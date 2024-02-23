@@ -18,7 +18,7 @@ Positions<br />
 ##Cross:<br />
    Ahmed hatem (team lead)<br />
    Omar Saied<br />
-   Mohamed elghetany<br />
+   Mohamed eghitany<br />
    Mohammed tamer<br />
    Hosam yasser<br />
 ##Devops:<br />
