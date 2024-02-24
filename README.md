@@ -1,28 +1,38 @@
-# Fox-a-Reddit-Clone
-Cairo University Fuculty of Engineering Software Project ->Fox A reddit Clone Working on web,android and ios<br />
+# Cairo University Faculty of Engineering Software Project - Fox
 
-Positions<br />
-##Team lead:<br />
-    Nour Aldeen Hassan Khalaf      mail:-  Nour.hassan1321@gmail.com    phone:-  01021297906<br />
-##Frontend:<br />
-   Omar adel(team lead)<br />
-   Nadine<br />
-   Anas alaa<br />
-   Nouran<br />
-   Mahmoud<br />
-##Backend:<br />
-   Sherif ehab(team lead)<br />
-   Kariem magdy<br />
-   Abd el Rahman ahmed<br />
-   Yusuf Ahmed Elsayed Salama<br />
-##Cross:<br />
-   Ahmed hatem (team lead)<br />
-   Omar Saied<br />
-   Mohamed eghitany<br />
-   Mohammed tamer<br />
-   Hosam yasser<br />
-##Devops:<br />
-   Nour aldeen (lead) <br />
-##Testing:<br />
-   Youssef Mohamed Ali 1190396 (team lead)<br />
-   Rawan abdelnasser <br />
+Fox is a Reddit clone project developed for web, Android, and iOS platforms.
+
+## Team
+
+### Team Lead
+- **Nour Aldeen Hassan Khalaf**
+  - **Email:** Nour.hassan1321@gmail.com
+  - **Phone:** 01021297906
+
+### Frontend
+- **Team Lead: Omar Adel**
+- Nadine
+- Anas Alaa
+- Nouran
+- Mahmoud
+
+### Backend
+- **Team Lead: Sharif Ehab**
+- Kariem Magdy
+- Abd El Rahman Ahmed
+- Yusuf Ahmed Elsayed Salama
+
+### Cross
+- **Team Lead: Ahmed Hatem**
+- Omar Saied
+- Mohamed Elghitany
+- Mohammed Tamer
+- Hosam Yasser
+
+### DevOps
+- **Lead: Nour Aldeen**
+
+### Testing
+- **Team Lead: Youssef Mohamed Ali (1190396)**
+- Rawan Abdelnasser
+
