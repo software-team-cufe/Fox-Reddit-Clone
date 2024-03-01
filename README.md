@@ -17,7 +17,7 @@ Fox is a Reddit clone project developed as part of the Cairo University Faculty 
 - **Team Lead:** Omar Adel
 - Nadine
 - Anas Alaa
-- Nouran
+- Nouran Aloui
 - Mahmoud
 
 ### Backend
