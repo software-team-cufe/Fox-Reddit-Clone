@@ -74,7 +74,7 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
-      
+      <NavBar />
       <div className="max-w-[95%] lg:max-w-[80%] mt-4 h-full mx-auto">
         <Outlet />
       </div>

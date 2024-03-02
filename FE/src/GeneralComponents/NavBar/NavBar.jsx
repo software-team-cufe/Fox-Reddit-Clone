@@ -2,7 +2,6 @@ import Logo from "@/GeneralElements/Logo/Logo";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import Button from "@/GeneralElements/Button/Button";
 import { Link } from "react-router-dom";
-import ItemsModal from "./Components/ItemsModal";
 import ProfileIcon from "./Components/ProfileIcon";
 import { useState } from "react";
 
@@ -25,8 +24,8 @@ export default function NavBar({ }) {
                                     </Button>
                                 </Link>
                                 <Link to="/register">
-                                    <Button>
-                                        CreateAccount
+                                    <Button >
+                                        Create Account
                                     </Button>
                                 </Link>
                             </div> : <ProfileIcon />

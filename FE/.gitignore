@@ -11,8 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-src/Utils/AdminAxios.js
-src/Utils/UserAxios.js
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

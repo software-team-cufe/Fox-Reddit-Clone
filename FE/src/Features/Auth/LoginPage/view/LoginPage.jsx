@@ -59,7 +59,7 @@ export default function LoginPage({ }) {
         <form id="frm-login" className="space-y-6" onSubmit={login}>
           <TextBox name="email" disabled={loading} placeholder="me@domain.com" label="Email address" />
           <TextBox name="password" disabled={loading} placeholder="********" label="Password" />
-
+          
           <Button disabled={loading} loading={loading} onClick={login} className="w-full">
             Login
           </Button>
