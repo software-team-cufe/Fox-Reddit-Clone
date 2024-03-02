@@ -1,0 +1,25 @@
+.textBox {
+    text-decoration: none;
+    border: 2px solid var(--secondary-select);
+    font-size: 16px;
+    border-radius: 5px;
+    padding-inline: 15px;
+    padding-block: 10px;
+    outline: none;
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: var(--secondary);
+    color: var(--text);
+    font-weight: 600;
+}
+.textarea{
+    resize:vertical;
+}
+.textBox:focus {
+    outline: 1px solid rgb(0, 0, 0, 0.3);
+}
+.labelText{
+    margin-bottom: 6px;
+    font-size: 15px;
+    font-weight: 500;
+}

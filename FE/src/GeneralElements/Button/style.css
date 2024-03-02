@@ -1,0 +1,48 @@
+.btn__button {
+    display: flex;
+    flex-direction: row;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    background-color: var(--secondary);
+    color: var(--text);
+    transition: 0.2s;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    font-size: .875rem;
+    column-gap: 7px;
+}
+
+
+
+.btn__button:hover {
+    background-color: var(--secondary-select);
+
+}
+
+.btn__spinner {
+    animation: spin 3s linear infinite;
+    font-size: 17px;
+}
+
+@-moz-keyframes spin {
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
