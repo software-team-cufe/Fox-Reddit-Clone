@@ -7,7 +7,7 @@ import ProfilePosts from "./pages/Profileposts";
 import ProfileComments from "./pages/profilecomments";
 import ProfileSaved from "./pages/profileSaved";
 import ProfileHidden from "./pages/profilehidden";
-import { userStore } from "@/hooks/UserRedux/UserStore";
+
 const buttons = [
   {
     text: "overview",
@@ -41,14 +41,13 @@ const buttons = [
 ]
 function Layout() {
   const path = useLocation();
-  const user = userStore.getState().user.user;
-
+  
   return (
     <div>
       <div className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
-        <span className='text-black font-bold text-2xl absolute top-10 left-24'>{user.name}</span>
-        <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/{user.name}</span>
+        <span className='text-black font-bold text-2xl absolute top-10 left-24'>username</span>
+        <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/username</span>
       </div>
       <ul className='flex gap-3 overflow-x-auto mb-3'>
         {
