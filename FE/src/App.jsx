@@ -40,7 +40,7 @@ function MainRoute() {
     }
   );
   if (isLoading) {
-    return <div className='w-screen h-screen'>
+    return <div className='w-screen h-screen flex justify-center items-center'>
       <Spinner className=' text-xl' />
     </div>;
   }
@@ -68,14 +68,14 @@ function MainRoute() {
     nav(0);
     return;
   }
-  if (userStore.getState().user.user == null && localStorage.getItem('token') != null) {
-    return <></>
-  }
+  // if (userStore.getState().user.user == null && localStorage.getItem('token') != null) {
+  //   return <></>
+  // }
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
       <NavBar />
-      <div className="max-w-[95%] lg:max-w-[80%] mt-4 h-full mx-auto">
+      <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
         <Outlet />
       </div>
     </div>
