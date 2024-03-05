@@ -1,11 +1,8 @@
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import ProfilePagesLayout from './ProfilePages/ProfilePagesRoutes';
 import HomePage from './HomePage/HomePage';
-import NavBar from '@/GeneralComponents/NavBar/NavBar';
-import ProfileOverview from './profilePages/profileoverview';
-import { Fragment } from 'react';
 
 export default [
-    <>
-    <Route path='/' key={'/'} element={<HomePage />}></Route><Route path='/overview' key={'/'} element={<ProfileOverview userName="user"/>}></Route>
-    </>
+    <Route key={'/'} path='/' element={<HomePage />} />,
+    <Route key={'/user'} path='/user/*' element={<ProfilePagesLayout />} />
 ]
