@@ -5,8 +5,8 @@
 
 :root {
  
-  --primary: rgb(255, 69, 0);
-  --primary-select: rgb(255, 98, 21);
+  --primary: #e94c00;
+  --primary-select: #ff6600;
 
 }
 

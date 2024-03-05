@@ -12,19 +12,13 @@ import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 
-const protectedRoutes = [
-  '/settings',
-  "/verify-email",
+const unProtectedRoutes = [
+  '/',
+  '/login',
+  '/register',
 ]
 function MainRoute() {
-  return (
-    <div className='w-full h-[calc(100%-72px)]'>
-      <NavBar />
-      <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
-        <Outlet />
-      </div>
-    </div>
-  );
+
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
@@ -66,7 +60,7 @@ function MainRoute() {
       return <Navigate to={"/"} replace={true} />;
     }
   } else {
-    if (protectedRoutes.includes(path)) {
+    if (!unProtectedRoutes.includes(path)) {
       return <Navigate to={"/"} replace={true} />;
     }
   }

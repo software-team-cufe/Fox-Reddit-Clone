@@ -7,6 +7,7 @@ import ProfilePosts from "./pages/Profileposts";
 import ProfileComments from "./pages/profilecomments";
 import ProfileSaved from "./pages/profileSaved";
 import ProfileHidden from "./pages/profilehidden";
+import { userStore } from "@/hooks/UserRedux/UserStore";
 const buttons = [
   {
     text: "overview",
@@ -40,13 +41,14 @@ const buttons = [
 ]
 function Layout() {
   const path = useLocation();
-  
+  const user = userStore.getState().user.user;
+
   return (
     <div>
       <div className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
-        <span className='text-black font-bold text-2xl absolute top-10 left-24'>{'userName'}</span>
-        <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/{'userName'}</span>
+        <span className='text-black font-bold text-2xl absolute top-10 left-24'>{user.name}</span>
+        <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/{user.name}</span>
       </div>
       <ul className='flex gap-3 overflow-x-auto mb-3'>
         {
@@ -57,9 +59,9 @@ function Layout() {
           </li>)
         }
       </ul>
-      <Link to={'/'} className='flex gap-3 '>
-        <div className='rounded-full flex  justify-center border border-gray-600 w-[140px] h-10 items-center hover:border-black' >
-          <Plus />
+      <Link to={'/create-post'} className='flex gap-3 '>
+        <div className='rounded-full flex gap-1 justify-center border border-gray-600 w-[140px] h-10 items-center hover:border-black' >
+          <Plus className="w-4 h-4"/>
           <span className='inline font-semibold text-sm'>Create a post</span>
         </div>
       </Link>

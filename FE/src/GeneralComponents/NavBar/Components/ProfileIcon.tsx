@@ -48,11 +48,11 @@ export default function ProfileIcon({ }) {
                 show && <>
                     <div onClick={() => setShow(false)} className="absolute top-0 left-0 right-0 bottom-0 " />
                     <div
-                        className="z-50 my-4 text-base list-none bg-white shadow border rounded divide-y divide-gray-100 block"
+                        className="z-50 right-6 my-4 text-base list-none bg-white shadow border rounded divide-y divide-gray-100 block"
                         id="dropdown-2"
                         style={{
                             position: "absolute",
-                            inset: "auto auto auto auto",
+
                             margin: 0,
                         }}
                         data-popper-placement="bottom">
@@ -66,6 +66,16 @@ export default function ProfileIcon({ }) {
                             </p>
                         </div>
                         <ul className="list-none py-1" role="none">
+                            <li>
+                                <Link
+                                    onClick={() => setShow(false)}
+                                    to="/user/overview"
+                                    className="block py-2 px-4 text-sm   hover:bg-gray-100"
+                                    role="menuitem"
+                                >
+                                    Profile
+                                </Link>
+                            </li>
                             <li>
                                 <Link
                                     onClick={() => setShow(false)}
