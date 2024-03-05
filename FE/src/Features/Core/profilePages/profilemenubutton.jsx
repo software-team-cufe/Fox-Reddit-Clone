@@ -29,7 +29,7 @@ const ProfileMenuButton = ({path,clicked,text}) => {
     }
 
     return (
-        <button className={`rounded-pill w-fit px-3 h-10 hover:underline ${clicked ? "bg-gray-300" : "bg-white"}`} onClick={()=> NavigateToProfileSection(path)}>{text}</button>
+        <button className={`rounded-full w-fit px-3 h-10 hover:underline ${clicked ? "bg-gray-300" : "bg-white"}`} onClick={()=> NavigateToProfileSection(path)}>{text}</button>
     )
 }
 

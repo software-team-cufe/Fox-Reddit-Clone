@@ -12,7 +12,7 @@ function ProfileOverview ({userName}) {
     }
 
     return (
-        <div className="flex-initial w-5/12 min-h-screen mx-28 my-4">
+        <div className="flex-initial w-1/2 min-h-screen mx-14 my-4">
         <div className='relative flex mb-8'>
             <img src={ProfileSnoo} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
             <span className='text-black font-bold text-2xl absolute top-10 left-24'>{userName}</span>
@@ -28,10 +28,10 @@ function ProfileOverview ({userName}) {
             <li><ProfileMenuButton text="downvoted" path='downvote'/></li>
         </ul>
         <div className='flex gap-3'>
-                <div className='rounded-full border-1 border-gray-600 w-[140px] h-10 items-center hover:border-black' onClick={NavigatetoCreatePost}>
-                    <img src={plusicon} className='mx-1 inline' alt="plus"/>
-                    <span className='inline font-semibold text-sm'>Create a post</span>
-                </div>
+                <button className="rounded-full border-2 border-gray-600 w-[140px] h-10 items-center hover:border-black" onClick={NavigatetoCreatePost}>
+                    <img src={plusicon} className='mx-1 inline w-6' alt="plus"/>
+                    <span className='font-semibold text-sm'>Create a post</span>
+                </button>
         </div>
                 <hr />
 

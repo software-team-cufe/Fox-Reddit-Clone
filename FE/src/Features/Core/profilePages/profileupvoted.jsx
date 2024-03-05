@@ -4,7 +4,7 @@ import ProfileMenuButton from './profilemenubutton';
 
 function ProfileUpvoted ({userName}) {
     return (
-        <div className="flex-initial w-5/12 min-h-screen mx-28 my-4">
+        <div className="flex-initial w-1/2 min-h-screen mx-14 my-4">
         <div className='relative flex mb-8'>
             <img src={ProfileSnoo} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
             <span className='text-black font-bold text-2xl absolute top-10 left-24'>{userName}</span>
