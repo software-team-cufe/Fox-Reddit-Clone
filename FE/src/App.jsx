@@ -17,7 +17,7 @@ const protectedRoutes = [
   "/verify-email",
 ]
 function MainRoute() {
-
+  
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
