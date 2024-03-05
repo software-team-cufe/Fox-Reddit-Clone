@@ -1,6 +1,6 @@
 import ProfileSnoo from './images/mySnoo.png';
 import EmptySnoo from './images/confusedSnoo.png';
-import ProfileMenuButton from './profilemenubutton';
+import {buttons, ProfileMenuButton} from './profilemenubutton';
 
 function ProfileHidden ({userName}) {
     return (
@@ -10,18 +10,17 @@ function ProfileHidden ({userName}) {
             <span className='text-black font-bold text-2xl absolute top-10 left-24'>{userName}</span>
             <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/{userName}</span>
         </div>
-        <ul className='flex gap-3 overflow-x-auto mb-14'>
-            <li><ProfileMenuButton text="overview" path='overview'/></li>
-            <li><ProfileMenuButton text="posts" path='post'/></li>
-            <li><ProfileMenuButton text="comments" path='comment'/></li>
-            <li><ProfileMenuButton text="saved" path='saved'/></li>
-            <li><ProfileMenuButton text="hidden" clicked={true} path='hidden'/></li>
-            <li><ProfileMenuButton text="upvoted" path='upvote'/></li>
-            <li><ProfileMenuButton text="downvoted" path='downvote'/></li>
-        </ul>
+        <ul className='flex gap-3 overflow-x-auto mb-12'>
+                {
+                    buttons.map((btn, index) => <li key={index}>
+                        <ProfileMenuButton text={btn.text} clicked="hidden" path={btn.path} />
+                    </li>)
+                }
+
+            </ul>
             <hr />
 
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col mt-6 items-center">
                 <img src={EmptySnoo} className="w-16 h-24 mb-2" alt="Confused Snoo"></img>
                 <p className="text-lg font-bold">looks like you haven't hidden anything</p>
             </div>
