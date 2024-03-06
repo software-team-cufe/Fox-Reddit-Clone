@@ -8,6 +8,7 @@ import ProfileComments from "./pages/profilecomments";
 import ProfileSaved from "./pages/profileSaved";
 import ProfileHidden from "./pages/profilehidden";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
+import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 
 const buttons = [
   {
@@ -38,11 +39,11 @@ const buttons = [
     text: "downvoted",
     path: "downvoted",
   },
-
 ]
+
 function Layout() {
   const path = useLocation();
-  
+
   return (
     <div>
       <div className='relative flex mb-8'>
@@ -61,15 +62,15 @@ function Layout() {
       </ul>
       <div className="flex gap-1">
       <Link to={'/create-post'} className='flex gap-3'>
-        <div className='rounded-full flex gap-1 justify-center border border-gray-600 w-[140px] h-10 items-center hover:border-black' >
+        <div className={`rounded-full flex gap-1 justify-center border border-gray-600 w-[140px] h-10 items-center hover:border-black ${path.pathname == '/user/overview' ? "" : "hidden"}`} >
           <Plus className="w-4 h-4"/>
           <span className='inline font-semibold text-sm'>Create a post</span>
         </div>
       </Link>
       <Sortmenu />
+      <Postdisplaymenu />
       </div>
-
-      <hr className='my-4' />
+      <hr/>
       <Outlet />
     </div>
   )
