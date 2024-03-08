@@ -61,7 +61,7 @@ function MainRoute() {
     }
   } else {
     if (!unProtectedRoutes.includes(path)) {
-      return <Navigate to={"/"} replace={true} />;
+      
     }
   }
   if ((error != null) && error.response != null && error.response.status == 401) {
