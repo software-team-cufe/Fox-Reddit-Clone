@@ -1,4 +1,5 @@
-import {Camera,Shirt,Shield} from 'lucide-react';
+import {Camera,Shirt,Shield,Plus} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Card (){
     return(
@@ -52,29 +53,26 @@ export default function Card (){
                  Moderation Tools
              </span>
              </span>
-             <button 
-                 type="button" className="text-xs ml-8 mt-2 font-medium border border-gray-200 bg-gray-200 py-1 px-3 h-8 w-fit hover:bg-gray-300 rounded-full"> 
+             <Link to={'/settings/profile'} 
+                 className="text-xs ml-8 mt-2 font-medium bg-gray-200 py-2 px-3 h-8 w-fit hover:bg-gray-300 hover:underline rounded-full"> 
                  Edit Profile
-                </button>
-                <button 
-                 type="button" className="text-xs ml-7 mt-2 font-medium border border-gray-200 bg-gray-200 py-1 px-3 h-8 w-fit hover:bg-gray-300 rounded-full"> 
+                </Link>
+                <Link to={'/avatar'} 
+                 type="button" className="text-xs ml-7 mt-2 font-medium bg-gray-200 py-2 px-3 h-8 w-fit hover:bg-gray-300 hover:underline rounded-full"> 
                  Style Avatar
-                </button>
-                 <button 
-                  type="button" className="text-xs ml-6 mt-2 font-medium border border-gray-200 bg-gray-200 py-1 px-3 h-8 w-fit hover:bg-gray-300 rounded-full"> 
+                </Link >
+                 <Link to={'./about/edit/moderation'} 
+                  type="button" className="text-xs ml-6 mt-2 font-medium bg-gray-200 py-2 px-3 h-8 w-fit hover:bg-gray-300 hover:underline rounded-full"> 
                   Mod settings
-                 </button>
+                 </Link>
          </div>
          <hr className="h-px m-3 mb-5 border-0 dark:bg-gray-300"/>
          <h1 className="mx-3 text-xs text-gray-500 font-semibold"> LINKS </h1>  
          <br/>
-         <button type="button" className="flex items-center py-1 px-4 mx-3 mb-2 text-xs font-medium text-gray-700 focus:outline-none
-         bg-gray-200 rounded-full border border-gray-200 hover:bg-gray-300"> 
-         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-             <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-           </svg>
+         <Link to={'/settings/profile'} className="w-fit flex items-center py-1 pl-2 pr-3 mx-3 mb-2 text-xs font-medium text-gray-700 focus:outline-none bg-gray-200 rounded-full hover:bg-gray-300 hover:underline"> 
+         <Plus className='h-5 w-5 mr-2'/>
         <span>Add Social Link</span>
-         </button>
+         </Link>
         <hr className="h-px m-3 mb-5 border-0 dark:bg-gray-300"/>
 
      </div>
