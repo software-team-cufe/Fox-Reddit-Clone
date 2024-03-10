@@ -4,13 +4,15 @@ import Button from "@/GeneralElements/Button/Button";
 import { Link } from "react-router-dom";
 import ProfileIcon from "./Components/ProfileIcon";
 import { useState } from "react";
+import Tooltip from "@/GeneralElements/Tooltip/Tooltip";
+import { Settings } from "lucide-react";
 
 export default function NavBar({}) {
   const [showModal, setShowModal] = useState(false);
   const [IsOpenMenue, setIsOpenMenue] = useState(false);
-  const IsLoggedIn = false;
+  const IsLoggedIn = true;
   return (
-    <div className="px-[1.5rem] pt-[1rem] w-100vl h-10">
+    <div className="px-[1.5rem] pt-[1rem] w-100vl ">
       <nav className="flex items-center justify-between">
         {/* <div
           className="hidden w-full md:block md:w-auto"
@@ -38,11 +40,12 @@ export default function NavBar({}) {
                 <button className="bg-white hover:bg-orange-100   min-w-8  h-10 my-2 rounded-full   ">
                   <img src="./icons/circle.png"></img>
                 </button>
-
-                <button className="bg-white hover:bg-orange-100   min-w-8 h-10 my-2 rounded-full    ">
-                  <img src="./icons/bell-ring.png"></img>
-                </button>
-
+                <div className="relative flex">
+                  <button className="bg-white hover:bg-orange-100   min-w-8 h-10 my-2 rounded-full    ">
+                    <img src="./icons/bell-ring.png"></img>
+                  </button>
+                  <Tooltip title={"hh"}></Tooltip>
+                </div>
                 <div className="relative">
                   <button
                     onClick={() => setIsOpenMenue(!IsOpenMenue)}
@@ -54,7 +57,6 @@ export default function NavBar({}) {
                   {IsOpenMenue && (
                     <ul className="flex-col shadow-md absolute right-0 w-40 bg-white mt-2 mb-2">
                       <li>
-                        {" "}
                         <button className="bg-white hover:bg-orange-100  text-black  py-1 px-1 rounded inline-flex items-center w-full">
                           <img src="./icons/user.png" className="mx-1"></img>
                           View profile
@@ -62,14 +64,12 @@ export default function NavBar({}) {
                       </li>
 
                       <li>
-                        {" "}
                         <button className="bg-white hover:bg-orange-100 text-black  py-1 px-1  rounded inline-flex items-center w-full">
                           <img src="./icons/logout.png" className="mx-1"></img>
                           Log out
                         </button>
                       </li>
                       <li>
-                        {" "}
                         <button className="bg-white hover:bg-orange-100 text-black   py-1 px-1  rounded inline-flex items-center w-full">
                           <img
                             src="./icons/settings.png"
