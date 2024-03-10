@@ -9,6 +9,9 @@ import ProfileSaved from "./pages/profileSaved";
 import ProfileHidden from "./pages/profilehidden";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
+import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
+import Card from "@/GeneralComponents/profileCard/Card.jsx";
+import { useState } from "react";
 
 const buttons = [
   {
@@ -43,10 +46,13 @@ const buttons = [
 
 function Layout() {
   const path = useLocation();
-
+  const [selected,setselected] = useState("New");
+  const [period,setperiod] = useState('All time');
   return (
     <div>
-      <div className='relative flex mb-8'>
+      <div className="flex gap-3">
+        <div>
+        <div className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
         <span className='text-black font-bold text-2xl absolute top-10 left-24'>username</span>
         <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/username</span>
@@ -67,11 +73,15 @@ function Layout() {
           <span className='inline font-semibold text-sm'>Create a post</span>
         </div>
       </Link>
-      <Sortmenu />
-      <Postdisplaymenu />
+          <Sortmenu setselected={setselected}/>
+          <PeriodSelect appearance={selected}  setperiod={setperiod}/>
+          <Postdisplaymenu />
+        </div>
+        <hr/>
+          <Outlet />
       </div>
-      <hr/>
-      <Outlet />
+      <Card/>
+      </div>
     </div>
   )
 }

@@ -3,6 +3,9 @@ import SearchSortMenu from "@/GeneralComponents/SearchSortMenu/SearchSortMenu";
 import { useState } from "react"; 
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import PostsSearchPage from "./pages/PostsSearchPage";
+import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
+import PeopleSearchPage from "./pages/PeopleSearchPage";
+import CommentsSearchPage from "./pages/COmmentsSearchPage";
 
 const buttons = [
   {
@@ -60,6 +63,9 @@ export default function SearchPagesLayout() {
       <Route element={<Layout />} >
         <Route key={'/search'} path="/" element={<></>} />
         <Route key={'/Posts'} path={`Posts`} element={<PostsSearchPage searched="idk bruh"/>} />
+        <Route key={'/Communities'} path={`Communities`} element={<CommunitiesSearchPage searched="idk bruh"/>} />
+        <Route key={'/People'} path={`People`} element={<PeopleSearchPage searched="idk bruh"/>} />
+        <Route key={'/COmments'} path={`Comments`} element={<CommentsSearchPage searched="idk bruh"/>} />
       </Route>
     </Routes>
   )

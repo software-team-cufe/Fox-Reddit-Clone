@@ -1,5 +1,3 @@
-
-
 export default function PostsSearchPage({searched}) { 
   return (
     <div className="flex gap-4 items-center">

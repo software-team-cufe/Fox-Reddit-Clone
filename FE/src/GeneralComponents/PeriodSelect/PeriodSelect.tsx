@@ -9,7 +9,7 @@ function classNames(...classes) {
 
 export default function PeriodSelect({appearance,setperiod}) {
 
-  const [current, switchup] = useState("Relevance")
+  const [current, switchup] = useState("All time")
   const switchperiod = (period) => {
     switch (period) {
       case "All time":

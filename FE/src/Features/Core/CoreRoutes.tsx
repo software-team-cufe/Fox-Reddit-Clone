@@ -7,5 +7,4 @@ export default [
     <Route key={'/'} path='/' element={<HomePage />} />,
     <Route key={'/user'} path='/user/*' element={<ProfilePagesLayout />} />,
     <Route key={'/search'} path='/search/*' element={<SearchPagesLayout />} />
-
 ]

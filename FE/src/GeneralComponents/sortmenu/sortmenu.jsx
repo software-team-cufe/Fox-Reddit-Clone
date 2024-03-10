@@ -6,9 +6,25 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Sortmenu() {
+export default function Sortmenu({setselected}) {
 
-  const [current, switchup] = useState("New");
+  const [current, switchstates] = useState("New");
+  const switchup = (period) => {
+    switch (period) {
+      case "Top":
+        switchstates("Top")
+        setselected("Top")
+        break;
+      case "Hot":
+        switchstates("Hot")
+        setselected("Hot")
+        break;
+      case "New":
+        switchstates("New")
+        setselected("New")
+        break;
+    }
+  }
 
   return (
     <Menu as="div" className="relative inline-block text-left">
