@@ -13,7 +13,6 @@ const sanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean')
 app.use(cors({
   origin: [
-    'https://restaurant-website-eosin-nine.vercel.app',
     'http://localhost:3001',
   ],
   credentials: true,
