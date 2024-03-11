@@ -49,6 +49,7 @@ function Layout() {
   const path = useLocation();
   const [selected,setselected] = useState("New");
   const [period,setperiod] = useState('All time');
+
   return (
     <div>
       <div className="flex flex-row gap-10">
@@ -69,10 +70,10 @@ function Layout() {
       </ul>
       <div className="flex gap-1">
       <Link to={'/create-post'} className='flex gap-3'>
-        <div className={`rounded-full flex gap-1 justify-center border border-gray-600 w-[140px] h-10 items-center hover:border-black ${path.pathname == '/user/overview' ? "" : "hidden"}`} >
+        <button className={`rounded-full flex gap-1 justify-center border border-gray-600 w-[140px] h-10 items-center hover:border-black ${path.pathname == '/user/overview' ? "" : "hidden"}`} >
           <Plus className="w-4 h-4"/>
           <span className='inline font-semibold text-sm'>Create a post</span>
-        </div>
+        </button>
       </Link>
           <Sortmenu setselected={setselected}/>
           <PeriodSelect appearance={selected}  setperiod={setperiod}/>

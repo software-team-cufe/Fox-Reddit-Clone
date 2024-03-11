@@ -15,7 +15,6 @@ export default function CreateCommunity() {
         const value = event.target.value;
         setInputValue(value);
 
-        // Apply validation rules here
         if (value == "") {
             setIsValid(false);
         } else {
