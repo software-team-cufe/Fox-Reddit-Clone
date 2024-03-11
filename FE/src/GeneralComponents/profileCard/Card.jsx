@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Card (){
     return(
-        <div className="relative border border-slate-200 bg-slate-50 min-w-[360px] h-[760px] ml-20 mr-7 rounded-2xl collapse md:visible">
+        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[360px] h-[760px] mr-5 rounded-2xl collapse md:visible">
         <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAAA1BMVEX/AAAZ4gk3AAAAR0lEQVR4nO3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO8GxYgAAb0jQ/cAAAAASUVORK5CYII=' className='w-[100%] h-[16%] rounded-t-2xl mb-2 bg-gradient-to-b from-transparent to-slate-800'/>
              <button className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
                 <Camera className='h-5 w-5'/>

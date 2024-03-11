@@ -11,6 +11,7 @@ import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
+import CreateCommunity from "@/GeneralComponents/CreateCommunity/CreateCommunity";
 import { useState } from "react";
 
 const buttons = [
@@ -50,8 +51,8 @@ function Layout() {
   const [period,setperiod] = useState('All time');
   return (
     <div>
-      <div className="flex gap-3">
-        <div>
+      <div className="flex flex-row gap-10">
+        <div  className="flex-initial">
         <div className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
         <span className='text-black font-bold text-2xl absolute top-10 left-24'>username</span>
@@ -80,7 +81,7 @@ function Layout() {
         <hr/>
           <Outlet />
       </div>
-      <Card/>
+      <Card />
       </div>
     </div>
   )
