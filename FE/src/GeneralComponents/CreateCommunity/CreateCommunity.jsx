@@ -9,7 +9,7 @@ export default function CreateCommunity() {
     };
 
     const [inputValue, setInputValue] = useState('');
-    const [isValid, setIsValid] = useState(true);
+    const [isValid, setIsValid] = useState(false);
 
     const handleChange = (event) => {
         const value = event.target.value;
@@ -30,17 +30,21 @@ export default function CreateCommunity() {
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                            <div className="relative transform overflow-hidden rounded-xl w-80 h-[623px] bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                            <div className="relative transform overflow-hidden rounded-xl w-80 h-[600px] bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                                    <img src={'communityCreate.png'} className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10" />
-                                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                    <div className='flex gap-2'>
+                                        <img src={'communityCreate.png'} className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10" />
                                         <h3 className="mt-2 text-2xl font-semibold leading-6 text-gray-900" id="modal-title">Create a community</h3>
                                     </div>
                                     <X onClick={handleClose} className="p-2 absolute top-4 right-5 h-8 w-8 bg-gray-200 hover:bg-slate-300 rounded-full cursor-pointer text-gray-500 active:bg-gray-500" />
                                     <div className=" text-sm text-gray-500 my-2">Build and grow a community about something you care about. We'll help you set things up.</div>
-                                    <input type="text" value={inputValue} maxLength={21} onChange={handleChange} placeholder="Name" className={`bg-gray-200 self-center h-14 w-[90%] mt-2 border-2 border-gray-200 rounded-2xl p-2 focus:outline-none focus:ring-2 focus:ring-slate-300
+                                    <input type="text" value={inputValue} maxLength={21} onChange={handleChange} placeholder="Name" className={`bg-gray-200 self-center h-14 w-full mt-2 border-2 border-gray-200 rounded-2xl p-2 focus:outline-none focus:ring-2 focus:ring-slate-300
                                             text-sm ${isValid ? '' : 'border-red-700'}`} />
+                                    <div className='flex justify-between'>
                                     <div className={`${isValid ? 'hidden' : 'visible'} text-red-600 text-xs mt-1 ml-5`}>Please fill out this field.</div>
+                                    <div className={`${isValid ? 'visible' : 'hidden'} text-green-500 text-xs mt-1 ml-5`}>Choose wisely. Once you pick a name, it can't be changed.</div>
+                                    <span className='text-sm mr-4 mt-1'>{inputValue.length}</span>
+                                    </div>
                                     <div className='mt-5 mb-3 font-semibold text-sm'>Type</div>
 
                                     <ul className="grid w-full gap-6 md:grid-rows-2">
