@@ -11,7 +11,6 @@ import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
-import CreateCommunity from "@/GeneralComponents/CreateCommunity/CreateCommunity";
 import { useState } from "react";
 
 const buttons = [

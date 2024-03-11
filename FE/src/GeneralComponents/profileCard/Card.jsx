@@ -10,7 +10,7 @@ export default function Card (){
                 </button>
  
         <span className='font-bold m-3'>username</span>
-             <button 
+             <button
               className="flex items-center py-1 px-4  m-2 text-xs font-medium text-gray-500 focus:outline-none
                bg-gray-200 rounded-xl border border-gray-200 hover:bg-gray-300"> 
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 me-1">
