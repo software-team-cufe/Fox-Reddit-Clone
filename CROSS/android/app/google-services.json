@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "24320835329",
+    "project_id": "fox-app-e9b9f",
+    "storage_bucket": "fox-app-e9b9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:24320835329:android:5ce2f181c813f5d47c6500",
+        "android_client_info": {
+          "package_name": "com.example.reddit_fox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "24320835329-mqkp1he1p4dsa38cok16gvmcnd3h8qo3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUToMIV471RlaB7YfWVTaSYCKsrqq0NQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "24320835329-mqkp1he1p4dsa38cok16gvmcnd3h8qo3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "24320835329-3nulk87ooi2bip1edpinvkt5gfcqo7cu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.redditFox"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:24320835329:android:e894a2ce98941c3d7c6500",
+        "android_client_info": {
+          "package_name": "com.fox.monstersinc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "24320835329-k3psga6vmo2rsbbtqh0p1nluc1l491ls.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fox.monstersinc",
+            "certificate_hash": "458d8fb4456067464d5c445868bca268d3f5263f"
+          }
+        },
+        {
+          "client_id": "24320835329-mqkp1he1p4dsa38cok16gvmcnd3h8qo3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUToMIV471RlaB7YfWVTaSYCKsrqq0NQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "24320835329-mqkp1he1p4dsa38cok16gvmcnd3h8qo3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "24320835329-3nulk87ooi2bip1edpinvkt5gfcqo7cu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.redditFox"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
