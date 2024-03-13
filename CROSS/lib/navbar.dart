@@ -20,7 +20,7 @@ class _nBarState extends State<nBar> {
             print('s');
           },
           child: const FaIcon(
-            FontAwesomeIcons.house,
+            FontAwesomeIcons.home,
             size: 50.0,
           ),
         ),
@@ -29,7 +29,7 @@ class _nBarState extends State<nBar> {
             print('s');
           },
           child: const FaIcon(
-            FontAwesomeIcons.peopleGroup,
+            FontAwesomeIcons.men ,
             size: 50.0,
           ),
         ),
