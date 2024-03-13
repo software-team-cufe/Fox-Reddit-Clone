@@ -11,6 +11,7 @@ import userModel from './Models/UserModel';
 import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
+import { Sidebar } from './GeneralComponents/SideBar/sidebar';
 
 const unProtectedRoutes = [
   '/',
@@ -78,6 +79,7 @@ function MainRoute() {
       <NavBar />
       <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
         <Outlet />
+        <Sidebar />
       </div>
     </div>
   );
