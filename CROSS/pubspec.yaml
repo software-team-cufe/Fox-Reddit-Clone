@@ -41,6 +41,7 @@ dependencies:
   cloud_firestore: ^4.15.8
   firebase_auth: ^4.17.8
   google_sign_in: ^6.2.1
+  font_awesome_flutter: ^9.1.0
 
 dev_dependencies:
   flutter_test:
@@ -95,5 +96,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
 
 
