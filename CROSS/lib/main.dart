@@ -4,6 +4,7 @@ import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/firebase_options.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 
+
 void main() async{
 WidgetsFlutterBinding.ensureInitialized();
 await Firebase.initializeApp(
