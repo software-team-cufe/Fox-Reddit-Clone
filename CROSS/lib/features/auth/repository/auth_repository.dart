@@ -6,7 +6,7 @@ import "package:google_sign_in/google_sign_in.dart";
 import "package:reddit_fox/core/constants/constants.dart";
 import "package:reddit_fox/core/constants/firebase_constants.dart";
 import "package:reddit_fox/core/providers/firebase_providers.dart";
-import "package:reddit_fox/pages/user_model.dart";
+import "package:reddit_fox/Pages/user_model.dart";
 
 //FirebaseFirestore.instance
 

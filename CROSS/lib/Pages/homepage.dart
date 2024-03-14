@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           ],
           onSelected: (value) {
             setState(() {
-              _selectedItem = value!;
+              _selectedItem = value;
             });
           },
         ),
