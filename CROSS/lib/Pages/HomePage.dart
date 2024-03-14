@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/navbar.dart';
-import 'package:reddit_fox/Pages/Search.dart';
+import 'package:reddit_fox/Pages/SearchInHomePage.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
+  
+  void desplatEndDrawer(BuildContext context) {
+    Scaffold.of(context).openEndDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +30,19 @@ class HomePage extends StatelessWidget {
             },
             icon: Icon(Icons.search),
           ),
-          IconButton( // Avatar IconButton
-            icon: CircleAvatar(),
-            onPressed: () {}, // No action on press
+          Builder(
+            builder: (context) {
+              return IconButton( // Avatar IconButton
+                icon: CircleAvatar(),
+                onPressed: () => desplatEndDrawer(context), // No action on press
+              );
+            }
           ),
         ],
       ),
       drawer: Drawer(
         width: drawerWidth,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.black,
         child: ListView(
           children: [
             ListTile(
@@ -48,7 +56,7 @@ class HomePage extends StatelessWidget {
       ),
       endDrawer: Drawer(
         width: userWidth,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.black,
         child: ListView(
           children: [
             // Add any content you want in the endDrawer
