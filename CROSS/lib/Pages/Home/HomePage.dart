@@ -78,22 +78,13 @@ class _HomePageState extends State<HomePage> {
           ],
           onSelected: (value) {
             setState(() {
-              _selectedItem = value!;
+              _selectedItem = value;
             });
           },
         ),
       ),
       drawer: CustomDrawer(drawer_Width: drawerWidth,),
       endDrawer: endDrawer(user_width: userWidth),
-      // endDrawer: Drawer(
-      //   width: userWidth,
-      //   backgroundColor: Colors.black,
-      //   child: ListView(
-      //     children: [
-      //       // Add any content you want in the endDrawer
-      //     ],
-      //   ),
-      // ),
       bottomNavigationBar: nBar(),
       endDrawerEnableOpenDragGesture: true, 
       drawerEnableOpenDragGesture: true,
