@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, Flame, Globe, Plus } from 'lucide-react';
+import { Home, Flame, Globe, Plus, ChevronDown } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link } from "react-router-dom";
 const icons = [
@@ -66,9 +66,7 @@ function Sidebar() {
                   <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
-                     <button id="dropdownDefaultButton" onClick={functionToExecute} data-dropdown-toggle="dropdown" className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 " type="button">RECENTS<svg onClick={functionToExecute} className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-                     </svg>
+                     <button id="dropdownDefaultButton" onClick={functionToExecute} data-dropdown-toggle="dropdown" className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 " type="button">RECENTS
                      </button>
 
                      <div id="dropdown" className="">
@@ -107,9 +105,9 @@ function Sidebar() {
 
                   <li>
 
-                     <button id="dropdownDefaultButton2" onClick={functionToExecute} data-dropdown-toggle="dropdown" className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 " type="button">RESOURCES<svg onClick={functionToExecute} className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-                     </svg>
+                     <button id="dropdownDefaultButton2" onClick={functionToExecute} data-dropdown-toggle="dropdown" className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 " type="button">
+                        RESOURCES 
+                        <ChevronDown />
                      </button>
 
                      <div id="dropdown2" className="">
@@ -170,40 +168,29 @@ function Sidebar() {
                            <li>
                               <a
                                  href="/layout"
-                                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
-                                 <svg fill="currentColor" className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19.375 1H18.25V0H17v1h-1.375a.625.625 0 0 0-.625.625V3H5V1.625A.625.625 0 0 0 4.375 1H3.25V0H2v1H.625A.625.625 0 0 0 0 1.625v16.75A.625.625 0 0 0 .625 19H2v1h1.25v-1h1.125A.625.625 0 0 0 5 18.375V17h10v1.375a.624.624 0 0 0 .625.625H17v1h1.25v-1h1.125a.624.624 0 0 0 .625-.625V1.625A.625.625 0 0 0 19.375 1ZM3.75 17.75h-2.5V2.25h2.5v15.5Zm1.25-2V4.25h10v11.5H5Zm13.75 2h-2.5V2.25h2.5v15.5ZM7.782 7.025h4.436v1.25H7.782v-1.25Zm0 4h4.436v1.25H7.782v-1.25Z"></path>
-                                 </svg>
-                                 <span className=" px-4 py-2">content policy</span>
+                              <ChevronDown />
+                                 <span className=" px-2 py-2">content policy</span>
                               </a>
                            </li>
                            <li>
                               <a
                                  href="/layout"
-                                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
-                                 <span className="flex shrink-0 items-center justify-center h-xl w-xl text-20 leading-4">
-                                    <svg fill="currentColor" className="w-5 h-5 text-gray-500 transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
-                                       <path d="M2.3 8.625 3.621 5.31l1.324 3.315h1.346L4.256 3.53a1.37 1.37 0 0 1 1.362-1.28h8.764a1.37 1.37 0 0 1 1.362 1.28l-2.035 5.1h1.346l1.324-3.32L17.7 8.625h1.346l-2.061-5.16A2.62 2.62 0 0 0 14.382 1H5.618a2.62 2.62 0 0 0-2.606 2.465L.951 8.625H2.3Z"></path>
-                                       <path d="M6.617 10H.625a.625.625 0 0 0-.625.625 3.62 3.62 0 1 0 7.242 0A.625.625 0 0 0 6.617 10Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.58A2.376 2.376 0 0 1 3.621 13h-.004Z"></path>
-                                       <path d="M19.375 10h-5.992a.624.624 0 0 0-.625.625 3.622 3.622 0 0 0 6.966 1.386c.182-.44.276-.91.276-1.386a.624.624 0 0 0-.625-.625Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.576A2.375 2.375 0 0 1 16.379 13h-.004Z"></path>
-                                       <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
-                                    </svg>
-                                 </span>
-                                 <span className="px-4 py-2">Privacy policy</span>
+                                 <ChevronDown />
+                                 <span className="px-2 py-2">Privacy policy</span>
                               </a>
                            </li>
 
                            <li>
                               <a
                                  href="/layout"
-                                 className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 className="flex items-center px-2 py-2 text-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
-                                 <svg fill="currentColor" className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M7.35 7.333H5.733V6.77h.48V5.23a1.232 1.232 0 0 1-.47.111v-.507c.178.01.353-.05.487-.167h.7v2.1h.419l.003.566Zm-.767 1.92c.164 0 .258.082.258.23 0 .22-.115.276-.516.522-.7.422-.768.806-.768 1.185v.143h1.975v-.564H6.374c.039-.106.149-.236.483-.424.538-.29.659-.581.659-.878 0-.488-.3-.8-.916-.8a1.171 1.171 0 0 0-1.05.633l.479.345a.708.708 0 0 1 .554-.392Zm.536 4.66a.544.544 0 0 0 .383-.545c0-.438-.313-.7-.9-.7a1.435 1.435 0 0 0-1.01.4l.369.427a.824.824 0 0 1 .588-.26c.178 0 .275.081.275.211 0 .156-.1.253-.448.253h-.218v.482h.205c.356 0 .507.086.507.307 0 .162-.1.28-.383.28a.7.7 0 0 1-.566-.334L5.5 14.8a1.22 1.22 0 0 0 1.047.529c.626 0 1.036-.286 1.036-.826a.581.581 0 0 0-.464-.59Zm1.88-3.288h6v-1.25H9v1.25Zm0 4h6v-1.25H9v1.25Zm0-8h6v-1.25H9v1.25Zm9-5.014v17.271A1.123 1.123 0 0 1 16.876 20h-12.7a1.123 1.123 0 0 1-1.125-1.118V4.25h-.875A1.127 1.127 0 0 1 1.05 3.125v-1.5A1.627 1.627 0 0 1 2.675 0h13.7A1.62 1.62 0 0 1 18 1.611ZM2.3 3h.75V1.625a.375.375 0 0 0-.75 0V3Zm14.45-1.389a.369.369 0 0 0-.374-.361H4.252a1.6 1.6 0 0 1 .048.375V18.75h12.45V1.611Z"></path>
-                                 </svg>
-                                 <span className=" px-4 py-2">User agreement</span>
+                                 <ChevronDown />
+                                 <span className=" px-2 py-2">User agreement</span>
                               </a>
                            </li>
                         </ul>
