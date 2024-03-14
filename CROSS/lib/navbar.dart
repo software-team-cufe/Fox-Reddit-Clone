@@ -13,7 +13,7 @@ class _nBarState extends State<nBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 20.0),
+      padding: EdgeInsets.only(bottom: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -25,6 +25,7 @@ class _nBarState extends State<nBar> {
             },
             child:Icon(Icons.home, size: 30.0, color: Colors.white,),
           ),
+          
           TextButton(
             onPressed: () {
               print('s');

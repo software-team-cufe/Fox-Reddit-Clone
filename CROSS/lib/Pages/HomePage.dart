@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:reddit_fox/Pages/SearchInHomePage.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-  
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _selectedItem = "Home"; // Default selected item
+
   void desplatEndDrawer(BuildContext context) {
     Scaffold.of(context).openEndDrawer();
   }
@@ -16,8 +23,6 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("Home"),
-        centerTitle: false,
         backgroundColor: Colors.black,
         iconTheme: IconThemeData(color: Colors.white),
         actions: [
@@ -39,6 +44,30 @@ class HomePage extends StatelessWidget {
             }
           ),
         ],
+        title: PopupMenuButton<String>(
+          icon: Text(_selectedItem),
+          initialValue: _selectedItem,
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              child: Text("Home"),
+              value: "Home",
+            ),
+            PopupMenuItem(
+              child: Text("Category 1"),
+              value: "Category 1",
+            ),
+            PopupMenuItem(
+              child: Text("Category 2"),
+              value: "Category 2",
+            ),
+            // Add more items as needed
+          ],
+          onSelected: (value) {
+            setState(() {
+              _selectedItem = value!;
+            });
+          },
+        ),
       ),
       drawer: Drawer(
         width: drawerWidth,
