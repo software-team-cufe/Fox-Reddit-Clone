@@ -19,10 +19,15 @@ function Sidebar() {
       }
    }
 
-   const[community,setCommunity]=useState(false);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
    const openCreateCommunity = () => {
-      setCommunity(!community);
-   }
+     setIsModalOpen(true); // Open the modal
+   };
+ 
+   const closeCreateCommunity = () => {
+     setIsModalOpen(false); // Close the modal
+   };
    return (
       //hna tekteb html
       <>
@@ -32,7 +37,7 @@ function Sidebar() {
                <ul className="space-y-2 font-light">
                   <li>
                      <a
-                        href="/layout"
+                        href="/"
                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-50 dark:hover:bg-gray-100 group"
                      >
                         <Home className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
@@ -87,11 +92,11 @@ function Sidebar() {
                      <div id="dropdown1" className="">
                         <ul className="" aria-labelledby="dropdownDefaultButton">
                            <li>
-                           <button onClick={openCreateCommunity}className="relative rounded-full flex justify-between gap-2 p-3 h-12 w-44 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray">
-                           <Plus className="w-8 h-8 absolute top-2 left-2"/>
-                           <span className="text-sm absolute top-3 left-12">Create Community</span>
-                           {community && <CreateCommunity />}
+                           <button onClick={openCreateCommunity} className="relative rounded-full flex justify-between gap-2 p-3 h-12 w-44 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray">
+                           <Plus className="w-8 h-8 absolute top-2 left-2" />
+                            <span className="text-sm absolute top-3 left-12">Create Community</span>
                            </button>
+                           {isModalOpen && <CreateCommunity onClose={closeCreateCommunity}/>}
                            </li>
                         </ul>
                      </div>
