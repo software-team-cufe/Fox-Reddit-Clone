@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/Pages/HomePage.dart';
+import 'package:reddit_fox/Pages/Home/HomePage.dart';
 import 'package:reddit_fox/core/common/sign_in_button.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
 

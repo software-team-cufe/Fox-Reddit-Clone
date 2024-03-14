@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/Pages/HomePage.dart';
+import 'package:reddit_fox/Pages/Home/HomePage.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);

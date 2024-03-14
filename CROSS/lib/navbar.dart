@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:reddit_fox/Pages/HomePage.dart';
+import 'package:reddit_fox/Pages/Home/HomePage.dart';
 
 class nBar extends StatefulWidget {
   const nBar({super.key});

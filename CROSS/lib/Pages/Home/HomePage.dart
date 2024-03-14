@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:reddit_fox/Pages/SearchInHomePage.dart';
+import 'package:reddit_fox/Pages/Home/Drawer.dart';
+import 'package:reddit_fox/Pages/Home/endDrawer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,8 +14,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String _selectedItem = "Home"; // Default selected item
 
-  void desplatEndDrawer(BuildContext context) {
+  void desplayEndDrawer(BuildContext context) {
     Scaffold.of(context).openEndDrawer();
+  }
+  void desplayDrawer(BuildContext context) {
+    Scaffold.of(context).openDrawer();
   }
 
   @override
@@ -25,6 +30,15 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         iconTheme: IconThemeData(color: Colors.white),
+        leading: Builder(builder: (context){
+          return IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: (){
+              desplayDrawer(context);
+            },
+          );
+        }
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -39,7 +53,7 @@ class _HomePageState extends State<HomePage> {
             builder: (context) {
               return IconButton( // Avatar IconButton
                 icon: CircleAvatar(),
-                onPressed: () => desplatEndDrawer(context), // No action on press
+                onPressed: () => desplayEndDrawer(context), // No action on press
               );
             }
           ),
@@ -69,31 +83,20 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      drawer: Drawer(
-        width: drawerWidth,
-        backgroundColor: Colors.black,
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text(
-                "Recently Visited",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-      endDrawer: Drawer(
-        width: userWidth,
-        backgroundColor: Colors.black,
-        child: ListView(
-          children: [
-            // Add any content you want in the endDrawer
-          ],
-        ),
-      ),
+      drawer: CustomDrawer(drawer_Width: drawerWidth,),
+      endDrawer: endDrawer(user_width: userWidth),
+      // endDrawer: Drawer(
+      //   width: userWidth,
+      //   backgroundColor: Colors.black,
+      //   child: ListView(
+      //     children: [
+      //       // Add any content you want in the endDrawer
+      //     ],
+      //   ),
+      // ),
       bottomNavigationBar: nBar(),
-      endDrawerEnableOpenDragGesture: false, // Added to prevent end drawer from opening on swipe
+      endDrawerEnableOpenDragGesture: true, 
+      drawerEnableOpenDragGesture: true,
     );
   }
 }
