@@ -38,9 +38,15 @@ function Sidebar() {
    }
 
    const [community, setCommunity] = useState(false);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
    const openCreateCommunity = () => {
-      setCommunity(!community);
-   }
+     setIsModalOpen(true); // Open the modal
+   };
+ 
+   const closeCreateCommunity = () => {
+     setIsModalOpen(false); // Close the modal
+   };
    return (
 
       <>
@@ -59,12 +65,9 @@ function Sidebar() {
                         </Link>
                      </li>
                      )
-                  }
-
-
-
-                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
-
+                  }                  
+                  <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  
                   <li>
                      <button id="dropdownDefaultButton" onClick={functionToExecute} data-dropdown-toggle="dropdown" className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 " type="button">RECENTS
                      </button>
@@ -91,11 +94,11 @@ function Sidebar() {
                      <div id="dropdown1" className="">
                         <ul className="" aria-labelledby="dropdownDefaultButton">
                            <li>
-                              <button onClick={openCreateCommunity} className="relative rounded-md w-full flex justify-between gap-2 p-3 h-12  hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray">
-                                 <Plus className="w-8 h-8 absolute top-2 left-2" />
-                                 <span className="text-sm absolute top-3 left-12">Create Community</span>
-                                 {community && <CreateCommunity />}
-                              </button>
+                           <button onClick={openCreateCommunity} className="relative rounded-full flex justify-between gap-2 p-3 h-12 w-44 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray">
+                           <Plus className="w-8 h-8 absolute top-2 left-2" />
+                            <span className="text-sm absolute top-3 left-12">Create Community</span>
+                           </button>
+                           {isModalOpen && <CreateCommunity onClose={closeCreateCommunity}/>}
                            </li>
                         </ul>
                      </div>
