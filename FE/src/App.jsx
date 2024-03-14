@@ -62,7 +62,7 @@ function MainRoute() {
     }
   } else {
     if (!unProtectedRoutes.includes(path)) {
-      
+
     }
   }
   if ((error != null) && error.response != null && error.response.status == 401) {
@@ -77,9 +77,11 @@ function MainRoute() {
   return (
     <div className='w-full h-[calc(100%-72px)]'>
       {/* <NavBar /> */}
-      <div className="flex  mt-[40px] h-full mx-auto">
-        <Outlet />
-        <Sidebar />
+      <div className="flex gap-5 mt-[40px] h-full mx-auto">
+        <Sidebar className="fixed" />
+        <div className='ml-[22rem]'>
+          <Outlet />
+        </div>
       </div>
     </div>
   );

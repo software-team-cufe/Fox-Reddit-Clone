@@ -20,7 +20,7 @@ const icons = [
    },
 ];
 
-function Sidebar() {
+function Sidebar({className}) {
    const [open, setOpen] = useState(true);
 
    const toggleSidebar = () => { setOpen(!open); };
@@ -45,7 +45,8 @@ function Sidebar() {
 
       <>
 
-         <aside id="sidebar-multi-level-sidebar" className={`${open ? 'w-80' : 'w-[0rem]'} bg-white fixed top-4 h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`} aria-label="Sidebar">
+         <aside id="sidebar-multi-level-sidebar" 
+         className={`${className} ${open ? 'w-80' : 'w-[0rem]'} bg-white  h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`} aria-label="Sidebar">
             <div className={`h-full px-3 py-15 overflow-y-auto ${!open && 'invisible'}`}>
                <ul className="space-y-2 font-light">
                   {
