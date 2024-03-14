@@ -79,7 +79,6 @@ function MainRoute() {
       <Sidebar />
       <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
         <Outlet />
-        <Sidebar />
       </div>
     </div>
   );

@@ -65,41 +65,7 @@ function Sidebar() {
                         </Link>
                      </li>
                      )
-                  }
-
-
-
-                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
-
-                  <li>
-                     <a
-                        href="/"
-                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-50 dark:hover:bg-gray-100 group"
-                     >
-                        <Home className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
-                        <span className="ms-3 text-gray-800">HOME</span>
-                     </a>
-                  </li>
-                  
-                  <li>
-                     <a href="/popular" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-50 dark:hover:bg-gray-100 group">
-                     <Flame className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
-                        <span className="ms-2 text-gray-800">
-                           Popular
-                        </span>
-                        </a>
-                  </li>
-                  
-                  <li>
-                     <a
-                        href="/all"
-                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-50 dark:hover:bg-gray-100 group"
-                     >
-                        <Globe className="fa-solid fa-globe w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
-                        <span className="ms-3 text-gray-800">ALL</span>
-                     </a>
-                  </li>
-                  
+                  }                  
                   <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
                   
                   <li>
