@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/navbar.dart';
-import 'package:reddit_fox/Pages/SearchInHomePage.dart';
+import 'package:reddit_fox/Pages/searchinhomepage.dart';
 import 'package:reddit_fox/Pages/Home/Drawer.dart';
 import 'package:reddit_fox/Pages/Home/endDrawer.dart';
 
