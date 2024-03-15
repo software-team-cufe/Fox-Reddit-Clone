@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/Pages/Home/HomePage.dart';
+import 'package:reddit_fox/Pages/create.dart';
 
 class nBar extends StatefulWidget {
   const nBar({super.key});
@@ -37,7 +38,8 @@ class _nBarState extends State<nBar> {
           ),
           TextButton(
             onPressed: () {
-              print('s');
+              Navigator.push(context, 
+              MaterialPageRoute(builder: (context) => const CreatePost()));
             },
             child:const Icon(Icons.add, size: 30.0, color: Colors.white,),
           ),
