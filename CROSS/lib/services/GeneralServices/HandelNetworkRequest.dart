@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:reddit_fox/Helper/Helper.dart';
 import 'package:reddit_fox/Models/ResponseResult.dart';
 

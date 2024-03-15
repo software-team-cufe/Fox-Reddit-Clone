@@ -5,7 +5,7 @@ import 'package:reddit_fox/Pages/Home/Drawer.dart';
 import 'package:reddit_fox/Pages/Home/endDrawer.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
