@@ -9,6 +9,7 @@ import 'package:reddit_fox/Shared/AppColors.dart';
 import 'package:reddit_fox/Shared/Fonts/FontModel.dart';
 import 'package:reddit_fox/features/auth/screens/EmailVerification/EmailVerificationPage/View/EmailVerificationPage.dart';
 import 'package:reddit_fox/features/auth/screens/StartingPage/View/StartingPage.dart';
+import 'package:reddit_fox/main.dart';
 
 
 
@@ -16,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configs();
 
-  runApp(const HomePage());
+  runApp(const MyApp());
 }
 
 class HomePage extends StatelessWidget {
