@@ -5,8 +5,8 @@ import 'package:reddit_fox/core/constants/constants.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 
-class SignInButton extends ConsumerWidget {
-  const SignInButton({super.key});
+class SignInWithGoogleButton extends ConsumerWidget {
+  const SignInWithGoogleButton({super.key});
 
 void signInWithGoogle(WidgetRef ref) {
   //AuthController 
@@ -38,3 +38,4 @@ void signInWithGoogle(WidgetRef ref) {
     );
   }
 }
+

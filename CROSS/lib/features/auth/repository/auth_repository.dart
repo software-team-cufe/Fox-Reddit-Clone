@@ -54,7 +54,7 @@ class AuthRepository {
         //_firestore.collection('users').doc(userCredential.user!.uid).set({
       UserModel userModel;    
       if(userCredential.additionalUserInfo!.isNewUser) {
-
+        print(userCredential.user?.email);
         userModel = UserModel(
           name: userCredential.user!.displayName??'No Name',
           profilePic: userCredential.user!.photoURL??Constants.avatarDefault, 

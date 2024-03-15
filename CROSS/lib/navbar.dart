@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/Pages/Home/HomePage.dart';
@@ -13,7 +15,7 @@ class _nBarState extends State<nBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 10.0),
+      padding: const EdgeInsets.only(bottom: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -21,23 +23,23 @@ class _nBarState extends State<nBar> {
           TextButton(
             onPressed: () {
               Navigator.push(context, 
-              MaterialPageRoute(builder: (context) => HomePage()));
+              MaterialPageRoute(builder: (context) => const HomePage()));
             },
-            child:Icon(Icons.home, size: 30.0, color: Colors.white,),
+            child:const Icon(Icons.home, size: 30.0, color: Colors.white,),
           ),
           
           TextButton(
             onPressed: () {
               print('s');
             },
-            child: Icon(Icons.people_outline_rounded, size: 30.0,
+            child: const Icon(Icons.people_outline_rounded, size: 30.0,
             color: Colors.white,),
           ),
           TextButton(
             onPressed: () {
               print('s');
             },
-            child:Icon(Icons.add, size: 30.0, color: Colors.white,),
+            child:const Icon(Icons.add, size: 30.0, color: Colors.white,),
           ),
           TextButton(
             onPressed: () {

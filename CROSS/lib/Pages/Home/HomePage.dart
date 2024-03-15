@@ -1,93 +1,59 @@
-import 'package:flutter/material.dart';
-import 'package:reddit_fox/navbar.dart';
-import 'package:reddit_fox/Pages/searchinhomepage.dart';
-import 'package:reddit_fox/Pages/Home/Drawer.dart';
-import 'package:reddit_fox/Pages/Home/endDrawer.dart';
+// ignore_for_file: unused_import
 
-class HomePage extends StatefulWidget {
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+import 'package:reddit_fox/Configs.dart';
+import 'package:reddit_fox/Pages/Home/HomePage.dart';
+import 'package:reddit_fox/Shared/AppColors.dart';
+import 'package:reddit_fox/Shared/Fonts/FontModel.dart';
+import 'package:reddit_fox/features/auth/screens/EmailVerification/EmailVerificationPage/View/EmailVerificationPage.dart';
+import 'package:reddit_fox/features/auth/screens/StartingPage/View/StartingPage.dart';
+
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configs();
+
+  runApp(const HomePage());
+}
+
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  String _selectedItem = "Home"; // Default selected item
-
-  void desplayEndDrawer(BuildContext context) {
-    Scaffold.of(context).openEndDrawer();
-  }
-  void desplayDrawer(BuildContext context) {
-    Scaffold.of(context).openDrawer();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    double drawerWidth = MediaQuery.of(context).size.width * 0.8;
-    double userWidth = MediaQuery.of(context).size.width * 0.6;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
-        leading: Builder(builder: (context){
-          return IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: (){
-              desplayDrawer(context);
-            },
-          );
-        }
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Search()),
-              );
-            },
-            icon: Icon(Icons.search),
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      themeMode: AppColors.mode,
+      darkTheme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: AppColors.instance.background,
+        appBarTheme: AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: FontFamily.bold,
+            fontSize: 17,
+            color: AppColors.instance.text,
           ),
-          Builder(
-            builder: (context) {
-              return IconButton( // Avatar IconButton
-                icon: CircleAvatar(),
-                onPressed: () => desplayEndDrawer(context), // No action on press
-              );
-            }
-          ),
-        ],
-        title: PopupMenuButton<String>(
-          icon: Text(_selectedItem),
-          initialValue: _selectedItem,
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              child: Text("Home"),
-              value: "Home",
-            ),
-            PopupMenuItem(
-              child: Text("Category 1"),
-              value: "Category 1",
-            ),
-            PopupMenuItem(
-              child: Text("Category 2"),
-              value: "Category 2",
-            ),
-            // Add more items as needed
-          ],
-          onSelected: (value) {
-            setState(() {
-              _selectedItem = value;
-            });
-          },
+          backgroundColor: AppColors.instance.background,
+          foregroundColor: AppColors.instance.text,
+          elevation: 0,
         ),
       ),
-      drawer: CustomDrawer(drawer_Width: drawerWidth,),
-      endDrawer: endDrawer(user_width: userWidth),
-      bottomNavigationBar: nBar(),
-      endDrawerEnableOpenDragGesture: true, 
-      drawerEnableOpenDragGesture: true,
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: AppColors.instance.background,
+        appBarTheme: AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: FontFamily.bold,
+            fontSize: 17,
+            color: AppColors.instance.text,
+          ),
+          foregroundColor: AppColors.instance.text,
+          backgroundColor: AppColors.instance.background,
+          elevation: 0,
+        ),
+      ),
+      home: const LandingPage(),
     );
   }
 }

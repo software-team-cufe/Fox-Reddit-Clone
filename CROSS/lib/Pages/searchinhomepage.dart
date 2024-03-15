@@ -9,7 +9,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void dispose() {
@@ -28,8 +28,8 @@ class _SearchState extends State<Search> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
-          padding: EdgeInsets.only(top: 20.0),
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          padding: const EdgeInsets.only(top: 20.0),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.push(
                 context,
@@ -38,7 +38,7 @@ class _SearchState extends State<Search> {
           },
         ),
         title: Container(
-          padding: EdgeInsets.only(top: 20.0, right: 20.0),
+          padding: const EdgeInsets.only(top: 20.0, right: 20.0),
           child: Center(
             child: TextField(
               controller: _searchController,
@@ -46,18 +46,18 @@ class _SearchState extends State<Search> {
               decoration: InputDecoration(
                 hintText: 'Search Reddit',
                 filled: true,
-                fillColor: Color.fromARGB(255, 50, 50, 50),
+                fillColor: const Color.fromARGB(255, 50, 50, 50),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5.0),
                   borderSide: BorderSide.none,
                 ),
-                prefixIcon: Icon(Icons.search, color: Colors.white),
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.clear, color: Colors.white),
+                  icon: const Icon(Icons.clear, color: Colors.white),
                   onPressed: _clearSearch,
                 ),
               ),
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
               onChanged: (value) {
                 // Handle text field changes
               },

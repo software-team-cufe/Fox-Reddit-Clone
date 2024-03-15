@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Home/HomePage.dart';
-import 'package:reddit_fox/core/common/sign_in_button.dart';
+import 'package:reddit_fox/core/common/sign_in_With_Google_button.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
 
 
@@ -48,7 +48,7 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const SignInButton()
+          const SignInWithGoogleButton()
       ],
       ),
     );

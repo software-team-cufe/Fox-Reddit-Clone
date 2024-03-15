@@ -4,6 +4,8 @@ import 'package:reddit_fox/GeneralWidgets/AppText.dart';
 import 'package:reddit_fox/GeneralWidgets/CustomButton.dart';
 
 import 'package:gap/gap.dart';
+import 'package:reddit_fox/Shared/SharedTextStyles.dart';
+import 'package:reddit_fox/core/common/sign_in_With_Google_button.dart';
 import '../../LoginPage/View/LoginPage.dart';
 import '../../SignupPage/View/SignupPage.dart';
 
@@ -20,7 +22,7 @@ class LandingPage extends StatelessWidget {
             children: [
               AppText(
                 "Welcome back",
-                // style: FontStyles.bigTitle,
+                style: FontStyles.bigTitle,
                 textAlign: TextAlign.center,
               ),
               const Gap(20),
@@ -35,6 +37,12 @@ class LandingPage extends StatelessWidget {
                 text: "Create new account",
                 onTap: () {
                   Get.to(() => const SignupPage());
+                },
+              ),
+              CustomButton(
+                text: "Sign in with Google",                
+                onTap: () {
+                  Get.to(() => const SignInWithGoogleButton());
                 },
               ),
             ],
