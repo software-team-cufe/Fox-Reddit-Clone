@@ -20,7 +20,7 @@ export default function CreateCommunity({ onClose = () => { }}) {
         const value = event.target.value;
         setInputValue(value);
 
-        if (value == "") {
+        if (value.length < 3 || value.length > 21) {
             setIsValid(false);
         } else {
             setIsValid(true);
@@ -34,12 +34,11 @@ export default function CreateCommunity({ onClose = () => { }}) {
     const submitRequest = () => {
         if(commType == ''){
             toast.error('Please select a community type');
-            return;
         }
         else{
             toast.success('Community created successfully');
+            handleClose();
         }
-
     }
 
     return (
@@ -67,7 +66,7 @@ export default function CreateCommunity({ onClose = () => { }}) {
 
                                     <ul role="typeOptions" className="grid w-full gap-6 md:grid-rows-2">
                                         <li>
-                                            <input role="optionPublic" type="radio" id="comm-public" name="comm" value="comm-public" className="hidden peer" onChange={handleRadioChange} required />
+                                            <input role="optionPublic" type="radio" id="comm-public" name="comm" value="comm-public" className="hidden peer" onClick={handleRadioChange} required />
                                             <label htmlFor="comm-public" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Globe className="w-6 h-6 mr-6" />
                                                 <div className="block">
@@ -77,7 +76,7 @@ export default function CreateCommunity({ onClose = () => { }}) {
                                             </label>
                                         </li>
                                         <li>
-                                        <input role="optionRestricted" type="radio" id="comm-restricted" name="comm" value="comm-restricted" className="hidden peer" onChange={handleRadioChange}/>
+                                        <input role="optionRestricted" type="radio" id="comm-restricted" name="comm" value="comm-restricted" className="hidden peer" onClick={handleRadioChange}/>
                                             <label htmlFor="comm-restricted" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Eye className="w-6 h-6 mr-6" />
                                                 <div className="block">
@@ -87,7 +86,7 @@ export default function CreateCommunity({ onClose = () => { }}) {
                                             </label>
                                         </li>
                                         <li>
-                                        <input role="optionPrivate" type="radio" id="comm-private" name="comm" value="comm-private" className="hidden peer" onChange={handleRadioChange}/>
+                                        <input role="optionPrivate" type="radio" id="comm-private" name="comm" value="comm-private" className="hidden peer" onClick={handleRadioChange}/>
                                             <label htmlFor="comm-private" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Lock className="w-6 h-6 mr-6" />
                                                 <div className="block">
@@ -99,8 +98,8 @@ export default function CreateCommunity({ onClose = () => { }}) {
                                     </ul>
                                     <hr className='m-4 text-gray-500'/>
                                     <div className='flex justify-end'>
-                                        <button onClick={handleClose} className="bg-gray-100 py-2 h-12 px-4 rounded-full text-sm font-semibold text-gray-500 hover:bg-gray-200 active:bg-gray-300">Cancel</button>
-                                        <button onClick={submitRequest} disabled={!isValid}className="bg-slate-300 h-12 py-2 px-4 rounded-full text-sm font-semibold text-white ml-4 hover:bg-slate-400 enabled:hover:bg-blue-900 enabled:bg-blue-800">Create r/{inputValue}</button>
+                                        <button role="cancelButton" onClick={handleClose} className="bg-gray-100 py-2 h-12 px-4 rounded-full text-sm font-semibold text-gray-500 hover:bg-gray-200 active:bg-gray-300">Cancel</button>
+                                        <button role="submitButton" onClick={submitRequest} disabled={!isValid} className="bg-slate-300 h-12 py-2 px-4 rounded-full text-sm font-semibold text-white ml-4 hover:bg-slate-400 enabled:hover:bg-blue-900 enabled:bg-blue-800">Create r/{inputValue}</button>
                                     </div>
                                 </div>
                             </div>

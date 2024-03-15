@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom';
-
 import CreateCommunity from "./CreateCommunity";
 
 describe("initial state", () => {
@@ -35,20 +34,85 @@ test ("renders type list correctly", () => {
 test("renders exit button correctly", () => {
     render(<CreateCommunity />);
     const linkElement = screen.getByRole("exitButton");
-    const form = screen.getByRole("createForm");
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).toBeEnabled();
-    fireEvent.click(linkElement);
-    expect(form).not.toBeInTheDocument();
-});
 });
 
-test("word counter validation works", () => {
+test("renders cancel button correctly", () => {
     render(<CreateCommunity />);
-    const linkElement = screen.getByRole("nameInput");
+    const linkElement = screen.getByRole("cancelButton");
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).toBeEnabled();
+});
+
+test("renders submit button correctly", () => {
+    render(<CreateCommunity />);
+    const linkElement = screen.getByRole("submitButton");
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).toBeDisabled();
+});
+
+});
+
+describe("button functionality", () => {
+
+test("exit button works", () => {
+    const mockOnClose = jest.fn();
+
+    render(<CreateCommunity onClose={mockOnClose} />);
+    const exitButton = screen.getByRole("exitButton");
+
+    expect(exitButton).toBeInTheDocument();
+    fireEvent.click(exitButton);
+    expect(mockOnClose).toHaveBeenCalled();
+});
+
+test("cancel button works", () => {
+    const mockOnClose = jest.fn();
+
+    render(<CreateCommunity onClose={mockOnClose} />);
+    const exitButton = screen.getByRole("cancelButton");
+
+    expect(exitButton).toBeInTheDocument();
+    fireEvent.click(exitButton);
+    expect(mockOnClose).toHaveBeenCalled();
+});
+
+test("submit button works", () => {
+    const mockOnClose = jest.fn();
+    render(<CreateCommunity onClose={mockOnClose}/>);
+
+    const linkElement = screen.getByRole("submitButton");
+    const initalform = screen.getByRole("createForm");
+    const nameInput = screen.getByRole("nameInput");
+
+    fireEvent.change(nameInput, { target: { value: "no" } });
+    expect(linkElement).toBeDisabled();
+
+    fireEvent.change(nameInput, { target: { value: "yes" } });
+    expect(linkElement).toBeEnabled();
+
+
+    fireEvent.change(nameInput, { target: { value: "somename" } });
+    fireEvent.click(linkElement);
+    expect(mockOnClose).not.toHaveBeenCalled();
+});
+
+});
+
+describe("input functionality", () => {
+
+test("name and word counter input work", () => {
+    render(<CreateCommunity />);
+    const nameInput = screen.getByRole("nameInput");
     const wordCounter = screen.getByRole("wordCounter");
-    fireEvent.change(linkElement, { target: { value: "a" } });
-    expect(linkElement).toHaveStyle("border-color: red-700");
-    fireEvent.change(linkElement, { target: { value: "lolol" } });
-    expect(linkElement).toHaveStyle("border-color: green-400");
+
+    fireEvent.change(nameInput, { target: { value: "no" } });
+    expect(nameInput).toHaveValue("no");
+    expect(wordCounter).toHaveTextContent("2");
+
+    fireEvent.change(nameInput, { target: { value: "yes" } });
+    expect(nameInput).toHaveValue("yes");
+    expect(wordCounter).toHaveTextContent("3");
+});
 });
