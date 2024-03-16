@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/Pages/Home/HomePage.dart';
-import 'package:reddit_fox/core/common/sign_in_With_Google_button.dart';
+import 'package:reddit_fox/core/common/sign_in_with_google_button.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
 
 
@@ -18,10 +17,7 @@ class LoginScreen extends StatelessWidget {
             height: 40,
             ),
           actions: [
-            TextButton(onPressed: () {
-              Navigator.push(context, 
-              MaterialPageRoute(builder: (context) => const HomePage()));
-            }, 
+            TextButton(onPressed: () {}, 
             child: const Text('Skip', 
             style: TextStyle(
               fontWeight : FontWeight.bold,),
@@ -47,8 +43,9 @@ class LoginScreen extends StatelessWidget {
               height: 400,
             ),
           ),
+          
           const SizedBox(height: 20),
-          const SignInWithGoogleButton()
+          const SignInButton()
       ],
       ),
     );

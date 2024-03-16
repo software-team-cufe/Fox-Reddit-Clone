@@ -53,9 +53,6 @@ dependencies:
   cached_network_image: ^3.3.1
   # flutter_local_notifications: ^8.2.0
   shared_preferences: ^2.2.2
-  image_picker: ^0.8.0+6
-  video_player: ^2.2.13
-  chewie: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +82,7 @@ flutter:
     - assets/images/loginEmote.png
     - assets/images/logo.png
     - assets/Icons/Chat.svg
+    - assets/images/Logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,32 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:reddit_fox/GeneralWidgets/AppText.dart';
-import 'package:reddit_fox/GeneralWidgets/CustomButton.dart';
-
 import 'package:gap/gap.dart';
-import 'package:reddit_fox/Shared/SharedTextStyles.dart';
-import 'package:reddit_fox/core/common/sign_in_With_Google_button.dart';
-import '../../LoginPage/View/LoginPage.dart';
-import '../../SignupPage/View/SignupPage.dart';
+import 'package:get/get.dart';
+import 'package:reddit_fox/GeneralWidgets/CustomButton.dart';
+import 'package:reddit_fox/core/common/sign_in_with_google_button.dart';
+import 'package:reddit_fox/core/constants/constants.dart';
+import 'package:reddit_fox/features/auth/screens/LoginPage/View/LoginPage.dart';
+import 'package:reddit_fox/features/auth/screens/SignupPage/View/SignupPage.dart';
+
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 35),
-          child: Column(
-            children: [
-              AppText(
-                "Welcome back",
-                style: FontStyles.bigTitle,
-                textAlign: TextAlign.center,
-              ),
-              const Gap(20),
-              CustomButton(
+      appBar: AppBar(
+        centerTitle: true,
+          title: Image.asset(
+            Constants.logoPath,
+            height: 40,
+            ),
+          actions: [
+            TextButton(onPressed: () {}, 
+            child: const Text('Skip', 
+            style: TextStyle(
+              fontWeight : FontWeight.bold,),
+              )
+              )
+              ],  
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height:30),
+          const Text('dive into anything'
+          ,style: TextStyle(
+            fontSize: 24, 
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+          )
+          ),
+          const SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Image.asset(
+              Constants.loginPath,
+              height: 400,
+            ),
+          ),
+          CustomButton(
                 text: "Login",
                 onTap: () {
                   Get.to(() => const LoginPage());
@@ -39,16 +61,10 @@ class LandingPage extends StatelessWidget {
                   Get.to(() => const SignupPage());
                 },
               ),
-              CustomButton(
-                text: "Sign in with Google",                
-                onTap: () {
-                  Get.to(() => const SignInWithGoogleButton());
-                },
-              ),
-            ],
-          ),
-        ),
+          const SizedBox(height: 0),
+          const SignInButton()
+      ],
       ),
     );
-  }
+  }  
 }

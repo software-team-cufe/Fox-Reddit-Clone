@@ -1,12 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:reddit_fox/Helper/Helper.dart';
 import 'package:reddit_fox/Pages/Home/HomePage.dart';
-
 import '../../Services/LoginService.dart';
-
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
