@@ -1,77 +1,117 @@
 import React from "react";
-import { render, screen, fireEvent,waitFor, prettyDOM } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, prettyDOM } from "@testing-library/react";
 import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';
-import {BrowserRouter, MemoryRouter} from "react-router-dom";
-import {createMemoryHistory} from "history";
-import { Router} from "react-router";
+import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
+import { createMemoryHistory } from "history";
 
-describe('ProfilePages layout rendering', () => {
+test('avatar header renders correctly', () => {
+    render(
+        <BrowserRouter>
+            <ProfilePagesLayout />
+        </BrowserRouter>
+    );
+    const avatarHeader = screen.getByRole('avatarHeader');
+    expect(avatarHeader).toBeInTheDocument();
 
-    test('avatar header renders correctly', () => {
+    const sectionsBar = screen.getByRole('sectionsBar');
+    expect(sectionsBar).toBeInTheDocument();
+
+    const overviewButton = screen.getByRole('overviewButton');
+    expect(overviewButton).toBeInTheDocument();
+
+    const postsButton = screen.getByRole('postsButton');
+    expect(postsButton).toBeInTheDocument();
+
+    const commentsButton = screen.getByRole('commentsButton');
+    expect(commentsButton).toBeInTheDocument();
+
+    const savedButton = screen.getByRole('savedButton');
+    expect(savedButton).toBeInTheDocument();
+
+    const linkElement5 = screen.getByRole('hiddenButton');
+    expect(linkElement5).toBeInTheDocument();
+
+    const linkElement6 = screen.getByRole('upvotedButton');
+    const upvotedButton = screen.getByRole('upvotedButton');
+    expect(upvotedButton).toBeInTheDocument();
+
+    const downvotedButton = screen.getByRole('downvotedButton');
+    expect(downvotedButton).toBeInTheDocument();
+
+    const createPostButton = screen.getByRole('createPostButton');
+    expect(createPostButton).toBeInTheDocument();
+
+    const sortmenu = screen.getByRole('sortmenu');
+    expect(sortmenu).toBeInTheDocument();
+
+    const displaymenu = screen.getByRole('displaymenu');
+    expect(displaymenu).toBeInTheDocument();
+
+    const card = screen.getByRole('card');
+    expect(card).toBeInTheDocument();
+});
+
+describe('profile sections navigation correctly', () => {
+
+    test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <BrowserRouter>
-                <ProfilePagesLayout />
-            </BrowserRouter>
+            <MemoryRouter initialEntries={['/user']}>
+                <Routes>
+                    <Route path="/user/*" element={<ProfilePagesLayout />} />
+                </Routes>
+            </MemoryRouter>
         );
-        const linkElement = screen.getByRole('avatarHeader');
-        expect(linkElement).toBeInTheDocument();
+
+        const overviewButton = await screen.findByRole('overviewButton');
+        fireEvent.click(overviewButton);
+
+        await waitFor(() => {
+            expect(screen.getByRole('overviewtab')).toBeInTheDocument();
+        });
+
+        const postsButton = await screen.findByRole('postsButton');
+        fireEvent.click(postsButton);
+
+        await waitFor(() => {
+            expect(screen.getByRole('poststab')).toBeInTheDocument();
+        });
+
+        const commentsButton = await screen.findByRole('commentsButton');
+        fireEvent.click(commentsButton);
+
+        await waitFor(() => {
+            expect(screen.getByRole('commentstab')).toBeInTheDocument();
+        });
+
+        const savedButton = await screen.findByRole('savedButton');
+        fireEvent.click(savedButton);
+
+        await waitFor(() => {
+            expect(screen.getByRole('savedtab')).toBeInTheDocument();
+        });
+
+        const hiddenButton = await screen.findByRole('hiddenButton');
+        fireEvent.click(hiddenButton);
+
+        await waitFor(() => {
+            expect(screen.getByRole('hiddentab')).toBeInTheDocument();
+        });
+
+        const upvotedButton = await screen.findByRole('upvotedButton');
+        fireEvent.click(upvotedButton);
+
+        await waitFor(() => {
+            expect(screen.getByRole('upvotedtab')).toBeInTheDocument();
+        });
+
+        const downvotedButton = await screen.findByRole('downvotedButton');
+        fireEvent.click(downvotedButton);
+
+        await waitFor(() => {
+            expect(screen.getByRole('downvotedtab')).toBeInTheDocument();
+        });
     });
 
-    test('sort menu renders correctly', () => {
-        render(
-            <BrowserRouter>
-                <ProfilePagesLayout />
-            </BrowserRouter>
-        );
-        const linkElement = screen.getByRole('sectionsBar');
-        expect(linkElement).toBeInTheDocument();
-    });
 
-    test('sort menu buttons render correctly', () => {
-        render(
-            <BrowserRouter>
-                <ProfilePagesLayout />
-            </BrowserRouter>
-        );
-        const linkElement = screen.getByRole('overviewButton');
-        expect(linkElement).toBeInTheDocument();
-
-        const linkElement2 = screen.getByRole('postsButton');
-        expect(linkElement2).toBeInTheDocument();
-
-        const linkElement3 = screen.getByRole('commentsButton');
-        expect(linkElement3).toBeInTheDocument();
-
-        const linkElement4 = screen.getByRole('savedButton');
-        expect(linkElement4).toBeInTheDocument();
-
-        const linkElement5 = screen.getByRole('hiddenButton');
-        expect(linkElement5).toBeInTheDocument();
-
-        const linkElement6 = screen.getByRole('upvotedButton');
-        expect(linkElement6).toBeInTheDocument();
-
-        const linkElement7 = screen.getByRole('downvotedButton');
-        expect(linkElement7).toBeInTheDocument();
-    });
-
-    test('sort menu buttons and card render correctly', () => {
-        render(
-            <BrowserRouter>
-                <ProfilePagesLayout />
-            </BrowserRouter>
-        );
-        const linkElement = screen.getByRole('createPostButton');
-        expect(linkElement).toBeInTheDocument();
-
-        const linkElement2 = screen.getByRole('sortmenu');
-        expect(linkElement2).toBeInTheDocument();
-
-        const linkElement3 = screen.getByRole('displaymenu');
-        expect(linkElement3).toBeInTheDocument();
-
-        const linkElement4 = screen.getByRole('card');
-        expect(linkElement4).toBeInTheDocument();
-    });
 });

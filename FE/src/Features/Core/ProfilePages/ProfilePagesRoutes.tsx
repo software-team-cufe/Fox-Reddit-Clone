@@ -71,8 +71,8 @@ function Layout() {
       <ul role ="sectionsBar" className='flex gap-3 overflow-x-auto mb-3'>
         {
           buttons.map((btn, index) => <li key={index}>
-            <Link to={`/user/${btn.path}`}>
-              <button role={`${btn.text}Button`} className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/user/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
+            <Link role={`${btn.text}Button`} to={`/user/${btn.path}`}>
+              <button  className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/user/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
             </Link>
           </li>)
         }
@@ -110,7 +110,7 @@ export default function ProfilePagesLayout() {
     
     // nested routing for the profile pages renders layout then feed according to route
     <Routes>
-      <Route element={<Layout />} >
+        <Route element={<Layout />} >
         <Route key={'/user'} path="/" element={<></>} />
         <Route key={'/hidden'} path="/hidden" element={<ProfileHidden />} />
         <Route key={'/saved'} path="/saved" element={<ProfileSaved />} />
