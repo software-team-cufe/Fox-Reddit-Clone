@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { X, Globe, Lock, Eye } from 'lucide-react';
 import { toast } from 'react-toastify';
 import React from 'react';
-import communityCreate from '/communityCreate.png';
 
 export default function CreateCommunity({ onClose = () => { } }) {
 
@@ -55,7 +54,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
 
                                     {/* Create a community heading */}
                                     <div className='flex gap-2'>
-                                        <img src={communityCreate} className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10" />
+                                        <img src={`/communityCreate.png`} className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10" />
                                         <h3 className="mt-2 text-2xl font-semibold leading-6 text-gray-900" id="modal-title">Create a community</h3>
                                     </div>
                                     {/* exit button top right */}

@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDown } from 'lucide-react'
+import React from 'react';
 
 //for mapping the sorting button options
 const sortings = [

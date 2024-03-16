@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDown,Rows2,Rows3 } from 'lucide-react'
+import React from 'react';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
