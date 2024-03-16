@@ -1,12 +1,12 @@
-import {Camera,Shirt,Shield,Plus} from 'lucide-react';
+import {Camera,Shirt,Shield,Plus,Share2} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
 export default function Card (){
     return(
-        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[360px] h-[700px] mr-5 rounded-2xl collapse md:visible">
+        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[360px] min-h-fit h-fit mr-5 rounded-2xl collapse md:visible pb-3">
         
-        <div className='w-[100%] h-[18%] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
+        <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
         <button className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
                 <Camera className='h-5 w-5'/>
         </button>
@@ -18,11 +18,12 @@ export default function Card (){
         <button
               className="flex items-center py-1 px-4  m-2 text-xs font-medium text-gray-500 focus:outline-none
                bg-gray-200 rounded-xl border border-gray-200 hover:bg-gray-300"> 
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 me-1">
-               <path d="M13 4.5a2.5 2.5 0 1 1 .702 1.737L6.97 9.604a2.518 2.518 0 0 1 0 .792l6.733 3.367a2.5 2.5 0 1 1-.671 1.341l-6.733-3.367a2.5 2.5 0 1 1 0-3.475l6.733-3.366A2.52 2.52 0 0 1 13 4.5Z" />
-              </svg>
+                <Share2 className='h-5 w-5 mr-2'/>
               <span>share</span>
         </button>
+        <p className='p-2 text-xs text-gray-500'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis nulla qui tenetur numquam explicabo quae recusandae rem, voluptatum, voluptatem tempora minus tempore vero esse nesciunt ut ipsam alias ad reiciendis.</p>
+
+        <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700"/>
 
         <div className='space-y-7 mt-6 '> 
            <div className='flex flex-row space-x-24 ml-5 '>
