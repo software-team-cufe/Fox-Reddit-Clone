@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Globe,Lock,Eye } from 'lucide-react';
 import {toast} from 'react-toastify';
 import React from 'react';
+import communityCreate from '/communityCreate.png';
 
 export default function CreateCommunity({ onClose = () => { }}) {
 
@@ -51,7 +52,7 @@ export default function CreateCommunity({ onClose = () => { }}) {
                             <div role="createForm" className="relative transform overflow-hidden rounded-xl w-80 h-[600px] bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                     <div className='flex gap-2'>
-                                        <img src={'communityCreate.png'} className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10" />
+                                        <img src={communityCreate} className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10" />
                                         <h3 className="mt-2 text-2xl font-semibold leading-6 text-gray-900" id="modal-title">Create a community</h3>
                                     </div>
                                     <X role="exitButton" onClick={handleClose} className="p-2 absolute top-4 right-5 h-8 w-8 bg-gray-200 hover:bg-slate-300 rounded-full cursor-pointer text-gray-500 active:bg-gray-500" />
