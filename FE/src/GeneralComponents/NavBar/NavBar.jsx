@@ -3,13 +3,16 @@ import { userStore } from "@/hooks/UserRedux/UserStore";
 import Button from "@/GeneralElements/Button/Button";
 import { Link } from "react-router-dom";
 import ProfileIcon from "./Components/ProfileIcon";
-import { useState } from "react";
+import { useState, createContext } from "react";
 import Tooltip from "@/GeneralElements/Tooltip/Tooltip";
 import { MessageCircleMore, BadgePlus, QrCode } from "lucide-react";
-import { Settings, UserRound, Bell, LogOut } from "lucide-react";
+import { Settings, UserRound, Bell, LogOut, AlignJustify } from "lucide-react";
 import "./ButtonStyling.css";
+import SharedContext from "./SharedContext";
+export const Mo = createContext();
+import Sidebar from "../SideBar/sidebar";
 
-export default function NavBar({}) {
+export default function NavBar({ }) {
   const [showModal, setShowModal] = useState(false);
   const [IsOpenMenue, setIsOpenMenue] = useState(false);
   const [IshoverAd, setIshoverAd] = useState(false);
@@ -17,7 +20,9 @@ export default function NavBar({}) {
   const [IshoverCreate, setIshoverCreate] = useState(false);
   const [IshoverBell, setIshoverBell] = useState(false);
   const [IshoverProf, setIshoverProf] = useState(false);
+  const [IshoverSide, setIshoverSide] = useState(false);
   const IsLoggedIn = false;
+
   //handle to use tooltip
   const handleMouseEnterAd = () => {
     setIshoverAd(true);
@@ -50,12 +55,43 @@ export default function NavBar({}) {
   const handleMouseLeaveProf = () => {
     setIshoverProf(false);
   };
+  const handleMouseEnterSide = () => {
+    setIshoverSide(true);
+  };
+  const handleMouseLeaveSide = () => {
+    setIshoverSide(false);
+  };
+  const handleOpenMenu = () => {
+    IsOpenMenue ? setIsOpenMenue(true) : setIsOpenMenue(false);
+  };
+  const SharedContext = createContext(IsOpenMenue);
+
   return (
     <div className="px-[1.5rem] pt-[1rem] w-100vl ">
+      {/* Send Open Menu to sidebar */}
+      <Mo.Provider value={"hhhhhhhhhhhhhhh"}>
+        <Sidebar></Sidebar>
+      </Mo.Provider>
+      <SharedContext.Provider value={IsOpenMenue}>
+
+      </SharedContext.Provider>
       <nav className=" ">
         <div className="flex-row  justify-between items-center  h-10 mx-4">
           {/* userStore.getState().user.user == null ? */}
           <div className="flex items-center gap-4">
+            <button
+              className="bg-white hover:bg-orange-100  block lg:hidden w-8  h-10 my-2   rounded-full   "
+              onMouseEnter={handleMouseEnterSide}
+              onMouseLeave={handleMouseLeaveSide}
+              onClick={handleOpenMenu}
+            >
+              <AlignJustify color=" #e94c00" size={24} />
+
+              <Tooltip
+                title={"Open navigation "}
+                status={IshoverSide}
+              ></Tooltip>
+            </button>
             <Logo className=" text-2xl" />
             <input
               type="text"
@@ -179,7 +215,9 @@ export default function NavBar({}) {
           </div>
           <div className="bg-gray-200 h-px mx-4"></div>
         </div>
+
       </nav>
+
     </div>
   );
 }
