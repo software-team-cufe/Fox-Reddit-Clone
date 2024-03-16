@@ -70,7 +70,7 @@ export default function NavBar({ }) {
     <div className="px-[1.5rem] pt-[1rem] w-100vl ">
       {/* Send Open Menu to sidebar */}
       <Mo.Provider value={"hhhhhhhhhhhhhhh"}>
-        <Sidebar></Sidebar>
+
       </Mo.Provider>
       <SharedContext.Provider value={IsOpenMenue}>
 
