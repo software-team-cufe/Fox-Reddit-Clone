@@ -44,7 +44,6 @@ const buttons = [
     path: "downvoted",
   },
 ]
-
 function Layout() {
   const path = useLocation();
   const [selected,setselected] = useState("New");
