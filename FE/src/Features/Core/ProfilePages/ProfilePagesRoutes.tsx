@@ -53,7 +53,7 @@ function Layout() {
 
   return (
     <div>
-      <div className="flex flex-row gap-10">
+      <div className="flex ml-56 flex-row gap-10">
         <div className="flex-initial">
         <div role="avatarArea" className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
