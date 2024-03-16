@@ -11,9 +11,8 @@ import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { userStore } from "@/hooks/UserRedux/UserStore";
-import React from "react";
 
 const buttons = [
   {
