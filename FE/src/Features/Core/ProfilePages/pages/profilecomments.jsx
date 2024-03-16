@@ -1,5 +1,6 @@
 
 function ProfileComments() {
+
     return (
         <div className="flex flex-col items-center">
               <img src={'/confusedSnoo.png'} className="w-16 h-24 mb-2" alt="Confused Snoo"></img>
