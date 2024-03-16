@@ -13,8 +13,7 @@ export default function CreateCommunity({ onClose = () => { }}) {
 
     const [inputValue, setInputValue] = useState('');
     const [isValid, setIsValid] = useState(false);
-    const[commType, setCommType] = useState('');
-
+    const [commType, setCommType] = useState('');
 
     const handleChange = (event) => {
         const value = event.target.value;
