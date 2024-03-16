@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 export default function Card (){
     return(
-        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[360px] h-[760px] mr-5 rounded-2xl collapse md:visible">
+        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[360px] h-[700px] mr-5 rounded-2xl collapse md:visible">
         
-        <div className='w-[100%] h-[16%] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
+        <div className='w-[100%] h-[18%] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
         <button className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
                 <Camera className='h-5 w-5'/>
         </button>
@@ -61,11 +61,6 @@ export default function Card (){
             </div>
 
         </div>
-          
-        
-       
-
-
 
         <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700"/>
        
@@ -117,14 +112,11 @@ export default function Card (){
         </div>
         
         <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700"/>
-        <h1 className="mx-3 text-xs text-gray-500 font-semibold"> LINKS </h1>  
-        <br/>
+        <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold"> LINKS </h1>  
         <Link to={'/settings/profile'} className="w-fit flex items-center py-1 pl-2 pr-3 mx-3 mb-2 text-xs font-medium text-gray-700 focus:outline-none bg-gray-200 rounded-full hover:bg-gray-300 hover:underline"> 
          <Plus className='h-5 w-5 mr-2'/>
         <span>Add Social Link</span>
         </Link>
-        <hr className="h-px m-3 mb-5 border-0 dark:bg-gray-300"/>
-
      </div>
     )
 }
