@@ -1,0 +1,22 @@
+.NavButtons {
+  color: white;
+  display: flex;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin: 0 5px;
+  width: max-content;
+}
+.NavButtons:hover {
+  background-color: #ff6600;
+}
+@media (max-width: 768px) {
+  /* Styles for screens smaller than or equal to 768px */
+  .NavButtons {
+    width: fit-content;
+  }
+}
