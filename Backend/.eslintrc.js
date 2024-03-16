@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { off } = require('process');
+import { off } from 'process';
 
 module.exports = {
   env: {
@@ -26,7 +24,10 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'prettier', 'import'],
   rules: {
-    'no-console': 'off',
+    'no-console': 'warn',
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars-experimental': 'error',
+    'no-unused-vars': 'off',
     'prettier/prettier': [
       'error',
       {
