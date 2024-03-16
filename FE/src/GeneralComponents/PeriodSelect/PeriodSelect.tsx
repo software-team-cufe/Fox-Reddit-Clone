@@ -2,6 +2,17 @@ import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Calendar,ChevronDown } from 'lucide-react'
 
+//for mapping periods options
+const periods = [
+  { name: 'All time'},
+  { name: 'Past year'},
+  { name: 'Past month'},
+  { name: 'Past week'},
+  { name: 'Past 24 hours'},
+  { name: 'Past hour'},
+]
+
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -9,7 +20,9 @@ function classNames(...classes) {
 
 export default function PeriodSelect({appearance,setperiod}) {
 
+  //const and function to render selection on top of menu and pass data to parent component
   const [current, switchup] = useState("All time")
+
   const switchperiod = (period) => {
     switch (period) {
       case "All time":
@@ -43,7 +56,9 @@ export default function PeriodSelect({appearance,setperiod}) {
     }
   }
   return (
+    //appearance depends on the selection of the sorting dropdown menu in the parent component
     <Menu as="div" className={`relative inline-block text-left ${(appearance === "Top" || appearance === "Relevance" || appearance === "Comments") ? "" : "hidden"}`}>
+      {/**Menu header with current selection*/}
       <div>
         <Menu.Button className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
             <Calendar className='w-5 h-6'/>
@@ -61,52 +76,20 @@ export default function PeriodSelect({appearance,setperiod}) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
+        {/* select by prompt */}
         <Menu.Items className="absolute right-0 z-10 mt-2 w-[160px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="py-2">
-            <Menu.displayName className='font-semibold text-sm mx-3 my-3 text-gray-700'>View</Menu.displayName>
-            <Menu.Item className="mt-2">
-              {({ active }) => (
-                <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex relative pr-4 h-12 justify-center py-3 text-sm', current == 'All time' ? 'bg-gray-200' : '')} onClick={() => switchperiod("All time")}>
-                <span className='text-sm font-bold absolute top-3 left-4'>all time</span>
-                </div>
-              )}
-            </Menu.Item>
-            <Menu.Item className="mt-2">
-              {({ active }) => (
-                <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex relative pr-4 h-12 justify-center py-3 text-sm', current == 'Past year' ? 'bg-gray-200' : '')} onClick={() => switchperiod("Past year")}>
-                  <span className='text-sm font-bold absolute top-3 left-4'>Past year</span>
-                </div>
-              )}
-            </Menu.Item>
-            <Menu.Item className="mt-2">
-              {({ active }) => (
-                <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex relative pr-4 h-12 justify-center py-3 text-sm', current == 'Past month' ? 'bg-gray-200' : '')} onClick={() => switchperiod("Past month")}>
-                  <span className='text-sm font-bold absolute top-3 left-4'>Past month</span>
-                </div>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700','flex relative pr-4 h-12 justify-center py-3 text-sm', current == 'Past week' ? 'bg-gray-200' : '')}onClick={() => switchperiod("Past week")}>
-                  <span className='text-sm font-bold absolute top-3 left-4'>Past week</span>
-                </div>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700','flex relative pr-4 h-12 justify-center py-3 text-sm', current == 'Past 24 hours' ? 'bg-gray-200' : '')}onClick={() => switchperiod("Past 24 hours")}>
-                  <span className='text-sm font-bold absolute top-3 left-4'>Past 24 Hours</span>
-                </div>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700','flex relative pr-4 h-12 justify-center py-3 text-sm', current == 'past hour' ? 'bg-gray-200' : '')}onClick={() => switchperiod("Past hour")}>
-                  <span className='text-sm font-bold absolute top-3 left-4'>Past hour</span>
-                </div>
-              )}
-            </Menu.Item>
-          </div>
+            <div className='font-semibold text-sm my-2 mx-3 text-gray-700'>View</div>
+
+          {/* mapping periods options */}
+            {periods.map((period, index) => (
+              <Menu.Item key={index}>
+                {({ active }) => (
+                  <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex pr-4 h-12 p-3 text-sm', current == period.name ? 'bg-gray-200' : '')} onClick={() => switchperiod(period.name)}>
+                    <span className='text-xs font-semibold'>{period.name}</span>
+                  </div>
+                )}
+              </Menu.Item>
+            ))}
         </Menu.Items>
       </Transition>
     </Menu>

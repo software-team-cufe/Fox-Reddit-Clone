@@ -14,6 +14,8 @@ import Card from "@/GeneralComponents/profileCard/Card.jsx";
 import { useState,useEffect } from "react";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 
+
+// for mapping the list of buttons
 const buttons = [
   {
     text: "overview",
@@ -44,14 +46,19 @@ const buttons = [
     path: "downvoted",
   },
 ]
+
+
 function Layout() {
+
   const path = useLocation();
-  const [selected,setselected] = useState("New");
-  const [period,setperiod] = useState('All time');
-  const user = userStore.getState().user.user;
+  const [selected,setselected] = useState("New");   // for the sort select component
+  const [period,setperiod] = useState('All time');  // for the period select component
+  const [display,setDisplay] = useState('Card');     // for the display style select component
+  const user = userStore.getState().user.user;    // fetching user info from redux store
 
   return (
     <div>
+      {/* main header with avatar and username */}
       <div className="flex ml-56 flex-row gap-10">
         <div className="flex-initial">
         <div role="avatarArea" className='relative flex mb-8'>
@@ -59,6 +66,8 @@ function Layout() {
         <span className='text-black font-bold text-2xl absolute top-10 left-24'>user</span>
         <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/user</span>
       </div>
+
+      {/* selection of user activity: posts,comments...etc*/}
       <ul role ="sectionsBar" className='flex gap-3 overflow-x-auto mb-3'>
         {
           buttons.map((btn, index) => <li key={index}>
@@ -68,18 +77,27 @@ function Layout() {
           </li>)
         }
       </ul>
+
+      {/* sorting lists and period select components and create post in case of overview*/}
       <div className="flex gap-1">
+        {/* create post button in case of overview */}
         <button className={`rounded-full flex gap-1 justify-center border border-gray-600 w-[140px] h-10 items-center hover:border-black ${path.pathname == '/user/overview' ? "" : "hidden"}`} >
           <Plus className="w-4 h-4"/>
           <span className='inline font-semibold text-sm'>Create a post</span>
         </button>
+
+          {/* sorting lists and period select components */}
           <Sortmenu setselected={setselected}/>
           <PeriodSelect appearance={selected}  setperiod={setperiod}/>
-          <Postdisplaymenu />
+
+          {/* display style select component */}
+          <Postdisplaymenu setDisplay={setDisplay}/>
         </div>
         <hr/>
           <Outlet />
       </div>
+
+      {/* profile user card */}
       <Card />
       </div>
     </div>
@@ -89,6 +107,8 @@ function Layout() {
 
 export default function ProfilePagesLayout() {
   return (
+    
+    // nested routing for the profile pages renders layout then feed according to route
     <Routes>
       <Route element={<Layout />} >
         <Route key={'/user'} path="/" element={<></>} />

@@ -7,6 +7,8 @@ import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
 import PeopleSearchPage from "./pages/PeopleSearchPage";
 import CommentsSearchPage from "./pages/COmmentsSearchPage";
 
+
+// search for list options for mapping
 const buttons = [
   {
     text: "Posts",
@@ -27,14 +29,20 @@ const buttons = [
 ]
 
 function Layout() {
+
+  //consts for collecting sorting by data for request
   const path = useLocation();
   const [selected,setselected] = useState('Relevance');
   const [period,setperiod] = useState('All time');
 
   return (
-    <div>
+    <div className="ml-56">
+
+        {/* search by bar header */}
         <div className="flex gap-3">
             <span className="mt-[13px] text-xs">SEARCH RESULTS</span>
+
+      {/* search by bar items */}
       <ul className='flex gap-3 overflow-x-auto mb-3'>
         {
           buttons.map((btn, index) => <li key={index}>
@@ -45,6 +53,8 @@ function Layout() {
         }
       </ul>
         </div>
+
+        {/* sorting search by bar dropdown menus for period and type */}
       <div className="flex gap-1">
         <span className="text-xs text-gray-500 mt-[12px] ml-2">sort by:</span>
       <SearchSortMenu setselected={setselected}/>
@@ -59,6 +69,7 @@ function Layout() {
 
 export default function SearchPagesLayout() {
   return (
+    //routes to whatever selection is made for search by: people.posts...etc
     <Routes>
       <Route element={<Layout />} >
         <Route key={'/search'} path="/" element={<></>} />
