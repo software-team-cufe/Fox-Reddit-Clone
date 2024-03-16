@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:reddit_fox/GeneralWidgets/CustomButton.dart';
-import 'package:reddit_fox/core/common/sign_in_With_Google_button.dart';
+import 'package:reddit_fox/core/common/sign_in_with_google_button.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
 import 'package:reddit_fox/features/auth/screens/LoginPage/View/LoginPage.dart';
 import 'package:reddit_fox/features/auth/screens/SignupPage/View/SignupPage.dart';
@@ -42,7 +42,7 @@ class LandingPage extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Image.asset(
               Constants.loginPath,
               height: 400,
@@ -61,8 +61,8 @@ class LandingPage extends StatelessWidget {
                   Get.to(() => const SignupPage());
                 },
               ),
-          //const SizedBox(height: 3),
-          const SignInWithGoogleButton()
+          const SizedBox(height: 0),
+          const SignInButton()
       ],
       ),
     );

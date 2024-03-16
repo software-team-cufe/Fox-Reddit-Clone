@@ -3,11 +3,12 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:google_sign_in/google_sign_in.dart";
 import "package:reddit_fox/Pages/user_model.dart";
+//import "package:reddit_fox/lib/Models/user_model.dart";
 import "package:reddit_fox/core/constants/constants.dart";
 import "package:reddit_fox/core/constants/firebase_constants.dart";
 import "package:reddit_fox/core/providers/firebase_providers.dart";
 
-//FirebaseFirestore.instance
+//FirebaseFirestore.instance /home/atem/Documents/GitHub/Fox-Reddit-Clone/CROSS/lib/Models/user_model.dart
 
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(
@@ -51,11 +52,13 @@ class AuthRepository {
 
         UserCredential userCredential = await _auth.signInWithCredential(credential);
         //print(userCredential.user?.email);
+        //print(userCredential.user?.email);
         //_firestore.collection('users').doc(userCredential.user!.uid).set({
       UserModel userModel;    
+      print(userCredential.user?.email);
       if(userCredential.additionalUserInfo!.isNewUser) {
-        print(userCredential.user?.email);
-        userModel = UserModel(
+        
+          userModel = UserModel(
           name: userCredential.user!.displayName??'No Name',
           profilePic: userCredential.user!.photoURL??Constants.avatarDefault, 
           banner: Constants.bannerDefault, 
