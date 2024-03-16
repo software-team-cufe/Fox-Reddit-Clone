@@ -11,9 +11,8 @@ import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { userStore } from "@/hooks/UserRedux/UserStore";
-import React from "react";
 
 const buttons = [
   {
@@ -45,7 +44,6 @@ const buttons = [
     path: "downvoted",
   },
 ]
-
 function Layout() {
   const path = useLocation();
   const [selected,setselected] = useState("New");
@@ -54,7 +52,7 @@ function Layout() {
 
   return (
     <div>
-      <div className="flex flex-row gap-10">
+      <div className="flex ml-56 flex-row gap-10">
         <div className="flex-initial">
         <div role="avatarArea" className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
