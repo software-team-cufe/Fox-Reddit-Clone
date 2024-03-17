@@ -1,17 +1,20 @@
 import { ArrowDownCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function PostComponent({ post, className }) {
+export default function PostComponent({ post, className, viewMode = false }) {
     return (
-        <div className={` p-4  w-fit hover:bg-gray-50 rounded-md ${className}`}>
-            <Link to={`/posts/${post.id}`}>
-                <div>
-                    <div className="mb-4 flex items-center gap-4">
-                        <img src={post.subReddit.image} alt="image" className="w-9 h-9 rounded-full" />
-                        <h5 className=" text-sm ">{post.subReddit.title}</h5>
+        <div className={` p-4  w-fit ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
+            <Link to={viewMode ? null : `/posts/${post.id}`}>
+                {
+                    !viewMode && <div>
+                        <div className="mb-4 flex items-center gap-4">
+                            <img src={post.subReddit.image} alt="image" className="w-9 h-9 rounded-full" />
+                            <h5 className=" text-sm ">{post.subReddit.title}</h5>
+                        </div>
                     </div>
-                </div>
-                <p>{post.title} </p>
+                }
+                <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
+                <p className=" text-gray-600 text-sm">{post.subTitle}asdasdasdasdasdasdasd </p>
                 <img
                     className=" max-w-[800px] rounded-lg my-4"
                     alt=""

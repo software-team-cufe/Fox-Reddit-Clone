@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import ProfileIcon from "./Components/ProfileIcon";
 import { useState } from "react";
 
-export default function NavBar({ }) {
+export default function NavBar({className }) {
     const [showModal, setShowModal] = useState(false);
     return (
-        <div className="px-[1.5rem] pt-[1rem]">
+        <div className={`${className} pb-2 px-[1.5rem] pt-[1rem] border-b-2`}>
             <nav className='flex items-center justify-between'>
                 <Logo className=" text-2xl" />
                 <div className="hidden w-full md:block md:w-auto" id="navbar-default">
