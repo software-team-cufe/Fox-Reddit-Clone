@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown } from "lucide-react";
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link } from "react-router-dom";
-import "./sidebar.css"
+
 
 
 const icons = [

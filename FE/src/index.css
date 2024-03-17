@@ -41,3 +41,21 @@ body,
     text-wrap: balance;
   }
 }
+
+
+::-webkit-scrollbar
+  {
+    width: 5px;
+     
+  }
+  ::-webkit-scrollbar-track
+  {
+    background-color: rgb(212, 211, 211);
+    border-radius: 5px;
+   
+  }
+  ::-webkit-scrollbar-thumb
+  {
+    background-color: rgb(189, 186, 186);
+  border-radius: 5px;
+  }
