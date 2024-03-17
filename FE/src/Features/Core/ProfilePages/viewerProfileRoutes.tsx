@@ -10,7 +10,7 @@ import ProfileHidden from "./pages/profilehidden";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
-import Card from "@/GeneralComponents/profileCard/Card.jsx";
+import ViewerCard from "@/GeneralComponents/viewercard/viewerCard.jsx";
 import { useState,useEffect } from "react";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import React from "react";
@@ -29,22 +29,6 @@ const buttons = [
     text: "comments",
     path: "comments",
   },
-  {
-    text: "saved",
-    path: "saved",
-  },
-  {
-    text: "hidden",
-    path: "hidden",
-  },
-  {
-    text: "upvoted",
-    path: "upvoted",
-  },
-  {
-    text: "downvoted",
-    path: "downvoted",
-  },
 ]
 
 
@@ -59,8 +43,8 @@ function Layout() {
   return (
     <div>
       {/* main header with avatar and username */}
-      <div className="flex ml-56 gap-10">
-        <div role="avatarHeader" className="w-fill flex-1 ">
+      <div className="flex ml-56 flex-row gap-10">
+        <div role="avatarHeader" className="flex-1 min-w-fill">
         <div className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
         <span className='text-black font-bold text-2xl absolute top-10 left-24'>user</span>
@@ -71,8 +55,8 @@ function Layout() {
       <ul role ="sectionsBar" className='flex gap-3 overflow-x-auto mb-3'>
         {
           buttons.map((btn, index) => <li key={index}>
-            <Link role={`${btn.text}Button`} to={`/user/${btn.path}`}>
-              <button  className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/user/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
+            <Link role={`${btn.text}Button`} to={`/viewer/${btn.path}`}>
+              <button  className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/viewer/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
             </Link>
           </li>)
         }
@@ -80,11 +64,6 @@ function Layout() {
 
       {/* sorting lists and period select components and create post in case of overview*/}
       <div className="flex gap-1">
-        {/* create post button in case of overview */}
-        <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-[140px] h-10 items-center hover:border-black ${path.pathname == '/user/overview' ? "" : "hidden"}`} >
-          <Plus className="w-4 h-4"/>
-          <span className='inline font-semibold text-sm'>Create a post</span>
-        </button>
 
           {/* sorting lists and period select components */}
           <div role="sortmenu"><Sortmenu setselected={setselected}/></div>
@@ -98,27 +77,23 @@ function Layout() {
       </div>
 
       {/* profile user card */}
-      <div role="card"><Card/></div>
+      <div role="card"><ViewerCard/></div>
       </div>
     </div>
   )
 }
 
 
-export default function ProfilePagesLayout() {
+export default function ViewerProfilePage() {
   return (
     
     // nested routing for the profile pages renders layout then feed according to route
     <Routes>
         <Route element={<Layout />} >
-        <Route key={'/user'} path="/" element={<></>} />
-        <Route key={'/hidden'} path="/hidden" element={<ProfileHidden />} />
-        <Route key={'/saved'} path="/saved" element={<ProfileSaved />} />
+        <Route key={'/viewer'} path="/" element={<></>} />
         <Route key={'/comments'} path="/comments" element={<ProfileComments />} />
         <Route key={'/posts'} path="posts" element={<ProfilePosts />} />
         <Route key={'/overview'} path="/overview" element={<ProfileOverview />} />
-        <Route key={'/upvoted'} path="upvoted" element={<ProfileUpvoted />} />
-        <Route key={'/downvoted'} path="downvoted" element={<ProfileDownvoted />} />
       </Route>
     </Routes>
   )
