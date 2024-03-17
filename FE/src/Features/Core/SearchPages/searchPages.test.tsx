@@ -1,10 +1,14 @@
 import React from "react";
-import { render, screen, fireEvent,waitFor, prettyDOM } from "@testing-library/react";
+import { render, screen, fireEvent,waitFor, prettyDOM,cleanup } from "@testing-library/react";
 import SearchPagesLayout from "./SearchPagesRoutes";
 import '@testing-library/jest-dom';
 import {BrowserRouter, MemoryRouter, Routes, Route} from "react-router-dom";
 import {createMemoryHistory} from "history";
 
+    afterEach(() =>{
+        cleanup();
+    });
+    
     test('all main layout components render correctly', () => {
         render(
             <BrowserRouter>
