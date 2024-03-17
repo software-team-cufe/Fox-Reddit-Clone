@@ -49,7 +49,7 @@ function Sidebar({ className }) {
    return (
 
       <aside id="sidebar-multi-level-sidebar"
-         className={`${className} ${open ? 'w-80' : 'w-[0rem]'} bg-white  h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 `} aria-label="Sidebar">
+         className={`${className} ${open ? 'w-80' : 'w-[0rem]'}  bg-white  h-full transition-width duration-300 ease-in-out bg-white-300 border-r-2 `} aria-label="Sidebar">
          <div className={`h-full px-3 py-15 overflow-y-auto ${!open && 'invisible'}`}>
             <ul className="space-y-2 font-light">
                {

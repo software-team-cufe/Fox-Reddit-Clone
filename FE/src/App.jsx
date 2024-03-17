@@ -75,7 +75,7 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
-      <NavBar className="" />
+      <NavBar  />
       <div className="flex gap-5  h-full mx-auto">
         <Sidebar className="" />
         <div className='h-full w-full overflow-y-auto p-4'>
