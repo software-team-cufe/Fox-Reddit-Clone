@@ -11,7 +11,7 @@ import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 
 const buttons = [
@@ -44,7 +44,6 @@ const buttons = [
     path: "downvoted",
   },
 ]
-
 function Layout() {
   const path = useLocation();
   const [selected,setselected] = useState("New");
@@ -53,14 +52,14 @@ function Layout() {
 
   return (
     <div>
-      <div className="flex flex-row gap-10">
-        <div  className="flex-initial">
-        <div className='relative flex mb-8'>
+      <div className="flex ml-56 flex-row gap-10">
+        <div className="flex-initial">
+        <div role="avatarArea" className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
         <span className='text-black font-bold text-2xl absolute top-10 left-24'>user</span>
         <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/user</span>
       </div>
-      <ul className='flex gap-3 overflow-x-auto mb-3'>
+      <ul role ="sectionsBar" className='flex gap-3 overflow-x-auto mb-3'>
         {
           buttons.map((btn, index) => <li key={index}>
             <Link to={`/user/${btn.path}`}>

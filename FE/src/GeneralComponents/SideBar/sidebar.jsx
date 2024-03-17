@@ -37,7 +37,6 @@ function Sidebar({ className }) {
       }
    }
 
-   const [community, setCommunity] = useState(false);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
    const openCreateCommunity = () => {
