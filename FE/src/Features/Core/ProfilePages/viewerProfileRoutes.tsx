@@ -44,7 +44,7 @@ function Layout() {
     <div>
       {/* main header with avatar and username */}
       <div className="flex ml-56 flex-row gap-10">
-        <div role="avatarHeader" className="flex-initial min-w-[70%] w-[70%]">
+        <div role="avatarHeader" className="flex-1 min-w-fill">
         <div className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
         <span className='text-black font-bold text-2xl absolute top-10 left-24'>user</span>

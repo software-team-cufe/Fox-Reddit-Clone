@@ -4,7 +4,6 @@ import React from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { Mail, Flag, CircleOff } from 'lucide-react';
-import Button from '@/GeneralElements/Button/Button';
 
 function CardOptionsMenu() {  //prop takes the display to use it outside the component
 
@@ -63,7 +62,7 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
 
 export default function ViewerCard() {
     return (
-        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[360px] min-h-fit h-fit mr-5 rounded-2xl collapse md:visible pb-3">
+        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[360px] w-[360px] min-h-fit h-fit mr-5 rounded-2xl md:block hidden pb-3">
 
             <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'></div>
 
