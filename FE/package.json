@@ -48,6 +48,7 @@
     "redux": "^5.0.1",
     "sort-by": "^1.2.0",
     "tailwind-merge": "^2.2.1",
+    "tailwind-scrollbar": "^3.1.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -72,6 +73,6 @@
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
       "@/(.*)$": "<rootDir>/src/$1"
-   }
-}
+    }
+  }
 }
