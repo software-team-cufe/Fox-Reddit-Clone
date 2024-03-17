@@ -40,7 +40,7 @@ export default function Sortmenu({setselected}) {
 
       {/* Sort button header*/}
       <div>
-        <Menu.Button className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
+        <Menu.Button role="dropDownButton" className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
           {current}
           <ChevronDown className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
         </Menu.Button>
@@ -60,7 +60,7 @@ export default function Sortmenu({setselected}) {
         <Menu.Items className="absolute right-0 mt-2 w-20 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
 
             {/* prompt of options*/}
-            <div className='font-semibold text-sm mx-3 my-3 text-gray-700'>Sort by</div>
+            <div role="menuBodyHeader" className='font-semibold text-sm mx-3 my-3 text-gray-700'>Sort by</div>
 
             {/* Sort option mapped*/}
             {sortings.map((sorting, index) => {

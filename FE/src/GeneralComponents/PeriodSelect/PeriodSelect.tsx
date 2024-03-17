@@ -61,7 +61,7 @@ export default function PeriodSelect({appearance,setperiod}) {
     <Menu as="div" className={`relative inline-block text-left ${(appearance === "Top" || appearance === "Relevance" || appearance === "Comments") ? "" : "hidden"}`}>
       {/**Menu header with current selection*/}
       <div>
-        <Menu.Button className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
+        <Menu.Button role="dropDownButton" className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
             <Calendar className='w-5 h-6'/>
           <span className='text-xs mt-1'>{current}</span>
           <ChevronDown className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -79,7 +79,7 @@ export default function PeriodSelect({appearance,setperiod}) {
       >
         {/* select by prompt */}
         <Menu.Items className="absolute right-0 z-10 mt-2 w-[160px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div className='font-semibold text-sm my-2 mx-3 text-gray-700'>View</div>
+            <div role="menuBodyHeader" className='font-semibold text-sm my-2 mx-3 text-gray-700'>View</div>
 
           {/* mapping periods options */}
             {periods.map((period, index) => (
