@@ -24,11 +24,6 @@ class DefaultFirebaseOptions {
         return android;
       case TargetPlatform.iOS:
         return ios;
-      case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -69,6 +64,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '24320835329',
     projectId: 'fox-app-e9b9f',
     storageBucket: 'fox-app-e9b9f.appspot.com',
+    androidClientId: '24320835329-k3psga6vmo2rsbbtqh0p1nluc1l491ls.apps.googleusercontent.com',
+    iosClientId: '24320835329-3nulk87ooi2bip1edpinvkt5gfcqo7cu.apps.googleusercontent.com',
     iosBundleId: 'com.example.redditFox',
   );
+
 }

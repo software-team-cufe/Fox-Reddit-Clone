@@ -1,0 +1,1 @@
+ /home/atem/Documents/GitHub/Fox-Reddit-Clone/CROSS/.dart_tool/flutter_build/83f4c002e4e10a285f4af3d7b443c673/native_assets.yaml: 

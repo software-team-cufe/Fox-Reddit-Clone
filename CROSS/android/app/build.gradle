@@ -21,6 +21,8 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
+//implementation platform('com.google.firebase:firebase-bom:28.4.1')
+//implementation 'com.google.firebase:firebase-appcheck'
 
 android {
     namespace "com.example.reddit_fox"
