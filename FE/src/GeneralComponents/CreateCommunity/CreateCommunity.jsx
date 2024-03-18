@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Globe, Lock, Eye } from 'lucide-react';
 import { toast } from 'react-toastify';
 import React from 'react';
+import axios from 'axios';
 
 export default function CreateCommunity({ onClose = () => { } }) {
 
@@ -37,8 +38,27 @@ export default function CreateCommunity({ onClose = () => { } }) {
             toast.error('Please select a community type');
         }
         else {
-            toast.success('Community created successfully');
-            handleClose();
+            axios.post('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/api/createCommunity', {
+                name: inputValue,
+                description: '',
+                Banner: null,
+                Icon: null
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    toast.success('Community created successfully');
+                    handleClose();
+                } else {
+                    toast.error('Failed to create community');
+                }
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 400) {
+                    toast.error('A community with this name already exists');
+                } else {
+                    console.error('Error:', error);
+                }
+            });
         }
     }
 
