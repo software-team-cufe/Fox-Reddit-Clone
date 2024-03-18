@@ -1,0 +1,25 @@
+com.example.reddit_fox.app-jetified-window-1.0.0-beta04-0 /home/saied/.gradle/caches/transforms-3/032f4dff274e516110d9363a9793a3e3/transformed/jetified-window-1.0.0-beta04/res
+com.example.reddit_fox.app-jetified-window-java-1.0.0-beta04-1 /home/saied/.gradle/caches/transforms-3/142c24f2530665bb6deb4123ab140714/transformed/jetified-window-java-1.0.0-beta04/res
+com.example.reddit_fox.app-core-1.6.0-2 /home/saied/.gradle/caches/transforms-3/2579a7de00054bf46a8dbc332552f622/transformed/core-1.6.0/res
+com.example.reddit_fox.app-jetified-annotation-experimental-1.1.0-3 /home/saied/.gradle/caches/transforms-3/3f96ca76068ab400b494bc7d541ee256/transformed/jetified-annotation-experimental-1.1.0/res
+com.example.reddit_fox.app-jetified-play-services-base-18.1.0-4 /home/saied/.gradle/caches/transforms-3/4b9d22533576529904e76f8ef61c175c/transformed/jetified-play-services-base-18.1.0/res
+com.example.reddit_fox.app-jetified-firebase-common-20.4.2-5 /home/saied/.gradle/caches/transforms-3/89c6fd71728d0adae7dd67686aa1cdf7/transformed/jetified-firebase-common-20.4.2/res
+com.example.reddit_fox.app-browser-1.4.0-6 /home/saied/.gradle/caches/transforms-3/9186a72439cdfe13d23082d88530cc56/transformed/browser-1.4.0/res
+com.example.reddit_fox.app-jetified-play-services-auth-20.7.0-7 /home/saied/.gradle/caches/transforms-3/9c1f1d952a41f27715e8dfe1f1cb0ca1/transformed/jetified-play-services-auth-20.7.0/res
+com.example.reddit_fox.app-jetified-play-services-basement-18.3.0-8 /home/saied/.gradle/caches/transforms-3/c3e05c9fbf3e6c63974105ad6d97e1f5/transformed/jetified-play-services-basement-18.3.0/res
+com.example.reddit_fox.app-debug-9 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/android/app/src/debug/res
+com.example.reddit_fox.app-main-10 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/android/app/src/main/res
+com.example.reddit_fox.app-pngs-11 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/app/generated/res/pngs/debug
+com.example.reddit_fox.app-resValues-12 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/app/generated/res/resValues/debug
+com.example.reddit_fox.app-rs-13 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/app/generated/res/rs/debug
+com.example.reddit_fox.app-mergeDebugResources-14 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/app/intermediates/incremental/debug/mergeDebugResources/merged.dir
+com.example.reddit_fox.app-mergeDebugResources-15 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/app/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+com.example.reddit_fox.app-merged_res-16 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/app/intermediates/merged_res/debug
+com.example.reddit_fox.app-packaged_res-17 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/cloud_firestore/intermediates/packaged_res/debug
+com.example.reddit_fox.app-packaged_res-18 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/firebase_auth/intermediates/packaged_res/debug
+com.example.reddit_fox.app-packaged_res-19 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/firebase_core/intermediates/packaged_res/debug
+com.example.reddit_fox.app-packaged_res-20 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/firebase_storage/intermediates/packaged_res/debug
+com.example.reddit_fox.app-packaged_res-21 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/google_sign_in_android/intermediates/packaged_res/debug
+com.example.reddit_fox.app-packaged_res-22 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/path_provider_android/intermediates/packaged_res/debug
+com.example.reddit_fox.app-packaged_res-23 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/shared_preferences_android/intermediates/packaged_res/debug
+com.example.reddit_fox.app-packaged_res-24 /media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS/build/sqflite/intermediates/packaged_res/debug
