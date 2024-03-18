@@ -5,12 +5,13 @@ import 'package:reddit_fox/core/constants/constants.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 
+
 class SignInButton extends ConsumerWidget {
   const SignInButton({super.key});
 
-void signInWithGoogle(WidgetRef ref) {
+void signInWithGoogle(BuildContext context, WidgetRef ref) {
   //AuthController 
-  ref.read(authControllerProvider).signInWithGoogle();
+  ref.read(authControllerProvider).signInWithGoogle(context);
 }
 
   @override
@@ -18,7 +19,7 @@ void signInWithGoogle(WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: ElevatedButton.icon(
-        onPressed: () => signInWithGoogle(ref),
+        onPressed: () => signInWithGoogle(context, ref),
         icon: Image.asset(
           Constants.googlePath, 
           width: 35, 
@@ -38,4 +39,3 @@ void signInWithGoogle(WidgetRef ref) {
     );
   }
 }
-
