@@ -67,8 +67,8 @@ export default function NavBar({ SetOpenSiseBar }) {
   const SharedContext = createContext(IsOpenMenue);
 
   return (
-    <nav className=" px-[1.5rem]   w-100vl fixed w-full h-[69px]  bg-white top-0">
-      <div className="flex-row  justify-between items-center  h-8 mx-4">
+    <nav className=" px-[1.5rem]  z-50 w-100vl fixed w-full h-[69px]  bg-white top-0">
+      <div className="flex-row   justify-between items-center  h-8 mx-4">
         {/* userStore.getState().user.user == null ? */}
         <div className="flex items-center gap-4">
           <button
