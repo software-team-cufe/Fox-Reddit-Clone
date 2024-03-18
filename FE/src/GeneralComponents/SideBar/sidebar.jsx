@@ -63,6 +63,7 @@ function Sidebar() {
                      </li>
                      )
                   }                  
+
                   <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
                   
                   <li>

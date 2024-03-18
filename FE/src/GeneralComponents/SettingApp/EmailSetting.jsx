@@ -1,6 +1,9 @@
+import Navofsetting from './navofsetting';
+
 export default function EmailSetting()
 {
-    return (
+    return (<>
+        <Navofsetting />
         <div className="p-40">
         <h2 className=" font-semibold text-xl">
             Manage Emails
@@ -202,5 +205,6 @@ export default function EmailSetting()
         </div>
     
       </div>
+    </>
     );
 }
