@@ -40,6 +40,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
         else {
             axios.post('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/api/createCommunity', {
                 name: inputValue,
+                type: commType,
                 description: '',
                 Banner: null,
                 Icon: null
