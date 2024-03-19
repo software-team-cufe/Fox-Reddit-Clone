@@ -22,6 +22,4 @@ export const createUserSchema = object({
   }),
 });
 
-
-
-export type CreateUserInput = 
+export type CreateUserInput = TypeOf<typeof createUserSchema>['body'];
