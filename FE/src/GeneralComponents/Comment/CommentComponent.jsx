@@ -1,8 +1,12 @@
+import Button from "@/GeneralElements/Button/Button";
+import TextBox from "@/GeneralElements/TextBox/TextBox";
 import { ArrowDownCircle, ArrowUpCircle, MessageCircle, Share } from "lucide-react";
+import { useState } from "react";
 
 
 
 export default function CommentComponent({ comment, margin = 0 }) {
+    const [showComment, setShowCommetn] = useState(false);
 
     return (
         <div style={{
@@ -26,7 +30,7 @@ export default function CommentComponent({ comment, margin = 0 }) {
                             <ArrowDownCircle />
                         </button>
                     </div>
-                    <button className="flex items-center gap-2 rounded-full hover:bg-blue-100 px-3 py-2" >
+                    <button onClick={() => setShowCommetn(!showComment)} className="flex items-center gap-2 rounded-full hover:bg-blue-100 px-3 py-2" >
                         <MessageCircle />
                         Reply
                     </button>
@@ -36,6 +40,15 @@ export default function CommentComponent({ comment, margin = 0 }) {
                     </button>
                 </div>
             </div>
+            {
+                showComment && <div className="my-4">
+                    <TextBox area={true} placeholder="Enter your comment..." />
+                    <div className="flex mt-4 items-center gap-4">
+                        <Button>Comment</Button>
+                        <button onClick={()=> setShowCommetn(false)} className=" bg-gray-100 text-black rounded-full px-4 py-2">Cancel</button>
+                    </div>
+                </div>
+            }
             {
                 comment.comments?.map((e, idx) => <CommentComponent comment={e} key={idx} margin={margin + 20} />)
             }
