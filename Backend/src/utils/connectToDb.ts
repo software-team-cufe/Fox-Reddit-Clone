@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 import config from 'config';
+import log from '@src/utils/logger';
 
 async function connectToDb() {
-  const mongoUri = config.get('mongoUri');
+  const mongoUri = config.get<string>('mongoUri');
   try {
-    await mongoose.connect(config.get('mongoUri'), {});
+    await mongoose.connect(mongoUri);
+    log.info('Connected to MongoDB');
   } catch (e) {
     process.exit(1);
   }
