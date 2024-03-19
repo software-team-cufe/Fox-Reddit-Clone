@@ -1,27 +1,28 @@
 import Logo from "@/GeneralElements/Logo/Logo";
 import { userStore } from "@/hooks/UserRedux/UserStore";
-import Button from "@/GeneralElements/Button/Button";
 import { Link } from "react-router-dom";
-import ProfileIcon from "./Components/ProfileIcon";
-import { useState, createContext } from "react";
+import { useState, useRef, useEffect } from "react";
 import Tooltip from "@/GeneralElements/Tooltip/Tooltip";
-import { MessageCircleMore, BadgePlus, QrCode } from "lucide-react";
+import { MessageCircleMore, BadgePlus, QrCode, Megaphone } from "lucide-react";
 import { Settings, UserRound, Bell, LogOut, AlignJustify } from "lucide-react";
 import "./ButtonStyling.css";
-import SharedContext from "./SharedContext";
-export const Mo = createContext();
-import Sidebar from "../SideBar/sidebar";
+
+
+
 
 export default function NavBar({ SetOpenSiseBar }) {
+  const listProfRef = useRef(null);
+  const UserProfRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
-  const [IsOpenMenue, setIsOpenMenue] = useState(false);
+  const [IsOpenProfList, setIsOpenProfList] = useState(false);
   const [IshoverAd, setIshoverAd] = useState(false);
   const [IshoverChat, setIshoverChat] = useState(false);
   const [IshoverCreate, setIshoverCreate] = useState(false);
   const [IshoverBell, setIshoverBell] = useState(false);
   const [IshoverProf, setIshoverProf] = useState(false);
   const [IshoverSide, setIshoverSide] = useState(false);
-  const IsLoggedIn = false;
+  const IsLoggedIn = true;
+
 
   //handle to use tooltip
   const handleMouseEnterAd = () => {
@@ -50,7 +51,8 @@ export default function NavBar({ SetOpenSiseBar }) {
     setIshoverBell(false);
   };
   const handleMouseEnterProf = () => {
-    setIshoverProf(true);
+    if (!IsOpenProfList)
+      setIshoverProf(true);
   };
   const handleMouseLeaveProf = () => {
     setIshoverProf(false);
@@ -61,10 +63,24 @@ export default function NavBar({ SetOpenSiseBar }) {
   const handleMouseLeaveSide = () => {
     setIshoverSide(false);
   };
-  const handleOpenMenu = () => {
-    IsOpenMenue ? setIsOpenMenue(true) : setIsOpenMenue(false);
+  const handleOpenProfList = () => {
+    setIsOpenProfList(!IsOpenProfList);
   };
-  const SharedContext = createContext(IsOpenMenue);
+  //handle click outside profile list
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (listProfRef.current && !listProfRef.current.contains(event.target) && !UserProfRef.current.contains(event.target)) {
+        setIsOpenProfList(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
 
   return (
     <nav className=" px-[1.5rem]   w-100vl fixed w-full h-[69px]  bg-white top-0">
@@ -98,11 +114,11 @@ export default function NavBar({ SetOpenSiseBar }) {
                 id="navbar-default"
               ></div>
               <button
-                className="bg-white hover:bg-orange-100   w-8  h-10 my-2   rounded-full   "
+                className="bg-white hover:bg-orange-100 hidden md:block   my-3 h-fit   rounded-full   "
                 onMouseEnter={handleMouseEnterAd}
                 onMouseLeave={handleMouseLeaveAd}
               >
-                <img src="./icons/advertise.png"></img>
+                <Megaphone color=" #e94c00" size={32} />
 
                 <Tooltip
                   title={"Advertise on Fox "}
@@ -144,9 +160,9 @@ export default function NavBar({ SetOpenSiseBar }) {
                 </button>
               </div>
               <div className="relative">
-                <button
-                  onClick={() => setIsOpenMenue(!IsOpenMenue)}
-                  className=" backdrop-opacity-0 hover:bg-orange-100   min-w-8 rounded-full    my-3 "
+                <button ref={UserProfRef}
+                  onClick={() => handleOpenProfList()}
+                  className=" backdrop-opacity-0 hover:bg-orange-100  min-w-8 rounded-full    my-3 "
                   onMouseEnter={handleMouseEnterProf}
                   onMouseLeave={handleMouseLeaveProf}
                 >
@@ -157,27 +173,36 @@ export default function NavBar({ SetOpenSiseBar }) {
                   ></Tooltip>
                 </button>
 
-                {IsOpenMenue && (
-                  <ul className="flex-col shadow-md absolute right-0 w-40 bg-white mt-2 mb-2">
+                {IsOpenProfList && (
+                  <ul ref={listProfRef} className=" rounded-lg flex-col  shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                     <li>
-                      <button className="bg-white hover:bg-orange-100  text-black  py-1 px-1 rounded inline-flex items-center w-full">
-                        <UserRound color=" #e94c00" size={32} />
+                      <button className="bg-white hover:bg-orange-100  text-black h-12 py-1 px-1 rounded inline-flex items-center w-full">
+                        <UserRound className="mx-4" color=" #e94c00" size={24} />
                         View profile
                       </button>
                     </li>
 
                     <li>
-                      <button className="bg-white hover:bg-orange-100 text-black  py-1 px-1  rounded inline-flex items-center w-full">
-                        <LogOut color=" #e94c00" size={32} />
+                      <button className="bg-white hover:bg-orange-100 text-black h-12 py-1 px-1  rounded inline-flex items-center w-full">
+                        <LogOut className="mx-4" color=" #e94c00" size={24} />
                         Log out
                       </button>
                     </li>
+                    <div className="bg-gray-200 h-px mx-4 my-2"></div>
                     <li>
-                      <button className="bg-white hover:bg-orange-100 text-black   py-1 px-1  rounded inline-flex items-center w-full">
-                        <Settings color=" #e94c00" size={32} />
+                      <button className="bg-white hover:bg-orange-100 text-black  h-12 py-1 px-4  rounded inline-flex items-center w-full">
+                        <Megaphone className="mx-2" color=" #e94c00" size={24} />
+                        Advertise on Fox
+                      </button>
+                    </li>
+                    <div className="bg-gray-200 h-px mx-4 my-2"></div>
+                    <li>
+                      <button className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1  rounded inline-flex items-center w-full">
+                        <Settings className="mx-4" color=" #e94c00" size={24} />
                         Settings
                       </button>
                     </li>
+
                   </ul>
                 )}
               </div>
