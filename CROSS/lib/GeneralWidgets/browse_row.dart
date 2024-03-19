@@ -68,6 +68,7 @@ class _browseRowState extends State<browseRow> {
               child: FaIcon(
                 FontAwesomeIcons.link,
                 size: widget.iconSize,
+                color: Colors.white,
               ),
             ),
             TextButton(

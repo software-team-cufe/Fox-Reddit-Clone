@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/Pages/create_post.dart';
+import 'package:reddit_fox/Pages/messages.dart';
 
 class nBar extends StatefulWidget {
   const nBar({super.key});
@@ -65,7 +67,8 @@ class _nBarState extends State<nBar> {
           ),
           TextButton(
             onPressed: () {
-              print('s');
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MyApp()));
             },
             child: const FaIcon(
               FontAwesomeIcons.bell,
