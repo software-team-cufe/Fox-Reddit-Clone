@@ -1,5 +1,3 @@
-import { off } from 'process';
-
 module.exports = {
   env: {
     es2021: true,
@@ -24,9 +22,8 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'prettier', 'import'],
   rules: {
-    'no-console': 'warn',
-    '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars-experimental': 'error',
+    'no-console': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
     'no-unused-vars': 'off',
     'prettier/prettier': [
       'error',
