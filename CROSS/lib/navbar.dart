@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
-//import 'package:reddit_fox/Pages/create.dart';
+import 'package:reddit_fox/Pages/create_post.dart';
 
 class nBar extends StatefulWidget {
   const nBar({super.key});
@@ -23,25 +23,35 @@ class _nBarState extends State<nBar> {
         children: [
           TextButton(
             onPressed: () {
-              Navigator.push(context, 
-              MaterialPageRoute(builder: (context) => const HomePage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomePage()));
             },
-            child:const Icon(Icons.home, size: 30.0, color: Colors.white,),
+            child: const Icon(
+              Icons.home,
+              size: 30.0,
+              color: Colors.white,
+            ),
           ),
-          
           TextButton(
             onPressed: () {
               print('s');
             },
-            child: const Icon(Icons.people_outline_rounded, size: 30.0,
-            color: Colors.white,),
+            child: const Icon(
+              Icons.people_outline_rounded,
+              size: 30.0,
+              color: Colors.white,
+            ),
           ),
           TextButton(
             onPressed: () {
-              // Navigator.push(context, 
-              // MaterialPageRoute(builder: (context) => const CreatePost()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CreatePost()));
             },
-            child:const Icon(Icons.add, size: 30.0, color: Colors.white,),
+            child: const Icon(
+              Icons.add,
+              size: 30.0,
+              color: Colors.white,
+            ),
           ),
           TextButton(
             onPressed: () {
