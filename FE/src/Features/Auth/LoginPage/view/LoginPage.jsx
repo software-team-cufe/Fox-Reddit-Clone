@@ -59,21 +59,30 @@ export default function LoginPage({ }) {
         <form id="frm-login" className="space-y-6" onSubmit={login}>
           <TextBox name="email" disabled={loading} placeholder="me@domain.com" label="Email address" />
           <TextBox name="password" disabled={loading} placeholder="********" label="Password" />
-          
+
           <Button disabled={loading} loading={loading} onClick={login} className="w-full">
             Login
           </Button>
 
         </form>
-        <p className="mt-10 text-center text-sm text-gray-500">
-          Not a member?{" "}
-          <Link
-            to="/register"
-            className="font-semibold hover:underline leading-6 text-indigo-600 hover:text-indigo-500"
-          >
-            Create account
-          </Link>
-        </p>
+        <div className=" space-y-2" >
+          <p className="mt-4 text-sm text-gray-500">
+            Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>
+              username
+            </Link> or <Link className="text-blue-700 underline text-sm" to={`/forget-password`}>
+              password
+            </Link>?
+          </p>
+          <p className="  text-sm text-gray-500">
+            New to Reddit? {" "}
+            <Link
+              to="/register"
+              className="font-semibold hover:underline leading-6 text-indigo-600 hover:text-indigo-500"
+            >
+              Create account
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
 

@@ -13,7 +13,7 @@ export default function Button({
             type={btnType}
             disabled={disabled}
             onClick={onClick}
-            className={` text-white transition ${color && "bg-[color:var(--primary)]  hover:bg-[color:var(--primary-select)]"} focus:ring-4 font-medium rounded-2xl text-sm px-5 py-2   focus:outline-none  ${className}`}>
+            className={` text-white transition ${color && "bg-[color:var(--primary)] disabled:bg-gray-300 disabled:text-black hover:bg-[color:var(--primary-select)]"} focus:ring-4 font-medium rounded-2xl text-sm px-5 py-2   focus:outline-none  ${className}`}>
             {
                 !loading ? children :
                     <i className={`fa-solid fa-circle-notch  animate-spin`}></i>
