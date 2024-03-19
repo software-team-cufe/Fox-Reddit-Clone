@@ -1,17 +1,26 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import CreateCommunity from "./CreateCommunity";
 
+
+afterEach(() =>{
+    cleanup();
+});
+
+
 describe("initial state", () => {
+
+    beforeEach( () =>{
+        render(<CreateCommunity/>);
+    });
+
 test("renders CreateCommunity component", () => {
-    render(<CreateCommunity />);
     const linkElement = screen.getByRole("createForm");
     expect(linkElement).toBeInTheDocument();
 });
 
 test("renders name input crrectly", () => {
-    render(<CreateCommunity />);
     const linkElement = screen.getByRole("nameInput");
     expect(linkElement).toBeEmptyDOMElement();
     expect(linkElement).toHaveAttribute("placeholder", "Name");
@@ -19,34 +28,29 @@ test("renders name input crrectly", () => {
 });
 
 test("renders word counter correctly", () => {
-    render(<CreateCommunity />);
     const linkElement = screen.getByRole("wordCounter");
     expect(linkElement).toHaveTextContent("0");
 });
 
 test ("renders type list correctly", () => {
-    render(<CreateCommunity />);
     const linkElement = screen.getByRole("typeOptions");
     expect(linkElement).toBeInTheDocument();
 
 });
 
 test("renders exit button correctly", () => {
-    render(<CreateCommunity />);
     const linkElement = screen.getByRole("exitButton");
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).toBeEnabled();
 });
 
 test("renders cancel button correctly", () => {
-    render(<CreateCommunity />);
     const linkElement = screen.getByRole("cancelButton");
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).toBeEnabled();
 });
 
 test("renders submit button correctly", () => {
-    render(<CreateCommunity />);
     const linkElement = screen.getByRole("submitButton");
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).toBeDisabled();
