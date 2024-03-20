@@ -82,7 +82,7 @@ function MainRoute() {
     <div className='w-full h-[calc(100%-72px)]'>
       <NavBar SetOpenSiseBar={handleOpenSideBar} />
       <Sidebar IsOpen={OpenSideBar} />
-      <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
+      <div className="max-w-[95%] lg:max-w-[80%] mt-[90px] h-full mx-auto">
         <Outlet />
       </div>
     </div>
