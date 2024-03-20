@@ -12,6 +12,7 @@ import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
+import { useState } from 'react';
 const unProtectedRoutes = [
   '/',
   '/login',
@@ -23,8 +24,11 @@ function MainRoute() {
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
-
-
+  const [OpenSideBar, setOpenSideBar] = useState(false)
+  const handleOpenSideBar = () => {
+    OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
+    console.log(OpenSideBar);
+  }
 
   const { isLoading, error, data, refetch } = useQuery(
     "get-client",
@@ -62,7 +66,7 @@ function MainRoute() {
     }
   } else {
     if (!unProtectedRoutes.includes(path)) {
-      
+
     }
   }
   if ((error != null) && error.response != null && error.response.status == 401) {
@@ -76,8 +80,8 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
-      <NavBar />
-      <Sidebar />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} />
+      <Sidebar IsOpen={OpenSideBar} />
       <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
         <Outlet />
       </div>
