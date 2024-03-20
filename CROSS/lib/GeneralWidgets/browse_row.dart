@@ -7,14 +7,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class browseRow extends StatefulWidget {
   final void Function() togglePollVisibility;
   final void Function(Widget) addWidget;
-  final Function pickVideo;
+  //final Function pickVideo;
   final iconSize;
 
   const browseRow({
     required this.togglePollVisibility,
     required this.addWidget,
     required this.iconSize,
-    required this.pickVideo,
+    //required this.pickVideo,
   });
 
   @override
@@ -97,7 +97,7 @@ class _browseRowState extends State<browseRow> {
                     isImageVisible = false;
                   }
                 });
-                widget.pickVideo();
+                //widget.pickVideo();
               },
               child: FaIcon(
                 FontAwesomeIcons.play,

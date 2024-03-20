@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
+import 'package:reddit_fox/navbar.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
@@ -22,13 +23,7 @@ class Message extends StatefulWidget {
 }
 
 class _MessageState extends State<Message> {
-  void displayEndDrawer(BuildContext context) {
-    Scaffold.of(context).openEndDrawer();
-  }
-
-  void displayDrawer(BuildContext context) {
-    Scaffold.of(context).openDrawer();
-  }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +31,21 @@ class _MessageState extends State<Message> {
     double drawerWidth = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
-            displayDrawer(context);
+            _scaffoldKey.currentState!.openDrawer();
           },
         ),
         actions: [
           IconButton(
             icon: CircleAvatar(),
-            onPressed: () => displayEndDrawer(context),
+            onPressed: () {
+              _scaffoldKey.currentState!.openEndDrawer();
+            },
           ),
         ],
         title: Text("Inbox"),
@@ -56,8 +54,6 @@ class _MessageState extends State<Message> {
         drawer_Width: drawerWidth,
       ),
       endDrawer: endDrawer(user_width: userWidth),
-      endDrawerEnableOpenDragGesture: true,
-      drawerEnableOpenDragGesture: true,
       body: ListView(
         children: [
           Row(
@@ -88,9 +84,11 @@ class _MessageState extends State<Message> {
               ],
             ),
           ),
-          // Add more widgets here if needed
         ],
       ),
+      bottomNavigationBar: nBar(),
+      endDrawerEnableOpenDragGesture: true,
+      drawerEnableOpenDragGesture: true,
     );
   }
 }

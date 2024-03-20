@@ -51,17 +51,17 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
-  void pickVideo() async {
-    final pickedFile =
-        await ImagePicker().pickVideo(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        videoPath = pickedFile.path;
-      });
-      print('Video picked: $videoPath');
-      addWidget(VideoDisplay(videoPath: videoPath));
-    }
-  }
+  // void pickVideo() async {
+  //   final pickedFile =
+  //       await ImagePicker().pickVideo(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       videoPath = pickedFile.path;
+  //     });
+  //     print('Video picked: $videoPath');
+  //     addWidget(VideoDisplay(videoPath: videoPath));
+  //   }
+  // }
 
   void addWidget(Widget widgetToAdd) {
     setState(() {
@@ -88,7 +88,7 @@ class _CreatePostState extends State<CreatePost> {
                     child: const FaIcon(
                       FontAwesomeIcons.xmark,
                       size: 25.0,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                   ElevatedButton(
@@ -133,7 +133,7 @@ class _CreatePostState extends State<CreatePost> {
                 togglePollVisibility: togglePollVisibility,
                 addWidget: addWidget,
                 iconSize: iconsize,
-                pickVideo: pickVideo,
+                //pickVideo: pickVideo,
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
