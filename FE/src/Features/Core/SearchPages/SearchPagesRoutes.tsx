@@ -36,7 +36,7 @@ function Layout() {
   const [period,setperiod] = useState('All time');
 
   return (
-    <div className="ml-56">
+    <div className="w-[80%]">
 
         {/* search by bar header */}
         <div role="searchLabel" className="flex gap-3">

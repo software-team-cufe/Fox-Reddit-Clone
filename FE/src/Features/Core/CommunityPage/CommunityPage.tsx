@@ -85,10 +85,9 @@ function optionsMenu() {
 export default function CommunityPage () {
     const [selected,setselected] = useState("New");   // for the sort select component
     const [period,setperiod] = useState('All time');  // for the period select component
-    const [display,setDisplay] = useState('Card');     // for the display style select component
 
     return(
-        <div className={`flex-1 ${display == "card" ? 'w-full ml-36' : 'w-[75%] ml-80'}`}>
+        <div className={`flex-1 w-[80%] ml-32`}>
             <img src='https://images.unsplash.com/photo-1550684376-efcbd6e3f031?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTB8fHxlbnwwfHx8fHw%3D' alt='community' className='w-full h-36 rounded-lg'/>
             <div className='w-full relative flex justify-between items-center m-3'>
                 <div>
