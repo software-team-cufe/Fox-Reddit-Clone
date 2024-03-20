@@ -55,7 +55,7 @@ export default function Postdisplaymenu({setDisplay}) {  //prop takes the displa
             <Menu.Item  className="mt-2">
               {({ active }) => (
                 <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex relative pr-4 h-12 justify-center py-3 text-sm', current == 'card' ? 'bg-gray-200' : '')} onClick={() => switchup("card")}>
-                  <Rows2 className='w-5 h-6 absolute top-[10px] left-3'/>
+                  <Rows2 className={`${current == 'card' ? 'fill-gray-500' : ''} w-5 h-6 absolute top-[10px] left-3`}/>
                   <span className='absolute top-3 left-12'>Card</span>
                 </div>
               )}
@@ -65,7 +65,7 @@ export default function Postdisplaymenu({setDisplay}) {  //prop takes the displa
             <Menu.Item >
               {({ active }) => (
                 <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700','flex relative pr-4 h-12 justify-center py-3 text-sm', current == 'classic' ? 'bg-gray-200' : '')}onClick={() => switchup("classic")}>
-                  <Rows3 className='w-5 h-6 absolute top-[10px] left-3'/>
+                  <Rows3 className={`${current == 'classic' ? 'fill-gray-500' : ''} w-5 h-6 absolute top-[10px] left-3`}/>
                   <span className='absolute top-3 left-12'>Classic</span>
                 </div>
               )}

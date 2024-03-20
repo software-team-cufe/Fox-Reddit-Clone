@@ -17,7 +17,7 @@ const unProtectedRoutes = [
   '/',
   '/login',
   '/register',
-  '/user/overview',
+  '/user'
 ]
 function MainRoute() {
 
