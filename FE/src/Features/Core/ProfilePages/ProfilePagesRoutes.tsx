@@ -8,7 +8,6 @@ import ProfileComments from "./pages/profilecomments";
 import ProfileSaved from "./pages/profileSaved";
 import ProfileHidden from "./pages/profilehidden";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
-import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
 import { useState,useEffect } from "react";
@@ -53,7 +52,6 @@ function Layout() {
   const path = useLocation();
   const [selected,setselected] = useState("New");   // for the sort select component
   const [period,setperiod] = useState('All time');  // for the period select component
-  const [display,setDisplay] = useState('Card');     // for the display style select component
   const user = userStore.getState().user.user;    // fetching user info from redux store
 
   return (
@@ -90,8 +88,6 @@ function Layout() {
           <div role="sortmenu"><Sortmenu setselected={setselected}/></div>
           <PeriodSelect appearance={selected} setperiod={setperiod}/>
 
-          {/* display style select component */}
-          <div role="displaymenu"><Postdisplaymenu setDisplay={setDisplay}/></div>
         </div>
         <hr/>
           <Outlet />
