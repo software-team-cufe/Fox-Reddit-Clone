@@ -23,8 +23,8 @@ const icons = [
    },
 ];
 
-function Sidebar({ IsOpen }) {
-   // const [open, setOpen] = useState(true);
+function Sidebar({className,IsOpen}) {
+   const [open, setOpen] = useState(true);
 
    // const toggleSidebar = () => {
    //    setOpen(!open);
@@ -50,9 +50,12 @@ function Sidebar({ IsOpen }) {
 
    const openCreateCommunity = () => {
       setIsModalOpen(true); // Open the modal
+      setIsModalOpen(true); // Open the modal
    };
 
+
    const closeCreateCommunity = () => {
+      setIsModalOpen(false); // Close the modal
       setIsModalOpen(false); // Close the modal
    };
 
@@ -60,7 +63,7 @@ function Sidebar({ IsOpen }) {
       <>
          <aside
             id="sidebar-multi-level-sidebar"
-            className={`${IsOpen ? "w-80" : "w-[0rem]"
+            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"
                }  md:w-80 z-50  my-14 bg-white fixed top-4 h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
@@ -109,7 +112,7 @@ function Sidebar({ IsOpen }) {
                      </div>
                   </li>
 
-                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
@@ -158,7 +161,7 @@ function Sidebar({ IsOpen }) {
                      </div>
                   </li>
 
-                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
@@ -273,7 +276,7 @@ function Sidebar({ IsOpen }) {
                               </a>
                            </li>
 
-                           <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                        <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                            <li>
                               <a

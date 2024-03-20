@@ -67,6 +67,7 @@ function MainRoute() {
   } else {
     if (!unProtectedRoutes.includes(path)) {
 
+
     }
   }
   if ((error != null) && error.response != null && error.response.status == 401) {
@@ -74,16 +75,22 @@ function MainRoute() {
     nav(0);
     return;
   }
-  // if (userStore.getState().user.user == null && localStorage.getItem('token') != null) {
-  //   return <></>
-  // }
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} />
-      <Sidebar IsOpen={OpenSideBar} />
-      <div className="max-w-[95%] lg:max-w-[80%] mt-[90px] h-full mx-auto">
-        <Outlet />
+      <NavBar />
+      <div className="flex gap-5  h-full mx-auto">
+        {
+          [
+            "/login",
+            "/register",
+            "/forget-username",
+            "/forget-password",
+          ].includes('') && <Sidebar className="" />
+        }
+        <div className='h-full w-full overflow-y-auto p-4'>
+          <Outlet />
+        </div>
       </div>
     </div>
   );
