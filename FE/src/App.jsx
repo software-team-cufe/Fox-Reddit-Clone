@@ -12,12 +12,16 @@ import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
-import { useState } from 'react';
+import settingapp from './GeneralComponents/SettingApp/settingapp';
+import EmailSetting from './GeneralComponents/SettingApp/EmailSetting';
+
+
 const unProtectedRoutes = [
   '/',
   '/login',
   '/register',
 ]
+
 function MainRoute() {
 
   const path = window.location.pathname;
@@ -79,11 +83,12 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} />
-      <Sidebar IsOpen={OpenSideBar} />
-      <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
+      <EmailSetting />
+      {/* <NavBar />
+      <Sidebar />
+      <div className="max-w-[95%] lg:max-w-[80%] mt-[40px] h-full mx-auto">
         <Outlet />
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -97,6 +102,7 @@ function App() {
           <Routes>
             <Route element={<MainRoute />}>
               {AuthRoutes}
+              {settingapp}
               {CoreRoutes}
             </Route>
             <Route path='*' element={<NotFoundPage />} />

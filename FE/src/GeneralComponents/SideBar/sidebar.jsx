@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { Home, Flame, Globe, Plus, ChevronDown } from "lucide-react";
+import React, { useState } from "react";
+import { Home, Flame, Globe, Plus, ChevronDown } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link } from "react-router-dom";
 
@@ -31,7 +31,7 @@ function Sidebar({ IsOpen }) {
    // };
 
 
-   function functionToExecute(event) {
+   const functionToExecute = (event) => {
       // Get the dropdown list associated with the clicked button
       const dropdownList = event.target.nextElementSibling;
 
@@ -58,18 +58,8 @@ function Sidebar({ IsOpen }) {
 
    return (
       <>
-         <aside
-            id="sidebar-multi-level-sidebar"
-            className={`${IsOpen ? "w-80" : "w-[0rem]"
-               }  md:w-80 z-50  my-14 bg-white fixed top-4 h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
-            aria-label="Sidebar"
-         >
-
-
-            <div
-               className={`h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
-                  } md:visible`}
-            >
+         <aside role="test1" id="sidebar-multi-level-sidebar" className={`${open ? 'w-80' : 'w-[0rem]'} z-50 bg-white relative top-4 h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`} aria-label="Sidebar">
+            <div className={`h-full px-3 py-15 overflow-y-auto ${!open && 'invisible'}`}>
                <ul className="space-y-2 font-light">
                   {icons.map((e, idx) => (
                      <li key={idx}>
@@ -226,7 +216,8 @@ function Sidebar({ IsOpen }) {
                               </a>
                            </li>
                            <li>
-                              <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+
+                              <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                               <a
                                  href="/layout"
