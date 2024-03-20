@@ -1,4 +1,3 @@
-
 class UserModel {
   final String name;
   final String profilePic;
@@ -6,7 +5,10 @@ class UserModel {
   final String uid;
   final bool isAuthenticated; // if guest or not
   final int karma;
-  
+  final String email;
+  final String password;
+  DateTime birthDate;
+
   UserModel({
     required this.name,
     required this.profilePic,
@@ -14,7 +16,9 @@ class UserModel {
     required this.uid,
     required this.isAuthenticated,
     required this.karma,
-    
+    required this.email,
+    required this.password,
+    required this.birthDate,
   });
 
 // userModel.name = this. ->usermodel.copyWith(name: 'name');
@@ -26,7 +30,6 @@ class UserModel {
     String? uid,
     bool? isAuthenticated,
     int? karma,
-    
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -35,7 +38,9 @@ class UserModel {
       uid: uid ?? this.uid,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       karma: karma ?? this.karma,
-      
+      password: '',
+      email: '',
+      birthDate: birthDate,
     );
   }
 
@@ -47,7 +52,6 @@ class UserModel {
       'uid': uid,
       'isAuthenticated': isAuthenticated,
       'karma': karma,
-      
     };
   }
 
@@ -57,9 +61,11 @@ class UserModel {
       profilePic: map['profilePic'] ?? '',
       banner: map['banner'] ?? '',
       uid: map['uid'] ?? '',
+      email: map['email'] ?? '',
+      password: map['password'] ?? '',
+      birthDate: DateTime.parse(map['birthDate'].toString()),
       isAuthenticated: map['isAuthenticated'] ?? false,
       karma: map['karma']?.toInt() ?? 0,
-      
     );
   }
 
@@ -78,7 +84,7 @@ class UserModel {
         other.banner == banner &&
         other.uid == uid &&
         other.isAuthenticated == isAuthenticated &&
-        other.karma == karma ;
+        other.karma == karma;
   }
 
   @override
@@ -88,7 +94,6 @@ class UserModel {
         banner.hashCode ^
         uid.hashCode ^
         isAuthenticated.hashCode ^
-        karma.hashCode ;
-        
+        karma.hashCode;
   }
 }

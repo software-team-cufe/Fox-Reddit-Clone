@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/core/common/CustomTextBox.dart';
-import 'package:reddit_fox/features/auth/screens/ForgetPasswordScreen.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class ForgetPasswordScreen extends StatelessWidget {
+  const ForgetPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        title: const Text("Reset Password"),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -22,7 +20,7 @@ class LoginScreen extends StatelessWidget {
               const Gap(50),
               const Center(
                 child: Text(
-                  "Enter your login information",
+                  "Reset your password",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20,
@@ -30,27 +28,23 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              Center(
+                child: Text(
+                  "Enter your email address or username and we'll send you a link to reset your password",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey.shade500,
+                  ),
+                ),
+              ),
               const Gap(20),
               const CustomTextBox(
-                hintText: "Email or Phone number",
-                icon: Icons.email,
-              ),
-              const Gap(10),
-              const CustomTextBox(
-                hintText: "Password",
-                icon: Icons.password,
+                hintText: "Email or username",
               ),
               const Gap(20),
               CustomButton(
-                text: "Login",
+                text: "Reset password",
                 onTap: () {},
-              ),
-              const Gap(20),
-              TextButton(
-                onPressed: () {
-                  Get.to(() => const ForgetPasswordScreen());
-                },
-                child: const Text('Forget password'),
               ),
             ],
           ),
