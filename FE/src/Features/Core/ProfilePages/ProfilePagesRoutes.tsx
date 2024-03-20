@@ -59,7 +59,7 @@ function Layout() {
   return (
     <div>
       {/* main header with avatar and username */}
-      <div className="flex ml-56 gap-10">
+      <div className="flex gap-10">
         <div role="avatarHeader" className="w-fill flex-1 ">
         <div className='relative flex mb-8'>
         <img src={'/mySnoo.png'} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
