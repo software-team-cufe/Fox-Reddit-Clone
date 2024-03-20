@@ -91,7 +91,7 @@ export default function NavBar({ SetOpenSiseBar }) {
             className="border rounded-3xl w-5/6 mx-9 h-9 my-4 bg-gray-100 p-2"
           ></input>
 
-          {!IsLoggedIn && (
+          {IsLoggedIn && (
             <div className="flex  sm:justify-around space-x-2 mx-2 h-16 ">
               <div
                 className="   md:block max-w-1/6 "
@@ -183,7 +183,7 @@ export default function NavBar({ SetOpenSiseBar }) {
               </div>
             </div>
           )}
-          {IsLoggedIn && (
+          {!IsLoggedIn && (
             <div className="flex items-center w-auto">
               <div className="   md:block  " id="navbar-default"></div>
               <Link to="/register">
