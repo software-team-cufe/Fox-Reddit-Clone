@@ -2,7 +2,6 @@ import React, {Fragment, useState} from "react";
 import {Plus, Bell, GripHorizontal, BellRing, BellOff, Circle} from "lucide-react";
 import { Menu, Transition } from '@headlessui/react'
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
-import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 
 function bellMenu() {
@@ -113,7 +112,6 @@ export default function CommunityPage () {
             <div className='flex gap-2 justify-end'>
                 <Sortmenu setselected={setselected}/>
                 <PeriodSelect appearance={selected} setperiod={setperiod}/>
-                <Postdisplaymenu setDisplay={setDisplay}/>
             </div>
             <hr className="w-full border-1 border-gray-300"/>
             </div>
