@@ -10,7 +10,7 @@ afterEach(() => {
     cleanup();
 });
 
-describe('PostDisplayMenu elements render', () => {
+describe('sortmenu elements render', () => {
 
     beforeEach(() => {
         const Setselected = jest.fn();
@@ -41,9 +41,9 @@ describe('PostDisplayMenu elements render', () => {
     });
 });
 
-describe('PostDisplayMenu functionality', () => {
+describe('sortmenu functionality', () => {
 
-    test('PostDisplayMenu menu items call setDisplay', async () => {
+    test('sortmenu menu hot call setDisplay', async () => {
 
         const Setselected = jest.fn();
     
@@ -54,17 +54,41 @@ describe('PostDisplayMenu functionality', () => {
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items = await screen.getAllByRole('menuitem');
 
-        fireEvent.click(items[1]);
+        fireEvent.click(items[0]);
         expect(Setselected).toHaveBeenCalledTimes(1);
+    });
+
+    test('PostDisplayMenu menu new call setDisplay', async () => {
+
+        const Setselected = jest.fn();
+    
+        render(
+            <Sortmenu setselected={Setselected}/>
+        );
 
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items2 = await screen.getAllByRole('menuitem');
 
-        fireEvent.click(items2[0]);
-        expect(Setselected).toHaveBeenCalledTimes(2);
+        fireEvent.click(items2[1]);
+        expect(Setselected).toHaveBeenCalledTimes(1);
     });
 
-    test('postdisplaymenu closes on item click', async ()=> {
+    test('PostDisplayMenu menu top call setDisplay', async () => {
+
+        const Setselected = jest.fn();
+    
+        render(
+            <Sortmenu setselected={Setselected}/>
+        );
+
+        fireEvent.click(screen.getByRole('dropDownButton'));
+        const items2 = await screen.getAllByRole('menuitem');
+
+        fireEvent.click(items2[2]);
+        expect(Setselected).toHaveBeenCalledTimes(1);
+    });
+
+    test('sortmenu closes on item click', async ()=> {
             
             const Setselected = jest.fn();
         
@@ -78,7 +102,7 @@ describe('PostDisplayMenu functionality', () => {
             expect(menu).not.toBeInTheDocument();
     });
 
-    test('PostDisplayMenu menu items call setDisplay with correct value', async () => {
+    test('sortmenu menu hot call setDisplay with correct value', async () => {
 
         const Setselected = jest.fn();
     
@@ -91,24 +115,41 @@ describe('PostDisplayMenu functionality', () => {
 
         fireEvent.click(items1[0]);
         expect(Setselected).toHaveBeenCalledWith('Hot');
+    });
 
+    test('sortmenu menu new call setDisplay with correct value', async () => {
+
+        const Setselected = jest.fn();
+    
+        render(
+            <Sortmenu setselected={Setselected}/>
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items2 = await screen.getAllByRole('menuitem');
 
         fireEvent.click(items2[1]);
         expect(Setselected).toHaveBeenCalledWith('New');
+    });
 
+    test('sortmenu menu top call setDisplay with correct value', async () => {
+
+        const Setselected = jest.fn();
+    
+        render(
+            <Sortmenu setselected={Setselected}/>
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items3 = await screen.getAllByRole('menuitem');
 
         fireEvent.click(items3[2]);
         expect(Setselected).toHaveBeenCalledWith('Top');
     });
+
 });
 
 describe('sortmenu style select applies correctly', () => {
 
-        test('sortmenu style select applies correctly', async () => {
+        test('sortmenu style hot select applies correctly', async () => {
         
                 const Setselected = jest.fn();
             
@@ -119,20 +160,40 @@ describe('sortmenu style select applies correctly', () => {
                 fireEvent.click(screen.getByRole('dropDownButton'));
                 const items = await screen.getAllByRole('menuitem');
         
-                fireEvent.click(items[1]);
+                fireEvent.click(items[0]);
                 fireEvent.click(screen.getByRole('dropDownButton'));
-                expect(items[1]).toHaveClass('bg-gray-200');
-        
-                const items2 = await screen.getAllByRole('menuitem');
-        
-                fireEvent.click(items2[0]);
-                fireEvent.click(screen.getByRole('dropDownButton'));
-                expect(items2[0]).toHaveClass('bg-gray-200');
-
-                const items3 = await screen.getAllByRole('menuitem');
-
-                fireEvent.click(items3[2]);
-                fireEvent.click(screen.getByRole('dropDownButton'));
-                expect(items3[2]).toHaveClass('bg-gray-200');
+                expect(items[0]).toHaveClass('bg-gray-200');
         });
+
+        test('sortmenu style new select applies correctly', async () => {
+        
+            const Setselected = jest.fn();
+        
+            render(
+                <Sortmenu setselected={Setselected}/>
+            );
+    
+            fireEvent.click(screen.getByRole('dropDownButton'));
+            const items2 = await screen.getAllByRole('menuitem');
+    
+            fireEvent.click(items2[1]);
+            fireEvent.click(screen.getByRole('dropDownButton'));
+            expect(items2[1]).toHaveClass('bg-gray-200');
+    });
+
+    test('sortmenu style top select applies correctly', async () => {
+        
+        const Setselected = jest.fn();
+    
+        render(
+            <Sortmenu setselected={Setselected}/>
+        );
+
+        fireEvent.click(screen.getByRole('dropDownButton'));
+        const items3 = await screen.getAllByRole('menuitem');
+
+        fireEvent.click(items3[2]);
+        fireEvent.click(screen.getByRole('dropDownButton'));
+        expect(items3[2]).toHaveClass('bg-gray-200');
+});
 });
