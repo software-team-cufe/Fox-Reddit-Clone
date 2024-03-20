@@ -7,7 +7,7 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 
 function bellMenu() {
     return (
-        <Menu as="div" className="relative inline-block text-left z-50">
+        <Menu as="div" className="relative inline-block text-left z-40">
     
           {/* Sort button header*/}
             <Menu.Button role="dropDownButton" className="inline-flex justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full w-fill py-2 px-3 bg-white text-sm text-gray-900 ">
@@ -52,7 +52,7 @@ function bellMenu() {
 
 function optionsMenu() {
     return (
-        <Menu as="div" className="relative inline-block text-left z-50">
+        <Menu as="div" className="relative inline-block text-left z-40">
     
           {/* Sort button header*/}
           <Menu.Button role="dropDownButton" className="inline-flex justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full w-fill py-2 px-3 bg-white text-sm text-gray-900 ">
