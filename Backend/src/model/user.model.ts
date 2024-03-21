@@ -1,9 +1,6 @@
-import { prop, getModelForClass, Ref, modelOptions, Severity, pre, DocumentType } from '@typegoose/typegoose';
-import { model } from 'mongoose';
-import { nanoid } from 'nanoid';
+import { prop, getModelForClass, modelOptions, Severity, pre, DocumentType, index } from '@typegoose/typegoose';
 import * as argon2 from 'argon2';
-import { log } from 'console';
-
+import { nanoid } from 'nanoid';
 @pre<User>('save', async function () {
   if (!this.isModified('password')) {
     return;
@@ -13,6 +10,7 @@ import { log } from 'console';
   this.password = hashedPassword;
   return;
 })
+@index({ email: 1 })
 @modelOptions({
   schemaOptions: {
     timestamps: true,

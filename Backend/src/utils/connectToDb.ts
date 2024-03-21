@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import config from 'config';
-import log from '@src/utils/logger';
+import log from './logger';
 
 async function connectToDb() {
   const mongoUri = config.get<string>('mongoUri');
