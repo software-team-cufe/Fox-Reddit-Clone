@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 
-export default function ProfileHidden() {
+export default function ProfileHidden({using}) {
 
     // states for collecting hidden posts from request and loading state
     const [Posts, setPosts] = useState([]);

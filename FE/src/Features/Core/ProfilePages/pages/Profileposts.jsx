@@ -3,13 +3,14 @@ import PostComponent from "@/GeneralComponents/Post/Post";
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
+import { useParams } from "react-router-dom";
 
-export default function ProfilePosts() {
+export default function ProfilePosts({using}) {
 
     // states for collecting posts from request and loading state
     const [Posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const user = useParams().viewer;
     //fetch posts on load and put into posts array
     useEffect(() => {
         axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
@@ -56,9 +57,9 @@ export default function ProfilePosts() {
                 <>
                     {/*no results view*/}
                     <img src={'/confusedSnoo.png'} className="w-16 h-24 mb-2" alt="Confused Snoo"></img>
-                    <p className="text-lg font-bold">u/user has no posts yet</p>
+                    <p className="text-lg font-bold">u/{user} has no posts yet</p>
                 </>
-            )}
+            )} 
         </div>
     )
 }
