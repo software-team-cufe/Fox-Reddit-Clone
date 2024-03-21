@@ -48,7 +48,7 @@ dependencies:
   gap: ^3.0.1
   dio: ^5.4.1
   fluentui_system_icons: ^1.1.231
-  intl: ^0.19.0
+  intl: 0.18.1
   dropdown_button2: ^2.3.9
   cached_network_image: ^3.3.1
   #flutter_local_notifications: ^8.2.0
@@ -57,6 +57,7 @@ dependencies:
   image_picker: ^0.8.0+6
   video_player: ^2.2.13
   youtube_player_flutter: ^8.0.0
+  device_preview: ^1.1.0
   
 
 dev_dependencies:

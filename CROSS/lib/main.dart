@@ -6,6 +6,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
 import 'package:reddit_fox/firebase_options.dart';
 import 'package:reddit_fox/theme/pallete.dart';
+import 'package:device_preview/device_preview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,9 +14,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
+    DevicePreview(builder: (context) => const MyApp(),),
+    // const ProviderScope(
+    //   child: MyApp(),
+    // ),
+    
   );
 }
 
@@ -29,6 +32,8 @@ class MyApp extends StatelessWidget {
       title: 'Fox App',
       theme: Pallete.darkModeAppTheme,
       home: const StartingScreen(),
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
     );
   }
 }

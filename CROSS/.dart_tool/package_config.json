@@ -104,6 +104,18 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "device_frame",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/device_frame-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "device_preview",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/device_preview-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "dio",
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.4.1",
       "packageUri": "lib/",
@@ -254,6 +266,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "flutter_localizations",
+      "rootUri": "file:///C:/flutter/packages/flutter_localizations",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17",
       "packageUri": "lib/",
@@ -294,6 +312,12 @@
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/fpdart-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "freezed_annotation",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/freezed_annotation-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "gap",
@@ -411,13 +435,19 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.19.0",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.18.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "js",
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "json_annotation",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/json_annotation-4.8.1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -776,7 +806,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-03-20T23:47:26.266294Z",
+  "generated": "2024-03-21T13:13:53.874121Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }
