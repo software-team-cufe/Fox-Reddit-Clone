@@ -1,6 +1,5 @@
-// ignore_for_file: file_names, non_constant_identifier_names
-
 import 'package:flutter/material.dart';
+import 'package:reddit_fox/Pages/Blanck.dart';
 
 class CustomDrawer extends StatelessWidget {
   final double drawer_Width;
@@ -22,12 +21,16 @@ class CustomDrawer extends StatelessWidget {
             child: ListView(
               children: [
                 ListTile(
+                  leading: Icon(Icons.add, color: Colors.white), 
                   title: Text(
-                    "Recently Visited",
+                    "Create Community",
                     style: TextStyle(color: Colors.white),
                   ),
+                  onTap: () {
+                    Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => BlankPage()));
+                  },
                 ),
-                // Add more items if needed
               ],
             ),
           ),
