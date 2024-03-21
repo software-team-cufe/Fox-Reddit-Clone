@@ -1,50 +1,53 @@
 import React from "react";
 import Navofsetting from "./navofsetting";
-import { list } from "postcss";
+import { ChevronDown } from "lucide-react";
 
 export default function ChatMessaging() {
-    
-    function listOfOptions () {
-        var dropdown = document.getElementById("dropdown");
-        if (dropdown.style.display === "none") {
-            dropdown.style.display = "block";
-        } else {
-            dropdown.style.display = "none";
-        }
-        document.addEventListener("click", closeDropdownOutside);
-    }
 
-    function closeDropdownOutside(event) {
-        var dropdown = document.getElementById("dropdown");
-        var dropdownButton = document.getElementById("dropdownDefaultButton");
-        if (!dropdown.contains(event.target) && event.target !== dropdownButton) {
-            dropdown.classList.add("hidden");
-            document.removeEventListener("click", closeDropdownOutside);
+    const listOfOptions = (event) => {
+        // Stop propagation to prevent the document's click event from hiding the dropdown
+        event.stopPropagation();
+        const dropdownList = event.target.nextElementSibling;
+    
+        // Toggle the visibility of the dropdown list
+        if (dropdownList.style.display === "none" || dropdownList.style.display === "") {
+            dropdownList.style.display = "block";
+    
+            // Add a click event listener to the document to hide the dropdown
+            document.addEventListener('click', function hideDropdown(event) {
+                dropdownList.style.display = "none";
+                // Remove the event listener after it's executed
+                document.removeEventListener('click', hideDropdown);
+            });
+        } else {
+            dropdownList.style.display = "none";
         }
     }
+    
+    const DoReadToAll = () =>{
+        //this function should Mark all massages as read
+    }
+    
 
     return (
         <div>
             <Navofsetting />
             <br></br><br></br>
-            <h1>Chat & Messaging</h1>
+            <h1 className="text-2xl">Chat & Messaging</h1>
             <br></br><br></br>
             <div className="grid-rows-3 justify-between">
-                <div className="flex justify-between  ">
-                    <div className="">Who can send you chat requests?</div>
+                <div className="flex justify-between flex-wrap ">
+                    <div>Who can send you chat requests</div>
                     <div className="w-auto">
                         <button id="dropdownDefaultButton" onClick={listOfOptions} data-dropdown-toggle="dropdown" 
-                        className="text-white w-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none 
-                        focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                        className="text-white w-auto bg-blue-700 hover:bg-blue-800
+                        font-medium rounded-lg text-sm px-3 py-2.5 text-center
                         inline-flex gap-5 items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-                            Dropdown button 
-                        <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                        </svg>
+                            Dropdown button <ChevronDown />
                         </button>
 
                         <div id="dropdown" className="z-10 w-auto hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                            <ul className="py-2 text-sm text-black-700 dark:text-gray-200 w-auto" aria-labelledby="dropdownDefaultButton">
                                 <li>
                                     Everyone
                                 </li>
@@ -61,20 +64,18 @@ export default function ChatMessaging() {
 
                 <br></br><br></br>
 
-                <div className="flex justify-between   ">
+                <div className="flex justify-between">
                     <div className="flex flex-wrap">
-                        <div>Who can send you chat requests?</div>
-                        <h4 className="text-gray-400">kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk</h4>
+                        <div className="">Who can send you private message</div>
+                        <h6 className="text-gray-400 text-wrap ">Heads up—Reddit admins and moderators of communities you have joined can message you even if they are not approved.</h6>
                     </div>
+                    
                     <div className="w-auto">
                         <button id="dropdownDefaultButton" onClick={listOfOptions} data-dropdown-toggle="dropdown" 
-                        className="text-white w-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none 
-                        focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                        className="text-white w-auto bg-blue-700 hover:bg-blue-800
+                        font-medium rounded-lg text-sm px-3 py-1 text-center
                         inline-flex gap-5 items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-                            Dropdown button 
-                        <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                        </svg>
+                            Dropdown button <ChevronDown />
                         </button>
 
                         <div id="dropdown" className="z-10 w-auto hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
@@ -83,7 +84,7 @@ export default function ChatMessaging() {
                                     Everyone
                                 </li>
                                 <li>
-                                    Accounts Older Than 30 Days
+                                    Nobody                                
                                 </li>
                             </ul>
                         </div>    
@@ -92,37 +93,20 @@ export default function ChatMessaging() {
         
                 <br></br><br></br>
 
-                <div className="flex justify-between  ">
+                <div className="flex justify-between flex-wrap">
                     <div>
-                        <div>Who can send you chat requests?</div>
-                        <h4 className="text-gray-400">ttttttttttttttttttttttttttt</h4>
+                        <div>Mark all as read</div>
+                        <h4 className="text-gray-400">Mark all conversations and invites as read.</h4>
                     </div>
                     <div className="w-auto">
-                        <button id="dropdownDefaultButton" onClick={listOfOptions} data-dropdown-toggle="dropdown" 
-                        className="text-gray w-auto focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                        inline-flex gap-5 items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-                            Dropdown button 
-                        <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                        </svg>
+                        <button id="dropdownDefaultButton" onClick={DoReadToAll} data-dropdown-toggle="dropdown" 
+                        className="text-black dark:text-blue-500 w-auto focus:ring-blue-300 font-medium border-solid border-2 border-sky-500 rounded-lg text-sm px-5 py-2.5 text-center 
+                        inline-flex gap-5 items-center bg-transparent dark:bg-transparent dark:hover:bg-blue-200 dark:focus:ring-blue-800 rounded-3xl" type="button">
+                            Mark as Read 
                         </button>
-
-                        <div id="dropdown" className="z-10 w-auto hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                <li>
-                                    Everyone
-                                </li>
-                                <li>
-                                    Accounts Older Than 30 Days
-                                </li>
-                            </ul>
-                        </div>    
                     </div>
                 </div>        
-        
             </div>
-
-
         </div>
     );
 }

@@ -7,7 +7,7 @@ export default function Navofsetting() {
         <h3 className="font-bold mb-16">User Settings</h3>
         <nav >
             {/*there is an issue in the styling of navbar*/}
-            <ul className="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+            <ul className="flex flex-wrap gap-10">
                 <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                     <a href="/setting/Account">
                         <span>Account</span>
