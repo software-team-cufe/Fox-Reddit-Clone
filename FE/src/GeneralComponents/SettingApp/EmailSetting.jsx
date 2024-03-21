@@ -1,7 +1,9 @@
 import ToggleButton from "@/GeneralElements/ToggleButton";
+import Navofsetting from "./navofsetting";
 export default function EmailSetting() {
     return (
         <div className="p-40">
+            <Navofsetting />
             <h2 className=" font-semibold text-xl">
                 Manage Emails
             </h2>
