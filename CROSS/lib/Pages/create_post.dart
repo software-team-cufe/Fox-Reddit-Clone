@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/GeneralWidgets/poll.dart';
 import 'package:reddit_fox/GeneralWidgets/textInput.dart';
@@ -6,6 +7,7 @@ import 'package:reddit_fox/GeneralWidgets/browse_row.dart';
 import 'package:reddit_fox/GeneralWidgets/video_display.dart';
 import 'package:reddit_fox/GeneralWidgets/image_display.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reddit_fox/Pages/Blanck.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -51,17 +53,17 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
-  // void pickVideo() async {
-  //   final pickedFile =
-  //       await ImagePicker().pickVideo(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       videoPath = pickedFile.path;
-  //     });
-  //     print('Video picked: $videoPath');
-  //     addWidget(VideoDisplay(videoPath: videoPath));
-  //   }
-  // }
+  void pickVideo() async {
+    final pickedFile =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        videoPath = pickedFile.path;
+      });
+      print('Video picked: $videoPath');
+      addWidget(VideoDisplay(videoPath: videoPath));
+    }
+  }
 
   void addWidget(Widget widgetToAdd) {
     setState(() {
@@ -72,83 +74,93 @@ class _CreatePostState extends State<CreatePost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 15.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const FaIcon(
+                          FontAwesomeIcons.xmark,
+                          size: 25.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BlankPage()));
+                        },
+                        child: const Text('Next'),
+                        style: ButtonStyle(
+                          backgroundColor: !isFieldEmpty
+                              ? MaterialStateProperty.all<Color>(Colors.blue)
+                              : MaterialStateProperty.all<Color>(Colors
+                                  .grey), // Change colors based on isFieldEmpty condition
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: MyTextInputWidget(
+                    inputTitle: 'Title',
+                    sheight: 50.0,
+                    onChanged: (text) {
+                      setState(() {
+                        isFieldEmpty = text.isEmpty;
+                      });
                     },
-                    child: const FaIcon(
-                      FontAwesomeIcons.xmark,
-                      size: 25.0,
+                  ),
+                ),
+                MyTextInputWidget(
+                  inputTitle: 'body text(optional)',
+                  sheight: 250.0,
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: addedWidget != null ? [addedWidget!] : [],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                browseRow(
+                  togglePollVisibility: togglePollVisibility,
+                  addWidget: addWidget,
+                  iconSize: iconsize,
+                  pickVideo: pickVideo,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextButton(
+                    onPressed: doubleIconSizeOnce,
+                    child: FaIcon(
+                      FontAwesomeIcons.arrowUp,
+                      size: arrowsize,
                       color: Colors.white,
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Next'),
-                    style: ButtonStyle(
-                      backgroundColor: !isFieldEmpty
-                          ? MaterialStateProperty.all<Color>(Colors.blue)
-                          : MaterialStateProperty.all<Color>(Colors
-                              .grey), // Change colors based on isFieldEmpty condition
-                    ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: MyTextInputWidget(
-                  inputTitle: 'Title',
-                  sheight: 50.0,
-                  onChanged: (text) {
-                    setState(() {
-                      isFieldEmpty = text.isEmpty;
-                    });
-                  },
                 ),
-              ),
-              MyTextInputWidget(
-                inputTitle: 'body text(optional)',
-                sheight: 250.0,
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: addedWidget != null ? [addedWidget!] : [],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              browseRow(
-                togglePollVisibility: togglePollVisibility,
-                addWidget: addWidget,
-                iconSize: iconsize,
-                //pickVideo: pickVideo,
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: TextButton(
-                  onPressed: doubleIconSizeOnce,
-                  child: FaIcon(
-                    FontAwesomeIcons.arrowUp,
-                    size: arrowsize,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
