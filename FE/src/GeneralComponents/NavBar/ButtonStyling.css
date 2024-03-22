@@ -13,6 +13,7 @@
 }
 .NavButtons:hover {
   background-color: #ff6600;
+  
 }
 @media (max-width: 768px) {
   /* Styles for screens smaller than or equal to 768px */

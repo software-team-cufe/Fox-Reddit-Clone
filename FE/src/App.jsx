@@ -14,6 +14,8 @@ import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 import settingapp from './GeneralComponents/SettingApp/settingapp';
 import EmailSetting from './GeneralComponents/SettingApp/EmailSetting';
+import { useState } from 'react';
+import ProfileSettings from './GeneralComponents/SettingApp/ProfileSettings/ProfileSettings';
 
 
 const unProtectedRoutes = [
@@ -83,7 +85,7 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
-      <EmailSetting />
+      <ProfileSettings />
       {/* <NavBar />
       <Sidebar />
       <div className="max-w-[95%] lg:max-w-[80%] mt-[40px] h-full mx-auto">
