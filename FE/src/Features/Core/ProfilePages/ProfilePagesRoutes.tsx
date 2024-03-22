@@ -67,7 +67,7 @@ function Layout() {
       </div>
 
       {/* selection of user activity: posts,comments...etc*/}
-      <ul role ="sectionsBar" className='flex flex-wrap gap-3 overflow-x-auto mb-3'>
+      <ul role ="sectionsBar" className='flex overflow-x-auto gap-3 mb-3'>
         {
           buttons.map((btn, index) => <li key={index}>
             <Link role={`${btn.text}Button`} to={`/user/${user}/${btn.path}`}>
@@ -80,7 +80,7 @@ function Layout() {
       {/* sorting lists and period select components and create post in case of overview*/}
       <div className="flex gap-1">
         {/* create post button in case of overview */}
-        <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black ${path.pathname == '/user/overview' ? "" : "hidden"}`} >
+        <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black ${path.pathname == `/user/${user}/overview` ? "" : "hidden"}`} >
           <Plus className="w-4 h-4"/>
           <span className='inline font-semibold text-sm'>Create a post</span>
         </button>
