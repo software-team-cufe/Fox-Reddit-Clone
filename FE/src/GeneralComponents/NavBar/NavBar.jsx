@@ -124,7 +124,7 @@ export default function NavBar({ SetOpenSiseBar }) {
                 onMouseEnter={handleMouseEnterCreate}
                 onMouseLeave={handleMouseLeaveCreate}
               >
-                <BadgePlus color=" #e94c00" size={32} />
+                <BadgePlus  color=" #e94c00" size={32} />
                 <Tooltip
                   title={"Create new post"}
                   status={IshoverCreate}
@@ -188,7 +188,7 @@ export default function NavBar({ SetOpenSiseBar }) {
               <div className="   md:block  " id="navbar-default"></div>
               <Link to="/register">
                 <button className="NavButtons bg-gray-400 hover:bg-slate-500">
-                  <QrCode color=" white" size={32} />
+                  <QrCode className=" h-5 w-5" color=" white" size={32} /> 
                   Get App
                 </button>
               </Link>

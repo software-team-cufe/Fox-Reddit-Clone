@@ -57,7 +57,7 @@ function Layout() {
   const user = userStore.getState().user.user;    // fetching user info from redux store
 
   return (
-    <div>
+    <div className="w-full">
       {/* main header with avatar and username */}
       <div className="flex gap-10">
         <div role="avatarHeader" className="w-fill flex-1 ">
@@ -68,7 +68,7 @@ function Layout() {
       </div>
 
       {/* selection of user activity: posts,comments...etc*/}
-      <ul role ="sectionsBar" className='flex gap-3 overflow-x-auto mb-3'>
+      <ul role ="sectionsBar" className='flex flex-wrap gap-3 overflow-x-auto mb-3'>
         {
           buttons.map((btn, index) => <li key={index}>
             <Link role={`${btn.text}Button`} to={`/user/${btn.path}`}>

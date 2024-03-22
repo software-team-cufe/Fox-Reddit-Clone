@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function PostComponent({ post, className, viewMode = false }) {
     return (
-        <div className={` p-4  w-fit ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
+        <div className={` p-4  w-full lg:w-fit ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
             <Link to={viewMode ? null : `/posts/${post.id}`}>
                 {
                     !viewMode && <div>
@@ -16,7 +16,7 @@ export default function PostComponent({ post, className, viewMode = false }) {
                 <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
                 <p className=" text-gray-600 text-sm">{post.subTitle}asdasdasdasdasdasdasd </p>
                 <img
-                    className=" max-w-[800px] rounded-lg my-4"
+                    className="w-full  lg:max-w-[800px] rounded-lg my-4"
                     alt=""
                     src="https://www.magicpattern.design/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fbrandbird%2Fmagicpattern%2Fwallpapers%2Fmagicpattern-mesh-gradient-1635765500606-preview.jpg&w=3840&q=75" />
             </Link>

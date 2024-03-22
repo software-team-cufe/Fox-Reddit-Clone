@@ -85,7 +85,7 @@ function Sidebar({className,IsOpen}) {
                         </Link>
                      </li>
                   ))}
-                  <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
@@ -229,7 +229,7 @@ function Sidebar({className,IsOpen}) {
                               </a>
                            </li>
                            <li>
-                              <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                              <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                               <a
                                  href="/layout"
@@ -276,7 +276,7 @@ function Sidebar({className,IsOpen}) {
                               </a>
                            </li>
 
-                        <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                        <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                            <li>
                               <a
@@ -311,16 +311,7 @@ function Sidebar({className,IsOpen}) {
                   </li>
                </ul>
             </div>
-            {open && (
-               <div className="visible py-md grow flex flex-col justify-end">
-                  <a
-                     className="no-underline text-tone-2 text-10 px-md"
-                     href="https://redditinc.com"
-                  >
-                     Reddit, Inc. © 2024. All rights reserved.
-                  </a>
-               </div>
-            )}
+            
          </aside>
 
       </>

@@ -17,7 +17,7 @@ function ProfilePosts() {
 
         return (
             <div role="commentstab" className="flex flex-col w-full my-4 items-center">
-                {Posts.length > 0 ? (
+                {Posts?.length > 0 ? (
                     Posts.map((post, index) => (
                         <div key={index}>{post.commentId}</div>
                         //<Comment key={index} data={comment} />
