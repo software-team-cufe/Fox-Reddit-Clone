@@ -3,7 +3,7 @@ import axios from 'axios';
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { comment } from "postcss";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
-function ProfileComments() {
+function ProfileComments({using}) {
 
     // states for collecting comments from request and loading state
     const [comments, setComments] = useState([]);

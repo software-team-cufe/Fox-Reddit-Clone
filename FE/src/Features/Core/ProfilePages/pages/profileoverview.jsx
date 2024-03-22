@@ -1,6 +1,6 @@
 import React from "react";
 
-function ProfileOverview() {
+function ProfileOverview({using}) {
 
     return (
         <div role="overviewtab" className="flex-initial min-h-screen w-full my-4">

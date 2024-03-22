@@ -1,8 +1,13 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, prettyDOM } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
 import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
+
+
+afterEach(() =>{
+    cleanup();
+});
 
 test('avatar header renders correctly', () => {
     render(
@@ -51,9 +56,9 @@ describe('profile sections navigation correctly', () => {
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/user']}>
+            <MemoryRouter initialEntries={['/user/anas']}>
                 <Routes>
-                    <Route path="/user/*" element={<ProfilePagesLayout />} />
+                    <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
                 </Routes>
             </MemoryRouter>
         );

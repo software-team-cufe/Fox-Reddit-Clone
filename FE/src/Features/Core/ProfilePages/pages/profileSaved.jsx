@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 
-export default function ProfileSaved() {
+export default function ProfileSaved({using}) {
 
     // states for collecting saved posts from request and loading state
     const [Posts, setPosts] = useState([]);

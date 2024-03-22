@@ -1,7 +1,12 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PeriodSelect from './PeriodSelect';
+
+
+afterEach(() =>{
+    cleanup();
+});
 
 describe('PeriodSelect elements render', () => {
     test('PeriodSelect header renders', () => {

@@ -47,7 +47,7 @@ export default function SearchSortMenu({setselected}) {
     <Menu as="div" className="relative inline-block text-left">
 
         {/* dropdown menu button  */}
-        <Menu.Button className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
+        <Menu.Button role="menuButton" className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
           {displayicon()}
           <span className='text-xs mt-1'>{current}</span>
           <ChevronDown className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -65,7 +65,7 @@ export default function SearchSortMenu({setselected}) {
 
         {/* dropdown menu items mapped*/}
         <Menu.Items className="absolute right-0 z-10 mt-2 w-[160px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <Menu.displayName className='font-semibold text-sm mx-3 my-3 text-gray-700'>View</Menu.displayName>
+            <div role ="menuHeader" className='font-semibold text-sm mx-3 my-3 text-gray-700'>View</div>
             {options.map((option,index) => {
               return (
                 <Menu.Item key={index} className="mt-2">
