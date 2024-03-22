@@ -44,44 +44,51 @@ export default function LoginPage({ }) {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-[80px] w-auto"
-          src="/logo.png"
-          alt="Your Company"
-        />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Sign in to your account
-        </h2>
-      </div>
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form id="frm-login" className="space-y-6" onSubmit={login}>
-          <TextBox name="email" disabled={loading} placeholder="me@domain.com" label="Email address" />
-          <TextBox name="password" disabled={loading} placeholder="********" label="Password" />
+    <div
 
-          <Button disabled={loading} loading={loading} onClick={login} className="w-full">
-            Login
-          </Button>
+      className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm rounded-md border shadow p-7 w-fit">
+        <div className="">
+          {/* <img
+            className="mx-auto h-[80px] w-auto"
+            src="/logo.png"
+            alt="Your Company"
+          /> */}
+          <h2 className=" text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Log In
+          </h2>
+          <p className=" text-sm text-gray-400">
+            By continuing, you agree to our User Agreement and acknowledge that you understand the Privacy Policy.
+          </p>
+        </div>
+        <div className="mt-10">
+          <form id="frm-login" className="space-y-6" onSubmit={login}>
+            <TextBox name="email" disabled={loading} placeholder="me@domain.com" label="Email address" />
+            <TextBox name="password" disabled={loading} placeholder="********" label="Password" />
+            <div className=" space-y-2" >
+            <p className="mt-4 text-sm text-gray-500">
+              Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>
+                username
+              </Link> or <Link className="text-blue-700 underline text-sm" to={`/forget-password`}>
+                password
+              </Link>?
+            </p>
+            <p className="  text-sm text-gray-500">
+              New to Reddit? {" "}
+              <Link
+                to="/register"
+                className="font-semibold hover:underline leading-6 text-indigo-600 hover:text-indigo-500"
+              >
+                Create account
+              </Link>
+            </p>
+          </div>
+            <Button disabled={loading} loading={loading} onClick={login} className="w-full">
+              Login
+            </Button>
 
-        </form>
-        <div className=" space-y-2" >
-          <p className="mt-4 text-sm text-gray-500">
-            Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>
-              username
-            </Link> or <Link className="text-blue-700 underline text-sm" to={`/forget-password`}>
-              password
-            </Link>?
-          </p>
-          <p className="  text-sm text-gray-500">
-            New to Reddit? {" "}
-            <Link
-              to="/register"
-              className="font-semibold hover:underline leading-6 text-indigo-600 hover:text-indigo-500"
-            >
-              Create account
-            </Link>
-          </p>
+          </form>
+         
         </div>
       </div>
     </div>

@@ -64,7 +64,7 @@ function Sidebar({className,IsOpen}) {
          <aside
             id="sidebar-multi-level-sidebar"
             className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"
-               }  md:w-80   bg-white  h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
+               }  md:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
 
