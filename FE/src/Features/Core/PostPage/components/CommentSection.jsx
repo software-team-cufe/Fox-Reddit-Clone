@@ -21,7 +21,7 @@ const comments = [
           name: "",
         },
         content: {
-          text: "You mean random web development facts most web developer will already know?",
+          text: "yyyyyyyyyyyYou mean random web development facts most web developer will already know?",
         },
         info: {
           time: "14h ago",
@@ -222,7 +222,7 @@ const comments = [
 export default function CommentSection() {
   return (
     <div>
-      <TextBox placeholder="Add a comment" className=" rounded-2xl mb-3" />
+      <TextBox placeholder="Add a comment" className=" rounded-2xl mb-6" />
       {
         comments.map((e, idx) => <CommentComponent comment={e} key={idx} />)
       }
