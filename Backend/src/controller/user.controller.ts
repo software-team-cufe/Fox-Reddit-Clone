@@ -106,7 +106,13 @@ export async function forgotPasswordHandler(req: Request<{}, {}, ForgotPasswordI
   log.debug(`Password reset code is sent for user with email ${email} `);
   return res.send(message);
 }
-
+/**
+ * Handles the reset password request.
+ *
+ * @param {Request<ResetPasswordInput['params'], {}, ResetPasswordInput['body']>} req - The request object containing the reset password parameters and body.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves when the password is reset successfully.
+ */
 export async function resetPasswordHandler(
   req: Request<ResetPasswordInput['params'], {}, ResetPasswordInput['body']>,
   res: Response
@@ -118,7 +124,7 @@ export async function resetPasswordHandler(
   const user = await findUserById(id);
 
   if (!user || !user.passwordResetCode || user.passwordResetCode !== passwordResetCode) {
-    return res.status(400).send('could not reset password');
+    return res.status(400).send('Could not reset password');
   }
 
   user.passwordResetCode = null;
@@ -127,5 +133,5 @@ export async function resetPasswordHandler(
 
   await user.save();
 
-  return res.send('password reset successfully');
+  return res.send('Password reset successfully');
 }
