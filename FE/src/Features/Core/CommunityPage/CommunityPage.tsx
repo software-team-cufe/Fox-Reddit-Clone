@@ -1,8 +1,7 @@
 import React, {Fragment, useState} from "react";
-import {Plus, Bell, GripHorizontal, BellRing, BellOff} from "lucide-react";
+import {Plus, Bell, GripHorizontal, BellRing, BellOff, Circle} from "lucide-react";
 import { Menu, Transition } from '@headlessui/react'
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
-import Postdisplaymenu from "@/GeneralComponents/postdisplaymenu/postdisplaymenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 
 function bellMenu() {
@@ -86,10 +85,9 @@ function optionsMenu() {
 export default function CommunityPage () {
     const [selected,setselected] = useState("New");   // for the sort select component
     const [period,setperiod] = useState('All time');  // for the period select component
-    const [display,setDisplay] = useState('Card');     // for the display style select component
 
     return(
-        <div className={`flex-1 ${display == "card" ? 'w-full ml-32' : 'w-[75%] ml-80'}`}>
+        <div className={`flex-1 w-[80%] ml-32`}>
             <img src='https://images.unsplash.com/photo-1550684376-efcbd6e3f031?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTB8fHxlbnwwfHx8fHw%3D' alt='community' className='w-full h-36 rounded-lg'/>
             <div className='w-full relative flex justify-between items-center m-3'>
                 <div>
@@ -108,17 +106,27 @@ export default function CommunityPage () {
         </div>
 
         <div className='gap-3 flex'>
-            <div className='min-w-[75%] flex-1 gap-3'>
+            <div className='min-w-[70%] w-[75%] flex-initial gap-3'>
             <br/>
             <div className='flex gap-2 justify-end'>
                 <Sortmenu setselected={setselected}/>
                 <PeriodSelect appearance={selected} setperiod={setperiod}/>
-                <Postdisplaymenu setDisplay={setDisplay}/>
             </div>
             <hr className="w-full border-1 border-gray-300"/>
             </div>
-            <div className='flex gap-3 w-[340px] h-fit p-3 overflow-y-scroll bg-gray-200 rounded-lg'>
-                    
+            <div className='w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg'>
+                    <div className="text-sm font-bold">title</div>
+                    <span className="text-xs text-gray-599">Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, odio deleniti pariatur corrupti delectus quia maiores nobis, alias praesentium dolorem autem sunt, iusto laborum veritatis quae possimus nostrum soluta consectetur?</span>
+                    <div className="grid grid-cols-3 mt-3 grid-rows-2 grid-flow-rows justify justify-between">
+                      <div className="text-sm font-semibold text-gray-500">34M</div>
+                      <div className="text-sm font-semibold text-gray-500">1K</div>
+                      <div className="text-sm font-semibold text-gray-500">4</div>
+                      <div className="text-sm font-semibold text-gray-800">members</div>
+                      <div className="flex gap-1 text-sm font-semibold text-gray-800"><Circle className="w-2 h-2 fill-green-500 text-green-500 mt-[6px]"/>online</div>
+                      <div className="text-sm font-semibold text-gray-800">Rank by size</div>
+                    </div>
+                    <hr className="w-full border-1 my-2 border-gray-300"/>
+                    <div className="text-sm font-bold">Rules</div>
             </div>
             </div>
         </div>

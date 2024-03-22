@@ -3,7 +3,6 @@ import { render, screen, fireEvent, waitFor, prettyDOM } from "@testing-library/
 import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
-import { createMemoryHistory } from "history";
 
 test('avatar header renders correctly', () => {
     render(
@@ -28,9 +27,6 @@ test('avatar header renders correctly', () => {
 
     const sortmenu = screen.getByRole('sortmenu');
     expect(sortmenu).toBeInTheDocument();
-
-    const displaymenu = screen.getByRole('displaymenu');
-    expect(displaymenu).toBeInTheDocument();
 
     const card = screen.getByRole('card');
     expect(card).toBeInTheDocument();
