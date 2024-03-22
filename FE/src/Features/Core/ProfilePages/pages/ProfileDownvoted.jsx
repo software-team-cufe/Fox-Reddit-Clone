@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 
-export default function ProfileDownvoted() {
+export default function ProfileDownvoted({using}) {
 
     // states for collecting downvoted posts from request and loading state
     const [Posts, setPosts] = useState([]);
