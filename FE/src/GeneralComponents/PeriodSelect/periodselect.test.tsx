@@ -1,9 +1,14 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PeriodSelect from './PeriodSelect';
 
-describe ('PeriodSelect elements render', () => {
+
+afterEach(() =>{
+    cleanup();
+});
+
+describe('PeriodSelect elements render', () => {
     test('PeriodSelect header renders', () => {
         const setperiod = jest.fn();
         render(
@@ -36,45 +41,77 @@ describe ('PeriodSelect elements render', () => {
 });
 
 describe('PeriodSelect functionality', () => {
-    test('PeriodSelect menu items call setperiod', async () => {
+    test('PeriodSelect menu all time call setperiod', async () => {
         const setperiod = jest.fn();
         render(
             <PeriodSelect appearance="Top" setperiod={setperiod} />
         );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items = await screen.getAllByRole('menuitem');
+
         fireEvent.click(items[0]);
         expect(setperiod).toHaveBeenCalledTimes(1);
+    });
 
+    test('PeriodSelect menu this year call setperiod', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items2 = await screen.getAllByRole('menuitem');
 
         fireEvent.click(items2[1]);
-        expect(setperiod).toHaveBeenCalledTimes(2);
+        expect(setperiod).toHaveBeenCalledTimes(1);
+    });
 
+    test('PeriodSelect menu this month call setperiod', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items3 = await screen.getAllByRole('menuitem');
 
         fireEvent.click(items3[2]);
-        expect(setperiod).toHaveBeenCalledTimes(3);
+        expect(setperiod).toHaveBeenCalledTimes(1);
+    });
 
+    test('PeriodSelect menu this week call setperiod', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items4 = await screen.getAllByRole('menuitem');
 
         fireEvent.click(items4[3]);
-        expect(setperiod).toHaveBeenCalledTimes(4);
+        expect(setperiod).toHaveBeenCalledTimes(1);
+    });
 
+    test('PeriodSelect menu today call setperiod', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items5 = await screen.getAllByRole('menuitem');
 
         fireEvent.click(items5[4]);
-        expect(setperiod).toHaveBeenCalledTimes(5);
+        expect(setperiod).toHaveBeenCalledTimes(1);
+    });
 
+
+    test('PeriodSelect menu this hour call setperiod', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items6 = await screen.getAllByRole('menuitem');
 
         fireEvent.click(items6[5]);
-        expect(setperiod).toHaveBeenCalledTimes(6);
+        expect(setperiod).toHaveBeenCalledTimes(1);
     });
 
     test('PeriodSelect menu closes on item click', async () => {
@@ -88,7 +125,7 @@ describe('PeriodSelect functionality', () => {
         expect(menu).not.toBeInTheDocument();
     });
 
-    test('PeriodSelect menu items call setperiod with correct value', async () => {
+    test('PeriodSelect menu all call setperiod with correct value', async () => {
         const setperiod = jest.fn();
         render(
             <PeriodSelect appearance="Top" setperiod={setperiod} />
@@ -98,29 +135,64 @@ describe('PeriodSelect functionality', () => {
         fireEvent.click(items[0]);
         expect(setperiod).toHaveBeenCalledWith('All time');
 
+    });
+
+    test('PeriodSelect menu year call setperiod with correct value', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
-        const items2 = await screen.getAllByRole('menuitem');
-        fireEvent.click(items2[1]);
+        const items = await screen.getAllByRole('menuitem');
+        fireEvent.click(items[1]);
         expect(setperiod).toHaveBeenCalledWith('Past year');
 
+    });
+
+    test('PeriodSelect menu month call setperiod with correct value', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
-        const items3 = await screen.getAllByRole('menuitem');
-        fireEvent.click(items3[2]);
+        const items = await screen.getAllByRole('menuitem');
+        fireEvent.click(items[2]);
         expect(setperiod).toHaveBeenCalledWith('Past month');
 
+    });
+
+    test('PeriodSelect menu week call setperiod with correct value', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
-        const items4 = await screen.getAllByRole('menuitem');
-        fireEvent.click(items4[3]);
+        const items = await screen.getAllByRole('menuitem');
+        fireEvent.click(items[3]);
         expect(setperiod).toHaveBeenCalledWith('Past week');
 
+    });
+
+    test('PeriodSelect menu day call setperiod with correct value', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
-        const items5 = await screen.getAllByRole('menuitem');
-        fireEvent.click(items5[4]);
+        const items = await screen.getAllByRole('menuitem');
+        fireEvent.click(items[4]);
         expect(setperiod).toHaveBeenCalledWith('Past 24 hours');
 
+    });
+
+    test('PeriodSelect menu hour call setperiod with correct value', async () => {
+        const setperiod = jest.fn();
+        render(
+            <PeriodSelect appearance="Top" setperiod={setperiod} />
+        );
         fireEvent.click(screen.getByRole('dropDownButton'));
-        const items6 = await screen.getAllByRole('menuitem');
-        fireEvent.click(items6[5]);
+        const items = await screen.getAllByRole('menuitem');
+        fireEvent.click(items[5]);
         expect(setperiod).toHaveBeenCalledWith('Past hour');
     });
 });
@@ -128,7 +200,7 @@ describe('PeriodSelect functionality', () => {
 describe('periodselect style select applies correctly', () => {
     test('PeriodSelect style select applies correctly', async () => {
         const setperiod = jest.fn();
-        render( 
+        render(
             <PeriodSelect appearance="Top" setperiod={setperiod} />
         );
 

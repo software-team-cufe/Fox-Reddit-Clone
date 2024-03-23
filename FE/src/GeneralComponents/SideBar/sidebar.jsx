@@ -23,8 +23,8 @@ const icons = [
    },
 ];
 
-function Sidebar({ IsOpen }) {
-   // const [open, setOpen] = useState(true);
+function Sidebar({className,IsOpen}) {
+   const [open, setOpen] = useState(true);
 
    // const toggleSidebar = () => {
    //    setOpen(!open);
@@ -50,16 +50,29 @@ function Sidebar({ IsOpen }) {
 
    const openCreateCommunity = () => {
       setIsModalOpen(true); // Open the modal
+      setIsModalOpen(true); // Open the modal
    };
 
+
    const closeCreateCommunity = () => {
+      setIsModalOpen(false); // Close the modal
       setIsModalOpen(false); // Close the modal
    };
 
    return (
       <>
-         <aside role="test1" id="sidebar-multi-level-sidebar" className={`${open ? 'w-80' : 'w-[0rem]'} z-50 bg-white relative top-4 h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`} aria-label="Sidebar">
-            <div className={`h-full px-3 py-15 overflow-y-auto ${!open && 'invisible'}`}>
+         <aside
+            id="sidebar-multi-level-sidebar"
+            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"
+               }  md:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
+            aria-label="Sidebar"
+         >
+
+
+            <div
+               className={`h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
+                  } md:visible`}
+            >
                <ul className="space-y-2 font-light">
                   {icons.map((e, idx) => (
                      <li key={idx}>
@@ -72,7 +85,7 @@ function Sidebar({ IsOpen }) {
                         </Link>
                      </li>
                   ))}
-                  <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
@@ -99,7 +112,7 @@ function Sidebar({ IsOpen }) {
                      </div>
                   </li>
 
-                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
@@ -148,7 +161,7 @@ function Sidebar({ IsOpen }) {
                      </div>
                   </li>
 
-                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
@@ -216,6 +229,7 @@ function Sidebar({ IsOpen }) {
                               </a>
                            </li>
                            <li>
+                              <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
@@ -264,7 +278,7 @@ function Sidebar({ IsOpen }) {
                               </a>
                            </li>
 
-                           <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                        <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                            <li>
                               <a
@@ -299,16 +313,7 @@ function Sidebar({ IsOpen }) {
                   </li>
                </ul>
             </div>
-            {open && (
-               <div className="visible py-md grow flex flex-col justify-end">
-                  <a
-                     className="no-underline text-tone-2 text-10 px-md"
-                     href="https://redditinc.com"
-                  >
-                     Reddit, Inc. © 2024. All rights reserved.
-                  </a>
-               </div>
-            )}
+            
          </aside>
 
       </>
