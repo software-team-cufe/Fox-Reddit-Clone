@@ -4,6 +4,7 @@ import 'package:reddit_fox/Pages/searchinhomepage.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:reddit_fox/Pages/post_details.dart'; // Import the PostDetails page
 
 // Dummy post class
 class Post {
@@ -179,15 +180,25 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           } else {
-            return ListTile(
-              title: Text(getSelectedPosts()[index].title),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(getSelectedPosts()[index].content),
-                  SizedBox(height: 8),
-                  Image.network(getSelectedPosts()[index].imageUrl),
-                ],
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostDetails(key: UniqueKey()),
+                  ),
+                );
+              },
+              child: ListTile(
+                title: Text(getSelectedPosts()[index].title),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(getSelectedPosts()[index].content),
+                    SizedBox(height: 8),
+                    Image.network(getSelectedPosts()[index].imageUrl),
+                  ],
+                ),
               ),
             );
           }
