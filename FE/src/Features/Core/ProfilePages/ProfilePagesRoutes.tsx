@@ -101,7 +101,6 @@ function Layout() {
   )
 }
 
-
 export default function ProfilePagesLayout() {
   const { user } = useParams();  // fetching user from url
   return (
