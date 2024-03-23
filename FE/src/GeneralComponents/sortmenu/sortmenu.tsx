@@ -36,7 +36,7 @@ export default function Sortmenu({setselected}) {
   }
 
   return (
-    <Menu as="div" className="relative inline-block text-left ">
+    <Menu as="div" className="relative inline-block text-left">
 
       {/* Sort button header*/}
       <div>

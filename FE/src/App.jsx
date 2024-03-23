@@ -22,6 +22,7 @@ const unProtectedRoutes = [
   '/',
   '/login',
   '/register',
+  '/user'
 ]
 
 function MainRoute() {
@@ -72,6 +73,7 @@ function MainRoute() {
   } else {
     if (!unProtectedRoutes.includes(path)) {
 
+
     }
   }
   if ((error != null) && error.response != null && error.response.status == 401) {
@@ -79,18 +81,14 @@ function MainRoute() {
     nav(0);
     return;
   }
-  // if (userStore.getState().user.user == null && localStorage.getItem('token') != null) {
-  //   return <></>
-  // }
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
-      <ProfileSettings />
-      {/* <NavBar />
-      <Sidebar />
-      <div className="max-w-[95%] lg:max-w-[80%] mt-[40px] h-full mx-auto">
+      <NavBar SetOpenSiseBar={handleOpenSideBar} />
+      <Sidebar IsOpen={OpenSideBar} />
+      <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
         <Outlet />
-      </div> */}
+      </div>
     </div>
   );
 }
