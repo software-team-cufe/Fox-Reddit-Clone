@@ -77,6 +77,7 @@ function Layout() {
         }
       </ul>
 
+
       {/* sorting lists and period select components and create post in case of overview*/}
       <div className="flex gap-1">
         {/* create post button in case of overview */}
@@ -100,7 +101,6 @@ function Layout() {
     </div>
   )
 }
-
 
 export default function ProfilePagesLayout() {
   const { user } = useParams();  // fetching user from url
