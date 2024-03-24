@@ -1,3 +1,4 @@
+// This file contains the ESLint configuration for a TypeScript project. It sets up ESLint with recommended rules for TypeScript, Prettier integration, and import-related rules. It also includes rules to enforce code formatting, prevent common issues, and improve code quality.
 module.exports = {
   env: {
     es2021: true,
@@ -34,7 +35,7 @@ module.exports = {
   },
   settings: {
     'import/parsers': {
-      '@typescript-eslint/parser': ['.ts'],
+      '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts', '.js', '.jsx'],
     },
     'import/resolver': {
       typescript: {

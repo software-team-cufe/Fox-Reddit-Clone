@@ -4,6 +4,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { AnyZodObject } from 'zod';
 
+/**
+ * Validates a resource using a given schema.
+ *
+ * @param schema - The schema to validate the resource against.
+ * @param req - The Express request object.
+ * @param res - The Express response object.
+ * @param next - The Express next function.
+ * @returns void
+ * @throws {Error} - If the resource fails validation.
+ */
 const validateResource = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction) => {
   try {
     schema.parse({
