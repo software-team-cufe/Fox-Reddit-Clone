@@ -12,21 +12,28 @@ import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import settingapp from './GeneralComponents/SettingApp/settingapp';
-import Sidebar from './GeneralComponents/SideBar/sidebar';
+import EmailSetting from './GeneralComponents/SettingApp/EmailSetting';
+import { useState } from 'react';
+import ProfileSettings from './GeneralComponents/SettingApp/ProfileSettings/ProfileSettings';
+import Safety from './GeneralComponents/SettingApp/Safety';
 
 
 const unProtectedRoutes = [
   '/',
   '/login',
   '/register',
+  '/user'
 ]
 function MainRoute() {
 
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
-
-
+  const [OpenSideBar, setOpenSideBar] = useState(false)
+  const handleOpenSideBar = () => {
+    OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
+    console.log(OpenSideBar);
+  }
 
   const { isLoading, error, data, refetch } = useQuery(
     "get-client",
@@ -65,6 +72,7 @@ function MainRoute() {
   } else {
     if (!unProtectedRoutes.includes(path)) {
 
+
     }
   }
   if ((error != null) && error.response != null && error.response.status == 401) {
@@ -72,15 +80,13 @@ function MainRoute() {
     nav(0);
     return;
   }
-  // if (userStore.getState().user.user == null && localStorage.getItem('token') != null) {
-  //   return <></>
-  // }
 
   return (
     <div className='w-full h-[calc(100%-72px)]'>
-      <NavBar />
-      <Sidebar />
-      <div className="max-w-[95%] lg:max-w-[80%] mt-[40px] h-full mx-auto">
+      <Safety />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} />
+      <Sidebar IsOpen={OpenSideBar} />
+      <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
         <Outlet />
       </div> 
     </div>
