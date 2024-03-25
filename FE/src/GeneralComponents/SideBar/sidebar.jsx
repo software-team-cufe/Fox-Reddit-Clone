@@ -57,7 +57,7 @@ function Sidebar() {
       const dropdownList = event.target.nextElementSibling;
 
       // Toggle the visibility of the dropdown list
-      if (dropdownList.style.display === "none" || dropdownList.style.display === "") {
+      if (dropdownList.style.display === "none" || dropdownList.style.display === "" ) {
          dropdownList.style.display = "block";
       } else {
          dropdownList.style.display = "none";
@@ -93,7 +93,7 @@ function Sidebar() {
                      )
                   }                  
 
-                  <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
                   
                   <li>
                      <button id="dropdownDefaultButton" onClick={functionToExecute} data-dropdown-toggle="dropdown" 
@@ -199,7 +199,7 @@ function Sidebar() {
                               </a>
                            </li>
 
-                           <hr className="border-t-2 border-gray-400 dark:border-gray-600 w-full"></hr>
+                           <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                            <li>
                               <a
