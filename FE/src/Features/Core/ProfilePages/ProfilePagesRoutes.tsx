@@ -71,7 +71,7 @@ function Layout() {
         {
           buttons.map((btn, index) => <li key={index}>
             <Link role={`${btn.text}Button`} to={`/user/${user}/${btn.path}`}>
-              <button  className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/user/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
+              <button  className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/user/${user}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
             </Link>
           </li>)
         }
