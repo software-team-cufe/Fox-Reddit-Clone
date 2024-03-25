@@ -14,11 +14,11 @@ export default function PostComponent({ post, className, viewMode = false }) {
                     </div>
                 }
                 <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
-                <p className=" text-gray-600 text-sm">{post.subTitle}asdasdasdasdasdasdasd </p>
+                <p className=" text-gray-600 text-sm">{post.subTitle}</p>
                 <img
-                    className="w-full  lg:max-w-[800px] rounded-lg my-4"
+                    className="w-[800px]  lg:max-w-[800px] rounded-lg my-4 max-h-[700px] object-cover"
                     alt=""
-                    src="https://www.magicpattern.design/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fbrandbird%2Fmagicpattern%2Fwallpapers%2Fmagicpattern-mesh-gradient-1635765500606-preview.jpg&w=3840&q=75" />
+                    src={post.context} />
             </Link>
 
             <div className="flex flex-row mt-4 items-center gap-4">

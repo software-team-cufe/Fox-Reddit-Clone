@@ -12,14 +12,16 @@ export default function ProfileSaved({using}) {
 
     //fetch saved posts on load and put into posts array
     useEffect(() => {
-        axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/saved')
+        axios.get("http://localhost:3002/posts")
+        //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/saved')
             .then(response => {
-                const newPosts = response.data.postArr.map(post => ({
+                const newPosts = response.data.map(post => ({
                     subReddit: {
-                        image: post.attachments,
+                        image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
                     id: post.postID,
+                    context: post.attachments.postData,
                     title: post.title,
                     subTitle: post.postText,
                     votes: post.votesCount,

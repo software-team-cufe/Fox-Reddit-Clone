@@ -117,16 +117,16 @@ export default function CommunityPage () {
             <div className='w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg'>
                     <div className="text-sm font-bold">title</div>
                     <span className="text-xs text-gray-599">Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, odio deleniti pariatur corrupti delectus quia maiores nobis, alias praesentium dolorem autem sunt, iusto laborum veritatis quae possimus nostrum soluta consectetur?</span>
-                    <div className="grid grid-cols-3 mt-3 grid-rows-2 grid-flow-rows justify justify-between">
+                    <div className="grid grid-cols-2 mt-3 grid-rows-2 grid-flow-rows justify justify-between">
                       <div className="text-sm font-semibold text-gray-500">34M</div>
                       <div className="text-sm font-semibold text-gray-500">1K</div>
-                      <div className="text-sm font-semibold text-gray-500">4</div>
                       <div className="text-sm font-semibold text-gray-800">members</div>
                       <div className="flex gap-1 text-sm font-semibold text-gray-800"><Circle className="w-2 h-2 fill-green-500 text-green-500 mt-[6px]"/>online</div>
-                      <div className="text-sm font-semibold text-gray-800">Rank by size</div>
                     </div>
                     <hr className="w-full border-1 my-2 border-gray-300"/>
                     <div className="text-sm font-bold">Rules</div>
+
+                    
             </div>
             </div>
         </div>

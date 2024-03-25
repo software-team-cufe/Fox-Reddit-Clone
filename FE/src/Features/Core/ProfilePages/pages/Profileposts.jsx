@@ -13,13 +13,15 @@ export default function ProfilePosts({using}) {
     const user = useParams().viewer;
     //fetch posts on load and put into posts array
     useEffect(() => {
-        axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
+        axios.get('http://localhost:3002/posts')
+        //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
             .then(response => {
-                const newPosts = response.data.postArr.map(post => ({
+                const newPosts = response.data.map(post => ({
                     subReddit: {
-                        image: post.attachments,
+                        image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
+                    context: post.attachments.postData,
                     id: post.postID,
                     title: post.title,
                     subTitle: post.postText,

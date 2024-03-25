@@ -12,13 +12,15 @@ export default function ProfileDownvoted({using}) {
 
     //fetch downvoted posts on load and put into posts array
     useEffect(() => {
-        axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/downvoted?page=4&count=10&limit=50')
+        axios.get("http://localhost:3002/upvoted")
+        //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/downvoted?page=4&count=10&limit=50')
             .then(response => {
-                const newPosts = response.data.postArr.map(post => ({
+                const newPosts = response.data.map(post => ({
                     subReddit: {
-                        image: post.attachments,
+                        image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
+                    context: post.attachments.postData,
                     id: post.postID,
                     title: post.title,
                     subTitle: post.postText,

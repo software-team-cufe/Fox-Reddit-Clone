@@ -36,7 +36,7 @@ function Layout() {
   const [period,setperiod] = useState('All time');
 
   return (
-    <div className="w-[80%]">
+    <div className="max-w-[80%] w-screen">
 
         {/* search by bar header */}
         <div role="searchLabel" className="flex gap-3">
@@ -47,24 +47,32 @@ function Layout() {
         {
           buttons.map((btn, index) => <li key={index}>
             <Link role={`${btn.text}Button`} to={`/search/${btn.path}`}>
-              <button className={`rounded-3xl w-fit px-3 h-10 hover:bg-gray-300 ${path.pathname == `/search/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
+              <button className={`rounded-3xl font-sans text-sm font-semibold w-fit px-4 h-10 ${path.pathname == `/search/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
             </Link>
           </li>)
         }
       </ul>
         </div>
 
-        {/* sorting search by bar dropdown menus for period and type */}
-      <div className="flex gap-1">
-        <span className="text-xs text-gray-500 mt-[12px] ml-2">sort by:</span>
-      <div role="searchsortmenu"><SearchSortMenu setselected={setselected}/></div>
-      <div role="periodselect"><PeriodSelect appearance={selected} setperiod={setperiod}/></div>
-      </div>
-      <hr/>
-      <Outlet />
+        {
+          (path.pathname !== "/search/People" && (
+            <>
+              <div className="flex gap-1">
+                <span className="text-xs text-gray-500 mt-[12px] ml-2">sort by:</span>
+                <div role="searchsortmenu">
+                  <SearchSortMenu setselected={setselected} />
+                </div>
+                <div role="periodselect">
+                  <PeriodSelect appearance={selected} setperiod={setperiod} />
+                </div>
+              </div>
+            </>
+          ))
+        }
+        <hr/>
+        <Outlet />
     </div>
-  )
-}
+)}
 
 
 export default function SearchPagesLayout() {

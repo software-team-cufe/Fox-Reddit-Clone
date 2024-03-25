@@ -68,7 +68,7 @@ function Layout() {
     <div>
       {/* main header with avatar and username */}
       <div className="flex gap-10">
-        <div className="w-fill flex-1 ">
+        <div className="w-full flex-1 ">
         <div role="avatarHeader" className='relative flex mb-8'>
         <img src={avatar} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
         <span className='text-black font-bold text-2xl absolute top-10 left-24'>u/{sentUser}</span>
@@ -76,7 +76,7 @@ function Layout() {
       </div>
 
       {/* selection of user activity: posts,comments...etc*/}
-      <ul role ="sectionsBar" className='flex gap-3 overflow-x-auto mb-3'>
+      <ul role ="sectionsBar" className='flex gap-3 overflow-x-auto mb-3 p-1'>
         {
           buttons.map((btn, index) => <li key={index}>
             <Link role={`${btn.text}Button`} to={`/viewer/${sentUser}/${btn.path}`}>

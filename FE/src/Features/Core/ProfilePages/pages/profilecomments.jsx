@@ -11,16 +11,18 @@ function ProfileComments({using}) {
 
     //fetch comments on load and put into comments array
     useEffect( () => {
-        axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&count=10&limit=50&t=month')
+        axios.get("http://localhost:3002/comments")
+        //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&count=10&limit=50&t=month')
             .then(response => {
-                const newComments = response.data.commentArr.map(comment => ({
+                const newComments = response.data.map(comment => ({
                     user: {
                         image: comment.user.avatar,
-                        Username: comment.user.username
+                        Username: comment.user.username,
+                        id: comment.user.userID
                     },
                     info: {
                         votes: comment.votesCount,
-                        time: comment.createdAr,
+                        time: comment.createdAt,
                     },
                     content: {
                         text: comment.commentText

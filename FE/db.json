@@ -1,0 +1,394 @@
+{
+  "users":[
+    {
+      "name": "user1",
+      "userID": 1,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "This is user 1",
+      "totalKarma": 2424
+    },
+    {
+      "name": "user2",
+      "userID": 2,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "This is user 2",
+      "totalKarma": 5342
+    },
+    {
+      "name": "user3",
+      "userID": 3,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "This is user 3",
+      "totalKarma": 1234
+    },
+    {
+      "name": "user4",
+      "userID": 4,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "This is user 4",
+      "totalKarma": 2345
+    },
+    {
+      "name": "user5",
+      "userID": 5,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "This is user 5",
+      "totalKarma": 434 
+    }
+  ],
+    "posts": [
+      {
+        "attachments":{
+          "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+          "postData": "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        "communityName": "league",
+        "communityID": 1,
+        "postID": 1,
+        "title": "Post 1",
+        "subText": "This is the content of post 1",
+        "votesCount": 101,
+        "commentsCount": 4
+      },
+      {
+        "attachments":{
+          "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+          "postData": "https://images.unsplash.com/photo-1711207469465-e17f3c20c5d7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        "communityName": "art",
+        "communityID": 2,
+        "postID": 2,
+        "title": "Post 2",
+        "subText": "This is the content of post 2",
+        "votesCount": 23,
+        "commentsCount": 7
+      },
+      {
+        "attachments":{
+          "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+          "postData": "https://images.unsplash.com/photo-1682685794304-99d3d07c57d2?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        "communityName": "league",
+        "communityID": 1,
+        "postID": 3,
+        "title": "Post 3",
+        "subText": "This is the content of post 3",
+        "votesCount": 191,
+        "commentsCount": 33
+      },
+      {
+        "attachments":{
+          "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+          "postData": "https://images.unsplash.com/photo-1623300834538-538d044aff3e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        "communityName": "art",
+        "communityID": 2,
+        "postID": 4,
+        "title": "Post 4",
+        "subText": "This is the content of post 4",
+        "votesCount": 313,
+        "commentsCount": 23
+      }
+    ],
+
+"comments":[
+  {
+    "user":{
+      "avatar" : "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "username": "user1",
+      "userID": 1
+    },
+    "votesCount": 10,
+    "commentID": 1,
+    "createdAt": "2022/02/15, 15:05:45",
+    "commentText": "This is a comment on post 1",
+    "postID": 1
+  },
+  {
+    "user": {
+      "avatar" : "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "username": "user2",
+      "userID": 2
+    },
+    "votesCount": 5,
+    "commentID": 2,
+    "createdAt": "2022/02/15, 15:05:45",
+    "commentText": "This is a comment on post 2",
+    "postID": 2
+    },
+    {
+      "user":{
+        "avatar" : "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user3",
+        "userID": 3
+      },
+      "votesCount": 15,
+      "commentID": 3,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 3",
+      "postID": 3
+    },
+    {
+      "user":{
+        "avatar" : "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user4",
+        "userID": 4
+      },
+      "votesCount": 20,
+      "commentID": 4,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 4",
+      "postID": 4
+    },
+    {
+      "user":{
+        "avatar" : "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user5",
+        "userID": 5
+      },
+      "votesCount": 25,
+      "commentID": 5,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 1",
+      "postID": 1
+    },
+    {
+      "user":{
+        "avatar" : "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user6",
+        "userID": 6
+      },
+      "votesCount": 30,
+      "commentID": 6,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 2",
+      "postID": 2
+    },
+    {
+      "user":{
+        "avatar" : "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user7",
+        "userID": 7
+      },
+      "votesCount": 35,
+      "commentID": 7,
+      "createdAt": "2022/02/15, 15",
+      "commentText": "This is a comment on post 3",
+      "postID": 3
+    }
+  ],
+
+  "hidden":[
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://images.unsplash.com/photo-1608632739463-a1754d448f21?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 1,
+      "title": "Post 1",
+      "subText": "This is the content of post 1",
+      "votesCount": 101,
+      "commentsCount": 4
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 2,
+      "title": "Post 2",
+      "subText": "This is the content of post 2",
+      "votesCount": 23,
+      "commentsCount": 7
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 3,
+      "title": "Post 3",
+      "subText": "This is the content of post 3",
+      "votesCount": 191,
+      "commentsCount": 33
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 4,
+      "title": "Post 4",
+      "subText": "This is the content of post 4",
+      "votesCount": 313,
+      "commentsCount": 23
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 5,
+      "title": "Post 5",
+      "subText": "This is the content of post 5",
+      "votesCount": 101,
+      "commentsCount": 4
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 6,
+      "title": "Post 6",
+      "subText": "This is the content of post 6",
+      "votesCount": 23,
+      "commentsCount": 7
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://images.unsplash.com/photo-1608632739463-a1754d448f21?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 7,
+      "title": "Post 7",
+      "subText": "This is the content of post 7",
+      "votesCount": 191,
+      "commentsCount": 33
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://images.unsplash.com/photo-1608632739463-a1754d448f21?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 8,
+      "title": "Post 8",
+      "subText": "This is the content of post 8",
+      "votesCount": 313,
+      "commentsCount": 23
+    }
+  ],
+
+  "upvoted":[
+        {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://images.unsplash.com/photo-1608632739463-a1754d448f21?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 1,
+      "title": "Post 1",
+      "subText": "This is the content of post 1",
+      "votesCount": 101,
+      "commentsCount": 4
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 2,
+      "title": "Post 2",
+      "subText": "This is the content of post 2",
+      "votesCount": 23,
+      "commentsCount": 7
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 3,
+      "title": "Post 3",
+      "subText": "This is the content of post 3",
+      "votesCount": 191,
+      "commentsCount": 33
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 4,
+      "title": "Post 4",
+      "subText": "This is the content of post 4",
+      "votesCount": 313,
+      "commentsCount": 23
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 5,
+      "title": "Post 5",
+      "subText": "This is the content of post 5",
+      "votesCount": 101,
+      "commentsCount": 4
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 6,
+      "title": "Post 6",
+      "subText": "This is the content of post 6",
+      "votesCount": 23,
+      "commentsCount": 7
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1"
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 7,
+      "title": "Post 7",
+      "subText": "This is the content of post 7",
+      "votesCount": 191,
+      "commentsCount": 33
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
+        "postData": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 8,
+      "title": "Post 8",
+      "subText": "This is the content of post 8",
+      "votesCount": 313,
+      "commentsCount": 23
+    }
+  ]
+}
