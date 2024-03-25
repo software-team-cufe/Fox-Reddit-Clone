@@ -27,6 +27,12 @@ export default function Navofsetting() {
                 </li>
 
                 <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                    <a href="/setting/Feedsettings">
+                        <span>Feed settings</span>
+                    </a>
+                </li>
+                
+                <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                     <a href="/setting/Notifications">
                         <span>Notifications</span>
                     </a>

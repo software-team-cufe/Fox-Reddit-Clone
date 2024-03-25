@@ -35,7 +35,7 @@ export default function ChatMessaging() {
             <br></br><br></br>
             <h1 className="text-2xl">Chat & Messaging</h1>
             <br></br><br></br>
-            <div className="grid-rows-3 justify-between">
+            <div className="grid-rows-3 justify-between mt-7 w-1/2">
                 <div className="flex justify-between flex-wrap ">
                     <div>Who can send you chat requests</div>
                     <div className="w-auto">

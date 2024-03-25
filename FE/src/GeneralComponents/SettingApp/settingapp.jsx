@@ -6,6 +6,7 @@ import ChatMessaging from './chat&messaging';
 import Notifications from './notifications';
 import Subscription from './subscriptions';
 import SafetyPrivacy from './safety&privacy';
+import Feedsettings from './feedsettings';
 import Profile from './profile';
 import { Route, Routes } from "react-router-dom";
 
@@ -16,6 +17,7 @@ export default [
   <Route key={"/setting/account"} path="/setting/account" element={<Accountsetting />} />,
   <Route key={"/setting/profile"} path="/setting/profile" element={<Profile />} />,
   <Route key={"/setting/safety&privacy"} path="/setting/safety&privacy" element={<SafetyPrivacy />} />,
+  <Route key={"/setting/feedsettings"} path="/setting/feedsettings" element={<Feedsettings />} />,
   <Route key={"/setting/notifications"} path="/setting/notifications" element={<Notifications />} />,
   <Route key={"/setting/subscription"} path="/setting/subscription" element={<Subscription />} />,
   <Route key={"/setting/chat&messaging"} path="/setting/chat&messaging" element={<ChatMessaging />} />,
