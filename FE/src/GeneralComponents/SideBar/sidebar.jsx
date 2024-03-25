@@ -2,9 +2,6 @@ import React,{ useState } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link } from "react-router-dom";
-
-
-
 const icons = [
    {
       icon: Home,
@@ -23,23 +20,17 @@ const icons = [
    },
 ];
 
-function Sidebar({className,IsOpen}) {
+function Sidebar() {
    const [open, setOpen] = useState(true);
 
-   // const toggleSidebar = () => {
-   //    setOpen(!open);
-   // };
+   const toggleSidebar = () => { setOpen(!open); };
 
-
-   const functionToExecute = (event) => {
+   const functionToExecute = (event) =>{
       // Get the dropdown list associated with the clicked button
       const dropdownList = event.target.nextElementSibling;
 
       // Toggle the visibility of the dropdown list
-      if (
-         dropdownList.style.display === "none" ||
-         dropdownList.style.display === ""
-       ) {
+      if (dropdownList.style.display === "none" || dropdownList.style.display === "" ) {
          dropdownList.style.display = "block";
       } else {
          dropdownList.style.display = "none";
@@ -49,37 +40,21 @@ function Sidebar({className,IsOpen}) {
    const [isModalOpen, setIsModalOpen] = useState(false);
 
    const openCreateCommunity = () => {
-      setIsModalOpen(true); // Open the modal
-      setIsModalOpen(true); // Open the modal
+     setIsModalOpen(true); // Open the modal
    };
-
-
+ 
    const closeCreateCommunity = () => {
-      setIsModalOpen(false); // Close the modal
-      setIsModalOpen(false); // Close the modal
+     setIsModalOpen(false); // Close the modal
    };
-
    return (
       <>
-         <aside
-            id="sidebar-multi-level-sidebar"
-            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"
-               }  md:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
-            aria-label="Sidebar"
-         >
-
-
-            <div
-               className={`h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
-                  } md:visible`}
-            >
          <aside role="test1" id="sidebar-multi-level-sidebar" 
          className={`${open ? 'w-80' : 'w-[0rem]'} z-50 bg-white relative top-4 h-screen transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`} 
          aria-label="Sidebar">
             <div className={`h-full px-3 py-15 overflow-y-auto ${!open && 'invisible'}`}>
                <ul className="space-y-2 font-light">
-                  {icons.map((e, idx) => (
-                     <li key={idx}>
+                  {
+                     icons.map((e, idx) => <li key={idx}>
                         <Link
                            to={e.link}
                            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group"
@@ -111,7 +86,7 @@ function Sidebar({className,IsOpen}) {
                      </div>
                   </li>
 
-               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button id="dropdownDefaultButton1" onClick={functionToExecute}
@@ -135,7 +110,7 @@ function Sidebar({className,IsOpen}) {
                      </div>
                   </li>
 
-               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
 
@@ -165,7 +140,6 @@ function Sidebar({className,IsOpen}) {
                               <a href="/Press" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray">Press</a>
                            </li>
                            <li>
-                              <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
@@ -233,9 +207,13 @@ function Sidebar({className,IsOpen}) {
                   </li>
                </ul>
             </div>
-            
-         </aside>
 
+            {open && (
+               <div className="visible py-md grow flex flex-col justify-end">
+                  <a className="no-underline text-tone-2 text-10 px-md" href="https://redditinc.com">Reddit, Inc. © 2024. All rights reserved.</a>
+               </div>
+            )}
+         </aside>
       </>
    );
 }
