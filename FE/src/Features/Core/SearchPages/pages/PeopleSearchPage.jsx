@@ -29,7 +29,7 @@ export default function PeopleSearchPage({searched = "filler"}) {
             console.error('Error:', error);
             setLoading(false);
         });
-    });
+    }, []);
 
   if (loading) {
     return (
