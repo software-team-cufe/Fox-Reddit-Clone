@@ -20,33 +20,6 @@ const icons = [
    },
 ];
 
-const otherIcons = [
-   {
-      title: "About Reddit",
-      link: "/About",
-   },
-   {
-      title: "Advertise",
-      link: "/Advertise",
-   },
-   {
-      title: "Help",
-      link: "/Help",
-   },
-   {
-      title: "Blog",
-      link: "/Blog",
-   },
-   {
-      title: "Career",
-      link: "/Career",
-   },
-   {
-      title: "Press",
-      link: "/Press",
-   }
-];
-
 function Sidebar() {
    const [open, setOpen] = useState(true);
 
