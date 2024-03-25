@@ -33,7 +33,7 @@ export default function PeopleSearchPage({searched = "filler"}) {
 
   if (loading) {
     return (
-        <div role="savedtab" className="w-100 h-100 flex flex-col items-center justify-center">
+        <div role="peoplestab" className="w-100 h-100 flex flex-col items-center justify-center">
             <Spinner className="h-24 w-24" />
         </div>
     )

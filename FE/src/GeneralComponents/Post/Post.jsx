@@ -1,5 +1,6 @@
 import { ArrowDownCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import react from "react";
 
 export default function PostComponent({ post, className, viewMode = false }) {
     return (
