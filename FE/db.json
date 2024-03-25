@@ -36,7 +36,7 @@
       "totalKarma": 434
     }
   ],
-  "communities":[
+  "communities": [
     {
       "commID": 1,
       "name": "league",
@@ -44,7 +44,14 @@
       "membersCount": 12345,
       "icon": "https://images.contentstack.io/v3/assets/blt370612131b6e0756/blt02dd32b665c25036/5f4defe8b553152466d1b21a/Homepage_World_1.jpg",
       "backimage": "https://miro.medium.com/v2/resize:fit:1400/0*UX3dgOTddd9mTtQK.jpg",
-      "onlineMembers": 123
+      "onlineMembers": 123,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to League of Legends.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ]
     },
     {
       "commID": 2,
@@ -53,7 +60,14 @@
       "membersCount": 54321,
       "icon": "https://lh3.googleusercontent.com/ci/AL18g_RkkRcVmQUnptF8BLIfHB3Y7mCQuM7lgZzteHmwpjlm48hKJNHwM-HQafDeTploxf5603Db=s1200",
       "backimage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyXv2oNwPlfMmh7uemJz-4HjnF262cWdm4ZrHyfsEgEA&s",
-      "onlineMembers": 321
+      "onlineMembers": 321,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to art.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ]
     }
   ],
   "posts": [
