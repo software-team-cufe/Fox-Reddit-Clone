@@ -3,11 +3,11 @@ name: FE_Main
 on:
   push:
     branches:
-      - FEMain
+      - FEmain
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - FEMain
+      - FEmain
 
 jobs:
   build_and_deploy_job:
