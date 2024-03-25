@@ -16,6 +16,7 @@ import EmailSetting from './GeneralComponents/SettingApp/EmailSetting';
 import { useState } from 'react';
 import ProfileSettings from './GeneralComponents/SettingApp/ProfileSettings/ProfileSettings';
 import Safety from './GeneralComponents/SettingApp/Safety';
+import Sidebar from './GeneralComponents/SideBar/sidebar';
 
 
 const unProtectedRoutes = [
@@ -82,15 +83,24 @@ function MainRoute() {
   }
 
   return (
-    <div className='w-full h-[calc(100%-72px)]'>
-      <Safety />
-      <NavBar SetOpenSiseBar={handleOpenSideBar} />
-      <Sidebar IsOpen={OpenSideBar} />
-      <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
-        <Outlet />
-      </div> 
-    </div>
-  );
+    <div className='w-full h-[calc(100%)]'>
+      <NavBar />
+      <div className="flex my-[73px] gap-5  h-full mx-auto">
+        {
+          ![
+            "/login",
+            "/register",
+            "/forget-username",
+            "/forget-password",
+          ].includes(window.location.pathname) && <Sidebar className="" />
+        }
+         
+        <div className='h-full w-full overflow-y-auto p-4'>
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 const queryClient = new QueryClient();
