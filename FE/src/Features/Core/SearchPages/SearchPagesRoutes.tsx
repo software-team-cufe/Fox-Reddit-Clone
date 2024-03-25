@@ -29,11 +29,9 @@ const buttons = [
 ]
 
 function Layout() {
-
-  //consts for collecting sorting by data for request
-  const path = useLocation();
-  const [selected, setselected] = useState('Relevance');
-  const [period, setperiod] = useState('All time');
+  const path = useLocation();     //accessing current path
+  const [selected, setselected] = useState('Relevance');    //collecting current sorting type
+  const [period, setperiod] = useState('All time');     //collecting current period of sorting
 
   return (
     <div className="max-w-[80%] w-screen">
@@ -54,23 +52,23 @@ function Layout() {
         </ul>
       </div>
 
-      {
-        ((path.pathname !== "/search/People" && path.pathname !== "/search/Communities") && (
-          <>
-            <div className="flex gap-1 mt-2">
-              <span className="text-xs text-gray-500 mt-[12px] ml-2">sort by:</span>
-              <div role="searchsortmenu">
-                <SearchSortMenu setselected={setselected} />
-              </div>
-              <div role="periodselect">
-                <PeriodSelect appearance={selected} setperiod={setperiod} />
-              </div>
-              <div className="flex-1 mt-[18px]">
-                <hr className="font-bold text-black"/>
-              </div>
+      {/* sort by and period select only on posts and comments selections*/}
+      {((path.pathname !== "/search/People" && path.pathname !== "/search/Communities") && (
+        <>
+          <div className="flex gap-1 mt-2">
+            <span className="text-xs text-gray-500 mt-[12px] ml-2">sort by:</span>
+            <div role="searchsortmenu">
+              <SearchSortMenu setselected={setselected} />
             </div>
-          </>
-        ))
+            <div role="periodselect">
+              <PeriodSelect appearance={selected} setperiod={setperiod} />
+            </div>
+            <div className="flex-1 mt-[18px]">
+              <hr className="font-bold text-black" />
+            </div>
+          </div>
+        </>
+      ))
       }
       <Outlet />
     </div>

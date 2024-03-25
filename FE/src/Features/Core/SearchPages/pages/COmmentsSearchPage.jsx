@@ -6,13 +6,12 @@ import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 
 export default function CommentsSearchPage({ searched = "filler" }) {
 
-  // states for collecting saved posts from request and loading state
-  const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState([]);     // array of comments to show
+  const [loading, setLoading] = useState(true);     // loading state for fetching
+
 
   useEffect(() => {
-    //fetch saved posts on load and put into posts array
-    axios.get("http://localhost:3002/comments")
+    axios.get("http://localhost:3002/comments")   //fetch comments and organize into comments array for mapping
       .then(response => {
         const newComments = response.data.map(comment => ({
           user: {
@@ -29,7 +28,7 @@ export default function CommentsSearchPage({ searched = "filler" }) {
         }
         }));
         setComments(newComments);
-        setLoading(false);
+        setLoading(false);    //set loading to false after fetching to load body
       })
       .catch(error => {
         console.error('Error:', error);
@@ -37,6 +36,7 @@ export default function CommentsSearchPage({ searched = "filler" }) {
       });
   }, []);
 
+  // loading spinner to wait until fetch then load
   if (loading) {
     return (
       <div role="commentstab" className="w-100 h-100 flex flex-col items-center justify-center">
@@ -44,10 +44,12 @@ export default function CommentsSearchPage({ searched = "filler" }) {
       </div>
     )
   }
-
+ 
+  //main body of the page
   return (
     <div role="commentstab" className="flex flex-col w-full max-w[756px] h-fit my-4 p-1">
-      {/* if there are no saved posts, show no results */}
+
+      {/* if there are no comments, show no results */}
       {comments.length > 0 ? (
         comments.map((comment, index) => (
           <div key={index}>

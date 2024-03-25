@@ -6,13 +6,11 @@ import PostComponent from "@/GeneralComponents/Post/Post";
 
 export default function PeopleSearchPage({ searched = "filler" }) {
 
-  // states for collecting saved posts from request and loading state
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState([]);     // array of posts to show
+  const [loading, setLoading] = useState(true);   // loading state for fetching
 
   useEffect(() => {
-    //fetch saved posts on load and put into posts array
-    axios.get("http://localhost:3002/posts")
+    axios.get("http://localhost:3002/posts")    //fetch posts and organize into posts array for mapping
       .then(response => {
         const newPosts = response.data.map(post => ({
           subReddit: {
@@ -28,7 +26,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
         }));
 
         setPosts(newPosts);
-        setLoading(false);
+        setLoading(false);   //set loading to false after fetching to load body
       })
       .catch(error => {
         console.error('Error:', error);
@@ -36,6 +34,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
       });
   }, []);
 
+  // loading spinner to wait until fetch then load
   if (loading) {
     return (
       <div role="poststab" className="w-100 h-100 flex flex-col items-center justify-center">
@@ -44,9 +43,11 @@ export default function PeopleSearchPage({ searched = "filler" }) {
     )
   }
 
+  //main body of the page
   return (
     <div role="poststab" className="flex flex-col w-full max-w[756px] h-fit my-4 p-1">
-      {/* if there are no saved posts, show no results */}
+
+      {/* if there are no posts, show no results */}
       {posts.length > 0 ? (
         posts.map((post, index) => (
           <div key={index}>
