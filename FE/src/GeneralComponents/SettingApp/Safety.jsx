@@ -7,7 +7,7 @@ function Safety() {
     const [MuteValue, setMuteValue] = useState("");
     const [EnableAddBlock, setEnableAddBlock] = useState(true);
     const [EnableAddMute, setEnableAddMute] = useState(true);
-    const [isFocusedB, setIsFocusedB] = useState(false);
+    const [isFocusedB, setIsFocusedB] = useState(true);
     const [isFocusedM, setIsFocusedM] = useState(false);
     //To do add of both fields
 
@@ -59,7 +59,7 @@ function Safety() {
                     <h2 className=' text-base'>People You’ve Blocked</h2>
                     <div className='text-xs  text-gray-500'>Blocked people can’t send you chat requests or private messages.</div>
 
-                    <div onFocus={() => { setFocusBlock(true); handleFocusBlock(); }}
+                    <div onFocus={() => { setFocusBlock(true); }}
                         onBlur={() => { if (BlockValue.length === 0) setFocusBlock(false); handleBlurBlock(); }}
                         className={`relative h-12 flex  border p-1 my-4  focus:border border-gray-400 rounded-md  ${isFocusedB ? 'border-blue-500' : 'border-gray-400'}`}>
                         <input value={BlockValue}
