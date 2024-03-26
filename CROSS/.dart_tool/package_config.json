@@ -368,6 +368,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "hidden_drawer_menu",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/hidden_drawer_menu-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "html",
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/html-0.15.4",
       "packageUri": "lib/",
@@ -806,7 +812,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-03-21T16:16:16.929794Z",
+  "generated": "2024-03-21T19:54:57.057650Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }

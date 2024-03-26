@@ -152,18 +152,19 @@ class _HomePageState extends State<HomePage> {
       body: ListView.builder(
         itemCount: getSelectedPosts().length,
         itemBuilder: (context, index) {
-          if (getSelectedPosts()[index].imageUrl.contains('youtube.com')) {
+          final post = getSelectedPosts()[index];
+          if (post.imageUrl.contains('youtube.com')) {
             return ListTile(
-              title: Text(getSelectedPosts()[index].title),
+              title: Text(post.title),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(getSelectedPosts()[index].content),
+                  Text(post.content),
                   SizedBox(height: 8),
                   YoutubePlayer(
                     controller: YoutubePlayerController(
                       initialVideoId: YoutubePlayer.convertUrlToId(
-                        getSelectedPosts()[index].imageUrl,
+                        post.imageUrl,
                       )!,
                       flags: YoutubePlayerFlags(
                         autoPlay: false,
@@ -172,7 +173,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                     showVideoProgressIndicator: true,
                     onEnded: (metadata) {
-                      print('Video ended');
                     },
                   ),
                 ],
@@ -180,13 +180,13 @@ class _HomePageState extends State<HomePage> {
             );
           } else {
             return ListTile(
-              title: Text(getSelectedPosts()[index].title),
+              title: Text(post.title),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(getSelectedPosts()[index].content),
+                  Text(post.content),
                   SizedBox(height: 8),
-                  Image.network(getSelectedPosts()[index].imageUrl),
+                  Image.network(post.imageUrl),
                 ],
               ),
             );
