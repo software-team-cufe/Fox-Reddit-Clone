@@ -1,4 +1,4 @@
-import { Link, Outlet, Route, Routes, useLocation, useParams, } from "react-router-dom";
+import { Link, Outlet, Route, Routes, redirect, useLocation, useParams, } from "react-router-dom";
 import ProfileOverview from "./pages/profileoverview";
 import { Plus } from "lucide-react";
 import ProfileUpvoted from "./pages/profileupvoted";
@@ -15,6 +15,7 @@ import { userStore } from "@/hooks/UserRedux/UserStore";
 import React from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
+import { userAxios } from "@/Utils/UserAxios";
 // for mapping the list of buttons
 const buttons = [
   {
@@ -35,21 +36,22 @@ const buttons = [
 function Layout() {
 
   const path = useLocation();
+  
   const [selected, setselected] = useState("New");   // for the sort select component
   const [period, setperiod] = useState('All time');  // for the period select component
   const [user, setUser] = useState("");    // fetching user info from redux store
   const [avatar, setAvatar] = useState("");  // fetching user avatar from redux store
   const [loading, setLoading] = useState(true); // loading state for fetching user info
   const sentUser = useParams().viewer;  // getting the user from the url
-
+  
   useEffect(() => {
+
     axios.get(`https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/t2_AhmedLotfy02/about`) // fetching user info
       .then(res => {
         setUser(res.data.data[0].name);
         setAvatar(res.data.data[0].avatar);
         setLoading(false);
-      })
-      .catch(err => {
+      }).catch(err => {
         console.log(err);
         setLoading(false);
       })
@@ -115,7 +117,7 @@ export default function ViewerProfilePage() {
     // nested routing for the profile pages renders layout then feed according to route
     <Routes>
       <Route element={<Layout />} >
-        <Route key={'/viewer'} path={`/`} element={<></>} />
+        <Route key={'/viewer'} path={`/`} />
         <Route key={'/comments'} path="/comments" element={<ProfileComments using={user} />} />
         <Route key={'/posts'} path="posts" element={<ProfilePosts using={user} />} />
         <Route key={'/overview'} path="/overview" element={<ProfileOverview using={user} />} />

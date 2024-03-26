@@ -1,7 +1,17 @@
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { fakePosts } from "./fakePosts";
+import { useQuery } from "react-query";
+import Spinner from "@/GeneralElements/Spinner/Spinner";
+import { userAxios } from "@/Utils/UserAxios";
 
 export default function HomePage() {
+  const { isLoading, isError, error, data, } = useQuery('get-post',
+    () => userAxios.get("posts"),
+    {
+      retry: 0,
+      refetchOnWindowFocus: false,
+    });
+  if (isLoading) return <Spinner />;
 
   return (
     <div className="w-full h-full flex gap-10">
@@ -11,9 +21,9 @@ export default function HomePage() {
         }
       </div>
       <div className="p-5   w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">
-          <h2 className=" font-bold">Recent Posts</h2>
-          <hr className="my-2" />
-        </div>
+        <h2 className=" font-bold">Recent Posts</h2>
+        <hr className="my-2" />
+      </div>
     </div>
   )
 }

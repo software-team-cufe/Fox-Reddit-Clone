@@ -77,7 +77,7 @@
         "postData": [
           "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
           "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      ]
+        ]
       },
       "communityName": "league",
       "communityID": 1,
@@ -90,11 +90,11 @@
     },
     {
       "attachments": {
-        "subredditIcon": "https://lh3.googleusercontent.com/ci/AL18g_RkkRcVmQUnptF8BLIfHB3Y7mCQuM7lgZzteHmwpjlm48hKJNHwM-HQafDeTploxf5603Db=s1200"3,
+        "subredditIcon": "https://lh3.googleusercontent.com/ci/AL18g_RkkRcVmQUnptF8BLIfHB3Y7mCQuM7lgZzteHmwpjlm48hKJNHwM-HQafDeTploxf5603Db=s1200",
         "postData": [
           "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
           "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      ]
+        ]
       },
       "communityName": "art",
       "communityID": 2,
@@ -111,7 +111,7 @@
         "postData": [
           "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
           "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      ]
+        ]
       },
       "communityName": "league",
       "communityID": 1,
@@ -123,7 +123,6 @@
       "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
   ],
-
   "comments": [
     {
       "user": {

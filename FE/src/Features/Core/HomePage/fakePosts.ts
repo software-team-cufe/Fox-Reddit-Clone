@@ -33,7 +33,6 @@ export const fakePosts: Post[] = [
             'https://science.nasa.gov/wp-content/uploads/2023/06/webb-flickr-52259221868-30e1c78f0c-4k-jpg.webp',
         ],
         thumbnail: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
-        
     },
     {
         id: "2",

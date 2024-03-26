@@ -6,8 +6,7 @@ export default function PostComponent({ post, className, viewMode = false }) {
     const images = [post.thumbnail, ...post.images];
 
     return (
-        <div className={` p-4  w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
-
+        <div className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
             {
                 !viewMode ? <Link to={`/posts/${post.id}`}>
                     <div>
@@ -22,7 +21,7 @@ export default function PostComponent({ post, className, viewMode = false }) {
 
                         className=" rounded-lg my-4 w-full bg-gray-600">
                         <img
-                            className="mx-auto   lg:max-w-[800px] rounded-lg my-4"
+                            className="mx-auto max-h-[600px] lg:max-w-[800px] rounded-lg my-4"
                             alt=""
                             src={post.thumbnail} />
                     </div>

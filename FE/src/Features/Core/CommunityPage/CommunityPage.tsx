@@ -110,8 +110,7 @@ export default function CommunityPage() {
             setLoading(false);
           }
         })
-      })
-      .catch(error => {
+      }).catch(error => {
         console.error('There was an error!', error);
       });
   }, []);
