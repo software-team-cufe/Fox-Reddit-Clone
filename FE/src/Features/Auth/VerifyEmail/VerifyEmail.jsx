@@ -38,7 +38,6 @@ export default function VerifyEmailPage({ }) {
                     return;
                 }
             }
-
         }
         setLoading(false);
     };

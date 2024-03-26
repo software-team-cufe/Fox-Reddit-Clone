@@ -11,8 +11,11 @@ import userModel from './Models/UserModel';
 import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
-import Sidebar from './GeneralComponents/SideBar/sidebar';
+import settingapp from './GeneralComponents/SettingApp/settingapp';
 import { useState } from 'react';
+import Sidebar from './GeneralComponents/SideBar/sidebar';
+
+
 const unProtectedRoutes = [
   '/',
   '/login',
@@ -24,10 +27,9 @@ function MainRoute() {
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
-  const [OpenSideBar, setOpenSideBar] = useState(false)
+  const [OpenSideBar, setOpenSideBar] = useState(false);
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
-    console.log(OpenSideBar);
   }
 
   const { isLoading, error, data, refetch } = useQuery(
@@ -78,25 +80,25 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar />
-      <div className="flex my-[73px] gap-5  h-full mx-auto">
-        {
-          ![
-            "/login",
-            "/register",
-            "/forget-username",
-            "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar className="" />
-        }
-         
-        <div className='h-full w-full overflow-y-auto p-4'>
+      <div className='w-full h-[calc(100%)]'>
+        <NavBar SetOpenSiseBar={handleOpenSideBar} />
+        <div className="flex my-[73px] gap-5  h-full mx-auto">
+          {
+            ![
+              "/login",
+              "/register",
+              "/forget-username",
+              "/forget-password",
+            ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} className="" />
+          }
+
+          <div className='h-full w-full overflow-y-auto p-4' />
           <Outlet />
         </div>
       </div>
-    </div>
+    </div >
   );
 }
-
 const queryClient = new QueryClient();
 function App() {
   return (
@@ -106,6 +108,7 @@ function App() {
           <Routes>
             <Route element={<MainRoute />}>
               {AuthRoutes}
+              {settingapp}
               {CoreRoutes}
             </Route>
             <Route path='*' element={<NotFoundPage />} />

@@ -6,9 +6,8 @@ function Tooltip({ title, status }) {
 
   return (
     <div
-      className={`  flex-col    absolute ${
-        status ? "opacity-100  " : "opacity-0  "
-      }`}
+      className={` z-0 flex-col    absolute ${status ? "opacity-100  " : "opacity-0  "
+        }`}
     >
       <svg
         className="absolute text-gray-100 h-4 left-0 ml-3  "
