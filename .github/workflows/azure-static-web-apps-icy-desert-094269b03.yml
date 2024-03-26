@@ -1,13 +1,13 @@
-name: FE_Main
+name: frontmain
 
 on:
   push:
     branches:
-      - FEmain
+      - frontmain
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - FEmain
+      - frontmain
 
 jobs:
   build_and_deploy_job:
