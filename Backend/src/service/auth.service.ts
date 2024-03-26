@@ -1,6 +1,7 @@
 import { signJwt } from '../utils/jwt';
-import { User } from '../model/user.model';
+import { User, privateFields } from '../model/user.model';
 import { DocumentType } from '@typegoose/typegoose';
+import { omit } from 'lodash';
 import SessionModel from '../model/session.model';
 
 export async function createSession({ userId }: { userId: string }) {
@@ -9,7 +10,9 @@ export async function createSession({ userId }: { userId: string }) {
 
 export async function signRefreshToken({ userId }: { userId: string }) {
   const session = await createSession({ userId });
-  const refreshToken = signJwt({ session: session._id }, 'refreshTokenPrivateKey');
+  const refreshToken = signJwt({ session: session._id }, 'refreshTokenPrivateKey', {
+    expiresIn: '1y',
+  });
   return refreshToken;
 }
 
@@ -20,9 +23,15 @@ export async function signRefreshToken({ userId }: { userId: string }) {
  * @returns The generated access token as a string.
  */
 export function signAccessToken(user: DocumentType<User>) {
-  const payload = user.toJSON();
+  const payload = omit(user.toJSON(), privateFields);
 
-  const accessToken = signJwt(payload, 'accessTokenPrivateKey');
+  const accessToken = signJwt(payload, 'accessTokenPrivateKey', {
+    expiresIn: '15m',
+  });
 
   return accessToken;
+}
+
+export async function findSessionById(id: string) {
+  return SessionModel.findById(id);
 }

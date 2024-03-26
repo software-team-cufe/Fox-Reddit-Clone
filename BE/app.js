@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
 const sanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean')
+import deserializeUser from "./middlewares/deserializeUser"
 app.use(cors({
   origin: [
     'http://localhost:3001',
@@ -50,3 +51,5 @@ process.on('unhandledRejection', (error) => {
   console.log(`Unhandeled Exeption ${error}`);
   // process.exit(1)
 });
+
+

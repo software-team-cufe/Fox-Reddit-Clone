@@ -6,6 +6,8 @@ import { createUser, findUserByEmail, findUserById } from '../service/user.servi
 import sendEmail from '../utils/mailer';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
+import { UserModel, privateFields } from '../model/user.model';
+import { omit } from 'lodash';
 
 /**
  * Handles the creation of a user.
@@ -134,4 +136,16 @@ export async function resetPasswordHandler(
   await user.save();
 
   return res.send('Password reset successfully');
+}
+
+export async function getCurrentUserHandler(req: Request, res: Response) {
+  const user_id = req.params.id;
+  const user = await UserModel.findById(user_id);
+  if (!user) {
+    res.sendStatus(404);
+  } else {
+    const payload = omit(user.toJSON(), privateFields);
+    return res.send(payload);
+  }
+  //return res.send(res.locals.user);
 }

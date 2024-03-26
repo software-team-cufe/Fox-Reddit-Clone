@@ -1,8 +1,10 @@
 //  Manage all authentification routes
 import { Request, Response } from 'express';
 import { CreateSessionInput } from '../schema/auth.schema';
-import { findUserByUsername } from '../service/user.service';
-import { signAccessToken, signRefreshToken } from '../service/auth.service';
+import { findUserByUsername, findUserById } from '../service/user.service';
+import { signAccessToken, signRefreshToken, findSessionById } from '../service/auth.service';
+import { verifyJwt } from '../utils/jwt';
+import { get } from 'lodash';
 // eslint-disable-next-line @typescript-eslint/ban-types
 export async function createSessionHandeler(req: Request<{}, {}, CreateSessionInput>, res: Response) {
   const message = 'Invalid email or password';
@@ -30,4 +32,28 @@ export async function createSessionHandeler(req: Request<{}, {}, CreateSessionIn
   // send the access token and refresh token to the client(store in client)
 
   return res.send({ accessToken, refreshToken });
+}
+
+export async function refreshAccessTokenHandler(req: Request, res: Response) {
+  const refreshToken = get(req, 'headers.x-refresh') as string;
+
+  if (typeof refreshToken === 'undefined') {
+    return res.status(401).send('Could not refresh access token');
+  }
+  const decoded = verifyJwt<{ session: string }>(refreshToken, 'refreshTokenPublicKey');
+
+  if (!decoded) {
+    return res.status(401).send('Could not refresh access token');
+  }
+  const session = await findSessionById(decoded.session);
+  if (!session || !session.valid) {
+    return res.status(401).send('Could not refresh access token');
+  }
+  const user = await findUserById(String(session.user));
+
+  if (!user) {
+    return res.status(401).send('Could not refresh access token');
+  }
+  const accessToken = signAccessToken(user);
+  return res.send({ accessToken });
 }

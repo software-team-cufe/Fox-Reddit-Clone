@@ -7,8 +7,10 @@ import {
   verifyUserHandler,
   forgotPasswordHandler,
   resetPasswordHandler,
+  getCurrentUserHandler,
 } from '../controller/user.controller';
 import { create } from 'lodash';
+//import deserializeUser from '../middleware/deserialzeUser';
 
 const router = express.Router();
 
@@ -23,4 +25,5 @@ router.post(
   validateResource(resetPasswordSchema),
   resetPasswordHandler
 );
+router.get('/api/v1/me/:id', getCurrentUserHandler);
 export default router;
