@@ -79,7 +79,7 @@ function MainRoute() {
   return (
     <div className='w-full h-[calc(100%)]'>
       <NavBar />
-      <div className="flex my-[73px] gap-5  h-full mx-auto">
+      <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
           ![
             "/login",
@@ -89,7 +89,7 @@ function MainRoute() {
           ].includes(window.location.pathname) && <Sidebar className="" />
         }
          
-        <div className='h-full w-full overflow-y-auto p-4'>
+        <div className='h-full w-full overflow-y-auto lg:p-4'>
           <Outlet />
         </div>
       </div>
