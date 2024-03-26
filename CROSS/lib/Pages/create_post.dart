@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 
 class CreatePost extends StatefulWidget {
-  const CreatePost({Key? key}) : super(key: key);
+  const CreatePost({super.key});
 
   @override
   State<CreatePost> createState() => _CreatePostState();
@@ -32,7 +32,7 @@ class _CreatePostState extends State<CreatePost> {
       if (!isPollVisible) {
         addedWidget = null;
       } else {
-        addedWidget = PollPage();
+        addedWidget = const PollPage();
       }
     });
   }
@@ -81,7 +81,7 @@ class _CreatePostState extends State<CreatePost> {
             Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 15.0),
+                  padding: const EdgeInsets.only(top: 15.0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,15 +101,15 @@ class _CreatePostState extends State<CreatePost> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => BlankPage()));
+                                  builder: (context) => const BlankPage()));
                         },
-                        child: const Text('Next'),
                         style: ButtonStyle(
                           backgroundColor: !isFieldEmpty
                               ? MaterialStateProperty.all<Color>(Colors.blue)
                               : MaterialStateProperty.all<Color>(Colors
                                   .grey), // Change colors based on isFieldEmpty condition
                         ),
+                        child: const Text('Next'),
                       )
                     ],
                   ),
@@ -147,7 +147,7 @@ class _CreatePostState extends State<CreatePost> {
                   pickVideo: pickVideo,
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: TextButton(
                     onPressed: doubleIconSizeOnce,
                     child: FaIcon(

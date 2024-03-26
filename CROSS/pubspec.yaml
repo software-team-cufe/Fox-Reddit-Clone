@@ -89,6 +89,8 @@ flutter:
   - assets/images/logo.png
   - assets/images/avatar.png
   - assets/Icons/Chat.svg
+  - assets/Icons/channelIcon.png
+  - assets/images/community.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

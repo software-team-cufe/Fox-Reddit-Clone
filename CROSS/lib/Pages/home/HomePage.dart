@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     showVideoProgressIndicator: true,
                     onEnded: (metadata) {
-                      print('Video ended');
+                      // print('Video ended');
                     },
                   ),
                 ],
