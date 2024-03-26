@@ -161,3 +161,22 @@ export async function getCurrentUserPrefs(req: Request, res: Response) {
   }
   // return res.send(res.locals.user.prefs);
 }
+
+export async function editCurrentUserPrefs(req: Request, res: Response) {
+  const user_id = req.params.id;
+  const prefsToUpdate = req.body.prefs;
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(user_id, { $set: { prefs: prefsToUpdate } }, { new: true });
+
+    if (!updatedUser) {
+      return res.sendStatus(404);
+    }
+
+    const updatedPrefs = JSON.stringify(updatedUser.prefs);
+    return res.send(updatedPrefs);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
+}
