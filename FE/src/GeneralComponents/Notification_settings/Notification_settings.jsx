@@ -156,7 +156,8 @@ export default function Notification_settings(){
                 </div>
                 <div className="flex flex-row mb-7 justify-between">
                     <p>
-                        Activity on chat posts you're in
+                        Activity on chat posts you&apos;re in
+
                     </p>
                     <div >
                         <label className="relative inline-flex cursor-pointer items-center">
