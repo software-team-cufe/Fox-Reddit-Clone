@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-
+//git
 export default function Card (){
     return(
         <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[240px] w-[360px] min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
