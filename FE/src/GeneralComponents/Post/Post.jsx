@@ -28,12 +28,7 @@ export default function PostComponent({ post, className, viewMode = false }) {
                     </div>
                 </Link> :
                     <div>
-                        <div>
-                            <div className="mb-4 flex items-center gap-4">
-                                <img src={post.subReddit.image} alt="image" className="w-9 h-9 rounded-full" />
-                                <h5 className=" text-sm ">{post.subReddit.title}</h5>
-                            </div>
-                        </div>
+                        
                         <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
                         <p className=" text-gray-600 text-sm mb-4">{post.subTitle}asdasdasdasdasdasdasd </p>
                         {(images.length != 0 && post.video == null) &&

@@ -11,7 +11,7 @@ export default function PostPage() {
     if(idx > fakePosts.length) return <></>;
     return (
         <div className=" space-y-4">
-            <UserHeader />
+            <UserHeader post={fakePosts[parseInt(idx)]}/>
             <PostComponent post={fakePosts[parseInt(idx)]} viewMode={true} />
             <CommentSection />
         </div>
