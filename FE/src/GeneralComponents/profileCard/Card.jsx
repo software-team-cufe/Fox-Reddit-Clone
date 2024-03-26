@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 //git
 export default function Card (){
     return(
-        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[240px] w-[360px] min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
+        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[240px] w-[337px] min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
         
         <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
             <button className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-4">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
           </svg>
@@ -19,20 +19,11 @@ export default function Card (){
         <button
               className="flex items-center py-1.5 px-3 ml-5 mt-4 text-xs font-medium text-black focus:outline-none
                bg-gray-200 rounded-xl border border-gray-200 hover:bg-gray-300"> 
-               <svg 
-               className=' mt-1'
-               xmlns="http://www.w3.org/2000/svg"
-               width="1em"
-               height="1em"
-               viewBox="0 0 8 8"
-             >
-               <path
-                 fill="currentColor"
-                 d="M5 0v2C1 2 0 4.05 0 7c.52-1.98 2-3 4-3h1v2l3-3.16z"
-               />
-             </svg>
+               <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="13" viewBox="0 0 16 16">
+               <path d="M 12.5 1 C 11.125 1 10 2.125 10 3.5 C 10 3.671875 10.019531 3.835938 10.050781 4 L 5.519531 6.039063 C 5.0625 5.414063 4.328125 5 3.5 5 C 2.125 5 1 6.125 1 7.5 C 1 8.875 2.125 10 3.5 10 C 4.332031 10 5.074219 9.582031 5.527344 8.949219 L 10.0625 10.964844 C 10.023438 11.136719 10 11.316406 10 11.5 C 10 12.875 11.125 14 12.5 14 C 13.875 14 15 12.875 15 11.5 C 15 10.125 13.875 9 12.5 9 C 11.667969 9 10.925781 9.417969 10.472656 10.050781 L 5.9375 8.039063 C 5.976563 7.863281 6 7.683594 6 7.5 C 6 7.3125 5.976563 7.128906 5.9375 6.953125 L 10.445313 4.914063 C 10.898438 5.570313 11.652344 6 12.5 6 C 13.875 6 15 4.875 15 3.5 C 15 2.125 13.875 1 12.5 1 Z M 12.5 2 C 13.335938 2 14 2.664063 14 3.5 C 14 4.335938 13.335938 5 12.5 5 C 11.664063 5 11 4.335938 11 3.5 C 11 2.664063 11.664063 2 12.5 2 Z M 3.5 6 C 4.335938 6 5 6.664063 5 7.5 C 5 8.335938 4.335938 9 3.5 9 C 2.664063 9 2 8.335938 2 7.5 C 2 6.664063 2.664063 6 3.5 6 Z M 12.5 10 C 13.335938 10 14 10.664063 14 11.5 C 14 12.335938 13.335938 13 12.5 13 C 11.664063 13 11 12.335938 11 11.5 C 11 10.664063 11.664063 10 12.5 10 Z"></path>
+               </svg>
              
-              <span className=' ml-1'>share</span>
+              <span className=' ml-1 text-xs'>share</span>
         </button>
     
         
@@ -78,7 +69,7 @@ export default function Card (){
 
         <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700"/>
        
-        <h1 className="text-xs text-gray-500 mx-3"> SETTINGS </h1>
+        <h1 className="text-xs text-gray-600 ml-6"> SETTINGS </h1>
         <br/>
 
         <div className='flex flex-col'>
@@ -219,7 +210,7 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 ml-12'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 ml-10'> 
                   Edit Profile
                 </button>
                </div>
@@ -250,7 +241,7 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-14'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-12'> 
                   Style Avatar
                 </button>
                </div>
@@ -287,7 +278,7 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-16'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-14'> 
                   Mod Settings
                 </button>
                </div>
@@ -298,8 +289,8 @@ export default function Card (){
         </div>
         
         <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700"/>
-        <h1 className="mx-3 mb-4 text-xs text-gray-500 "> LINKS </h1>  
-        <Link to={'/settings/profile'} className="w-fit flex items-center py-1 pl-2 pr-3 mx-3 mb-2 text-xs font-semibold focus:outline-none bg-gray-200 rounded-full hover:bg-gray-300 hover:underline"> 
+        <h1 className=" ml-6 mb-4 text-xs text-gray-600 "> LINKS </h1>  
+        <Link to={'/settings/profile'} className="w-fit flex items-center py-1 pl-2 pr-3 ml-6 mb-2 text-xs font-semibold focus:outline-none bg-gray-200 rounded-full hover:bg-gray-300 hover:underline"> 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-1">
         <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
         </svg>
