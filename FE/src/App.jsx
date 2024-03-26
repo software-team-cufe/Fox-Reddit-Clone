@@ -11,12 +11,12 @@ import userModel from './Models/UserModel';
 import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
-import Sidebar from './GeneralComponents/SideBar/sidebar';
 import settingapp from './GeneralComponents/SettingApp/settingapp';
 import EmailSetting from './GeneralComponents/SettingApp/EmailSetting';
 import { useState } from 'react';
-import ProfileSettings from './GeneralComponents/SettingApp/ProfileSettings/ProfileSettings';
+import ProfileSettings from './GeneralComponents/SettingApp/ProfileSettings/profile';
 import Safety from './GeneralComponents/SettingApp/Safety';
+import Sidebar from './GeneralComponents/SideBar/sidebar';
 
 
 const unProtectedRoutes = [
@@ -25,13 +25,12 @@ const unProtectedRoutes = [
   '/register',
   '/user'
 ]
-
 function MainRoute() {
 
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
-  const [OpenSideBar, setOpenSideBar] = useState(false)
+  const [OpenSideBar, setOpenSideBar] = useState(false);
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
     console.log(OpenSideBar);
@@ -85,43 +84,44 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} />
-      <div className="flex my-[73px] gap-5  h-full mx-auto">
-        {
-          ![
-            "/login",
-            "/register",
-            "/forget-username",
-            "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} className="" />
-        }
+      <div className='w-full h-[calc(100%)]'>
+        <NavBar SetOpenSiseBar={handleOpenSideBar} />
+        <div className="flex my-[73px] gap-5  h-full mx-auto">
+          {
+            ![
+              "/login",
+              "/register",
+              "/forget-username",
+              "/forget-password",
+            ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} className="" />
+          }
 
-        <div className='h-full w-full overflow-y-auto p-4'>
-          <Outlet />
+          <div className='h-full w-full overflow-y-auto p-4'>
+            <Outlet />
+          </div>
         </div>
-      </div>
-    </div >
-  );
+      </div >
+      );
 }
 
-const queryClient = new QueryClient();
-function App() {
+      const queryClient = new QueryClient();
+      function App() {
   return (
-    <UserProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<MainRoute />}>
-              {AuthRoutes}
-              {settingapp}
-              {CoreRoutes}
-            </Route>
-            <Route path='*' element={<NotFoundPage />} />
-          </Routes>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </UserProvider>
-  )
+      <UserProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<MainRoute />}>
+                {AuthRoutes}
+                {settingapp}
+                {CoreRoutes}
+              </Route>
+              <Route path='*' element={<NotFoundPage />} />
+            </Routes>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </UserProvider>
+      )
 }
 
-export default App
+      export default App
