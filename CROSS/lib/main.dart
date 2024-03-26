@@ -34,11 +34,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fox App',
       theme: Pallete.darkModeAppTheme,
-      // home: const StartingScreen(),
-      home: const ChatScreen(
-        title: 'Chat',
-      ),
-      // home: const HomePage(),
+      home: const StartingScreen(),
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
     );

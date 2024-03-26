@@ -81,11 +81,15 @@ class _ChatScreenState extends State<ChatScreen> {
               children: const [
                 CustomContainer(
                   mainText: 'valroant',
-                  subText: 'r/valorant channels',
+                  subText: 'r/Egy-valorant',
                 ),
                 CustomContainer(
                   mainText: 'league of legends',
-                  subText: 'r/EGY LOL',
+                  subText: 'r/EGY-LOL',
+                ),
+                CustomContainer(
+                  mainText: 'Cufe Engineers',
+                  subText: 'r/Cufe-ENGS',
                 ),
               ],
             ),

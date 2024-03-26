@@ -51,7 +51,7 @@ class StartingScreen extends StatelessWidget {
               const SizedBox(height: 30),
               Image.asset(
                 Constants.loginPath,
-                height: 400,
+                height: 250,
               ),
               const SizedBox(height: 20),
               const SignInButton(),
