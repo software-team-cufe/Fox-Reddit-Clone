@@ -16,17 +16,20 @@ export default function ProfilePosts({using}) {
         axios.get('http://localhost:3002/posts')
         //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
             .then(response => {
+                console.log(response.data)
                 const newPosts = response.data.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
-                    context: post.attachments.postData,
+                    images: post.attachments.postData,
                     id: post.postID,
                     title: post.title,
                     subTitle: post.postText,
                     votes: post.votesCount,
                     comments: post.commentsCount,
+                    thumbnail: post.thumbnail,
+                    video: null
                 }));
 
                 setPosts(newPosts);
@@ -36,7 +39,8 @@ export default function ProfilePosts({using}) {
                 console.error('Error:', error);
                 setLoading(false);
             });
-    })
+    }, []);
+
 
     //to handle waiting for fetch or loading state
     if (loading) {

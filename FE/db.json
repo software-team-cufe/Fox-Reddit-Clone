@@ -74,56 +74,56 @@
     {
       "attachments": {
         "subredditIcon": "https://images.contentstack.io/v3/assets/blt370612131b6e0756/blt02dd32b665c25036/5f4defe8b553152466d1b21a/Homepage_World_1.jpg",
-        "postData": "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "postData": [
+          "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      ]
       },
       "communityName": "league",
       "communityID": 1,
       "postID": 1,
       "title": "Post 1",
-      "subText": "This is the content of post 1",
+      "postText": "This is the content of post 1",
       "votesCount": 101,
-      "commentsCount": 4
+      "commentsCount": 4,
+      "thumbnail": "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       "attachments": {
-        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
-        "postData": "https://images.unsplash.com/photo-1711207469465-e17f3c20c5d7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "subredditIcon": "https://lh3.googleusercontent.com/ci/AL18g_RkkRcVmQUnptF8BLIfHB3Y7mCQuM7lgZzteHmwpjlm48hKJNHwM-HQafDeTploxf5603Db=s1200"3,
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      ]
       },
       "communityName": "art",
       "communityID": 2,
       "postID": 2,
       "title": "Post 2",
-      "subText": "This is the content of post 2",
+      "postText": "This is the content of post 2",
       "votesCount": 23,
-      "commentsCount": 7
+      "commentsCount": 7,
+      "thumbnail": "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       "attachments": {
         "subredditIcon": "https://images.contentstack.io/v3/assets/blt370612131b6e0756/blt02dd32b665c25036/5f4defe8b553152466d1b21a/Homepage_World_1.jpg",
-        "postData": "https://images.unsplash.com/photo-1682685794304-99d3d07c57d2?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "postData": [
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      ]
       },
       "communityName": "league",
       "communityID": 1,
       "postID": 3,
       "title": "Post 3",
-      "subText": "This is the content of post 3",
+      "postText": "This is the content of post 3",
       "votesCount": 191,
-      "commentsCount": 33
-    },
-    {
-      "attachments": {
-        "subredditIcon": "https://www.redditstatic.com/gold/awards/icon/silver_48.png",
-        "postData": "https://images.unsplash.com/photo-1623300834538-538d044aff3e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      },
-      "communityName": "art",
-      "communityID": 2,
-      "postID": 4,
-      "title": "Post 4",
-      "subText": "This is the content of post 4",
-      "votesCount": 313,
-      "commentsCount": 23
+      "commentsCount": 33,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
   ],
+
   "comments": [
     {
       "user": {

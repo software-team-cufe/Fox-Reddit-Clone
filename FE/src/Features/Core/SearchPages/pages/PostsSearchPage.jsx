@@ -16,13 +16,15 @@ export default function PeopleSearchPage({ searched = "filler" }) {
           subReddit: {
             image: post.attachments.subredditIcon,
             title: post.communityName,
-          },
-          context: post.attachments.postData,
-          id: post.postID,
-          title: post.title,
-          subTitle: post.postText,
-          votes: post.votesCount,
-          comments: post.commentsCount,
+        },
+        images: post.attachments.postData,
+        id: post.postID,
+        title: post.title,
+        subTitle: post.postText,
+        votes: post.votesCount,
+        comments: post.commentsCount,
+        thumbnail: post.thumbnail,
+        video: null
         }));
 
         setPosts(newPosts);
