@@ -96,32 +96,31 @@ function MainRoute() {
             ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} className="" />
           }
 
-          <div className='h-full w-full overflow-y-auto p-4'>
-            <Outlet />
-          </div>
+          <div className='h-full w-full overflow-y-auto p-4' />
+          <Outlet />
         </div>
-      </div >
-      );
+      </div>
+    </div >
+  );
 }
-
-      const queryClient = new QueryClient();
-      function App() {
+const queryClient = new QueryClient();
+function App() {
   return (
-      <UserProvider>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<MainRoute />}>
-                {AuthRoutes}
-                {settingapp}
-                {CoreRoutes}
-              </Route>
-              <Route path='*' element={<NotFoundPage />} />
-            </Routes>
-          </BrowserRouter>
-        </QueryClientProvider>
-      </UserProvider>
-      )
+    <UserProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<MainRoute />}>
+              {AuthRoutes}
+              {settingapp}
+              {CoreRoutes}
+            </Route>
+            <Route path='*' element={<NotFoundPage />} />
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </UserProvider>
+  )
 }
 
-      export default App
+export default App
