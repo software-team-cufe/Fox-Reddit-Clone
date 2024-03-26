@@ -37,7 +37,7 @@ export default function ProfileSaved({using}) {
                 console.error('Error:', error);
                 setLoading(false);
             });
-    })
+    }, [])
 
     //to handle waiting for fetch or loading state
     if (loading) {
