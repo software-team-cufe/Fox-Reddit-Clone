@@ -1,13 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Safety() {
     const [FocusBlock, setFocusBlock] = useState(false);
     const [BlockValue, setBlockValue] = useState("");
     const [FocusMute, setFocusMute] = useState(false);
     const [MuteValue, setMuteValue] = useState("");
-
+    const [EnableAddBlock, setEnableAddBlock] = useState(true);
+    const [EnableAddMute, setEnableAddMute] = useState(true);
     //To do add of both fields
-    //to do disable of add buttons in both fields
+
+    const handleAddBlock = () => {//To do
+    }
+    const handleAddMute = () => {//To do
+    }
+
+    useEffect(() => {
+        if (BlockValue.startsWith("u/") || BlockValue.startsWith("r/"))
+            setEnableAddBlock(false);
+        else setEnableAddBlock(true);
+    }, [BlockValue])
+    useEffect(() => {
+        if (MuteValue.startsWith("u/") || MuteValue.startsWith("r/"))
+            setEnableAddMute(false);
+        else setEnableAddMute(true);
+    }, [MuteValue])
 
     const handleBlockInputValue = (event) => {
         setBlockValue(event.target.value);
@@ -36,7 +52,9 @@ function Safety() {
                     onBlur={() => { if (BlockValue.length === 0) setFocusBlock(false); }}
                     className="w-full px-2 py-1 focus:outline-none" type="text" />
                 <label className={`absolute text-gray-400 text-xs left-2 ${FocusBlock ? "top-0" : "top-4"} `}>Block New User</label>
-                <button className=" text-base font-sans text-orange-600 font-bold px-4 py-1 rounded-r-md">
+                <button onClick={handleAddBlock}
+                    disabled={EnableAddBlock}
+                    className=" disabled:text-gray-400 text-base font-sans text-orange-600 font-bold px-4 py-1 rounded-r-md">
                     Add
                 </button>
 
@@ -53,7 +71,9 @@ function Safety() {
                         onBlur={() => { if (MuteValue.length === 0) setFocusMute(false); }}
                         className="w-full text-black text-sm px-2 py-1 focus:outline-none" type="text" />
                     <label className={`absolute text-gray-400 text-xs left-2 ${FocusMute ? "top-0" : "top-4"} `}>Mute New Community</label>
-                    <button className=" text-base text-orange-600 font-bold px-4 py-1 rounded-r-md">
+                    <button onClick={handleAddMute}
+                        disabled={EnableAddMute}
+                        className="  disabled:text-gray-400 text-base text-orange-600 font-bold px-4 py-1 rounded-r-md">
                         Add
                     </button>
 
