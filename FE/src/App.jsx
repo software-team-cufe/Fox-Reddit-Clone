@@ -14,8 +14,8 @@ import NavBar from './GeneralComponents/NavBar/NavBar';
 import settingapp from './GeneralComponents/SettingApp/settingapp';
 import { useState } from 'react';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
-
-
+import "../icons/Prof.jpg"
+import ProfileIcon from "./GeneralComponents/ProfileIcon/ProfileIcon";
 const unProtectedRoutes = [
   '/',
   '/login',
@@ -80,8 +80,9 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%)]'>
+
       <div className='w-full h-[calc(100%)]'>
-        <NavBar SetOpenSiseBar={handleOpenSideBar} />
+        <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="../icons/Prof.jpg" UserName="u/jhjfjy" IsOnline={true} />
         <div className="flex my-[73px] gap-5  h-full mx-auto">
           {
             ![
