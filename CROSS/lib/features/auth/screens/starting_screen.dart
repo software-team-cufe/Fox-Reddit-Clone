@@ -42,7 +42,7 @@ class StartingScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              const Text('dive into anything',
+              const Text('Dive into anything',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

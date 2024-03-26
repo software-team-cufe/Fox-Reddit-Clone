@@ -10,13 +10,13 @@ import 'package:reddit_fox/Pages/post_details.dart'; // Import the PostDetails p
 class Post {
   final String title;
   final String content;
-  final String imageUrl; 
+  final String imageUrl;
 
   Post({required this.title, required this.content, required this.imageUrl});
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _controller = YoutubePlayerController(
       initialVideoId: 'ALDt7jOZUw0',
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
@@ -92,15 +92,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double drawerWidth = MediaQuery.of(context).size.width * 0.8;
-    double userWidth = MediaQuery.of(context).size.width * 0.6;
+    double userWidth = MediaQuery.of(context).size.width * 0.7;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: Builder(builder: (context) {
           return IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () {
               desplayDrawer(context);
             },
@@ -111,15 +111,15 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           ),
           Builder(builder: (context) {
             return IconButton(
-              icon: CircleAvatar(),
-              onPressed: () => desplayEndDrawer(context), 
+              icon: const CircleAvatar(),
+              onPressed: () => desplayEndDrawer(context),
             );
           }),
         ],
@@ -127,13 +127,13 @@ class _HomePageState extends State<HomePage> {
           icon: Text(_selectedItem),
           initialValue: _selectedItem,
           itemBuilder: (context) => [
-            PopupMenuItem(
-              child: Text("Home"),
+            const PopupMenuItem(
               value: "Home",
+              child: Text("Home"),
             ),
-            PopupMenuItem(
-              child: Text("Watch"),
+            const PopupMenuItem(
               value: "Watch",
+              child: Text("Watch"),
             ),
           ],
           onSelected: (value) {
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
         drawer_Width: drawerWidth,
       ),
       endDrawer: endDrawer(user_width: userWidth),
-      bottomNavigationBar: nBar(),
+      bottomNavigationBar: const nBar(),
       endDrawerEnableOpenDragGesture: true,
       drawerEnableOpenDragGesture: true,
       body: ListView.builder(
@@ -160,13 +160,13 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(getSelectedPosts()[index].content),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   YoutubePlayer(
                     controller: YoutubePlayerController(
                       initialVideoId: YoutubePlayer.convertUrlToId(
                         getSelectedPosts()[index].imageUrl,
                       )!,
-                      flags: YoutubePlayerFlags(
+                      flags: const YoutubePlayerFlags(
                         autoPlay: false,
                         mute: false,
                       ),
@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(getSelectedPosts()[index].content),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Image.network(getSelectedPosts()[index].imageUrl),
                   ],
                 ),
