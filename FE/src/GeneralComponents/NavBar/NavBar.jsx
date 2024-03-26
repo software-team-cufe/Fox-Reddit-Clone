@@ -7,9 +7,6 @@ import { MessageCircleMore, BadgePlus, QrCode, Megaphone } from "lucide-react";
 import { Settings, UserRound, Bell, LogOut, AlignJustify } from "lucide-react";
 import "./ButtonStyling.css";
 
-
-
-
 export default function NavBar({ SetOpenSiseBar }) {
   const listProfRef = useRef(null);
   const UserProfRef = useRef(null);
@@ -93,7 +90,7 @@ export default function NavBar({ SetOpenSiseBar }) {
             onMouseLeave={handleMouseLeaveSide}
             onClick={SetOpenSiseBar}
           >
-            <AlignJustify color=" #e94c00" size={24} />
+            <AlignJustify strokeWidth={1} color=" #e94c00" size={24} />
 
             <Tooltip
               title={"Open navigation "}
@@ -118,7 +115,7 @@ export default function NavBar({ SetOpenSiseBar }) {
                 onMouseEnter={handleMouseEnterAd}
                 onMouseLeave={handleMouseLeaveAd}
               >
-                <Megaphone color=" #e94c00" size={32} />
+                <Megaphone strokeWidth={1} color=" #e94c00" size={32} />
 
                 <Tooltip
                   title={"Advertise on Fox "}
@@ -131,7 +128,7 @@ export default function NavBar({ SetOpenSiseBar }) {
                 onMouseEnter={handleMouseEnterChat}
                 onMouseLeave={handleMouseLeaveChat}
               >
-                <MessageCircleMore color=" #e94c00" size={32} />
+                <MessageCircleMore strokeWidth={1} color=" #e94c00" size={32} />
                 <Tooltip title={"Open chat"} status={IshoverChat}></Tooltip>
               </button>
 
@@ -140,7 +137,7 @@ export default function NavBar({ SetOpenSiseBar }) {
                 onMouseEnter={handleMouseEnterCreate}
                 onMouseLeave={handleMouseLeaveCreate}
               >
-                <BadgePlus  color=" #e94c00" size={32} />
+                <BadgePlus strokeWidth={1} color=" #e94c00" size={32} />
                 <Tooltip
                   title={"Create new post"}
                   status={IshoverCreate}
@@ -152,7 +149,7 @@ export default function NavBar({ SetOpenSiseBar }) {
                   onMouseEnter={handleMouseEnterBell}
                   onMouseLeave={handleMouseLeaveBell}
                 >
-                  <Bell color=" #e94c00" size={32} />
+                  <Bell strokeWidth={1} color=" #e94c00" size={32} />
                   <Tooltip
                     title={"Open inbox"}
                     status={IshoverBell}
@@ -166,7 +163,7 @@ export default function NavBar({ SetOpenSiseBar }) {
                   onMouseEnter={handleMouseEnterProf}
                   onMouseLeave={handleMouseLeaveProf}
                 >
-                  <UserRound color=" #e94c00" size={32} />
+                  <UserRound strokeWidth={1} color=" #e94c00" size={32} />
                   <Tooltip
                     title={"Open profile menu"}
                     status={IshoverProf}
@@ -177,28 +174,28 @@ export default function NavBar({ SetOpenSiseBar }) {
                   <ul ref={listProfRef} className=" rounded-lg flex-col  shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                     <li>
                       <button className="bg-white hover:bg-orange-100  text-black h-12 py-1 px-1 rounded inline-flex items-center w-full">
-                        <UserRound className="mx-4" color=" #e94c00" size={24} />
+                        <UserRound strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                         View profile
                       </button>
                     </li>
 
                     <li>
                       <button className="bg-white hover:bg-orange-100 text-black h-12 py-1 px-1  rounded inline-flex items-center w-full">
-                        <LogOut className="mx-4" color=" #e94c00" size={24} />
+                        <LogOut strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                         Log out
                       </button>
                     </li>
                     <div className="bg-gray-200 h-px mx-4 my-2"></div>
                     <li>
                       <button className="bg-white hover:bg-orange-100 text-black  h-12 py-1 px-4  rounded inline-flex items-center w-full">
-                        <Megaphone className="mx-2" color=" #e94c00" size={24} />
+                        <Megaphone strokeWidth={1} className="mx-2" color=" #e94c00" size={24} />
                         Advertise on Fox
                       </button>
                     </li>
                     <div className="bg-gray-200 h-px mx-4 my-2"></div>
                     <li>
                       <button className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1  rounded inline-flex items-center w-full">
-                        <Settings className="mx-4" color=" #e94c00" size={24} />
+                        <Settings strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                         Settings
                       </button>
                     </li>
@@ -213,7 +210,7 @@ export default function NavBar({ SetOpenSiseBar }) {
               <div className="   md:block  " id="navbar-default"></div>
               <Link to="/register">
                 <button className="NavButtons bg-gray-400 hover:bg-slate-500">
-                  <QrCode className=" h-5 w-5" color=" white" size={32} /> 
+                  <QrCode className=" h-5 w-5" color=" white" size={32} />
                   Get App
                 </button>
               </Link>
