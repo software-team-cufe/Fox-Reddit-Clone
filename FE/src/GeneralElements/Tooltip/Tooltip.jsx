@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "tailwindcss/tailwind.css";
 
 function Tooltip({ title, status }) {
-  const [IsHovered, setIsHovered] = useState(false);
+
 
   return (
     <div
