@@ -8,6 +8,7 @@ import {
   forgotPasswordHandler,
   resetPasswordHandler,
   getCurrentUserHandler,
+  getCurrentUserPrefs,
 } from '../controller/user.controller';
 import { create } from 'lodash';
 //import deserializeUser from '../middleware/deserialzeUser';
@@ -26,4 +27,6 @@ router.post(
   resetPasswordHandler
 );
 router.get('/api/v1/me/:id', getCurrentUserHandler);
+
+router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
 export default router;

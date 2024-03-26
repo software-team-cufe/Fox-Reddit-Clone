@@ -2,7 +2,82 @@ import { prop, getModelForClass, modelOptions, Severity, pre, DocumentType, inde
 import * as argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 
-export const privateFields = ['password', 'verificationCode', 'passwordResetCode', 'verified'];
+export const privateFields = ['password', 'verificationCode', 'passwordResetCode', 'verified', 'prefs'];
+
+export class UserPrefs {
+  @prop({ type: Boolean, default: true })
+  numComments: boolean;
+
+  @prop({ type: Boolean, default: true })
+  threadedMessages: boolean;
+
+  @prop({ type: Boolean, default: true })
+  showLinkFlair: boolean;
+
+  @prop({ type: String, default: 'EG' })
+  countryCode: string;
+
+  @prop({ type: Boolean, default: true })
+  emailCommentReply: boolean;
+
+  @prop({ type: Boolean, default: true })
+  emailUpvoteComment: boolean;
+
+  @prop({ type: Boolean, default: true })
+  emailMessages: boolean;
+
+  @prop({ type: Boolean, default: true })
+  emailUnsubscribeAll: boolean;
+
+  @prop({ type: Boolean, default: true })
+  emailUpvotePost: boolean;
+
+  @prop({ type: Boolean, default: true })
+  emailUsernameMention: boolean;
+
+  @prop({ type: Boolean, default: true })
+  emailUserNewFollower: boolean;
+
+  @prop({ type: Boolean, default: true })
+  emailPostReply: boolean;
+
+  @prop({ type: Boolean, default: true })
+  emailPrivateMessage: boolean;
+
+  @prop({ type: Boolean, default: true })
+  over18: boolean;
+
+  @prop({ type: Boolean, default: true })
+  newwindow: boolean;
+
+  @prop({ type: Boolean, default: true })
+  labelNsfw: boolean;
+
+  @prop({ type: Boolean, default: true })
+  liveOrangeReds: boolean;
+
+  @prop({ type: Boolean, default: true })
+  markMessageRead: boolean;
+
+  @prop({ type: Boolean, default: true })
+  enableFollwers: boolean;
+
+  @prop({ type: Boolean, default: true })
+  publicVotes: boolean;
+
+  @prop({ type: Boolean, default: true })
+  showLocationBasedRecommendations: boolean;
+
+  @prop({ type: Boolean, default: true })
+  searchIncludeOver18: boolean;
+
+  @prop({ type: String, default: 'Best' })
+  defaultCommentSort: string;
+
+  @prop({ type: String, default: 'en' })
+  langauge: string;
+}
+
 @pre<User>('save', async function (this: DocumentType<User>) {
   if (!this.isModified('password')) {
     return;
@@ -47,6 +122,12 @@ export class User {
 
   @prop({ default: false })
   verified: boolean;
+
+  @prop({
+    type: () => UserPrefs,
+    default: {},
+  })
+  prefs: UserPrefs;
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {

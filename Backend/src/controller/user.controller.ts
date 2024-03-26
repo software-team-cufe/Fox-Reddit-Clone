@@ -149,3 +149,15 @@ export async function getCurrentUserHandler(req: Request, res: Response) {
   }
   //return res.send(res.locals.user);
 }
+
+export async function getCurrentUserPrefs(req: Request, res: Response) {
+  const user_id = req.params.id;
+  const user = await UserModel.findById(user_id).populate('prefs');
+  if (!user) {
+    res.sendStatus(404);
+  } else {
+    const user_prefs = JSON.stringify(user.prefs);
+    return res.send(user_prefs);
+  }
+  // return res.send(res.locals.user.prefs);
+}
