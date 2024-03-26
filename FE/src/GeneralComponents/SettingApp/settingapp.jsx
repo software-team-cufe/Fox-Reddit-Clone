@@ -7,7 +7,7 @@ import Notifications from './notifications';
 import Subscription from './subscriptions';
 import SafetyPrivacy from './safety&privacy';
 import Feedsettings from './feedsettings';
-import Profile from './profile';
+import Profile from './ProfileSettings/profile';
 import { Route, Routes } from "react-router-dom";
 
 

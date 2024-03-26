@@ -14,7 +14,7 @@ import NavBar from './GeneralComponents/NavBar/NavBar';
 import settingapp from './GeneralComponents/SettingApp/settingapp';
 import EmailSetting from './GeneralComponents/SettingApp/EmailSetting';
 import { useState } from 'react';
-import ProfileSettings from './GeneralComponents/SettingApp/ProfileSettings/ProfileSettings';
+import ProfileSettings from './GeneralComponents/SettingApp/ProfileSettings/profile';
 import Safety from './GeneralComponents/SettingApp/Safety';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 

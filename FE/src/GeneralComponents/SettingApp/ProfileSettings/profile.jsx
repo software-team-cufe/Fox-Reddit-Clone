@@ -165,7 +165,7 @@ function ProfileSettings() {
 
     return (
         <>
-
+            <Navofsetting />
             <h1 className='my-9 text-xl'>Customize profile</h1>
             <div className='text-xs  text-gray-500'>PROFILE INFORMATION</div>
             <hr className='mb-6' />
