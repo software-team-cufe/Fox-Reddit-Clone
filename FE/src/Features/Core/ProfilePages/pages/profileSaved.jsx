@@ -20,12 +20,14 @@ export default function ProfileSaved({using}) {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
+                    images: post.attachments.postData,
                     id: post.postID,
-                    context: post.attachments.postData,
                     title: post.title,
                     subTitle: post.postText,
                     votes: post.votesCount,
                     comments: post.commentsCount,
+                    thumbnail: post.thumbnail,
+                    video: null
                 }));
 
                 setPosts(newPosts);
