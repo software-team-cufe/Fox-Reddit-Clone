@@ -30,7 +30,7 @@ function MainRoute() {
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
-  const [OpenSideBar, setOpenSideBar] = useState(false)
+  const [OpenSideBar, setOpenSideBar] = useState(false);
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
     console.log(OpenSideBar);
@@ -84,22 +84,22 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar />
-      <div className="flex my-[73px] gap-5  h-full mx-auto">
+      <NavBar SetOpenSiseBar={handleOpenSideBar} />
+      {/* <div className="flex my-[73px] gap-5  h-full mx-auto">
         {
           ![
             "/login",
             "/register",
             "/forget-username",
             "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar className="" />
-        }
+          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} className="" />
+        } */}
 
-        <div className='h-full w-full overflow-y-auto p-4'>
-          <Outlet />
-        </div>
+      <div className='h-full w-full overflow-y-auto p-4'>
+        <Outlet />
       </div>
     </div>
+    // </div >
   );
 }
 

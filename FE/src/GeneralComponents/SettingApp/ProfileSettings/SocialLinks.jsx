@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react'
 import { X, ArrowLeft } from "lucide-react";
-import React from 'react'
+
 
 
 

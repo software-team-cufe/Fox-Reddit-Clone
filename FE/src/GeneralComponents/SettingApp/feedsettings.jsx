@@ -3,7 +3,7 @@ import ToggleButton from "@/GeneralElements/ToggleButton";
 
 export default function Feedsettings() {
     return (
-        <div className="p-40">
+        <div className="">
             <Navofsetting />
             <br></br><br></br>
             <h1 className=" font-semibold text-xl">
@@ -18,11 +18,11 @@ export default function Feedsettings() {
                     <div className="flex flex-row mb-7 justify-between ">
                         <div>
                             <p>
-                            Show mature (18+) content
+                                Show mature (18+) content
                             </p>
-                            <br/>
+                            <br />
                             <p className="text-gray-400 text-wrap">
-                            See NSFW (Not Safe for Work) mature and adult images, videos, written content, and other media in your Reddit feeds and search results.
+                                See NSFW (Not Safe for Work) mature and adult images, videos, written content, and other media in your Reddit feeds and search results.
                             </p>
                         </div>
                         <ToggleButton />
@@ -32,11 +32,11 @@ export default function Feedsettings() {
                     <div className="flex flex-row mb-7 justify-between">
                         <div>
                             <p>
-                            Blur mature images and media
+                                Blur mature images and media
                             </p>
-                            <br/>
+                            <br />
                             <p className="text-gray-400 text-wrap">
-                            Blur previews and thumbnails for any images or videos tagged as NSFW (Not Safe for Work).
+                                Blur previews and thumbnails for any images or videos tagged as NSFW (Not Safe for Work).
                             </p>
                         </div>
                         <ToggleButton />
@@ -49,13 +49,14 @@ export default function Feedsettings() {
             <div>
                 <div className="flex flex-col mt-7 w-3/2 ">
                     <div className="flex flex-row mb-7 justify-between">
-                        <p>
-                        Enable home feed recommendations
-                        </p>
-                        <br/>
-                        <p className="text-gray-400 text-wrap">
-                        Allow us to introduce recommended posts in your home feed.
-                        </p>
+                        <div>
+                            <div>
+                                Enable home feed recommendations
+                            </div>
+                            <div className="text-gray-400 text-wrap">
+                                Allow us to introduce recommended posts in your home feed.
+                            </div>
+                        </div>
                         <div >
                             <ToggleButton />
                         </div>
@@ -64,11 +65,11 @@ export default function Feedsettings() {
                     </div>
                     <div className="flex flex-row mb-7 justify-between">
                         <p>
-                        Autoplay media
+                            Autoplay media
                         </p>
-                        <br/>
+
                         <p className="text-gray-400 text-wrap">
-                        Play videos and gifs automatically when in the viewport.
+                            Play videos and gifs automatically when in the viewport.
                         </p>
                         <div >
                             <ToggleButton />
@@ -77,11 +78,11 @@ export default function Feedsettings() {
                     </div>
                     <div className="flex flex-row mb-7 justify-between">
                         <p>
-                        Reduce Animations
+                            Reduce Animations
                         </p>
-                        <br/>
+                        <br />
                         <p className="text-gray-400 text-wrap">
-                        Reduce animations on posts, comments, and feeds.
+                            Reduce animations on posts, comments, and feeds.
                         </p>
                         <div >
                             <ToggleButton />
@@ -91,32 +92,32 @@ export default function Feedsettings() {
                     <div className="flex flex-nowrap">
                         <div className="flex flex-row mb-7 flex-wrap">
                             <p>
-                            Community themes
+                                Community themes
                             </p>
-                            <br/>
+                            <br />
                             <p className="text-gray-400 text-wrap">
-                            Use custom themes for all communities. You can also turn this off on a per community basis.
+                                Use custom themes for all communities. You can also turn this off on a per community basis.
                             </p>
                         </div>
-                        
+
                         <div >
-                                <ToggleButton />
+                            <ToggleButton />
                         </div>
                     </div>
 
                     <div className="flex flex-nowrap">
                         <div className="flex flex-row mb-7 flex-wrap">
                             <p>
-                            Community content sort
+                                Community content sort
                             </p>
-                            <br/>
+                            <br />
                             <p className="text-gray-400 text-wrap">
-                            Choose how you would like content organized in communities you visit. This will not affect global feeds such as Home, or Popular.
+                                Choose how you would like content organized in communities you visit. This will not affect global feeds such as Home, or Popular.
                             </p>
                         </div>
-                        
+
                         <div >
-                                <ToggleButton />
+                            <ToggleButton />
                         </div>
                     </div>
                     <div className="flex flex-row mb-7 justify-between">
@@ -178,4 +179,5 @@ export default function Feedsettings() {
                 </div>
             </div>
 
-        </div>)}
+        </div>)
+}
