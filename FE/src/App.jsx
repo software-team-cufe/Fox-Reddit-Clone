@@ -84,13 +84,23 @@ function MainRoute() {
   }
 
   return (
-    <div className='w-full h-[calc(100%-72px)]'>
+    <div className='w-full h-[calc(100%)]'>
       <NavBar SetOpenSiseBar={handleOpenSideBar} />
-      <Sidebar IsOpen={OpenSideBar} />
-      <div className="max-w-[95%]  lg:max-w-[80%] mt-[40px] h-full mx-auto">
-        <Outlet />
+      <div className="flex my-[73px] gap-5  h-full mx-auto">
+        {
+          ![
+            "/login",
+            "/register",
+            "/forget-username",
+            "/forget-password",
+          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} className="" />
+        }
+
+        <div className='h-full w-full overflow-y-auto p-4'>
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </div >
   );
 }
 
