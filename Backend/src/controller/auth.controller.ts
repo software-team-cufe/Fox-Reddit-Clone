@@ -26,8 +26,8 @@ export async function createSessionHandeler(req: Request<{}, {}, CreateSessionIn
   // sign a access token
   const accessToken = signAccessToken(user);
   //sign a refresh token
+
   const refreshToken = await signRefreshToken({ userId: user._id.toString() });
   // send the access token and refresh token to the client(store in client)
-
   return res.send({ accessToken, refreshToken });
 }
