@@ -78,7 +78,7 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} />
       <div className="flex my-[73px] gap-5  h-full mx-auto">
         {
           ![
@@ -86,14 +86,14 @@ function MainRoute() {
             "/register",
             "/forget-username",
             "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar className="" />
+          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} className="" />
         }
-         
+
         <div className='h-full w-full overflow-y-auto p-4'>
           <Outlet />
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
