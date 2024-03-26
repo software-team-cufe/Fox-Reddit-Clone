@@ -94,13 +94,13 @@ function MainRoute() {
             "/forget-password",
           ].includes(window.location.pathname) && <Sidebar className="" />
         }
-         
+
         <div className='h-full w-full overflow-y-auto p-4'>
           <Outlet />
         </div>
       </div>
-    </div>
-  );
+    </div>
+  );
 }
 
 const queryClient = new QueryClient();
