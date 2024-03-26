@@ -12,10 +12,7 @@ import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import settingapp from './GeneralComponents/SettingApp/settingapp';
-import EmailSetting from './GeneralComponents/SettingApp/EmailSetting';
 import { useState } from 'react';
-import ProfileSettings from './GeneralComponents/SettingApp/ProfileSettings/profile';
-import Safety from './GeneralComponents/SettingApp/Safety';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 
 
@@ -33,7 +30,6 @@ function MainRoute() {
   const [OpenSideBar, setOpenSideBar] = useState(false);
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
-    console.log(OpenSideBar);
   }
 
   const { isLoading, error, data, refetch } = useQuery(

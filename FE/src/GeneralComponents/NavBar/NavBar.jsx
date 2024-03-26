@@ -6,8 +6,10 @@ import Tooltip from "@/GeneralElements/Tooltip/Tooltip";
 import { MessageCircleMore, BadgePlus, QrCode, Megaphone } from "lucide-react";
 import { Settings, UserRound, Bell, LogOut, AlignJustify } from "lucide-react";
 import "./ButtonStyling.css";
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar({ SetOpenSiseBar }) {
+  const navigator = useNavigate();
   const listProfRef = useRef(null);
   const UserProfRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
@@ -194,7 +196,8 @@ export default function NavBar({ SetOpenSiseBar }) {
                     </li>
                     <div className="bg-gray-200 h-px mx-4 my-2"></div>
                     <li>
-                      <button className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1  rounded inline-flex items-center w-full">
+                      <button onClick={() => { navigator("/setting/account"); }}
+                        className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1  rounded inline-flex items-center w-full">
                         <Settings strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                         Settings
                       </button>
