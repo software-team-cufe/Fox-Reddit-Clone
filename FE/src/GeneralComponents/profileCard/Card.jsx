@@ -1,6 +1,6 @@
 import {Camera,Shirt,Shield,Plus,Share2} from 'lucide-react';
 import { Link } from 'react-router-dom';
-import React from 'react';
+
 
 export default function Card (){
     return(
