@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:reddit_fox/features/auth/screens/chat_screen.dart';
 // import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
 import 'package:reddit_fox/firebase_options.dart';
@@ -14,11 +16,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    DevicePreview(builder: (context) => const MyApp(),),
+    DevicePreview(
+      builder: (context) => const MyApp(),
+    ),
     // const ProviderScope(
     //   child: MyApp(),
     // ),
-    
   );
 }
 

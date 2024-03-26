@@ -4,12 +4,13 @@ import 'package:reddit_fox/Pages/searchinhomepage.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:reddit_fox/Pages/post_details.dart'; // Import the PostDetails page
 
 // Dummy post class
 class Post {
   final String title;
   final String content;
-  final String imageUrl; 
+  final String imageUrl;
 
   Post({required this.title, required this.content, required this.imageUrl});
 }
@@ -71,7 +72,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _controller = YoutubePlayerController(
       initialVideoId: 'ALDt7jOZUw0',
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
@@ -91,15 +92,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double drawerWidth = MediaQuery.of(context).size.width * 0.8;
-    double userWidth = MediaQuery.of(context).size.width * 0.6;
+    double userWidth = MediaQuery.of(context).size.width * 0.7;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: Builder(builder: (context) {
           return IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () {
               desplayDrawer(context);
             },
@@ -110,15 +111,15 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           ),
           Builder(builder: (context) {
             return IconButton(
-              icon: CircleAvatar(),
-              onPressed: () => desplayEndDrawer(context), 
+              icon: const CircleAvatar(),
+              onPressed: () => desplayEndDrawer(context),
             );
           }),
         ],
@@ -126,13 +127,13 @@ class _HomePageState extends State<HomePage> {
           icon: Text(_selectedItem),
           initialValue: _selectedItem,
           itemBuilder: (context) => [
-            PopupMenuItem(
-              child: Text("Home"),
+            const PopupMenuItem(
               value: "Home",
+              child: Text("Home"),
             ),
-            PopupMenuItem(
-              child: Text("Watch"),
+            const PopupMenuItem(
               value: "Watch",
+              child: Text("Watch"),
             ),
           ],
           onSelected: (value) {
@@ -146,7 +147,7 @@ class _HomePageState extends State<HomePage> {
         drawer_Width: drawerWidth,
       ),
       endDrawer: endDrawer(user_width: userWidth),
-      bottomNavigationBar: nBar(),
+      bottomNavigationBar: const nBar(),
       endDrawerEnableOpenDragGesture: true,
       drawerEnableOpenDragGesture: true,
       body: ListView.builder(
@@ -160,34 +161,45 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(post.content),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   YoutubePlayer(
                     controller: YoutubePlayerController(
                       initialVideoId: YoutubePlayer.convertUrlToId(
                         post.imageUrl,
                       )!,
-                      flags: YoutubePlayerFlags(
+                      flags: const YoutubePlayerFlags(
                         autoPlay: false,
                         mute: false,
                       ),
                     ),
                     showVideoProgressIndicator: true,
                     onEnded: (metadata) {
+                      // print('Video ended');
                     },
                   ),
                 ],
               ),
             );
           } else {
-            return ListTile(
-              title: Text(post.title),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(post.content),
-                  SizedBox(height: 8),
-                  Image.network(post.imageUrl),
-                ],
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostDetails(key: UniqueKey()),
+                  ),
+                );
+              },
+              child: ListTile(
+                title: Text(post.title),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(post.content),
+                    const SizedBox(height: 8),
+                    Image.network(post.imageUrl),
+                  ],
+                ),
               ),
             );
           }

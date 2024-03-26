@@ -7,6 +7,7 @@ import 'package:reddit_fox/Pages/Blanck.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/Pages/create_post.dart';
 import 'package:reddit_fox/Pages/messages.dart';
+import 'package:reddit_fox/features/auth/screens/chat_screen.dart';
 
 class nBar extends StatefulWidget {
   const nBar({super.key});
@@ -38,7 +39,7 @@ class _nBarState extends State<nBar> {
           TextButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BlankPage()));
+                  MaterialPageRoute(builder: (context) => const BlankPage()));
             },
             child: const Icon(
               Icons.people_outline_rounded,
@@ -59,8 +60,10 @@ class _nBarState extends State<nBar> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BlankPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ChatScreen(title: 'chat')));
             },
             child: const FaIcon(
               FontAwesomeIcons.message,
@@ -71,7 +74,9 @@ class _nBarState extends State<nBar> {
           TextButton(
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MyApp()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Message(title: 'Inbox')));
             },
             child: const FaIcon(
               FontAwesomeIcons.bell,

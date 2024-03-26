@@ -5,16 +5,16 @@ import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Message(title: 'Inbox');
+    return const Message(title: 'Inbox');
   }
 }
 
 class Message extends StatefulWidget {
-  const Message({Key? key, required this.title});
+  const Message({super.key, required this.title});
 
   final String title;
 
@@ -33,22 +33,22 @@ class _MessageState extends State<Message> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: const Icon(Icons.menu),
           onPressed: () {
             _scaffoldKey.currentState!.openDrawer();
           },
         ),
         actions: [
           IconButton(
-            icon: CircleAvatar(),
+            icon: const CircleAvatar(),
             onPressed: () {
               _scaffoldKey.currentState!.openEndDrawer();
             },
           ),
         ],
-        title: Text("Inbox"),
+        title: const Text("Inbox"),
       ),
       drawer: CustomDrawer(
         drawer_Width: drawerWidth,
@@ -61,18 +61,18 @@ class _MessageState extends State<Message> {
             children: [
               TextButton(
                 onPressed: () {},
-                child: Text("Activity"),
+                child: const Text("Activity"),
               ),
               TextButton(
                 onPressed: () {},
-                child: Text("Messages"),
+                child: const Text("Messages"),
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 75.0,
           ),
-          Center(
+          const Center(
             child: Column(
               children: [
                 FaIcon(
@@ -86,7 +86,7 @@ class _MessageState extends State<Message> {
           ),
         ],
       ),
-      bottomNavigationBar: nBar(),
+      bottomNavigationBar: const nBar(),
       endDrawerEnableOpenDragGesture: true,
       drawerEnableOpenDragGesture: true,
     );
