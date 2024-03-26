@@ -11,7 +11,7 @@ export async function createSession({ userId }: { userId: string }) {
 export async function signRefreshToken({ userId }: { userId: string }) {
   const session = await createSession({ userId });
   const refreshToken = signJwt({ session: session._id }, 'refreshTokenPrivateKey', {
-    expiresIn: '1y',
+    expiresIn: '1h',
   });
   return refreshToken;
 }

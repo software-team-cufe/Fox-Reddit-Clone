@@ -27,9 +27,9 @@ router.post(
   validateResource(resetPasswordSchema),
   resetPasswordHandler
 );
-router.get('/api/v1/me/:id', getCurrentUserHandler);
+router.get('/api/v1/me/:id', getCurrentUserHandler); //needs schema validation
 
-router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
+router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs); //needs schema validation
 
-router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
+router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs); //needs schema validation
 export default router;

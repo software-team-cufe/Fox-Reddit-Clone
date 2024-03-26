@@ -8,5 +8,5 @@ const router = express.Router();
 
 router.post('/api/auth/login', requireUser, validateResource(createSessionSchema), createSessionHandeler);
 
-router.post('/api/sessions/refresh', refreshAccessTokenHandler);
+router.post('/api/sessions/refresh', refreshAccessTokenHandler); //needs schema validation?
 export default router;
