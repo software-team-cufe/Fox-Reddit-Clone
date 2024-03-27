@@ -11,7 +11,7 @@ interface Post {
     votes: number;
     comments: number;
     images: string[],
-    thumbnail: string,
+    thumbnail?: string,
     video?: string,
 }
 export const fakePosts: Post[] = [
@@ -32,7 +32,7 @@ export const fakePosts: Post[] = [
             'https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg',
             'https://science.nasa.gov/wp-content/uploads/2023/06/webb-flickr-52259221868-30e1c78f0c-4k-jpg.webp',
         ],
-        thumbnail: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
+        
     },
     {
         id: "2",

@@ -3,8 +3,13 @@ import { fakePosts } from "./fakePosts";
 import { useQuery } from "react-query";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import { userAxios } from "@/Utils/UserAxios";
+import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
+import { useState } from "react";
+import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 
 export default function HomePage() {
+  const [selected, setselected] = useState("New");   // for the sort select component
+  const [period, setperiod] = useState('All time');
   const { isLoading, isError, error, data, } = useQuery('get-post',
     () => userAxios.get("posts"),
     {
@@ -15,7 +20,13 @@ export default function HomePage() {
 
   return (
     <div className="w-full h-full flex gap-10">
+
       <div className="w-full overflow-y-auto space-y-4">
+        <div className="flex -mb-3 gap-x-4">
+          <div role="sortmenu"><Sortmenu setselected={setselected} /></div>
+          <PeriodSelect appearance={selected} setperiod={setperiod} />
+        </div>
+        <hr />
         {
           fakePosts.map((e, idx) => <PostComponent post={e} key={idx} />)
         }

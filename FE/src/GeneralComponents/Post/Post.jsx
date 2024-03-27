@@ -16,7 +16,7 @@ export default function PostComponent({ post, className, viewMode = false }) {
                         </div>
                     </div>
                     <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
-                    <p className=" text-gray-600 text-sm">{post.subTitle} </p>
+                    <p className=" text-gray-600 text-sm">{post.description} </p>
                     <div
 
                         className=" rounded-lg my-4 w-full bg-gray-600">
@@ -29,7 +29,7 @@ export default function PostComponent({ post, className, viewMode = false }) {
                     <div>
                         
                         <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
-                        <p className=" text-gray-600 text-sm mb-4">{post.subTitle} </p>
+                        <p className=" text-gray-600 text-sm mb-4">{post.description} </p>
                         {(images.length != 0 && post.video == null) &&
                             <div className=" max-w-[700px]">
                                 <ImageGallery
