@@ -4,7 +4,7 @@ import HomePage from './HomePage/HomePage';
 import SearchPagesLayout from './SearchPages/SearchPagesRoutes';
 import PostPage from './PostPage/PostPage';
 import ViewerProfilePage from './ProfilePages/viewerProfileRoutes';
-import CommunityPage from './CommunityPage/CommunityPage';
+import CommunityPage from './COmmunityPage/CommunityPage';
 
 export default [
     <Route key={'/'} path='/' element={<HomePage />} />,
