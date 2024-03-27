@@ -4,7 +4,6 @@ import SocialLinks from './SocialLinks';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Navofsetting from './Navofsetting';
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 
 function ProfileSettings() {
@@ -41,8 +40,8 @@ function ProfileSettings() {
         // Cleanup function
         return () => {
             // Remove the event listeners
-            document.getElementById("DropProfImage").removeEventListener('dragover', handleDragOver);
-            document.getElementById("DropProfImage").removeEventListener('drop', handleProfImageDrop);
+            //document.getElementById("DropProfImage").removeEventListener('dragover', handleDragOver);
+            //document.getElementById("DropProfImage").removeEventListener('drop', handleProfImageDrop);
         };
     }, []);
 

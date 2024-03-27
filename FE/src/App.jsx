@@ -13,7 +13,7 @@ import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 import { useState } from 'react';
-import SettingRoute from './GeneralComponents/Settings/SettingRoute';
+import SettingRoute from './Features/Core/Settings/SettingRoute';
 const unProtectedRoutes = [
   '/',
   '/login',

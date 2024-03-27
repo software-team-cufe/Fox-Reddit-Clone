@@ -1,66 +1,64 @@
 import React from "react";
-import { Link, Outlet, Route, Routes, useLocation, useParams, } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useLocation} from "react-router-dom";
 import EmailSetting from './EmailSetting';
 import Accountsetting from './Account';
 import Notifications from './NotificationSettings';
 import SafetySettings from './SafetySettings';
 import Feedsettings from './FeedSettings';
 import ProfileSettings from './PofileSettings';
-import ChatMessaging from './chat&messaging';
-import { Settings } from 'lucide-react';
+import ChatMessaging from './chatmessaging';
 
 function Navofsetting() {
-    const path = useLocation();
     return (
         <div className="ss:w-max">
             <h3 className="font-bold mb-16">User Settings</h3>
-            <nav >
+            <nav className="mb-10">
                 <ul className="flex flex-wrap gap-10">
                     <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <Link to={`/setting/account`}>
+                        <Link to={`./account`}>
                             <span>Account</span>
                         </Link>
                     </li>
 
                     <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <Link to={`/profile`}>
+                        <Link to={`./profile`}>
                             <span>Profile</span>
                         </Link>
                     </li>
 
                     <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <Link to="setting/safetyandprivacy">
+                        <Link to="./safetyandprivacy">
                             <span>SafetyandPrivacy</span>
                         </Link>
                     </li>
 
                     <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <Link to={`/feedsettings`}>
+                        <Link to={`./feedsettings`}>
                             <span>Feed settings</span>
                         </Link>
                     </li>
 
                     <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <Link to="/notifications">
+                        <Link to="./notifications">
                             <span>Notifications</span>
                         </Link>
                     </li>
 
                     <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <Link to='setting/email'>
+                        <Link to='./email'>
                             <span>Emails</span>
                         </Link>
                     </li>
 
                     <li className="block text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <Link to={`setting/chat`}>
+                        <Link to={`./chat`}>
                             <span>Chat & Messaging</span>
                         </Link>
                     </li>
                 </ul>
             </nav>
+            <Outlet />
         </div>
-    
     )
 };
 

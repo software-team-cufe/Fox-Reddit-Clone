@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Navofsetting from "./Navofsetting";
+
 function SafetySettings() {
     const [FocusBlock, setFocusBlock] = useState(false);
     const [BlockValue, setBlockValue] = useState("");

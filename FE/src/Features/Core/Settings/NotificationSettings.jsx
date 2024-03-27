@@ -1,4 +1,3 @@
-import Navofsetting from "./Navofsetting"
 
 export default function NotificationSettings() {
 

@@ -205,7 +205,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                     </li>
                     <div className="bg-gray-200 h-px mx-4 my-2"></div>
                     <li>
-                      <button onClick={() => { navigator("/setting"); }}
+                      <button onClick={() => { navigator("/setting/profile"); }}
                         className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1  rounded inline-flex items-center w-full">
                         <Settings strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                         Settings

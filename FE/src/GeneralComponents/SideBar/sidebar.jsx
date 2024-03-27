@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 
 
@@ -59,12 +59,14 @@ function Sidebar({className,IsOpen}) {
       setIsModalOpen(false); // Close the modal
    };
 
+   const path = useLocation();
+   
    return (
       <>
          <aside
             id="sidebar-multi-level-sidebar"
-            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"
-               }  md:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
+            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""}
+            md:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
 

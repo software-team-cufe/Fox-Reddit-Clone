@@ -5,6 +5,7 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import PostsSearchPage from "./pages/PostsSearchPage";
 import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
 import PeopleSearchPage from "./pages/PeopleSearchPage";
+import CommentsSearchPage from "./pages/CommentsSearchPage";
 import {React, useContext, createContext} from "react";
 
 // search for list options for mapping

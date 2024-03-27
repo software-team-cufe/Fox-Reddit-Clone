@@ -128,10 +128,10 @@ export default function ProfilePagesLayout() {
         <Route key={'/hidden'} path="/hidden" element={<ProfileHidden using={user}/>} />
         <Route key={'/saved'} path="/saved" element={<ProfileSaved using={user}/>} />
         <Route key={'/comments'} path="/comments" element={<ProfileComments context={ProfileContext} using={user}/>} />
-        <Route key={'/posts'} path="posts" element={<ProfilePosts context={ProfileContext} using={user}/>} />
+        <Route key={'/posts'} path="/posts" element={<ProfilePosts context={ProfileContext} using={user}/>} />
         <Route key={'/overview'} path="/overview" element={<ProfileOverview using={user} />} />
-        <Route key={'/upvoted'} path="upvoted" element={<ProfileUpvoted using={user}/>} />
-        <Route key={'/downvoted'} path="downvoted" element={<ProfileDownvoted using={user}/>} />
+        <Route key={'/upvoted'} path="/upvoted" element={<ProfileUpvoted using={user}/>} />
+        <Route key={'/downvoted'} path="/downvoted" element={<ProfileDownvoted using={user}/>} />
       </Route>
     </Routes>
     </ProfileProvider>

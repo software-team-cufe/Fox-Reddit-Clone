@@ -1,8 +1,8 @@
-import Navofsetting from "./Navofsetting"
+
 
 const Acount = () => {
   return (
-    <div className='p-40'>
+    <div>
       <h2 className=" font-semibold text-xl">Account settings</h2>
       <div >
         <p className="text-xs text-gray-500 mt-9 mb-1">ACCOUNT PREFERENCES</p>

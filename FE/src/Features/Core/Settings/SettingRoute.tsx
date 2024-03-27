@@ -5,7 +5,7 @@ import Notifications from './NotificationSettings';
 import Safety from './SafetySettings';
 import Feedsettings from './FeedSettings';
 import ProfileSettings from './PofileSettings';
-import ChatMessaging from './chat&messaging';
+import ChatMessaging from './chatmessaging';
 import { Route } from "react-router-dom";
 import SafetySettings from './SafetySettings';
 
