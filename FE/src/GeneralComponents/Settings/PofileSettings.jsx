@@ -169,7 +169,6 @@ function ProfileSettings() {
                 className="bg-white w-40 LeSS:w-0 min-w-0 max-w-40 mx-2" />
 
             <div>
-                <Navofsetting />
 
                 <div className="justify-center  w-[70%]">
                     <h1 className='my-9 text-xl'>Customize profile</h1>

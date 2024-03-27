@@ -4,7 +4,6 @@ import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 export default function FeedSettings() {
     return (
         <div className="">
-            <Navofsetting />
             <br></br><br></br>
             <h1 className=" font-semibold text-xl">
                 Feed settings

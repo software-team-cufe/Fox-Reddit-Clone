@@ -49,7 +49,6 @@ function SafetySettings() {
                 className="bg-white w-40 LeSS:w-0 min-w-0 max-w-40 mx-2" />
 
             <div>
-                <Navofsetting />
                 <div className="w-[70%]">
                     <h1 className='my-4 text-xl'>Safety & Privacy</h1>
                     <div className='text-xs mb-6 text-gray-500'><div className='text-xs  text-gray-500'>Manage how we use data to personalize your Fox experience, and control how other users interact with you.</div></div>

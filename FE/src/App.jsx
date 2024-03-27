@@ -108,7 +108,6 @@ function App() {
             <Route element={<MainRoute />}>
               {AuthRoutes}
               {CoreRoutes}
-              {SettingRoute}
             </Route>
             <Route path='*' element={<NotFoundPage />} />
           </Routes>

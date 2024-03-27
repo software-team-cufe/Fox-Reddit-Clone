@@ -1,3 +1,5 @@
+import Navofsetting from "./Navofsetting"
+
 export default function EmailSetting()
 {
     return (

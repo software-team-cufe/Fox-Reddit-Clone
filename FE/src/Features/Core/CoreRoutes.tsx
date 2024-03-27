@@ -5,6 +5,7 @@ import SearchPagesLayout from './SearchPages/SearchPagesRoutes';
 import PostPage from './PostPage/PostPage';
 import ViewerProfilePage from './ProfilePages/viewerProfileRoutes';
 import CommunityPage from './CommunityPage/CommunityPage';
+import Settingpagelayout from '@/GeneralComponents/Settings/Navofsetting';
 import {HomeProvider} from './HomePage/HomePage';
 
 export default [
@@ -13,5 +14,6 @@ export default [
     <Route key={'/posts'} path='/posts/:id' element={<PostPage />} />,
     <Route key={'/search'} path='/search/*' element={<SearchPagesLayout />} />,
     <Route key={'/viewer'} path='/viewer/:viewer/*' element={<ViewerProfilePage />} />,
-    <Route key={'/r'} path='/r/:community' element={<CommunityPage />} />
+    <Route key={'/r'} path='/r/:community' element={<CommunityPage />} />,
+    <Route key={"/setting"} path="/setting" element={<Settingpagelayout />} />
 ]

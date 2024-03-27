@@ -6,7 +6,6 @@ export default function NotificationSettings() {
     return (
 
         <div className='table:w-max'>
-            <Navofsetting />
             <h2 className=" font-semibold text-xl">
                 Notification settings
             </h2>
