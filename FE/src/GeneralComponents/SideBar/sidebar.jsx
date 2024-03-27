@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Home, Flame, Globe, Plus, ChevronDown } from "lucide-react";
+import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link } from "react-router-dom";
 
@@ -14,12 +14,12 @@ const icons = [
    {
       icon: Flame,
       title: "Popular",
-      link: "/",
+      link: "/Popular",
    },
    {
       icon: Globe,
       title: "All",
-      link: "/",
+      link: "/All",
    },
 ];
 
@@ -96,6 +96,7 @@ function Sidebar({className,IsOpen}) {
                         type="button"
                      >
                         RECENTS
+                     <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
                      </button>
 
                      <div id="dropdown" className="">
@@ -123,22 +124,8 @@ function Sidebar({className,IsOpen}) {
                         type="button"
                      >
                         YOUR COMMUNITIES
-                        <svg
-                           onClick={functionToExecute}
-                           className="w-2.5 h-2.5 ms-3"
-                           aria-hidden="true"
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 10 6"
-                        >
-                           <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="m1 1 4 4 4-4"
-                           />
-                        </svg>
+                        <ChevronDown 
+                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
                      </button>
 
                      <div id="dropdown1" className="">
@@ -172,7 +159,7 @@ function Sidebar({className,IsOpen}) {
                         type="button"
                      >
                         RESOURCES
-                        <ChevronDown />
+                        <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
                      </button>
 
                      <div id="dropdown2" className="">
@@ -182,7 +169,7 @@ function Sidebar({className,IsOpen}) {
                         >
                            <li>
                               <a
-                                 href="#"
+                                 href="/About"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  About Reddit
@@ -190,7 +177,7 @@ function Sidebar({className,IsOpen}) {
                            </li>
                            <li>
                               <a
-                                 href="#"
+                                 href="/Advertise"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  Advertise
@@ -198,7 +185,7 @@ function Sidebar({className,IsOpen}) {
                            </li>
                            <li>
                               <a
-                                 href="#"
+                                 href="/Help"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  Help
@@ -206,7 +193,7 @@ function Sidebar({className,IsOpen}) {
                            </li>
                            <li>
                               <a
-                                 href="#"
+                                 href="/Blog"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  Blog
@@ -214,7 +201,7 @@ function Sidebar({className,IsOpen}) {
                            </li>
                            <li>
                               <a
-                                 href="#"
+                                 href="/Career"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  career
@@ -222,57 +209,42 @@ function Sidebar({className,IsOpen}) {
                            </li>
                            <li>
                               <a
-                                 href="#"
+                                 href="/Press"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  Press
                               </a>
                            </li>
                            <li>
+
                               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                               <a
                                  href="/layout"
-                                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <i className="fa-solid fa-users-between-lines w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"></i>
-                                 <span className=" px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray">
-                                    Communities
-                                 </span>
+                                 <i className="fa-solid fa-users-between-lines w-5 h-5"></i>
+                                 <span className="px-2 py-2 text-gray-800">Communities</span>
                               </a>
                            </li>
 
                            <li>
                               <a
-                                 href="/layout"
-                                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 href="/BestofReddit"
+                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <i className="fa-solid fa-medal w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"></i>
-                                 <span className=" px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray">
-                                    Best of Reddit
-                                 </span>
+                                 <Sparkles className="w-5 h-5" />
+                                 <span className=" px-2 py-2 text-gray-800">Best of Reddit</span>
                               </a>
                            </li>
 
                            <li>
                               <a
-                                 href="/layout"
-                                 className="block flex px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 href="/Topics"
+                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <svg
-                                    fill="currentColor"
-                                    className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"
-                                    height="20"
-                                    icon-name="topic-outline"
-                                    viewBox="0 0 20 20"
-                                    width="20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                 >
-                                    <path d="m19.567 18.683-2.194-2.194a3.508 3.508 0 1 0-.884.885l2.194 2.193.884-.884ZM14.5 16.75a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5ZM5.5 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0 5.75a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5ZM12.125 9h4.75A1.127 1.127 0 0 0 18 7.875v-4.75A1.127 1.127 0 0 0 16.875 2h-4.75A1.127 1.127 0 0 0 11 3.125v4.75A1.127 1.127 0 0 0 12.125 9Zm.125-5.75h4.5v4.5h-4.5v-4.5ZM7.875 11h-4.75A1.127 1.127 0 0 0 2 12.125v4.75A1.127 1.127 0 0 0 3.125 18h4.75A1.127 1.127 0 0 0 9 16.875v-4.75A1.127 1.127 0 0 0 7.875 11Zm-.125 5.75h-4.5v-4.5h4.5v4.5Z"></path>
-                                 </svg>
-                                 <span className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray">
-                                    Topics
-                                 </span>
+                                 <LayoutGrid strokeWidth={1.5} className="w-5 h-5" />
+                                 <span className="px-2 py-2 text-gray-800">Topics</span>
                               </a>
                            </li>
 
@@ -280,30 +252,30 @@ function Sidebar({className,IsOpen}) {
 
                            <li>
                               <a
-                                 href="/layout"
-                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 href="/Contentpolicy"
+                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <ChevronDown />
-                                 <span className=" px-2 py-2">content policy</span>
+                                 <Siren className="w-5 h-5"/>
+                                 <span className=" px-2 py-2 text-gray-800">content policy</span>
                               </a>
                            </li>
                            <li>
                               <a
-                                 href="/layout"
-                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 href="/PrivacyPolicy"
+                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <ChevronDown />
-                                 <span className="px-2 py-2">Privacy policy</span>
+                                 <BookLock className="w-5 h-5"/>
+                                 <span className="px-2 py-2 text-gray-800">Privacy policy</span>
                               </a>
                            </li>
 
                            <li>
                               <a
-                                 href="/layout"
-                                 className="flex items-center px-2 py-2 text-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 href="/Useragreement"
+                                 className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <ChevronDown />
-                                 <span className=" px-2 py-2">User agreement</span>
+                                 <Handshake className="w-5 h-5"/>
+                                 <span className=" px-2 py-2 text-gray-800">User agreement</span>
                               </a>
                            </li>
                         </ul>
