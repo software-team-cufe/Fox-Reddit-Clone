@@ -12,7 +12,7 @@ export default function CommentsSearchPage({ searched = "filler"}) {
   const [comments, setComments] = useState([]);     // array of comments to show
   const [loading, setLoading] = useState(true);     // loading state for fetching
 
-
+  
   useEffect(() => {
     setLoading(true);    //set loading to true before fetching
     axios.get("http://localhost:3002/comments")   //fetch comments and organize into comments array for mapping
