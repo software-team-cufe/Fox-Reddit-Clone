@@ -9,7 +9,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'ss': '1032px', // Define a custom screen size named 'custom' for 600px width
+        'LeSS': { 'min': '0px', 'max': '1032px' },
+      },
+    },
   },
   plugins: [
 
