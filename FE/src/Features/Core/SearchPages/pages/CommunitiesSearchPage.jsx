@@ -28,7 +28,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
         console.error('Error:', error);
         setLoading(false);
       });
-  }, []);
+  }, [searched]);
 
   // loading spinner to wait until fetch then load
   if (loading) {

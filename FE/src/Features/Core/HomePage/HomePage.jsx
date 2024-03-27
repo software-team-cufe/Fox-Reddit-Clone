@@ -6,10 +6,27 @@ import { userAxios } from "@/Utils/UserAxios";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
+import {createContext, useContext, React} from "react";
+
+
+export const HomeContext = createContext();
+
+// Create a provider component that holds the state
+export function HomeProvider({ children }) {
+  const [selected, setselected] = useState("New");
+  const [period, setperiod] = useState("All time");
+
+  return (
+    <HomeContext.Provider value={{ selected, setselected, period, setperiod }}>
+      {children}
+    </HomeContext.Provider>
+  );
+}
 
 export default function HomePage() {
-  const [selected, setselected] = useState("New");   // for the sort select component
-  const [period, setperiod] = useState('All time');
+
+  const { selected } = useContext(HomeContext);
+
   const { isLoading, isError, error, data, } = useQuery('get-post',
     () => userAxios.get("posts"),
     {
@@ -23,8 +40,8 @@ export default function HomePage() {
 
       <div className="w-full overflow-y-auto space-y-4">
         <div className="flex -mb-3 gap-x-4">
-          <div role="sortmenu"><Sortmenu setselected={setselected} /></div>
-          <PeriodSelect appearance={selected} setperiod={setperiod} />
+          <div role="sortmenu"><Sortmenu context={HomeContext} /></div>
+          <PeriodSelect appearance={selected} context={HomeContext} />
         </div>
         <hr />
         {

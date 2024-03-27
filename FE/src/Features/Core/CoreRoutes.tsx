@@ -5,9 +5,10 @@ import SearchPagesLayout from './SearchPages/SearchPagesRoutes';
 import PostPage from './PostPage/PostPage';
 import ViewerProfilePage from './ProfilePages/viewerProfileRoutes';
 import CommunityPage from './CommunityPage/CommunityPage';
+import {HomeProvider} from './HomePage/HomePage';
 
 export default [
-    <Route key={'/'} path='/' element={<HomePage />} />,
+    <Route key={'/'} path='/' element={<HomeProvider><HomePage /></HomeProvider>} />,
     <Route key={'/user'} path='/user/:user/*' element={<ProfilePagesLayout />} />,
     <Route key={'/posts'} path='/posts/:id' element={<PostPage />} />,
     <Route key={'/search'} path='/search/*' element={<SearchPagesLayout />} />,

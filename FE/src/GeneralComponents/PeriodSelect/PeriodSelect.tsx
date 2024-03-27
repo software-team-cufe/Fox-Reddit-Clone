@@ -1,7 +1,8 @@
 import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Calendar,ChevronDown } from 'lucide-react'
-import React from 'react';
+import { React, useContext } from 'react';
+
 
 //for mapping periods options
 const periods = [
@@ -19,43 +20,18 @@ function classNames(...classes) {
 }
 
 
-export default function PeriodSelect({appearance,setperiod}) {
+export default function PeriodSelect({appearance, context}) {
 
   //const and function to render selection on top of menu and pass data to parent component
-  const [current, switchup] = useState("All time")
+  const { setperiod } = useContext(context);
+  const [current, switchup] = useState("All time");
 
-  const switchperiod = (period) => {
-    switch (period) {
-      case "All time":
-        switchup("All time")
-        setperiod("All time")
-        break;
-      case "Past year":
-        switchup("Past year")
-        setperiod("Past year")
-        break;
-      case "Past month":
-        switchup("Past month")
-        setperiod("Past month")
-        break;
-      case "Past week":
-        switchup("Past week")
-        setperiod("Past week")
-        break;
-      case "Past 24 hours":
-        switchup("Past 24 hours")
-        setperiod("Past 24 hours")
-        break;
-      case "Past hour":
-        switchup("Past hour")
-        setperiod("Past hour")
-        break;
-      default:
-        switchup("All time")
-        setperiod("All time")
-        break;
-    }
-  }
+  const handleSwitch = (optionName) => {
+    switchup(optionName);
+    setperiod(optionName);
+  };
+
+
   return (
     //appearance depends on the selection of the sorting dropdown menu in the parent component
     <Menu as="div" className={`relative inline-block text-left ${(appearance === "Top" || appearance === "Relevance" || appearance === "Comments") ? "" : "hidden"}`}>
@@ -85,7 +61,7 @@ export default function PeriodSelect({appearance,setperiod}) {
             {periods.map((period, index) => (
               <Menu.Item key={index}>
                 {({ active }) => (
-                  <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex pr-4 h-12 p-3 text-sm', current == period.name ? 'bg-gray-200' : '')} onClick={() => switchperiod(period.name)}>
+                  <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex pr-4 h-12 p-3 text-sm', current == period.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(period.name)}>
                     <span className='text-xs font-semibold'>{period.name}</span>
                   </div>
                 )}

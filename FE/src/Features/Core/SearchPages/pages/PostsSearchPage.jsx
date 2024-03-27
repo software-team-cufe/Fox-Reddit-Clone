@@ -1,15 +1,18 @@
-import React from "react";
+import {React, useContext} from "react";
 import { useState, useEffect } from "react";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import axios from 'axios';
 import PostComponent from "@/GeneralComponents/Post/Post";
+import { SearchContext } from "../SearchPagesRoutes";
 
 export default function PeopleSearchPage({ searched = "filler" }) {
 
+  const { selected, period } = useContext(SearchContext);
   const [posts, setPosts] = useState([]);     // array of posts to show
   const [loading, setLoading] = useState(true);   // loading state for fetching
 
   useEffect(() => {
+    setLoading(true);    //set loading to true before fetching
     axios.get("http://localhost:3002/posts")    //fetch posts and organize into posts array for mapping
       .then(response => {
         const newPosts = response.data.map(post => ({
@@ -34,7 +37,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
         console.error('Error:', error);
         setLoading(false);
       });
-  }, []);
+  }, [searched, selected, period]);
 
   // loading spinner to wait until fetch then load
   if (loading) {

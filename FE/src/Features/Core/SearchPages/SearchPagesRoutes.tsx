@@ -5,8 +5,8 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import PostsSearchPage from "./pages/PostsSearchPage";
 import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
 import PeopleSearchPage from "./pages/PeopleSearchPage";
-import CommentsSearchPage from "./pages/COmmentsSearchPage";
-import React from "react";
+import CommentsSearchPage from "./pages/CommentsSearchPage";
+import {React, useContext, createContext} from "react";
 
 // search for list options for mapping
 const buttons = [
@@ -28,10 +28,28 @@ const buttons = [
   },
 ]
 
+export const SearchContext = createContext();
+
+interface SearchProviderProps {
+  children: React.ReactNode;
+}
+// Create a provider component that holds the state
+export function SearchProvider({ children }: SearchProviderProps) {
+  const [selected, setselected] = useState("Relevance");
+  const [period, setperiod] = useState("All time");
+
+  return (
+    <SearchContext.Provider value={{ selected, setselected, period, setperiod }}>
+      {children}
+    </SearchContext.Provider>
+  );
+}
+
+
+
 function Layout() {
   const path = useLocation();     //accessing current path
-  const [selected, setselected] = useState('Relevance');    //collecting current sorting type
-  const [period, setperiod] = useState('All time');     //collecting current period of sorting
+  const { selected}: any = useContext(SearchContext);
 
   return (
     <div className="max-w-[80%] w-screen">
@@ -58,10 +76,10 @@ function Layout() {
           <div className="flex gap-1 mt-2">
             <span className="text-xs text-gray-500 mt-[12px] ml-2">sort by:</span>
             <div role="searchsortmenu">
-              <SearchSortMenu setselected={setselected} />
+              <SearchSortMenu/>
             </div>
             <div role="periodselect">
-              <PeriodSelect appearance={selected} setperiod={setperiod} />
+              <PeriodSelect appearance={selected} context={SearchContext}/>
             </div>
             <div className="flex-1 mt-[18px]">
               <hr className="font-bold text-black" />
@@ -77,10 +95,12 @@ function Layout() {
 
 
 export default function SearchPagesLayout() {
+
   return (
     //routes to whatever selection is made for search by: people.posts...etc
+    <SearchProvider>
     <Routes>
-      <Route element={<Layout />} >
+      <Route element={<Layout />}>
         <Route key={'/search'} path="/" element={<></>} />
         <Route key={'/Posts'} path={`Posts`} element={<PostsSearchPage searched="idk bruh" />} />
         <Route key={'/Communities'} path={`Communities`} element={<CommunitiesSearchPage searched="idk bruh" />} />
@@ -88,5 +108,6 @@ export default function SearchPagesLayout() {
         <Route key={'/COmments'} path={`Comments`} element={<CommentsSearchPage searched="idk bruh" />} />
       </Route>
     </Routes>
+    </SearchProvider>
   )
 }

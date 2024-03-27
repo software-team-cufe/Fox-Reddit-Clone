@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
+import { ProfileContext } from "../ProfilePagesRoutes";
 
 export default function ProfileUpvoted({using}) {
 
     // states for collecting upvoted posts from request and loading state
+    const { selected, period } = useContext(ProfileContext);
     const [Posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     //fetch upvoted posts on load and put into posts array
     useEffect(() => {
+        setLoading(true);
         axios.get("http://localhost:3002/posts")
         //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/upvoted?page=4&count=10&limit=50')
             .then(response => {
@@ -37,7 +40,7 @@ export default function ProfileUpvoted({using}) {
                 console.error('Error:', error);
                 setLoading(false);
             });
-    }, [])
+    }, [selected, period])
 
     //to handle waiting for fetch or loading state
     if (loading) {
