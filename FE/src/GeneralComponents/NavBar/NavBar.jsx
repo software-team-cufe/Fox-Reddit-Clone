@@ -7,7 +7,7 @@ import { MessageCircleMore, BadgePlus, QrCode, Megaphone } from "lucide-react";
 import { Settings, UserRound, Bell, LogOut, AlignJustify } from "lucide-react";
 import "./ButtonStyling.css";
 import { useNavigate } from "react-router-dom";
-import ProfileIcon from "@/GeneralComponents/ProfileIcon/Profileicon";
+import ProfileIcon from "@/GeneralComponents/profileIcon/profileIcon";
 export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOnline }) {
   const navigator = useNavigate();
   const listProfRef = useRef(null);
