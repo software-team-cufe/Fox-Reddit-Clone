@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ProfileIcon({ imageSrc, altText, isOnline }) {
+function Profileicon({ imageSrc, altText, isOnline }) {
     return (
         <div className='w-fit h-fit' style={{ position: 'relative' }}>
             <img className='w-10 h-10 mt-2 rounded-full ' src={imageSrc} alt={altText} />
@@ -11,4 +11,4 @@ function ProfileIcon({ imageSrc, altText, isOnline }) {
     );
 }
 //mmm
-export default ProfileIcon
+export default Profileicon
