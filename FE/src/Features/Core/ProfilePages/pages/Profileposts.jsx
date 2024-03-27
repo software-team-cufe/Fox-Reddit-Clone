@@ -16,7 +16,6 @@ export default function ProfilePosts({using}) {
         axios.get('http://localhost:3002/posts')
         //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
             .then(response => {
-                console.log(response.data)
                 const newPosts = response.data.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,

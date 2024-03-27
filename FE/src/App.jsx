@@ -13,6 +13,7 @@ import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 import { useState } from 'react';
+import SettingRoute from './GeneralComponents/Settings/SettingRoute';
 const unProtectedRoutes = [
   '/',
   '/login',
@@ -78,7 +79,7 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="../icons/Prof.jpg" UserName="jhjfjy" IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
           ![
@@ -86,9 +87,9 @@ function MainRoute() {
             "/register",
             "/forget-username",
             "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar className="" />
+          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} />
         }
-         
+
         <div className='h-full w-full overflow-y-auto lg:p-4'>
           <Outlet />
         </div>
@@ -107,6 +108,7 @@ function App() {
             <Route element={<MainRoute />}>
               {AuthRoutes}
               {CoreRoutes}
+              {SettingRoute}
             </Route>
             <Route path='*' element={<NotFoundPage />} />
           </Routes>

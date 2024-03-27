@@ -18,14 +18,14 @@ export default function CommentsSearchPage({ searched = "filler" }) {
             image: comment.user.avatar,
             Username: comment.user.username,
             id: comment.user.userID
-        },
-        info: {
+          },
+          info: {
             votes: comment.votesCount,
             time: comment.createdAt,
-        },
-        content: {
+          },
+          content: {
             text: comment.commentText
-        }
+          }
         }));
         setComments(newComments);
         setLoading(false);    //set loading to false after fetching to load body
@@ -44,7 +44,7 @@ export default function CommentsSearchPage({ searched = "filler" }) {
       </div>
     )
   }
- 
+
   //main body of the page
   return (
     <div role="commentstab" className="flex flex-col w-full max-w[756px] h-fit my-4 p-1">
