@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from 'axios';
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { comment } from "postcss";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
-function ProfileComments({using}) {
+
+function ProfileComments({using, context}) {
 
     // states for collecting comments from request and loading state
+    const { selected, period } = useContext(context);
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
 
     //fetch comments on load and put into comments array
     useEffect( () => {
+        setLoading(true);
         axios.get("http://localhost:3002/comments")
         //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&count=10&limit=50&t=month')
             .then(response => {
@@ -36,7 +39,7 @@ function ProfileComments({using}) {
                 console.error('Error:', error);
                 setLoading(false);
             });
-    }, []);
+    }, [period, selected]);
 
     //to handle waiting for fetch or loading state
     if (loading) {

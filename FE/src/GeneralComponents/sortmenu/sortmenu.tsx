@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDown } from 'lucide-react'
-import React from 'react';
+import {React, useContext} from 'react';
 
 //for mapping the sorting button options
 const sortings = [
@@ -14,26 +14,16 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Sortmenu({setselected}) {
+export default function Sortmenu({context}) {
 
   //managing current state selection and passing data to parent eleement to change the sorting
   const [current, switchstates] = useState("New");
-  const switchup = (period) => {
-    switch (period) {
-      case "Top":
-        switchstates("Top")
-        setselected("Top")
-        break;
-      case "Hot":
-        switchstates("Hot")
-        setselected("Hot")
-        break;
-      case "New":
-        switchstates("New")
-        setselected("New")
-        break;
-    }
-  }
+  const { setselected } = useContext(context);
+
+  const handleSwitch = (period) => {
+    switchstates(period);
+    setselected(period);
+    };
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -67,7 +57,7 @@ export default function Sortmenu({setselected}) {
               return (
                 <Menu.Item key={index}>
                   {({ active }) => (
-                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === sorting.name ? 'bg-gray-200' : '')} onClick={() => switchup(sorting.name)}>
+                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === sorting.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(sorting.name)}>
                       {sorting.name}
                     </div>
                   )}

@@ -12,7 +12,7 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
 import { useState,useEffect } from "react";
 import { userStore } from "@/hooks/UserRedux/UserStore";
-import React from "react";
+import {useContext,createContext, React} from "react";
 
 // for mapping the list of buttons
 const buttons = [
@@ -46,12 +46,27 @@ const buttons = [
   },
 ]
 
+export const ProfileContext = createContext();
+
+interface ProfileProviderProps {
+  children: React.ReactNode;
+}
+// Create a provider component that holds the state
+export function ProfileProvider({ children }: ProfileProviderProps) {
+  const [selected, setselected] = useState("New");
+  const [period, setperiod] = useState("All time");
+
+  return (
+    <ProfileContext.Provider value={{ selected, setselected, period, setperiod }}>
+      {children}
+    </ProfileContext.Provider>
+  );
+}
 
 function Layout() {
-
+  
   const path = useLocation();
-  const [selected,setselected] = useState("New");   // for the sort select component
-  const [period,setperiod] = useState('All time');  // for the period select component
+  const { selected, setselected, setperiod }: any = useContext(ProfileContext);
   const user = userStore.getState().user.user;    // fetching user info from redux store
   const avatar = userStore.getState().user.avatar;  // fetching user avatar from redux store
 
@@ -87,8 +102,8 @@ function Layout() {
         </button>
 
           {/* sorting lists and period select components */}
-          <div role="sortmenu"><Sortmenu setselected={setselected}/></div>
-          <PeriodSelect appearance={selected} setperiod={setperiod}/>
+          <div role="sortmenu"><Sortmenu context={ProfileContext}/></div>
+          <PeriodSelect appearance={selected} context={ProfileContext}/>
 
         </div>
         <hr/>
@@ -106,17 +121,19 @@ export default function ProfilePagesLayout() {
   const { user } = useParams();  // fetching user from url
   return (
     // nested routing for the profile pages renders layout then feed according to route
+    <ProfileProvider>
     <Routes>
         <Route element={<Layout />} >
         <Route key={'/user'} path='/' element={<></>} />
         <Route key={'/hidden'} path="/hidden" element={<ProfileHidden using={user}/>} />
         <Route key={'/saved'} path="/saved" element={<ProfileSaved using={user}/>} />
-        <Route key={'/comments'} path="/comments" element={<ProfileComments using={user}/>} />
-        <Route key={'/posts'} path="posts" element={<ProfilePosts using={user}/>} />
+        <Route key={'/comments'} path="/comments" element={<ProfileComments context={ProfileContext} using={user}/>} />
+        <Route key={'/posts'} path="posts" element={<ProfilePosts context={ProfileContext} using={user}/>} />
         <Route key={'/overview'} path="/overview" element={<ProfileOverview using={user} />} />
         <Route key={'/upvoted'} path="upvoted" element={<ProfileUpvoted using={user}/>} />
         <Route key={'/downvoted'} path="downvoted" element={<ProfileDownvoted using={user}/>} />
       </Route>
     </Routes>
+    </ProfileProvider>
   )
 }
