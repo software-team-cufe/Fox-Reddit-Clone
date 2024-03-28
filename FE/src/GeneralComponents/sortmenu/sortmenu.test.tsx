@@ -2,7 +2,7 @@ import {screen, render, fireEvent, cleanup} from '@testing-library/react';
 import Sortmenu from './sortmenu';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
-import React from 'react';
+import React, {useState, createContext} from 'react';
 
 
 
@@ -13,14 +13,33 @@ afterEach(() => {
 describe('sortmenu elements render', () => {
 
     beforeEach(() => {
-        const Setselected = jest.fn();
-    
+        const ProfileContext = createContext({
+            selected: "New",
+            setselected: (value: string) => {},
+            period: "All time",
+            setperiod: (value: string) => {}
+          });
+
+        // Create a provider component that holds the state
+        function ProfileProvider({ children }) {
+            const [selected, setselected] = useState("New");
+            const [period, setperiod] = useState("All time");
+          
+            return (
+              <ProfileContext.Provider value={{ selected, setselected, period, setperiod }}>
+                {children}
+              </ProfileContext.Provider>
+            );
+          }
+
         render(
-            <Sortmenu setselected={Setselected}/>
+            <ProfileProvider>
+            <Sortmenu context={ProfileContext}/>
+            </ProfileProvider>
         );
     });
 
-    test('PostDisplayMenu header renders', () => {
+    test.only('PostDisplayMenu header renders', () => {
         const header = screen.getByRole('dropDownButton');
         expect(header).toBeInTheDocument();
         expect(header).toHaveTextContent('New');
@@ -48,7 +67,7 @@ describe('sortmenu functionality', () => {
         const Setselected = jest.fn();
     
         render(
-            <Sortmenu setselected={Setselected}/>
+            <Sortmenu context={ProfileContext}/>
         );
 
         fireEvent.click(screen.getByRole('dropDownButton'));
@@ -63,7 +82,7 @@ describe('sortmenu functionality', () => {
         const Setselected = jest.fn();
     
         render(
-            <Sortmenu setselected={Setselected}/>
+            <Sortmenu context={ProfileContext}/>
         );
 
         fireEvent.click(screen.getByRole('dropDownButton'));
@@ -78,7 +97,7 @@ describe('sortmenu functionality', () => {
         const Setselected = jest.fn();
     
         render(
-            <Sortmenu setselected={Setselected}/>
+            <Sortmenu context={ProfileContext}/>
         );
 
         fireEvent.click(screen.getByRole('dropDownButton'));
@@ -93,7 +112,7 @@ describe('sortmenu functionality', () => {
             const Setselected = jest.fn();
         
             render(
-                <Sortmenu setselected={Setselected}/>
+                <Sortmenu context={ProfileContext}/>
             );
     
             fireEvent.click(screen.getByRole('dropDownButton'));
@@ -107,7 +126,7 @@ describe('sortmenu functionality', () => {
         const Setselected = jest.fn();
     
         render(
-            <Sortmenu setselected={Setselected}/>
+            <Sortmenu context={ProfileContext}/>
         );
 
         fireEvent.click(screen.getByRole('dropDownButton'));
@@ -122,7 +141,7 @@ describe('sortmenu functionality', () => {
         const Setselected = jest.fn();
     
         render(
-            <Sortmenu setselected={Setselected}/>
+            <Sortmenu context={ProfileContext}/>
         );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items2 = await screen.getAllByRole('menuitem');
@@ -136,7 +155,7 @@ describe('sortmenu functionality', () => {
         const Setselected = jest.fn();
     
         render(
-            <Sortmenu setselected={Setselected}/>
+            <Sortmenu context={ProfileContext}/>
         );
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items3 = await screen.getAllByRole('menuitem');
@@ -154,7 +173,7 @@ describe('sortmenu style select applies correctly', () => {
                 const Setselected = jest.fn();
             
                 render(
-                    <Sortmenu setselected={Setselected}/>
+                    <Sortmenu context={ProfileContext}/>
                 );
         
                 fireEvent.click(screen.getByRole('dropDownButton'));
@@ -170,7 +189,7 @@ describe('sortmenu style select applies correctly', () => {
             const Setselected = jest.fn();
         
             render(
-                <Sortmenu setselected={Setselected}/>
+                <Sortmenu context={ProfileContext}/>
             );
     
             fireEvent.click(screen.getByRole('dropDownButton'));
@@ -186,7 +205,7 @@ describe('sortmenu style select applies correctly', () => {
         const Setselected = jest.fn();
     
         render(
-            <Sortmenu setselected={Setselected}/>
+            <Sortmenu context={ProfileContext}/>
         );
 
         fireEvent.click(screen.getByRole('dropDownButton'));
