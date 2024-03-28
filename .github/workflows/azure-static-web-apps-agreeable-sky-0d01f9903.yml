@@ -20,11 +20,13 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: cd
+        run: cd fe
+     
       - name: Run Pre-Build Commands
         run: |
-          # Add your pre-build commands here
           npm install  
-          npm run preprocess  
+  
       
       - name: Build And Deploy
         id: builddeploy
