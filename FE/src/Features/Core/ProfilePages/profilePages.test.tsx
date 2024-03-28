@@ -1,4 +1,4 @@
-import React from "react";
+import React = require("react");
 import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
 import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';

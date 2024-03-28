@@ -28,11 +28,9 @@ const buttons = [
 
 export const ViewerContext = createContext();
 
-interface ViewerProviderProps {
-  children: React.ReactNode;
-}
+
 // Create a provider component that holds the state
-export function ViewerProvider({ children }: ViewerProviderProps) {
+export function ViewerProvider({ children }) {
   const [selected, setselected] = useState("New");
   const [period, setperiod] = useState("All time");
 
@@ -47,7 +45,7 @@ export function ViewerProvider({ children }: ViewerProviderProps) {
 function Layout() {
 
   const path = useLocation();
-  const { selected }: any = useContext(ViewerContext);
+  const { selected } = useContext(ViewerContext);
   const [avatar, setAvatar] = useState("");  // fetching user avatar from redux store
   const [loading, setLoading] = useState(true); // loading state for fetching user info
   const { viewer } = useParams();  // getting the user from the url

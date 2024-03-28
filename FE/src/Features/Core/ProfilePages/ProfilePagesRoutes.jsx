@@ -10,7 +10,7 @@ import ProfileHidden from "./pages/profilehidden";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
-import { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import {useContext,createContext} from "react";
 
@@ -48,16 +48,14 @@ const buttons = [
 
 export const ProfileContext = createContext({
   selected: "New",
-  setselected: (selected: string) => {},
+  setselected: (selected) => {},
   period: "All time",
-  setperiod: (period: string) => {},
+  setperiod: (period) => {},
 });
 
-interface ProfileProviderProps {
-  children: React.ReactNode;
-}
+
 // Create a provider component that holds the state
-export function ProfileProvider({ children }: ProfileProviderProps) {
+export function ProfileProvider({ children }) {
   const [selected, setselected] = useState("New");
   const [period, setperiod] = useState("All time");
 
@@ -71,7 +69,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 function Layout() {
   
   const path = useLocation();
-  const { selected}: any = useContext(ProfileContext);
+  const { selected} = useContext(ProfileContext);
   const user = userStore.getState().user.user;    // fetching user info from redux store
   const avatar = userStore.getState().user.avatar;  // fetching user avatar from redux store
 
