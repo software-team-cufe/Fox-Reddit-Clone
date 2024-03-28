@@ -2,7 +2,7 @@
 
 const Acount = () => {
   return (
-    <div >
+    <div className="w-[75%]" >
       <h2 className=" font-semibold text-xl">Account settings</h2>
       <div >
         <p className="text-xs text-gray-500 mt-9 mb-1">ACCOUNT PREFERENCES</p>
@@ -17,7 +17,6 @@ const Acount = () => {
             </div>
             <div>
               <button type="button" className="text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 ">Change</button>
-
             </div>
           </div>
 

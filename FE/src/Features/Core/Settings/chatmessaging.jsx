@@ -1,25 +1,6 @@
 import { ChevronDown } from "lucide-react";
 
 export default function ChatMessaging() {
-    const listOfOptions = (event) => {
-        // Stop propagation to prevent the document's click event from hiding the dropdown
-        event.stopPropagation();
-        const dropdownList = event.target.nextElementSibling;
-
-        // Toggle the visibility of the dropdown list
-        if (dropdownList.style.display === "none" || dropdownList.style.display === "") {
-            dropdownList.style.display = "block";
-
-            // Add a click event listener to the document to hide the dropdown
-            document.addEventListener('click', function hideDropdown(event) {
-                dropdownList.style.display = "none";
-                // Remove the event listener after it's executed
-                document.removeEventListener('click', hideDropdown);
-            });
-        } else {
-            dropdownList.style.display = "none";
-        }
-    }
 
     const DoReadToAll = () => {
         //this function should Mark all massages as read
@@ -28,8 +9,6 @@ export default function ChatMessaging() {
 
     return (
         <div className="w-[75%]">
-
-
             <div className="flex justify-between flex-wrap">
                 <div>
                     <div>Mark all as read</div>
