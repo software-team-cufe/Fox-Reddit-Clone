@@ -12,7 +12,7 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
 import { useState,useEffect } from "react";
 import { userStore } from "@/hooks/UserRedux/UserStore";
-import {useContext,createContext, React} from "react";
+import {useContext,createContext} from "react";
 
 // for mapping the list of buttons
 const buttons = [
@@ -46,7 +46,12 @@ const buttons = [
   },
 ]
 
-export const ProfileContext = createContext();
+export const ProfileContext = createContext({
+  selected: "New",
+  setselected: (selected: string) => {},
+  period: "All time",
+  setperiod: (period: string) => {},
+});
 
 interface ProfileProviderProps {
   children: React.ReactNode;
@@ -66,7 +71,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 function Layout() {
   
   const path = useLocation();
-  const { selected, setselected, setperiod }: any = useContext(ProfileContext);
+  const { selected}: any = useContext(ProfileContext);
   const user = userStore.getState().user.user;    // fetching user info from redux store
   const avatar = userStore.getState().user.avatar;  // fetching user avatar from redux store
 

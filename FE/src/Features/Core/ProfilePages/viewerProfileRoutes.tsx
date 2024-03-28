@@ -1,17 +1,11 @@
 import { Link, Outlet, Route, Routes, redirect, useLocation, useParams, } from "react-router-dom";
 import ProfileOverview from "./pages/profileoverview";
-import { Plus, View } from "lucide-react";
-import ProfileUpvoted from "./pages/profileupvoted";
-import ProfileDownvoted from "./pages/ProfileDownvoted";
 import ProfilePosts from "./pages/Profileposts";
 import ProfileComments from "./pages/profilecomments";
-import ProfileSaved from "./pages/profileSaved";
-import ProfileHidden from "./pages/profilehidden";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import ViewerCard from "@/GeneralComponents/viewercard/viewerCard.jsx";
 import { useState, useEffect, useContext, createContext } from "react";
-import { userStore } from "@/hooks/UserRedux/UserStore";
 import React from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";

@@ -6,7 +6,7 @@ import PostsSearchPage from "./pages/PostsSearchPage";
 import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
 import PeopleSearchPage from "./pages/PeopleSearchPage";
 import CommentsSearchPage from "./pages/CommentsSearchPage";
-import {React, useContext, createContext} from "react";
+import React, { useContext, createContext} from "react";
 
 // search for list options for mapping
 const buttons = [
@@ -28,13 +28,15 @@ const buttons = [
   },
 ]
 
-export const SearchContext = createContext();
+export const SearchContext = createContext({
+  selected: "Relevance",
+  setselected: (selected) => {},
+  period: "All time",
+  setperiod: (period) => {},
+});
 
-interface SearchProviderProps {
-  children: React.ReactNode;
-}
 // Create a provider component that holds the state
-export function SearchProvider({ children }: SearchProviderProps) {
+export function SearchProvider({ children }) {
   const [selected, setselected] = useState("Relevance");
   const [period, setperiod] = useState("All time");
 
@@ -49,7 +51,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
 
 function Layout() {
   const path = useLocation();     //accessing current path
-  const { selected}: any = useContext(SearchContext);
+  const { selected} = useContext(SearchContext);
 
   return (
     <div className="max-w-[80%] w-screen">

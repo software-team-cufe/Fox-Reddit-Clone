@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
-      // ...
       "jsx": "react",
-      // ...
+      "baseUrl": "src", // This should be the directory where your source files are located
+      "paths": {
+        "@/*": ["./*"] // This maps any module name that starts with "@" to the corresponding path in the "src" directory
+      },
     },
     // ...
   }

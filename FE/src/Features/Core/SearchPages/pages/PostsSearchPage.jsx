@@ -1,4 +1,4 @@
-import {React, useContext} from "react";
+import React, {useContext} from "react";
 import { useState, useEffect } from "react";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import axios from 'axios';

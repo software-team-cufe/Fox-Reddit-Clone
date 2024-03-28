@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDown } from 'lucide-react'
-import {React, useContext} from 'react';
+import React,{useContext} from 'react';
 
 //for mapping the sorting button options
 const sortings = [
@@ -23,7 +23,7 @@ export default function Sortmenu({context}) {
   const handleSwitch = (period) => {
     switchstates(period);
     setselected(period);
-    };
+  };
 
   return (
     <Menu as="div" className="relative inline-block text-left">

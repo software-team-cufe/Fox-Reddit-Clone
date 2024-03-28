@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDown, Flame, ArrowUpNarrowWide, Rocket, Badge, TrendingUp } from 'lucide-react'
-import { React, useContext } from 'react';
+import React, { useContext } from 'react';
 import {SearchContext} from '@/Features/Core/SearchPages/SearchPagesRoutes';
 
 // for mapping sorting option buttons in menu

@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Calendar,ChevronDown } from 'lucide-react'
-import { React, useContext } from 'react';
+import React, { useContext } from 'react';
 
 
 //for mapping periods options

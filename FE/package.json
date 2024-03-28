@@ -56,8 +56,9 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-env": "^7.24.3",
     "@babel/preset-react": "^7.23.3",
+    "@babel/preset-typescript": "^7.24.1",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.12",
@@ -65,10 +66,12 @@
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.16",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.53.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
+    "identity-obj-proxy": "^3.0.0",
     "json-server": "^1.0.0-alpha.23",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",
@@ -78,10 +81,12 @@
   "jest": {
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
-      "@/(.*)$": "<rootDir>/src/$1"
+      "@/(.*)$": "<rootDir>/src/$1",
+      "\\.(css|less)$": "identity-obj-proxy"
     },
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.tsx?$": "ts-jest",
+      "^.+\\.jsx?$": "babel-jest"
     }
   }
 }
