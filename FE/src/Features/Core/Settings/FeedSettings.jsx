@@ -3,7 +3,7 @@ import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 
 export default function FeedSettings() {
     return (
-        <div className="w-[70%]">
+        <div className="w-[75%]">
             <h1 className=" font-semibold text-xl">
                 Feed settings
             </h1>
