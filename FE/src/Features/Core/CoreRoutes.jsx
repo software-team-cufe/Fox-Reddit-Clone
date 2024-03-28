@@ -9,6 +9,7 @@ import Settingpagelayout from '@/Features/Core/Settings/Navofsetting';
 import {HomeProvider} from './HomePage/HomePage';
 import { CommunityProvider } from './CommunityPage/CommunityPage';
 
+
 export default [
     <Route key={'/'} path='/' element={<HomeProvider><HomePage /></HomeProvider>} />,
     <Route key={'/user'} path='/user/:user/*' element={<ProfilePagesLayout />} />,
