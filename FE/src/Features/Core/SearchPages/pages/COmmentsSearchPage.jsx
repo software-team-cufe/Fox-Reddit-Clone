@@ -6,7 +6,7 @@ import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { SearchContext } from "../SearchPagesRoutes";
 
 
-export default function CommentsSearchPage({ searched = "filler"}) {
+export default function COmmentsSearchPage({ searched = "filler"}) {
 
   const { selected, period } = useContext(SearchContext);
   const [comments, setComments] = useState([]);     // array of comments to show
