@@ -11,8 +11,8 @@ export default {
   theme: {
     extend: {
       screens: {
-        'ss': '1032px', // Define a custom screen size named 'custom' for 600px width
-        'LeSS': { 'min': '0px', 'max': '1032px' },
+        'ss': { 'min': '901.6px', 'max': '1280px' }, // Define a custom screen size named 'custom' for 600px width
+        'LeSS': { 'min': '0px', 'max': '902px' },
       },
     },
   },

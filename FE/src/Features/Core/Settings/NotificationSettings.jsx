@@ -12,8 +12,8 @@ export default function NotificationSettings() {
             <div>
                 <p className='text-xs text-gray-500 mt-9 mb-1'>MESSAGES</p>
 
-                <hr className='w-1/2' />
-                <div className="flex flex-col mt-7 w-1/2">
+                <hr className='w-[85%]' />
+                <div className="flex flex-col mt-7 w-[85%]">
                     <div className="flex flex-row mb-7 justify-between ">
                         <div>
                             <p>
@@ -66,8 +66,8 @@ export default function NotificationSettings() {
             <div>
                 <p className="text-xs text-gray-500 mt-9 mb-1">ACTIVITY</p>
 
-                <hr className="w-1/2" />
-                <div className="flex flex-col mt-7 w-1/2 ">
+                <hr className="w-[85%]" />
+                <div className="flex flex-col mt-7 w-[85%] ">
                     <div>
                         <button className='flex flex-row space-x-2'>
                             <p className="text-sm"> Community alerts</p>
@@ -229,8 +229,8 @@ export default function NotificationSettings() {
             <div>
                 <p className="text-xs text-gray-500 mt-9 mb-1">RECOMMENDATIONS</p>
 
-                <hr className="w-1/2" />
-                <div className="flex flex-col mt-7 w-1/2">
+                <hr className="w-[85%]" />
+                <div className="flex flex-col mt-7 w-[85%]">
                     <div className="flex flex-row mb-7 justify-between">
                         <p>
                             Trending posts
@@ -291,8 +291,8 @@ export default function NotificationSettings() {
             <div>
                 <p className="text-xs text-gray-500 mt-9 mb-1">UPDATES</p>
 
-                <hr className="w-1/2" />
-                <div className="flex flex-col mt-7 w-1/2">
+                <hr className="w-[85%]" />
+                <div className="flex flex-col mt-7 w-[85%]">
                     <div className="flex flex-row mb-7 justify-between">
                         <p>
                             Reddit announcements

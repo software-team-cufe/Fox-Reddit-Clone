@@ -3,7 +3,7 @@ import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 
 export default function FeedSettings() {
     return (
-        <div className="">
+        <div className="w-[70%]">
             <h1 className=" font-semibold text-xl">
                 Feed settings
             </h1>
@@ -11,7 +11,7 @@ export default function FeedSettings() {
             <div>
                 <p className="text-xs text-gray-500 mt-9 mb-1">CONTENT PREFERENCES</p>
 
-                <hr className="w-1/2" />
+                <hr className="w-[70%]" />
                 <div className="flex flex-col mt-7 w-3/2">
                     <div className="flex flex-row mb-7 justify-between ">
                         <div>
@@ -143,7 +143,7 @@ export default function FeedSettings() {
                 <p className="text-xs text-gray-500 mt-9 mb-1">NEWSLETTERS
                 </p>
 
-                <hr className="w-1/2" />
+                <hr className="w-[70%]" />
                 <div className="flex flex-col mt-7 w-3/2">
                     <div className="flex flex-row mb-7 justify-between">
                         <p>
@@ -160,7 +160,7 @@ export default function FeedSettings() {
             </div>
 
             <div>
-                <hr className="w-1/2" />
+                <hr className="w-[70%]" />
                 <div className="flex flex-col mt-7 w-3/2">
                     <div className="flex flex-row mb-7 justify-between">
                         <p>

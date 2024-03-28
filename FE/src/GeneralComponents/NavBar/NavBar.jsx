@@ -8,7 +8,7 @@ import { Settings, UserRound, Bell, LogOut, AlignJustify } from "lucide-react";
 import "./ButtonStyling.css";
 import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../profileicon/Profileicon";
-//import ProfileIcon from "@/GeneralComponents/profileIcon/profileIcon";
+import { useLocation } from "react-router-dom";
 export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOnline }) {
   const navigator = useNavigate();
   const listProfRef = useRef(null);
@@ -21,8 +21,9 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
   const [IshoverBell, setIshoverBell] = useState(false);
   const [IshoverProf, setIshoverProf] = useState(false);
   const [IshoverSide, setIshoverSide] = useState(false);
-  const IsLoggedIn = true;
 
+  const IsLoggedIn = true;
+  const path = useLocation();
 
 
   //handle to use tooltip
@@ -90,7 +91,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
         {/* userStore.getState().user.user == null ? */}
         <div className="flex items-center gap-4">
           <button
-            className="bg-white hover:bg-orange-100  block md:hidden w-8  h-10 my-2   rounded-full   "
+            className={`bg-white hover:bg-orange-100  md:hidden w-8  h-10 my-2   rounded-full  ${path.pathname.includes('setting') ? "hidden" : " block"} `}
             onMouseEnter={handleMouseEnterSide}
             onMouseLeave={handleMouseLeaveSide}
             onClick={SetOpenSiseBar}

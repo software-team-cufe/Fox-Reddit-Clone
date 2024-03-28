@@ -2,12 +2,12 @@
 
 const Acount = () => {
   return (
-    <div>
+    <div >
       <h2 className=" font-semibold text-xl">Account settings</h2>
       <div >
         <p className="text-xs text-gray-500 mt-9 mb-1">ACCOUNT PREFERENCES</p>
-        <hr className="w-1/2" />
-        <div className='flex flex-col mt-7 w-1/2'>
+        <hr className="w-[70%]" />
+        <div className='flex flex-col mt-7 w-[70%]'>
           <div className="flex flex-row mb-7 justify-between ">
             <div className='flex flex-col'>
               <p className=" font-semibold">Email address</p>
@@ -69,7 +69,7 @@ const Acount = () => {
 
       <div >
 
-        <div className='flex flex-col mt-7 w-1/2'>
+        <div className='flex flex-col mt-7 w-[70%]'>
           <div className="flex flex-row mb-7 justify-between ">
             <div className='flex flex-col'>
               <p className=" font-semibold">Content languages</p>
@@ -103,9 +103,9 @@ const Acount = () => {
 
       <div >
         <p className="text-xs text-gray-500 mt-9 mb-1">CONNECTED ACCOUNTS</p>
-        <hr className="w-1/2" />
+        <hr className="w-[70%]" />
 
-        <div className='flex flex-col mt-7 w-1/2'>
+        <div className='flex flex-col mt-7 w-[70%]'>
           <div className="flex flex-row mb-7 justify-between ">
             <div className='flex flex-col'>
               <p className=" font-semibold">Connected to Twitter</p>
@@ -188,9 +188,9 @@ const Acount = () => {
 
       <div>
         <p className="text-xs text-gray-500 mt-9 mb-1">BETA TESTS</p>
-        <hr className="w-1/2" />
+        <hr className="w-[70%]" />
 
-        <div className="flex flex-col mt-7 w-1/2">
+        <div className="flex flex-col mt-7 w-[70%]">
           <div className="flex flex-row mb-7 justify-between ">
             <div className=" flex flex-col">
               <p className=" font-semibold">Opt into beta tests</p>
@@ -237,9 +237,9 @@ const Acount = () => {
 
       <div className=" justify-between ">
         <p className="text-xs text-gray-500 mt-9 mb-1">DELETE ACCOUNT</p>
-        <hr className="w-1/2" />
+        <hr className="w-[70%]" />
 
-        <div className="flex flex-row mb-7 text-xs font-semibold w-1/2 justify-end">
+        <div className="flex flex-row mb-7 text-xs font-semibold w-[70%] justify-end">
 
 
           <button type="button" className="bg-white text-red-500 flex flex-row mt-9 ">
