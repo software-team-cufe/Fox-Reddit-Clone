@@ -78,7 +78,7 @@ function MainRoute() {
 
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="../icons/Prof.jpg" UserName="jhjfjy" IsOnline={true} />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg" UserName="jhjfjy" IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
           ![

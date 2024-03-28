@@ -729,117 +729,117 @@ function SocialLinks({ handleOpenLinkPop }) {
                             {/* <!-- Modal body --> */}
                             <div className="flex flex-wrap p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                                 <button onClick={() => { setOpenCustomLink(true); sethide(true); }} className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/link.png" alt="Link" />
+                                    <img src="/link.png" alt="Link" />
                                     <div className='mx-2 text-xs font-bold'>Custom link </div>
                                 </button>
                                 <button onClick={() => { setOpenFoxLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./logo.png" alt="Fox" className='w-4 h-4' />
+                                    <img src="/logo.png" alt="Fox" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Fox </div>
                                 </button>
                                 <button onClick={() => { setOpenInstaLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/instagram.png" alt="instagram" className='w-4 h-4' />
+                                    <img src="/instagram.png" alt="instagram" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Instagram </div>
                                 </button>
                                 <button onClick={() => { setOpenTwitLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/twitter.png" alt="twitter" className='w-4 h-4' />
+                                    <img src="/twitter.png" alt="twitter" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Twitter </div>
                                 </button>
                                 <button onClick={() => { setOpenTikLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/tiktok.png" alt="tiktok" className='w-4 h-4' />
+                                    <img src="/tiktok.png" alt="tiktok" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Tiktok </div>
                                 </button>
                                 <button onClick={() => { setOpenTwitchLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/twitch.png" alt="twitch" className='w-4 h-4' />
+                                    <img src="/twitch.png" alt="twitch" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Twitch </div>
                                 </button>
                                 <button onClick={() => { setOpenFBLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/facebook.png" alt="facebook" className='w-4 h-4' />
+                                    <img src="/facebook.png" alt="facebook" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Facebook </div>
                                 </button>
                                 <button onClick={() => { setOpenyoutubeLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/youtube.png" alt="youtube" className='w-4 h-4' />
+                                    <img src="/youtube.png" alt="youtube" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Youtube </div>
                                 </button>
                                 <button onClick={() => { setOpenTumblrLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/tumblr.png" alt="tumblr" className='w-4 h-4' />
+                                    <img src="/tumblr.png" alt="tumblr" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Tumblr </div>
                                 </button>
                                 <button onClick={() => { setOpenSpotifyLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/spotify.png" alt="spotify" className='w-4 h-4' />
+                                    <img src="/spotify.png" alt="spotify" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Spotify </div>
                                 </button>
                                 <button onClick={() => { setOpenSoundCouldLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/soundcloud.png" alt="soundcloud" className='w-4 h-4' />
+                                    <img src="/soundcloud.png" alt="soundcloud" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>SoundCloud </div>
                                 </button>
                                 <button onClick={() => { setOpenBeaconsLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/beacons.png" alt="beacons" className='w-4 h-4' />
+                                    <img src="/beacons.png" alt="beacons" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Beacons</div>
                                 </button>
                                 <button onClick={() => { setOpenLinktreeLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/linktree.png" alt="linktree" className='w-4 h-4' />
+                                    <img src="/linktree.png" alt="linktree" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Linktree</div>
                                 </button>
                                 <button onClick={() => { setOpenDiscordLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/discord.png" alt="discord" className='w-4 h-4' />
+                                    <img src="/discord.png" alt="discord" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Discord</div>
                                 </button>
                                 <button onClick={() => { setOpenVenmoLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/venmo.png" alt="venmo" className='w-4 h-4' />
+                                    <img src="/venmo.png" alt="venmo" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Venmo</div>
                                 </button>
                                 <button onClick={() => { setOpenCashAppLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/cash_app.png" alt="cash_app" className='w-4 h-4' />
+                                    <img src="/cash_app.png" alt="cash_app" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Cash app</div>
                                 </button>
                                 <button onClick={() => { setOpenPatreonLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/patreon.png" alt="Patreon" className='w-4 h-4' />
+                                    <img src="/patreon.png" alt="Patreon" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Patreon</div>
                                 </button>
                                 <button onClick={() => { setOpenKofiLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/kofi.png" alt="kofi" className='w-4 h-4' />
+                                    <img src="/kofi.png" alt="kofi" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Kofi</div>
                                 </button>
                                 <button onClick={() => { setOpenPaypalLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/paypal.png" alt="paypal" className='w-4 h-4' />
+                                    <img src="/paypal.png" alt="paypal" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Paypal</div>
                                 </button>
                                 <button onClick={() => { setOpenCameoLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/cameo.png" alt="cameo" className='w-4 h-4' />
+                                    <img src="/cameo.png" alt="cameo" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Cameo</div>
                                 </button>
                                 <button onClick={() => { setOpenOnlyFansLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/onlyfans.png" alt="onlyfans" className='w-4 h-4' />
+                                    <img src="/onlyfans.png" alt="onlyfans" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>OnlyFans</div>
                                 </button>
                                 <button onClick={() => { setOpenSubstackLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/substack.png" alt="substack" className='w-4 h-4' />
+                                    <img src="/substack.png" alt="substack" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Substack</div>
                                 </button>
                                 <button onClick={() => { setOpenkickstarterLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/kickstarter.png" alt="kickstarter" className='w-4 h-4' />
+                                    <img src="/kickstarter.png" alt="kickstarter" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Kickstarter</div>
                                 </button>
                                 <button onClick={() => { setOpenBuyCoffLink(true); sethide(true); }}
@@ -849,7 +849,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                                 </button>
                                 <button onClick={() => { setOpenShopifyLink(true); sethide(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="./icons/shopify.png" alt="shopify" className='w-4 h-4' />
+                                    <img src="/shopify.png" alt="shopify" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Shopify</div>
                                 </button>
                             </div>
@@ -888,7 +888,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="./icons/link.png" alt="Link" />
+                            <img src="/link.png" alt="Link" />
                             <div className='mx-2 text-xs font-bold'>Custom link </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -932,7 +932,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./logo.png" alt="Fox" className='w-4 h-4' />
+                            <img src="/logo.png" alt="Fox" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Fox </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -975,7 +975,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/instagram.png" alt="instagram" className='w-4 h-4' />
+                            <img src="/instagram.png" alt="instagram" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Instagram </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1015,7 +1015,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/twitter.png" alt="twitter" className='w-4 h-4' />
+                            <img src="/twitter.png" alt="twitter" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Twitter </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1055,7 +1055,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/tiktok.png" alt="tiktok" className='w-4 h-4' />
+                            <img src="/tiktok.png" alt="tiktok" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Tiktok </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1096,7 +1096,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/twitch.png" alt="twitch" className='w-4 h-4' />
+                            <img src="/twitch.png" alt="twitch" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Twitch </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1136,7 +1136,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="./icons/facebook.png" alt="facebook" className='w-4 h-4' />
+                            <img src="/facebook.png" alt="facebook" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Facebook </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1180,7 +1180,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="./icons/youtube.png" alt="youtube" className='w-4 h-4' />
+                            <img src="/youtube.png" alt="youtube" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Youtube </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1224,7 +1224,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/tumblr.png" alt="tumblr" className='w-4 h-4' />
+                            <img src="/tumblr.png" alt="tumblr" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Tumblr </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1264,7 +1264,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="./icons/spotify.png" alt="spotify" className='w-4 h-4' />
+                            <img src="/spotify.png" alt="spotify" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Spotify </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1308,7 +1308,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/soundcloud.png" alt="soundcloud" className='w-4 h-4' />
+                            <img src="/soundcloud.png" alt="soundcloud" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>SoundCloud </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1348,7 +1348,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/beacons.png" alt="beacons" className='w-4 h-4' />
+                            <img src="/beacons.png" alt="beacons" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Beacons</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1388,7 +1388,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/linktree.png" alt="linktree" className='w-4 h-4' />
+                            <img src="/linktree.png" alt="linktree" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Linktree</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1428,7 +1428,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="./icons/discord.png" alt="discord" className='w-4 h-4' />
+                            <img src="/discord.png" alt="discord" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Discord</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1472,7 +1472,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/venmo.png" alt="venmo" className='w-4 h-4' />
+                            <img src="/venmo.png" alt="venmo" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Venmo</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1512,7 +1512,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/cash_app.png" alt="cash_app" className='w-4 h-4' />
+                            <img src="/cash_app.png" alt="cash_app" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Cash app</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1552,7 +1552,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/patreon.png" alt="Patreon" className='w-4 h-4' />
+                            <img src="/patreon.png" alt="Patreon" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Patreon</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1592,7 +1592,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/kofi.png" alt="kofi" className='w-4 h-4' />
+                            <img src="/kofi.png" alt="kofi" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Kofi</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1632,7 +1632,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/paypal.png" alt="paypal" className='w-4 h-4' />
+                            <img src="/paypal.png" alt="paypal" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Paypal</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1672,7 +1672,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/cameo.png" alt="cameo" className='w-4 h-4' />
+                            <img src="/cameo.png" alt="cameo" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Cameo</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1712,7 +1712,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                         <div
                             className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="./icons/onlyfans.png" alt="onlyfans" className='w-4 h-4' />
+                            <img src="/onlyfans.png" alt="onlyfans" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>OnlyFans</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1752,7 +1752,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="./icons/Substack.png" alt="Substack" className='w-4 h-4' />
+                            <img src="/Substack.png" alt="Substack" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Substack </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1796,7 +1796,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="./icons/kickstarter.png" alt="kickstarter" className='w-4 h-4' />
+                            <img src="/kickstarter.png" alt="kickstarter" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Kickstarter</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
@@ -1880,7 +1880,7 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="./icons/shopify.png" alt="shopify" className='w-4 h-4' />
+                            <img src="/shopify.png" alt="shopify" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Shopify</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
