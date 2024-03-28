@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, createContext, useEffect, useState } from "react";
 import { Plus, Bell, GripHorizontal, BellRing, BellOff, Circle } from "lucide-react";
 import { Menu, Transition } from '@headlessui/react'
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
@@ -9,6 +9,26 @@ import Spinner from '@/GeneralElements/Spinner/Spinner';
 
 
 //helping functions for the notifications frequency and options menu
+
+export const CommunityContext = createContext({
+  selected: "New",
+  setselected: (selected) => {},
+  period: "All time",
+  setperiod: (period) => {},
+});
+
+
+// Create a provider component that holds the state
+export function CommunityProvider({ children }) {
+  const [selected, setselected] = useState("New");
+  const [period, setperiod] = useState("All time");
+
+  return (
+    <CommunityContext.Provider value={{ selected, setselected, period, setperiod }}>
+      {children}
+    </CommunityContext.Provider>
+  );
+}
 
 function bellMenu() {
   return (
@@ -91,19 +111,15 @@ function optionsMenu() {
 
 
 export default function CommunityPage() {
-  const [selected, setselected] = useState("New");   // for the sort select component
-  const [period, setperiod] = useState('All time');  // for the period select component
   const { community } = useParams();                  // get the community name from the url
   const [comm, setcommunity] = useState({});        // store the community data
   const [loading, setLoading] = useState(true);          // check if the data is loading
   const path = useLocation();                          // get the current path
-
+  const {period,selected} = useContext(CommunityContext);
   //to fetch the community data from the server and use them
   useEffect(() => {
     axios.get(`http://localhost:3002/communities`)
       .then((response) => {
-        console.log(response.data);
-        console.log(community);
         response.data.map((commresponse) => {
           if (commresponse.name === community) {
             setcommunity(commresponse);
@@ -113,7 +129,7 @@ export default function CommunityPage() {
       }).catch(error => {
         console.error('There was an error!', error);
       });
-  }, []);
+  }, [period, selected, community]);
 
   //to handle loading until fetch is complete
   if (loading) {
@@ -178,8 +194,8 @@ export default function CommunityPage() {
 
             {/* sort elements for the feed*/}
             <div className='flex gap-2'>
-              <Sortmenu setselected={setselected} />
-              <PeriodSelect appearance={selected} setperiod={setperiod} />
+              <Sortmenu context={CommunityContext} />
+              <PeriodSelect appearance={selected} context={CommunityContext} />
             </div>
           </div>
           <hr className="w-full border-1 border-gray-300 mt-2" />
