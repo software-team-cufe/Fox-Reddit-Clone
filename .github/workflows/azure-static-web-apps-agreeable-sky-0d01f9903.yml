@@ -1,5 +1,5 @@
 
-name: Azure Static Web Apps CI/CD
+name: main CI/CD
 
 on:
   push:
@@ -20,12 +20,6 @@ jobs:
         with:
           submodules: true
           lfs: false
-
-
-     
-      - name: Run Pre-Build Commands
-        run: |
-          npm install  
   
       
       - name: Build And Deploy
