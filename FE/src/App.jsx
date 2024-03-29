@@ -75,9 +75,6 @@ function MainRoute() {
     nav(0);
     return;
   }
-  // if (userStore.getState().user.user == null && localStorage.getItem('token') != null) {
-  //   return <></>
-  // }
 
   return (
     <div className='w-full h-[calc(100%)]'>

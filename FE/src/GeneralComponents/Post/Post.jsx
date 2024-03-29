@@ -66,10 +66,12 @@ export default function PostComponent({ post, className, viewMode = false }) {
                     <p>{post.votes}</p>
                     <ArrowDownCircle className="w-5 h-5 cursor-pointer" />
                 </div>
-                <div className="flex bg-gray-100 gap-1 items-center rounded-[80px] px-3 py-2">
-                    <MessageCircle className="w-5 h-5 cursor-pointer" />
+                {!viewMode && <div className="flex bg-gray-100 gap-1 items-center rounded-[80px] px-3 py-2">
+                    <Link to={viewMode ? null : `/posts/${post.id}`}>
+                        <MessageCircle className="w-5 h-5 cursor-pointer" />
+                    </Link>
                     <p>{post.comments}</p>
-                </div>
+                </div>}
             </div>
         </div>
     )
