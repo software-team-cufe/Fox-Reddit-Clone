@@ -21,8 +21,7 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: cd
-        run: cd fe
+
      
       - name: Run Pre-Build Commands
         run: |
