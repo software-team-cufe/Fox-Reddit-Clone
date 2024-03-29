@@ -1,9 +1,8 @@
-import React from "react";
+import React = require("react");
 import { render, screen, fireEvent,waitFor, prettyDOM,cleanup } from "@testing-library/react";
 import SearchPagesLayout from "./SearchPagesRoutes";
 import '@testing-library/jest-dom';
 import {BrowserRouter, MemoryRouter, Routes, Route} from "react-router-dom";
-import {createMemoryHistory} from "history";
 
     afterEach(() =>{
         cleanup();

@@ -1,4 +1,4 @@
-import React from "react";
+import React = require("react");
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import CreateCommunity from "./CreateCommunity";

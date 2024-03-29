@@ -1,0 +1,212 @@
+{
+  "users": [
+    {
+      "name": "user1",
+      "userID": 1,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "Hi, I'm user1. I love hiking, reading books, and playing the guitar in my free time.",
+      "totalKarma": 2424
+    },
+    {
+      "name": "user2",
+      "userID": 2,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "Hello, I'm user2. My hobbies include painting, cooking, and playing video games.",
+      "totalKarma": 5342
+    },
+    {
+      "name": "user3",
+      "userID": 3,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "Hey, I'm user3. I enjoy traveling, photography, and learning new languages.",
+      "totalKarma": 1234
+    },
+    {
+      "name": "user4",
+      "userID": 4,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "Hi there, I'm user4. I'm a big fan of sports, especially football and basketball, and I also love to write.",
+      "totalKarma": 2345
+    },
+    {
+      "name": "user5",
+      "userID": 5,
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+      "about": "Hello, I'm user5. In my spare time, I like to go fishing, watch movies, and play board games with friends.",
+      "totalKarma": 434
+    }
+  ],
+  "communities": [
+    {
+      "commID": 1,
+      "name": "league",
+      "description": "A community for League of Legends fans to discuss the game, share fan art, and connect with other players.",
+      "membersCount": 12345,
+      "icon": "https://images.contentstack.io/v3/assets/blt370612131b6e0756/blt02dd32b665c25036/5f4defe8b553152466d1b21a/Homepage_World_1.jpg",
+      "backimage": "https://miro.medium.com/v2/resize:fit:1400/0*UX3dgOTddd9mTtQK.jpg",
+      "onlineMembers": 123,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to League of Legends.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ]
+    },
+    {
+      "commID": 2,
+      "name": "art",
+      "description": "A community for artists and art enthusiasts to share their work, get feedback, and connect with other creatives.",
+      "membersCount": 54321,
+      "icon": "https://lh3.googleusercontent.com/ci/AL18g_RkkRcVmQUnptF8BLIfHB3Y7mCQuM7lgZzteHmwpjlm48hKJNHwM-HQafDeTploxf5603Db=s1200",
+      "backimage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyXv2oNwPlfMmh7uemJz-4HjnF262cWdm4ZrHyfsEgEA&s",
+      "onlineMembers": 321,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to art.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ]
+    }
+  ],
+  "posts": [
+    {
+      "attachments": {
+        "subredditIcon": "https://images.contentstack.io/v3/assets/blt370612131b6e0756/blt02dd32b665c25036/5f4defe8b553152466d1b21a/Homepage_World_1.jpg",
+        "postData": [
+          "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 1,
+      "title": "Post 1",
+      "postText": "This is the content of post 1",
+      "votesCount": 101,
+      "commentsCount": 4,
+      "thumbnail": "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://lh3.googleusercontent.com/ci/AL18g_RkkRcVmQUnptF8BLIfHB3Y7mCQuM7lgZzteHmwpjlm48hKJNHwM-HQafDeTploxf5603Db=s1200",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 2,
+      "title": "Post 2",
+      "postText": "This is the content of post 2",
+      "votesCount": 23,
+      "commentsCount": 7,
+      "thumbnail": "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://images.contentstack.io/v3/assets/blt370612131b6e0756/blt02dd32b665c25036/5f4defe8b553152466d1b21a/Homepage_World_1.jpg",
+        "postData": [
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "league",
+      "communityID": 1,
+      "postID": 3,
+      "title": "Post 3",
+      "postText": "This is the content of post 3",
+      "votesCount": 191,
+      "commentsCount": 33,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    }
+  ],
+  "comments": [
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 10,
+      "commentID": 1,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 1",
+      "postID": 1
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user2",
+        "userID": 2
+      },
+      "votesCount": 5,
+      "commentID": 2,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 2",
+      "postID": 2
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user3",
+        "userID": 3
+      },
+      "votesCount": 15,
+      "commentID": 3,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 3",
+      "postID": 3
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user4",
+        "userID": 4
+      },
+      "votesCount": 20,
+      "commentID": 4,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 4",
+      "postID": 4
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user5",
+        "userID": 5
+      },
+      "votesCount": 25,
+      "commentID": 5,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 1",
+      "postID": 1
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user6",
+        "userID": 6
+      },
+      "votesCount": 30,
+      "commentID": 6,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 2",
+      "postID": 2
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user7",
+        "userID": 7
+      },
+      "votesCount": 35,
+      "commentID": 7,
+      "createdAt": "2022/02/15, 15",
+      "commentText": "This is a comment on post 3",
+      "postID": 3
+    }
+  ]
+}

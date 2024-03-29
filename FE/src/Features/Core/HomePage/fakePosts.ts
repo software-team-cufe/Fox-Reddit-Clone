@@ -10,6 +10,9 @@ interface Post {
     links: string;
     votes: number;
     comments: number;
+    images: string[],
+    thumbnail?: string,
+    video?: string,
 }
 export const fakePosts: Post[] = [
     {
@@ -24,6 +27,12 @@ export const fakePosts: Post[] = [
         links: "Links 1",
         comments: 20,
         votes: 10,
+        images: [
+            'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+            'https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg',
+            'https://science.nasa.gov/wp-content/uploads/2023/06/webb-flickr-52259221868-30e1c78f0c-4k-jpg.webp',
+        ],
+        
     },
     {
         id: "2",
@@ -37,6 +46,9 @@ export const fakePosts: Post[] = [
         links: "Links 2",
         comments: 20,
         votes: 20,
+        images: [],
+        thumbnail: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
+        video: 'https://file-examples.com/storage/fe1b802e1565fe057a1d758/2017/04/file_example_MP4_640_3MG.mp4',
     },
     {
         id: "3",
@@ -49,7 +61,9 @@ export const fakePosts: Post[] = [
         description: "Description 3",
         links: "Links 3",
         comments: 20,
-        votes: 30
+        votes: 30,
+        images: [],
+        thumbnail: "https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/8.jpg",
     },
     {
         id: "4",
@@ -62,7 +76,9 @@ export const fakePosts: Post[] = [
         description: "Description 4",
         links: "Links 4",
         comments: 20,
-        votes: 40
+        votes: 40,
+        images: [],
+        thumbnail: "https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/5.jpg",
     },
     {
         id: "5",
@@ -75,7 +91,9 @@ export const fakePosts: Post[] = [
         description: "Description 5",
         links: "Links 5",
         comments: 20,
-        votes: 50
+        votes: 50,
+        images: [],
+        thumbnail: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
     },
     {
         id: "6",
@@ -88,7 +106,9 @@ export const fakePosts: Post[] = [
         description: "Description 6",
         links: "Links 6",
         comments: 20,
-        votes: 60
+        votes: 60,
+        images: [],
+        thumbnail: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
     },
     {
         id: "7",
@@ -101,7 +121,9 @@ export const fakePosts: Post[] = [
         description: "Description 7",
         links: "Links 7",
         comments: 20,
-        votes: 70
+        votes: 70,
+        images: [],
+        thumbnail: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
     },
     {
         id: "8",
@@ -114,7 +136,9 @@ export const fakePosts: Post[] = [
         description: "Description 8",
         links: "Links 8",
         comments: 20,
-        votes: 80
+        votes: 80,
+        images: [],
+        thumbnail: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
     },
     {
         id: "9",
@@ -127,7 +151,9 @@ export const fakePosts: Post[] = [
         description: "Description 9",
         links: "Links 9",
         comments: 20,
-        votes: 90
+        votes: 90,
+        images: [],
+        thumbnail: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
     },
     {
         id: "10",
@@ -140,6 +166,8 @@ export const fakePosts: Post[] = [
         description: "Description 10",
         links: "Links 10",
         comments: 20,
-        votes: 100
-    }
+        votes: 100,
+        images: [],
+        thumbnail: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
+    },
 ];

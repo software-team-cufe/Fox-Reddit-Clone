@@ -45,10 +45,13 @@ export default function RegisterPage({ }) {
         <section >
             <div className="flex flex-col items-center justify-center py-8 mx-auto md:h-screen lg:py-0">
                 <div className="w-full  rounded-lg   md:mt-0 sm:max-w-md xl:p-0  ">
-                    <div className="p-4 space-y-4 md:space-y-6 sm:p-8">
+                    <div className="p-4 border shadow rounded-lg space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight  md:text-2xl ">
-                            Create account
+                            Sign Up
                         </h1>
+                        <p className=" text-sm text-gray-400">
+                        By continuing, you agree to our User Agreement and acknowledge that you understand the Privacy Policy.
+                        </p>
                         <form id="from-register" className="space-y-4 md:space-y-6" action="#" onSubmit={(e) => e.preventDefault()}>
                             <TextBox disabled={loading} label="name" placeholder="name" name="name" />
                             <TextBox disabled={loading} label="Email" placeholder="ex@domain.com" name="email" type="email" />
@@ -56,9 +59,6 @@ export default function RegisterPage({ }) {
                             <TextBox disabled={loading} label="Confirm password" placeholder="••••••••" name="confirmPassword" type="password" />
                             <TextBox disabled={loading} label="Phone" placeholder="0xx23456789" name="phone" />
                             <ComboBox text="Gender" items={genders} selected={gender} onSelect={onSelect} />
-                            <Button className=" w-full" loading={loading} disabled={loading} onClick={register} >
-                                Create account
-                            </Button>
                             <p className="text-sm font-light text-gray-500 ">
                                 Already have an account?{" "}
                                 <Link
@@ -68,6 +68,10 @@ export default function RegisterPage({ }) {
                                     Login
                                 </Link>
                             </p>
+                            <Button className=" w-full" loading={loading} disabled={loading} onClick={register} >
+                                Create account
+                            </Button>
+                           
                         </form>
                     </div>
                 </div>

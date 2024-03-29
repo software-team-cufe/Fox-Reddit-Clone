@@ -1,19 +1,25 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor, prettyDOM } from "@testing-library/react";
-import ProfilePagesLayout from "./ProfilePagesRoutes";
+import React = require("react");
+import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
+import ViewerProfilePage from "./viewerProfileRoutes";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
-import { createMemoryHistory } from "history";
 
-test('avatar header renders correctly', () => {
+
+afterEach(() =>{
+    cleanup();
+});
+
+describe('component renders correctly', () => {
+test('avatar header renders correctly', async () => {
     render(
         <BrowserRouter>
-            <ProfilePagesLayout />
+            <ViewerProfilePage />
         </BrowserRouter>
     );
-    const avatarHeader = screen.getByRole('avatarHeader');
-    expect(avatarHeader).toBeInTheDocument();
 
+    await waitFor(() =>
+        expect(screen.getByRole('avatarHeader')).toBeInTheDocument()
+    )
     const sectionsBar = screen.getByRole('sectionsBar');
     expect(sectionsBar).toBeInTheDocument();
 
@@ -29,20 +35,18 @@ test('avatar header renders correctly', () => {
     const sortmenu = screen.getByRole('sortmenu');
     expect(sortmenu).toBeInTheDocument();
 
-    const displaymenu = screen.getByRole('displaymenu');
-    expect(displaymenu).toBeInTheDocument();
-
     const card = screen.getByRole('card');
     expect(card).toBeInTheDocument();
+    });
 });
 
 describe('profile sections navigation correctly', () => {
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/user']}>
+            <MemoryRouter initialEntries={['/viewer/anas']}>
                 <Routes>
-                    <Route path="/user/*" element={<ProfilePagesLayout />} />
+                    <Route path="/viewer/:viewer/*" element={<ViewerProfilePage />} />
                 </Routes>
             </MemoryRouter>
         );

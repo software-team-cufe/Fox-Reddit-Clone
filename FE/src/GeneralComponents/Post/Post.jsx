@@ -1,22 +1,64 @@
-import { ArrowDownCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
+import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import "react-image-gallery/styles/css/image-gallery.css";
+import ImageGallery from "react-image-gallery";
+export default function PostComponent({ post, className, viewMode = false }) {
+    const images = [post.thumbnail, ...post.images];
 
-export default function PostComponent({ post, className }) {
     return (
-        <div className={` p-4  w-fit hover:bg-gray-50 rounded-md ${className}`}>
-            <Link to={`/posts/${post.id}`}>
-                <div>
-                    <div className="mb-4 flex items-center gap-4">
-                        <img src={post.subReddit.image} alt="image" className="w-9 h-9 rounded-full" />
-                        <h5 className=" text-sm ">{post.subReddit.title}</h5>
+        <div className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
+            {
+                !viewMode ? <Link to={`/posts/${post.id}`}>
+                    <div>
+                        <div className="mb-4 flex items-center gap-4">
+                            <img src={post.subReddit.image} alt="image" className="w-9 h-9 rounded-full" />
+                            <h5 className=" text-sm ">{post.subReddit.title}</h5>
+                        </div>
                     </div>
-                </div>
-                <p>{post.title} </p>
-                <img
-                    className=" max-w-[800px] rounded-lg my-4"
-                    alt=""
-                    src="https://www.magicpattern.design/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fbrandbird%2Fmagicpattern%2Fwallpapers%2Fmagicpattern-mesh-gradient-1635765500606-preview.jpg&w=3840&q=75" />
-            </Link>
+                    <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
+                    <p className=" text-gray-600 text-sm">{post.description} </p>
+                    <div
+
+                        className=" rounded-lg my-4 w-full bg-gray-600">
+                        <img
+                            className="mx-auto max-h-[600px] lg:max-w-[800px] rounded-lg my-4"
+                            alt=""
+                            src={post.thumbnail} />
+                    </div>
+                </Link> :
+                    <div>
+                        
+                        <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
+                        <p className=" text-gray-600 text-sm mb-4">{post.description} </p>
+                        {(images.length != 0 && post.video == null) &&
+                            <div className=" max-w-[700px]">
+                                <ImageGallery
+                                    showBullets={images.length > 1}
+                                    renderLeftNav={(onClick, disabled) => (
+                                        <button className=" absolute z-20 top-[50%] ml-4" onClick={onClick} disabled={disabled} >
+                                            <ArrowLeftCircle className=" text-white" />
+                                        </button>
+                                    )}
+                                    renderRightNav={(onClick, disabled) => (
+                                        <button className=" absolute z-20 top-[50%] right-4" onClick={onClick} disabled={disabled} >
+                                            <ArrowRightCircle className=" text-white" />
+                                        </button>
+                                    )}
+                                    showThumbnails={false} showPlayButton={false} showFullscreenButton={false} items={images.map((e, idx) => {
+                                        return {
+                                            original: e,
+                                            thumbnail: e,
+                                        };
+                                    })} />
+                            </div>
+                        }
+                        {
+                            post.video && <div>
+                                <video src={post.video} controls/>
+                            </div>
+                        }
+                    </div>
+            }
 
             <div className="flex flex-row mt-4 items-center gap-4">
                 <div className="flex bg-gray-100 gap-3 items-center rounded-[80px] px-3 py-2">

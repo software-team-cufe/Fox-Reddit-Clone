@@ -1,9 +1,13 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor, prettyDOM } from "@testing-library/react";
+import React = require("react");
+import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
 import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
-import { createMemoryHistory } from "history";
+
+
+afterEach(() =>{
+    cleanup();
+});
 
 test('avatar header renders correctly', () => {
     render(
@@ -32,7 +36,6 @@ test('avatar header renders correctly', () => {
     const linkElement5 = screen.getByRole('hiddenButton');
     expect(linkElement5).toBeInTheDocument();
 
-    const linkElement6 = screen.getByRole('upvotedButton');
     const upvotedButton = screen.getByRole('upvotedButton');
     expect(upvotedButton).toBeInTheDocument();
 
@@ -45,9 +48,6 @@ test('avatar header renders correctly', () => {
     const sortmenu = screen.getByRole('sortmenu');
     expect(sortmenu).toBeInTheDocument();
 
-    const displaymenu = screen.getByRole('displaymenu');
-    expect(displaymenu).toBeInTheDocument();
-
     const card = screen.getByRole('card');
     expect(card).toBeInTheDocument();
 });
@@ -56,9 +56,9 @@ describe('profile sections navigation correctly', () => {
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/user']}>
+            <MemoryRouter initialEntries={['/user/anas']}>
                 <Routes>
-                    <Route path="/user/*" element={<ProfilePagesLayout />} />
+                    <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
                 </Routes>
             </MemoryRouter>
         );

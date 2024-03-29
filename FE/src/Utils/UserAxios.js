@@ -2,25 +2,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const userAxios = axios.create({
-    baseURL: process.env.NODE_ENV != 'development' ? 
-    '' : 
-    "http://localhost:3000/",
-    withCredentials: true,
-    headers: {
-        post: {
-            "Content-Type": 'application/json'
-        },
-    },
+    baseURL: "http://localhost:3002/",
+    
 })
 
 
-userAxios.interceptors.request.use(request => {
-
-    request.headers.set('token', `Bearer ${localStorage.getItem('token')}`);
-    return request;
-}, error => {
-    return Promise.reject(error);
-});
 userAxios.interceptors.response.use(response => {
     if (response.data.token != null) {
         localStorage.setItem('token', response.data.token);
@@ -29,7 +15,8 @@ userAxios.interceptors.response.use(response => {
         toast(response.data.msg);
     }
     return response;
-}, error => {
+}, 
+error => {
     if (error.response == null) {
         toast.error("Please check your internet connection and try again.");
     } else if (error.response != null && error.response.data.msg != null) {

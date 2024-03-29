@@ -67,6 +67,7 @@ function MainRoute() {
   } else {
     if (!unProtectedRoutes.includes(path)) {
 
+
     }
   }
   if ((error != null) && error.response != null && error.response.status == 401) {
@@ -79,11 +80,21 @@ function MainRoute() {
   // }
 
   return (
-    <div className='w-full h-[calc(100%-72px)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} />
-      <Sidebar IsOpen={OpenSideBar} />
-      <div className="max-w-[95%] lg:max-w-[80%] mt-[90px] h-full mx-auto">
-        <Outlet />
+    <div className='w-full h-[calc(100%)]'>
+      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg" UserName="jhjfjy" IsOnline={true} />
+      <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
+        {
+          ![
+            "/login",
+            "/register",
+            "/forget-username",
+            "/forget-password",
+          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} />
+        }
+
+        <div className='h-full w-full overflow-y-auto lg:p-4'>
+          <Outlet />
+        </div>
       </div>
     </div>
   );
