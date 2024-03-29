@@ -43,6 +43,7 @@ export default function COmmentsSearchPage({ searched = "filler"}) {
   // loading spinner to wait until fetch then load
   if (loading) {
     return (
+<<<<<<< HEAD
       <div role="commentstab" className="w-100 h-100 flex flex-col items-center justify-center">
         <Spinner className="h-24 w-24" />
       </div>
@@ -71,3 +72,40 @@ export default function COmmentsSearchPage({ searched = "filler"}) {
     </div>
   );
 }
+||||||| a41c91a
+      <div className="flex gap-4 items-center">
+      <img src={'/nosearch.svg'} className="w-16 h-24 mb-2" alt="Confused Snoo"></img>
+      <p className="text-lg">Hm... We couldn't find any results for<br/>"{searched}"</p>
+  </div>
+    );
+  }
+=======
+      <div role="commentstab" className="w-100 h-100 flex flex-col items-center justify-center">
+        <Spinner className="h-24 w-24" />
+      </div>
+    )
+  }
+
+  //main body of the page
+  return (
+    <div role="commentstab" className="flex flex-col w-full max-w[756px] h-fit my-4 p-1">
+
+      {/* if there are no comments, show no results */}
+      {comments.length > 0 ? (
+        comments.map((comment, index) => (
+          <div key={index}>
+            <CommentComponent comment={comment} />
+            <hr className="w-full my-2 border-gray-300" />
+          </div>
+        ))
+      ) : (
+        <>
+          {/*no results view*/}
+          <img src={'/nosearch.svg'} className="w-16 h-24 mb-2" alt="Confused Snoo"></img>
+          <p className="text-lg">Hm... We couldn't find any results for<br />"{searched}"</p>
+        </>
+      )}
+    </div>
+  );
+}
+>>>>>>> FinalFront
