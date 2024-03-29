@@ -7,6 +7,7 @@ import SafetySettings from './SafetySettings';
 import Feedsettings from './FeedSettings';
 import ProfileSettings from './PofileSettings';
 import ChatMessaging from './chatmessaging';
+import React from 'react';
 
 function Navofsetting() {
     return (
