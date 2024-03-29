@@ -2,6 +2,9 @@ import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
+import React from "react";
+import Popular from "./Popular";
+import About from "./About";
 
 
 
@@ -65,6 +68,8 @@ function Sidebar({className,IsOpen}) {
       <>
          <aside
             id="sidebar-multi-level-sidebar"
+            role="sidebarr"
+            data-testid="sidebar"
             className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""}
             md:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
@@ -95,7 +100,8 @@ function Sidebar({className,IsOpen}) {
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
                         className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
-                        type="button"
+                        type="buttonn"
+                        role="button"
                      >
                         RECENTS
                      <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
@@ -222,11 +228,12 @@ function Sidebar({className,IsOpen}) {
                               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                               <a
-                                 href="/layout"
+                                 href="/Communities"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
                                  <i className="fa-solid fa-users-between-lines w-5 h-5"></i>
-                                 <span className="px-2 py-2 text-gray-800">Communities</span>
+                                 <span className="px-2 py-2 text-gray-800" >Communities</span>
+                                 
                               </a>
                            </li>
 
@@ -287,7 +294,6 @@ function Sidebar({className,IsOpen}) {
             </div>
             
          </aside>
-
       </>
    );
 }
