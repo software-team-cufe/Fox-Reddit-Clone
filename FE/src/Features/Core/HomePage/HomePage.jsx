@@ -45,7 +45,7 @@ export default function HomePage() {
         </div>
         <hr />
         {
-          fakePosts.map((e, idx) => <PostComponent post={e} key={idx} />)
+          fakePosts.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
       </div>
       <div className="p-5   w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">

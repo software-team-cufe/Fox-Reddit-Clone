@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ export default function UserHeader({ post }) {
   const navigate = useNavigate();
   
   return (
-    <div className=" flex items-center gap-3">
+    <div  className=" flex items-center gap-3">
       <button className=" rounded-full bg-gray-100 p-2" onClick={()=> navigate(-1)}>
         <ArrowLeft />
       </button>

@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ImageGallery from "react-image-gallery";
-export default function PostComponent({ post, className, viewMode = false }) {
+export default function PostComponent({role, post, className, viewMode = false }) {
     const images = [post.thumbnail, ...post.images];
 
     if (post == null) return <></>;
     return (
-        <div className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
+        <div role={role} className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
             {
                 !viewMode ? <Link to={`/posts/${post.id}`}>
                     <div>

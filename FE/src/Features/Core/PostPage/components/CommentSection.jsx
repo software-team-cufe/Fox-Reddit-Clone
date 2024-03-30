@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent"
 import TextBox from "@/GeneralElements/TextBox/TextBox"
 

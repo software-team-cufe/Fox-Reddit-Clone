@@ -1,4 +1,5 @@
 import React from "react";
+import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
 import userModel from "@/Models/UserModel";
@@ -12,7 +13,7 @@ import { toast } from "react-toastify";
 export default function LoginPage({ }) {
 
   const [loading, setLoading] = useState(false);
-  const disp = useDispatch();
+  // const disp = useDispatch();
   const nav = useNavigate();
   const login = async (e) => {
 
@@ -53,11 +54,7 @@ export default function LoginPage({ }) {
       className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm rounded-md border shadow p-7 w-fit">
         <div className="">
-          {/* <img
-            className="mx-auto h-[80px] w-auto"
-            src="/logo.png"
-            alt="Your Company"
-          /> */}
+
           <h2 className=" text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Log In
           </h2>
@@ -67,8 +64,8 @@ export default function LoginPage({ }) {
         </div>
         <div className="mt-10">
           <form id="frm-login" className="space-y-6" onSubmit={login}>
-            <TextBox name="email" disabled={loading} placeholder="me@domain.com" label="Email address" />
-            <TextBox name="password" disabled={loading} placeholder="********" label="Password" />
+            <TextBox role="email" name="email" disabled={loading} placeholder="me@domain.com" label="Email address" />
+            <TextBox role="password" name="password" disabled={loading} placeholder="********" label="Password" />
             <div className=" space-y-2" >
               <p className="mt-4 text-sm text-gray-500">
                 Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>
@@ -92,6 +89,7 @@ export default function LoginPage({ }) {
             </Button>
 
           </form>
+
 
         </div>
       </div>

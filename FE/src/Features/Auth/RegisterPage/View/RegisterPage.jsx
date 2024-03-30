@@ -20,7 +20,7 @@ export default function RegisterPage({ }) {
         setGender(e);
     };
     const register = async (e) => {
-        nav('/')
+        nav('/');
         // const obj = Object.fromEntries(new FormData(document.getElementById("from-register")).entries());
         // if (obj.password != obj.confirmPassword && obj.password != "" && obj.confirmPassword != "") {
         //     toast.error("Please enter the password!");
@@ -51,15 +51,15 @@ export default function RegisterPage({ }) {
                             Sign Up
                         </h1>
                         <p className=" text-sm text-gray-400">
-                        By continuing, you agree to our User Agreement and acknowledge that you understand the Privacy Policy.
+                            By continuing, you agree to our User Agreement and acknowledge that you understand the Privacy Policy.
                         </p>
                         <form id="from-register" className="space-y-4 md:space-y-6" action="#" onSubmit={(e) => e.preventDefault()}>
-                            <TextBox disabled={loading} label="name" placeholder="name" name="name" />
-                            <TextBox disabled={loading} label="Email" placeholder="ex@domain.com" name="email" type="email" />
-                            <TextBox disabled={loading} label="Password" placeholder="••••••••" name="password" type="password" />
-                            <TextBox disabled={loading} label="Confirm password" placeholder="••••••••" name="confirmPassword" type="password" />
-                            <TextBox disabled={loading} label="Phone" placeholder="0xx23456789" name="phone" />
-                            <ComboBox text="Gender" items={genders} selected={gender} onSelect={onSelect} />
+                            <TextBox role={'name'} disabled={loading} label="name" placeholder="name" name="name" />
+                            <TextBox role={'email'} disabled={loading} label="Email" placeholder="ex@domain.com" name="email" type="email" />
+                            <TextBox role={'password'} disabled={loading} label="Password" placeholder="••••••••" name="password" type="password" />
+                            <TextBox role={'confirm-password'} disabled={loading} label="Confirm password" placeholder="••••••••" name="confirmPassword" type="password" />
+                            <TextBox role={'phone'} disabled={loading} label="Phone" placeholder="0xx23456789" name="phone" />
+                            <ComboBox role="gender" text="Gender" items={genders} selected={gender} onSelect={onSelect} />
                             <p className="text-sm font-light text-gray-500 ">
                                 Already have an account?{" "}
                                 <Link
@@ -69,10 +69,10 @@ export default function RegisterPage({ }) {
                                     Login
                                 </Link>
                             </p>
-                            <Button className=" w-full" loading={loading} disabled={loading} onClick={register} >
+                            <Button role="register-btn" className=" w-full" loading={loading} disabled={loading} onClick={register} >
                                 Create account
                             </Button>
-                           
+
                         </form>
                     </div>
                 </div>
