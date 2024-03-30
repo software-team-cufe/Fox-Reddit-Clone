@@ -57,7 +57,6 @@ function Layout() {
         setAvatar(res.data.data[0].avatar);
         setLoading(false);
       }).catch(err => {
-        console.log(err);
         setLoading(false);
       })
   }, []);

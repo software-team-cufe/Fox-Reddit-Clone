@@ -27,9 +27,27 @@ function MainRoute() {
   const [OpenSideBar, setOpenSideBar] = useState(false)
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
-    console.log(OpenSideBar);
-  }
 
+  }
+  return (
+    <div className='w-full h-[calc(100%)]'>
+      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg" UserName="jhjfjy" IsOnline={true} />
+      <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
+        {
+          ![
+            "/login",
+            "/register",
+            "/forget-username",
+            "/forget-password",
+          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} />
+        }
+
+        <div className='h-full w-full overflow-y-auto lg:p-4'>
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  );
   const { isLoading, error, data, refetch } = useQuery(
     "get-client",
     () => userAxios.post('login/token').then((d) => {

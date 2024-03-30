@@ -1,3 +1,4 @@
+import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import ComboBox from "@/GeneralElements/ComboBox/ComboBox";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
@@ -12,33 +13,33 @@ const genders = [{ text: "Male", value: true, }, { text: "Female", value: false,
 export default function RegisterPage({ }) {
     const [gender, setGender] = useState(genders[0]);
     const [loading, setLoading] = useState(false);
-    const disp = useDispatch();
+    // const disp = useDispatch();
     const nav = useNavigate();
 
     const onSelect = (e) => {
         setGender(e);
     };
     const register = async (e) => {
-
-        const obj = Object.fromEntries(new FormData(document.getElementById("from-register")).entries());
-        if (obj.password != obj.confirmPassword && obj.password != "" && obj.confirmPassword != "") {
-            toast.error("Please enter the password!");
-        }
-        obj.gender = gender.value;
-        setLoading(true);
-        try {
-            const data = await userModel.parseAsync(obj);
-            const res = await userAxios.post('signup', data);
-            const user = await userModel.parseAsync(res.data.user);
-            disp(setUser(user));
-            nav('/verify-email');
-            setLoading(false);
-        } catch (ex) {
-            if (ex.issues != null && ex.issues.length != 0) {
-                toast.error(ex.issues[0].message);
-            }
-            setLoading(false);
-        }
+        nav('/')
+        // const obj = Object.fromEntries(new FormData(document.getElementById("from-register")).entries());
+        // if (obj.password != obj.confirmPassword && obj.password != "" && obj.confirmPassword != "") {
+        //     toast.error("Please enter the password!");
+        // }
+        // obj.gender = gender.value;
+        // setLoading(true);
+        // try {
+        //     const data = await userModel.parseAsync(obj);
+        //     const res = await userAxios.post('signup', data);
+        //     const user = await userModel.parseAsync(res.data.user);
+        //     disp(setUser(user));
+        //     nav('/verify-email');
+        //     setLoading(false);
+        // } catch (ex) {
+        //     if (ex.issues != null && ex.issues.length != 0) {
+        //         toast.error(ex.issues[0].message);
+        //     }
+        //     setLoading(false);
+        // }
 
     }
     return (

@@ -1,4 +1,4 @@
-import React from "react";
+const React = require('react');
 import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
 import LoginPage from "./LoginPage";
 import '@testing-library/jest-dom';
