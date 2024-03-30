@@ -1,3 +1,4 @@
+import React from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { fakePosts } from "./fakePosts";
 import { useQuery } from "react-query";
@@ -6,7 +7,7 @@ import { userAxios } from "@/Utils/UserAxios";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
-import {createContext, useContext, React} from "react";
+import {createContext, useContext} from "react";
 
 
 export const HomeContext = createContext();
@@ -26,7 +27,6 @@ export function HomeProvider({ children }) {
 export default function HomePage() {
 
   const { selected } = useContext(HomeContext);
-
   const { isLoading, isError, error, data, } = useQuery('get-post',
     () => userAxios.get("posts"),
     {
@@ -45,7 +45,7 @@ export default function HomePage() {
         </div>
         <hr />
         {
-          fakePosts.map((e, idx) => <PostComponent post={e} key={idx} />)
+          fakePosts.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
       </div>
       <div className="p-5   w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">

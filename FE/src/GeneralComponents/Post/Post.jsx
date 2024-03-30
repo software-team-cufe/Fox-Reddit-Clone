@@ -1,18 +1,20 @@
+import React from "react";
 import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ImageGallery from "react-image-gallery";
-export default function PostComponent({ post, className, viewMode = false }) {
+export default function PostComponent({role, post, className, viewMode = false }) {
     const images = [post.thumbnail, ...post.images];
 
+
     return (
-        <div className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
+        <div role={role} className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
             {
                 !viewMode ? <Link to={`/posts/${post.id}`}>
                     <div>
                         <div className="mb-4 flex items-center gap-4">
-                            <img src={post.subReddit.image} alt="image" className="w-9 h-9 rounded-full" />
-                            <h5 className=" text-sm ">{post.subReddit.title}</h5>
+                            <img src={post.subReddit?.image} alt="image" className="w-9 h-9 rounded-full" />
+                            <h5 className=" text-sm ">{post.subReddit?.title}</h5>
                         </div>
                     </div>
                     <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
@@ -27,7 +29,7 @@ export default function PostComponent({ post, className, viewMode = false }) {
                     </div>
                 </Link> :
                     <div>
-                        
+
                         <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
                         <p className=" text-gray-600 text-sm mb-4">{post.description} </p>
                         {(images.length != 0 && post.video == null) &&
@@ -54,7 +56,7 @@ export default function PostComponent({ post, className, viewMode = false }) {
                         }
                         {
                             post.video && <div>
-                                <video src={post.video} controls/>
+                                <video src={post.video} controls />
                             </div>
                         }
                     </div>

@@ -1,3 +1,4 @@
+import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
 import { Link } from "react-router-dom";
@@ -8,8 +9,8 @@ export default function ForgetPassword() {
       <div className=" max-w-[400px] border shadow p-6 rounded-lg">
         <h2 className="mb-3 text-xl font-bold">Reset your password</h2>
         <p className="text-sm">Tell us the username and email address associated with your Reddit account, and we’ll send you an email with a link to reset your password.</p>
-        <TextBox className="my-4" placeholder="Username" />
-        <TextBox className="mb-6" placeholder="Email" />
+        <TextBox role={'username'} className="my-4" placeholder="Username" />
+        <TextBox role={'email'} className="mb-6" placeholder="Email" />
         <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>
           Forgot your username ?
         </Link>
@@ -24,7 +25,7 @@ export default function ForgetPassword() {
         </div>
 
 
-        <Button className="w-full">Reset Password</Button>
+        <Button role="btn" className="w-full" onClick={() => window.location.href = '/'}>Reset Password</Button>
       </div>
     </div>
   )

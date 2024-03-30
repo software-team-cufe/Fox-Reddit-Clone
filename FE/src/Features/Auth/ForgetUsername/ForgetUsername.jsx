@@ -6,7 +6,6 @@ import * as z from 'zod';
 
 export default function ForgetUsername() {
   const [str, setStr] = useState("");
-  console.log(z.string().email().safeParse(str).success);
   return (
     <div className="w-full h-full flex justify-center items-center">
       <div className=" max-w-[400px] border shadow p-6 rounded-lg">

@@ -1,5 +1,5 @@
-
-export default function TextBox({ id, backgroundColor, required, letterSpacing, width, textAlign, mb,  pattern, initialValue, label = "", error, name = "", area, className = "", minLength, maxLength, disabled, reference, type = "", onChanged, value, placeholder = "" }) {
+import React from "react";
+export default function TextBox({ role, id, backgroundColor, required, letterSpacing, width, textAlign, mb, pattern, initialValue, label = "", error, name = "", area, className = "", minLength, maxLength, disabled, reference, type = "", onChanged, value, placeholder = "" }) {
     function input(e) {
         e.target.style.height = "";
         e.target.style.height =
@@ -17,6 +17,7 @@ export default function TextBox({ id, backgroundColor, required, letterSpacing, 
             </label>
 
             {!area ? <input
+                role={role}
                 id={id}
                 style={{
                     letterSpacing: letterSpacing,
