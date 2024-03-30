@@ -5,7 +5,7 @@ import 'package:reddit_fox/GeneralWidgets/poll.dart';
 import 'package:reddit_fox/GeneralWidgets/textInput.dart';
 import 'package:reddit_fox/GeneralWidgets/browse_row.dart';
 import 'package:reddit_fox/GeneralWidgets/video_display.dart';
-//import 'package:reddit_fox/GeneralWidgets/image_display.dart';
+import 'package:reddit_fox/GeneralWidgets/image_display.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 
@@ -24,7 +24,7 @@ class _CreatePostState extends State<CreatePost> {
   double arrowsize = 25.0;
   late String imagePath;
   late String videoPath;
-  bool isFieldEmpty = true; // Initially set to true
+  bool isFieldEmpty = true;
 
   void togglePollVisibility() {
     setState(() {
@@ -80,58 +80,49 @@ class _CreatePostState extends State<CreatePost> {
           children: [
             Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const FaIcon(
-                          FontAwesomeIcons.xmark,
-                          size: 25.0,
-                          color: Colors.white,
-                        ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const FaIcon(
+                        FontAwesomeIcons.xmark,
+                        size: 25.0,
+                        color: Colors.white,
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const BlankPage()));
-                        },
-<<<<<<< HEAD
-=======
-                        style: ButtonStyle(
-                          backgroundColor: !isFieldEmpty
-                              ? MaterialStateProperty.all<Color>(Colors.blue)
-                              : MaterialStateProperty.all<Color>(Colors
-                                  .grey), // Change colors based on isFieldEmpty condition
-                        ),
->>>>>>> 908233545ca5ab96046823e6eabbde11b23a428d
-                        child: const Text('Next'),
-                      )
-                    ],
-                  ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BlankPage()));
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: !isFieldEmpty
+                            ? MaterialStateProperty.all<Color>(Colors.blue)
+                            : MaterialStateProperty.all<Color>(Colors
+                                .grey), // Change colors based on isFieldEmpty condition
+                      ),
+                      child: const Text('Next'),
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: MyTextInputWidget(
-                    inputTitle: 'Title',
-                    sheight: 50.0,
-                    onChanged: (text) {
-                      setState(() {
-                        isFieldEmpty = text.isEmpty;
-                      });
-                    },
-                  ),
+                MyTextInputWidget(
+                  inputTitle: 'Title',
+                  sheight: 50.0,
+                  onChanged: (text) {
+                    setState(() {
+                      isFieldEmpty = text.isEmpty;
+                    });
+                  },
                 ),
                 MyTextInputWidget(
                   inputTitle: 'body text(optional)',
-                  sheight: 250.0,
+                  sheight: 300.0,
                 ),
               ],
             ),
