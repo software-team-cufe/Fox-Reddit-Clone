@@ -6,7 +6,7 @@ import ImageGallery from "react-image-gallery";
 export default function PostComponent({role, post, className, viewMode = false }) {
     const images = [post.thumbnail, ...post.images];
 
-    if (post == null) return <></>;
+
     return (
         <div role={role} className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
             {

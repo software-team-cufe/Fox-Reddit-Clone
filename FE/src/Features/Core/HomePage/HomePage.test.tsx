@@ -1,20 +1,27 @@
 const React = require('react');
-import { render, screen, cleanup } from "@testing-library/react";
-import HomePage from "./HomePage";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import HomePage, { HomeProvider } from "./HomePage";
 import '@testing-library/jest-dom';
 import { BrowserRouter } from "react-router-dom";
-
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 afterEach(() => {
     cleanup();
 });
 
 test('Check the rendered posts to be 10 length', async () => {
+    const queryClient = new QueryClient();
     render(
         <BrowserRouter>
-            <HomePage />
+            <QueryClientProvider client={queryClient}>
+
+                <HomeProvider>
+
+                    <HomePage />
+                </HomeProvider>
+            </QueryClientProvider>
         </BrowserRouter>
     );
-    const posts = screen.getAllByRole('post');
+    const posts = await waitFor(() => screen.getAllByRole('post'));
     expect(posts.length).toBe(10);
 
 });

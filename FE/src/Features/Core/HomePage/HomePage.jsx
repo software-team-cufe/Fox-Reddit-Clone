@@ -1,3 +1,4 @@
+import React from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { fakePosts } from "./fakePosts";
 import { useQuery } from "react-query";
@@ -6,7 +7,7 @@ import { userAxios } from "@/Utils/UserAxios";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
-import {createContext, useContext, React} from "react";
+import {createContext, useContext} from "react";
 
 
 export const HomeContext = createContext();
@@ -26,7 +27,6 @@ export function HomeProvider({ children }) {
 export default function HomePage() {
 
   const { selected } = useContext(HomeContext);
-
   const { isLoading, isError, error, data, } = useQuery('get-post',
     () => userAxios.get("posts"),
     {
