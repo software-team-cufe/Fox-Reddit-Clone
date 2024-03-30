@@ -9,18 +9,17 @@ import 'package:reddit_fox/features/auth/screens/ForgetPasswordScreen.dart';
 class LoginScreen extends StatefulWidget {
   static login(final String email, final String password) {
     String messages = '';
+    bool valid = true;
     if (email.trim().isEmpty) messages = "$messages Please enter email";
     RegExp emailpaatern = RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    if (!emailpaatern.hasMatch(email)) {
-      messages = "$messages,Please enter a valid email";
+    if (!emailpaatern.hasMatch(email) ||
+        password.trim().isEmpty ||
+        email.trim().isEmpty ||
+        password.length < 7) {
+      messages = 'Please enter Valid Data';
     }
 
-    if (password.trim().isEmpty) messages = "$messages,Please enter password";
-    if (password.length < 7) {
-      messages = "$messages,Please enter more than 7 characters password";
-    }
-    if (messages == '') return null;
     return messages;
   }
 
@@ -41,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        title: const Text("login"),
       ),
       body: Center(
         child: SingleChildScrollView(
