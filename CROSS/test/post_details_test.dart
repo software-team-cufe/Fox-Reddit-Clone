@@ -34,7 +34,5 @@ void main() {
 
     // Verify if the second comment's username is displayed
     expect(find.text('User2'), findsOneWidget);
-
-    // Add more test cases as needed
   });
 }
