@@ -118,7 +118,7 @@ class _CreatePostState extends State<CreatePost> {
                   padding: const EdgeInsets.only(top: 20.0),
                   child: MyTextInputWidget(
                     inputTitle: 'Title',
-                    sheight: 50.0,
+                    sheight: 100.0,
                     onChanged: (text) {
                       setState(() {
                         isFieldEmpty = text.isEmpty;
@@ -128,7 +128,7 @@ class _CreatePostState extends State<CreatePost> {
                 ),
                 MyTextInputWidget(
                   inputTitle: 'body text(optional)',
-                  sheight: 250.0,
+                  sheight: 300.0,
                 ),
               ],
             ),

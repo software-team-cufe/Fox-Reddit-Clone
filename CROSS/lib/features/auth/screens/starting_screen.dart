@@ -61,7 +61,7 @@ class StartingScreen extends StatelessWidget {
                 borderRadius: 10,
                 verticalPadding: 13,
                 onTap: () {
-                  Get.to(() => const LoginScreen());
+                  Get.to(() =>  LoginScreen());
                 },
               ),
               const Gap(15),
