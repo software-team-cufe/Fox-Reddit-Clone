@@ -103,15 +103,12 @@ class _CreatePostState extends State<CreatePost> {
                               MaterialPageRoute(
                                   builder: (context) => const BlankPage()));
                         },
-<<<<<<< HEAD
-=======
                         style: ButtonStyle(
                           backgroundColor: !isFieldEmpty
                               ? MaterialStateProperty.all<Color>(Colors.blue)
                               : MaterialStateProperty.all<Color>(Colors
                                   .grey), // Change colors based on isFieldEmpty condition
                         ),
->>>>>>> 908233545ca5ab96046823e6eabbde11b23a428d
                         child: const Text('Next'),
                       )
                     ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'CreateCommentsPage.dart';
+import 'package:reddit_fox/Pages/CreateCommmentsPage.dart';
 
 class PostDetails extends StatelessWidget {
   const PostDetails({super.key});
