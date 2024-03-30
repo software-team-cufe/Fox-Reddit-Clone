@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'CreateCommentsPage.dart';
 
 class PostDetails extends StatelessWidget {
   const PostDetails({super.key});
@@ -93,7 +94,7 @@ class PostDetails extends StatelessWidget {
                 content: "This is a comment.",
                 upvotes: 10,
                 downvotes: 5,
-                context: context, 
+                context: context,
                 comments: [
                   "Reply 1",
                   "Reply 2",
@@ -105,12 +106,19 @@ class PostDetails extends StatelessWidget {
                 content: "Another comment here.",
                 upvotes: 15,
                 downvotes: 3,
-                context: context, 
+                context: context,
                 comments: [
                   "Comment A",
                   "Comment B",
                 ],
               ),
+              const SizedBox(height: 16),
+              const Text(
+                "Add a Comment",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              _buildNewCommentField(context),
               const SizedBox(height: 16),
             ],
           ),
@@ -126,76 +134,105 @@ class PostDetails extends StatelessWidget {
     );
   }
 
-Widget _buildComment({
-  required String username,
-  required String pfp,
-  required String content,
-  required int upvotes,
-  required int downvotes,
-  required BuildContext context, 
-  required List<String> comments, 
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        children: [
-          _buildAvatarIcon(),
-          const SizedBox(width: 8),
-          Text(
-            username,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-      const SizedBox(height: 8),
-      Text(
-        content,
-        style: const TextStyle(fontSize: 16),
-      ),
-      const SizedBox(height: 8),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-                icon: const Icon(Icons.arrow_upward),
-                onPressed: () {},
-              ),
-              Text(upvotes.toString()),
-              IconButton(
-                icon: const Icon(Icons.arrow_downward),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.reply),
-                onPressed: () {
-                  
-                },
-              ),
-              IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              _showBottomMenu(context); 
-            },
-          ),
-        ],
-      ),
-      const SizedBox(height: 8), 
-      ...comments.map((comment) => _buildCommentWidget(comment)), 
-      const SizedBox(height: 8), 
-    ],
-  );
-}
+  Widget _buildComment({
+    required String username,
+    required String pfp,
+    required String content,
+    required int upvotes,
+    required int downvotes,
+    required BuildContext context,
+    required List<String> comments,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _buildAvatarIcon(),
+            const SizedBox(width: 8),
+            Text(
+              username,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          content,
+          style: const TextStyle(fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_upward),
+              onPressed: () {},
+            ),
+            Text(upvotes.toString()),
+            IconButton(
+              icon: const Icon(Icons.arrow_downward),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.reply),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: () {
+                _showBottomMenu(context);
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        ...comments.map((comment) => _buildCommentWidget(comment)),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
 
   Widget _buildCommentWidget(String comment) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
       child: Row(
         children: [
-          const SizedBox(width: 24), 
+          const SizedBox(width: 24),
           Text(
             comment,
             style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNewCommentField(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CreateCommentsPage(),
+          ),
+        );
+      },
+      child: Row(
+        children: [
+          const Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Write a comment...",
+                border: InputBorder.none,
+              ),
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () {},
           ),
         ],
       ),

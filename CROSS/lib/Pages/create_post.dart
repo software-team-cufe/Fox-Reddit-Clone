@@ -5,7 +5,7 @@ import 'package:reddit_fox/GeneralWidgets/poll.dart';
 import 'package:reddit_fox/GeneralWidgets/textInput.dart';
 import 'package:reddit_fox/GeneralWidgets/browse_row.dart';
 import 'package:reddit_fox/GeneralWidgets/video_display.dart';
-import 'package:reddit_fox/GeneralWidgets/image_display.dart';
+//import 'package:reddit_fox/GeneralWidgets/image_display.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 
@@ -103,12 +103,15 @@ class _CreatePostState extends State<CreatePost> {
                               MaterialPageRoute(
                                   builder: (context) => const BlankPage()));
                         },
+<<<<<<< HEAD
+=======
                         style: ButtonStyle(
                           backgroundColor: !isFieldEmpty
                               ? MaterialStateProperty.all<Color>(Colors.blue)
                               : MaterialStateProperty.all<Color>(Colors
                                   .grey), // Change colors based on isFieldEmpty condition
                         ),
+>>>>>>> 908233545ca5ab96046823e6eabbde11b23a428d
                         child: const Text('Next'),
                       )
                     ],

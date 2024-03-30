@@ -368,6 +368,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "hidden_drawer_menu",
+      "rootUri": "file:///C:/Users/Hossam/AppData/Local/Pub/Cache/hosted/pub.dev/hidden_drawer_menu-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "html",
       "rootUri": "file:///C:/Users/Hossam/AppData/Local/Pub/Cache/hosted/pub.dev/html-0.15.4",
       "packageUri": "lib/",
@@ -806,7 +812,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-03-30T12:22:34.909245Z",
+  "generated": "2024-03-30T15:06:49.849942Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }

@@ -58,6 +58,7 @@ dependencies:
   video_player: ^2.2.13
   youtube_player_flutter: ^8.0.0
   device_preview: ^1.1.0
+  hidden_drawer_menu: ^3.0.0
   
 
 dev_dependencies:
