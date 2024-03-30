@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 
+/// Widget representing a custom drawer.
+///
+/// The [CustomDrawer] widget displays a drawer that slides in from the left side of the screen.
+/// It typically contains navigation options or other actions.
+///
+/// Requires:
+///   - 'package:flutter/material.dart'
+///   - 'package:reddit_fox/Pages/Blanck.dart'
+///
+/// Example:
+/// ```dart
+/// CustomDrawer(drawer_Width: drawerWidth),
+/// ```
 class CustomDrawer extends StatelessWidget {
+  /// Width of the custom drawer.
   final double drawer_Width;
   
-  const CustomDrawer({Key? key, required this.drawer_Width});
+  /// Constructs a [CustomDrawer] with the given [drawer_Width].
+  const CustomDrawer({Key? key, required this.drawer_Width}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
