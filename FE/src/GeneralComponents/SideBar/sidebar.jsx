@@ -101,7 +101,6 @@ function Sidebar({className,IsOpen}) {
                         data-dropdown-toggle="dropdown"
                         className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                         type="buttonn"
-                        role="button"
                      >
                         RECENTS
                      <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
@@ -130,6 +129,7 @@ function Sidebar({className,IsOpen}) {
                         data-dropdown-toggle="dropdown"
                         className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                         type="button"
+                        role="button1212"
                      >
                         YOUR COMMUNITIES
                         <ChevronDown 
