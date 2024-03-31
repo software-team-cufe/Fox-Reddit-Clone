@@ -69,6 +69,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.23",
+    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
     "babel-jest": "^29.7.0",
