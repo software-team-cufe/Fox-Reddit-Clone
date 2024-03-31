@@ -113,6 +113,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
             type="text"
             placeholder=" Search"
             className="border rounded-3xl w-5/6 mx-9 h-9 my-4 bg-gray-100 p-2"
+            onKeyDown={(e) => {if (e.key === 'Enter') { navigator(`/search/${e.target.value}/posts`); } }}
           ></input>
 
           {IsLoggedIn && (

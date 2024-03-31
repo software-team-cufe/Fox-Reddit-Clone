@@ -52,7 +52,7 @@ function ProfileComments({using, context}) {
 
     //main comments feed
     return (
-        <div role="commentstab" className="flex flex-col w-full h-fit my-4 items-center">
+        <div role="commentstab" className="flex flex-col w-full h-fit my-4">
 
             {/* if there are no comments, show no results */}
             {comments.length > 0 ? (

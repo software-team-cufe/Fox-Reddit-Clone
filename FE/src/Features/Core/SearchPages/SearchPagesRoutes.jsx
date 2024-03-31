@@ -5,7 +5,7 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import PostsSearchPage from "./pages/PostsSearchPage";
 import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
 import PeopleSearchPage from "./pages/PeopleSearchPage";
-import CommentsSearchPage from "./pages/COmmentsSearchPage";
+import CommentsSearchPage from "./pages/CommentsSearchPage";
 import React, { useContext, createContext} from "react";
 //.
 // search for list options for mapping
@@ -52,13 +52,13 @@ export function SearchProvider({ children }) {
 function Layout() {
   const path = useLocation();     //accessing current path
   const { selected} = useContext(SearchContext);
-
+  const { searchkey } = useParams();  //accessing search key
   return (
     <div className="max-w-[80%] w-screen">
 
       {/* search by bar header */}
       <div role="searchLabel" className="flex gap-3">
-        <span className="mt-[13px] text-xs">SEARCH RESULTS</span>
+        <span className="mt-[13px] text-xs">SEARCH RESULTS {searchkey}</span>
 
         {/* search by bar items */}
         <ul role="searchBySelect" className='flex gap-3 overflow-x-auto mb-3'>
@@ -98,16 +98,18 @@ function Layout() {
 
 export default function SearchPagesLayout() {
 
+  const {searchkey} = useParams();  //accessing search key
+
   return (
     //routes to whatever selection is made for search by: people.posts...etc
     <SearchProvider>
     <Routes>
       <Route element={<Layout />}>
         <Route key={'/search'} path="/" element={<></>} />
-        <Route key={'/Posts'} path={`Posts`} element={<PostsSearchPage searched="idk bruh" />} />
-        <Route key={'/Communities'} path={`Communities`} element={<CommunitiesSearchPage searched="idk bruh" />} />
-        <Route key={'/People'} path={`People`} element={<PeopleSearchPage searched="idk bruh" />} />
-        <Route key={'/COmments'} path={`Comments`} element={<CommentsSearchPage searched="idk bruh" />} />
+        <Route key={'/Posts'} path={`Posts`} element={<PostsSearchPage searched={searchkey} />} />
+        <Route key={'/Communities'} path={`Communities`} element={<CommunitiesSearchPage searched={searchkey} />} />
+        <Route key={'/People'} path={`People`} element={<PeopleSearchPage searched={searchkey} />} />
+        <Route key={'/COmments'} path={`Comments`} element={<CommentsSearchPage searched={searchkey} />} />
       </Route>
     </Routes>
     </SearchProvider>
