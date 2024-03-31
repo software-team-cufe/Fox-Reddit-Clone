@@ -1,6 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/models/user_model.dart';
 
@@ -13,9 +16,29 @@ class SignupScreen extends StatefulWidget {
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
+
+  static String? signup(final String email, final String password, String? name,
+      bool termsandconditions) {
+    String? errorMessage;
+    if (email.trim().isEmpty) errorMessage = "Please enter email";
+    RegExp emailPattern = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    if (!emailPattern.hasMatch(email) ||
+        password.trim().isEmpty ||
+        password.length < 7 ||
+        name == null) {
+      return 'Please enter Valid Data and accept termsandconditions';
+    }
+
+    return null;
+  }
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   final UserModel user = UserModel(
     name: "",
     profilePic: "",
@@ -28,8 +51,10 @@ class _SignupScreenState extends State<SignupScreen> {
     birthDate: DateTime.now(),
   );
 
+  bool valid = true;
   bool acceptTerms = false;
   bool showPass = false;
+  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +81,16 @@ class _SignupScreenState extends State<SignupScreen> {
                 textAlign: TextAlign.center,
               ),
               const Gap(10),
-              const CustomTextBox(
+              CustomTextBox(
                 hintText: "Name",
                 icon: FluentIcons.rename_28_regular,
+                controller: nameController,
               ),
               const SizedBox(height: 20),
-              const CustomTextBox(
+              CustomTextBox(
                 hintText: "Email",
                 icon: FluentIcons.mail_28_regular,
+                controller: emailController,
               ),
               const SizedBox(height: 20),
               CustomTextBox(
@@ -76,6 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     showPass = !showPass;
                   });
                 },
+                controller: passwordController,
               ),
               const SizedBox(height: 20),
               CustomDatePicker(
@@ -99,10 +127,22 @@ class _SignupScreenState extends State<SignupScreen> {
                   });
                 },
               ),
+              if (errorMessage != null) Text(errorMessage!),
               const SizedBox(height: 40),
               CustomButton(
                 text: "Create account",
-                onTap: () {},
+                onTap: () {
+                  setState(() {
+                    errorMessage = SignupScreen.signup(
+                        emailController.text,
+                        passwordController.text,
+                        nameController.text,
+                        acceptTerms);
+                  });
+                  if (errorMessage == null) {
+                    Get.to(() => const HomePage());
+                  }
+                },
               ),
               const SizedBox(height: 20),
             ],

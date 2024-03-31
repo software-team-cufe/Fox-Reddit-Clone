@@ -1,18 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/core/common/CustomTextBox.dart';
 import 'package:reddit_fox/features/auth/screens/ForgetPasswordScreen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  static login(final String email, final String password) {
+    String messages = '';
+    bool valid = true;
+    if (email.trim().isEmpty) messages = "$messages Please enter email";
+    RegExp emailpaatern = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    if (!emailpaatern.hasMatch(email) ||
+        password.trim().isEmpty ||
+        email.trim().isEmpty ||
+        password.length < 7) {
+      messages = 'Please enter Valid Data';
+    }
+
+    return messages;
+  }
+
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
+
+  String? errormessage;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        title: const Text("login"),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -31,20 +59,30 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const Gap(20),
-              const CustomTextBox(
+              CustomTextBox(
                 hintText: "Email or Phone number",
                 icon: Icons.email,
+                controller: emailController, // Added controller
               ),
               const Gap(10),
-              const CustomTextBox(
+              CustomTextBox(
                 hintText: "Password",
                 icon: Icons.password,
+                controller: passwordController, // Added controller
               ),
               const Gap(20),
+              if (errormessage != null) Text(errormessage!),
               CustomButton(
-                text: "Login",
-                onTap: () {},
-              ),
+                  text: "Login",
+                  onTap: () {
+                    setState(() {
+                      errormessage = LoginScreen.login(
+                          emailController.text, passwordController.text);
+                    });
+                    if (errormessage == null) {
+                      Get.to(() => const HomePage());
+                    }
+                  }),
               const Gap(20),
               TextButton(
                 onPressed: () {
