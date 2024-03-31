@@ -21,6 +21,7 @@ jobs:
           lfs: false
       - name: Run Pre-Build Commands
         run: |
+          cd fe
           npm run mock-api  
   
       - name: Build And Deploy
