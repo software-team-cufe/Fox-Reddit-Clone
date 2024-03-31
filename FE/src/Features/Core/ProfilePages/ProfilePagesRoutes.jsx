@@ -74,7 +74,7 @@ function Layout() {
   const avatar = userStore.getState().user.avatar;  // fetching user avatar from redux store
 
   return (
-    <div className="w-full">
+    <div className="w-full mx-3">
       {/* main header with avatar and username */}
       <div className="flex gap-10">
       <div className="flex-1 w-full">
