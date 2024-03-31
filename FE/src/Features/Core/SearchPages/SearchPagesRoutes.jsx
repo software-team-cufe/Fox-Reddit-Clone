@@ -58,7 +58,7 @@ function Layout() {
 
       {/* search by bar header */}
       <div role="searchLabel" className="flex gap-3">
-        <span className="mt-[13px] text-xs">SEARCH RESULTS {searchkey}</span>
+        <span className="mt-[13px] text-xs">SEARCH RESULTS</span>
 
         {/* search by bar items */}
         <ul role="searchBySelect" className='flex gap-3 overflow-x-auto mb-3'>
