@@ -22,6 +22,7 @@ jobs:
       - name: Run post-Build Commands
         run: |
           cd FE
+          npm install
           npm run mock-api  
   
       - name: Build And Deploy
