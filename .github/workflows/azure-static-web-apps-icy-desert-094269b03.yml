@@ -1,13 +1,13 @@
-name: anas
+name: FinalFront
 
 on:
   push:
     branches:
-      - anas
+      - FinalFront
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - anas
+      - FinalFront
 
 jobs:
   build_and_deploy_job:
@@ -22,8 +22,7 @@ jobs:
       - name: Run post-Build Commands
         run: |
           cd FE
-          npm install
-          npm run mock-api  
+          npm run mock-api &   
   
       - name: Build And Deploy
         id: builddeploy
