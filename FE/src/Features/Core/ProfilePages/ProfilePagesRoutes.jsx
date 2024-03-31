@@ -74,7 +74,7 @@ function Layout() {
   const avatar = userStore.getState().user.avatar;  // fetching user avatar from redux store
 
   return (
-    <div className="w-full">
+    <div className="w-full mx-3">
       {/* main header with avatar and username */}
       <div className="flex gap-10">
       <div className="flex-1 w-full">
@@ -99,7 +99,7 @@ function Layout() {
       {/* sorting lists and period select components and create post in case of overview*/}
       <div className="flex gap-1">
         {/* create post button in case of overview */}
-        <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black ${path.pathname == '/user/overview' ? "" : "hidden"}`} >
+        <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black ${path.pathname == `/user/${user}/overview` ? "" : "hidden"}`} >
           <Plus className="w-4 h-4"/>
           <span className='inline font-semibold text-sm'>Create a post</span>
         </button>

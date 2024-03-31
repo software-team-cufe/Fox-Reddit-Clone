@@ -68,14 +68,14 @@ function Sidebar({className,IsOpen}) {
             role="sidebarr"
             data-testid="sidebar"
             className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""}
-            md:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
+            lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
 
 
             <div
                className={`h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
-                  } md:visible`}
+                  } lg:visible`}
             >
                <ul className="space-y-2 font-light">
                   {icons.map((e, idx) => (

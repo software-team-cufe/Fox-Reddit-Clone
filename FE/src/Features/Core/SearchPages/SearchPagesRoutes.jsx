@@ -5,7 +5,7 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import PostsSearchPage from "./pages/PostsSearchPage";
 import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
 import PeopleSearchPage from "./pages/PeopleSearchPage";
-import CommentsSearchPage from "./pages/COmmentsSearchPage";
+import CommentsSearchPage from "./pages/CommentsSearchPage";
 import React, { useContext, createContext} from "react";
 //.
 // search for list options for mapping
@@ -52,9 +52,10 @@ export function SearchProvider({ children }) {
 function Layout() {
   const path = useLocation();     //accessing current path
   const { selected} = useContext(SearchContext);
+  const { searchkey } = useParams();  //accessing search key
 
   return (
-    <div className="max-w-[80%] w-screen">
+    <div className="max-w-[80%] w-screen m-2">
 
       {/* search by bar header */}
       <div role="searchLabel" className="flex gap-3">
@@ -64,8 +65,8 @@ function Layout() {
         <ul role="searchBySelect" className='flex gap-3 overflow-x-auto mb-3'>
           {
             buttons.map((btn, index) => <li key={index}>
-              <Link role={`${btn.text}Button`} to={`/search/${btn.path}`}>
-                <button className={`rounded-3xl font-sans text-sm font-semibold w-fit px-4 h-10 ${path.pathname == `/search/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
+              <Link role={`${btn.text}Button`} to={`/search/${searchkey}/${btn.path}`}>
+                <button className={`rounded-3xl font-sans text-sm font-semibold w-fit px-4 h-10 ${path.pathname == `/search/${searchkey}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
               </Link>
             </li>)
           }
@@ -98,16 +99,18 @@ function Layout() {
 
 export default function SearchPagesLayout() {
 
+  const {searchkey} = useParams();  //accessing search key
+
   return (
     //routes to whatever selection is made for search by: people.posts...etc
     <SearchProvider>
     <Routes>
       <Route element={<Layout />}>
         <Route key={'/search'} path="/" element={<></>} />
-        <Route key={'/Posts'} path={`Posts`} element={<PostsSearchPage searched="idk bruh" />} />
-        <Route key={'/Communities'} path={`Communities`} element={<CommunitiesSearchPage searched="idk bruh" />} />
-        <Route key={'/People'} path={`People`} element={<PeopleSearchPage searched="idk bruh" />} />
-        <Route key={'/COmments'} path={`Comments`} element={<CommentsSearchPage searched="idk bruh" />} />
+        <Route key={'/Posts'} path={`Posts`} element={<PostsSearchPage searched={searchkey} />} />
+        <Route key={'/Communities'} path={`Communities`} element={<CommunitiesSearchPage searched={searchkey} />} />
+        <Route key={'/People'} path={`People`} element={<PeopleSearchPage searched={searchkey} />} />
+        <Route key={'/COmments'} path={`Comments`} element={<CommentsSearchPage searched={searchkey} />} />
       </Route>
     </Routes>
     </SearchProvider>
