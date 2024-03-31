@@ -7,7 +7,7 @@ import { userAxios } from "@/Utils/UserAxios";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
-import {createContext, useContext} from "react";
+import { createContext, useContext } from "react";
 
 
 export const HomeContext = createContext();
@@ -48,7 +48,7 @@ export default function HomePage() {
           fakePosts.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
       </div>
-      <div className="p-5   w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">
+      <div className="p-5   max-w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">
         <h2 className=" font-bold">Recent Posts</h2>
         <hr className="my-2" />
       </div>

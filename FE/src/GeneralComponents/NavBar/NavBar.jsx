@@ -9,7 +9,9 @@ import "./ButtonStyling.css";
 import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../profileicon/Profileicon";
 import { useLocation } from "react-router-dom";
-export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOnline }) {
+import React from "react";
+export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOnline, IsLogged }) {
+  const [IsLoggedIn, setIsLoggedIn] = useState(IsLogged); //Switch mode
   const navigator = useNavigate();
   const listProfRef = useRef(null);
   const UserProfRef = useRef(null);
@@ -22,7 +24,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
   const [IshoverProf, setIshoverProf] = useState(false);
   const [IshoverSide, setIshoverSide] = useState(false);
 
-  const IsLoggedIn = true;
+
   const path = useLocation();
 
 
@@ -70,8 +72,10 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
   };
   //handle click outside profile list
   useEffect(() => {
+
     const handleClickOutside = (event) => {
-      if (listProfRef.current && !listProfRef.current.contains(event.target) && !UserProfRef.current.contains(event.target)) {
+      if (listProfRef.current && !listProfRef.current.contains(event.target)
+        && !UserProfRef.current.contains(event.target)) {
         setIsOpenProfList(false);
       }
     };
@@ -103,7 +107,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
               status={IshoverSide}
             ></Tooltip>
           </button>
-          <Logo className=" text-2xl" />
+          <Logo role="FoxLogo"
+            className=" text-2xl" />
           <input
             type="text"
             placeholder=" Search"
@@ -116,7 +121,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                 className="   md:block max-w-1/6 "
                 id="navbar-default"
               ></div>
-              <button
+              <button role="advertisement-button"
                 className="bg-white hover:bg-orange-100 hidden md:block   my-3 h-fit   rounded-full   "
                 onMouseEnter={handleMouseEnterAd}
                 onMouseLeave={handleMouseLeaveAd}
@@ -206,7 +211,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                     </li>
                     <div className="bg-gray-200 h-px mx-4 my-2"></div>
                     <li>
-                      <button onClick={() => { navigator("/setting/profile"); }}
+                      <button onClick={() => { navigator("/setting/account"); }}
                         className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1  rounded inline-flex items-center w-full">
                         <Settings strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                         Settings
