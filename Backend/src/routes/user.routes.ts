@@ -1,4 +1,3 @@
-import exp from 'constants';
 import express from 'express';
 import validateResource from '../middleware/validateResource';
 import { createUserSchema, verifyUserSchema, forgotPasswordSchema, resetPasswordSchema } from '../schema/user.schema';
@@ -11,8 +10,7 @@ import {
   getCurrentUserPrefs,
   editCurrentUserPrefs,
 } from '../controller/user.controller';
-import { create } from 'lodash';
-//import deserializeUser from '../middleware/deserialzeUser';
+import requireUser from '../middleware/requireUser';
 
 const router = express.Router();
 
@@ -27,7 +25,7 @@ router.post(
   validateResource(resetPasswordSchema),
   resetPasswordHandler
 );
-router.get('/api/v1/me/:id', getCurrentUserHandler); //needs schema validation
+router.get('/api/v1/me', requireUser, getCurrentUserHandler); //needs schema validation
 
 router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs); //needs schema validation
 

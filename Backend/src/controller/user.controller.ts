@@ -139,44 +139,33 @@ export async function resetPasswordHandler(
 }
 
 export async function getCurrentUserHandler(req: Request, res: Response) {
-  const user_id = req.params.id;
-  const user = await UserModel.findById(user_id);
-  if (!user) {
-    res.sendStatus(404);
-  } else {
-    const payload = omit(user.toJSON(), privateFields);
-    return res.send(payload);
-  }
-  //return res.send(res.locals.user);
+  return res.send(res.locals.user);
 }
 
 export async function getCurrentUserPrefs(req: Request, res: Response) {
-  const user_id = req.params.id;
-  const user = await UserModel.findById(user_id).populate('prefs');
+  const user = res.locals.user;
+
   if (!user) {
-    res.sendStatus(404);
-  } else {
-    const user_prefs = JSON.stringify(user.prefs);
-    return res.send(user_prefs);
+    return res.status(401).send('No user logged in');
   }
-  // return res.send(res.locals.user.prefs);
+
+  return res.send(user.prefs);
 }
 
 export async function editCurrentUserPrefs(req: Request, res: Response) {
-  const user_id = req.params.id;
+  const user = res.locals.user;
+
+  if (!user) {
+    return res.status(401).send('No user logged in');
+  }
+
+  // Get specific prefs to update from request body
   const prefsToUpdate = req.body.prefs;
 
-  try {
-    const updatedUser = await UserModel.findByIdAndUpdate(user_id, { $set: { prefs: prefsToUpdate } }, { new: true });
+  // Update only those prefs on the user document
+  Object.assign(user.prefs, prefsToUpdate);
 
-    if (!updatedUser) {
-      return res.sendStatus(404);
-    }
+  await user.save();
 
-    const updatedPrefs = JSON.stringify(updatedUser.prefs);
-    return res.send(updatedPrefs);
-  } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
-  }
+  return res.status(200).send(user.prefs);
 }

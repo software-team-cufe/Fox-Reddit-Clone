@@ -6,7 +6,7 @@ import requireUser from '../middleware/requireUser';
 
 const router = express.Router();
 
-router.post('/api/auth/login', requireUser, validateResource(createSessionSchema), createSessionHandeler);
+router.post('/api/auth/login', validateResource(createSessionSchema), createSessionHandeler);
 
-router.post('/api/sessions/refresh', refreshAccessTokenHandler); //needs schema validation?
+router.post('/api/sessions/refresh', refreshAccessTokenHandler);
 export default router;

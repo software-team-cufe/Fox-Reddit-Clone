@@ -2,7 +2,7 @@ import { prop, getModelForClass, modelOptions, Severity, pre, DocumentType, inde
 import * as argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 
-export const privateFields = ['password', 'verificationCode', 'passwordResetCode', 'verified', 'prefs'];
+export const privateFields = ['password', '__v', 'verificationCode', 'passwordResetCode', 'verified', 'prefs'];
 
 export class UserPrefs {
   @prop({ type: Boolean, default: true })

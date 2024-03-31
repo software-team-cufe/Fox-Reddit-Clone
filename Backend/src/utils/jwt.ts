@@ -1,6 +1,7 @@
+/* eslint-disable import/default */
 import jwt from 'jsonwebtoken';
 import config from 'config';
-
+import { getEnvVariable } from './GetEnvVariables';
 /**
  * Signs a JSON Web Token (JWT) using the specified object, key name, and options.
  *
@@ -9,22 +10,16 @@ import config from 'config';
  * @param options - Optional. Additional options for signing the JWT.
  * @returns The signed JWT.
  */
-export function signJwt(
-  object: object,
-  keyName: 'accessTokenPrivateKey' | 'refreshTokenPrivateKey',
-  options?: jwt.SignOptions | undefined
-) {
-  const signinKey = Buffer.from(config.get<string>(keyName), 'base64').toString('ascii');
-  return jwt.sign(object, signinKey, {
+export function signJwt(object: object, options?: jwt.SignOptions | undefined) {
+  return jwt.sign(object, getEnvVariable('JWT_SECRET_KEY'), {
     ...(options && options),
-    algorithm: 'RS256',
+    algorithm: 'HS256',
   });
 }
 
-export function verifyJwt<T>(token: string, keyName: 'accessTokenPublicKey' | 'refreshTokenPublicKey'): T | null {
-  const publicKey = Buffer.from(config.get<string>(keyName), 'base64').toString('ascii');
+export function verifyJwt<T>(token: string): T | null {
   try {
-    const decoded = jwt.verify(token, publicKey, { algorithms: ['RS256'] }) as T;
+    const decoded = jwt.verify(token, getEnvVariable('JWT_SECRET_KEY')) as T;
     return decoded;
   } catch (err) {
     return null;

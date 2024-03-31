@@ -30,29 +30,30 @@ export async function createSessionHandeler(req: Request<{}, {}, CreateSessionIn
   //sign a refresh token
   const refreshToken = await signRefreshToken({ userId: user._id.toString() });
   // send the access token and refresh token to the client(store in client)
-
   return res.send({ accessToken, refreshToken });
 }
 
 export async function refreshAccessTokenHandler(req: Request, res: Response) {
   const refreshToken = get(req, 'headers.x-refresh') as string;
 
-  if (typeof refreshToken === 'undefined') {
-    return res.status(401).send('Could not refresh access token');
+  const message = 'Could not refresh access token';
+  if (!refreshToken) {
+    return res.status(401).send('Refresh token is missing');
   }
-  const decoded = verifyJwt<{ session: string }>(refreshToken, 'refreshTokenPublicKey');
+
+  const decoded = verifyJwt<{ session: string }>(refreshToken);
 
   if (!decoded) {
-    return res.status(401).send('Could not refresh access token');
+    return res.status(401).send(message);
   }
   const session = await findSessionById(decoded.session);
   if (!session || !session.valid) {
-    return res.status(401).send('Could not refresh access token');
+    return res.status(401).send(message);
   }
   const user = await findUserById(String(session.user));
 
   if (!user) {
-    return res.status(401).send('Could not refresh access token');
+    return res.status(401).send(message);
   }
   const accessToken = signAccessToken(user);
   return res.send({ accessToken });
