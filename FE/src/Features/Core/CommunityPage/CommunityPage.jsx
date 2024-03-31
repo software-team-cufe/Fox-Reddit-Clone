@@ -142,7 +142,7 @@ export default function CommunityPage() {
 
   //main body of the page
   return (
-    <div className={`flex-1 `}>
+    <div className={`flex-1 m-2 lg:w-2/3 mx-auto`}>
       {/* backgroyund image of the community */}
       <img src={comm.backimage} alt='community' className='md:w-full w-screen h-36 rounded-lg object-cover object-top' />
 

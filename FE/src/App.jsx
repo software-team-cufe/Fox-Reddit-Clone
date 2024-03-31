@@ -8,7 +8,6 @@ import { useDispatch } from 'react-redux';
 import { logOutUser, setUser } from './hooks/UserRedux/UserModelSlice';
 import UserProvider from './hooks/UserRedux/UserProvider';
 import userModel from './Models/UserModel';
-import { userStore } from './hooks/UserRedux/UserStore';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
@@ -31,7 +30,7 @@ function MainRoute() {
   }
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg" UserName="jhjfjy" IsOnline={true} IsLogged={true} />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg" UserName="someuser" IsOnline={true} IsLogged={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
           ![

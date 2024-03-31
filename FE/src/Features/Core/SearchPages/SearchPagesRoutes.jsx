@@ -55,7 +55,7 @@ function Layout() {
   const { searchkey } = useParams();  //accessing search key
 
   return (
-    <div className="max-w-[80%] w-screen">
+    <div className="max-w-[80%] w-screen m-2">
 
       {/* search by bar header */}
       <div role="searchLabel" className="flex gap-3">
