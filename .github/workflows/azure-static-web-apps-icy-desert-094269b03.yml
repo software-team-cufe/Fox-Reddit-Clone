@@ -19,7 +19,7 @@ jobs:
         with:
           submodules: true
           lfs: false
-      - name: Run Pre-Build Commands
+      - name: Run post-Build Commands
         run: |
           cd FE
           npm run mock-api  
