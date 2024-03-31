@@ -53,6 +53,7 @@ function Layout() {
   const path = useLocation();     //accessing current path
   const { selected} = useContext(SearchContext);
   const { searchkey } = useParams();  //accessing search key
+
   return (
     <div className="max-w-[80%] w-screen">
 
@@ -64,8 +65,8 @@ function Layout() {
         <ul role="searchBySelect" className='flex gap-3 overflow-x-auto mb-3'>
           {
             buttons.map((btn, index) => <li key={index}>
-              <Link role={`${btn.text}Button`} to={`/search/${btn.path}`}>
-                <button className={`rounded-3xl font-sans text-sm font-semibold w-fit px-4 h-10 ${path.pathname == `/search/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
+              <Link role={`${btn.text}Button`} to={`/search/${searchkey}/${btn.path}`}>
+                <button className={`rounded-3xl font-sans text-sm font-semibold w-fit px-4 h-10 ${path.pathname == `/search/${searchkey}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
               </Link>
             </li>)
           }
