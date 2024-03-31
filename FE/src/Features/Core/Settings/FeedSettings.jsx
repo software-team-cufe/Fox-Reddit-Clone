@@ -1,6 +1,7 @@
 import React from "react";
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import { getByRole } from '@testing-library/react';
+import Dropdown from "./dropDownlist";
 
 export default function FeedSettings() {
     return (
@@ -47,47 +48,21 @@ export default function FeedSettings() {
 
             <div>
                 <div className="flex flex-col mt-7 w-3/2 " role="toggleButton">
-                    <div className="flex flex-row mb-7 justify-between">
-                        <div>
-                            <div role="TextOfButtons">
-                                Enable home feed recommendations
-                            </div>
-                            <div className="text-gray-400 text-wrap" role="TextOfButtons">
-                                Allow us to introduce recommended posts in your home feed.
-                            </div>
-                        </div>
-                        <div >
-                            <ToggleButton />
-                        </div>
-
-
-                    </div>
-                    <div className="flex flex-row mb-7 justify-between">
-                        <p role="TextOfButtons">
+                    
+                    <div className="flex flex-row flex-wrap mb-7 justify-between">
+                        <div role="TextOfButtons">
                             Autoplay media
-                        </p>
-
-                        <p className="text-gray-400 text-wrap" role="TextOfButtons">
+                        </div>
+                        <br />
+                        <div className="text-gray-400 text-wrap" role="TextOfButtons">
                             Play videos and gifs automatically when in the viewport.
-                        </p>
-                        <div role="toggleButton">
+                        </div>
+                        <div role="toggleButton" >
                             <ToggleButton />
                         </div>
 
                     </div>
-                    <div className="flex flex-row mb-7 justify-between">
-                        <p role="TextOfButtons">
-                            Reduce Animations
-                        </p>
-                        <br />
-                        <p className="text-gray-400 text-wrap" role="TextOfButtons">
-                            Reduce animations on posts, comments, and feeds.
-                        </p>
-                        <div role="toggleButton">
-                            <ToggleButton  />
-                        </div>
-
-                    </div>
+                    
                     <div className="flex flex-nowrap">
                         <div className="flex flex-row mb-7 flex-wrap" role="TextOfButtons">
                             <p>
@@ -114,67 +89,64 @@ export default function FeedSettings() {
                                 Choose how you would like content organized in communities you visit. This will not affect global feeds such as Home, or Popular.
                             </p>
                         </div>
-
-                        <div role="toggleButton">
-                            <ToggleButton />
-                        </div>
-                    </div>
-                    <div className="flex flex-row mb-7 justify-between">
-                        <p role="TextOfButtons">
-                            Username mentions
-                        </p>
-                        <div role="toggleButton">
-                            <ToggleButton />
-                        </div>
-
                     </div>
 
-                    <div className="flex flex-row mb-7 justify-between">
+                    <div className="flex flex-nowrap ml-8">
+                        <div className="flex flex-row mb-7 flex-wrap">
+                            <p role="TextOfButtons">
+                            Remember per community
+                            </p>
+                            <br />
+                            <p className="text-gray-400 text-wrap" role="TextOfButtons">
+                            Enable if you would like each community to remember and use the last content sort you selected for that community.
+                            </p>
+                        </div>
+                        <div>
+                        <ToggleButton />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-row mb-7 flex-nowrap">
+                        <div className="flex flex-row flex-wrap">
                         <p role="TextOfButtons">
-                            New followers
+                        Global content view
                         </p>
+                        <br />
+                        <p className="text-gray-400 text-wrap" role="TextOfButtons">
+                        Choose how you would like content displayed in feeds. This control is also found above your feed.
+                        </p>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-nowrap ml-8">
+                        <div className="flex flex-row mb-7 flex-wrap">
+                            <p role="TextOfButtons">
+                            Remember per community
+                            </p>
+                            <br />
+                            <p className="text-gray-400 text-wrap" >
+                            Enable if you would like each community to remember and use the last content sort you selected for that community.
+                            </p>
+                        </div>
+                        <div role="TextOfButtons">
+                        <ToggleButton />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-row mb-7 justify-between">
+                        <div className="flex flex-row justify-between flex-wrap">
+                            <div role="TextOfButtons">
+                            Open posts in new tab
+                            </div>
+                            <br />
+                            <div className="text-gray-400 text-wrap" role="TextOfButtons">
+                            Enable to always open posts in a new tab.
+                            </div>
+                        </div>
                         <div role="toggleButton">
                             <ToggleButton  />
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div>
-                <p className="text-xs text-gray-500 mt-9 mb-1" role="TextOfButtons">NEWSLETTERS
-                </p>
-
-                <hr className="w-[70%]" />
-                <div className="flex flex-col mt-7 w-3/2">
-                    <div className="flex flex-row mb-7 justify-between">
-                        <p role="TextOfButtons">
-                            Daily Digest
-                        </p>
-                        <div role="toggleButton">
-                            <ToggleButton />
-                        </div>
-
-
-                    </div>
-
-                </div>
-            </div>
-
-            <div>
-                <hr className="w-[70%]" />
-                <div className="flex flex-col mt-7 w-3/2">
-                    <div className="flex flex-row mb-7 justify-between">
-                        <p role="TextOfButtons">
-                            Unsubscribe from all emails
-                        </p>
-                        <div role="toggleButton">
-                            <ToggleButton />
-                        </div>
-
-
-                    </div>
-
-
                 </div>
             </div>
 
