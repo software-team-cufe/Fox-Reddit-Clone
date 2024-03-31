@@ -16,7 +16,12 @@ export function signJwt(object: object, options?: jwt.SignOptions | undefined) {
     algorithm: 'HS256',
   });
 }
-
+/**
+ * Verifies a JSON Web Token (JWT) and returns the decoded payload.
+ *
+ * @param {string} token - The JWT to be verified.
+ * @returns {T | null} - The decoded payload if the JWT is valid, or null if the JWT is invalid.
+ */
 export function verifyJwt<T>(token: string): T | null {
   try {
     const decoded = jwt.verify(token, getEnvVariable('JWT_SECRET_KEY')) as T;

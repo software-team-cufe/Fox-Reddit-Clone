@@ -1,8 +1,25 @@
-import { prop, getModelForClass, modelOptions, Severity, pre, DocumentType, index } from '@typegoose/typegoose';
+import {
+  prop,
+  getModelForClass,
+  modelOptions,
+  Severity,
+  pre,
+  DocumentType,
+  index,
+  queryMethod,
+} from '@typegoose/typegoose';
 import * as argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 
-export const privateFields = ['password', '__v', 'verificationCode', 'passwordResetCode', 'verified', 'prefs'];
+export const privateFields = [
+  'password',
+  'verificationCode',
+  'passwordResetCode',
+  'verified',
+  'prefs',
+  'upvotedPosts',
+  'downvotedPosts',
+];
 
 export class UserPrefs {
   @prop({ type: Boolean, default: true })
@@ -128,6 +145,12 @@ export class User {
     default: {},
   })
   prefs: UserPrefs;
+
+  @prop({ type: [String], default: [] })
+  upvotedPosts: string[];
+
+  @prop({ type: [String], default: [] })
+  downvotedPosts: string[];
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {

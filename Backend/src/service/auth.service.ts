@@ -4,10 +4,22 @@ import { DocumentType } from '@typegoose/typegoose';
 import { omit } from 'lodash';
 import SessionModel from '../model/session.model';
 
+/**
+ * Creates a new session for the given user ID.
+ *
+ * @param {string} userId - The ID of the user to create the session for.
+ * @returns {Promise<DocumentType<Session>>} The newly created session document.
+ */
 export async function createSession({ userId }: { userId: string }) {
   return SessionModel.create({ user: userId });
 }
 
+/**
+ * Generates a refresh token for the given user ID.
+ *
+ * @param {string} userId - The ID of the user.
+ * @returns {string} The generated refresh token.
+ */
 export async function signRefreshToken({ userId }: { userId: string }) {
   const session = await createSession({ userId });
   const refreshToken = signJwt(
@@ -34,7 +46,12 @@ export function signAccessToken(user: DocumentType<User>) {
 
   return accessToken;
 }
-
+/**
+ * Finds a session by its ID.
+ *
+ * @param {string} id - The ID of the session to find.
+ * @returns {Promise<DocumentType<Session> | null>} - A promise that resolves to the found session document, or null if not found.
+ */
 export async function findSessionById(id: string) {
   return SessionModel.findById(id);
 }
