@@ -1,8 +1,8 @@
+import React from 'react';
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
 import { ArrowDownCircle, ArrowUpCircle, MessageCircle, Share } from "lucide-react";
 import { useState } from "react";
-
 
 
 export default function CommentComponent({ comment, margin = 0 }) {
