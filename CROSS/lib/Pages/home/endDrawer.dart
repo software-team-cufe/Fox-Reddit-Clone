@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 
+/// Widget representing an end drawer.
+///
+/// The [endDrawer] widget displays a drawer that slides in from the right side of the screen.
+/// It typically contains user-related information and options.
+///
+/// Requires:
+///   - 'package:flutter/material.dart'
+///
+/// Example:
+/// ```dart
+/// endDrawer(user_width: userWidth),
+/// ```
 class endDrawer extends StatelessWidget {
-  final double user_width; // Define a parameter to hold drawerWidth
-  const endDrawer({super.key, required this.user_width});
+  /// Width of the end drawer.
+  final double user_width;
+
+  /// Constructs an [endDrawer] with the given [user_width].
+  const endDrawer({Key? key, required this.user_width}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +41,17 @@ class endDrawer extends StatelessWidget {
                   leading: const Icon(Icons.person_outlined),
                   title: const Text('My profile'),
                   onTap: () {},
-                ) // Add any content you want in the endDrawer
-                ,
+                ),
                 ListTile(
                   leading: const Icon(Icons.add_circle_outline_sharp),
                   title: const Text('Create community'),
                   onTap: () {},
-                ) // Add any content you want in the endDrawer
-                ,
+                ),
                 ListTile(
                   leading: const Icon(Icons.access_time),
                   title: const Text('History'),
                   onTap: () {},
-                ) // Add any content you want in the endDrawer
+                ),
               ],
             ),
           ),
