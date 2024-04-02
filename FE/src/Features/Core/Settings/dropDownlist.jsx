@@ -1,3 +1,13 @@
+/**
+ * 
+ * 
+ * dropDownList is a functional component that renders the drop down list. 
+ * 
+ * 
+ */
+
+
+
 import {AiOutlineDown,AiOutlineUp} from "react-icons/ai"
 import react, { useState } from "react";
 

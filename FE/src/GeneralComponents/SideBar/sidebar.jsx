@@ -1,3 +1,10 @@
+/**
+ * 
+ * sideBar function is a functional component that returns a sidebar component.
+ * this function take no parameters only render sideBar and route to its links
+ * 
+ */
+
 import React from "react";
 import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
