@@ -55,7 +55,6 @@ export default function CommunityPage() {
     setfeed(true);
     axios.get(`http://localhost:3002/communities`)
       .then((response) => {
-        console.log("ll");
         response.data.map((commresponse) => {
           if (commresponse.name === community) {
             setcommunity(commresponse);
