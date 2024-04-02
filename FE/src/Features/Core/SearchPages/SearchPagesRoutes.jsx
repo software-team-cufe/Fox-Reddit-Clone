@@ -7,6 +7,7 @@ import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
 import PeopleSearchPage from "./pages/PeopleSearchPage";
 import CommentsSearchPage from "./pages/CommentsSearchPage";
 import React, { useContext, createContext} from "react";
+
 //.
 // search for list options for mapping
 const buttons = [
