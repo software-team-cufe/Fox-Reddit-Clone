@@ -38,7 +38,7 @@
   ],
   "communities": [
     {
-      "commID": 1,
+      "id": 1,
       "name": "league",
       "description": "A community for League of Legends fans to discuss the game, share fan art, and connect with other players.",
       "membersCount": 12345,
@@ -51,10 +51,13 @@
         "Keep discussions relevant to League of Legends.",
         "No hate speech or harassment of any kind.",
         "Follow Reddit's content policy."
-      ]
+      ],
+      "joined": false,
+      "muted": true,
+      "favourited": false
     },
     {
-      "commID": 2,
+      "id": 2,
       "name": "art",
       "description": "A community for artists and art enthusiasts to share their work, get feedback, and connect with other creatives.",
       "membersCount": 54321,
@@ -67,7 +70,10 @@
         "Keep discussions relevant to art.",
         "No hate speech or harassment of any kind.",
         "Follow Reddit's content policy."
-      ]
+      ],
+      "joined": true,
+      "muted": true,
+      "favourited": true
     }
   ],
   "posts": [
