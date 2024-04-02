@@ -95,7 +95,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
         {/* userStore.getState().user.user == null ? */}
         <div className="flex items-center gap-4">
           <button
-            className={`bg-white hover:bg-orange-100  md:hidden w-8  h-10 my-2   rounded-full  ${path.pathname.includes('setting') ? "hidden" : " block"} `}
+            className={`bg-white hover:bg-orange-100  lg:hidden w-8  h-10 my-2   rounded-full  ${path.pathname.includes('setting') ? "hidden" : " block"} `}
             onMouseEnter={handleMouseEnterSide}
             onMouseLeave={handleMouseLeaveSide}
             onClick={SetOpenSiseBar}
@@ -119,11 +119,11 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
           {IsLoggedIn && (
             <div className="flex  sm:justify-around space-x-2 mx-2 h-16 ">
               <div
-                className="   md:block max-w-1/6 "
+                className="   lg:block max-w-1/6 "
                 id="navbar-default"
               ></div>
               <button role="advertisement-button"
-                className="bg-white hover:bg-orange-100 hidden md:block   my-3 h-fit   rounded-full   "
+                className="bg-white hover:bg-orange-100 hidden lg:block   my-3 h-fit   rounded-full   "
                 onMouseEnter={handleMouseEnterAd}
                 onMouseLeave={handleMouseLeaveAd}
               >
@@ -226,7 +226,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
           )}
           {!IsLoggedIn && (
             <div className="flex items-center w-auto">
-              <div className="   md:block  " id="navbar-default"></div>
+              <div className="   lg:block  " id="navbar-default"></div>
               <Link to="/register">
                 <button className="NavButtons bg-gray-400 hover:bg-slate-500">
                   <QrCode className=" h-5 w-5" color=" white" size={32} />
