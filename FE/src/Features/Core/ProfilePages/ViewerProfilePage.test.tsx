@@ -12,9 +12,11 @@ afterEach(() =>{
 describe('component renders correctly', () => {
 test('avatar header renders correctly', async () => {
     render(
-        <BrowserRouter>
-            <ViewerProfilePage />
-        </BrowserRouter>
+        <MemoryRouter initialEntries={['/viewer/anas/']}>
+            <Routes>
+                <Route path="/viewer/:viewer/*" element={<ViewerProfilePage />} />
+            </Routes>
+        </MemoryRouter>
     );
 
     await waitFor(() =>
@@ -44,7 +46,7 @@ describe('profile sections navigation correctly', () => {
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/viewer/anas']}>
+            <MemoryRouter initialEntries={['/viewer/anas/']}>
                 <Routes>
                     <Route path="/viewer/:viewer/*" element={<ViewerProfilePage />} />
                 </Routes>

@@ -56,7 +56,7 @@ describe('profile sections navigation correctly', () => {
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/user/anas']}>
+            <MemoryRouter initialEntries={['/user/anas/']}>
                 <Routes>
                     <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
                 </Routes>
