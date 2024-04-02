@@ -3,7 +3,7 @@
 import { CreateUserInput, ForgotPasswordInput, VerifyUserInput, ResetPasswordInput } from '../schema/user.schema';
 import { Request, Response } from 'express';
 import { createUser, findUserByEmail, findUserById } from '../service/user.service';
-import sendEmail from '../utils/mailer';
+import { sendEmail, generateVerificationLink } from '../utils/mailer';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
 import { UserModel, privateFields } from '../model/user.model';
@@ -22,13 +22,18 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
   try {
     const user = await createUser(body);
 
-    await sendEmail({
-      from: 'test@example.com',
-      to: user.email,
-      subject: 'please verify your account',
-      text: `Verification code: ${user.verificationCode}. Id: ${user._id}`,
-    });
-    return res.send('user created successfully!');
+    //const verificationLink = generateVerificationLink(String(user._id), user.verificationCode);
+    try {
+      await sendEmail({
+        from: 'foxreddit140@gmail.com',
+        to: user.email,
+        subject: 'please verify your account',
+        text: `please verify`,
+      });
+    } catch (e) {
+      log.error(e);
+    }
+    return res.send('user created successfully and verification email sent!');
   } catch (e: any) {
     if (e.code === 11000) {
       return res.status(409).send('Email already exists');

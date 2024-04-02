@@ -2,41 +2,32 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 require('dotenv').config();
 import config from 'config';
-import nodemailer, { SendMailOptions, getTestMessageUrl } from 'nodemailer';
+import nodemailer, { SendMailOptions, createTransport, getTestMessageUrl } from 'nodemailer';
+import nodemailerSendgrid from 'nodemailer-sendgrid';
 import log from './logger';
-import Mail from 'nodemailer/lib/mailer';
-/* 
-async function createTestCreds() {
-  const creds = await nodemailer.createTestAccount();
-  console.log({ creds });
-}
+import { getEnvVariable } from './GetEnvVariables';
 
-createTestCreds(); */
-const smtp = config.get<{
-  user: string;
-  pass: string;
-  host: string;
-  port: number;
-  secure: boolean;
-}>('smtp');
+const transporter = createTransport(
+  nodemailerSendgrid({
+    apiKey: getEnvVariable('FOX_EMAILVERIFICATION_API'),
+  })
+);
 
-const transporter = nodemailer.createTransport({
-  ...smtp,
-  auth: {
-    user: smtp.user,
-    pass: smtp.pass,
-  },
-});
-
-async function sendEmail(payload: SendMailOptions) {
+export async function sendEmail(payload: SendMailOptions) {
   transporter.sendMail(payload, (err, info) => {
     if (err) {
       log.error(err, 'Error occurred while sending email');
       return;
     }
 
-    log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    log.info(`Preview URL: ${getTestMessageUrl(info)}`);
   });
 }
 
-export default sendEmail;
+export function generateVerificationLink(userId: string, verificationCode: string): string {
+  // Assuming your frontend URL is stored in an environment variable
+  const frontendURL = 'http://localhost:3000';
+
+  // Construct the verification link using the frontend URL and API endpoint
+  return `${frontendURL}/api/users/signup/verify/${userId}/${verificationCode}`;
+}
