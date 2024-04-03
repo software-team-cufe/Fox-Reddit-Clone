@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
+import { getEnvVariable } from '../utils/GetEnvVariables';
 import { CreateUserInput, ForgotPasswordInput, VerifyUserInput, ResetPasswordInput } from '../schema/user.schema';
 import { Request, Response } from 'express';
 import { createUser, findUserByEmail, findUserById } from '../service/user.service';
@@ -8,6 +9,7 @@ import log from '../utils/logger';
 import { nanoid } from 'nanoid';
 import { UserModel, privateFields } from '../model/user.model';
 import { omit } from 'lodash';
+import { get } from 'config';
 
 /**
  * Handles the creation of a user.
@@ -25,10 +27,13 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
     //const verificationLink = generateVerificationLink(String(user._id), user.verificationCode);
     try {
       await sendEmail({
-        from: 'foxreddit140@gmail.com',
         to: user.email,
+        from: {
+          name: 'Fox ',
+          email: getEnvVariable('FROM_EMAIL'),
+        },
         subject: 'please verify your account',
-        text: `please verify`,
+        text: ``,
       });
     } catch (e) {
       log.error(e);

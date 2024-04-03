@@ -6,22 +6,17 @@ import nodemailer, { SendMailOptions, createTransport, getTestMessageUrl } from 
 import nodemailerSendgrid from 'nodemailer-sendgrid';
 import log from './logger';
 import { getEnvVariable } from './GetEnvVariables';
+import sgMail from '@sendgrid/mail';
 
-const transporter = createTransport(
-  nodemailerSendgrid({
-    apiKey: getEnvVariable('FOX_EMAILVERIFICATION_API'),
-  })
-);
+sgMail.setApiKey(getEnvVariable('SENDGRID_API_KEY'));
 
-export async function sendEmail(payload: SendMailOptions) {
-  transporter.sendMail(payload, (err, info) => {
-    if (err) {
-      log.error(err, 'Error occurred while sending email');
-      return;
-    }
-
-    log.info(`Preview URL: ${getTestMessageUrl(info)}`);
-  });
+export async function sendEmail(payload: sgMail.MailDataRequired) {
+  try {
+    await sgMail.send(payload);
+    console.log('Email sent');
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export function generateVerificationLink(userId: string, verificationCode: string): string {
