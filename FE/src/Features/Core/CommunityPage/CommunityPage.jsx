@@ -1,7 +1,7 @@
 import React, { useContext, createContext, useEffect, useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Spinner from '@/GeneralElements/Spinner/Spinner';
 import PostComponent from "@/GeneralComponents/Post/Post";
@@ -9,6 +9,9 @@ import { Plus } from 'lucide-react';
 import bellMenu from "./accessories/bellmenu";
 import optionsMenu from "./accessories/optionsmenu";
 import MainFooter from "./footers/mainFooter";
+import { userStore } from "@/hooks/UserRedux/UserStore";
+import LoginFirtstModal from "./accessories/loginFirstModal";
+
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -39,9 +42,15 @@ export default function CommunityPage() {
   const { period, selected } = useContext(CommunityContext);  // get the selected sorting and period
   const [posts, setposts] = useState([]);              // store the posts data
   const [feed, setfeed] = useState(true);                // store the feed loading state
-
+  const user = userStore.getState().user;             // get the user data
+  const [showModal, setShowModal] = useState(false);
+  const navigator = useNavigate();
 
   const swtichJoinState = () => {
+    if(user.user == null){
+      setShowModal(true);
+      return;
+    }
     axios.patch(`http://localhost:3002/communities?id=2`, { joined: !comm.joined })
       .then(() => {
         console.log('Community joined state changed!');
@@ -51,6 +60,14 @@ export default function CommunityPage() {
       });
   }
 
+  const CreatePostHandle = () => {
+    if(user.user == null){
+      setShowModal(true);
+      return;
+    }
+    navigator('/createpost');
+  }
+  
   //to fetch the community data from the server and use them
   useEffect(() => {
     setfeed(true);
@@ -85,7 +102,7 @@ export default function CommunityPage() {
       }).catch(error => {
         console.error('There was an error!', error);
       });
-  }, [period, selected, community]);
+  }, [period, selected]);
 
   //to handle loading until fetch is complete
   if (loading) {
@@ -97,8 +114,11 @@ export default function CommunityPage() {
   }
 
   //main body of the page
+  
   return (
     <div className={`flex-1 m-2 lg:w-2/3 mx-auto`}>
+          {showModal && <LoginFirtstModal onClose={setShowModal}/>}
+
       {/* backgroyund image of the community */}
       <img src={comm.backimage} alt='community' className='md:w-full w-screen h-36 rounded-lg object-cover object-top' />
 
@@ -115,15 +135,15 @@ export default function CommunityPage() {
 
         {/* create post, bell and options menu in desktop mode */}
         <div className='hidden mr-6 md:flex md:gap-2 md:justify-between'>
-          <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} >
+          <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
             <Plus className="w-4 h-4" />
             <span className='inline font-bold text-sm'>Create a post</span>
           </button>
-          <button role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'hover:bg-blue-600 bg-blue-700' : 'border-gray-700 border-[1px] hover:border-black'}`} onClick={() => swtichJoinState()}>
-            <span className={`inline font-bold text-sm ${comm.joined ? 'text-white' : 'text-black'}`}>{comm.joined ? 'Join' : 'Joined'}</span>
+          <button role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'border-gray-700 border-[1px] hover:border-black'  : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
+            <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' :  'Join'}</span>
           </button>
-          {bellMenu()}
-          {optionsMenu(comm.muted, comm.favourited, comm.name)}
+          {comm.joined ? bellMenu() : <></>}
+          {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : <></>}
         </div>
       </div>
 
@@ -133,11 +153,11 @@ export default function CommunityPage() {
           <Plus className="w-4 h-4" />
           <span className='inline font-bold text-sm'>Create a post</span>
         </button>
-        <button role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'hover:bg-blue-800 bg-blue-700' : 'border-gray-700 border-[1px] hover:border-black'}`} onClick={() => swtichJoinState()}>
-          <span className={`inline font-bold text-sm ${comm.joined ? 'text-white' : 'text-black'}`}>{comm.joined ? 'Join' : 'Joined'}</span>
+        <button role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'border-gray-700 border-[1px] hover:border-black'  : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
+            <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' :  'Join'}</span>
         </button>
-        {bellMenu()}
-        {optionsMenu(comm.muted, comm.favourited, comm.name)}
+        {comm.joined ? bellMenu() : <></>}
+        {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : <></>}
       </div>
 
       {/* the feed with its sort elements and the community description and rules and other tools on the right*/}
