@@ -70,39 +70,45 @@ export default function CommunityPage() {
   
   //to fetch the community data from the server and use them
   useEffect(() => {
-    setfeed(true);
     axios.get(`http://localhost:3002/communities`)
       .then((response) => {
         response.data.map((commresponse) => {
           if (commresponse.name === community) {
             setcommunity(commresponse);
-          }
-        })
-        return axios.get(`http://localhost:3002/posts`)
-          .then((response) => {
-            const newPosts = response.data.map(post => ({
-              subReddit: {
-                image: post.attachments.subredditIcon,
-                title: post.communityName,
-              },
-              images: post.attachments.postData,
-              id: post.postID,
-              title: post.title,
-              subTitle: post.postText,
-              votes: post.votesCount,
-              comments: post.commentsCount,
-              thumbnail: post.thumbnail,
-              video: null
-            }));
-            setposts(newPosts);
             setLoading(false);
-            setfeed(false);
-          })
-
+          }
+        });
       }).catch(error => {
         console.error('There was an error!', error);
       });
+  }, []);
+
+  useEffect(() => {
+    setfeed(true);
+    axios.get(`http://localhost:3002/posts`)
+    .then((response) => {
+      const newPosts = response.data.map(post => ({
+        subReddit: {
+          image: post.attachments.subredditIcon,
+          title: post.communityName,
+        },
+        images: post.attachments.postData,
+        id: post.postID,
+        title: post.title,
+        subTitle: post.postText,
+        votes: post.votesCount,
+        comments: post.commentsCount,
+        thumbnail: post.thumbnail,
+        video: null
+      }));
+      setposts(newPosts);
+      setfeed(false);
+    })
+    .catch(error => {
+    console.error('There was an error!', error);
+  });
   }, [period, selected]);
+
 
   //to handle loading until fetch is complete
   if (loading) {
