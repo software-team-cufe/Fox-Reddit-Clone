@@ -9,6 +9,11 @@ import ProfileSettings from './PofileSettings';
 import ChatMessaging from './chatmessaging';
 import React from 'react';
 
+/**
+ * this function is used to make user switch between settings` pages
+ * @returns {JSX.Element}
+ * 
+ */
 function Navofsetting() {
     return (
         <div className="flex h-full w-full mt-10">
@@ -69,7 +74,12 @@ function Navofsetting() {
     )
 };
 
-
+/**
+ * 
+ * @file this is the routing component between the setting pages
+ * @module Settingpagelayout
+ * 
+ */
 export default function Settingpagelayout() {
 
     return (
