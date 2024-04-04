@@ -120,16 +120,16 @@ export default function CommunityPage() {
           {showModal && <LoginFirtstModal onClose={setShowModal}/>}
 
       {/* backgroyund image of the community */}
-      <img src={comm.backimage} alt='community' className='md:w-full w-screen h-36 rounded-lg object-cover object-top' />
+      <img src={comm.backimage} alt='community' className='md:w-full w-screen h-36 rounded-lg object-cover' />
 
       {/* community name and (members count in mobile mode)*/}
       <div className='w-full relative flex justify-between items-center m-3'>
         <div>
           <img src={comm.icon} alt='community' className='absolute md:-top-16 -top-2 broder-white md:border-4 border-2 md:w-24 w-12 md:h-24 h-12 rounded-full' />
           <span className='absolute md:top-2 top-0 md:left-28 left-16 md:text-3xl text-lg font-bold'>r/{community}</span>
-          <div className='absolute md:top-10 top-[28px] md:left-28 left-16 md:hidden text-xs font-semibold text-gray-500'>
-            <span>{comm.membersCount} members</span>
-            <span className='md:ml-4 ml-2'>{comm.onlineMembers} online</span>
+          <div className='absolute md:top-10 top-[28px] md:left-28 left-16 md:hidden text-xs font-semibold text-gray-500 flex flex-wrap gap-x-3'>
+            <div>{comm.membersCount} members</div>
+            <div>{comm.onlineMembers} online</div>
           </div>
         </div>
 
@@ -148,13 +148,13 @@ export default function CommunityPage() {
       </div>
 
       {/* create post, bell and options menu in mobile mode */}
-      <div className='flex gap-2 md:justify-between mr-6 md:hidden mt-[55px]'>
-        <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} >
+      <div className='flex gap-2 md:justify-between mr-6 md:hidden mt-[62px]'>
+        <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`}  onClick={CreatePostHandle}>
           <Plus className="w-4 h-4" />
           <span className='inline font-bold text-sm'>Create a post</span>
         </button>
         <button role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'border-gray-700 border-[1px] hover:border-black'  : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
-            <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' :  'Join'}</span>
+            <span className={`inline font-bold text-xs ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' :  'Join'}</span>
         </button>
         {comm.joined ? bellMenu() : <></>}
         {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : <></>}

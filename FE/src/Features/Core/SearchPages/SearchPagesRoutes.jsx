@@ -75,7 +75,7 @@ function Layout() {
       </div>
 
       {/* sort by and period select only on posts and comments selections*/}
-      {((path.pathname !== "/search/People" && path.pathname !== "/search/Communities") && (
+      {((path.pathname !== `/search/${searchkey}/People` && path.pathname !== `/search/${searchkey}/Communities`) && (
         <>
           <div className="flex gap-1 mt-2">
             <span className="text-xs text-gray-500 mt-[12px] ml-2">sort by:</span>
