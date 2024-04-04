@@ -48,7 +48,6 @@ export default function COmmentsSearchPage({ searched = "filler"}) {
       </div>
     )
   }
-
   //main body of the page
   return (
     <div role="commentstab" className="flex flex-col w-full max-w[756px] h-fit my-4 p-1">
