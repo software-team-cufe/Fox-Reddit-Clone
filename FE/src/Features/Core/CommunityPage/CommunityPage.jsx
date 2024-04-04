@@ -120,7 +120,7 @@ export default function CommunityPage() {
           {showModal && <LoginFirtstModal onClose={setShowModal}/>}
 
       {/* backgroyund image of the community */}
-      <img src={comm.backimage} alt='community' className='md:w-full w-screen h-36 rounded-lg object-cover object-top' />
+      <img src={comm.backimage} alt='community' className='md:w-full w-screen h-36 rounded-lg object-cover' />
 
       {/* community name and (members count in mobile mode)*/}
       <div className='w-full relative flex justify-between items-center m-3'>
