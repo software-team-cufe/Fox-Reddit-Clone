@@ -3,7 +3,14 @@
 import { getEnvVariable } from '../utils/GetEnvVariables';
 import { CreateUserInput, ForgotPasswordInput, VerifyUserInput, ResetPasswordInput } from '../schema/user.schema';
 import { Request, Response } from 'express';
-import { createUser, findUserByEmail, findUserById } from '../service/user.service';
+import {
+  createUser,
+  findUserByEmail,
+  findUserById,
+  findUserByUsername,
+  findUserIdByUsername,
+  findUserPosts,
+} from '../service/user.service';
 import { sendEmail, generateVerificationLink } from '../utils/mailer';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
@@ -24,7 +31,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
   try {
     const user = await createUser(body);
 
-    //const verificationLink = generateVerificationLink(String(user._id), user.verificationCode);
+    const verificationLink = generateVerificationLink(String(user._id), user.verificationCode);
     try {
       await sendEmail({
         to: user.email,
@@ -33,7 +40,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
           email: getEnvVariable('FROM_EMAIL'),
         },
         subject: 'please verify your account',
-        text: ``,
+        text: `click here to verify your account: ${verificationLink}`,
       });
     } catch (e) {
       log.error(e);
@@ -179,3 +186,250 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
 
   return res.status(200).send(user.prefs);
 }
+
+/**
+ * Handles username_available request.
+ *
+ * @param req - The request object containing the user data.
+ * @param res - The response object to send the result.
+ * @returns A response indicating the availability of the username.
+ */
+export async function username_availableHandler(req: Request<VerifyUserInput>, res: Response) {
+  try {
+    // Extract params
+    const username: string = req.query.username as string;
+
+    const user = await findUserByUsername(username);
+
+    if (user !== null) {
+      return res.status(200).send('Not Available');
+    } else {
+      return res.status(200).send('Available');
+    }
+  } catch (error) {
+    console.error('Error handling username availability request:', error);
+    return res.status(500).send('Internal server error');
+  }
+}
+
+/**
+ * Handles user "about" request.
+ *
+ * @param req - The request object containing the user data.
+ * @param res - The response object to send the result.
+ * @returns A response for user "about" by username.
+ */
+export async function aboutHandler(req: Request, res: Response) {
+  try {
+    // Extract params
+    const username: string = req.params.username as string;
+
+    const user = await findUserByUsername(username);
+
+    if (!user) {
+      return res.status(404).send("This user doesn't exist!");
+    }
+
+    const obj = {
+      prefShowTrending: user?.prefs?.prefShowTrending,
+      isBlocked: user?.aboutReturn?.isBlocked,
+      isBanned: user?.commMember?.isBanned,
+      isMuted: user?.commMember?.isMuted,
+      canCreateSubreddit: user?.canCreateSubreddit,
+      isMod: user?.aboutReturn?.isModerator,
+      over18: user?.prefs?.over18,
+      hasVerifiedEmail: user?.verified,
+      createdAt: user?.createdAt,
+      inboxCount: user?.inboxCount,
+      totalKarma: user?.karma,
+      linkKarma: user?.postKarma,
+      acceptFollowers: user?.aboutReturn?.acceptFollowers,
+      commentKarma: user?.commentKarma,
+      passwordSet: user?.passwordResetCode,
+      email: user?.email,
+      about: user?.about,
+      gender: user?.gender,
+      avatar: user?.avatar,
+      userID: user?._id,
+      showActiveCommunities: user?.showActiveCommunities,
+    };
+
+    return res.status(200).send(obj);
+  } catch (error) {
+    console.error('Error handling user request:', error);
+    return res.status(500).send('Internal server error');
+  }
+}
+
+/**
+ * Handles user submitted (posts, comments, replies) by username request.
+ *
+ * @param req - The request object containing the user data.
+ * @param res - The response object to send the result.
+ * @returns A response for user (posts, comments, replies) by username.
+ */
+export async function submittedPostByUsrnameHandler(req: Request, res: Response) {
+  try {
+    // Extract params
+    const username: string = req.params.username as string;
+    const sortBy: string = req.query.sortBy as string;
+
+    if (!sortBy || !username) {
+      return res.status(400).send('Invalid request');
+    }
+
+    const userId = await findUserIdByUsername(username);
+
+    if (!userId) {
+      return res.status(404).send('User not found');
+    }
+
+    const retrievedPosts = await findUserPosts(userId, sortBy);
+
+    if (retrievedPosts && retrievedPosts.length > 0) {
+      return res.status(200).send(retrievedPosts);
+    } else {
+      return res.status(404).send('No posts found for this user');
+    }
+  } catch (error) {
+    console.error('Error handling user request:', error);
+    return res.status(500).send('Internal server error');
+  }
+}
+
+/****************************** BOUDY ***********************************/
+
+// export async function getFriendHandler(req: Request, res: Response) {
+//   const username: string = req.params.username as string;
+//   const user = await findUserByUsername(username);
+
+//   if (!user) {
+//     return res.status(404).send('could not find friend');
+//   } else {
+//     res.status(200).json({
+//       id: user._id,
+//       avatar: user.avatar,
+//       about: user.about,
+//     });
+//   }
+// }
+
+// export async function getALLFriendsHandler(req: Request, res: Response) {
+//   const { id } = req.body.username; //create auth, token middle ware and add the username to request body
+
+//   const user = await findUserById(id);
+
+//   if (!user) {
+//     return res.status(404).send('could not find friend');
+//   } else {
+//     res.status(200).json({
+//       //friends: user.friends
+//     });
+//   }
+// }
+
+// export async function friendRequestHandler(req: Request<friendRequest['body']>, res: Response) {
+//   const { username, type } = req.body;
+
+//   const reciever = await findUserByUsername(username);
+//   const sender = reciever;
+//   //const sender = res.local.user;
+
+//   if (!reciever && !sender) {
+//     return res.status(405).json({
+//       status: 'failed',
+//       message: 'Account is not found and Access token is missing or invalid',
+//     });
+//   } else if (!reciever) {
+//     return res.status(404).json({
+//       status: 'failed',
+//       message: 'Account is not found',
+//     });
+//   } else if (!sender) {
+//     return res.status(401).json({
+//       status: 'failed',
+//       message: 'Access token is missing or invalid',
+//     });
+//   } else if (type == 'frindRequest') {
+//     await friendUser(reciever, sender);
+//   } else if (type == 'moderatorInvite') {
+//     // moderator invite
+//   } else {
+//     return res.status(400).json({
+//       status: 'failed',
+//       message: 'Invalid type',
+//     });
+//   }
+//   return res.status(200).json({
+//     status: 'succeeded',
+//   });
+// }
+
+// export async function unFriendRequestHandler(req: Request<unFriendRequest['body']>, res: Response) {
+//   const { usernameid, type } = req.body;
+
+//   const user = await findUserByUsername(usernameid);
+
+//   if (type == 'unFrindRequest') {
+//     //remove friend from database
+//   } else if (type == 'moderatorInvite') {
+//     // moderator invite
+//   } else {
+//     return res.status(400).json({
+//       status: 'failed',
+//       message: 'invalid type',
+//     });
+//   }
+//   return res.status(200).json({
+//     status: 'succeeded',
+//   });
+// }
+
+// export async function reportUserHandler(req: Request<reportUser['body']>, res: Response) {
+//   const { usernameid } = req.body;
+
+//   const user = await findUserByUsername(usernameid);
+// }
+
+// export async function blockUserHandler(req: Request<blockUserInput['body']>, res: Response) {
+//   const { username, type } = req.body; //type block or unblock
+//   const blocked = await findUserByUsername(username);
+//   const blocker = blocked;
+//   //const blocker = res.local.user;
+
+//   if (!blocked && !blocker) {
+//     return res.status(405).json({
+//       status: 'failed',
+//       message: 'Account is not found and Access token is missing or invalid',
+//     });
+//   } else if (!blocked) {
+//     return res.status(404).json({
+//       status: 'failed',
+//       message: 'Account is not found',
+//     });
+//   } else if (!blocker) {
+//     return res.status(401).json({
+//       status: 'failed',
+//       message: 'Access token is missing or invalid',
+//     });
+//   }
+//   let updatedBlocked: User;
+//   let updatedBlocker: User;
+//   if (type === 'block') {
+//     updatedBlocked = await blockUser1(blocked, blocker);
+//     updatedBlocker = await blockUser2(blocked, blocker);
+//     const savedBlocked = await UserModel.updateOne({ _id: username }, updatedBlocked);
+//     console.log(savedBlocked);
+//   } else if (type === 'unblock') {
+//     //await unblockUser(blocked, blocker);
+//   } else {
+//     return res.status(400).json({
+//       status: 'failed',
+//       message: 'invalid type',
+//     });
+//   }
+//   return res.status(200).json({
+//     status: 'succeeded',
+//   });
+// }
+/****************************** BOUDY ***********************************/

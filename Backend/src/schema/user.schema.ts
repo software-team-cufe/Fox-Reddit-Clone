@@ -57,10 +57,58 @@ export const resetPasswordSchema = object({
   }),
 });
 
-export type CreateUserInput = TypeOf<typeof createUserSchema>['body'];
+export const friendRequestSchema = object({
+  body: object({
+    type: string({
+      required_error: 'type is required',
+    }),
+    username: string({
+      required_error: 'Username is required',
+    }),
+  }),
+});
+
+export const unFriendRequestSchema = object({
+  body: object({
+    type: string({
+      required_error: 'type is required',
+    }),
+    username: string({
+      required_error: 'Username is required',
+    }),
+  }),
+});
+
+export const reportUserSchema = object({
+  body: object({
+    type: string({
+      required_error: 'type is required',
+    }),
+    username: string({
+      required_error: 'Username is required',
+    }),
+  }),
+});
+
+export const blockUserSchema = object({
+  body: object({
+    type: string({
+      required_error: 'type is required',
+    }),
+    username: string({
+      required_error: 'Username is required',
+    }),
+  }),
+});
 
 export type VerifyUserInput = TypeOf<typeof verifyUserSchema>['params'];
 
 export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>['body'];
 
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
+
+export type friendRequest = TypeOf<typeof friendRequestSchema>;
+export type unFriendRequest = TypeOf<typeof unFriendRequestSchema>;
+export type reportUser = TypeOf<typeof reportUserSchema>;
+export type blockUserInput = TypeOf<typeof blockUserSchema>;
+export type CreateUserInput = TypeOf<typeof createUserSchema>['body'];

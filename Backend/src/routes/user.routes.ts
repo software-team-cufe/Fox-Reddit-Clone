@@ -9,6 +9,9 @@ import {
   getCurrentUserHandler,
   getCurrentUserPrefs,
   editCurrentUserPrefs,
+  username_availableHandler,
+  aboutHandler,
+  submittedPostByUsrnameHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 
@@ -19,6 +22,12 @@ router.post('/api/users/signup', validateResource(createUserSchema), createUserH
 router.get('/api/users/signup/verify/:id/:verificationCode', validateResource(verifyUserSchema), verifyUserHandler);
 
 router.post('/api/users/forgotpassword', validateResource(forgotPasswordSchema), forgotPasswordHandler);
+
+router.get('/api/username_available', username_availableHandler);
+
+router.get('/user/:username/about', aboutHandler);
+
+router.get('/user/:username/submitted', submittedPostByUsrnameHandler);
 
 router.post(
   '/api/users/resetpassword/:id/:passwordResetCode',
@@ -31,3 +40,18 @@ router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs); //needs schema validati
 
 router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs); //needs schema validation
 export default router;
+
+/********************TODO BOUDY **************************/
+// router.get('/api/v1/me/friends', getALLFriendsHandler); //no validation?
+
+// router.get('/api/v1/me/friends/:username', getFriendHandler); // no validation?
+
+// router.post('/api/friend', validateResource(friendRequestSchema), friendRequestHandler);
+
+// router.post('/api/unfriend', validateResource(unFriendRequestSchema), unFriendRequestHandler);
+
+// router.post('/api/block_user', validateResource(blockUserSchema), blockUserHandler);
+
+// router.post('/api/report_user', validateResource(reportUserSchema), reportUserHandler);
+
+/********************************************************/
