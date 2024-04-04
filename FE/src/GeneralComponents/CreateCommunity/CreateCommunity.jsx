@@ -72,9 +72,9 @@ export default function CreateCommunity({ onClose = () => { } }) {
                 <div className="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div className="fixed inset-0 w-screen overflow-y-auto">
-                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0 ">
-                            <div role="createForm" className="relative transform overflow-hidden rounded-xl w-80 h-[635px] bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0 ">
+                            <div role="createForm" className="relative transform  rounded-xl w-80 h-3/4 bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 rounded-full">
 
                                     {/* Create a community heading */}
                                     <div className='flex gap-2'>
