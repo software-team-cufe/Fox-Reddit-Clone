@@ -3,6 +3,7 @@ import { useContext, createContext, useState } from 'react';
 import '@testing-library/jest-dom';
 import Sortmenu from './sortmenu';
 import React = require('react');
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 let mockSetselected;
 
@@ -15,7 +16,11 @@ beforeEach(() => {
 
     render(
         <Testcontext.Provider value={{setselected: mockSetselected}}>
-            <Sortmenu context={Testcontext}/>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Sortmenu context={Testcontext}/>} />
+                </Routes>
+            </BrowserRouter>
         </Testcontext.Provider>
     )});
     
@@ -43,7 +48,7 @@ describe('sortmenu elements render', () => {
         fireEvent.click(screen.getByRole('dropDownButton'));
 
         const items = await screen.getAllByRole('menuitem');
-        expect(items).toHaveLength(3);
+        expect(items).toHaveLength(5);
     });
 });
 
@@ -89,7 +94,7 @@ describe('sortmenu functionality', () => {
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items1 = await screen.getAllByRole('menuitem');
 
-        fireEvent.click(items1[0]);
+        fireEvent.click(items1[1]);
         expect(mockSetselected).toHaveBeenCalledWith('Hot');
     });
 
@@ -98,7 +103,7 @@ describe('sortmenu functionality', () => {
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items2 = await screen.getAllByRole('menuitem');
 
-        fireEvent.click(items2[1]);
+        fireEvent.click(items2[2]);
         expect(mockSetselected).toHaveBeenCalledWith('New');
     });
 
@@ -107,7 +112,7 @@ describe('sortmenu functionality', () => {
         fireEvent.click(screen.getByRole('dropDownButton'));
         const items3 = await screen.getAllByRole('menuitem');
 
-        fireEvent.click(items3[2]);
+        fireEvent.click(items3[3]);
         expect(mockSetselected).toHaveBeenCalledWith('Top');
     });
 

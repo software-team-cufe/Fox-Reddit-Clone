@@ -38,7 +38,7 @@
   ],
   "communities": [
     {
-      "commID": 1,
+      "id": 1,
       "name": "league",
       "description": "A community for League of Legends fans to discuss the game, share fan art, and connect with other players.",
       "membersCount": 12345,
@@ -51,10 +51,13 @@
         "Keep discussions relevant to League of Legends.",
         "No hate speech or harassment of any kind.",
         "Follow Reddit's content policy."
-      ]
+      ],
+      "joined": false,
+      "muted": true,
+      "favourited": false
     },
     {
-      "commID": 2,
+      "id": 2,
       "name": "art",
       "description": "A community for artists and art enthusiasts to share their work, get feedback, and connect with other creatives.",
       "membersCount": 54321,
@@ -67,7 +70,48 @@
         "Keep discussions relevant to art.",
         "No hate speech or harassment of any kind.",
         "Follow Reddit's content policy."
-      ]
+      ],
+      "joined": true,
+      "muted": true,
+      "favourited": true
+    },
+    {
+      "id": 3,
+      "name": "music",
+      "description": "A community for music lovers to share their favorite songs, discuss new releases, and connect with other fans.",
+      "membersCount": 98765,
+      "icon": "https://media.wired.com/photos/5926df59f3e2356fd800ab80/master/w_2560%2Cc_limit/GettyImages-543338600-S2.jpg",
+      "backimage": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "onlineMembers": 543,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to music.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ],
+      "joined": true,
+      "muted": false,
+      "favourited": false
+    },
+    {
+      "id": 4,
+      "name": "movies",
+      "description": "A community for movie buffs to discuss their favorite films, share recommendations, and connect with other cinephiles.",
+      "membersCount": 87654,
+      "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
+      "backimage": "https://plus.unsplash.com/premium_photo-1676049462062-e8ec9b661675?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "onlineMembers": 654,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to movies.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ],
+      "joined": false,
+      "muted": false,
+      "favourited": true
     }
   ],
   "posts": [

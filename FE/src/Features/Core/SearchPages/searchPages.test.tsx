@@ -43,9 +43,9 @@ import {BrowserRouter, MemoryRouter, Routes, Route} from "react-router-dom";
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/search']}>
+            <MemoryRouter initialEntries={['/search/topic/']}>
                 <Routes>
-                    <Route path="/Search/*" element={<SearchPagesLayout />} />
+                    <Route path="/Search/:searchkey/*" element={<SearchPagesLayout />} />
                 </Routes>
             </MemoryRouter>
         );
@@ -53,6 +53,7 @@ import {BrowserRouter, MemoryRouter, Routes, Route} from "react-router-dom";
         const PostsButton = await screen.findByRole('PostsButton');
         fireEvent.click(PostsButton);
     
+        console.log(prettyDOM(window.document.body));
         await waitFor(() => {
             expect(screen.getByRole('poststab')).toBeInTheDocument();
         });
