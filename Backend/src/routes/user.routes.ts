@@ -1,6 +1,15 @@
 import express from 'express';
 import validateResource from '../middleware/validateResource';
-import { createUserSchema, verifyUserSchema, forgotPasswordSchema, resetPasswordSchema } from '../schema/user.schema';
+import {
+  createUserSchema,
+  verifyUserSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  friendRequestSchema,
+  unFriendRequestSchema,
+  blockUserSchema,
+  reportUserSchema,
+} from '../schema/user.schema';
 import {
   createUserHandler,
   verifyUserHandler,
@@ -12,6 +21,12 @@ import {
   username_availableHandler,
   aboutHandler,
   submittedPostByUsrnameHandler,
+  getFriendHandler,
+  getALLFriendsHandler,
+  unFriendRequestHandler,
+  friendRequestHandler,
+  blockUserHandler,
+  // reportUserHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 
@@ -42,16 +57,16 @@ router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs); //needs schema valid
 export default router;
 
 /********************TODO BOUDY **************************/
-// router.get('/api/v1/me/friends', getALLFriendsHandler); //no validation?
+router.get('/api/v1/me/friends', getALLFriendsHandler); //no validation?
 
-// router.get('/api/v1/me/friends/:username', getFriendHandler); // no validation?
+router.get('/api/v1/me/friends/:username', getFriendHandler); // no validation?
 
-// router.post('/api/friend', validateResource(friendRequestSchema), friendRequestHandler);
+router.post('/api/friend', validateResource(friendRequestSchema), friendRequestHandler);
 
-// router.post('/api/unfriend', validateResource(unFriendRequestSchema), unFriendRequestHandler);
+router.post('/api/unfriend', validateResource(unFriendRequestSchema), unFriendRequestHandler);
 
-// router.post('/api/block_user', validateResource(blockUserSchema), blockUserHandler);
+router.post('/api/block_user', validateResource(blockUserSchema), blockUserHandler);
 
-// router.post('/api/report_user', validateResource(reportUserSchema), reportUserHandler);
+//router.post('/api/report_user', validateResource(reportUserSchema), reportUserHandler);
 
 /********************************************************/
