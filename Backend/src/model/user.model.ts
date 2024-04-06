@@ -10,6 +10,8 @@ import {
 } from '@typegoose/typegoose';
 import * as argon2 from 'argon2';
 import { nanoid } from 'nanoid';
+import { Post } from './posts.model';
+import { Types } from 'mongoose'; // Import Types from mongoose
 
 export const privateFields = [
   'password',
@@ -321,11 +323,11 @@ export class User {
   // @prop({ ref: Comment })
   // mentionedInComments?: Ref<Comment>[];
 
-  @prop({ type: [String], default: [] })
-  upvotedPosts: string[];
+  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
+  upvotedPosts: Types.ObjectId[];
 
-  @prop({ type: [String], default: [] })
-  downvotedPosts: string[];
+  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
+  downvotedPosts: Types.ObjectId[];
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {
