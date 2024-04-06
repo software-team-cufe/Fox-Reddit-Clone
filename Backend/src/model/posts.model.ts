@@ -16,13 +16,13 @@ import { ModelType } from '@typegoose/typegoose/lib/types';
 // //   spamText?: string;
 // // }
 
-// // class Vote {
-// //   // @prop({ ref: () => User })
-// //   // userrID?: Ref<User>;
+class Vote {
+  @prop({ ref: () => User })
+  userrID?: Ref<User>;
 
-// //   @prop()
-// //   voteType?: number;
-// // }
+  @prop()
+  voteType?: number;
+}
 
 class Post {
   @prop({ required: true })
@@ -82,8 +82,8 @@ class Post {
   // @prop({ type: () => [Spam] })
   // spammers?: Spam[];
 
-  // @prop({ type: () => [Vote] })
-  // voters?: Vote[];
+  @prop({ type: () => [Vote] })
+  voters?: Vote[];
 
   @prop({ type: () => [String], ref: () => User })
   mentionedInUsers?: Ref<User>[];
@@ -93,6 +93,7 @@ class Post {
 
   @prop({ ref: () => Post })
   postComments?: Post[];
+  engagementScore: number;
 }
 
 // @prop({ type: () => [Object] }) // Assuming mongoose.Schema.ObjectId is a complex type

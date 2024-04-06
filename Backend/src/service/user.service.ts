@@ -75,38 +75,40 @@ export async function findUserIdByUsername(username: string) {
     throw error; // Re-throw the error to be caught by the caller
   }
 }
-
 /**
  * Finds user posts by username.
  *
- * @param username- The username of the user to find and method of sorting comments.
- * @returns A promise that resolves to the post object if found, or null if not found.
+ * @param userId - The ID of the user to find posts for.
+ * @param sortBy - The method of sorting posts ('New' or 'Top').
+ * @returns A promise that resolves to the post objects if found, or null if not found.
  */
-export async function findUserPosts(userId: string, sortBy: string) {
+export async function findUserPosts(userId: string, sortBy: string): Promise<Post[] | null> {
   try {
     const posts: Post[] = await PostModel.find({ authorId: userId });
+
     if (sortBy === 'New') {
       // Sort posts by createdAt timestamp in descending order
       posts.sort((a, b) => {
-        // Check if both a and b have the createdAt property defined
         if (a.createdAt && b.createdAt) {
           return b.createdAt.getTime() - a.createdAt.getTime();
         }
-        // If createdAt is not defined for either a or b, return 0 to maintain current order
         return 0;
       });
-      return posts;
+    } else if (sortBy === 'Top') {
+      // Perform sorting based on engagement score
+      posts.sort((a, b) => {
+        const engagementScoreA = (a.commentsNum ?? 0) + (a.votesCount ?? 0);
+        const engagementScoreB = (b.commentsNum ?? 0) + (b.votesCount ?? 0);
+        return engagementScoreB - engagementScoreA;
+      });
+    } else {
+      throw new Error('Invalid sortBy parameter');
     }
-    // } else if (sortBy === 'Top') {
-    //   const retrivedComments = comments.map((comment) => {
-    //     const engagementScore = (comment?.voters?.length ?? 0) + (comment?.replies?.length ?? 0);
-    //     return { ...comment.toObject(), engagementScore };
-    //   });
-    //   retrivedComments.sort((a, b) => b.engagementScore - a.engagementScore);
-    // }
+
+    return posts;
   } catch (error) {
-    console.error('Error in findUserComments:', error);
-    throw error; // Re-throw the error to be caught by thecaller
+    console.error('Error in findUserPosts:', error);
+    throw error;
   }
 }
 

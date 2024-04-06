@@ -17,6 +17,7 @@ import { nanoid } from 'nanoid';
 import { UserModel, privateFields } from '../model/user.model';
 import { omit } from 'lodash';
 import { get } from 'config';
+import { findUserComments } from '../service/comment.service';
 
 /**
  * Handles the creation of a user.
@@ -202,9 +203,9 @@ export async function username_availableHandler(req: Request<VerifyUserInput>, r
     const user = await findUserByUsername(username);
 
     if (user !== null) {
-      return res.status(200).send('Not Available');
+      return res.status(200).json('Not Available');
     } else {
-      return res.status(200).send('Available');
+      return res.status(200).json('Available');
     }
   } catch (error) {
     console.error('Error handling username availability request:', error);
@@ -254,7 +255,7 @@ export async function aboutHandler(req: Request, res: Response) {
       showActiveCommunities: user?.showActiveCommunities,
     };
 
-    return res.status(200).send(obj);
+    return res.status(200).json(obj);
   } catch (error) {
     console.error('Error handling user request:', error);
     return res.status(500).send('Internal server error');
@@ -262,13 +263,53 @@ export async function aboutHandler(req: Request, res: Response) {
 }
 
 /**
- * Handles user submitted (posts, comments, replies) by username request.
+ * Handles user submitted (posts) by username request.
  *
  * @param req - The request object containing the user data.
  * @param res - The response object to send the result.
- * @returns A response for user (posts, comments, replies) by username.
+ * @returns A response for user posts by username.
  */
 export async function submittedPostByUsrnameHandler(req: Request, res: Response) {
+  try {
+    // Extract params
+    const username: string = req.params.username as string;
+    const sortBy: string = req.query.sortBy as string;
+
+    if (!sortBy || !username) {
+      res.status(400).send('Invalid request');
+    }
+
+    const userId = await findUserIdByUsername(username);
+
+    if (!userId) {
+      return res.status(404).send('User not found');
+    }
+
+    const retrievedPosts = await findUserPosts(userId, sortBy);
+
+    if (!retrievedPosts) {
+      return res.status(404).send('No posts found for this user');
+    }
+
+    if (retrievedPosts.length === 0) {
+      return res.status(404).send('No posts found for this user');
+    }
+
+    return res.status(200).json(retrievedPosts);
+  } catch (error) {
+    console.error('Error handling user request:', error);
+    return res.status(500).send('Internal server error');
+  }
+}
+
+/**
+ * Handles user overview (posts, comments, replies) by username request.
+ *
+ * @param req - The request object containing the user data.
+ * @param res - The response object to send the result.
+ * @returns A response for user posts, comments and replies by username.
+ */
+export async function userOverviewHandler(req: Request, res: Response) {
   try {
     // Extract params
     const username: string = req.params.username as string;
@@ -285,15 +326,21 @@ export async function submittedPostByUsrnameHandler(req: Request, res: Response)
     }
 
     const retrievedPosts = await findUserPosts(userId, sortBy);
+    const retrievedComments = await findUserComments(userId, sortBy);
+    //const retrievedReplies = await findUserReplies(userId, sortBy);
 
-    if (retrievedPosts && retrievedPosts.length > 0) {
-      return res.status(200).send(retrievedPosts);
-    } else {
-      return res.status(404).send('No posts found for this user');
+    if (!retrievedPosts || !retrievedComments) {
+      return res.status(404).send('No posts or comments found for this user');
     }
+
+    if (retrievedPosts.length === 0 && retrievedComments.length === 0) {
+      return res.status(404).send('No posts or comments found for this user');
+    }
+
+    return res.status(200).json({ retrievedPosts, retrievedComments });
   } catch (error) {
     console.error('Error handling user request:', error);
-    return res.status(500).send('Internal server error');
+    return res.status(500).send('Internal server error');
   }
 }
 
