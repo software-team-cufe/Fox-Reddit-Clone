@@ -12,6 +12,7 @@ import {
   username_availableHandler,
   aboutHandler,
   submittedPostByUsrnameHandler,
+  userOverviewHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 
@@ -28,6 +29,8 @@ router.get('/api/username_available', username_availableHandler);
 router.get('/user/:username/about', aboutHandler);
 
 router.get('/user/:username/submitted', submittedPostByUsrnameHandler);
+
+router.get('/user/:username/overview', userOverviewHandler);
 
 router.post(
   '/api/users/resetpassword/:id/:passwordResetCode',

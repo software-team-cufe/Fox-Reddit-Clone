@@ -12,7 +12,6 @@ export async function commentsByUsrnameHandler(req: Request, res: Response) {
     // Extract params
     const username: string = req.params.username as string;
     const sortBy: string = req.query.sortBy as string;
-
     if (!sortBy || !username) {
       return res.status(400).send('Invalid request');
     }
