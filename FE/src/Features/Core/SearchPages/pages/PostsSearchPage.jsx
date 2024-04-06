@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import axios from 'axios';
 import PostComponent from "@/GeneralComponents/Post/Post";
-import { SearchContext } from "../SearchPagesRoutes";
+import { SearchContext } from "../searchPagesRoutes";
 
 export default function PeopleSearchPage({ searched = "filler" }) {
 

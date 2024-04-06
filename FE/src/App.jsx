@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useNavigate, } from 'react-router-dom';
-import CoreRoutes from './Features/Core/CoreRoutes';
+import CoreRoutes from './Features/Core/coreRoutes';
 import AuthRoutes from './Features/Auth/AuthRoutes';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import Spinner from './GeneralElements/Spinner/Spinner';
@@ -12,12 +12,14 @@ import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 import { useState } from 'react';
+
 const unProtectedRoutes = [
   '/',
   '/login',
   '/register',
   '/user'
 ]
+
 function MainRoute() {
 
   const path = window.location.pathname;

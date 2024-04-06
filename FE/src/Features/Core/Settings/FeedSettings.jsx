@@ -1,13 +1,10 @@
 /**
- * 
- * 
  * feedSetting is a functional component that renders the feed settings page.
- * it has no parameters.
  * 
+ * @file feedSetting is a functional component that renders the feed settings page.
+ * @module feedSettings
  */
-
-
-import React from "react";
+import React from "react";  
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import { getByRole } from '@testing-library/react';
 import Dropdown from "./dropDownlist";

@@ -8,8 +8,8 @@ import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
-import Popular from "./Popular";
-import About from "./About";
+import Popular from "./popular";
+import About from "./about";
 const icons = [
    {
       icon: Home,
@@ -37,9 +37,9 @@ function Sidebar({className,IsOpen}) {
 
 /**
  * this function open resources , community , and Recents dropdown list
+ * 
  * @param {Event} event - the event of clicking any button
  * @returns {void} - this function does not return anything
- * 
  */
    function functionToExecute(event) {
       // Get the dropdown list associated with the clicked button
@@ -299,7 +299,6 @@ function Sidebar({className,IsOpen}) {
                   </li>
                </ul>
             </div>
-            
          </aside>
       </>
    );

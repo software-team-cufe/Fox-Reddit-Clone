@@ -1,6 +1,6 @@
 import React = require("react");
 import { render, screen, fireEvent,waitFor, prettyDOM,cleanup } from "@testing-library/react";
-import SearchPagesLayout from "./SearchPagesRoutes";
+import SearchPagesLayout from "./searchPagesRoutes";
 import '@testing-library/jest-dom';
 import {BrowserRouter, MemoryRouter, Routes, Route} from "react-router-dom";
 

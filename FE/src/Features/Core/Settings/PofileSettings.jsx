@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Plus, ImageUp } from "lucide-react";
-import SocialLinks from './SocialLinks';
+import SocialLinks from './socialLinks';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
