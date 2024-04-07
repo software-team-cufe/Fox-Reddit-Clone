@@ -16,12 +16,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    DevicePreview(
-      builder: (context) => const MyApp(),
-    ),
-    // const ProviderScope(
-    //   child: MyApp(),
+    // DevicePreview(
+    //   builder: (context) => const MyApp(),
     // ),
+    const ProviderScope(
+      child: MyApp(),
+    ),
   );
 }
 
@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
       title: 'Fox App',
       theme: Pallete.darkModeAppTheme,
       home: const StartingScreen(),
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
+//      locale: DevicePreview.locale(context),
+  //    builder: DevicePreview.appBuilder,
     );
   }
 }
