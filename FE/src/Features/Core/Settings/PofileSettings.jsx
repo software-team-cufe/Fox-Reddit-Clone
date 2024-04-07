@@ -36,12 +36,9 @@ function ProfileSettings() {
         document.getElementById("DropProfImage").addEventListener('dragover', handleDragOver, false);
         document.getElementById("DropProfImage").addEventListener('drop', handleProfImageDrop, false);
 
-        // Cleanup function
-        return () => {
-            // Remove the event listeners
-            //document.getElementById("DropProfImage").removeEventListener('dragover', handleDragOver);
-            //document.getElementById("DropProfImage").removeEventListener('drop', handleProfImageDrop);
-        };
+        document.getElementById("DropBannerImage").addEventListener('dragover', handleDragOver, false);
+        document.getElementById("DropBannerImage").addEventListener('drop', handleBannerDrop, false);
+
     }, []);
 
     const handleBannerUpload = (event, UpOrDrop = "up") => {
@@ -216,7 +213,9 @@ function ProfileSettings() {
                 <h2 className=' text-base'>Profile and banner image</h2>
                 <div className='text-xs    text-gray-500'>Images must be .png or .jpg format</div>
                 <div className='flex'>
-                    <div id="DropProfImage" className='relative border-dashed hover:cursor-pointer	border border-[#e94c00] h-[118.4px] m-4 w-[118.4px] bg-gray-200  rounded' onClick={() => document.getElementById("Pro-Image-load").click()}>
+                    <div id="DropProfImage" className='relative border-dashed hover:cursor-pointer	border 
+                    border-[#e94c00] h-[118.4px] m-4 w-[118.4px] bg-gray-200  rounded'
+                        onClick={() => document.getElementById("Pro-Image-load").click()}>
                         <input
                             className='hidden'
                             id="Pro-Image-load"
@@ -227,20 +226,24 @@ function ProfileSettings() {
 
                         {selectedProfImage && (
                             <div>
-                                <ImageUp strokeWidth={1} size={30} color='#e94c00' className='absolute p-1 bg-white border rounded-full bottom-1 right-1' />
+                                <ImageUp strokeWidth={1} size={30} color='#e94c00' className='absolute p-1
+                                 bg-white border rounded-full bottom-1 right-1' />
                                 <img className='object-cover object-top h-[118.4px] w-[118.4px]' src={selectedProfImage} alt="Selected" />
                             </div>
                         )}
                         {!selectedProfImage && (
                             <div className='items-center h-[118.4px] w-[118.4px] justify-items-center' >
-                                <ImageUp strokeWidth={1} size={40} color='#e94c00' className='absolute p-1 bg-white border rounded-full bottom-1 left-9' />
+                                <ImageUp strokeWidth={1} size={40} color='#e94c00' className='absolute p-1
+                                 bg-white border rounded-full bottom-1 left-9' />
                                 <p className='text-ms font-sans px-2 mt-6 '> Upload Profile  </p>
 
                                 <span className='text-ms font-sans px-4  mt-2'>image here</span>
                             </div>
                         )}
                     </div>
-                    <div id="DropBannerImage" className='relative border-dashed hover:cursor-pointer	border border-[#e94c00] h-[118.4px] m-4 w-[300px] bg-gray-200  rounded' onClick={() => document.getElementById("Banner-load").click()}>
+                    <div id="DropBannerImage" className='relative border-dashed hover:cursor-pointer
+                    	border border-[#e94c00] h-[118.4px] m-4 w-[300px] bg-gray-200  rounded'
+                        onClick={() => document.getElementById("Banner-load").click()}>
                         <input
                             className='hidden'
                             id="Banner-load"
@@ -252,13 +255,15 @@ function ProfileSettings() {
                         {SelectedBannar && (
                             <div>
                                 <ImageUp strokeWidth={1} size={30} color='#e94c00' className='absolute p-1 bg-white border rounded-full bottom-1 right-1' />
-                                <img className='object-cover object-top h-[118.4px] w-[118.4px]' src={SelectedBannar} alt="Selected" />
+                                <img className='object-cover object-top h-[118.4px]  w-full' src={SelectedBannar} alt="Selected" />
                             </div>
                         )}
                         {!SelectedBannar && (
                             <div className='items-center h-[118.4px] w-[118.4px] justify-items-center' >
-                                <ImageUp strokeWidth={1} size={40} color='#e94c00' className='absolute p-1 bg-white border rounded-full bottom-2 left-1/2' />
-                                <p className='text-ms font-sans  text-center   w-full  sm:w-max sm:my-8 sm:mx-2  '> Drag and drop or Upload Banner  image  </p>
+                                <ImageUp strokeWidth={1} size={40} color='#e94c00' className='absolute p-1
+                                 bg-white border rounded-full bottom-2 left-1/2' />
+                                <p className='text-ms font-sans  text-center   w-full  sm:w-max sm:my-8 sm:mx-2 
+                                 '> Drag and drop or Upload Banner  image  </p>
                             </div>
                         )}
                     </div>
@@ -293,7 +298,9 @@ function ProfileSettings() {
                         <p className='text-ms font-sans  '>Content visibility</p>
                         {/* to do: put the real links */}
                         <span className='text-xs font-sans mr-44'>
-                            Posts to this profile can appear in <a className='text-blue-500 underline' href="url">r/all</a> and your profile can be discovered in <a className='text-blue-500 underline' href="url">/users</a>
+                            Posts to this profile can appear in
+                            <a className='text-blue-500 underline' href="url">r/all</a> and your profile can be discovered in
+                            <a className='text-blue-500 underline' href="url">/users</a>
                         </span>
                     </span>
                     <ToggleButton />

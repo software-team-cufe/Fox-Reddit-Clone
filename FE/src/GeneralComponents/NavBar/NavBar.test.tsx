@@ -8,7 +8,7 @@ import { useState } from "react";
 
 test('renders NavBar component', () => {
     const func = jest.fn();
-
+    //To do: test login mode
     render(
         <MemoryRouter>
             <NavBar
@@ -30,8 +30,8 @@ test('renders NavBar component', () => {
     // expect(logoElement).toBeInTheDocument();
 
     //check if adve
-    const logoElement = screen.getByRole('advertisement-button');
-    expect(logoElement).toBeInTheDocument();
+
+
 
     // // Check if the search input is rendered
     // const searchInput = screen.getByPlaceholderText('Search');

@@ -26,7 +26,7 @@ const icons = [
    },
 ];
 
-function Sidebar({className,IsOpen}) {
+function Sidebar({ className, IsOpen }) {
    const [open, setOpen] = useState(true);
 
    // const toggleSidebar = () => {
@@ -63,22 +63,22 @@ function Sidebar({className,IsOpen}) {
    };
 
    const path = useLocation();
-   
+
    return (
       <>
          <aside
             id="sidebar-multi-level-sidebar"
             role="sidebarr"
             data-testid="sidebar"
-            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""}
+            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
             lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
 
 
             <div
-               className={`h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
-                  } lg:visible`}
+               className={` ${path.pathname.includes('submit') ? "hidden" : ""} h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
+                  }  lg:visible`}
             >
                <ul className="space-y-2 font-light">
                   {icons.map((e, idx) => (
@@ -103,7 +103,7 @@ function Sidebar({className,IsOpen}) {
                         type="buttonn"
                      >
                         RECENTS
-                     <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      </button>
 
                      <div id="dropdown" className="">
@@ -120,7 +120,7 @@ function Sidebar({className,IsOpen}) {
                      </div>
                   </li>
 
-               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
@@ -132,8 +132,8 @@ function Sidebar({className,IsOpen}) {
                         role="button1212"
                      >
                         YOUR COMMUNITIES
-                        <ChevronDown 
-                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        <ChevronDown
+                           className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      </button>
 
                      <div id="dropdown1" className="">
@@ -156,7 +156,7 @@ function Sidebar({className,IsOpen}) {
                      </div>
                   </li>
 
-               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
@@ -167,7 +167,7 @@ function Sidebar({className,IsOpen}) {
                         type="button"
                      >
                         RESOURCES
-                        <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      </button>
 
                      <div id="dropdown2" className="">
@@ -233,7 +233,7 @@ function Sidebar({className,IsOpen}) {
                               >
                                  <i className="fa-solid fa-users-between-lines w-5 h-5"></i>
                                  <span className="px-2 py-2 text-gray-800" >Communities</span>
-                                 
+
                               </a>
                            </li>
 
@@ -257,14 +257,14 @@ function Sidebar({className,IsOpen}) {
                               </a>
                            </li>
 
-                        <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                           <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                            <li>
                               <a
                                  href="/Contentpolicy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <Siren className="w-5 h-5"/>
+                                 <Siren className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">content policy</span>
                               </a>
                            </li>
@@ -273,7 +273,7 @@ function Sidebar({className,IsOpen}) {
                                  href="/PrivacyPolicy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <BookLock className="w-5 h-5"/>
+                                 <BookLock className="w-5 h-5" />
                                  <span className="px-2 py-2 text-gray-800">Privacy policy</span>
                               </a>
                            </li>
@@ -283,7 +283,7 @@ function Sidebar({className,IsOpen}) {
                                  href="/Useragreement"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <Handshake className="w-5 h-5"/>
+                                 <Handshake className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">User agreement</span>
                               </a>
                            </li>
@@ -292,7 +292,7 @@ function Sidebar({className,IsOpen}) {
                   </li>
                </ul>
             </div>
-            
+
          </aside>
       </>
    );
