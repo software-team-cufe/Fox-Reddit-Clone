@@ -13,8 +13,7 @@ import {
   aboutHandler,
   getUserSubmittedHandler,
   getUserCommentsHandler,
-  //submittedPostByUsrnameHandler,
-  //userOverviewHandler,
+  getUserOverview,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 
@@ -34,7 +33,7 @@ router.get('/user/:username/submitted', getUserSubmittedHandler);
 
 router.get('/user/:username/comments', getUserCommentsHandler);
 
-//router.get('/user/:username/overview', userOverviewHandler);
+router.get('/user/:username/overview', getUserOverview);
 
 router.post(
   '/api/users/resetpassword/:id/:passwordResetCode',

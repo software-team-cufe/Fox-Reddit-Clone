@@ -275,17 +275,16 @@ export async function getUserSubmittedHandler(req: Request, res: Response, next:
   let posts;
   try {
     const username: string = req.params.username as string;
-    if (!req.query || !username) {
-      return res.status(400).send('Invalid request');
+    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
+    if (!req.query || !username || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
     }
     const postIDS = await userSubmittedPosts(username);
-    posts = await userPosts(postIDS, req.query);
+    posts = await userPosts(postIDS, limit);
   } catch (err) {
     return next(err);
   }
-  res.status(200).json({
-    posts,
-  });
+  res.status(200).json({ posts });
 }
 /**
  * Get user posts
@@ -296,11 +295,12 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
   let comments;
   try {
     const username: string = req.params.username as string;
-    if (!req.query || !username) {
-      return res.status(400).send('Invalid request');
+    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
+    if (!req.query || !username || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
     }
     const commmentsIDS = await userCommentsIds(username);
-    comments = await userCommets(commmentsIDS, req.query);
+    comments = await userCommets(commmentsIDS, limit);
   } catch (err) {
     return next(err);
   }
@@ -308,31 +308,45 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
     comments,
   });
 }
+
 /**
-//  * Get user overview
-//  * @param {function} (req, res)
-//  * @returns {object} res
-//  */
-// export async function getUserOverview(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const postIds = await userSubmittedPosts(req.params.username);
-//     const posts = await userPosts(postIds, req.query);
-//     const commentIds = await userCommentsIds(req.params.username);
-//     const comments = await userCommets(commentIds, req.query);
-//     const replyIds = await userRepliesIds(req.params.username);
-//     const replies = await userCommets(replyIds, req.query);
+ * Get user overview
+ * @param {function} (req, res)
+ * @returns {object} res
+ */
+export async function getUserOverview(req: Request, res: Response, next: NextFunction) {
+  try {
+    const username: string = req.params.username as string;
+    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
+    if (!req.query || !username || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+    }
+    // get user posts by username
+    const postIds = await userSubmittedPosts(username);
+    const posts = await userPosts(postIds, limit);
 
-//     // Assuming mergeTwo returns an array of Post objects
-//     const merged = await mergeTwo(posts, comments);
-//     const overviewReturn = (await mergeTwo(merged, replies)).reverse();
+    // get user comments by username
+    const commentIds = await userCommentsIds(username);
+    const comments = await userCommets(commentIds, limit);
 
-//     res.status(200).json({
-//       overview: overviewReturn,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-//}
+    // get user replies by username
+    const replyIds = await userRepliesIds(username);
+    const replies = await userCommets(replyIds, limit);
+
+    // // Assuming mergeTwo returns an array of Post objects
+    // const merged = await mergeTwo(posts, comments);
+    // const overviewReturn = (await mergeTwo(merged, replies)).reverse();
+
+    res.status(200).json({
+      //overview: overviewReturn,
+      posts,
+      comments,
+      replies,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
 
 // /**
 //  * Handles user submitted (posts) by username request.

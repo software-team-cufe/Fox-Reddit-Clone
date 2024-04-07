@@ -2,23 +2,22 @@ import CommentModel from '../model/comments.model';
 import { User, UserModel } from '../model/user.model';
 import appError from '../utils/appError';
 
-interface Query {
-  limit?: number;
-}
-
-async function userCommets(commentsIDS: string[], query: Query) {
+async function userCommets(commentsIDS: string[], limit: number | undefined) {
   // If the request didn't contain a limit in its query, set it to 10 by default
-  query.limit = query.limit || 10;
+  limit = limit || 10;
 
   // Fetch comments based on the provided postIDs
-  let comments = await CommentModel.find({ _id: { $in: commentsIDS } });
-  console.log(comments);
+  const comments = await CommentModel.find({ _id: { $in: commentsIDS } });
+
+  // Limit the number of fetched posts to the provided limit
+  const limitedComments = comments.slice(0, limit);
+
   // Populate user and community information
-  comments = await CommentModel.populate(comments, { path: 'userID', select: '_id avatar' });
+  //comments = await CommentModel.populate(comments, { path: 'userID', select: '_id avatar' });
   //posts = await PostModel.populate(posts, { path: 'communityID', select: '_id icon' });
 
   // Return the populated posts
-  return comments;
+  return limitedComments;
 }
 
 export default userCommets;
