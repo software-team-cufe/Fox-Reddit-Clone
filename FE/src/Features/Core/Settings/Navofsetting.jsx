@@ -6,7 +6,7 @@ import Notifications from './notificationSettings';
 import SafetySettings from './safetySettings';
 import Feedsettings from './feedSettings';
 import ProfileSettings from './pofileSettings';
-import ChatMessaging from './chatMessaging';
+import ChatMessaging from './chatmessaging';
 import React from 'react';
 
 /**
