@@ -34,11 +34,11 @@ router.post(
   validateResource(resetPasswordSchema),
   resetPasswordHandler
 );
-router.get('/api/v1/me', requireUser, getCurrentUserHandler); //needs schema validation
+router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 
-router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs); //needs schema validation
+router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
 
-router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs); //needs schema validation
+router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
 export default router;
 
 /********************TODO BOUDY **************************/
