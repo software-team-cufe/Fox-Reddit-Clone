@@ -1,6 +1,9 @@
 /**
- * @file Sidebar component for the Fox Reddit Clone application.
- * @module Sidebar
+ * 
+ * sideBar function is a functional component that returns a sidebar component.
+ * this function take no parameters only render sideBar and route to its links
+ * @returns {JSX} sideBar component
+ * 
  */
 
 import React from "react";
