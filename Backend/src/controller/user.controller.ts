@@ -117,9 +117,12 @@ export async function forgotPasswordHandler(req: Request<{}, {}, ForgotPasswordI
 
   await sendEmail({
     to: user.email,
-    from: 'test@example.com',
-    subject: 'Reset your password',
-    text: `Password reset code: ${passwordResetCode}. Id ${user._id}`,
+    from: {
+      name: 'Fox ',
+      email: getEnvVariable('FROM_EMAIL'),
+    },
+    subject: 'Password reset code',
+    text: `Password reset code: ${passwordResetCode}. Id ${user._id}`, //Want to render reset password page
   });
 
   log.debug(`Password reset code is sent for user with email ${email} `);
