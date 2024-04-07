@@ -17,6 +17,7 @@ import { nanoid } from 'nanoid';
 import { UserModel, privateFields } from '../model/user.model';
 import { omit } from 'lodash';
 import { get } from 'config';
+import { PostModel } from '../model/posts.model';
 
 /**
  * Handles the creation of a user.
@@ -188,6 +189,42 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
   await user.save();
 
   return res.status(200).send(user.prefs);
+}
+
+export async function getUpvotedPostsHandler(req: Request, res: Response) {
+  try {
+    // Get the current user from the request
+    const currentUser = res.locals.user;
+
+    // Retrieve the upvoted post IDs from the user document
+    const upvotedPostIds = currentUser.upvotedPosts;
+
+    // Query the Post model to retrieve the upvoted posts
+    const upvotedPosts = await PostModel.find({ _id: { $in: upvotedPostIds } });
+
+    return res.json(upvotedPosts);
+  } catch (error) {
+    console.error('Error fetching upvoted posts:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+export async function getDownvotedPostsHandler(req: Request, res: Response) {
+  try {
+    // Get the current user from the request
+    const currentUser = res.locals.user;
+
+    // Retrieve the downvoted post IDs from the user document
+    const downvotedPostIds = currentUser.downvotedPosts;
+
+    // Query the Post model to retrieve the downvoted posts
+    const downvotedPosts = await PostModel.find({ _id: { $in: downvotedPostIds } });
+
+    return res.json(downvotedPosts);
+  } catch (error) {
+    console.error('Error fetching downvoted posts:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
 }
 
 /**

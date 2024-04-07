@@ -1,6 +1,8 @@
 import { prop, getModelForClass, Ref, plugin } from '@typegoose/typegoose';
 import { Schema } from 'mongoose';
 import { User } from './user.model';
+import { Post } from './posts.model';
+import { Types } from 'mongoose';
 //import { Post } from './post.model';
 //import { CommunityModel, Community } from './community.model';
 // @plugin(autopopulate)
@@ -73,6 +75,12 @@ class Comment {
 
   // @prop({ type: () => Spam })
   // spams!: Spam[];
+
+  @prop({ ref: 'Post' }) // Reference to Post model
+  post: Types.ObjectId;
+
+  @prop({ ref: 'User' }) // Reference to User model
+  user: Types.ObjectId;
 }
 const CommentModel = getModelForClass(Comment);
 
