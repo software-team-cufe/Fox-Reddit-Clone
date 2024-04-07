@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { findUserComments, findUserIdByUsername } from '../service/comment.service';
+import { findUserByUsername } from '../service/user.service';
+import { UserModel, User } from '../model/user.model';
 /**
  * Handles user comments by username request.
  *
@@ -12,17 +14,22 @@ export async function commentsByUsrnameHandler(req: Request, res: Response) {
     // Extract params
     const username: string = req.params.username as string;
     const sortBy: string = req.query.sortBy as string;
+    console.log(username);
     if (!sortBy || !username) {
       return res.status(400).send('Invalid request');
     }
 
-    const userId = await findUserIdByUsername(username);
+    const user = await findUserByUsername(username);
+    //console.log(user);
+    const userId = user?._id.toString();
+    console.log(userId);
 
     if (!userId) {
       return res.status(404).send('User not found');
     }
 
     const retrievedComments = await findUserComments(userId, sortBy);
+    console.log(retrievedComments);
 
     if (retrievedComments && retrievedComments.length > 0) {
       return res.status(200).send(retrievedComments);

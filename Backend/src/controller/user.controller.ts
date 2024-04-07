@@ -2,14 +2,17 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { getEnvVariable } from '../utils/GetEnvVariables';
 import { CreateUserInput, ForgotPasswordInput, VerifyUserInput, ResetPasswordInput } from '../schema/user.schema';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import {
   createUser,
   findUserByEmail,
   findUserById,
   findUserByUsername,
   findUserIdByUsername,
-  findUserPosts,
+  //findUserPosts,
+  userSubmittedPosts,
+  userCommentsIds,
+  userRepliesIds,
 } from '../service/user.service';
 import { sendEmail, generateVerificationLink } from '../utils/mailer';
 import log from '../utils/logger';
@@ -17,7 +20,9 @@ import { nanoid } from 'nanoid';
 import { UserModel, privateFields } from '../model/user.model';
 import { omit } from 'lodash';
 import { get } from 'config';
-import { findUserComments } from '../service/comment.service';
+import userCommets, { findUserComments } from '../service/comment.service';
+import userPosts from '../service/post.service';
+import mergeTwo from '../middleware/user.control.midware';
 
 /**
  * Handles the creation of a user.
@@ -261,88 +266,155 @@ export async function aboutHandler(req: Request, res: Response) {
     return res.status(500).send('Internal server error');
   }
 }
-
 /**
- * Handles user submitted (posts) by username request.
- *
- * @param req - The request object containing the user data.
- * @param res - The response object to send the result.
- * @returns A response for user posts by username.
+ * Get user posts
+ * @param {function} (req, res)
+ * @returns {object} res
  */
-export async function submittedPostByUsrnameHandler(req: Request, res: Response) {
+export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
+  let posts;
   try {
-    // Extract params
     const username: string = req.params.username as string;
-    const sortBy: string = req.query.sortBy as string;
-
-    if (!sortBy || !username) {
-      res.status(400).send('Invalid request');
-    }
-
-    const userId = await findUserIdByUsername(username);
-
-    if (!userId) {
-      return res.status(404).send('User not found');
-    }
-
-    const retrievedPosts = await findUserPosts(userId, sortBy);
-
-    if (!retrievedPosts) {
-      return res.status(404).send('No posts found for this user');
-    }
-
-    if (retrievedPosts.length === 0) {
-      return res.status(404).send('No posts found for this user');
-    }
-
-    return res.status(200).json(retrievedPosts);
-  } catch (error) {
-    console.error('Error handling user request:', error);
-    return res.status(500).send('Internal server error');
-  }
-}
-
-/**
- * Handles user overview (posts, comments, replies) by username request.
- *
- * @param req - The request object containing the user data.
- * @param res - The response object to send the result.
- * @returns A response for user posts, comments and replies by username.
- */
-export async function userOverviewHandler(req: Request, res: Response) {
-  try {
-    // Extract params
-    const username: string = req.params.username as string;
-    const sortBy: string = req.query.sortBy as string;
-
-    if (!sortBy || !username) {
+    if (!req.query || !username) {
       return res.status(400).send('Invalid request');
     }
-
-    const userId = await findUserIdByUsername(username);
-
-    if (!userId) {
-      return res.status(404).send('User not found');
-    }
-
-    const retrievedPosts = await findUserPosts(userId, sortBy);
-    const retrievedComments = await findUserComments(userId, sortBy);
-    //const retrievedReplies = await findUserReplies(userId, sortBy);
-
-    if (!retrievedPosts || !retrievedComments) {
-      return res.status(404).send('No posts or comments found for this user');
-    }
-
-    if (retrievedPosts.length === 0 && retrievedComments.length === 0) {
-      return res.status(404).send('No posts or comments found for this user');
-    }
-
-    return res.status(200).json({ retrievedPosts, retrievedComments });
-  } catch (error) {
-    console.error('Error handling user request:', error);
-    return res.status(500).send('Internal server error');
+    const postIDS = await userSubmittedPosts(username);
+    posts = await userPosts(postIDS, req.query);
+  } catch (err) {
+    return next(err);
   }
+  res.status(200).json({
+    posts,
+  });
 }
+/**
+ * Get user posts
+ * @param {function} (req, res)
+ * @returns {object} res
+ */
+export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
+  let comments;
+  try {
+    const username: string = req.params.username as string;
+    if (!req.query || !username) {
+      return res.status(400).send('Invalid request');
+    }
+    const commmentsIDS = await userCommentsIds(username);
+    comments = await userCommets(commmentsIDS, req.query);
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    comments,
+  });
+}
+/**
+//  * Get user overview
+//  * @param {function} (req, res)
+//  * @returns {object} res
+//  */
+// export async function getUserOverview(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const postIds = await userSubmittedPosts(req.params.username);
+//     const posts = await userPosts(postIds, req.query);
+//     const commentIds = await userCommentsIds(req.params.username);
+//     const comments = await userCommets(commentIds, req.query);
+//     const replyIds = await userRepliesIds(req.params.username);
+//     const replies = await userCommets(replyIds, req.query);
+
+//     // Assuming mergeTwo returns an array of Post objects
+//     const merged = await mergeTwo(posts, comments);
+//     const overviewReturn = (await mergeTwo(merged, replies)).reverse();
+
+//     res.status(200).json({
+//       overview: overviewReturn,
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+//}
+
+// /**
+//  * Handles user submitted (posts) by username request.
+//  *
+//  * @param req - The request object containing the user data.
+//  * @param res - The response object to send the result.
+//  * @returns A response for user posts by username.
+//  */
+// export async function submittedPostByUsrnameHandler(req: Request, res: Response) {
+//   try {
+//     // Extract params
+//     const username: string = req.params.username as string;
+//     const sortBy: string = req.query.sortBy as string;
+
+//     if (!sortBy || !username) {
+//       res.status(400).send('Invalid request');
+//     }
+
+//     const userId = await findUserIdByUsername(username);
+
+//     if (!userId) {
+//       return res.status(404).send('User not found');
+//     }
+
+//     const retrievedPosts = await findUserPosts(userId, sortBy);
+
+//     if (!retrievedPosts) {
+//       return res.status(404).send('No posts found for this user');
+//     }
+
+//     if (retrievedPosts.length === 0) {
+//       return res.status(404).send('No posts found for this user');
+//     }
+
+//     return res.status(200).json(retrievedPosts);
+//   } catch (error) {
+//     console.error('Error handling user request:', error);
+//     return res.status(500).send('Internal server error');
+//   }
+// }
+
+// /**
+//  * Handles user overview (posts, comments, replies) by username request.
+//  *
+//  * @param req - The request object containing the user data.
+//  * @param res - The response object to send the result.
+//  * @returns A response for user posts, comments and replies by username.
+//  */
+// export async function userOverviewHandler(req: Request, res: Response) {
+//   try {
+//     // Extract params
+//     const username: string = req.params.username as string;
+//     const sortBy: string = req.query.sortBy as string;
+
+//     if (!sortBy || !username) {
+//       return res.status(400).send('Invalid request');
+//     }
+
+//     const userId = await findUserIdByUsername(username);
+
+//     if (!userId) {
+//       return res.status(404).send('User not found');
+//     }
+
+//     const retrievedPosts = await findUserPosts(userId, sortBy);
+//     const retrievedComments = await findUserComments(userId, sortBy);
+//     //const retrievedReplies = await findUserReplies(userId, sortBy);
+
+//     if (!retrievedPosts || !retrievedComments) {
+//       return res.status(404).send('No posts or comments found for this user');
+//     }
+
+//     if (retrievedPosts.length === 0 && retrievedComments.length === 0) {
+//       return res.status(404).send('No posts or comments found for this user');
+//     }
+
+//     return res.status(200).json({ retrievedPosts, retrievedComments });
+//   } catch (error) {
+//     console.error('Error handling user request:', error);
+//     return res.status(500).send('Internal server error');
+//   }
+// }
 
 /****************************** BOUDY ***********************************/
 

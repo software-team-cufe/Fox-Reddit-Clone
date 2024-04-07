@@ -1,42 +1,42 @@
-import { prop, getModelForClass, Ref, plugin } from '@typegoose/typegoose';
-import { Schema } from 'mongoose';
+import { prop, getModelForClass, Ref, pre } from '@typegoose/typegoose';
+
 import { User } from './user.model';
-//import { Post } from './post.model';
-//import { CommunityModel, Community } from './community.model';
-// @plugin(autopopulate)
-// // class Spam {
-// //   // @prop({ ref: () => User })
-// //   // userID!: Ref<User>;
+import { Post } from './posts.model';
 
-// //   @prop()
-// //   text!: string;
+class Spam {
+  @prop({ ref: () => User })
+  userID!: Ref<User>;
 
-// //   @prop()
-// //   type!: string;
-// // }
+  @prop()
+  text!: string;
+
+  @prop()
+  type!: string;
+}
 
 class Vote {
   @prop({ ref: () => User })
-  voterID: Ref<User>;
+  userID!: Ref<User>;
 
   @prop()
   voteType!: number;
 }
-class Comment {
-  @prop({ ref: () => User }) //@prop({ autopopulate: true, required: true, ref: () => User })
-  userID!: Ref<User>;
+
+export class Comment {
+  @prop({ ref: () => User, required: true })
+  authorId!: Ref<User>;
 
   @prop({ default: true })
   isRoot!: boolean;
 
   @prop()
-  replyingTo?: Schema.Types.ObjectId;
+  replyingTo!: Ref<Comment>;
 
-  // @prop({ ref: () => Post })
-  // posttID!: Ref<Post>;
+  @prop({ ref: 'Post' })
+  postID!: Ref<Post>;
 
-  @prop({ type: () => Schema.Types.ObjectId })
-  replies!: Schema.Types.ObjectId[];
+  @prop({ ref: 'Comment' })
+  replies!: Ref<Comment>[];
 
   @prop()
   textHTML!: string;
@@ -45,9 +45,9 @@ class Comment {
   textJSON!: string;
 
   @prop({ default: 1 })
-  votessCount!: number;
+  votesCount!: number;
 
-  @prop({ type: () => Vote })
+  @prop({ type: () => [Vote] })
   voters!: Vote[];
 
   @prop({ default: Date.now })
@@ -60,10 +60,7 @@ class Comment {
   isLocked!: boolean;
 
   @prop()
-  editedAt?: Date;
-
-  //   @prop({ ref: () => Community })
-  //   communityID!: Ref<Community>;
+  editedAt!: Date;
 
   @prop({ default: 0 })
   spamCount!: number;
@@ -71,9 +68,19 @@ class Comment {
   @prop({ default: false })
   isCollapsed!: boolean;
 
-  // @prop({ type: () => Spam })
-  // spams!: Spam[];
+  @prop({ type: () => [Spam] })
+  spams!: Spam[];
 }
+
+// @pre<Comment>('find', async function (next) {
+//   const comments = await CommentModel.find();
+//   for (const comment of comments) {
+//     await comment.populate('postID');
+//   }
+//   next();
+// })
+class CommentMiddleware {}
+
 const CommentModel = getModelForClass(Comment);
 
-export { Comment, CommentModel };
+export default CommentModel;
