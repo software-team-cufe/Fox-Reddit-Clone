@@ -10,6 +10,7 @@ import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
 import Popular from "./Popular";
 import About from "./About";
+
 const icons = [
    {
       icon: Home,

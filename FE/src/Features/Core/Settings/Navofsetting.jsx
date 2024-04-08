@@ -77,7 +77,6 @@ function Navofsetting() {
  * this function is used to make user switch between settings` pages
  * @module Settingpagelayout
  * 
- * 
  */
 
 export default function Settingpagelayout() {
