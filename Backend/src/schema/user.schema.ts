@@ -90,12 +90,26 @@ export const reportUserSchema = object({
   }),
 });
 
+// export const blockUserSchema = object({
+//   body: object({
+//     type: string({
+//       required_error: 'type is required',
+//     }),
+//     username: string({
+//       required_error: 'Username is required',
+//     }),
+//   }),
+// });
+
 export const blockUserSchema = object({
   body: object({
     type: string({
       required_error: 'type is required',
     }),
-    username: string({
+    username1: string({
+      required_error: 'Username is required',
+    }),
+    username2: string({
       required_error: 'Username is required',
     }),
   }),

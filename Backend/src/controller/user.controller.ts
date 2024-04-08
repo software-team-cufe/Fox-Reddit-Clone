@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import { getEnvVariable } from '../utils/GetEnvVariables';
-import { CreateUserInput, ForgotPasswordInput, VerifyUserInput, ResetPasswordInput } from '../schema/user.schema';
+import {
+  CreateUserInput,
+  ForgotPasswordInput,
+  VerifyUserInput,
+  ResetPasswordInput,
+  friendRequest,
+  unFriendRequest,
+  blockUserInput,
+  reportUser,
+} from '../schema/user.schema';
 import { NextFunction, Request, Response } from 'express';
 import {
   createUser,
@@ -349,7 +358,7 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
  * @param {function} (req, res)
  * @returns {object} res
  */
-export async function getUserOverview(req: Request, res: Response, next: NextFunction) {
+export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const username: string = req.params.username as string;
     const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
@@ -385,137 +394,231 @@ export async function getUserOverview(req: Request, res: Response, next: NextFun
 
 /****************************** BOUDY ***********************************/
 
-// export async function getFriendHandler(req: Request, res: Response) {
-//   const username: string = req.params.username as string;
-//   const user = await findUserByUsername(username);
+export async function getFriendHandler(req: Request, res: Response) {
+  try {
+    const username: string = req.params.username as string;
+    const user = await findUserByUsername(username);
 
-//   if (!user) {
-//     return res.status(404).send('could not find friend');
-//   } else {
-//     res.status(200).json({
-//       id: user._id,
-//       avatar: user.avatar,
-//       about: user.about,
-//     });
-//   }
-// }
+    if (!user) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'friend is not found',
+      });
+    } else {
+      res.status(200).json({
+        id: user._id,
+        avatar: user.avatar,
+        about: user.about,
+      });
+    }
+  } catch (error) {
+    console.error('Error in friendRequestUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
 
-// export async function getALLFriendsHandler(req: Request, res: Response) {
-//   const { id } = req.body.username; //create auth, token middle ware and add the username to request body
+export async function getALLFriendsHandler(req: Request, res: Response) {
+  const { username } = req.body;
+  //const username = res.local.user;
 
-//   const user = await findUserById(id);
+  const user = await findUserByUsername(username);
+  try {
+    if (!user) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else if (!user.friend || user.friend.length === 0) {
+      return res.status(402).json({
+        status: 'failed',
+        message: 'User does not have friends',
+      });
+    } else {
+      const friendsIDs = user.friend ? user.friend.map((friendID) => friendID.toString()) : [];
+      const friends = await UserModel.find({ _id: { $in: friendsIDs } });
+      const friendsData = friends.map((friend) => ({
+        username: friend.username,
+        about: friend.about,
+        avatar: friend.avatar,
+      }));
+      res.status(200).json({
+        friendsData,
+      });
+    }
+  } catch (error) {
+    console.error('Error in getALLFriendsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
 
-//   if (!user) {
-//     return res.status(404).send('could not find friend');
-//   } else {
-//     res.status(200).json({
-//       //friends: user.friends
-//     });
-//   }
-// }
+//done change token only
+export async function friendRequestHandler(req: Request<friendRequest['body']>, res: Response) {
+  try {
+    const { username, type } = req.body;
+    const reciever = await findUserByUsername(username);
+    const sender = reciever;
+    //const sender = res.local.user;
 
-// export async function friendRequestHandler(req: Request<friendRequest['body']>, res: Response) {
-//   const { username, type } = req.body;
+    if (!reciever && !sender) {
+      return res.status(405).json({
+        status: 'failed',
+        message: 'Account is not found and Access token is missing or invalid',
+      });
+    } else if (!reciever) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Account is not found',
+      });
+    } else if (!sender) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else if (type == 'frindRequest') {
+      await UserModel.findByIdAndUpdate(
+        sender._id,
+        { $addToSet: { friendRequestFromMe: sender._id } },
+        { upsert: true, new: true }
+      );
+      await UserModel.findByIdAndUpdate(
+        reciever._id,
+        { $addToSet: { friendRequestToMe: reciever._id } },
+        { upsert: true, new: true }
+      );
+    } else {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Invalid type',
+      });
+    }
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    console.error('Error in friendRequestUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
 
-//   const reciever = await findUserByUsername(username);
-//   const sender = reciever;
-//   //const sender = res.local.user;
+export async function unFriendRequestHandler(req: Request<unFriendRequest['body']>, res: Response) {
+  try {
+    const { username, type } = req.body;
+    const reciever = await findUserByUsername(username);
+    const sender = reciever;
+    //const sender = res.local.user;
 
-//   if (!reciever && !sender) {
-//     return res.status(405).json({
-//       status: 'failed',
-//       message: 'Account is not found and Access token is missing or invalid',
-//     });
-//   } else if (!reciever) {
-//     return res.status(404).json({
-//       status: 'failed',
-//       message: 'Account is not found',
-//     });
-//   } else if (!sender) {
-//     return res.status(401).json({
-//       status: 'failed',
-//       message: 'Access token is missing or invalid',
-//     });
-//   } else if (type == 'frindRequest') {
-//     await friendUser(reciever, sender);
-//   } else if (type == 'moderatorInvite') {
-//     // moderator invite
-//   } else {
-//     return res.status(400).json({
-//       status: 'failed',
-//       message: 'Invalid type',
-//     });
-//   }
-//   return res.status(200).json({
-//     status: 'succeeded',
-//   });
-// }
-
-// export async function unFriendRequestHandler(req: Request<unFriendRequest['body']>, res: Response) {
-//   const { usernameid, type } = req.body;
-
-//   const user = await findUserByUsername(usernameid);
-
-//   if (type == 'unFrindRequest') {
-//     //remove friend from database
-//   } else if (type == 'moderatorInvite') {
-//     // moderator invite
-//   } else {
-//     return res.status(400).json({
-//       status: 'failed',
-//       message: 'invalid type',
-//     });
-//   }
-//   return res.status(200).json({
-//     status: 'succeeded',
-//   });
-// }
-
+    if (!reciever && !sender) {
+      return res.status(405).json({
+        status: 'failed',
+        message: 'Account is not found and Access token is missing or invalid',
+      });
+    } else if (!reciever) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Account is not found',
+      });
+    } else if (!sender) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else if (type == 'unfrindRequest') {
+      await UserModel.findByIdAndUpdate(
+        sender._id,
+        { $pull: { friendRequestFromMe: sender._id } },
+        { upsert: true, new: true }
+      );
+      await UserModel.findByIdAndUpdate(
+        reciever._id,
+        { $pull: { friendRequestToMe: reciever._id } },
+        { upsert: true, new: true }
+      );
+    } else {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Invalid type',
+      });
+    }
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    console.error('Error in unfriendRequestUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
 // export async function reportUserHandler(req: Request<reportUser['body']>, res: Response) {
 //   const { usernameid } = req.body;
 
 //   const user = await findUserByUsername(usernameid);
 // }
 
-// export async function blockUserHandler(req: Request<blockUserInput['body']>, res: Response) {
-//   const { username, type } = req.body; //type block or unblock
-//   const blocked = await findUserByUsername(username);
-//   const blocker = blocked;
-//   //const blocker = res.local.user;
+export async function blockUserHandler(req: Request<blockUserInput['body']>, res: Response) {
+  try {
+    const { username1, username2, type } = req.body; // type block or unblock
+    const blocked = await findUserByUsername(username1);
+    const blocker = await findUserByUsername(username2);
+    //const blocker = res.local.user;
 
-//   if (!blocked && !blocker) {
-//     return res.status(405).json({
-//       status: 'failed',
-//       message: 'Account is not found and Access token is missing or invalid',
-//     });
-//   } else if (!blocked) {
-//     return res.status(404).json({
-//       status: 'failed',
-//       message: 'Account is not found',
-//     });
-//   } else if (!blocker) {
-//     return res.status(401).json({
-//       status: 'failed',
-//       message: 'Access token is missing or invalid',
-//     });
-//   }
-//   let updatedBlocked: User;
-//   let updatedBlocker: User;
-//   if (type === 'block') {
-//     updatedBlocked = await blockUser1(blocked, blocker);
-//     updatedBlocker = await blockUser2(blocked, blocker);
-//     const savedBlocked = await UserModel.updateOne({ _id: username }, updatedBlocked);
-//     console.log(savedBlocked);
-//   } else if (type === 'unblock') {
-//     //await unblockUser(blocked, blocker);
-//   } else {
-//     return res.status(400).json({
-//       status: 'failed',
-//       message: 'invalid type',
-//     });
-//   }
-//   return res.status(200).json({
-//     status: 'succeeded',
-//   });
-// }
+    if (!blocked && !blocker) {
+      return res.status(405).json({
+        status: 'failed',
+        message: 'Account is not found and Access token is missing or invalid',
+      });
+    } else if (!blocked) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Account is not found',
+      });
+    } else if (!blocker) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    if (type === 'block') {
+      console.log(blocker._id);
+      await UserModel.findByIdAndUpdate(
+        blocker._id,
+        { $addToSet: { blocksFromMe: blocked._id } },
+        { upsert: true, new: true }
+      );
+      await UserModel.findByIdAndUpdate(
+        blocked._id,
+        { $addToSet: { blocksToMe: blocker._id } },
+        { upsert: true, new: true }
+      );
+    } else if (type === 'unblock') {
+      await UserModel.findByIdAndUpdate(blocker._id, { $pull: { blocksFromMe: blocked._id } }, { new: true });
+      await UserModel.findByIdAndUpdate(blocked._id, { $pull: { blocksToMe: blocker._id } }, { new: true });
+    } else {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'invalid type',
+      });
+    }
+    console.log(blocker);
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    console.error('Error in blockUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
 /****************************** BOUDY ***********************************/
