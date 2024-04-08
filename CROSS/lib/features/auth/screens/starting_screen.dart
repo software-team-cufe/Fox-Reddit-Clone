@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
-import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:reddit_fox/Pages/Splash_screen.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/core/common/sign_in_button.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
@@ -25,7 +25,7 @@ class StartingScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
+                  MaterialPageRoute(builder: (context) => const SplashScreen()));
             },
             child: const Text(
               'Skip',

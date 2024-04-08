@@ -5,20 +5,11 @@ import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:reddit_fox/Pages/post_details.dart'; // Import the PostDetails page
-
-/// Represents a post with a title, content, and imageUrl.
-class Post {
-  final String title;
-  final String content;
-  final String imageUrl;
-
-  /// Constructs a [Post] with the given [title], [content], and [imageUrl].
-  Post({required this.title, required this.content, required this.imageUrl});
-}
+import 'package:http/http.dart';
 
 /// HomePage Widget displays a list of posts or videos based on user selection.
 ///
-/// It contains a custom app bar with a menu for selecting between "Home" and "Watch" options,
+/// It contains a custom app bar with a menu for selecting between "Home" and "Popular" options,
 /// a search icon for navigating to the search page, and an end drawer.
 /// The end drawer contains user-related information and options.
 ///
@@ -58,62 +49,11 @@ class _HomePageState extends State<HomePage> {
     Scaffold.of(context).openDrawer();
   }
 
-  // Dummy post data
-  final List<Post> dummyPosts = [
-    Post(
-        title: "Post 1",
-        content: "Content of post 1",
-        imageUrl: "https://via.placeholder.com/520"),
-    Post(
-        title: "Post 2",
-        content: "Content of post 2",
-        imageUrl: "https://via.placeholder.com/520"),
-    Post(
-        title: "Post 3",
-        content: "Content of post 3",
-        imageUrl: "https://via.placeholder.com/520"),
-  ];
-
-  // Dummy video post data
-  final List<Post> videoPosts = [
-    Post(
-        title: "Video Post 1",
-        content: "Video content 1",
-        imageUrl: "https://www.youtube.com/watch?v=ALDt7jOZUw0"),
-    Post(
-        title: "Video Post 2",
-        content: "Video content 2",
-        imageUrl: "https://youtube.com/shorts/3MvYrndVM3M?si=QoaiYKKEH0TLQ37f"),
-    Post(
-        title: "Video Post 3",
-        content: "Video content 3",
-        imageUrl: "https://youtube.com/shorts/CaW9OmZwAG0?si=JKLdyke4R0eofXTa"),
-  ];
-
-  late YoutubePlayerController _controller;
-
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: 'ALDt7jOZUw0',
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-      ),
-    );
   }
 
-  /// Returns the list of posts or videos based on the selected item.
-  List<Post> getSelectedPosts() {
-    if (_selectedItem == "Home") {
-      return dummyPosts;
-    } else if (_selectedItem == "Watch") {
-      return videoPosts;
-    } else {
-      return [];
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,8 +98,8 @@ class _HomePageState extends State<HomePage> {
               child: Text("Home"),
             ),
             const PopupMenuItem(
-              value: "Watch",
-              child: Text("Watch"),
+              value: "Popular",
+              child: Text("Popular"),
             ),
           ],
           onSelected: (value) {
@@ -176,61 +116,6 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: const nBar(),
       endDrawerEnableOpenDragGesture: true,
       drawerEnableOpenDragGesture: true,
-      body: ListView.builder(
-        itemCount: getSelectedPosts().length,
-        itemBuilder: (context, index) {
-          final post = getSelectedPosts()[index];
-          if (post.imageUrl.contains('youtube.com')) {
-            return ListTile(
-              title: Text(post.title),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(post.content),
-                  const SizedBox(height: 8),
-                  YoutubePlayer(
-                    controller: YoutubePlayerController(
-                      initialVideoId: YoutubePlayer.convertUrlToId(
-                        post.imageUrl,
-                      )!,
-                      flags: const YoutubePlayerFlags(
-                        autoPlay: false,
-                        mute: false,
-                      ),
-                    ),
-                    showVideoProgressIndicator: true,
-                    onEnded: (metadata) {
-                      // print('Video ended');
-                    },
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PostDetails(key: UniqueKey()),
-                  ),
-                );
-              },
-              child: ListTile(
-                title: Text(post.title),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(post.content),
-                    const SizedBox(height: 8),
-                    Image.network(post.imageUrl),
-                  ],
-                ),
-              ),
-            );
-          }
-        },
-      ),
     );
   }
 }
