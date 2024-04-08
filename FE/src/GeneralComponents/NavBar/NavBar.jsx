@@ -95,7 +95,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
         {/* userStore.getState().user.user == null ? */}
         <div className="flex items-center gap-4">
           <button
-            className={`bg-white hover:bg-orange-100  lg:hidden w-8  h-10 my-2   rounded-full  ${path.pathname.includes('setting') ? "hidden" : " block"} `}
+            className={`bg-white hover:bg-orange-100  lg:hidden w-8  h-10 my-2   rounded-full  ${path.pathname.includes('setting') || path.pathname.includes('submit') ? "hidden" : " block"} `}
             onMouseEnter={handleMouseEnterSide}
             onMouseLeave={handleMouseLeaveSide}
             onClick={SetOpenSiseBar}
@@ -113,7 +113,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
             type="text"
             placeholder=" Search"
             className="border rounded-3xl w-5/6 mx-9 h-9 my-4 bg-gray-100 p-2"
-            onKeyDown={(e) => {if (e.key === 'Enter') { navigator(`/search/${e.target.value}/posts`); } }}
+            onKeyDown={(e) => { if (e.key === 'Enter') { navigator(`/search/${e.target.value}/posts`); } }}
           ></input>
 
           {IsLoggedIn && (
@@ -148,6 +148,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                 className="bg-white hover:bg-orange-100   min-w-8  h-10 my-2 rounded-full   "
                 onMouseEnter={handleMouseEnterCreate}
                 onMouseLeave={handleMouseLeaveCreate}
+                onClick={() => { navigator("submit") }}
               >
                 <BadgePlus strokeWidth={1} color=" #e94c00" size={32} />
                 <Tooltip
@@ -213,7 +214,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                     <div className="bg-gray-200 h-px mx-4 my-2"></div>
                     <li>
                       <button onClick={() => { navigator("/setting/account"); }}
-                        className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1  rounded inline-flex items-center w-full">
+                        className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1 
+                         rounded inline-flex items-center w-full">
                         <Settings strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                         Settings
                       </button>
