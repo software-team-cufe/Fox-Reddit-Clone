@@ -122,7 +122,7 @@ export default function CommunityPage() {
   //main body of the page
   
   return (
-    <div className={`flex-1 m-2 lg:w-2/3 mx-auto`}>
+    <div className={`flex-1 m-2 w-2/3 mx-auto`}>
           {showModal && <LoginFirtstModal onClose={setShowModal}/>}
 
       {/* backgroyund image of the community */}
@@ -141,10 +141,10 @@ export default function CommunityPage() {
 
         {/* create post, bell and options menu in desktop mode */}
         <div className='hidden mr-6 md:flex md:gap-2 md:justify-between'>
-          <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
+          <Link to='/submit' role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
             <Plus className="w-4 h-4" />
             <span className='inline font-bold text-sm'>Create a post</span>
-          </button>
+          </Link>
           <button role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'border-gray-700 border-[1px] hover:border-black'  : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
             <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' :  'Join'}</span>
           </button>
@@ -155,10 +155,10 @@ export default function CommunityPage() {
 
       {/* create post, bell and options menu in mobile mode */}
       <div className='flex gap-2 md:justify-between mr-6 md:hidden mt-[62px]'>
-        <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`}  onClick={CreatePostHandle}>
+        <Link to='/submit' role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`}  onClick={CreatePostHandle}>
           <Plus className="w-4 h-4" />
           <span className='inline font-bold text-sm'>Create a post</span>
-        </button>
+        </Link>
         <button role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'border-gray-700 border-[1px] hover:border-black'  : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
             <span className={`inline font-bold text-xs ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' :  'Join'}</span>
         </button>
