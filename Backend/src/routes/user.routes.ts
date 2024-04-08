@@ -9,6 +9,8 @@ import {
   unFriendRequestSchema,
   blockUserSchema,
   reportUserSchema,
+  followUserSchema,
+  unfollowUserSchema,
 } from '../schema/user.schema';
 import {
   createUserHandler,
@@ -28,6 +30,10 @@ import {
   unFriendRequestHandler,
   friendRequestHandler,
   blockUserHandler,
+  followRequestHandler,
+  unfollowRequestHandler,
+  getALLFollowersHandler,
+  getALLFollowedHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 
@@ -63,11 +69,23 @@ router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
 /******************** BOUDY **************************/
 router.get('/api/v1/me/friends', getALLFriendsHandler);
 
+router.get('/api/v1/me/followers', getALLFollowersHandler);
+
+router.get('/api/v1/me/followed', getALLFollowedHandler);
+
 router.get('/api/v1/me/friends/:username', getFriendHandler);
+
+router.get('/api/v1/me/followers/:username', getFriendHandler);
+
+router.get('/api/v1/me/following/:username', getFriendHandler);
 
 router.post('/api/friend', validateResource(friendRequestSchema), friendRequestHandler);
 
 router.post('/api/unfriend', validateResource(unFriendRequestSchema), unFriendRequestHandler);
+
+router.post('/api/follow', validateResource(followUserSchema), followRequestHandler);
+
+router.post('/api/unfollow', validateResource(unfollowUserSchema), unfollowRequestHandler);
 
 router.post('/api/block_user', validateResource(blockUserSchema), blockUserHandler);
 
