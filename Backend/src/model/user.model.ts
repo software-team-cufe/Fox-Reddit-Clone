@@ -7,11 +7,13 @@ import {
   DocumentType,
   index,
   queryMethod,
+  Ref,
 } from '@typegoose/typegoose';
 import * as argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 import { Post } from './posts.model';
-import { Types } from 'mongoose'; // Import Types from mongoose
+import { Comment } from './comments.model';
+//import { Validator } from 'validator';
 
 export const privateFields = [
   'password',
@@ -129,6 +131,16 @@ class IsBannedOrMuted {
   @prop()
   date?: Date;
 }
+// class Notification {
+//   @prop({ ref: 'Notification' })
+//   notificationID?: Ref<Notification>;
+
+//   @prop({ default: false })
+//   isRead!: boolean;
+
+//   @prop({ default: false })
+//   isDeleted!: boolean;
+// }
 
 class Member {
   // @prop({ ref: () => CommunityModel })
@@ -142,16 +154,16 @@ class Member {
 }
 
 class Vote {
-  // @prop({ ref: () => Post })
-  // postID?: Ref<Post>;
+  @prop({ ref: () => 'Post' })
+  postID?: Ref<Post>;
 
   @prop()
   type?: number;
 }
 
 class VoteComment {
-  // @prop({ ref: () => Comment })
-  // commentID?: Ref<Comment>;
+  @prop({ ref: () => 'Comment' })
+  commentID?: Ref<Comment>;
 
   @prop()
   type?: number;
@@ -192,13 +204,23 @@ export class User {
       message: 'Invalid email format',
     },
   })
-  email: string;
+  @prop({
+    minlength: [5, 'the minimum length is 5 characters'],
+    maxlength: [20, 'the maximum length is 20'],
+    unique: true,
+    required: true,
+  })
+  _id!: string;
+
+  @prop({ required: true, unique: true, lowercase: true }) //@prop({ required: true, unique: true, lowercase: true, validate: validator.isEmail })
+  email!: string;
 
   @prop({ required: true, unique: true, validator: (value: string) => value.length >= 3 && value.length <= 20 })
   username: string;
 
   @prop({ required: true, validator: (value: string) => value.length >= 8 && value.length <= 200 })
   password: string;
+
   @prop()
   birthdate?: string;
 
@@ -225,6 +247,7 @@ export class User {
 
   @prop()
   commentKarma?: number;
+
   @prop()
   karma?: number;
 
@@ -251,6 +274,9 @@ export class User {
 
   @prop({ default: true })
   showActiveCommunities?: boolean;
+
+  @prop({ default: false })
+  hasVerifiedEmail!: boolean;
 
   @prop({ default: () => new UserPrefs() })
   prefs?: UserPrefs;
@@ -290,45 +316,57 @@ export class User {
   @prop({ ref: User })
   blocksToMe?: User[]; // Array of user references
 
-  // @prop({ ref: Post })
-  // hasPost?: Ref<Post>[];
+  @prop({ ref: () => 'Post' })
+  hasPost?: Ref<Post>[];
 
-  // @prop({ ref: Comment })
-  // hasComment?: Ref<Comment>[];
+  @prop({ ref: () => 'Comment' })
+  hasComment?: Ref<Comment>[];
 
-  // @prop({ ref: Comment })
-  // hasReply?: Ref<Comment>[];
+  @prop({ ref: () => 'Comment' })
+  hasReply?: Ref<Comment>[];
 
-  // @prop({ type: () => Vote })
-  // hasVote?: Vote[];
+  @prop({ type: () => [Vote] })
+  hasVote?: Vote[];
 
-  // @prop({ ref: Post })
-  // followPost?: Ref<Post>[];
+  @prop({ ref: 'Post' })
+  followPost?: Ref<Post>[];
 
-  // @prop({ ref: Post })
-  // hiddenPosts?: Ref<Post>[];
+  @prop({ ref: 'Post' })
+  hiddenPosts?: Ref<Post>[];
 
-  // @prop({ ref: Post })
-  // savedPosts?: Ref<Post>[];
+  @prop({ ref: 'Post' })
+  savedPosts?: Ref<Post>[];
 
-  // @prop({ ref: Post })
-  // mentionedInPosts?: Ref<typeof Post>[];
+  @prop({ ref: 'Post' })
+  mentionedInPosts?: Ref<Post>[];
 
   // @prop({ ref: NotificationModel })
   // notifications?: Ref<Notification>[];
 
-  // @prop({ type: () => VoteComment })
-  // votedComments?: VoteComment[];
+  @prop({ type: () => [VoteComment] })
+  votedComments?: VoteComment[];
 
-  // @prop({ ref: Comment })
-  // mentionedInComments?: Ref<Comment>[];
+  @prop({ ref: () => 'Comment' })
+  mentionedInComments?: Ref<Comment>[];
 
-  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
-  upvotedPosts: Types.ObjectId[];
+  // @prop({ type: [String], default: [] })
+  // upvotedPosts: string[];
 
-  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
-  downvotedPosts: Types.ObjectId[];
+  // @prop({ type: [String], default: [] })
+  // downvotedPosts: string[];
 
+  //////////////////////////////////////////////
+  // @prop({ type: () => [String] })
+  // messages?: string[];
+  // @prop({ type: () => [String] })
+  // follows?: string[];
+  // @prop({ type: () => [Member] })
+  // member?: Member[];
+  // @prop({ type: () => [Moderator] })
+  // moderators?: Moderator[];
+  // @prop({ type: () => [String] })
+  // categories?: string[];
+  //////////////////////////////////////////////////////
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {
       return await argon2.verify(this.password, candidatePassword);

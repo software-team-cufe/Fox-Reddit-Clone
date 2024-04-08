@@ -2,14 +2,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { getEnvVariable } from '../utils/GetEnvVariables';
 import { CreateUserInput, ForgotPasswordInput, VerifyUserInput, ResetPasswordInput } from '../schema/user.schema';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import {
   createUser,
   findUserByEmail,
   findUserById,
   findUserByUsername,
-  findUserIdByUsername,
-  findUserPosts,
+  userSubmittedPosts,
+  userCommentsIds,
+  userRepliesIds,
 } from '../service/user.service';
 import { sendEmail, generateVerificationLink } from '../utils/mailer';
 import log from '../utils/logger';
@@ -17,8 +18,10 @@ import { nanoid } from 'nanoid';
 import { UserModel, privateFields } from '../model/user.model';
 import { omit } from 'lodash';
 import { get } from 'config';
-import { PostModel } from '../model/posts.model';
-
+import PostModel from '../model/posts.model';
+import userCommets from '../service/comment.service';
+import userPosts from '../service/post.service';
+import mergeTwo from '../middleware/user.control.midel';
 /**
  * Handles the creation of a user.
  *
@@ -226,7 +229,6 @@ export async function getDownvotedPostsHandler(req: Request, res: Response) {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-
 /**
  * Handles username_available request.
  *
@@ -242,9 +244,9 @@ export async function username_availableHandler(req: Request<VerifyUserInput>, r
     const user = await findUserByUsername(username);
 
     if (user !== null) {
-      return res.status(200).send('Not Available');
+      return res.status(200).json('Not Available');
     } else {
-      return res.status(200).send('Available');
+      return res.status(200).json('Available');
     }
   } catch (error) {
     console.error('Error handling username availability request:', error);
@@ -263,7 +265,6 @@ export async function aboutHandler(req: Request, res: Response) {
   try {
     // Extract params
     const username: string = req.params.username as string;
-
     const user = await findUserByUsername(username);
 
     if (!user) {
@@ -294,46 +295,91 @@ export async function aboutHandler(req: Request, res: Response) {
       showActiveCommunities: user?.showActiveCommunities,
     };
 
-    return res.status(200).send(obj);
+    return res.status(200).json(obj);
   } catch (error) {
     console.error('Error handling user request:', error);
     return res.status(500).send('Internal server error');
   }
 }
+/**
+ * Get user posts
+ * @param {function} (req, res)
+ * @returns {object} res
+ */
+export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
+  let posts;
+  try {
+    const username: string = req.params.username as string;
+    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
+    if (!req.query || !username || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+    }
+    const postIDS = await userSubmittedPosts(username);
+    posts = await userPosts(postIDS, limit);
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({ posts });
+}
+/**
+ * Get user posts
+ * @param {function} (req, res)
+ * @returns {object} res
+ */
+export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
+  let comments;
+  try {
+    const username: string = req.params.username as string;
+    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
+    if (!req.query || !username || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+    }
+    const commmentsIDS = await userCommentsIds(username);
+    comments = await userCommets(commmentsIDS, limit);
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    comments,
+  });
+}
 
 /**
- * Handles user submitted (posts, comments, replies) by username request.
- *
- * @param req - The request object containing the user data.
- * @param res - The response object to send the result.
- * @returns A response for user (posts, comments, replies) by username.
+ * Get user overview
+ * @param {function} (req, res)
+ * @returns {object} res
  */
-export async function submittedPostByUsrnameHandler(req: Request, res: Response) {
+export async function getUserOverview(req: Request, res: Response, next: NextFunction) {
   try {
-    // Extract params
     const username: string = req.params.username as string;
-    const sortBy: string = req.query.sortBy as string;
-
-    if (!sortBy || !username) {
-      return res.status(400).send('Invalid request');
+    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
+    if (!req.query || !username || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
     }
+    // get user posts by username
+    const postIds = await userSubmittedPosts(username);
+    const posts = await userPosts(postIds, limit);
 
-    const userId = await findUserIdByUsername(username);
+    // get user comments by username
+    const commentIds = await userCommentsIds(username);
+    const comments = await userCommets(commentIds, limit);
 
-    if (!userId) {
-      return res.status(404).send('User not found');
-    }
+    // get user replies by username
+    const replyIds = await userRepliesIds(username);
+    const replies = await userCommets(replyIds, limit);
 
-    const retrievedPosts = await findUserPosts(userId, sortBy);
+    // // Assuming mergeTwo returns an array of Post objects
+    // const merged = await mergeTwo(posts, comments);
+    // const overviewReturn = (await mergeTwo(merged, replies)).reverse();
 
-    if (retrievedPosts && retrievedPosts.length > 0) {
-      return res.status(200).send(retrievedPosts);
-    } else {
-      return res.status(404).send('No posts found for this user');
-    }
-  } catch (error) {
-    console.error('Error handling user request:', error);
-    return res.status(500).send('Internal server error');
+    res.status(200).json({
+      //overview: overviewReturn,
+      posts,
+      comments,
+      replies,
+    });
+  } catch (err) {
+    next(err);
   }
 }
 

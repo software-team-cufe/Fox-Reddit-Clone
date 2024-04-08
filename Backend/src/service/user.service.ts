@@ -1,6 +1,6 @@
 import UserModel, { User } from '../model/user.model';
-import { Post, PostModel } from '../model/posts.model';
-
+import PostModel, { Post } from '../model/posts.model';
+import appError from '../utils/appError';
 /**
  * Creates a new user.
  *
@@ -79,35 +79,61 @@ export async function findUserIdByUsername(username: string) {
 /**
  * Finds user posts by username.
  *
- * @param username- The username of the user to find and method of sorting comments.
- * @returns A promise that resolves to the post object if found, or null if not found.
+ * @param username - The username of the user to find posts for.
+ * @returns posts ids of the user  by username.
  */
-export async function findUserPosts(userId: string, sortBy: string) {
-  try {
-    const posts: Post[] = await PostModel.find({ authorId: userId });
-    if (sortBy === 'New') {
-      // Sort posts by createdAt timestamp in descending order
-      posts.sort((a, b) => {
-        // Check if both a and b have the createdAt property defined
-        if (a.createdAt && b.createdAt) {
-          return b.createdAt.getTime() - a.createdAt.getTime();
-        }
-        // If createdAt is not defined for either a or b, return 0 to maintain current order
-        return 0;
-      });
-      return posts;
-    }
-    // } else if (sortBy === 'Top') {
-    //   const retrivedComments = comments.map((comment) => {
-    //     const engagementScore = (comment?.voters?.length ?? 0) + (comment?.replies?.length ?? 0);
-    //     return { ...comment.toObject(), engagementScore };
-    //   });
-    //   retrivedComments.sort((a, b) => b.engagementScore - a.engagementScore);
-    // }
-  } catch (error) {
-    console.error('Error in findUserComments:', error);
-    throw error; // Re-throw the error to be caught by thecaller
+export async function userSubmittedPosts(username: string) {
+  // Find the user by username and retrieve their user submitted posts
+  const user = await UserModel.findOne({ username: username }, 'hasPost');
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
   }
+  // Extract the post IDs from the user's submitted posts if it exists
+  const postsIDS = user.hasPost ? user.hasPost.map((post) => post.toString()) : [];
+  // Return the post IDs
+  return postsIDS;
+}
+/**
+ * Finds user comments by username.
+ *
+ * @param username - The username of the user to find posts for.
+ * @returns comments ids of the user  by username.
+ */
+export async function userCommentsIds(username: string) {
+  // Find the user by username and retrieve their user comments
+  const user = await UserModel.findOne({ username: username }, 'hasComment');
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+  // Extract the post IDs from the user's comments if it exists
+  const commentsIDS = user.hasComment ? user.hasComment.map((comment) => comment.toString()) : [];
+  // Return the comments IDs
+  return commentsIDS;
+}
+/**
+ * Finds user replies by username.
+ *
+ * @param username - The username of the user to find posts for.
+ * @returns replies ids of the user  by username.
+ */
+export async function userRepliesIds(username: string) {
+  // Find the user by username and retrieve their user comments
+  const user = await UserModel.findOne({ username: username }, 'hasReply');
+  //console.log('inside user service');
+  //console.log(user);
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+
+  // Extract the post IDs from the user's comments if it exists
+  const repliesIDS = user.hasReply ? user.hasReply.map((comment) => comment.toString()) : [];
+  //console.log('insside user service');
+  //console.log(commentsIDS);
+  // Return the comments IDs
+  return repliesIDS;
 }
 
 /*************************Boudy ***************************

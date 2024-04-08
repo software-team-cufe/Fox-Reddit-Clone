@@ -11,7 +11,9 @@ import {
   editCurrentUserPrefs,
   username_availableHandler,
   aboutHandler,
-  submittedPostByUsrnameHandler,
+  getUserCommentsHandler,
+  getUserOverview,
+  getUserSubmittedHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 
@@ -27,7 +29,11 @@ router.get('/api/username_available', username_availableHandler);
 
 router.get('/user/:username/about', aboutHandler);
 
-router.get('/user/:username/submitted', submittedPostByUsrnameHandler);
+router.get('/user/:username/submitted', getUserSubmittedHandler);
+
+router.get('/user/:username/comments', getUserCommentsHandler);
+
+router.get('/user/:username/overview', getUserOverview);
 
 router.post(
   '/api/users/resetpassword/:id/:passwordResetCode',

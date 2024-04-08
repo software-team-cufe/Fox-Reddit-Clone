@@ -1,107 +1,132 @@
-import { prop, getModelForClass, Ref } from '@typegoose/typegoose';
-import { Schema } from 'mongoose';
-//import appError from '../utils/appError';
+import { prop, getModelForClass, Ref, DocumentType, pre, ReturnModelType, post } from '@typegoose/typegoose';
 import { User } from './user.model';
-import { Comment } from './comments.model';
-import { ModelType } from '@typegoose/typegoose/lib/types';
 
-// // class Spam {
-// //   // @prop({ ref: () => User })
-// //   // spammerID?: Ref<User>;
+class Spam {
+  @prop({ ref: () => User })
+  spammerID!: Ref<User>;
 
-// //   @prop()
-// //   spamType?: string;
+  @prop()
+  spamType!: string;
 
-// //   @prop()
-// //   spamText?: string;
-// // }
+  @prop()
+  spamText!: string;
+}
 
-// // class Vote {
-// //   // @prop({ ref: () => User })
-// //   // userrID?: Ref<User>;
+class Vote {
+  @prop({ ref: () => User })
+  userID!: Ref<User>;
 
-// //   @prop()
-// //   voteType?: number;
-// // }
+  @prop()
+  voteType!: number;
+}
 
-class Post {
+export class Post {
+  @prop({ required: true, ref: () => User })
+  userID!: Ref<User>;
+
   @prop({ required: true })
-  postID?: string;
+  title!: string;
 
-  @prop({ required: [true, 'A post must have a title!'], trim: true, maxlength: 150, minlength: 1 })
-  title?: string;
+  @prop()
+  textHTML!: string;
 
-  @prop({ trim: true })
-  textHTML?: string;
-
-  @prop({ trim: true })
-  textJSON?: string;
+  @prop()
+  textJSON!: string;
 
   @prop({ default: false })
-  isDeleted?: boolean;
+  isDeleted!: boolean;
 
   @prop({ type: () => [String] })
-  attachments?: string[];
+  attachments!: string[];
 
   @prop({ default: false })
-  spoiler?: boolean;
+  spoiler!: boolean;
 
   @prop({ default: false })
-  locked?: boolean;
+  locked!: boolean;
 
   @prop({ enum: ['link', 'image', 'linkWithImage'], default: 'linkWithImage' })
-  type?: string;
+  type!: string;
 
   @prop({ default: false })
-  nsfw?: boolean;
+  nsfw!: boolean;
 
   @prop({ default: 1 })
-  insightCnt?: number;
+  insightCnt!: number;
 
   @prop({ default: 0 })
-  spamCount?: number;
+  spamCount!: number;
 
   @prop({ default: 1 })
-  votesCount?: number;
+  votesCount!: number;
 
-  @prop({ default: () => new Date() })
-  createdAt?: Date;
+  @prop()
+  flairID!: string;
+
+  @prop()
+  flairText!: string;
+
+  @prop()
+  flairTextColor!: string;
+
+  @prop()
+  flairBackGround!: string;
+
+  @prop({ default: Date.now })
+  createdAt!: Date;
 
   @prop()
   editedAt?: Date;
 
   @prop({ type: () => [String] })
-  followers?: string[];
+  followers!: string[];
 
-  @prop({ ref: () => Comment })
-  communityID?: Ref<Comment>;
+  // @prop({ ref: () => User })
+  // communityID!: Ref<User>;
 
-  @prop({ ref: () => User })
-  userId: Ref<User>;
+  @prop({ type: () => [Spam] })
+  spammers!: Spam[];
 
-  // @prop({ type: () => [Spam] })
-  // spammers?: Spam[];
-
-  // @prop({ type: () => [Vote] })
-  // voters?: Vote[];
+  @prop({ type: () => [Vote] })
+  voters!: Vote[];
 
   @prop({ type: () => [String], ref: () => User })
-  mentionedInUsers?: Ref<User>[];
+  mintionedInUsers!: Ref<User>[];
 
   @prop()
-  commentsNum?: number;
+  commentsNum!: number;
 
-  @prop({ ref: () => Post })
-  postComments?: Post[];
+  @prop()
+  hotnessFactor!: number;
+
+  @prop()
+  bestFactor!: number;
+
+  // static async incrementInsightCount(doc: DocumentType<Post>) {
+  //   await PostModel.updateOne({ _id: doc._id }, { $inc: { insightCnt: 1 } });
+  // }
+  // static async preFind(next: () => void) {
+  //   await PostModel.updateMany({}, { $inc: { insightCnt: 1 } }).exec();
+  //   next();
+  // }
 }
 
-// @prop({ type: () => [Object] }) // Assuming mongoose.Schema.ObjectId is a complex type
-// postComments?: Object[];
-// static async postFind(this: any, doc: any, next: () => void) {
-//   await this.updateMany(this.getFilter(), { $inc: { insightCnt: 1 } });
+// @pre<Post>('find', function (next) {
+//   const doc = this as DocumentType<Post>;
+//   Post.incrementInsightCount(doc);
 //   next();
-// }
+// })
 
+// @pre<typeof Post>('find', function (next) {
+//   PostModel.updateMany({}, { $inc: { insightCnt: 1 } }).exec(); // Use the model to update
+//   next();
+// })
 const PostModel = getModelForClass(Post);
 
-export { Post, PostModel };
+// // Define pre-hook directly within the schema definition
+// PostModel.pre('find', async function (this: Post, next: () => void) {
+//   await this.updateMany({}, { $inc: { insightCnt: 1 } });
+//   next();
+// });
+
+export default PostModel;
