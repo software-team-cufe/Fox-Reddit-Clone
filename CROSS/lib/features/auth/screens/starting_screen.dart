@@ -19,7 +19,7 @@ class StartingScreen extends StatelessWidget {
         centerTitle: true,
         title: Image.asset(
           Constants.logoPath,
-          height: 40,
+          height: 60,
         ),
         actions: [
           TextButton(
