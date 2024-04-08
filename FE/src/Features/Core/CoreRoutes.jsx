@@ -1,12 +1,12 @@
 import { Route } from 'react-router-dom';
 import ProfilePagesLayout from './ProfilePages/ProfilePagesRoutes';
 import HomePage from './HomePage/HomePage';
-import SearchPagesLayout from './SearchPages/searchPagesRoutes';
+import SearchPagesLayout from './SearchPages/SearchPagesRoutes';
 import PostPage from './PostPage/PostPage';
-import ViewerProfilePage from './ProfilePages/viewerProfileRoutes';
+import ViewerProfilePage from './ProfilePages/ViewerProfileRoutes';
 import CommunityPage from './CommunityPage/CommunityPage';
-import Settingpagelayout from '@/Features/Core/Settings/navOfSetting';
-import {HomeProvider} from './HomePage/HomePage';
+import Settingpagelayout from '@/Features/Core/Settings/NavOfSetting';
+import { HomeProvider } from './HomePage/HomePage';
 import { CommunityProvider } from './CommunityPage/CommunityPage';
 
 

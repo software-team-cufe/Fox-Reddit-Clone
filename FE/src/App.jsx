@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useNavigate, } from 'react-router-dom';
-import CoreRoutes from './Features/Core/coreRoutes';
+import CoreRoutes from './Features/Core/CoreRoutes';
 import AuthRoutes from './Features/Auth/AuthRoutes';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import Spinner from './GeneralElements/Spinner/Spinner';

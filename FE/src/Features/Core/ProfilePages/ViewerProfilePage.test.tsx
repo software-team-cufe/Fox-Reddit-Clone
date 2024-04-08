@@ -1,6 +1,6 @@
 import React = require("react");
 import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
-import ViewerProfilePage from "./viewerProfileRoutes";
+import ViewerProfilePage from "./ViewerProfileRoutes";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
 
