@@ -2,7 +2,7 @@ import React =require("react")
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
-import ChatMessaging from "./chatMessaging";
+import ChatMessaging from "./Chatmessaging";
 
 describe('every element renders right', () => {
 

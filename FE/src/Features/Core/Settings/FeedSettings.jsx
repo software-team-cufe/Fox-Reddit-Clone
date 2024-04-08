@@ -7,7 +7,7 @@
 import React from "react";  
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import { getByRole } from '@testing-library/react';
-import Dropdown from "./dropDownlist";
+import Dropdown from "./DropDownlist";
 
 export default function FeedSettings() {
     return (

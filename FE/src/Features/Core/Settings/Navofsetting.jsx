@@ -1,14 +1,19 @@
 
 import { Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
-import EmailSetting from './emailSetting';
-import Accountsetting from './account';
-import Notifications from './notificationSettings';
-import SafetySettings from './safetySettings';
-import Feedsettings from './feedSettings';
-import ProfileSettings from './pofileSettings';
-import ChatMessaging from './chatmessaging';
+import EmailSetting from './EmailSetting';
+import Accountsetting from './Account';
+import Notifications from './NotificationSettings';
+import SafetySettings from './SafetySettings';
+import Feedsettings from './FeedSettings';
+import ProfileSettings from './PofileSettings';
+import ChatMessaging from './Chatmessaging';
 import React from 'react';
 
+/*
+ * this function is used to make user switch between settings` pages
+ * @returns {JSX.Element}
+ * 
+/*/
 function Navofsetting() {
     return (
         <div className="flex h-full w-full mt-10">

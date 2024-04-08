@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import axios from 'axios';
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
-import { SearchContext } from "../searchPagesRoutes";
+import { SearchContext } from "../SearchPagesRoutes";
 
 
 export default function COmmentsSearchPage({ searched = "filler"}) {

@@ -3,9 +3,9 @@ import SearchSortMenu from "@/GeneralComponents/SearchSortMenu/SearchSortMenu";
 import { useState } from "react";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import PostsSearchPage from "./pages/PostsSearchPage";
-import CommunitiesSearchPage from "./pages/communitiesSearchPage";
-import PeopleSearchPage from "./pages/peopleSearchPage";
-import CommentsSearchPage from "./pages/commentsSearchPage";
+import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
+import PeopleSearchPage from "./pages/PeopleSearchPage";
+import CommentsSearchPage from "./pages/CommentsSearchPage";
 import React, { useContext, createContext} from "react";
 
 //.
