@@ -309,33 +309,68 @@ export async function submittedPostByUsrnameHandler(req: Request, res: Response)
 /****************************** BOUDY ***********************************/
 
 export async function getFriendHandler(req: Request, res: Response) {
-  const username: string = req.params.username as string;
-  const user = await findUserByUsername(username);
+  try {
+    const username: string = req.params.username as string;
+    const user = await findUserByUsername(username);
 
-  if (!user) {
-    return res.status(404).send('could not find friend');
-  } else {
-    res.status(200).json({
-      id: user._id,
-      avatar: user.avatar,
-      about: user.about,
+    if (!user) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'friend is not found',
+      });
+    } else {
+      res.status(200).json({
+        id: user._id,
+        avatar: user.avatar,
+        about: user.about,
+      });
+    }
+  } catch (error) {
+    console.error('Error in friendRequestUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
     });
   }
 }
 
 export async function getALLFriendsHandler(req: Request, res: Response) {
-  const { id } = req.body.username; //create auth, token middle ware and add the username to request body
+  const { username } = req.body;
+  //const username = res.local.user;
 
-  const user = await findUserById(id);
-
-  if (!user) {
-    return res.status(404).send('could not find friend');
-  } else {
-    res.status(200).json({
-      //friends: user.friends
+  const user = await findUserByUsername(username);
+  try {
+    if (!user) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else if (!user.friend || user.friend.length === 0) {
+      return res.status(402).json({
+        status: 'failed',
+        message: 'User does not have friends',
+      });
+    } else {
+      const friendsIDs = user.friend ? user.friend.map((friendID) => friendID.toString()) : [];
+      const friends = await UserModel.find({ _id: { $in: friendsIDs } });
+      const friendsData = friends.map((friend) => ({
+        username: friend.username,
+        about: friend.about,
+        avatar: friend.avatar,
+      }));
+      res.status(200).json({
+        friendsData,
+      });
+    }
+  } catch (error) {
+    console.error('Error in getALLFriendsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
     });
   }
 }
+
 //done change token only
 export async function friendRequestHandler(req: Request<friendRequest['body']>, res: Response) {
   try {
