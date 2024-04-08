@@ -3,8 +3,8 @@ import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, Layo
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
 import React from "react";
-import Popular from "./Popular";
-import About from "./About";
+import Popular from "./popular";
+import About from "./about";
 
 
 
