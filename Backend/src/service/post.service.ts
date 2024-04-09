@@ -1,3 +1,4 @@
+import appError from '../utils/appError';
 import PostModel from '../model/posts.model';
 
 async function userPosts(postIDs: string[], limit: number | undefined) {
@@ -15,7 +16,16 @@ async function userPosts(postIDs: string[], limit: number | undefined) {
   return posts;
 }
 
-export default userPosts;
+async function deletePost(id: string) {
+  const post = await PostModel.findById(id);
+  if (!post) {
+    throw new appError('Post not found', 404);
+  }
+  await post.deleteOne();
+  // comment.isDeleted = true;
+  // await comment.save();
+}
+export { userPosts, deletePost };
 
 //post.service.ts
 // import PostModel, { Post } from '../model/posts.model';
