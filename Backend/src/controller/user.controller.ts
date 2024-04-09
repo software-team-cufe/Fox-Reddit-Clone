@@ -30,8 +30,8 @@ import { UserModel, privateFields } from '../model/user.model';
 import { omit } from 'lodash';
 import { get } from 'config';
 import PostModel from '../model/posts.model';
-import userCommets from '../service/comment.service';
-import userPosts from '../service/post.service';
+import { userCommets } from '../service/comment.service';
+import { userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 /**
  * Handles the creation of a user.
