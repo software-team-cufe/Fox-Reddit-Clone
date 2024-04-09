@@ -11,7 +11,7 @@ import optionsMenu from "./accessories/optionsmenu";
 import MainFooter from "./footers/mainFooter";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import LoginFirtstModal from "./accessories/loginFirstModal";
-
+import BackToTop from "@/GeneralComponents/backToTop/backToTop";
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -125,7 +125,7 @@ export default function CommunityPage() {
     <div>
       <div className={`flex-1 -mt-4 md:w-3/4 w-full md:mx-auto relative`}>
         {showModal && <LoginFirtstModal onClose={setShowModal} />}
-
+        <BackToTop />
         {/* backgroyund image of the community */}
         <img src={comm.backimage} alt='community' className='w-full md:mx-auto h-20 md:h-36 md:rounded-lg object-cover' />
 
