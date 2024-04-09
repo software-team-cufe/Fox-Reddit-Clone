@@ -61,6 +61,7 @@ dependencies:
   hidden_drawer_menu: ^3.0.0
   mockito: ^5.0.0
   lottie: ^3.1.0
+  
 
 dev_dependencies:
   flutter_test:
@@ -95,6 +96,7 @@ flutter:
   - assets/Icons/Chat.svg
   - assets/Icons/channelIcon.png
   - assets/images/community.png
+  - assets/images/banana.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
