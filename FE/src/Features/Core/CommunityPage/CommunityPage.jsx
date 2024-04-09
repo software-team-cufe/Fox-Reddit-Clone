@@ -53,6 +53,7 @@ export default function CommunityPage() {
     }
     axios.patch(`http://localhost:3002/communities?id=2`, { joined: !comm.joined })
       .then(() => {
+        setcommunity({ ...comm, joined: !comm.joined });
         console.log('Community joined state changed!');
       })
       .catch(error => {
