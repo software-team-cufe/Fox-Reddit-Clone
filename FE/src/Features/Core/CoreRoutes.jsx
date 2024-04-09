@@ -8,6 +8,7 @@ import CommunityPage from './CommunityPage/CommunityPage';
 import Settingpagelayout from '@/Features/Core/Settings/NavOfSetting';
 import { HomeProvider } from './HomePage/HomePage';
 import { CommunityProvider } from './CommunityPage/CommunityPage';
+import CreatePostPage from './CreatePostPage/CreatePostPage';
 
 
 export default [
@@ -17,5 +18,7 @@ export default [
     <Route key={'/search'} path='/search/:searchkey/*' element={<SearchPagesLayout />} />,
     <Route key={'/viewer'} path='/viewer/:viewer/*' element={<ViewerProfilePage />} />,
     <Route key={'/r'} path='/r/:community' element={<CommunityProvider><CommunityPage /></CommunityProvider>} />,
-    <Route key={"/setting"} path="/setting/*" element={<Settingpagelayout />} />
+    <Route key={"/setting"} path="/setting/*" element={<Settingpagelayout />} />,
+    <Route key={"/submit"} path="/submit/*" element={< CreatePostPage />} />
+
 ]

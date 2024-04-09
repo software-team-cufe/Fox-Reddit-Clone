@@ -1,4 +1,4 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import axios from 'axios';
@@ -6,13 +6,13 @@ import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { SearchContext } from "../SearchPagesRoutes";
 
 
-export default function COmmentsSearchPage({ searched = "filler"}) {
+export default function COmmentsSearchPage({ searched = "filler" }) {
 
   const { selected, period } = useContext(SearchContext);
   const [comments, setComments] = useState([]);     // array of comments to show
   const [loading, setLoading] = useState(true);     // loading state for fetching
 
-  
+
   useEffect(() => {
     setLoading(true);    //set loading to true before fetching
     axios.get("http://localhost:3002/comments")   //fetch comments and organize into comments array for mapping

@@ -33,7 +33,7 @@ function MainRoute() {
   return (
     <div className='w-full h-[calc(100%)]'>
       <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg" UserName="someuser" IsOnline={true} IsLogged={true} />
-      <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
+      <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto ">
         {
           ![
             "/login",
@@ -43,7 +43,7 @@ function MainRoute() {
           ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} />
         }
 
-        <div className='h-full w-full overflow-y-auto lg:p-4'>
+        <div className={` h-full w-full overflow-y-auto  ${path.includes('submit') ? " " : "lg:p-4"}`}>
           <Outlet />
         </div>
       </div>

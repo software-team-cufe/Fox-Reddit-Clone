@@ -23,7 +23,7 @@ export default function PostComponent({role, post, className, viewMode = false }
 
                         className=" rounded-lg my-4 w-full bg-gray-600">
                         <img
-                            className="mx-auto max-h-[600px] lg:max-w-[800px] rounded-lg my-4"
+                            className="mx-auto max-h-[600px] lg:max-w-[800px] w-full rounded-lg my-4"
                             alt=""
                             src={post.thumbnail} />
                     </div>
