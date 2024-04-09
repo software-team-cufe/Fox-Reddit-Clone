@@ -8,6 +8,7 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import { createContext, useContext } from "react";
+import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
 
 
 export const HomeContext = createContext();
@@ -36,9 +37,9 @@ export default function HomePage() {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="w-full h-full flex gap-10">
-
-      <div className="w-full overflow-y-auto space-y-4">
+    <div className="w-full h-full relative flex gap-10">
+      <div className="w-full relative overflow-y-auto space-y-4">
+        <BackToTop />
         <div className="flex -mb-3 gap-x-4">
           <div role="sortmenu"><Sortmenu context={HomeContext} /></div>
           <PeriodSelect appearance={selected} context={HomeContext} />
