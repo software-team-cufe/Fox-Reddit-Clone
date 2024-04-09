@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_fox/Pages/settings/setting.dart';
 
 /// Widget representing an end drawer.
 ///
@@ -51,6 +52,16 @@ class endDrawer extends StatelessWidget {
                   leading: const Icon(Icons.access_time),
                   title: const Text('History'),
                   onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Setting'),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const setting()));
+                  },
                 ),
               ],
             ),
