@@ -20,4 +20,12 @@ async function userCommets(commentsIDS: string[], limit: number | undefined) {
   return limitedComments;
 }
 
-export default userCommets;
+async function deleteComment(id: string) {
+  const comment = await CommentModel.findById(id);
+  if (!comment) {
+    throw new appError('Comment not found', 404);
+  }
+  comment.deleteOne();
+}
+
+export { userCommets, deleteComment };
