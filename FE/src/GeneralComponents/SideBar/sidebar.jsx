@@ -78,7 +78,7 @@ function Sidebar({ className, IsOpen }) {
             id="sidebar-multi-level-sidebar"
             role="sidebarr"
             data-testid="sidebar"
-            className={`${className} ${IsOpen ? "md:w-80 md:relative w-screen md:display-block md:z-0 z-40 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
+            className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-50 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
             lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
