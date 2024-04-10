@@ -42,7 +42,7 @@ function MainRoute() {
             "/forget-password",
           ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} />
         }
-
+        
         <div className={` h-full w-full overflow-y-auto  ${path.includes('submit') ? " " : "lg:p-4"}`}>
           <Outlet />
         </div>
