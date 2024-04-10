@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
-import { addComment, deleteCommentOrPost } from '../schema/listing.schema';
-import { deletePost } from '../service/post.service';
+import { NextFunction, Request, Response } from 'express';
+import { addComment, deleteCommentOrPost, hidePost } from '../schema/listing.schema';
+import { deletePost, hide, unhide } from '../service/post.service';
 import { deleteComment } from '../service/comment.service';
+import { findUserByUsername } from '../service/user.service';
 // export async function addCommentHandler(req: Request<addComment['body']>, res: Response) {
 //     try{
 //         let comment=await addComment(req.body, req.username);
@@ -14,37 +15,107 @@ import { deleteComment } from '../service/comment.service';
  */
 
 export async function deleteHandler(req: Request<deleteCommentOrPost['body']>, res: Response) {
-  const id = req.body.id;
-  const desiredID = id.split('_')[1];
-  // deleting comment by user
-  if (id[1] === '1') {
-    try {
+  try {
+    const id = req.body.id;
+    const desiredID = id.split('_')[1];
+
+    // Determine whether to delete a comment or a post
+    if (id[1] === '1') {
+      // Delete comment by user
       await deleteComment(desiredID);
-    } catch {
-      return res.status(401).json({
-        status: 'failed',
-        message: 'Access token is missing or invalid',
+      res.status(200).json({
+        status: 'success',
+        message: 'Comment is deleted successfully',
       });
-    }
-    res.status(200).json({
-      status: 'success',
-      message: 'comment is deleted successfully',
-    });
-  }
-  // deleting post by user
-  else if (id[1] === '3') {
-    console.log('post item');
-    try {
+    } else if (id[1] === '3') {
+      // Delete post by user
       await deletePost(desiredID);
-    } catch {
-      return res.status(401).json({
+      res.status(200).json({
+        status: 'success',
+        message: 'Post is deleted successfully',
+      });
+    } else {
+      // Invalid ID format
+      res.status(400).json({
         status: 'failed',
-        message: 'Access token is missing or invalid',
+        message: 'Invalid ID format',
       });
     }
-    res.status(200).json({
-      status: 'success',
-      message: 'Post is deleted successfully',
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    res.status(500).json({
+      status: 'failed',
+      message: 'Internal server error',
     });
   }
+}
+
+export async function hidePostHandler(req: Request<hidePost['body']>, res: Response, next: NextFunction) {
+  try {
+    const id = req.body.linkID;
+    console.log(id);
+    const desiredID = id.split('_')[1];
+    console.log(desiredID);
+    if (!desiredID) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Invalid ID format',
+      });
+    } else {
+      //const user = res.locals.user;
+      const user = await findUserByUsername(req.body.username as string);
+      console.log(req.body.username as string);
+      if (!user) {
+        return res.status(404).json({
+          status: 'failed',
+          message: 'User not found',
+        });
+      } else {
+        console.log(user.hiddenPosts);
+        await hide(desiredID, user);
+        console.log(user.hiddenPosts);
+      }
+    }
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Post is hidden successfully',
+  });
+}
+
+export async function unhidePostHandler(req: Request<hidePost['body']>, res: Response, next: NextFunction) {
+  try {
+    const id = req.body.linkID;
+    console.log(id);
+    const desiredID = id.split('_')[1];
+    console.log(desiredID);
+    if (!desiredID) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Invalid ID format',
+      });
+    } else {
+      const user = await findUserByUsername(req.body.username as string);
+      //const user = res.locals.user;
+      if (!user) {
+        return res.status(404).json({
+          status: 'failed',
+          message: 'User not found',
+        });
+      } else {
+        console.log(user.hiddenPosts);
+        await unhide(desiredID, user);
+        console.log(user.hiddenPosts);
+      }
+    }
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Post is unhidden successfully',
+  });
 }

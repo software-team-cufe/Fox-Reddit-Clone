@@ -18,5 +18,17 @@ export const deleteCommentOrPostSchema = object({
   }),
 });
 
+export const hidePostSchema = object({
+  body: object({
+    id: string({
+      required_error: 'id is required',
+    }),
+    username: string({
+      required_error: 'username is required',
+    }),
+  }),
+});
+
 export type addComment = TypeOf<typeof addCommentSchema>;
 export type deleteCommentOrPost = TypeOf<typeof deleteCommentOrPostSchema>;
+export type hidePost = TypeOf<typeof hidePostSchema>;

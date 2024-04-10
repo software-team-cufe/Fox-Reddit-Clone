@@ -22,7 +22,7 @@ class Vote {
 
 export class Post {
   @prop({ required: true, ref: () => User })
-  userID!: Ref<User>;
+  userID!: Ref<User>; ////////////////////////////////////////////////////////////////////////////////
 
   @prop({ required: true })
   title!: string;
@@ -91,7 +91,7 @@ export class Post {
   voters!: Vote[];
 
   @prop({ type: () => [String], ref: () => User })
-  mintionedInUsers!: Ref<User>[];
+  mintionedInUsers!: Ref<User>[]; ///////////////////////////////////////////////////////
 
   @prop()
   commentsNum!: number;
