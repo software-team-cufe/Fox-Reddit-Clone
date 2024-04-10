@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useEffect, useState } from "react";
+import React, { useContext, createContext, useEffect, useState, useRef } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
@@ -40,11 +40,13 @@ export default function CommunityPage() {
   const [loading, setLoading] = useState(true);          // check if the data is loading
   const path = useLocation();                          // get the current path
   const { period, selected } = useContext(CommunityContext);  // get the selected sorting and period
-  const [posts, setposts] = useState([]);              // store the posts data
+  const [Posts, setPosts] = useState([]);              // store the Posts data
   const [feed, setfeed] = useState(true);                // store the feed loading state
   const user = userStore.getState().user;             // get the user data
   const [showModal, setShowModal] = useState(false);
   const navigator = useNavigate();
+  const loadMoreButtonRef = useRef(null);
+
 
   const swtichJoinState = () => {
     if (user.user == null) {
@@ -86,7 +88,7 @@ export default function CommunityPage() {
 
   useEffect(() => {
     setfeed(true);
-    axios.get(`http://localhost:3002/posts`)
+    axios.get(`http://localhost:3002/posts?_limit=5`)
       .then((response) => {
         const newPosts = response.data.map(post => ({
           subReddit: {
@@ -102,7 +104,7 @@ export default function CommunityPage() {
           thumbnail: post.thumbnail,
           video: null
         }));
-        setposts(newPosts);
+        setPosts(newPosts);
         setfeed(false);
       })
       .catch(error => {
@@ -110,6 +112,33 @@ export default function CommunityPage() {
       });
   }, [period, selected]);
 
+  const fetchMorePosts = () => {
+    axios.get('http://localhost:3002/posts?_limit=5')
+    .then(response => {
+        const newPosts = response.data.map(post => ({
+            subReddit: {
+                image: post.attachments.subredditIcon,
+                title: post.communityName,
+            },
+            images: post.attachments.postData,
+            id: post.postID,
+            title: post.title,
+            subTitle: post.postText,
+            votes: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null
+        }));
+
+        setPosts(prevPosts => [...prevPosts, ...newPosts]);
+        setLoading(false);
+
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        setLoading(false);
+    });
+};
 
   //to handle loading until fetch is complete
   if (loading) {
@@ -192,12 +221,17 @@ export default function CommunityPage() {
 
             {/* the feed of the community*/}
             {!feed ? (<div role="communityFeed" className="flex flex-col md:w-full w-full h-fit my-4 items-center">
-              {/* if there are no downvoted posts, show no results */}
-              {posts.length > 0 ? (
-                posts.map((post, index) => (<PostComponent key={index} post={post} />))
+              {/* if there are no downvoted Posts, show no results */}
+              {Posts.length > 0 ? (
+                <>
+                {Posts.map((post, index) => (
+                    <PostComponent key={index} post={post} />
+                ))}
+                <button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit text-white ring-1 ring-inset ring-white tbg-gray-300 px-3 py-2 bg-blue-600 rounded-full hover:bg-blue-700 hover:ring-black mb-2">Load more</button>
+            </>
               ) : (
                 <>{/*no results view*/}
-                  <p className="text-xl font-bold text-center mt-2">This community doesn't have any posts yet</p>
+                  <p className="text-xl font-bold text-center mt-2">This community doesn't have any Posts yet</p>
                   <p className="text-md font-semibold text-center mb-3">Make one and get this feed started.</p>
                   <button role="createPostButton" className={`rounded-full text-white flex gap-1 justify-center bg-blue-600 w-fit px-4 h-10 items-center hover:bg-blue-700`} onClick={CreatePostHandle}>
                     <Plus className="w-4 h-4" />

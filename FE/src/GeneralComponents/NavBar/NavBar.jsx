@@ -188,7 +188,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                 {IsOpenProfList && (
                   <ul ref={listProfRef} className=" rounded-lg flex-col shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                     <li>
-                      <button onClick={() => { navigator(`/user/${UserName}/overview`) }}
+                      <button onClick={() => { navigator(`/user/${UserName}/posts`) }}
                         className="bg-white hover:bg-orange-100  text-black h-16 py-2 px-4 rounded inline-flex items-center w-full">
                         <ProfileIcon imageSrc={ProfileImageSrc} altText={UserName} isOnline={IsOnline} />
                         <div className="flex-col flex my-2">
