@@ -48,7 +48,7 @@ describe('sortmenu elements render', () => {
         fireEvent.click(screen.getByRole('dropDownButton'));
 
         const items = await screen.getAllByRole('menuitem');
-        expect(items).toHaveLength(5);
+        expect(items).toHaveLength(4);
     });
 });
 

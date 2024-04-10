@@ -89,7 +89,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
 
 
   return (
-    <nav className=" px-[1.5rem]  z-50 w-100vl fixed w-full h-[69px]  bg-white top-0">
+    <nav className=" px-[1.5rem]  z-40 w-100vl fixed w-full h-[69px]  bg-white top-0">
 
       <div className="flex-row   justify-between items-center  h-8 mx-4">
         {/* userStore.getState().user.user == null ? */}
