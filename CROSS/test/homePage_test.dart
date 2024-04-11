@@ -4,7 +4,6 @@ import 'package:mockito/mockito.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
-import 'package:reddit_fox/Pages/Search.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
