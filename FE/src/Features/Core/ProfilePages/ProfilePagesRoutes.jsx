@@ -15,6 +15,11 @@ import { userStore } from "@/hooks/UserRedux/UserStore";
 import { useContext, createContext } from "react";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
 // for mapping the list of buttons
+/**
+ * Array of buttons representing different profile page options.
+ *
+ * @type {Array<{text: string, path: string}>}
+ */
 const buttons = [
   {
     text: "overview",

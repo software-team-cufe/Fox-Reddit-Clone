@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Features/Core/ProfilePages/pages/profilecomments.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Features/Core/ProfilePages/pages/profilecomments.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState, useContext, useRef } from "react";
+import axios from 'axios';
+import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
+import { comment } from "postcss";
+import Spinner from "@/GeneralElements/Spinner/Spinner";
+
+/**
+ * Renders the profile comments section.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.using - The using value.
+ * @param {Object} props.context - The context object.
+ * @returns {JSX.Element} The profile comments component.
+ */
+function ProfileComments({ using, context }) {
+
+    // states for collecting comments from request and loading state
+    const { selected, period } = useContext(context);
+    const [comments, setComments] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [callingposts, setCallingPosts] = useState(false);
+    const loadMoreButtonRef = useRef(null);
+
+    //fetch comments on load and put into comments array
+    useEffect(() => {
+        setLoading(true);
+        axios.get("http://localhost:3002/comments?_limit=5")
+            //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&amp;count=10&amp;limit=50&amp;t=month')
+            .then(response => {
+                const newComments = response.data.map(comment => ({
+                    user: {
+                        image: comment.user.avatar,
+                        Username: comment.user.username,
+                        id: comment.user.userID
+                    },
+                    info: {
+                        votes: comment.votesCount,
+                        time: comment.createdAt,
+                    },
+                    content: {
+                        text: comment.commentText
+                    }
+                }));
+
+                setComments(newComments);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                setLoading(false);
+            });
+    }, [period, selected]);
+
+    const fetchMoreComments = () => {
+        setCallingPosts(true);
+        axios.get('http://localhost:3002/comments?_limit=5')
+            .then(response => {
+                const newComments = response.data.map(comment => ({
+                    user: {
+                        image: comment.user.avatar,
+                        Username: comment.user.username,
+                        id: comment.user.userID
+                    },
+                    info: {
+                        votes: comment.votesCount,
+                        time: comment.createdAt,
+                    },
+                    content: {
+                        text: comment.commentText
+                    }
+                }));
+
+                setComments(prevComments => [...prevComments, ...newComments]);
+                setCallingPosts(false);
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                setCallingPosts(false);
+            });
+    };
+
+    //to handle waiting for fetch or loading state
+    if (loading) {
+        return (
+            &lt;div role="commentstab" className="w-100 h-100 flex flex-col items-center justify-center">
+                &lt;Spinner className="h-24 w-24" />
+            &lt;/div>
+        )
+    }
+
+    //main comments feed
+    return (
+        &lt;div role="commentstab" className="flex flex-col w-full h-fit my-4">
+
+            {/* if there are no comments, show no results */}
+            {comments.length > 0 ? (
+                &lt;>
+                    {comments.map((comment, index) => (
+                        &lt;CommentComponent key={index} comment={comment} />
+                    ))}
+                    {!callingposts &amp;&amp; (&lt;button ref={loadMoreButtonRef} type="button" onClick={fetchMoreComments} className="w-fit h-fit my-2 px-3 mx-auto py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more&lt;/button>)}
+                    {callingposts &amp;&amp; (&lt;img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
+                &lt;/>
+            ) : (
+                &lt;>
+                    {/*no results view*/}
+                    &lt;img src={'/confusedSnoo.png'} className="w-16 h-24 mb-2" alt="Confused Snoo">&lt;/img>
+                    &lt;p className="text-lg font-bold">looks like you haven't commented on anything&lt;/p>
+                &lt;/>
+            )}
+        &lt;/div>
+    )
+}
+
+export default ProfileComments;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Apr 11 2024 19:31:09 GMT+0200 (Eastern European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
