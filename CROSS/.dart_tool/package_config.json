@@ -728,6 +728,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "share",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/share-2.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "shared_preferences",
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences-2.2.2",
       "packageUri": "lib/",
@@ -950,7 +956,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-04-11T22:40:18.872447Z",
+  "generated": "2024-04-11T22:41:54.279605Z",
   "generator": "pub",
   "generatorVersion": "3.3.3"
 }
