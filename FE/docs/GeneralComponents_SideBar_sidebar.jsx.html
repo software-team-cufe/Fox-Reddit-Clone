@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>JSDoc: Source: GeneralComponents/SideBar/sidebar.jsx</title>
-    <meta name="viewport" content="width=device-width">
+
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -38,6 +38,7 @@ import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
 import Popular from "./Popular";
 import About from "./About";
+
 const icons = [
    {
       icon: Home,
@@ -56,7 +57,7 @@ const icons = [
    },
 ];
 
-function Sidebar({className,IsOpen}) {
+function Sidebar({ className, IsOpen }) {
    const [open, setOpen] = useState(true);
 
    // const toggleSidebar = () => {
@@ -98,22 +99,22 @@ function Sidebar({className,IsOpen}) {
    };
 
    const path = useLocation();
-   
+
    return (
       &lt;>
          &lt;aside
             id="sidebar-multi-level-sidebar"
             role="sidebarr"
             data-testid="sidebar"
-            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""}
+            className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-50 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
             lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
 
 
             &lt;div
-               className={`h-full px-3 py-15 overflow-y-auto ${!IsOpen &amp;&amp; "invisible"
-                  } lg:visible`}
+               className={` ${path.pathname.includes('submit') ? "hidden" : ""} h-full px-3 py-15 overflow-y-auto ${!IsOpen &amp;&amp; "invisible"
+                  }  lg:visible`}
             >
                &lt;ul className="space-y-2 font-light">
                   {icons.map((e, idx) => (
@@ -138,7 +139,7 @@ function Sidebar({className,IsOpen}) {
                         type="buttonn"
                      >
                         RECENTS
-                     &lt;ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        &lt;ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      &lt;/button>
 
                      &lt;div id="dropdown" className="">
@@ -155,7 +156,7 @@ function Sidebar({className,IsOpen}) {
                      &lt;/div>
                   &lt;/li>
 
-               &lt;hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full">&lt;/hr>
+                  &lt;hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full">&lt;/hr>
 
                   &lt;li>
                      &lt;button
@@ -167,8 +168,8 @@ function Sidebar({className,IsOpen}) {
                         role="button1212"
                      >
                         YOUR COMMUNITIES
-                        &lt;ChevronDown 
-                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        &lt;ChevronDown
+                           className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      &lt;/button>
 
                      &lt;div id="dropdown1" className="">
@@ -191,7 +192,7 @@ function Sidebar({className,IsOpen}) {
                      &lt;/div>
                   &lt;/li>
 
-               &lt;hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full">&lt;/hr>
+                  &lt;hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full">&lt;/hr>
 
                   &lt;li>
                      &lt;button
@@ -202,7 +203,7 @@ function Sidebar({className,IsOpen}) {
                         type="button"
                      >
                         RESOURCES
-                        &lt;ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        &lt;ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      &lt;/button>
 
                      &lt;div id="dropdown2" className="">
@@ -268,7 +269,7 @@ function Sidebar({className,IsOpen}) {
                               >
                                  &lt;i className="fa-solid fa-users-between-lines w-5 h-5">&lt;/i>
                                  &lt;span className="px-2 py-2 text-gray-800" >Communities&lt;/span>
-                                 
+
                               &lt;/a>
                            &lt;/li>
 
@@ -292,14 +293,14 @@ function Sidebar({className,IsOpen}) {
                               &lt;/a>
                            &lt;/li>
 
-                        &lt;hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full">&lt;/hr>
+                           &lt;hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full">&lt;/hr>
 
                            &lt;li>
                               &lt;a
                                  href="/Contentpolicy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 &lt;Siren className="w-5 h-5"/>
+                                 &lt;Siren className="w-5 h-5" />
                                  &lt;span className=" px-2 py-2 text-gray-800">content policy&lt;/span>
                               &lt;/a>
                            &lt;/li>
@@ -308,7 +309,7 @@ function Sidebar({className,IsOpen}) {
                                  href="/PrivacyPolicy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 &lt;BookLock className="w-5 h-5"/>
+                                 &lt;BookLock className="w-5 h-5" />
                                  &lt;span className="px-2 py-2 text-gray-800">Privacy policy&lt;/span>
                               &lt;/a>
                            &lt;/li>
@@ -318,7 +319,7 @@ function Sidebar({className,IsOpen}) {
                                  href="/Useragreement"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 &lt;Handshake className="w-5 h-5"/>
+                                 &lt;Handshake className="w-5 h-5" />
                                  &lt;span className=" px-2 py-2 text-gray-800">User agreement&lt;/span>
                               &lt;/a>
                            &lt;/li>
@@ -348,7 +349,7 @@ export default Sidebar;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 08 2024 19:15:59 GMT+0200 (Eastern European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Apr 11 2024 19:16:28 GMT+0200 (Eastern European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

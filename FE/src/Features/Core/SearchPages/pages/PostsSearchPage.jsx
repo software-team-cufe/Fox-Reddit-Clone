@@ -5,6 +5,13 @@ import axios from 'axios';
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { SearchContext } from "../SearchPagesRoutes";
 
+/**
+ * Renders the People Search page.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.searched - The search query string.
+ * @returns {JSX.Element} The People Search page component.
+ */
 export default function PeopleSearchPage({ searched = "filler" }) {
 
   const { selected, period } = useContext(SearchContext);
