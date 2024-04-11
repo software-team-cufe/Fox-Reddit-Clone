@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 /**
  * @file chatMessaging is a functional component that has mark all as read option .
  * @module ChatMessaging
