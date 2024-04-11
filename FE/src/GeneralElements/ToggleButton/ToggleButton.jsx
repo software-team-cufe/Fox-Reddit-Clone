@@ -1,11 +1,13 @@
 import React, { useState } from "react"
-function ToggleButton() {
+function ToggleButton({ onToggle }) {
     
     const[trueFalse,setTrueFalse]=useState(true);
     const handleToggle = () => {
-        setTrueFalse(!trueFalse);
-        
+        const newState = !trueFalse;
+        setTrueFalse(newState);
+        onToggle(newState); // Call the callback function with the new state
     };
+    
     return (
         <div>
             <label className="relative inline-flex cursor-pointer items-center">
