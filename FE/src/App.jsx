@@ -29,7 +29,7 @@ function MainRoute() {
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
   }
-  const exp = new RegExp('\/threads\/?([^\/]+)?$');
+  const exp = new RegExp('\/chat\/?([^\/]+)?$');
   if(exp.test(path)){
     return <Outlet/>
   }

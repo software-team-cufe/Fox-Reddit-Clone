@@ -1,11 +1,10 @@
 import React from 'react'
-import UserMessages from './Components/UserMessages'
 import SendMessageBar from './Components/SendMessageBar'
 import SideBar from './Components/SideBar'
 import Header from './Components/Header'
 import Message from './Components/Message'
 
-export default function ThreadsPage() {
+export default function ChatPage() {
     return (
         <div className="flex flex-row h-screen antialiased text-gray-800">
             <SideBar />
