@@ -17,7 +17,8 @@ const unProtectedRoutes = [
   '/login',
   '/register',
   '/user'
-]
+];
+
 function MainRoute() {
 
   const path = window.location.pathname;
@@ -26,7 +27,10 @@ function MainRoute() {
   const [OpenSideBar, setOpenSideBar] = useState(false)
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
-
+  }
+  const exp = new RegExp('\/threads\/?([^\/]+)?$');
+  if(exp.test(path)){
+    return <Outlet/>
   }
   return (
     <div className='w-full h-[calc(100%)]'>
