@@ -14,7 +14,7 @@ import Dropdown from "./DropDownlist";
  */
 
 export default function FeedSettings() {
-    
+    //state for each setting statement to be toggled
     const [showMatureContent, setShowMatureContent] = useState(false);
     const [BlurMatureImg, setBlurMatureImg] = useState(false);
     const [autoplayMedia, setAutoplayMedia] = useState(false);

@@ -5,7 +5,8 @@
       "userID": 1,
       "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
       "about": "Hi, I'm user1. I love hiking, reading books, and playing the guitar in my free time.",
-      "totalKarma": 2424
+      "totalKarma": 2424,
+      "NSFW":true
     },
     {
       "name": "user2",
@@ -73,7 +74,8 @@
       ],
       "joined": true,
       "muted": true,
-      "favourited": true
+      "favourited": true,
+      "NSFW": true 
     },
     {
       "id": 3,
@@ -92,7 +94,8 @@
       ],
       "joined": true,
       "muted": false,
-      "favourited": false
+      "favourited": false,
+      "NSFW": true
     },
     {
       "id": 4,
@@ -164,7 +167,8 @@
       "postText": "This is the content of post 3",
       "votesCount": 191,
       "commentsCount": 33,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "NSFW":true
     },
     {
       "attachments": {
@@ -198,7 +202,8 @@
       "postText": "This is the content of post 5",
       "votesCount": 67,
       "commentsCount": 23,
-      "thumbnail": "https://images.unsplash.com/photo-1712105052316-b929d9fd5395?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "thumbnail": "https://images.unsplash.com/photo-1712105052316-b929d9fd5395?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "NSFW":true
     },
     {
       "attachments": {
@@ -249,7 +254,8 @@
       "postText": "This is the content of post 8",
       "votesCount": 56,
       "commentsCount": 19,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "NSFW":true
     },
     {
       "attachments": {
@@ -283,7 +289,8 @@
       "postText": "This is the content of post 10",
       "votesCount": 89,
       "commentsCount": 34,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "NSFW":true
     }
   ],
   "comments": [
