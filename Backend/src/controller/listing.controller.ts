@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { addComment, deleteCommentOrPost, hidePost } from '../schema/listing.schema';
 import { deletePost, hide, unhide } from '../service/post.service';
-import { deleteComment } from '../service/comment.service';
+import { add_comment, deleteComment } from '../service/comment.service';
 import { findUserByUsername } from '../service/user.service';
+import { Comment } from '../model/comments.model';
 // export async function addCommentHandler(req: Request<addComment['body']>, res: Response) {
 //     try{
 //         let comment=await addComment(req.body, req.username);
@@ -118,4 +119,15 @@ export async function unhidePostHandler(req: Request<hidePost['body']>, res: Res
     status: 'success',
     message: 'Post is unhidden successfully',
   });
+}
+// export async function addCommentHandler(req: Request<addComment['body']>, res: Response, next: NextFunction) {
+export async function addCommentHandler(req: Request, res: Response, next: NextFunction) {
+  console.log('here');
+  let newComment: Comment = {} as Comment;
+  try {
+    newComment = await add_comment(req.body, '660e55a8ee6a9d0206dcf794');
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json(newComment);
 }

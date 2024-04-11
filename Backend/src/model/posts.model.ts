@@ -93,6 +93,9 @@ export class Post {
   @prop({ type: () => [String], ref: () => User })
   mintionedInUsers!: Ref<User>[]; ///////////////////////////////////////////////////////
 
+  @prop({ type: () => [String], ref: () => User }) //////////////////////////////////
+  postComments: Ref<Comment>[];
+
   @prop()
   commentsNum!: number;
 
