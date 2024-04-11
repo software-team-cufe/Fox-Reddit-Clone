@@ -1,4 +1,3 @@
-
 import { Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import EmailSetting from './EmailSetting';
 import Accountsetting from './Account';
@@ -10,6 +9,7 @@ import ChatMessaging from './chatMessaging';
 import React from 'react';
 
 /**
+ * 
  * this function is used to make user switch between settings` pages
  * @returns {JSX.Element}
  * 

@@ -7,9 +7,18 @@
 import React from "react";  
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import { getByRole } from '@testing-library/react';
-import Dropdown from "./dropDownlist";
+import Dropdown from "./DropDownlist";
+/**
+ * 
+ * Adult content, autoplay media, community themes, community content sort, global content view, open pots in new tab
+ */
 
 export default function FeedSettings() {
+    
+    function handleToggleInFeed (isChecked){
+        console.log(isChecked);
+    };
+    
     return (
         <div className="w-[75%]">
             <h1 className=" font-semibold text-xl" role="TextOfButtons">
@@ -18,8 +27,7 @@ export default function FeedSettings() {
 
             <div>
                 <p className="text-xs text-gray-500 mt-9 mb-1" role="TextOfButtons">CONTENT PREFERENCES</p>
-
-                <hr className="w-[70%]" />
+                <hr className="w-[75%]" />
                 <div className="flex flex-col mt-7 w-3/2">
                     <div className="flex flex-row mb-7 justify-between " role="toggleButton">
                         <div>
@@ -31,8 +39,7 @@ export default function FeedSettings() {
                                 See NSFW (Not Safe for Work) mature and adult images, videos, written content, and other media in your Reddit feeds and search results.
                             </p>
                         </div >
-                        <ToggleButton />
-
+                        <ToggleButton onToggle={handleToggleInFeed} />
                     </div>
 
                     <div className="flex flex-row mb-7 justify-between" role="toggleButton">
