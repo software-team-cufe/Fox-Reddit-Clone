@@ -60,7 +60,7 @@ class endDrawer extends StatelessWidget {
                   leading: const Icon(Icons.access_time),
                   title: const Text('History'),
                   onTap: () {},
-                  ),
+                ),
                 ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text('Setting'),
@@ -69,7 +69,7 @@ class endDrawer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const setting()));
-                  },
+                  }
                 ),
               ],
             ),
