@@ -74,11 +74,11 @@ function Layout() {
   const avatar = userStore.getState().user.avatar;  // fetching user avatar from redux store
 
   return (
-    <div className="relative w-full mx-3 overflow-auto" > {/* attach the ref to your scrollable element */}
+    <div className="relative w-[90%] mx-auto overflow-auto" > {/* attach the ref to your scrollable element */}
       <BackToTop />
       {/* main header with avatar and username */}
-      <div className="flex gap-10">
-        <div className="flex-1 w-[75%] max-w-screen">
+      <div className="flex gap-10 ">
+        <div className="flex-grow w-[90%] md:w-[55%] max-w-[90%]">
           <div role="avatarHeader" className='relative w-full flex mb-8'>
             <img src={avatar} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
             <span className='text-black font-bold text-2xl absolute top-10 left-24'>u/{user}</span>
@@ -115,7 +115,7 @@ function Layout() {
         </div>
 
         {/* profile user card */}
-        <div role="card"><Card /></div>
+        <div role="card" className="flex-grow w-[35%] max-w-[337px]"><Card /></div>
       </div>
     </div>
   )

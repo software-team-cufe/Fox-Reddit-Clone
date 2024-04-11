@@ -74,8 +74,8 @@ function Layout() {
 
   //main body of page
   return (
-    <div className="flex gap-10">
-      <div className="relative w-full flex-1 ">
+    <div className="flex gap-10 w-[90%] mx-auto">
+      <div className="relative flex-grow md:w-[55%]">
         <BackToTop />
         <div role="avatarHeader" className='relative flex mb-8'>
           <img src={avatar} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
@@ -107,7 +107,7 @@ function Layout() {
       </div>
 
       {/* profile user card */}
-      <div role="card"><ViewerCard /></div>
+      <div role="card" className="flex-grow md:w-[35%] max-w-[380px]"><ViewerCard /></div>
     </div>
   )
 }
