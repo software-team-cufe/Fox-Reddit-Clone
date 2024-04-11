@@ -2,6 +2,16 @@ import appError from '../utils/appError';
 import PostModel from '../model/posts.model';
 import UserModel, { User } from '../model/user.model';
 
+/**
+ * Finds a post by their ID.
+ *
+ * @param id - The ID of the post to find.
+ * @returns A promise that resolves to the user object if found, or null if not found.
+ */
+export function findPostById(id: string) {
+  return PostModel.findById(id);
+}
+
 async function userPosts(postIDs: string[], limit: number | undefined) {
   // If the request didn't contain a limit in its query, set it to 10 by default
   limit = limit || 10;
