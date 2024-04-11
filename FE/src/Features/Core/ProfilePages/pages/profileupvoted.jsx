@@ -11,6 +11,7 @@ export default function ProfileUpvoted({using}) {
     const { selected, period } = useContext(ProfileContext);
     const [Posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     
     //fetch posts on load and put into posts array
@@ -44,6 +45,7 @@ export default function ProfileUpvoted({using}) {
     }, [selected, period]);
 
     const fetchMorePosts = () => {
+        setCallingPosts(true);
         axios.get('http://localhost:3002/posts?_limit=5')
         .then(response => {
             const newPosts = response.data.map(post => ({
@@ -62,12 +64,12 @@ export default function ProfileUpvoted({using}) {
             }));
     
             setPosts(prevPosts => [...prevPosts, ...newPosts]);
-            setLoading(false);
+            setCallingPosts(false);
     
         })
         .catch(error => {
             console.error('Error:', error);
-            setLoading(false);
+            setCallingPosts(false);
         });
     };
 
@@ -87,8 +89,8 @@ export default function ProfileUpvoted({using}) {
                     {Posts.map((post, index) => (
                         <PostComponent key={index} post={post} />
                     ))}
-                    <button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit text-white ring-1 ring-inset ring-white tbg-gray-300 px-3 py-2 bg-blue-600 rounded-full hover:bg-blue-700 hover:ring-black mb-2">Load more</button>
-                </>
+                    {!callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}                </>
             ) : (
                 <>
                     {/*no results view*/}
