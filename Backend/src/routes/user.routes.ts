@@ -41,8 +41,7 @@ const router = express.Router();
 
 router.post('/api/users/signup', validateResource(createUserSchema), createUserHandler);
 
-router.get('/api/users/signup/verify/:id/:verificationCode', validateResource(verifyUserSchema), verifyUserHandler);
-
+router.get('/api/users/signup/verify/:verify_token', validateResource(verifyUserSchema), verifyUserHandler);
 router.post('/api/users/forgotpassword', validateResource(forgotPasswordSchema), forgotPasswordHandler);
 
 router.get('/api/username_available', username_availableHandler);

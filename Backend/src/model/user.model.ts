@@ -15,15 +15,7 @@ import { Post } from './posts.model';
 import { Comment } from './comments.model';
 //import { Validator } from 'validator';
 
-export const privateFields = [
-  'password',
-  'verificationCode',
-  'passwordResetCode',
-  'verified',
-  'prefs',
-  'upvotedPosts',
-  'downvotedPosts',
-];
+export const privateFields = ['password', 'verificationCode', 'passwordResetCode'];
 
 export class UserPrefs {
   @prop({ default: true })
@@ -204,25 +196,6 @@ export class User {
       message: 'Invalid email format',
     },
   })
-  // @prop({
-  //   minlength: [5, 'the minimum length is 5 characters'],
-  //   maxlength: [20, 'the maximum length is 20'],
-  //   unique: true,
-  //   required: true,
-  // })
-  // _id!: string;
-
-  // @prop({ required: true, unique: true, lowercase: true }) //@prop({ required: true, unique: true, lowercase: true, validate: validator.isEmail })
-  // email!: string;
-  @prop({
-    lowercase: true,
-    required: true,
-    unique: true,
-    validate: {
-      validator: (value: string) => /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(value),
-      message: 'Invalid email format',
-    },
-  })
   email: string;
 
   @prop({ required: true, unique: true, validator: (value: string) => value.length >= 3 && value.length <= 20 })
@@ -385,11 +358,11 @@ export class User {
       return false;
     }
   }
-  async save(): Promise<User> {
-    const UserModel = getModelForClass(User); // Retrieve the Mongoose model for User class
-    const user = new UserModel(this); // Create a new instance of User model
-    return await user.save(); // Save the user to the database and return the saved user object
-  }
+  // async save(): Promise<User> {
+  //   const UserModel = getModelForClass(User); // Retrieve the Mongoose model for User class
+  //   const user = new UserModel(this); // Create a new instance of User model
+  //   return await user.save(); // Save the user to the database and return the saved user object
+  // }
 }
 
 export const UserModel = getModelForClass(User);

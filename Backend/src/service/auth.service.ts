@@ -41,7 +41,7 @@ export function signAccessToken(user: DocumentType<User>) {
   const payload = omit(user.toJSON(), privateFields);
 
   const accessToken = signJwt(payload, {
-    expiresIn: '15m',
+    expiresIn: '1h',
   });
 
   return accessToken;

@@ -7,7 +7,7 @@ import nodemailerSendgrid from 'nodemailer-sendgrid';
 import log from './logger';
 import { getEnvVariable } from './GetEnvVariables';
 import sgMail from '@sendgrid/mail';
-
+import { signJwt, verifyJwt } from './jwt';
 sgMail.setApiKey(getEnvVariable('SENDGRID_API_KEY'));
 
 export async function sendEmail(payload: sgMail.MailDataRequired) {
@@ -19,10 +19,25 @@ export async function sendEmail(payload: sgMail.MailDataRequired) {
   }
 }
 
-export function generateVerificationLink(userId: string, verificationCode: string): string {
+export function generateVerificationLinkToken(
+  userId: string,
+  verificationCode: string
+): {
+  verify_link: string;
+  verify_token: string;
+} {
   // Assuming your frontend URL is stored in an environment variable
   const frontendURL = 'http://localhost:3000';
 
-  // Construct the verification link using the frontend URL and API endpoint
-  return `${frontendURL}/api/users/signup/verify/${userId}/${verificationCode}`;
+  // Construct payload for JWT verification
+  const payload = { userId, verificationCode };
+
+  // Generate JWT verification token
+  const verificationToken = signJwt(payload, { expiresIn: '1d' });
+
+  // Construct the verification link using the frontend URL and include the token as a query parameter
+  const verificationLink = `${frontendURL}/api/users/signup/verify/${verificationToken}`;
+
+  // Return an object containing both the verification link and the verification token
+  return { verify_link: verificationLink, verify_token: verificationToken };
 }

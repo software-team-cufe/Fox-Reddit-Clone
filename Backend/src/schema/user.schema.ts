@@ -22,10 +22,12 @@ export const createUserSchema = object({
   }),
 });
 
+// replace with token verification
 export const verifyUserSchema = object({
   params: object({
-    id: string(),
-    verificationCode: string(),
+    verify_token: string({
+      required_error: 'Verify token is required',
+    }),
   }),
 });
 
