@@ -1,3 +1,11 @@
+/**
+ * Renders the Comments Search Page component.
+ * 
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.searched - The search query string.
+ * @returns {JSX.Element} The Comments Search Page component.
+ */
 import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import Spinner from "@/GeneralElements/Spinner/Spinner";

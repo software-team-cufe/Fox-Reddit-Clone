@@ -4,6 +4,15 @@ import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { comment } from "postcss";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 
+/**
+ * Renders the profile comments section.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.using - The using value.
+ * @param {Object} props.context - The context object.
+ * @returns {JSX.Element} The profile comments component.
+ */
 function ProfileComments({ using, context }) {
 
     // states for collecting comments from request and loading state

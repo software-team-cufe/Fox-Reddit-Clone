@@ -1,3 +1,7 @@
+/**
+ * @file FILEPATH: /d:/Projects/Fox-Reddit-Clone/FE/src/Features/Core/CommunityPage/CommunityPage.jsx
+ * @desc This file contains the implementation of the CommunityPage component, which displays a community page with posts, sorting options, and community information.
+ */
 import React, { useContext, createContext, useEffect, useState, useRef } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";

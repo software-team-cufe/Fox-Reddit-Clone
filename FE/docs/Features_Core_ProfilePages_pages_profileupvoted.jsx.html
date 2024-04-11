@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Features/Core/ProfilePages/pages/profilehidden.jsx</title>
+    <title>JSDoc: Source: Features/Core/ProfilePages/pages/profileupvoted.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Features/Core/ProfilePages/pages/profilehidden.jsx</h1>
+    <h1 class="page-title">Source: Features/Core/ProfilePages/pages/profileupvoted.jsx</h1>
 
     
 
@@ -26,29 +26,30 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useContext } from "react";
+            <pre class="prettyprint source linenums"><code>import React, {useContext} from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import { ProfileContext } from "../ProfilePagesRoutes";
+
 /**
- * Renders the profile hidden page.
+ * Renders the profile upvoted page.
  *
  * @component
  * @param {Object} props - The component props.
- * @param {string} props.using - The username of the profile owner.
- * @returns {JSX.Element} The profile hidden page component.
+ * @param {string} props.using - The username of the profile being viewed.
+ * @returns {JSX.Element} The profile upvoted page component.
  */
-export default function ProfileHidden({ using }) {
+export default function ProfileUpvoted({using}) {
 
-    // states for collecting hidden posts from request and loading state
+    // states for collecting posts from request and loading state
     const { selected, period } = useContext(ProfileContext);
     const [Posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
-
+    
     //fetch posts on load and put into posts array
     useEffect(() => {
         setLoading(true);
@@ -82,42 +83,42 @@ export default function ProfileHidden({ using }) {
     const fetchMorePosts = () => {
         setCallingPosts(true);
         axios.get('http://localhost:3002/posts?_limit=5')
-            .then(response => {
-                const newPosts = response.data.map(post => ({
-                    subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
-                    },
-                    images: post.attachments.postData,
-                    id: post.postID,
-                    title: post.title,
-                    subTitle: post.postText,
-                    votes: post.votesCount,
-                    comments: post.commentsCount,
-                    thumbnail: post.thumbnail,
-                    video: null
-                }));
-
-                setPosts(prevPosts => [...prevPosts, ...newPosts]);
-                setCallingPosts(false);
-
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                setCallingPosts(false);
-            });
+        .then(response => {
+            const newPosts = response.data.map(post => ({
+                subReddit: {
+                    image: post.attachments.subredditIcon,
+                    title: post.communityName,
+                },
+                images: post.attachments.postData,
+                id: post.postID,
+                title: post.title,
+                subTitle: post.postText,
+                votes: post.votesCount,
+                comments: post.commentsCount,
+                thumbnail: post.thumbnail,
+                video: null
+            }));
+    
+            setPosts(prevPosts => [...prevPosts, ...newPosts]);
+            setCallingPosts(false);
+    
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            setCallingPosts(false);
+        });
     };
 
     if (loading) {
         return (
-            &lt;div role='hiddentab' className="w-100 h-100 flex flex-col items-center justify-center">
+            &lt;div role='upvotedtab' className="w-100 h-100 flex flex-col items-center justify-center">
                 &lt;Spinner className="h-24 w-24" />
             &lt;/div>
         )
     }
     //main posts feed
     return (
-        &lt;div role="hiddentab" className="flex flex-col w-full h-fit my-4 items-center">
+        &lt;div role="upvotedtab" className="flex flex-col w-full h-fit my-4 items-center">
             {/* if there are no posts, show no results */}
             {Posts.length > 0 ? (
                 &lt;>
@@ -125,8 +126,7 @@ export default function ProfileHidden({ using }) {
                         &lt;PostComponent key={index} post={post} />
                     ))}
                     {!callingposts &amp;&amp; (&lt;button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more&lt;/button>)}
-                    {callingposts &amp;&amp; (&lt;img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
-                &lt;/>
+                    {callingposts &amp;&amp; (&lt;img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}                &lt;/>
             ) : (
                 &lt;>
                     {/*no results view*/}

@@ -5,6 +5,14 @@ import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import { ProfileContext } from "../ProfilePagesRoutes";
 
+/**
+ * Renders the profile upvoted page.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.using - The username of the profile being viewed.
+ * @returns {JSX.Element} The profile upvoted page component.
+ */
 export default function ProfileUpvoted({using}) {
 
     // states for collecting posts from request and loading state

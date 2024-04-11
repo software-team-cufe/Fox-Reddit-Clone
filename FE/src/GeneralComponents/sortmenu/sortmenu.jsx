@@ -5,6 +5,11 @@ import React,{useContext} from 'react';
 import { useLocation } from 'react-router-dom';
 
 //for mapping the sorting button options
+/**
+ * Checks if the given path is a valid best path.
+ * @param {string} path - The path to be checked.
+ * @returns {boolean} - Returns true if the path is a valid best path, otherwise returns false.
+ */
 function isValidBest(path){
   const bestpaths = ['/', '/Popular', '/All'];
 
