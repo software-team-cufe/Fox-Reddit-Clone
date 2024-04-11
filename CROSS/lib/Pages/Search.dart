@@ -28,7 +28,7 @@ class _SearchState extends State<Search> {
   }
 
   void _fetchRecentlySearched() async {
-    final response = await http.get(Uri.parse('http://your-json-server/recentlySearched'));
+    final response = await http.get(Uri.parse(ApiRoutes.getRecentSearch));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       print(data); // Print response body to see the structure
