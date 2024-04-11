@@ -1,9 +1,9 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/home/saied/snap/flutter/common/flutter"
-export "FLUTTER_APPLICATION_PATH=/media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS"
+export "FLUTTER_ROOT=C:\Users\S\AppData\Local\development\sdks\flutter"
+export "FLUTTER_APPLICATION_PATH=C:\Users\S\OneDrive\Documents\GitHub\Fox-Reddit-Clone\CROSS"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
-export "FLUTTER_TARGET=lib/main.dart"
+export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"
