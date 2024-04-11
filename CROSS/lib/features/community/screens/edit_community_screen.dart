@@ -58,6 +58,7 @@ void save(Community community){
     //final isLoading = ref.watch(communityControllerProvider);
     //final currentTheme = ref.watch(themeNotifierProvider);
 
+    final isLoading = ref.watch(communityControllerProvider);
     return ref.watch(getCommunityByNameProvider(widget.name)).when(
       data: (community)=>  Scaffold(
       backgroundColor: Pallete.darkModeAppTheme.colorScheme.background,
@@ -70,7 +71,7 @@ void save(Community community){
           ),
         ],
       ),
-      body: Padding(
+      body: isLoading? const Loader(): Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(children: [
 

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,7 +79,7 @@ class CommunityController extends StateNotifier<bool>{
   required BuildContext context, 
   required Community community}
   ) async {
-    state;
+    state = true;
   if(profileFile!=null)
 {
   // communities/profile/MemesXD
@@ -103,6 +102,7 @@ if(bannerFile!=null)
     );
    } 
 final res= await _communityRepository.editCommunity(community);
+state = false;
 res.fold((l) => showSnackBar(context, l.message), (r) => Routemaster.of(context).pop());
 
   }
