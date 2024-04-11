@@ -4,8 +4,37 @@ import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
 
+class MockIntersectionObserver {
+    constructor(public callback: IntersectionObserverCallback, public options?: IntersectionObserverInit) { }
 
-afterEach(() =>{
+    disconnect() {
+        return null;
+    }
+
+    observe() {
+        return null;
+    }
+
+    unobserve() {
+        return null;
+    }
+
+    takeRecords() {
+        return [];
+    }
+
+    root = null;
+    rootMargin = '';
+    thresholds = [0];
+}
+
+Object.defineProperty(window, 'IntersectionObserver', {
+    writable: true,
+    configurable: true,
+    value: MockIntersectionObserver,
+});
+
+afterEach(() => {
     cleanup();
 });
 

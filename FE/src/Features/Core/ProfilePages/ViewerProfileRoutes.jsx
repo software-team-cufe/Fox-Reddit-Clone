@@ -1,4 +1,4 @@
-import { Link, Outlet, Route, Routes, redirect, useLocation, useParams, } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useLocation, useParams, } from "react-router-dom";
 import ProfileOverview from "./pages/profileoverview";
 import ProfilePosts from "./pages/Profileposts";
 import ProfileComments from "./pages/profilecomments";
@@ -9,7 +9,19 @@ import { useState, useEffect, useContext, createContext } from "react";
 import React from "react";
 import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
-import { userAxios } from "@/Utils/UserAxios";
+import BackToTop from "@/GeneralComponents/backToTop/backToTop";
+
+/**
+ * @file ViewerProfileRoutes.jsx
+ * @desc This file contains the routing and layout components for the viewer profile pages.
+ * It imports various components from react-router-dom and other custom components to render the profile pages.
+ * The ViewerProfilePage component is the main component that handles the nested routing and renders the layout and profile pages based on the current route.
+ * The ViewerProvider component is a context provider that holds the state for the viewer profile pages.
+ * The Layout component is the main layout component that renders the profile header, sections bar, sorting components, and the viewer card.
+ * The ProfileOverview, ProfilePosts, and ProfileComments components are the individual profile pages that are rendered based on the current route.
+ * The axios library is used to fetch user information from an API.
+ */
+
 // for mapping the list of buttons
 const buttons = [
   {
@@ -51,16 +63,16 @@ function Layout() {
   const { viewer } = useParams();  // getting the user from the url
 
   useEffect(() => {
-
+    // Fetch user info
     axios.get(`https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/t2_AhmedLotfy02/about`) // fetching user info
       .then(res => {
         setAvatar(res.data.data[0].avatar);
         setLoading(false);
-      }).catch(err => {
+      })
+      .catch(err => {
         setLoading(false);
       })
-  }, []);
-
+  }, []); // empty dependency array means this effect runs once on mount and cleanup on unmount
 
   // loading spinner to wait for fetch then load body of apge
   if (loading) {
@@ -73,50 +85,47 @@ function Layout() {
 
   //main body of page
   return (
-
-    <div>
-      {/* main header with avatar and username */}
-      <div className="flex gap-10">
-        <div className="w-full flex-1 ">
-          <div role="avatarHeader" className='relative flex mb-8'>
-            <img src={avatar} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
-            <span className='text-black font-bold text-2xl absolute top-10 left-24'>u/{viewer}</span>
-            <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/{viewer}</span>
-          </div>
-
-          {/* selection of user activity: posts,comments...etc*/}
-          <ul role="sectionsBar" className='flex gap-3 overflow-x-auto mb-3 p-1'>
-            {
-              buttons.map((btn, index) => <li key={index}>
-                <Link role={`${btn.text}Button`} to={`/viewer/${viewer}/${btn.path}`}>
-                  <button className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/viewer/${viewer}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
-                </Link>
-              </li>)
-            }
-          </ul>
-
-          {/* sorting lists and period select components and create post in case of overview*/}
-          <div className="flex gap-1">
-
-            {/* sorting lists and period select components */}
-            <div role="sortmenu"><Sortmenu context={ViewerContext}/></div>
-            <PeriodSelect appearance={selected} context={ViewerContext}/>
-
-          </div>
-          <hr />
-          <Outlet />
+    <div className="flex gap-10 w-[80%] mx-auto">
+      <div className="relative flex-grow md:w-[55%]">
+        <BackToTop />
+        <div role="avatarHeader" className='relative flex mb-8'>
+          <img src={avatar} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
+          <span className='text-black font-bold text-2xl absolute top-10 left-24'>u/{viewer}</span>
+          <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/{viewer}</span>
         </div>
 
-        {/* profile user card */}
-        <div role="card"><ViewerCard /></div>
+        {/* selection of user activity: posts,comments...etc*/}
+        <ul role="sectionsBar" className='flex gap-3 overflow-x-auto mb-3 p-1'>
+          {
+            buttons.map((btn, index) => <li key={index}>
+              <Link role={`${btn.text}Button`} to={`/viewer/${viewer}/${btn.path}`}>
+                <button className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/viewer/${viewer}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
+              </Link>
+            </li>)
+          }
+        </ul>
+
+        {/* sorting lists and period select components and create post in case of overview*/}
+        <div className="flex gap-1">
+
+          {/* sorting lists and period select components */}
+          <div role="sortmenu"><Sortmenu context={ViewerContext} /></div>
+          <PeriodSelect appearance={selected} context={ViewerContext} />
+
+        </div>
+        <hr />
+        <Outlet />
       </div>
+
+      {/* profile user card */}
+      <div role="card" className="flex-grow md:w-[35%] max-w-[380px]"><ViewerCard /></div>
     </div>
   )
 }
 
 
 export default function ViewerProfilePage() {
-  const {viewer} = useParams();
+  const { viewer } = useParams();
 
   return (
     // nested routing for the profile pages renders layout then feed according to route

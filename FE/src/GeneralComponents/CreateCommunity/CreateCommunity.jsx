@@ -6,6 +6,12 @@ import axios from 'axios';
 import { Switch } from '@headlessui/react'
 
 
+/**
+ * Component for creating a community.
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClose - The function to be called when the component is closed.
+ * @returns {JSX.Element} The CreateCommunity component.
+ */
 export default function CreateCommunity({ onClose = () => { } }) {
 
     const validText = <div className={` text-green-500 text-xs mt-1 ml-5`}>Choose wisely. Once you pick a name, it can't be changed.</div>;

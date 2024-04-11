@@ -12,12 +12,13 @@ import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 import { useState } from 'react';
+
 const unProtectedRoutes = [
   '/',
   '/login',
   '/register',
   '/user'
-];
+]
 
 function MainRoute() {
 
@@ -44,7 +45,7 @@ function MainRoute() {
             "/forget-password",
           ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} />
         }
-
+        
         <div className={` h-full w-full overflow-y-auto  ${path.includes('submit') ? " " : "lg:p-4"}`}>
           <Outlet />
         </div>

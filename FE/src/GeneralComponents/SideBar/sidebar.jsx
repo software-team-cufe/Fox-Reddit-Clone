@@ -1,12 +1,15 @@
+/**
+ * @file Sidebar component for the Fox Reddit Clone application.
+ * @module Sidebar
+ */
+
+import React from "react";
 import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
-import React from "react";
 import Popular from "./Popular";
 import About from "./About";
-
-
 
 const icons = [
    {
@@ -33,7 +36,12 @@ function Sidebar({ className, IsOpen }) {
    //    setOpen(!open);
    // };
 
-
+/**
+ * this function open resources , community , and Recents dropdown list
+ * 
+ * @param {Event} event - the event of clicking any button
+ * @returns {void} - this function does not return anything
+ */
    function functionToExecute(event) {
       // Get the dropdown list associated with the clicked button
       const dropdownList = event.target.nextElementSibling;
@@ -70,7 +78,7 @@ function Sidebar({ className, IsOpen }) {
             id="sidebar-multi-level-sidebar"
             role="sidebarr"
             data-testid="sidebar"
-            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
+            className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-50 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
             lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
@@ -292,7 +300,6 @@ function Sidebar({ className, IsOpen }) {
                   </li>
                </ul>
             </div>
-
          </aside>
       </>
    );

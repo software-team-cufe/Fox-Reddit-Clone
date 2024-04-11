@@ -61,7 +61,7 @@
       "name": "art",
       "description": "A community for artists and art enthusiasts to share their work, get feedback, and connect with other creatives.",
       "membersCount": 54321,
-      "icon": "https://lh3.googleusercontent.com/ci/AL18g_RkkRcVmQUnptF8BLIfHB3Y7mCQuM7lgZzteHmwpjlm48hKJNHwM-HQafDeTploxf5603Db=s1200",
+      "icon": "https://i.pinimg.com/736x/87/ea/4b/87ea4bd1f27494d698bb682b25ac142f.jpg",
       "backimage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyXv2oNwPlfMmh7uemJz-4HjnF262cWdm4ZrHyfsEgEA&s",
       "onlineMembers": 321,
       "rules": [
@@ -134,7 +134,7 @@
     },
     {
       "attachments": {
-        "subredditIcon": "https://lh3.googleusercontent.com/ci/AL18g_RkkRcVmQUnptF8BLIfHB3Y7mCQuM7lgZzteHmwpjlm48hKJNHwM-HQafDeTploxf5603Db=s1200",
+        "subredditIcon": "https://i.pinimg.com/736x/87/ea/4b/87ea4bd1f27494d698bb682b25ac142f.jpg",
         "postData": [
           "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
           "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -164,6 +164,125 @@
       "postText": "This is the content of post 3",
       "votesCount": 191,
       "commentsCount": 33,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "movies",
+      "communityID": 4,
+      "postID": 4,
+      "title": "Post 4",
+      "postText": "This is the content of post 4",
+      "votesCount": 45,
+      "commentsCount": 12,
+      "thumbnail": "https://images.unsplash.com/photo-1712652080461-8a6ef120a66f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://i.pinimg.com/736x/87/ea/4b/87ea4bd1f27494d698bb682b25ac142f.jpg",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "art",
+      "communityID": 2,
+      "postID": 5,
+      "title": "Post 5",
+      "postText": "This is the content of post 5",
+      "votesCount": 67,
+      "commentsCount": 23,
+      "thumbnail": "https://images.unsplash.com/photo-1712105052316-b929d9fd5395?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://media.wired.com/photos/5926df59f3e2356fd800ab80/master/w_2560%2Cc_limit/GettyImages-543338600-S2.jpg",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "music",
+      "communityID": 3,
+      "postID": 6,
+      "title": "Post 6",
+      "postText": "This is the content of post 6",
+      "votesCount": 89,
+      "commentsCount": 45,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "movies",
+      "communityID": 4,
+      "postID": 7,
+      "title": "Post 7",
+      "postText": "This is the content of post 7",
+      "votesCount": 34,
+      "commentsCount": 15,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://media.wired.com/photos/5926df59f3e2356fd800ab80/master/w_2560%2Cc_limit/GettyImages-543338600-S2.jpg",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "music",
+      "communityID": 3,
+      "postID": 8,
+      "title": "Post 8",
+      "postText": "This is the content of post 8",
+      "votesCount": 56,
+      "commentsCount": 19,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "movies",
+      "communityID": 4,
+      "postID": 9,
+      "title": "Post 9",
+      "postText": "This is the content of post 9",
+      "votesCount": 78,
+      "commentsCount": 27,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "movies",
+      "communityID": 4,
+      "postID": 10,
+      "title": "Post 10",
+      "postText": "This is the content of post 10",
+      "votesCount": 89,
+      "commentsCount": 34,
       "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
   ],
@@ -251,6 +370,126 @@
       "createdAt": "2022/02/15, 15",
       "commentText": "This is a comment on post 3",
       "postID": 3
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user8",
+        "userID": 8
+      },
+      "votesCount": 40,
+      "commentID": 8,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 4",
+      "postID": 4
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user9",
+        "userID": 9
+      },
+      "votesCount": 45,
+      "commentID": 9,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 5",
+      "postID": 5
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user10",
+        "userID": 10
+      },
+      "votesCount": 50,
+      "commentID": 10,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 6",
+      "postID": 6
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user11",
+        "userID": 11
+      },
+      "votesCount": 55,
+      "commentID": 11,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 7",
+      "postID": 7
+    },
+    {
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user12",
+        "userID": 12
+      },
+      "votesCount": 60,
+      "commentID": 12,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 8",
+      "postID": 8
+    },
+    {
+      "user": {
+        "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 10,
+      "commentID": 13,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 1",
+      "postID": 1
+    },
+    {
+      "user": {
+        "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+        "username": "user2",
+        "userID": 2
+      },
+      "votesCount": 5,
+      "commentID": 14,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 2",
+      "postID": 2
+    },
+    {
+      "user": {
+        "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+        "username": "user3",
+        "userID": 3
+      },
+      "votesCount": 15,
+      "commentID": 15,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 3",
+      "postID": 3
+    },
+    {
+      "user": {
+        "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+        "username": "user4",
+        "userID": 4
+      },
+      "votesCount": 20,
+      "commentID": 16,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 4",
+      "postID": 4
+    },
+    {
+      "user": {
+        "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+        "username": "user5",
+        "userID": 5
+      },
+      "votesCount": 25,
+      "commentID": 17,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 1",
+      "postID": 1
     }
   ]
 }

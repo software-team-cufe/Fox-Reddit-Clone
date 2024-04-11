@@ -5,6 +5,11 @@ import React,{useContext} from 'react';
 import { useLocation } from 'react-router-dom';
 
 //for mapping the sorting button options
+/**
+ * Checks if the given path is a valid best path.
+ * @param {string} path - The path to be checked.
+ * @returns {boolean} - Returns true if the path is a valid best path, otherwise returns false.
+ */
 function isValidBest(path){
   const bestpaths = ['/', '/Popular', '/All'];
 
@@ -12,19 +17,6 @@ function isValidBest(path){
     return true;
 
   if(bestpaths.includes(path))
-    return true;
-
-  else
-    return false;
-}
-
-function isValidRising(path){
-const risingpaths = ['/r/', '/'];
-
-  if(path.startsWith('/r/'))
-    return true;
-
-  if(risingpaths.includes(path))
     return true;
 
   else
@@ -97,12 +89,6 @@ export default function Sortmenu({context}) {
                   {({ active }) => (
                     <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Top' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Top")}>
                       Top
-                    </div>
-                  )}</Menu.Item>
-                <Menu.Item >
-                  {({ active }) => (
-                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Rising' ? 'bg-gray-200' : '', isValidRising(path) ? '': 'hidden')} onClick={() => handleSwitch("Rising")}>
-                      Rising
                     </div>
                   )}</Menu.Item>
         </Menu.Items>

@@ -89,7 +89,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
 
 
   return (
-    <nav className=" px-[1.5rem]  z-50 w-100vl fixed w-full h-[69px]  bg-white top-0">
+    <nav className=" px-[1.5rem] z-40 w-100vl fixed w-full h-[69px]  bg-white top-0">
 
       <div className="flex-row   justify-between items-center  h-8 mx-4">
         {/* userStore.getState().user.user == null ? */}
@@ -186,9 +186,9 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
 
 
                 {IsOpenProfList && (
-                  <ul ref={listProfRef} className=" rounded-lg flex-col  shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
+                  <ul ref={listProfRef} className=" rounded-lg flex-col shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                     <li>
-                      <button onClick={() => { navigator(`/user/${UserName}/overview`) }}
+                      <button onClick={() => { navigator(`/user/${UserName}/posts`) }}
                         className="bg-white hover:bg-orange-100  text-black h-16 py-2 px-4 rounded inline-flex items-center w-full">
                         <ProfileIcon imageSrc={ProfileImageSrc} altText={UserName} isOnline={IsOnline} />
                         <div className="flex-col flex my-2">

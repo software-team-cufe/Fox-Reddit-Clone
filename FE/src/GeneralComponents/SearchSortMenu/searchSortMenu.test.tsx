@@ -3,7 +3,7 @@ import { render, screen, fireEvent, cleanup, waitFor } from "@testing-library/re
 import SearchSortMenu from "./SearchSortMenu.jsx";
 import '@testing-library/jest-dom';
 import React = require("react");
-import { SearchContext } from "@/Features/Core/SearchPages/SearchPagesRoutes";
+import { SearchContext } from "@/Features/Core/SearchPages/searchPagesRoutes.jsx";
 
 let mockSetsearch;
 
