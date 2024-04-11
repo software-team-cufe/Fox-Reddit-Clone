@@ -44,8 +44,7 @@ export async function findUserByUsername(username: string) {
   try {
     return await UserModel.findOne({ username });
   } catch (error) {
-    console.error('Error in findUserByUsername:', error);
-    throw error; // Re-throw the error to be caught by the caller
+    throw new appError('User not found ', 404); //vague error Re-throw the error to be caught by the caller
   }
 }
 /**

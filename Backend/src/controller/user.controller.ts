@@ -23,7 +23,8 @@ import {
   userCommentsIds,
   userRepliesIds,
 } from '../service/user.service';
-import { sendEmail, generateVerificationLink } from '../utils/mailer';
+import { sendEmail, generateVerificationLinkToken } from '../utils/mailer';
+import { signJwt, verifyJwt } from '../utils/jwt';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
 import { UserModel, privateFields } from '../model/user.model';
@@ -33,6 +34,7 @@ import PostModel from '../model/posts.model';
 import { userCommets } from '../service/comment.service';
 import { userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
+import appError from '../utils/appError';
 /**
  * Handles the creation of a user.
  *
@@ -46,30 +48,33 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
   try {
     const user = await createUser(body);
 
-    const verificationLink = generateVerificationLink(String(user._id), user.verificationCode);
-    try {
-      await sendEmail({
-        to: user.email,
-        from: {
-          name: 'Fox ',
-          email: getEnvVariable('FROM_EMAIL'),
-        },
-        subject: 'please verify your account',
-        text: `click here to verify your account: ${verificationLink}`,
-      });
-    } catch (e) {
-      log.error(e);
-    }
-    return res.send('user created successfully and verification email sent!');
+    const { verify_link, verify_token } = generateVerificationLinkToken(String(user._id), user.verificationCode);
+    await sendEmail({
+      to: user.email,
+      from: {
+        name: 'Fox ',
+        email: getEnvVariable('FROM_EMAIL'),
+      },
+      subject: 'please verify your account',
+      text: ` click here to verify your account: ${verify_link}`,
+    });
+
+    return res.status(200).json({
+      token: verify_token,
+      username: user.username,
+    });
   } catch (e: any) {
     if (e.code === 11000) {
-      return res.status(409).send('Email already exists');
+      return res.status(409).json({
+        msg: 'User already exists',
+      });
     }
 
-    return res.status(500).send(e);
+    return res.status(500).json({
+      msg: 'Something went wrong',
+    });
   }
 }
-
 /**
  * Handles the verification of a user.
  *
@@ -79,29 +84,39 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
  * @returns A promise that resolves to the verification result.
  */
 export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Response) {
-  //extract params
-  const id = req.params.id;
-  const verificationCode = req.params.verificationCode;
-  //find the user with the id and verification code
-  const user = await findUserById(id);
-
-  if (!user) {
-    return res.send('could not verify user');
+  //extract token from params
+  const token = req.params.verify_token;
+  try {
+    const decoded = verifyJwt<{ userId: string; verificationCode: string }>(token);
+    console.log(decoded);
+    if (decoded) {
+      const { userId, verificationCode } = decoded;
+      const user = await findUserById(userId);
+      if (!user) {
+        throw new appError('User not found', 404);
+      }
+      if (user.verified) {
+        return res.status(200).json({
+          msg: 'User already verified',
+        });
+      }
+      if (user && user.verificationCode === verificationCode) {
+        user.verified = true;
+        await user.save();
+        return res.status(200).json({
+          msg: 'Email verified successfully',
+        });
+      }
+    }
+  } catch (err) {
+    if (err instanceof appError) {
+      return res.status(err.statusCode).json({
+        msg: err.message,
+      });
+    }
+    console.log(err);
+    return res.status(500).json({ msg: 'could not verify user' });
   }
-  //check to see if they are already verified
-
-  if (user.verified) {
-    return res.send('user already verified');
-  }
-
-  //check to see if the verification code is correct
-  if (user.verificationCode === verificationCode) {
-    user.verified = true;
-    await user.save();
-    return res.send('user verified');
-  }
-
-  return res.send('could not verify user');
 }
 
 /**
