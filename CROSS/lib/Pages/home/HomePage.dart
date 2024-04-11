@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:reddit_fox/Pages/Search.dart';
-import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:reddit_fox/Pages/post_details.dart'; // Import the PostDetails page
+import 'package:reddit_fox/Pages/post_details.dart';
+import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart'; // Import the PostDetails page
 
 /// Represents a post with a title, content, and imageUrl.
 class Post {
@@ -53,10 +53,10 @@ class _HomePageState extends State<HomePage> {
     Scaffold.of(context).openEndDrawer();
   }
 
-  /// Opens the main drawer.
-  void desplayDrawer(BuildContext context) {
-    Scaffold.of(context).openDrawer();
-  }
+void displayDrawer(BuildContext context) {
+  Scaffold.of(context).openDrawer();
+
+}
 
   // Dummy post data
   final List<Post> dummyPosts = [
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
           return IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              desplayDrawer(context);
+              displayDrawer(context);
             },
           );
         }),
@@ -169,9 +169,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      drawer: CustomDrawer(
-        drawer_Width: drawerWidth,
-      ),
+      drawer: const CommunityListDrawer(),        
       endDrawer: endDrawer(user_width: userWidth),
       bottomNavigationBar: const nBar(),
       endDrawerEnableOpenDragGesture: true,

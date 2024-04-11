@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
+import 'package:reddit_fox/GeneralWidgets/dots.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -41,6 +42,7 @@ class _MessageState extends State<Message> {
           },
         ),
         actions: [
+          WidgetButton(),
           IconButton(
             icon: const CircleAvatar(),
             onPressed: () {
@@ -61,11 +63,17 @@ class _MessageState extends State<Message> {
             children: [
               TextButton(
                 onPressed: () {},
-                child: const Text("Activity"),
+                child: const Text(
+                  "Activity",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               TextButton(
                 onPressed: () {},
-                child: const Text("Messages"),
+                child: const Text(
+                  "Messages",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),

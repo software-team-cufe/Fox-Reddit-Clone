@@ -1,30 +1,50 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_fox/core/utils.dart';
 import 'package:reddit_fox/features/auth/repository/auth_repository.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:reddit_fox/models/user_model_for_google.dart';
 
-import '../../../core/utils.dart';
+final userProvider = StateProvider<UserModelForGoogle?>((ref) => null);
 
-// AuthController authController = AuthController ();
-// authController.singInWithGoogle();
-
-// Provider
-final authControllerProvider = Provider(
+final authControllerProvider = StateNotifierProvider<AuthController, bool>(
   (ref) => AuthController(
-    authRepository: ref.read(authRepositoryProvider),
-    ),
-  );
+    authRepository: ref.watch(authRepositoryProvider),
+    ref: ref,
+  )
+);
 
-class AuthController {
+final authStateChangeProvider = StreamProvider((ref) {
+    final authController = ref.watch(authControllerProvider.notifier);
+   return authController.authStateChange; 
+});
+
+final  getUserDataProvider = StreamProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getUserData(uid);
+});
+
+class AuthController extends StateNotifier<bool>{
   final AuthRepository _authRepository;
-  AuthController({required AuthRepository authRepository}) :_authRepository = authRepository;
+  final Ref _ref;
+  AuthController(
+    {required AuthRepository authRepository, 
+    required Ref ref}) : 
+    _authRepository = authRepository, 
+    _ref = ref, 
+    super(false); //loading part
 
-  void signInWithGoogle(BuildContext context) async {
-    
-  final googleSignIn = GoogleSignIn(); // Create an instance of GoogleSignIn
-  await googleSignIn.signOut(); // Clear cached account
-  final user = await _authRepository.signInWithGoogle(); // Call the repository method
-  user.fold((l) => showSnackBar(context, l.messge), (r) => null); //l -> faliur,r-> success left & right
-}
+  Stream<User?> get authStateChange => _authRepository.authStateChange;
 
+
+  void signInWithGoogle(BuildContext context) async{
+    state = true;
+    final user = await _authRepository.signInWithGoogle();
+    state = false;
+    user.fold((l) => showSnackBar(context, l.message), 
+    (userModel) => _ref.read(userProvider.notifier).update((state) => userModel));
   }
+  Stream<UserModelForGoogle> getUserData(String uid) {
+    return _authRepository.getUserData(uid);
+  }
+}   

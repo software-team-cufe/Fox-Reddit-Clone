@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
-import 'package:reddit_fox/core/common/sign_in_button.dart';
+import 'package:reddit_fox/core/common/sign_in_with_google_button.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/features/auth/screens/signup_screen.dart';
@@ -19,7 +19,7 @@ class StartingScreen extends StatelessWidget {
         centerTitle: true,
         title: Image.asset(
           Constants.logoPath,
-          height: 40,
+          height: 60,
         ),
         actions: [
           TextButton(
@@ -54,7 +54,7 @@ class StartingScreen extends StatelessWidget {
                 height: 250,
               ),
               const SizedBox(height: 20),
-              const SignInButton(),
+              const SignInWithGoogleButton(),
               const Gap(20),
               CustomButton(
                 text: "Login",

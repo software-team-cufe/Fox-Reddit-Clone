@@ -182,6 +182,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "dotted_border",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/dotted_border-2.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "dropdown_button2",
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/dropdown_button2-2.3.9",
       "packageUri": "lib/",
@@ -204,6 +210,12 @@
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/file-7.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "file_picker",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/file_picker-8.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "file_selector_linux",
@@ -704,6 +716,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "routemaster",
+      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/routemaster-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "rxdart",
       "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/rxdart-0.27.7",
       "packageUri": "lib/",
@@ -932,7 +950,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-04-11T22:35:28.468267Z",
+  "generated": "2024-04-11T22:36:57.652899Z",
   "generator": "pub",
   "generatorVersion": "3.3.3"
 }
