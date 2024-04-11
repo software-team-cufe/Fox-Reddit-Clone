@@ -3,7 +3,7 @@ import React from 'react';
 //git
 export default function Card (){
     return(
-        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[240px] w-[337px] min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
+        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
         
         <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
             <button className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">

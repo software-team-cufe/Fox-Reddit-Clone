@@ -11,6 +11,17 @@ import axios from 'axios';
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
 
+/**
+ * @file ViewerProfileRoutes.jsx
+ * @desc This file contains the routing and layout components for the viewer profile pages.
+ * It imports various components from react-router-dom and other custom components to render the profile pages.
+ * The ViewerProfilePage component is the main component that handles the nested routing and renders the layout and profile pages based on the current route.
+ * The ViewerProvider component is a context provider that holds the state for the viewer profile pages.
+ * The Layout component is the main layout component that renders the profile header, sections bar, sorting components, and the viewer card.
+ * The ProfileOverview, ProfilePosts, and ProfileComments components are the individual profile pages that are rendered based on the current route.
+ * The axios library is used to fetch user information from an API.
+ */
+
 // for mapping the list of buttons
 const buttons = [
   {
@@ -74,8 +85,8 @@ function Layout() {
 
   //main body of page
   return (
-    <div className="flex gap-10">
-      <div className="relative w-full flex-1 ">
+    <div className="flex gap-10 w-[80%] mx-auto">
+      <div className="relative flex-grow md:w-[55%]">
         <BackToTop />
         <div role="avatarHeader" className='relative flex mb-8'>
           <img src={avatar} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
@@ -107,7 +118,7 @@ function Layout() {
       </div>
 
       {/* profile user card */}
-      <div role="card"><ViewerCard /></div>
+      <div role="card" className="flex-grow md:w-[35%] max-w-[380px]"><ViewerCard /></div>
     </div>
   )
 }

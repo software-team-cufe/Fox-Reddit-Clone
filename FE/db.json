@@ -250,8 +250,41 @@
       "votesCount": 56,
       "commentsCount": 19,
       "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments": {
+        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "movies",
+      "communityID": 4,
+      "postID": 9,
+      "title": "Post 9",
+      "postText": "This is the content of post 9",
+      "votesCount": 78,
+      "commentsCount": 27,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      "attachments":{
+        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
+        "postData": [
+          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ]
+      },
+      "communityName": "movies",
+      "communityID": 4,
+      "postID": 10,
+      "title": "Post 10",
+      "postText": "This is the content of post 10",
+      "votesCount": 89,
+      "commentsCount": 34,
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
-
   ],
   "comments": [
     {

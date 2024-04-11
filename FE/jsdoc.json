@@ -1,8 +1,8 @@
 {
   "source": {
     "include": ["src"],
-    "includePattern": "jsx$",
-    "excludePattern": "(node_modules/docs)"
+    "includePattern": ".+\\.jsx?$",
+    "excludePattern": "node_modules|docs"
   },
   "templates": {
     "cleverLinks": true,

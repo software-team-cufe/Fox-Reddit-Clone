@@ -1,8 +1,16 @@
+/**
+ * Renders the PeopleSearchPage component.
+ * 
+ * @param {Object} props - The component props.
+ * @param {string} props.searched - The search query.
+ * @returns {JSX.Element} The rendered PeopleSearchPage component.
+ */
 import React from "react";
 import { useState, useEffect } from "react";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import UserComponent from "@/GeneralComponents/userContainer/userContainer";
 import axios from 'axios';
+
 
 export default function PeopleSearchPage({ searched = "filler" }) {
 

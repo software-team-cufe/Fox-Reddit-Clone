@@ -1,8 +1,15 @@
+/**
+ * Renders the Communities Search Page component.
+ * @param {Object} props - The component props.
+ * @param {string} props.searched - The search query string.
+ * @returns {JSX.Element} The Communities Search Page component.
+ */
 import React from "react";
 import { useState, useEffect } from "react";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import axios from 'axios';
 import CommunityComponent from "@/GeneralComponents/CommunityContainer/CommunityContainer";
+
 
 export default function PeopleSearchPage({ searched = "filler" }) {
 
