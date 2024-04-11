@@ -85,12 +85,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 hintText: "Name",
                 icon: FluentIcons.rename_28_regular,
                 controller: nameController,
+                obscureText: true,
               ),
               const SizedBox(height: 20),
               CustomTextBox(
                 hintText: "Email",
                 icon: FluentIcons.mail_28_regular,
                 controller: emailController,
+                obscureText: true,
               ),
               const SizedBox(height: 20),
               CustomTextBox(
@@ -98,6 +100,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 isPassword: showPass,
                 icon: FluentIcons.password_24_regular,
                 showEyeIcon: true,
+                obscureText: true,
                 onChangeVisability: () {
                   setState(() {
                     showPass = !showPass;

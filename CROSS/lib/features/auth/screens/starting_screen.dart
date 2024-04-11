@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 import 'package:reddit_fox/Pages/Splash_screen.dart';
+import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/core/common/sign_in_button.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
@@ -19,13 +20,13 @@ class StartingScreen extends StatelessWidget {
         centerTitle: true,
         title: Image.asset(
           Constants.logoPath,
-          height: 40,
+          height: 60,
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SplashScreen()));
+                  MaterialPageRoute(builder: (context) => const HomePage()));
             },
             child: const Text(
               'Skip',

@@ -24,7 +24,7 @@ class _AppBarMessagesState extends State<AppBarMessages> {
           children: [
             CustomDrawer(drawer_Width: drawerWidth),
             Text("Inbox"),
-            endDrawer(user_width: userWidth),
+            endDrawer(user_width: userWidth, user_Id: 1,),
           ],
         ),
         Row(

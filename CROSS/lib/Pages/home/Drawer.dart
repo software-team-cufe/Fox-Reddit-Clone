@@ -42,7 +42,7 @@ class CustomDrawer extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    Navigator.push(context,
+                    Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => BlankPage()));
                   },
                 ),

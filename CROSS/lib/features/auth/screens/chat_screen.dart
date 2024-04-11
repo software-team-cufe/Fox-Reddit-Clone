@@ -55,7 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
       drawer: CustomDrawer(
         drawer_Width: drawerWidth,
       ),
-      endDrawer: endDrawer(user_width: userWidth),
+      endDrawer: endDrawer(user_width: userWidth, user_Id: 1,),
       body: Column(
         children: [
           Padding(
@@ -108,8 +108,8 @@ class _ChatScreenState extends State<ChatScreen> {
             trailing: const Icon(Icons.arrow_forward_ios_sharp),
           ),
           SizedBox(
-            height: 100,
-            width: 100,
+            height: 250,
+            width: 250,
             child: Image.asset('assets/images/community.png'),
           ),
           const SizedBox(

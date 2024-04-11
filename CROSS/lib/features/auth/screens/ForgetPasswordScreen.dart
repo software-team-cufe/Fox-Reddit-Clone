@@ -40,6 +40,7 @@ class ForgetPasswordScreen extends StatelessWidget {
               const Gap(20),
               const CustomTextBox(
                 hintText: "Email or username",
+                obscureText: true,
               ),
               const Gap(20),
               CustomButton(

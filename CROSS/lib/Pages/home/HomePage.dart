@@ -1,35 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/navbar.dart';
+import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:reddit_fox/Pages/post_details.dart'; // Import the PostDetails page
-import 'package:http/http.dart';
+import 'package:reddit_fox/navbar.dart';
+import 'dart:convert';
 
-/// HomePage Widget displays a list of posts or videos based on user selection.
-///
-/// It contains a custom app bar with a menu for selecting between "Home" and "Popular" options,
-/// a search icon for navigating to the search page, and an end drawer.
-/// The end drawer contains user-related information and options.
-///
-/// The [HomePage] Widget utilizes dummy post data and video post data.
-/// Posts are displayed in a list view, and videos are displayed using the YoutubePlayer plugin.
-///
-/// Users can interact with posts by tapping on them, which navigates them to the [PostDetails] page.
-///
-/// Requires:
-///   - 'package:flutter/material.dart'
-///   - 'package:reddit_fox/navbar.dart'
-///   - 'package:reddit_fox/Pages/Search.dart'
-///   - 'package:reddit_fox/Pages/home/Drawer.dart'
-///   - 'package:reddit_fox/Pages/home/endDrawer.dart'
-///   - 'package:youtube_player_flutter/youtube_player_flutter.dart'
-///   - 'package:reddit_fox/Pages/post_details.dart'
-///
+import 'package:reddit_fox/routes/Mock_routes.dart';
 
 class HomePage extends StatefulWidget {
-  /// Creates a [HomePage] Widget.
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -37,23 +16,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _selectedItem = "Home"; // Default selected item
+  String _selectedItem = 'Home'; // Declare _selectedItem here
 
-  /// Opens the end drawer.
-  void desplayEndDrawer(BuildContext context) {
-    Scaffold.of(context).openEndDrawer();
+  Future<List<dynamic>> fetchPosts() async {
+    var url = Uri.parse(_selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
+    var response = await http.get(url);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load posts');
+    }
   }
-
-  /// Opens the main drawer.
-  void desplayDrawer(BuildContext context) {
-    Scaffold.of(context).openDrawer();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +42,7 @@ class _HomePageState extends State<HomePage> {
           return IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              desplayDrawer(context);
+              Scaffold.of(context).openDrawer();
             },
           );
         }),
@@ -85,7 +59,9 @@ class _HomePageState extends State<HomePage> {
           Builder(builder: (context) {
             return IconButton(
               icon: const CircleAvatar(),
-              onPressed: () => desplayEndDrawer(context),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
             );
           }),
         ],
@@ -104,7 +80,7 @@ class _HomePageState extends State<HomePage> {
           ],
           onSelected: (value) {
             setState(() {
-              _selectedItem = value;
+              _selectedItem = value; // Use _selectedItem from the state class
             });
           },
         ),
@@ -112,10 +88,47 @@ class _HomePageState extends State<HomePage> {
       drawer: CustomDrawer(
         drawer_Width: drawerWidth,
       ),
-      endDrawer: endDrawer(user_width: userWidth),
-      bottomNavigationBar: const nBar(),
-      endDrawerEnableOpenDragGesture: true,
-      drawerEnableOpenDragGesture: true,
+      endDrawer: endDrawer(user_width: userWidth, user_Id: 2,),
+      bottomNavigationBar: nBar(),
+      body: FutureBuilder<List<dynamic>>(
+        future: fetchPosts(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(), // Show a loading indicator
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'), // Show an error message if loading fails
+            );
+          } else {
+            List<dynamic> posts = snapshot.data!;
+            return ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                var post = posts[index];
+                return ListTile(
+                  contentPadding: EdgeInsets.all(16), // Add padding around the content
+                  title: Text(
+                    post['redditName'],
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // Increase font size
+                  ),
+                  subtitle: Text(
+                    post['title'],
+                    style: TextStyle(fontSize: 16), // Increase font size
+                  ),
+                  trailing: post['picture'] != null
+                      ? Image.network(post['picture'], width: 100, height: 250, fit: BoxFit.cover,) // Adjust width and height of the image
+                      : null, // Leave trailing blank if post['picture'] is null
+                  onTap: () {
+                    // Navigate to post details or perform other actions
+                  },
+                );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }

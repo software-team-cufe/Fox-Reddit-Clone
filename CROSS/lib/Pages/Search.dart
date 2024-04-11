@@ -1,21 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
 
-/// Widget representing the search page.
-///
-/// The [Search] widget allows users to search for content within the app.
-/// It contains a text field for entering search queries and a clear button to clear the search field.
-///
-/// Requires:
-///   - 'package:flutter/material.dart'
-///   - 'package:reddit_fox/Pages/home/HomePage.dart'
-///
-/// Example:
-/// ```dart
-/// Navigator.push(context, MaterialPageRoute(builder: (context) => const Search()));
-/// ```
 class Search extends StatefulWidget {
-  /// Creates a [Search] Widget.
   const Search({Key? key}) : super(key: key);
 
   @override
@@ -24,6 +13,13 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   final TextEditingController _searchController = TextEditingController();
+  List<String> _recentlySearched = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRecentlySearched();
+  }
 
   @override
   void dispose() {
@@ -31,7 +27,22 @@ class _SearchState extends State<Search> {
     super.dispose();
   }
 
-  /// Clears the search query.
+  void _fetchRecentlySearched() async {
+    final response = await http.get(Uri.parse('http://your-json-server/recentlySearched'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(data); // Print response body to see the structure
+      final List<dynamic> terms = data['recentlySearched'];
+      setState(() {
+        _recentlySearched = terms.map((term) => term['searchTerm'].toString()).toList();
+        print(_recentlySearched);
+      });
+    } else {
+      throw Exception('Failed to load recently searched terms');
+    }
+  }
+
+
   void _clearSearch() {
     _searchController.clear();
   }
@@ -42,16 +53,6 @@ class _SearchState extends State<Search> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        leading: IconButton(
-          padding: const EdgeInsets.only(top: 20.0),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
-          },
-        ),
         title: Container(
           padding: const EdgeInsets.only(top: 20.0, right: 20.0),
           child: Center(
@@ -80,6 +81,19 @@ class _SearchState extends State<Search> {
           ),
         ),
         titleSpacing: 0,
+      ),
+      body: Container(
+        child: ListView.builder(
+          itemCount: _recentlySearched.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(_recentlySearched[index]),
+              onTap: () {
+                // Handle tap on recently searched term
+              },
+            );
+          },
+        ),
       ),
     );
   }

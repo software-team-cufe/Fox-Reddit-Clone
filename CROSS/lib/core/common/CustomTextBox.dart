@@ -32,7 +32,7 @@ class CustomTextBox extends StatelessWidget {
     this.spaces = true,
     this.isEmail,
     this.isPasswordInput,
-    this.textDirection,
+    this.textDirection, required bool obscureText,
   });
   final TextDirection? textDirection;
   final FocusNode? focusNode;

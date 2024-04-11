@@ -62,6 +62,7 @@ dependencies:
   mockito: ^5.0.0
   lottie: ^3.1.0
   http: ^1.2.1
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:
@@ -93,7 +94,7 @@ flutter:
   - assets/images/loginEmote.png
   - assets/images/logo.png
   - assets/images/avatar.png
-  - assets/Icons/Chat.svg
+  - assets/Icons/
   - assets/Icons/channelIcon.png
   - assets/images/community.png
 
