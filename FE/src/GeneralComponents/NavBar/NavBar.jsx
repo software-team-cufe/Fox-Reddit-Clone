@@ -135,14 +135,16 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                 ></Tooltip>
               </button>
 
-              <button
-                className="bg-white hover:bg-orange-100    min-w-8 h-10 my-2 rounded-full   "
-                onMouseEnter={handleMouseEnterChat}
-                onMouseLeave={handleMouseLeaveChat}
-              >
-                <MessageCircleMore strokeWidth={1} color=" #e94c00" size={32} />
-                <Tooltip title={"Open chat"} status={IshoverChat}></Tooltip>
-              </button>
+              <Link to={'/chat/1'}>
+                <button
+                  className="bg-white hover:bg-orange-100    min-w-8 h-10 my-2 rounded-full   "
+                  onMouseEnter={handleMouseEnterChat}
+                  onMouseLeave={handleMouseLeaveChat}
+                >
+                  <MessageCircleMore strokeWidth={1} color=" #e94c00" size={32} />
+                  <Tooltip title={"Open chat"} status={IshoverChat}></Tooltip>
+                </button>
+              </Link>
 
               <button
                 className="bg-white hover:bg-orange-100   min-w-8  h-10 my-2 rounded-full   "
