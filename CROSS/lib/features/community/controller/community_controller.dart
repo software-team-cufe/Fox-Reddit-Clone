@@ -29,6 +29,10 @@ final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
   return ref.watch(communityControllerProvider.notifier).getCommunityByName(name);
 });
 
+final searchCommunityProvider = StreamProvider.family((ref, String query)  {
+
+  return ref.watch(communityControllerProvider.notifier).searchCommunity(query);
+});
 
 
 class CommunityController extends StateNotifier<bool>{
@@ -103,7 +107,12 @@ if(bannerFile!=null)
    } 
 final res= await _communityRepository.editCommunity(community);
 state = false;
-res.fold((l) => showSnackBar(context, l.message), (r) => Routemaster.of(context).pop());
+res.fold(
+  (l) => showSnackBar(context, l.message), 
+  (r) => Routemaster.of(context).pop());
 
   }
-} 
+  Stream<List<Community>> searchCommunity(String query) {
+    return _communityRepository.searchCommunity(query);
+  }
+}

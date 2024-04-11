@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'text_input.dart';
+import 'textInput.dart';
 import 'image_display.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

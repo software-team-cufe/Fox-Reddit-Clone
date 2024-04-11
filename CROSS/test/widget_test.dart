@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:reddit_fox/GeneralWidgets/text_input.dart';
+import 'package:reddit_fox/GeneralWidgets/textInput.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 import 'package:reddit_fox/Pages/create_post.dart';
 import 'package:reddit_fox/GeneralWidgets/poll.dart';
