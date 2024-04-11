@@ -1,44 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/navbar.dart';
+import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
+import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:reddit_fox/Pages/post_details.dart';
-import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart'; // Import the PostDetails page
+import 'package:reddit_fox/navbar.dart';
+import 'dart:convert';
 
-/// Represents a post with a title, content, and imageUrl.
-class Post {
-  final String title;
-  final String content;
-  final String imageUrl;
-
-  /// Constructs a [Post] with the given [title], [content], and [imageUrl].
-  Post({required this.title, required this.content, required this.imageUrl});
-}
-
-/// HomePage Widget displays a list of posts or videos based on user selection.
-///
-/// It contains a custom app bar with a menu for selecting between "Home" and "Watch" options,
-/// a search icon for navigating to the search page, and an end drawer.
-/// The end drawer contains user-related information and options.
-///
-/// The [HomePage] Widget utilizes dummy post data and video post data.
-/// Posts are displayed in a list view, and videos are displayed using the YoutubePlayer plugin.
-///
-/// Users can interact with posts by tapping on them, which navigates them to the [PostDetails] page.
-///
-/// Requires:
-///   - 'package:flutter/material.dart'
-///   - 'package:reddit_fox/navbar.dart'
-///   - 'package:reddit_fox/Pages/Search.dart'
-///   - 'package:reddit_fox/Pages/home/Drawer.dart'
-///   - 'package:reddit_fox/Pages/home/endDrawer.dart'
-///   - 'package:youtube_player_flutter/youtube_player_flutter.dart'
-///   - 'package:reddit_fox/Pages/post_details.dart'
-///
+import 'package:reddit_fox/routes/Mock_routes.dart';
 
 class HomePage extends StatefulWidget {
-  /// Creates a [HomePage] Widget.
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -46,72 +16,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _selectedItem = "Home"; // Default selected item
+  String _selectedItem = 'Home'; // Declare _selectedItem here
 
-  /// Opens the end drawer.
-  void desplayEndDrawer(BuildContext context) {
-    Scaffold.of(context).openEndDrawer();
-  }
-
-void displayDrawer(BuildContext context) {
-  Scaffold.of(context).openDrawer();
-
-}
-
-  // Dummy post data
-  final List<Post> dummyPosts = [
-    Post(
-        title: "Post 1",
-        content: "Content of post 1",
-        imageUrl: "https://via.placeholder.com/520"),
-    Post(
-        title: "Post 2",
-        content: "Content of post 2",
-        imageUrl: "https://via.placeholder.com/520"),
-    Post(
-        title: "Post 3",
-        content: "Content of post 3",
-        imageUrl: "https://via.placeholder.com/520"),
-  ];
-
-  // Dummy video post data
-  final List<Post> videoPosts = [
-    Post(
-        title: "Video Post 1",
-        content: "Video content 1",
-        imageUrl: "https://www.youtube.com/watch?v=ALDt7jOZUw0"),
-    Post(
-        title: "Video Post 2",
-        content: "Video content 2",
-        imageUrl: "https://youtube.com/shorts/3MvYrndVM3M?si=QoaiYKKEH0TLQ37f"),
-    Post(
-        title: "Video Post 3",
-        content: "Video content 3",
-        imageUrl: "https://youtube.com/shorts/CaW9OmZwAG0?si=JKLdyke4R0eofXTa"),
-  ];
-
-  late YoutubePlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: 'ALDt7jOZUw0',
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-      ),
-    );
-  }
-
-  /// Returns the list of posts or videos based on the selected item.
-  List<Post> getSelectedPosts() {
-    if (_selectedItem == "Home") {
-      return dummyPosts;
-    } else if (_selectedItem == "Watch") {
-      return videoPosts;
+  Future<List<dynamic>> fetchPosts() async {
+    var url = Uri.parse(_selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
+    var response = await http.get(url);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
     } else {
-      return [];
+      throw Exception('Failed to load posts');
     }
   }
 
@@ -128,7 +42,7 @@ void displayDrawer(BuildContext context) {
           return IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              displayDrawer(context);
+              Scaffold.of(context).openDrawer();
             },
           );
         }),
@@ -145,7 +59,9 @@ void displayDrawer(BuildContext context) {
           Builder(builder: (context) {
             return IconButton(
               icon: const CircleAvatar(),
-              onPressed: () => desplayEndDrawer(context),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
             );
           }),
         ],
@@ -158,73 +74,57 @@ void displayDrawer(BuildContext context) {
               child: Text("Home"),
             ),
             const PopupMenuItem(
-              value: "Watch",
-              child: Text("Watch"),
+              value: "Popular",
+              child: Text("Popular"),
             ),
           ],
           onSelected: (value) {
             setState(() {
-              _selectedItem = value;
+              _selectedItem = value; // Use _selectedItem from the state class
             });
           },
         ),
       ),
-      drawer: const CommunityListDrawer(),        
-      endDrawer: endDrawer(user_width: userWidth),
-      bottomNavigationBar: const nBar(),
-      endDrawerEnableOpenDragGesture: true,
-      drawerEnableOpenDragGesture: true,
-      body: ListView.builder(
-        itemCount: getSelectedPosts().length,
-        itemBuilder: (context, index) {
-          final post = getSelectedPosts()[index];
-          if (post.imageUrl.contains('youtube.com')) {
-            return ListTile(
-              title: Text(post.title),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(post.content),
-                  const SizedBox(height: 8),
-                  YoutubePlayer(
-                    controller: YoutubePlayerController(
-                      initialVideoId: YoutubePlayer.convertUrlToId(
-                        post.imageUrl,
-                      )!,
-                      flags: const YoutubePlayerFlags(
-                        autoPlay: false,
-                        mute: false,
-                      ),
-                    ),
-                    showVideoProgressIndicator: true,
-                    onEnded: (metadata) {
-                      // print('Video ended');
-                    },
-                  ),
-                ],
-              ),
+      drawer: CustomDrawer(
+        drawer_Width: drawerWidth,
+      ),
+      endDrawer: endDrawer(user_width: userWidth, user_Id: 2,),
+      bottomNavigationBar: nBar(),
+      body: FutureBuilder<List<dynamic>>(
+        future: fetchPosts(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(), // Show a loading indicator
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'), // Show an error message if loading fails
             );
           } else {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PostDetails(key: UniqueKey()),
+            List<dynamic> posts = snapshot.data!;
+            return ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                var post = posts[index];
+                return ListTile(
+                  contentPadding: EdgeInsets.all(16), // Add padding around the content
+                  title: Text(
+                    post['redditName'],
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // Increase font size
                   ),
+                  subtitle: Text(
+                    post['title'],
+                    style: TextStyle(fontSize: 16), // Increase font size
+                  ),
+                  trailing: post['picture'] != null
+                      ? Image.network(post['picture'], width: 100, height: 250, fit: BoxFit.cover,) // Adjust width and height of the image
+                      : null, // Leave trailing blank if post['picture'] is null
+                  onTap: () {
+                    // Navigate to post details or perform other actions
+                  },
                 );
               },
-              child: ListTile(
-                title: Text(post.title),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(post.content),
-                    const SizedBox(height: 8),
-                    Image.network(post.imageUrl),
-                  ],
-                ),
-              ),
             );
           }
         },

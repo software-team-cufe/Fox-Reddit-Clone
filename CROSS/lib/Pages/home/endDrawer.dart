@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/settings/setting.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:reddit_fox/Pages/Profile.dart';
 
 /// Widget representing an end drawer.
 ///
@@ -16,9 +18,10 @@ import 'package:reddit_fox/Pages/settings/setting.dart';
 class endDrawer extends StatelessWidget {
   /// Width of the end drawer.
   final double user_width;
+  final int user_Id;
 
   /// Constructs an [endDrawer] with the given [user_width].
-  const endDrawer({Key? key, required this.user_width}) : super(key: key);
+  const endDrawer({Key? key, required this.user_width, required this.user_Id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,12 @@ class endDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.person_outlined),
                   title: const Text('My profile'),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Profile(user_Id: user_Id)),
+                    );
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.add_circle_outline_sharp),
@@ -52,7 +60,7 @@ class endDrawer extends StatelessWidget {
                   leading: const Icon(Icons.access_time),
                   title: const Text('History'),
                   onTap: () {},
-                ),
+                  ),
                 ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text('Setting'),
