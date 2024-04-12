@@ -29,9 +29,7 @@ const icons = [
    },
 ];
 
-function Sidebar({ className, IsOpen }) {
-   const [open, setOpen] = useState(true);
-
+function Sidebar({ className, IsOpen, IsModerator }) {
    // const toggleSidebar = () => {
    //    setOpen(!open);
    // };
@@ -100,6 +98,27 @@ function Sidebar({ className, IsOpen }) {
                         </Link>
                      </li>
                   ))}
+                  
+                  
+
+                  {IsModerator &&
+                     <>
+                        <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                        <button
+                           id="dropdownDefaultButton"
+                           onClick={functionToExecute}
+                           data-dropdown-toggle="dropdown"
+                           className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                           type="buttonn"
+                        >
+                           Moderator
+                           <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
+                        </button>
+                        <div>
+                        </div>
+                     </>
+                 }
+
                   <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
