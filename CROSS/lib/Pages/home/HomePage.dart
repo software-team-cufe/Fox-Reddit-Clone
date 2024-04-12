@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: MediaQuery.of(context).size.width -
-                      MediaQuery.of(context).size.width / 15),
+                      MediaQuery.of(context).size.width / 5),
               child: DropdownButton<String>(
                 isDense: true,
                 isExpanded: true,
