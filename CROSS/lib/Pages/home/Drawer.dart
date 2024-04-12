@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
-
+import 'package:reddit_fox/features/community/screens/modmail.dart';
 /// Widget representing a custom drawer.
 ///
 /// The [CustomDrawer] widget displays a drawer that slides in from the left side of the screen.
@@ -45,7 +45,8 @@ class CustomDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const BlankPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const BlankPage()),
                     );
                   },
                 ),
@@ -78,9 +79,15 @@ class CustomDrawer extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    // Navigate to Modmail page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ModMailScreen()), 
+                    );
                   },
                 ),
+
                 const Divider(color: Colors.white), // Add a divider
                 ListTile(
                   title: const Text(
@@ -90,7 +97,10 @@ class CustomDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ModToolsScreen(name: '',)),
+                      MaterialPageRoute(
+                          builder: (context) => const ModToolsScreen(
+                                name: '',
+                              )),
                     );
                   },
                 ),

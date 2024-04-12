@@ -7,7 +7,7 @@ import 'package:reddit_fox/features/community/screens/community_icon.dart';
 import 'package:reddit_fox/features/community/screens/description.dart';
 import 'package:reddit_fox/features/community/screens/post_types.dart';
 import 'package:reddit_fox/features/community/screens/discovery.dart';
-import 'package:reddit_fox/features/community/screens/modmail.dart';
+//import 'package:reddit_fox/features/community/screens/modmail.dart';
 import 'package:reddit_fox/features/community/screens/mod_notifications.dart';
 import 'package:reddit_fox/features/community/screens/archive_posts.dart';
 import 'package:reddit_fox/features/community/screens/media_in_comments.dart';
@@ -46,7 +46,7 @@ class ModToolsScreen extends StatelessWidget {
             title: const Text('Insights'),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => InsightsScreen(),
+                builder: (context) => const InsightsScreen(),
               ));
             },
           ),
@@ -55,7 +55,7 @@ class ModToolsScreen extends StatelessWidget {
             title: const Text('Mod Log'),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ModLogScreen(),
+                builder: (context) => const ModLogScreen(),
               ));
             },
           ),
@@ -64,7 +64,7 @@ class ModToolsScreen extends StatelessWidget {
             title: const Text('Community Icon'),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CommunityIconScreen(),
+                builder: (context) => const CommunityIconScreen(),
               ));
             },
           ),
