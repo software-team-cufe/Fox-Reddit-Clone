@@ -10,6 +10,45 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 const genders = [{ text: "Male", value: true, }, { text: "Female", value: false, }];
+
+/**
+ * RegisterPage Component
+ * 
+ * This component is used for user registration.
+ * 
+ * @component
+ * 
+ * @example
+ * 
+ * return (
+ *   <RegisterPage />
+ * )
+ * 
+ * @returns {JSX.Element} The RegisterPage component.
+ * 
+ * Props:
+ * None
+ * 
+ * State:
+ * - gender: A state variable used to store the selected gender. It's initially set to the first gender in the `genders` array.
+ * - loading: A state variable used to indicate whether the component is in a loading state. It's initially set to `false`.
+ * 
+ * Children:
+ * - Button: A general purpose button component.
+ * - ComboBox: A general purpose combo box component.
+ * - TextBox: A general purpose text box component.
+ * 
+ * Functions:
+ * - setGender: A function that updates the value of the `gender` state variable. It's used as the `onChange` handler for the ComboBox component.
+ * - setLoading: A function that updates the value of the `loading` state variable.
+ * - onSelect: A function that sets the selected gender when a gender is selected from the ComboBox.
+ * 
+ * External Libraries:
+ * - react-router-dom: Used for the `Link` and `useNavigate` components, which are used to navigate between pages.
+ * - react-toastify: Used to display notifications to the user.
+ * - react-redux: Used for the `useDispatch` hook, which allows the component to dispatch actions to the Redux store.
+ */
+
 export default function RegisterPage({ }) {
     const [gender, setGender] = useState(genders[0]);
     const [loading, setLoading] = useState(false);
