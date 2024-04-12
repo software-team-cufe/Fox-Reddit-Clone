@@ -7,10 +7,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 import './QuillStyle.css'
 import CheckButton from "../../../GeneralElements/CheckButton/CheckButton";
-import { toast } from 'react-toastify';
 import Poll from "./Poll"
 
-function TypingArea() {
+function TypingArea(props) {
     const navigator = useNavigate();
     const [DisablePoll, setDisablePoll] = useState(false); //ToDo: set by community
     const [PostContent, setPostContent] = useState('');
@@ -62,6 +61,14 @@ function TypingArea() {
     //  {/* )} */}
     //////////////////////////////////////////////////////////////////////
 
+    useEffect(() => {
+        if (props.SelectedCom.name === "Choose Community")
+            setDisablePoll(true);
+        else
+            setDisablePoll(false);
+
+
+    }, [props.SelectedCom])
 
 
     useEffect(() => {
@@ -156,7 +163,7 @@ function TypingArea() {
 
 
     return (
-        <div className='bg-white h-fit  w-full'>
+        <div className='bg-white h-fit rounded  w-full'>
 
             <Tabs>
                 <Tab label="Post" num={0} addOnClick={NoDrag} icon={<NotepadText strokeWidth={1} color=" #e94c00" size={24} />}>
@@ -340,8 +347,10 @@ function TypingArea() {
             <hr className="w-[100%-2] my-4 grid mx-5" />
             <div className="w-full relative h-6 ">
                 <button
+                    disabled={DisablePoll}
                     type="submit"
-                    className="bg-orange-600 text-white rounded-full px-4 py-2 absolute right-4  hover:bg-orange-800"
+                    className="bg-orange-600 text-white rounded-full px-4 py-2 
+                    absolute right-4  hover:bg-orange-800 disabled:bg-gray-400"
                 >
                     Post
                 </button>
