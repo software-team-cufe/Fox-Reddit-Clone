@@ -30,7 +30,6 @@ final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
 });
 
 final searchCommunityProvider = StreamProvider.family((ref, String query)  {
-
   return ref.watch(communityControllerProvider.notifier).searchCommunity(query);
 });
 

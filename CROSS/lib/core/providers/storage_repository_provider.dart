@@ -17,11 +17,16 @@ class StorageRepository {
 
   StorageRepository({required FirebaseStorage firebaseStorage}): _firebaseStorage = firebaseStorage;
   
-  FutureEither<String> storeFile({required String path, required String id, required File? file,}) async {
+  FutureEither<String> storeFile({
+    required String path, 
+    required String id, 
+    required File? file,
+  }) async {
     try{
       //user/banner/123 for example 
      final ref = _firebaseStorage.ref().child(path).child(id);
      UploadTask uploadTask = ref.putFile(file!);
+     
      final snapshot = await uploadTask;
      return right(await snapshot.ref.getDownloadURL());
     } catch(e) {
