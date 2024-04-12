@@ -57,11 +57,21 @@ class _HomePageState extends State<HomePage> {
         iconTheme: const IconThemeData(color: Colors.white),
         leading: Builder(builder: (context) {
           return IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          );
+                    icon: access_token != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage('https://example.com/api/user/profilePic', headers: {
+                              'Authorization': 'Bearer $access_token',
+                          //backgroundImage: NetworkImage(user.profilePic),
+                            }),
+                          )
+                        : CircleAvatar(
+                            // Fallback to asset image if access_token is null
+                            backgroundImage: AssetImage('assets/default_profile_pic.png'),
+                          ),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
         }),
         actions: [
           IconButton(

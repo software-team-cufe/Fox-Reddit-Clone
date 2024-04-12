@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
+import 'package:reddit_fox/features/home/delegates/search_community_delegate.dart';
 import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 
 
@@ -34,7 +35,8 @@ void displayDrawer(BuildContext context) {
           }
         ),
           actions: [
-            IconButton(onPressed: () {}, 
+            IconButton(onPressed: () {showSearch(context: context, delegate: SearchCommunityDelegate(ref));
+            }, 
             icon: const Icon(Icons.search),
             ),
             IconButton(
