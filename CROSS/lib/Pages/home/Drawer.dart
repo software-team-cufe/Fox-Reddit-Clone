@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
+import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
 
 /// Widget representing a custom drawer.
 ///
@@ -17,7 +18,7 @@ import 'package:reddit_fox/Pages/Blanck.dart';
 class CustomDrawer extends StatelessWidget {
   /// Width of the custom drawer.
   final double drawer_Width;
-  
+
   /// Constructs a [CustomDrawer] with the given [drawer_Width].
   const CustomDrawer({Key? key, required this.drawer_Width}) : super(key: key);
 
@@ -36,14 +37,61 @@ class CustomDrawer extends StatelessWidget {
             child: ListView(
               children: [
                 ListTile(
-                  leading: Icon(Icons.add, color: Colors.white), 
-                  title: Text(
+                  leading: const Icon(Icons.add, color: Colors.white),
+                  title: const Text(
                     "Create Community",
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BlankPage()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const BlankPage()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10), // Add some space between items
+                // Moderating section
+                ListTile(
+                  leading: const Icon(Icons.star, color: Colors.white),
+                  title: const Text(
+                    "Mod Feed",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    // Navigate to Mod Feed page
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.list, color: Colors.white),
+                  title: const Text(
+                    "Queues",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    // Navigate to Queues page
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.mail, color: Colors.white),
+                  title: const Text(
+                    "Modmail",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    // Navigate to Modmail page
+                  },
+                ),
+                const Divider(color: Colors.white), // Add a divider
+                ListTile(
+                  title: const Text(
+                    "Mod Tools", // Add "Mod Tools" section
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ModToolsScreen(name: '',)),
+                    );
                   },
                 ),
               ],
