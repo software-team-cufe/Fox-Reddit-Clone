@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class DescriptionScreen extends StatefulWidget {
-  const DescriptionScreen({super.key});
+  const DescriptionScreen({Key? key}) : super(key: key);
 
   @override
   _DescriptionScreenState createState() => _DescriptionScreenState();
@@ -10,6 +11,25 @@ class DescriptionScreen extends StatefulWidget {
 class _DescriptionScreenState extends State<DescriptionScreen> {
   TextEditingController _descriptionController = TextEditingController();
   String _description = '';
+
+  Future<void> updateBio(String newBio) async {
+    try {
+      final response = await http.put(
+        Uri.parse('your_api_endpoint_here'), // Replace with your API endpoint
+        body: {'Bio': newBio},
+      );
+      if (response.statusCode == 200) {
+        // Handle success
+        print('Bio updated successfully');
+      } else {
+        // Handle other status codes (e.g., error updating bio)
+        print('Failed to update bio: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle network or other errors
+      print('Error updating bio: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -26,9 +46,9 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              // Save the description here
               _description = _descriptionController.text;
-              Navigator.of(context).pop(_description); // Pop with the description data
+              updateBio(_description);
+              Navigator.of(context).pop(_description);
             },
           ),
         ],
@@ -44,9 +64,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 hintText: 'Enter description',
                 border: OutlineInputBorder(),
               ),
-              maxLines: null, // Allow multiple lines for the description
+              maxLines: null,
               onChanged: (value) {
-                // Update the description as it is typed
                 setState(() {
                   _description = value;
                 });
