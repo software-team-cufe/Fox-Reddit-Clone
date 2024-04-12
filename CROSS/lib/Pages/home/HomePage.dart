@@ -7,6 +7,7 @@ import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:reddit_fox/Pages/post_details.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,12 +35,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<dynamic>> fetchPosts() async {
-    var url = Uri.parse(_selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
+    var url = Uri.parse(_selectedItem == 'Popular'
+        ? ApiRoutes.getPopular
+        : "${ApiRoutes.baseUrl}/${_sortValue}Posts");
     var response = await http.get(url);
     print(response.statusCode);
     if (response.statusCode == 200) {
       return json.decode(response.body);
-    } else {  
+    } else {
       throw Exception('Failed to load posts');
     }
   }
@@ -170,7 +173,7 @@ class _HomePageState extends State<HomePage> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: MediaQuery.of(context).size.width -
-                      MediaQuery.of(context).size.width / 5),
+                      MediaQuery.of(context).size.width / 15),
               child: DropdownButton<String>(
                 isDense: true,
                 isExpanded: true,
@@ -254,7 +257,17 @@ class _HomePageState extends State<HomePage> {
                                 ) // Adjust width and height of the image
                               : null, // Leave trailing blank if post['picture'] is null
                           onTap: () {
-                            // Navigate to post details or perform other actions
+                            // Navigate to post details page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PostDetails(
+                                  redditName: post['redditName'],
+                                  title: post['title'],
+                                  picture: post['picture'],
+                                ),
+                              ),
+                            );
                           },
                         );
                       },
