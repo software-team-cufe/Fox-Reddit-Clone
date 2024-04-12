@@ -76,6 +76,8 @@ class _AuthContainerState extends State<AuthContainer> {
   }
 }
 
+
+
 class CurrentUserData {
   static UserModel? _user;
   static String? access_token;
