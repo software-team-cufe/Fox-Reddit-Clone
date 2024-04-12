@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/Pages/settings/setting.dart';
-import 'package:reddit_fox/routes/Mock_routes.dart';
-import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:http/http.dart' as http;
+import 'package:reddit_fox/Pages/Profile.dart';
+import 'package:reddit_fox/Pages/settings/setting.dart';
+import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
-
 
 class endDrawer extends StatefulWidget {
   final double user_width;
@@ -22,7 +20,7 @@ class endDrawer extends StatefulWidget {
 
 class _endDrawerState extends State<endDrawer> {
   late Future<int> userId;
-  late String? ProfilePic;
+  late String? profilePic;
 
   @override
   void initState() {
@@ -40,7 +38,7 @@ class _endDrawerState extends State<endDrawer> {
     if (response.statusCode == 200) {
       List<dynamic> responseData = json.decode(response.body);
       if (responseData.isNotEmpty && responseData[0] is Map<String, dynamic> && responseData[0].containsKey('id')) {
-        ProfilePic = responseData[0]['profilePic'];
+        profilePic = responseData[0]['profilePic'];
         return responseData[0]['id'];
       } else {
         throw Exception('User ID is not present or not an integer');
@@ -49,7 +47,6 @@ class _endDrawerState extends State<endDrawer> {
       throw Exception('Failed to fetch user ID');
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -76,17 +73,21 @@ class _endDrawerState extends State<endDrawer> {
                 } else {
                   return ListView(
                     children: [
-                      if (ProfilePic != null)
-                        Image.network(
-                          ProfilePic!,
-                          width: 250,
-                          height: 250,
+                      if (profilePic != null)
+                        ClipOval(
+                          child: Image.network(
+                            profilePic!,
+                            width: 250,
+                            height: 250,
+                          ),
                         ),
-                      if (ProfilePic == null)
-                        Image.asset(
-                          "assets/images/avatar.png",
-                          width: 250,
-                          height: 250,
+                      if (profilePic == null)
+                        ClipOval(
+                          child: Image.asset(
+                            "assets/images/avatar.png",
+                            width: 250,
+                            height: 250,
+                          ),
                         ),
                       ListTile(
                         leading: const Icon(Icons.person_outlined),
