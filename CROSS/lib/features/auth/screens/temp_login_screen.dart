@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
           actions: [
             TextButton(onPressed: () {
               Navigator.push(context, 
-              MaterialPageRoute(builder: (context) => HomePage()));
+              MaterialPageRoute(builder: (context) => const HomePage()));
             },
             child: const Text('Skip', 
             style: TextStyle(

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_fox/core/utils.dart';
 import 'package:reddit_fox/features/auth/repository/auth_repository.dart';
-import 'package:reddit_fox/models/user_model_for_google.dart';
+import 'package:reddit_fox/models/user_model.dart';
 
-final userProvider = StateProvider<UserModelForGoogle?>((ref) => null);
+final userProvider = StateProvider<UserModel?>((ref) => null);
 
 final authControllerProvider = StateNotifierProvider<AuthController, bool>(
   (ref) => AuthController(
@@ -41,10 +41,11 @@ class AuthController extends StateNotifier<bool>{
     state = true;
     final user = await _authRepository.signInWithGoogle();
     state = false;
-    user.fold((l) => showSnackBar(context, l.message), 
-    (userModel) => _ref.read(userProvider.notifier).update((state) => userModel));
+    user.fold(
+      (l) => showSnackBar(context, l.message), 
+      (userModel) => _ref.read(userProvider.notifier).update((state) => userModel));
   }
-  Stream<UserModelForGoogle> getUserData(String uid) {
+  Stream<UserModel> getUserData(String uid) {
     return _authRepository.getUserData(uid);
   }
 }   

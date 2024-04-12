@@ -9,7 +9,6 @@ import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/models/user_model.dart';
 import '../../../core/common/CustomCheckBox.dart';
-import '../../../core/common/CustomDatePicker.dart';
 import '../../../core/common/CustomTextBox.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
@@ -102,8 +101,6 @@ class _SignupScreenState extends State<SignupScreen> {
     isAuthenticated: false,
     karma: 1,
     email: '',
-    password: '',
-    birthDate: DateTime.now(),
   );
 
   bool valid = true;
@@ -161,16 +158,16 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: passwordController,
               ),
               const SizedBox(height: 20),
-              CustomDatePicker(
-                subTitle: "Birthdate",
-                icon: FluentIcons.calendar_32_regular,
-                currentDate: user.birthDate,
-                onChanged: (e) {
-                  setState(() {
-                    user.birthDate = e;
-                  });
-                },
-              ),
+              // CustomDatePicker(
+              //   subTitle: "Birthdate",
+              //   icon: FluentIcons.calendar_32_regular,
+              //   currentDate: user.birthDate,
+              //   onChanged: (e) {
+              //     setState(() {
+              //       user.birthDate = e;
+              //     });
+              //   },
+              // ),
               const Gap(10),
               const Gap(10),
               CustomCheckBox(
