@@ -6,6 +6,9 @@ import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
+
 
 class endDrawer extends StatefulWidget {
   final double user_width;
@@ -19,6 +22,7 @@ class endDrawer extends StatefulWidget {
 
 class _endDrawerState extends State<endDrawer> {
   late Future<int> userId;
+  late String? ProfilePic;
 
   @override
   void initState() {
@@ -36,6 +40,7 @@ class _endDrawerState extends State<endDrawer> {
     if (response.statusCode == 200) {
       List<dynamic> responseData = json.decode(response.body);
       if (responseData.isNotEmpty && responseData[0] is Map<String, dynamic> && responseData[0].containsKey('id')) {
+        ProfilePic = responseData[0]['profilePic'];
         return responseData[0]['id'];
       } else {
         throw Exception('User ID is not present or not an integer');
@@ -44,9 +49,7 @@ class _endDrawerState extends State<endDrawer> {
       throw Exception('Failed to fetch user ID');
     }
   }
-
-
-
+  
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +76,18 @@ class _endDrawerState extends State<endDrawer> {
                 } else {
                   return ListView(
                     children: [
-                      Image.asset(
-                        "assets/images/avatar.png",
-                        width: 250,
-                        height: 250,
-                      ),
+                      if (ProfilePic != null)
+                        Image.network(
+                          ProfilePic!,
+                          width: 250,
+                          height: 250,
+                        ),
+                      if (ProfilePic == null)
+                        Image.asset(
+                          "assets/images/avatar.png",
+                          width: 250,
+                          height: 250,
+                        ),
                       ListTile(
                         leading: const Icon(Icons.person_outlined),
                         title: const Text('My profile'),
@@ -111,8 +121,16 @@ class _endDrawerState extends State<endDrawer> {
                       ListTile(
                         leading: const Icon(Icons.logout),
                         title: const Text('Logout'),
-                        onTap: () {
-                          // Handle logout logic here
+                        onTap: () async {
+                          // Delete the saved token (assuming you're using shared preferences)
+                          // Replace 'token' with the key you used to save the token
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          await prefs.remove('token');
+
+                          // Navigate back to the login screen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => StartingScreen()),
+                          );
                         },
                       ),
                     ],
