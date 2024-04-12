@@ -12,6 +12,8 @@ class ApiRoutes {
   static const String login = '$baseUrl/user';
   static String getUserById(int id) => '$baseUrl/user/$id';
   static String getPostsByCreatorId(int id) => '$baseUrl/posts?creatorId=$id';
-  static const String getPopular = '$baseUrl/posts?_sort=votes,commentsNo&_order=desc,desc';
+  static const String getPopular =
+      '$baseUrl/posts?_sort=votes,commentsNo&_order=desc,desc';
   static const String getRecentSearch = '$baseUrl/recentlySearched';
+  static const String message = '$baseUrl/user?_embed=messages';
 }

@@ -76,7 +76,7 @@ class _nBarState extends State<nBar> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const Message(title: 'Inbox')));
+                      builder: (context) => const Message()));
             },
             child: const FaIcon(
               FontAwesomeIcons.bell,
