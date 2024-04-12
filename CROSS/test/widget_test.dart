@@ -60,7 +60,8 @@ void main() {
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   testWidgets('MyApp Widget Test', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
-      home: Message(title: 'Inbox'),
+      home: Message(),
+      //home: Message(title: 'Inbox'),
     ));
 
     expect(find.text('Activity'), findsOneWidget);

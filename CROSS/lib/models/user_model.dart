@@ -6,6 +6,7 @@ class UserModel {
   final bool isAuthenticated; // if guest or not
   final int karma;
   final String email;
+   DateTime? birthDate;
 
   UserModel({
     required this.name,
@@ -15,6 +16,7 @@ class UserModel {
     required this.isAuthenticated,
     required this.karma,
     required this.email,
+     this.birthDate,
   });
 
 // userModel.name = this. ->usermodel.copyWith(name: 'name');
@@ -35,6 +37,7 @@ class UserModel {
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       karma: karma ?? this.karma,
       email: '',
+      birthDate: birthDate,
     );
   }
 
@@ -56,6 +59,7 @@ class UserModel {
       banner: map['banner'] ?? '',
       uid: map['uid'] ?? '',
       email: map['email'] ?? '',
+      birthDate: DateTime.parse(map['birthDate'].toString()),
       isAuthenticated: map['isAuthenticated'] ?? false,
       karma: map['karma']?.toInt() ?? 0,
     );
