@@ -47,7 +47,7 @@ class endDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Profile(user_Id: user_Id)),
+                      MaterialPageRoute(builder: (context) => ProfilePage(user_Id: user_Id)),
                     );
                   },
                 ),
@@ -64,6 +64,16 @@ class endDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text('Setting'),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const setting()));
+                  }
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('logout'),
                   onTap: () {
                     Navigator.push(
                         context,

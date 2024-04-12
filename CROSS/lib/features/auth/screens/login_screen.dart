@@ -37,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
           await saveToken(token);
 
           print('login successful');
+          print("token: " + token);
 
           return null; // No error message
         } else {
