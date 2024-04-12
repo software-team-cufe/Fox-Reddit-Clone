@@ -1,11 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
+import { ChevronDown } from "lucide-react"
+import CreateCommunity from '../../../GeneralComponents/CreateCommunity/CreateCommunity';
+const Dropdown = (props) => {
 
-const Dropdown = () => {
+    const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
+    const YourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
+    { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125" }];
+    const OtherCommunities = [{ name: "r / com3", icon: "DumPhoto3.jpg", membersCount: "123" },
+    {
+        name: "r / com4", icon: "DumPhoto4.jpg", membersCount: "1235", rules: [
+            "Be respectful to other members.",
+            "No spamming or self-promotion.",
+            "Keep discussions relevant to League of Legends.",
+            "No hate speech or harassment of any kind.",
+            "Follow Reddit's content policy."
+        ],
+    }];
+
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [Selected, setSelected] = useState("Choose Community");
-    const items = ['Uppercase', 'Lowercase', 'Camel Case', 'Kebab Case'];
     const dropdownRef = useRef(null);
+    const [ShowCreateCom, setShowCreateCom] = useState(false);
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -19,24 +34,35 @@ const Dropdown = () => {
         }
     }, [])
 
-    const filteredItems = items.filter(item =>
-        item.toLowerCase().includes(searchTerm.toLowerCase())
+    const handleCreateNewCom = () => {
+        setShowCreateCom(true);
+    }
+
+    const filteredProfile = Profile.filter(item =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const filteredYourCom = YourCommunities.filter(item =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const filteredOtherCom = OtherCommunities.filter(item =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
-        <div className=" w-60  flex items-center  " ref={dropdownRef}>
-            <div className="relative group">
+        <div className=" w-[100%]  flex items-center my-4 " ref={dropdownRef}>
+            <div className="relative group w-5/6">
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+                    className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700
+                     bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 
+                     focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
                 >
-                    <span className="mr-2"> {Selected}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fillRule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
+                    <span className="mr-2"> {props.Selected.name}</span>
+                    <ChevronDown strokeWidth={2} size={20} />
                 </button>
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1">
+                    <div className="absolute w-full z-10  mt-2 rounded-md shadow-lg bg-white ring-1 ring-black
+                     ring-opacity-5 p-1 space-y-1">
                         <input
                             className="block w-full px-4 py-2 text-gray-800 border rounded-md border-gray-300 focus:outline-none"
                             type="text"
@@ -44,10 +70,48 @@ const Dropdown = () => {
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
                         />
-                        {filteredItems.map((item, index) => (
-                            <button key={index} onClick={() => { setSelected(item); setIsOpen(false); }}
-                                className="block px-4 py-2 text-gray-700
-                             hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md">{item}</button>
+                        <div className='text-xs mt-1  m-2 font-bold text-gray-500'>YOUR PROFILE</div>
+                        {filteredProfile.map((item, index) => (
+                            <button key={index} onClick={() => { props.setSelected(item); setIsOpen(false); }}
+                                className=" px-4 py-2 text-gray-700 w-full 
+                             hover:bg-gray-100 active:bg-blue-100 cursor-pointer h-12 flex gap-7 rounded-md">
+                                <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
+                                <p className='m-2 '>{item.name}</p>
+                            </button>
+                        ))}
+                        <hr className='m-4 my-6' />
+                        <div className='text-xs mt-1 m-2 font-bold text-gray-500'>YOUR COMMUNITIES</div>
+                        <button
+                            onClick={handleCreateNewCom}
+                            type="submit"
+                            className="bg-white text-orange-600 font-bold text-xs rounded-full  p-1 px-2 m-1 
+                 hover:bg-orange-100  disabled:text-gray-400 disabled:hover:bg-white"
+                        >
+                            Create New
+                        </button>
+                        {ShowCreateCom && <CreateCommunity onClose={() => { setShowCreateCom(false); }} />}
+                        {filteredYourCom.map((item, index) => (
+                            <button key={index} onClick={() => { props.setSelected(item); setIsOpen(false); }}
+                                className=" px-4 py-2 text-gray-700 w-full 
+                        hover:bg-gray-100 active:bg-blue-100 cursor-pointer h-12 flex gap-7 rounded-md">
+                                <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
+                                <div>
+                                    <p className='mx-2 '>{item.name}</p>
+                                    <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p>
+                                </div>
+                            </button>
+                        ))}
+                        <hr className='m-4 my-6' />
+                        <div className='text-xs mt-1 m-2 font-bold text-gray-500'>OTHERS</div>
+                        {filteredOtherCom.map((item, index) => (
+                            <button key={index} onClick={() => { props.setSelected(item); setIsOpen(false); }}
+                                className=" px-4 py-2 text-gray-700 w-full
+                        hover:bg-gray-100 active:bg-blue-100 cursor-pointer h-12 flex gap-7 rounded-md">
+                                <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
+                                <div>
+                                    <p className='mx-2 '>{item.name}</p>
+                                    <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p>
+                                </div></button>
                         ))}
                     </div>
                 )}

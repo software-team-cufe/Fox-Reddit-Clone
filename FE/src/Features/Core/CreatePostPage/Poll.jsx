@@ -92,18 +92,18 @@ function Poll(props) {
                     </div>
                 </div>
             ))}
-            <div className='flex gap-40'>
+            <div className='flex gap-0 md:gap-40'>
                 <button
                     onClick={handleAddOption}
                     type="submit"
                     disabled={DisableAddOption}
-                    className="bg-white text-orange-600 font-bold  rounded-full  p-1 px-2 m-1 
+                    className="bg-white text-orange-600 font-bold text-xs rounded-full  p-1 px-2 m-1 
                  hover:bg-orange-100  disabled:text-gray-400 disabled:hover:bg-white"
                 >
                     Add an option
                 </button>
                 <div className='text-sm h-6 flex '>
-                    <p className='m-2 pt-2'> Voting length:</p>
+                    <p className='m-1 pt-2 text-xs'> Voting length:</p>
                     <ComboBox SelectedOption={selectedOption} SetSelectedOption={setSelectedOption} />
                 </div>
             </div>
