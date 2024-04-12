@@ -4,17 +4,17 @@
  * @file feedSetting is a functional component that renders the feed settings page.
  * @module feedSettings
  */
-import React , { useState } from "react";  
+import React, { useState } from "react";
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import { getByRole } from '@testing-library/react';
-import Dropdown from "./DropDownlist";
+// import Dropdown from "./DropDownlist";
 /**
  * 
  * Adult content, autoplay media, community themes, community content sort, global content view, open pots in new tab
  */
 
 export default function FeedSettings() {
-    
+
     const [showMatureContent, setShowMatureContent] = useState(false);
     const [BlurMatureImg, setBlurMatureImg] = useState(false);
     const [autoplayMedia, setAutoplayMedia] = useState(false);
@@ -48,7 +48,7 @@ export default function FeedSettings() {
         //console.log(rememberingSortPerCommunity);
     }
     const handleToggleInFeed6 = (isChecked6) => {
-        setGlobalView(isChecked6);       
+        setGlobalView(isChecked6);
         console.log(isChecked6);
         //console.log(globalView);
     }
@@ -58,7 +58,7 @@ export default function FeedSettings() {
         //console.log(openPostsInNewTab);
     };
 
-    
+
     return (
         <div className="w-[75%]">
             <h1 className=" font-semibold text-xl" role="TextOfButtons">
@@ -92,7 +92,7 @@ export default function FeedSettings() {
                                 Blur previews and thumbnails for any images or videos tagged as NSFW (Not Safe for Work).
                             </p>
                         </div>
-                        <ToggleButton onToggle={handleToggleInFeed2}/>
+                        <ToggleButton onToggle={handleToggleInFeed2} />
                     </div>
 
                 </div>
@@ -101,7 +101,7 @@ export default function FeedSettings() {
 
             <div>
                 <div className="flex flex-col mt-7 w-3/2 " role="toggleButton">
-                    
+
                     <div className="flex flex-row flex-wrap mb-7 justify-between">
                         <div role="TextOfButtons">
                             Autoplay media
@@ -111,11 +111,11 @@ export default function FeedSettings() {
                             Play videos and gifs automatically when in the viewport.
                         </div>
                         <div role="toggleButton" >
-                            <ToggleButton onToggle={handleToggleInFeed3}/>
+                            <ToggleButton onToggle={handleToggleInFeed3} />
                         </div>
 
                     </div>
-                    
+
                     <div className="flex flex-nowrap">
                         <div className="flex flex-row mb-7 flex-wrap" role="TextOfButtons">
                             <p>
@@ -128,7 +128,7 @@ export default function FeedSettings() {
                         </div>
 
                         <div role="toggleButton">
-                            <ToggleButton  onToggle={handleToggleInFeed4}/>
+                            <ToggleButton onToggle={handleToggleInFeed4} />
                         </div>
                     </div>
 
@@ -147,57 +147,57 @@ export default function FeedSettings() {
                     <div className="flex flex-nowrap ml-8">
                         <div className="flex flex-row mb-7 flex-wrap">
                             <p role="TextOfButtons">
-                            Remember per community
+                                Remember per community
                             </p>
                             <br />
                             <p className="text-gray-400 text-wrap" role="TextOfButtons">
-                            Enable if you would like each community to remember and use the last content sort you selected for that community.
+                                Enable if you would like each community to remember and use the last content sort you selected for that community.
                             </p>
                         </div>
                         <div>
-                        <ToggleButton onToggle={handleToggleInFeed5}/>
+                            <ToggleButton onToggle={handleToggleInFeed5} />
                         </div>
                     </div>
 
                     <div className="flex flex-row mb-7 flex-nowrap">
                         <div className="flex flex-row flex-wrap">
-                        <p role="TextOfButtons">
-                        Global content view
-                        </p>
-                        <br />
-                        <p className="text-gray-400 text-wrap" role="TextOfButtons">
-                        Choose how you would like content displayed in feeds. This control is also found above your feed.
-                        </p>
+                            <p role="TextOfButtons">
+                                Global content view
+                            </p>
+                            <br />
+                            <p className="text-gray-400 text-wrap" role="TextOfButtons">
+                                Choose how you would like content displayed in feeds. This control is also found above your feed.
+                            </p>
                         </div>
                     </div>
 
                     <div className="flex flex-nowrap ml-8">
                         <div className="flex flex-row mb-7 flex-wrap">
                             <p role="TextOfButtons">
-                            Remember per community
+                                Remember per community
                             </p>
                             <br />
                             <p className="text-gray-400 text-wrap" >
-                            Enable if you would like each community to remember and use the last content sort you selected for that community.
+                                Enable if you would like each community to remember and use the last content sort you selected for that community.
                             </p>
                         </div>
                         <div role="TextOfButtons">
-                        <ToggleButton onToggle={handleToggleInFeed6}/>
+                            <ToggleButton onToggle={handleToggleInFeed6} />
                         </div>
                     </div>
 
                     <div className="flex flex-row mb-7 justify-between">
                         <div className="flex flex-row justify-between flex-wrap">
                             <div role="TextOfButtons">
-                            Open posts in new tab
+                                Open posts in new tab
                             </div>
                             <br />
                             <div className="text-gray-400 text-wrap" role="TextOfButtons">
-                            Enable to always open posts in a new tab.
+                                Enable to always open posts in a new tab.
                             </div>
                         </div>
                         <div role="toggleButton">
-                            <ToggleButton  onToggle={handleToggleInFeed7}/>
+                            <ToggleButton onToggle={handleToggleInFeed7} />
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import TypingArea from './TypingArea'
-import "./CreatePost.css"
+
 
 function CreatePostPage() {
     return (
