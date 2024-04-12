@@ -161,7 +161,7 @@ class _settingState extends State<setting> {
                           'banana feed',
                           style: TextStyle(color: Colors.white),
                         ),
-                        SwitchWidget(),
+                        const SwitchWidget(),
                       ],
                     ),
                   ],
@@ -169,7 +169,7 @@ class _settingState extends State<setting> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Language'),
+                    const Text('Language'),
                     Column(
                       children: [
                         TextButton(
@@ -312,15 +312,15 @@ class _settingState extends State<setting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.remove_red_eye,
                             size: 25,
                             color: Colors.white,
                           ),
-                          const Text(
+                          Text(
                             "reduce Animations",
                             style: TextStyle(color: Colors.white),
                           ),
@@ -330,19 +330,19 @@ class _settingState extends State<setting> {
                     ),
                   ],
                 ),
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Dark mode'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.settings,
                           size: 25,
                           color: Colors.white,
                         ),
-                        const Text(
+                        Text(
                           "Automatic(Follow setting)",
                           style: TextStyle(
                             color: Colors.white,
@@ -357,15 +357,15 @@ class _settingState extends State<setting> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Advanced'),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.keyboard_double_arrow_up,
                           size: 25,
                           color: Colors.white,
                         ),
-                        const Text(
+                        Text(
                           "Swipe to collapse comments",
                           style: TextStyle(
                             color: Colors.white,
@@ -374,15 +374,15 @@ class _settingState extends State<setting> {
                         SwitchWidget(),
                       ],
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.image,
                           size: 25,
                           color: Colors.white,
                         ),
-                        const Text(
+                        Text(
                           "Saved imagr attribution",
                           style: TextStyle(
                             color: Colors.white,
@@ -391,15 +391,15 @@ class _settingState extends State<setting> {
                         SwitchWidget(),
                       ],
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.videocam_off_rounded,
                           size: 25,
                           color: Colors.white,
                         ),
-                        const Text(
+                        Text(
                           "mute videos by default",
                           style: TextStyle(
                             color: Colors.white,
@@ -408,15 +408,15 @@ class _settingState extends State<setting> {
                         SwitchWidget(),
                       ],
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.keyboard_arrow_down,
                           size: 25,
                           color: Colors.white,
                         ),
-                        const Text(
+                        Text(
                           "comment jump button",
                           style: TextStyle(
                             color: Colors.white,
@@ -425,15 +425,15 @@ class _settingState extends State<setting> {
                         SwitchWidget(),
                       ],
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.more_time_rounded,
                           size: 25,
                           color: Colors.white,
                         ),
-                        const Text(
+                        Text(
                           "Recent Communities",
                           style: TextStyle(
                             color: Colors.white,

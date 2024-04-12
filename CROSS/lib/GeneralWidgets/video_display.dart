@@ -5,7 +5,7 @@ import 'dart:io';
 class VideoDisplay extends StatefulWidget {
   final String videoPath;
 
-  const VideoDisplay({Key? key, required this.videoPath}) : super(key: key);
+  const VideoDisplay({super.key, required this.videoPath});
 
   @override
   _VideoDisplayState createState() => _VideoDisplayState();

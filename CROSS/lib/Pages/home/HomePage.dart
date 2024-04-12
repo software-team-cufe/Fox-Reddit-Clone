@@ -39,7 +39,7 @@ class Post {
 
 class HomePage extends StatefulWidget {
   /// Creates a [HomePage] Widget.
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();

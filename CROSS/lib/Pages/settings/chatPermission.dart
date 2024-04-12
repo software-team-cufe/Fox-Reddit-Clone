@@ -14,16 +14,16 @@ class _permissionChatState extends State<permissionChat> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             "Chat and messaging permissions",
             style: TextStyle(fontSize: 20),
           ),
         ),
-        body: Column(
+        body: const Column(
           children: [
             Text('Manage who has the permission to send you chat'),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -40,7 +40,7 @@ class _permissionChatState extends State<permissionChat> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

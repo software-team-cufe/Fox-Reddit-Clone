@@ -18,7 +18,7 @@ class endDrawer extends StatelessWidget {
   final double user_width;
 
   /// Constructs an [endDrawer] with the given [user_width].
-  const endDrawer({Key? key, required this.user_width}) : super(key: key);
+  const endDrawer({super.key, required this.user_width});
 
   @override
   Widget build(BuildContext context) {

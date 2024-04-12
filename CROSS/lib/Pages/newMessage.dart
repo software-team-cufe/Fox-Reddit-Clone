@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/GeneralWidgets/textInput.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({Key? key}) : super(key: key);
+  const NewMessage({super.key});
 
   @override
   State<NewMessage> createState() => _NewMessageState();
@@ -10,9 +10,9 @@ class NewMessage extends StatefulWidget {
 
 class _NewMessageState extends State<NewMessage> {
   List<Widget> inputWidgets = [
-    MyTextInputWidget(inputTitle: 'u/username', sheight: 50),
-    MyTextInputWidget(inputTitle: 'Subject', sheight: 50),
-    MyTextInputWidget(inputTitle: 'Message', sheight: 50),
+    const MyTextInputWidget(inputTitle: 'u/username', sheight: 50),
+    const MyTextInputWidget(inputTitle: 'Subject', sheight: 50),
+    const MyTextInputWidget(inputTitle: 'Message', sheight: 50),
   ];
 
   bool showURLInput = false;
@@ -23,7 +23,7 @@ class _NewMessageState extends State<NewMessage> {
       child: Scaffold(
         appBar: AppBar(
           actions: [
-            IconButton(icon: Icon(Icons.send), onPressed: () {}),
+            IconButton(icon: const Icon(Icons.send), onPressed: () {}),
           ],
         ),
         body: Padding(
@@ -41,18 +41,18 @@ class _NewMessageState extends State<NewMessage> {
               } else {
                 // Add URL input widget
                 inputWidgets
-                    .add(MyTextInputWidget(inputTitle: 'URL', sheight: 50));
+                    .add(const MyTextInputWidget(inputTitle: 'URL', sheight: 50));
               }
               // Toggle the flag
               showURLInput = !showURLInput;
             });
           },
+          backgroundColor: Colors.transparent,
           child: Icon(
             showURLInput ? Icons.delete : Icons.link,
             color: Colors.white,
             size: 50,
           ),
-          backgroundColor: Colors.transparent,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

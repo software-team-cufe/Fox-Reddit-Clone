@@ -10,7 +10,7 @@ class browseRow extends StatefulWidget {
   final Function pickVideo;
   final iconSize;
 
-  const browseRow({
+  const browseRow({super.key, 
     required this.togglePollVisibility,
     required this.addWidget,
     required this.iconSize,
@@ -58,7 +58,7 @@ class _browseRowState extends State<browseRow> {
                 });
                 widget.addWidget(
                   isURLVisible
-                      ? MyTextInputWidget(
+                      ? const MyTextInputWidget(
                           inputTitle: 'URL',
                           sheight: 50.0,
                         )

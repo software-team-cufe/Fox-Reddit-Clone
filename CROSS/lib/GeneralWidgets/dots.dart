@@ -3,6 +3,8 @@ import 'package:reddit_fox/Pages/newMessage.dart';
 import 'package:reddit_fox/Pages/settings/notificationSettings.dart';
 
 class WidgetButton extends StatelessWidget {
+  const WidgetButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -15,8 +17,8 @@ class WidgetButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
-                    leading: Icon(Icons.new_label_outlined),
-                    title: Text('New Messages'),
+                    leading: const Icon(Icons.new_label_outlined),
+                    title: const Text('New Messages'),
                     onTap: () {
                       Navigator.push(
                           context,
@@ -25,13 +27,13 @@ class WidgetButton extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.done_all_rounded),
-                    title: Text('Mark all inbox as read'),
+                    leading: const Icon(Icons.done_all_rounded),
+                    title: const Text('Mark all inbox as read'),
                     onTap: () {},
                   ),
                   ListTile(
-                    leading: Icon(Icons.settings),
-                    title: Text('Edit notification Settings'),
+                    leading: const Icon(Icons.settings),
+                    title: const Text('Edit notification Settings'),
                     onTap: () {
                       Navigator.push(
                           context,
@@ -46,7 +48,7 @@ class WidgetButton extends StatelessWidget {
           },
         );
       },
-      child: Icon(
+      child: const Icon(
         Icons.more_horiz_outlined,
         color: Colors.white,
       ),

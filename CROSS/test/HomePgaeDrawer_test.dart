@@ -6,7 +6,7 @@ import 'package:reddit_fox/Pages/home/Drawer.dart';
 void main() {
   testWidgets('CustomDrawer widget test', (WidgetTester tester) async {
     // Build our CustomDrawer widget
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: Scaffold(
         body: CustomDrawer(drawer_Width: 200.0),
       ),

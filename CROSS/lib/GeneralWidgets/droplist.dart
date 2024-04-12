@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DropdownWidget extends StatefulWidget {
   final List<String> items;
 
-  const DropdownWidget({required this.items});
+  const DropdownWidget({super.key, required this.items});
 
   @override
   _DropdownWidgetState createState() => _DropdownWidgetState();

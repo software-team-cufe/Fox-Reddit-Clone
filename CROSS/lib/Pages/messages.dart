@@ -42,7 +42,7 @@ class _MessageState extends State<Message> {
           },
         ),
         actions: [
-          WidgetButton(),
+          const WidgetButton(),
           IconButton(
             icon: const CircleAvatar(),
             onPressed: () {

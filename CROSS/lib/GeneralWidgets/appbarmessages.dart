@@ -3,9 +3,9 @@ import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 
 class AppBarMessages extends StatefulWidget {
-  AppBarMessages({
-    Key? key,
-  }) : super(key: key);
+  const AppBarMessages({
+    super.key,
+  });
 
   @override
   _AppBarMessagesState createState() => _AppBarMessagesState();
@@ -23,7 +23,7 @@ class _AppBarMessagesState extends State<AppBarMessages> {
         Row(
           children: [
             CustomDrawer(drawer_Width: drawerWidth),
-            Text("Inbox"),
+            const Text("Inbox"),
             endDrawer(user_width: userWidth),
           ],
         ),
@@ -33,13 +33,13 @@ class _AppBarMessagesState extends State<AppBarMessages> {
               onPressed: () {
                 //Messages()
               },
-              child: Text('Activity'),
+              child: const Text('Activity'),
             ),
             TextButton(
               onPressed: () {
                 //Activity()
               },
-              child: Text('Messages'),
+              child: const Text('Messages'),
             ),
           ],
         )

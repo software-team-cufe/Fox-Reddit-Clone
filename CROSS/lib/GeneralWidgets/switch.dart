@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SwitchWidget extends StatefulWidget {
+  const SwitchWidget({super.key});
+
   @override
   _SwitchWidgetState createState() => _SwitchWidgetState();
 }

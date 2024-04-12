@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
 
 class EmailsSetting extends StatefulWidget {
@@ -15,12 +14,12 @@ class _EmailsSettingState extends State<EmailsSetting> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Emails'),
+          title: const Text('Emails'),
         ),
-        body: Column(
+        body: const Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   Column(
@@ -49,7 +48,7 @@ class _EmailsSettingState extends State<EmailsSetting> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   Column(
@@ -118,7 +117,7 @@ class _EmailsSettingState extends State<EmailsSetting> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   Column(
@@ -126,7 +125,7 @@ class _EmailsSettingState extends State<EmailsSetting> {
                     children: [
                       Text('New Sletters'),
                       Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(10.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -137,7 +136,7 @@ class _EmailsSettingState extends State<EmailsSetting> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

@@ -14,13 +14,13 @@ class _NotificationSetttingState extends State<NotificationSettting> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Notification Settting'),
+          title: const Text('Notification Settting'),
         ),
-        body: SingleChildScrollView(
+        body: const SingleChildScrollView(
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Column(
                   children: [
                     Column(
@@ -57,7 +57,7 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Column(
                   children: [
                     Column(
@@ -158,7 +158,7 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Column(
                   children: [
                     Column(
@@ -203,7 +203,7 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Column(
                   children: [
                     Column(

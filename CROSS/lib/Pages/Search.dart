@@ -16,7 +16,7 @@ import 'package:reddit_fox/Pages/home/HomePage.dart';
 /// ```
 class Search extends StatefulWidget {
   /// Creates a [Search] Widget.
-  const Search({Key? key}) : super(key: key);
+  const Search({super.key});
 
   @override
   _SearchState createState() => _SearchState();

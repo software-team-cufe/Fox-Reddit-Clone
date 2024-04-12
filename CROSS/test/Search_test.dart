@@ -6,7 +6,7 @@ import 'package:reddit_fox/Pages/Search.dart';
 void main() {
   testWidgets('Search widget test', (WidgetTester tester) async {
     // Build our Search widget
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
       home: Scaffold(
         body: Search(),
       ),

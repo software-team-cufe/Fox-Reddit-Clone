@@ -1,11 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:reddit_fox/GeneralWidgets/droplist.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
-import 'package:reddit_fox/Pages/Blanck.dart';
 import 'package:reddit_fox/Pages/settings/chatPermission.dart';
 import 'package:reddit_fox/Pages/settings/email.dart';
 import 'package:reddit_fox/Pages/settings/notificationSettings.dart';
@@ -27,7 +23,7 @@ class _AccSettingState extends State<AccSetting> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.only(top: 20.0),
+            padding: const EdgeInsets.only(top: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -65,7 +61,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -99,7 +95,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -133,7 +129,7 @@ class _AccSettingState extends State<AccSetting> {
                                 builder: (context) =>
                                     const NotificationSettting()));
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -166,7 +162,7 @@ class _AccSettingState extends State<AccSetting> {
                             MaterialPageRoute(
                                 builder: (context) => const EmailsSetting()));
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -194,7 +190,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -218,15 +214,15 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.location_on,
                             size: 15,
                             color: Colors.white,
                           ),
-                          const Column(
+                          Column(
                             children: [
                               Text(
                                 "location customization",
@@ -267,23 +263,23 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Connected Accounts'),
+                    const Text('Connected Accounts'),
                     Padding(
-                      padding: EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          FaIcon(
+                          const FaIcon(
                             FontAwesomeIcons.google,
                             size: 50,
                           ),
-                          Text('Google'),
+                          const Text('Google'),
                           Text(
                             'Disconnect',
                             style: TextStyle(
@@ -294,15 +290,15 @@ class _AccSettingState extends State<AccSetting> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          FaIcon(
+                          const FaIcon(
                             FontAwesomeIcons.apple,
                             size: 50,
                           ),
-                          Text('apple'),
+                          const Text('apple'),
                           Text(
                             'connect',
                             style: TextStyle(
@@ -317,10 +313,10 @@ class _AccSettingState extends State<AccSetting> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Safety'),
+                    const Text('Safety'),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -342,7 +338,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -367,10 +363,10 @@ class _AccSettingState extends State<AccSetting> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => permissionChat()),
+                              builder: (context) => const permissionChat()),
                         );
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -392,7 +388,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -421,7 +417,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -442,14 +438,14 @@ class _AccSettingState extends State<AccSetting> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('privcy'),
-                    Text(
+                    const Text('privcy'),
+                    const Text(
                       'Device take actions over the setting below',
                       style: TextStyle(fontWeight: FontWeight.w100),
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -466,7 +462,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -483,7 +479,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -511,14 +507,14 @@ class _AccSettingState extends State<AccSetting> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('sensitive advertising categoris'),
-                    Text(
+                    const Text('sensitive advertising categoris'),
+                    const Text(
                       'You can limit ads about these topics',
                       style: TextStyle(fontWeight: FontWeight.w100),
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -535,7 +531,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -552,7 +548,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -569,7 +565,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(
@@ -586,7 +582,7 @@ class _AccSettingState extends State<AccSetting> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(

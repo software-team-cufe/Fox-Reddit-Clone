@@ -4,12 +4,12 @@ import 'package:reddit_fox/theme/pallete.dart';
 
 class CustomCheckBox extends StatelessWidget {
   const CustomCheckBox({
-    Key? key,
+    super.key,
     required this.value,
     required this.text,
     required this.onChange,
     this.checkColor = Colors.white,
-  }) : super(key: key);
+  });
   final bool value;
   final String text;
   final Function(bool) onChange;

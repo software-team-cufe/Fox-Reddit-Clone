@@ -8,9 +8,9 @@ class PollPage extends StatefulWidget {
 
 class _PollPageState extends State<PollPage> {
   int? _selectedOption; // Updated to allow null values
-  List<String> _options = []; // Initial options
+  final List<String> _options = []; // Initial options
 
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   void _submitResponse() {
     if (_selectedOption != null) {
@@ -48,16 +48,16 @@ class _PollPageState extends State<PollPage> {
                 groupValue: _selectedOption,
                 onChanged: (value) {
                   setState(() {
-                    _selectedOption = value as int?;
+                    _selectedOption = value;
                   });
                 },
               ),
             ),
           ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           TextField(
             controller: _textEditingController,
-            decoration: InputDecoration(labelText: 'Enter option'),
+            decoration: const InputDecoration(labelText: 'Enter option'),
             onSubmitted: (option) {
               _addOption(option);
             },

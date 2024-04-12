@@ -5,25 +5,25 @@ class MyTextInputWidget extends StatefulWidget {
   final double sheight;
   final ValueChanged<String>? onChanged;
 
-  MyTextInputWidget({
-    Key? key,
+  const MyTextInputWidget({
+    super.key,
     required this.inputTitle,
     this.sheight = 0.0,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   _MyTextInputWidgetState createState() => _MyTextInputWidgetState();
 }
 
 class _MyTextInputWidgetState extends State<MyTextInputWidget> {
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: widget.sheight,
           child: TextField(
             controller: _textEditingController,
@@ -34,7 +34,7 @@ class _MyTextInputWidgetState extends State<MyTextInputWidget> {
             ),
           ),
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
       ],
     );
   }

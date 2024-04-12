@@ -19,7 +19,7 @@ class CustomDrawer extends StatelessWidget {
   final double drawer_Width;
   
   /// Constructs a [CustomDrawer] with the given [drawer_Width].
-  const CustomDrawer({Key? key, required this.drawer_Width}) : super(key: key);
+  const CustomDrawer({super.key, required this.drawer_Width});
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +36,14 @@ class CustomDrawer extends StatelessWidget {
             child: ListView(
               children: [
                 ListTile(
-                  leading: Icon(Icons.add, color: Colors.white), 
-                  title: Text(
+                  leading: const Icon(Icons.add, color: Colors.white), 
+                  title: const Text(
                     "Create Community",
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
                     Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BlankPage()));
+                  MaterialPageRoute(builder: (context) => const BlankPage()));
                   },
                 ),
               ],

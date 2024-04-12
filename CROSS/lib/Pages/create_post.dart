@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/GeneralWidgets/poll.dart';
 import 'package:reddit_fox/GeneralWidgets/textInput.dart';
 import 'package:reddit_fox/GeneralWidgets/browse_row.dart';
 import 'package:reddit_fox/GeneralWidgets/video_display.dart';
-import 'package:reddit_fox/GeneralWidgets/image_display.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 
@@ -120,7 +118,7 @@ class _CreatePostState extends State<CreatePost> {
                     });
                   },
                 ),
-                MyTextInputWidget(
+                const MyTextInputWidget(
                   inputTitle: 'body text(optional)',
                   sheight: 300.0,
                 ),

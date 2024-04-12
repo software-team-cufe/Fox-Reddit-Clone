@@ -8,7 +8,7 @@ class CreateCommentsPage extends StatefulWidget {
 }
 
 class _CreateCommentsPageState extends State<CreateCommentsPage> {
-  TextEditingController _commentController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void dispose() {
