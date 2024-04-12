@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
       drawer: CustomDrawer(
         drawer_Width: drawerWidth,
       ),
-      endDrawer: endDrawer(user_width: userWidth, user_Id: 2,),
+      endDrawer: endDrawer(user_width: userWidth, user_Id: 1,),
       bottomNavigationBar: nBar(),
       body: FutureBuilder<List<dynamic>>(
         future: fetchPosts(),

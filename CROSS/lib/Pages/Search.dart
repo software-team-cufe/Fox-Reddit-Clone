@@ -28,19 +28,20 @@ class _SearchState extends State<Search> {
   }
 
   void _fetchRecentlySearched() async {
-    final response = await http.get(Uri.parse(ApiRoutes.getRecentSearch));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      print(data); // Print response body to see the structure
-      final List<dynamic> terms = data['recentlySearched'];
-      setState(() {
-        _recentlySearched = terms.map((term) => term['searchTerm'].toString()).toList();
-        print(_recentlySearched);
-      });
-    } else {
-      throw Exception('Failed to load recently searched terms');
-    }
+  final response = await http.get(Uri.parse(ApiRoutes.getRecentSearch));
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    print(data); // Print response body to see the structure
+    final List<dynamic> terms = data['searchTerm'];
+    setState(() {
+     // _recentlySearched = terms.map((term) => term['searchTerm'].toString()).toList();
+      print(terms);
+    });
+  } else {
+    throw Exception('Failed to load recently searched terms');
   }
+}
+
 
 
   void _clearSearch() {

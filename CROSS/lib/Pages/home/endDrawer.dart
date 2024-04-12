@@ -46,7 +46,7 @@ class endDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Profile(user_Id: user_Id)),
+                      MaterialPageRoute(builder: (context) => ProfilePage(user_Id: user_Id)),
                     );
                   },
                 ),
