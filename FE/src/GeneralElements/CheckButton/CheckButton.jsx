@@ -4,7 +4,7 @@ import { Check, Plus } from 'lucide-react'
 function CheckButton(props) {
     const [IsChecked, setIsChecked] = useState(false);
     return (
-        <button className={`border rounded-full p-2 m-2 ${IsChecked ? 'bg-orange-600 text-white' : 'bg-white text-gray-500'} `}
+        <button className={`border rounded-full ml-5 p-2 ${IsChecked ? 'bg-orange-600 text-white' : 'bg-white text-gray-500'} `}
             onClick={() => { IsChecked ? setIsChecked(false) : setIsChecked(true) }}>
             <div className='flex'>
                 {IsChecked && <Check strokeWidth={1} />}
