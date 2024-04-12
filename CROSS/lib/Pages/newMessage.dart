@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:reddit_fox/Pages/messages.dart';
 import 'dart:convert';
+import 'package:reddit_fox/Pages/messages.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 
 class NewMessage extends StatefulWidget {
@@ -67,62 +67,66 @@ class _NewMessageState extends State<NewMessage> {
     final String message = _messageController.text;
     final String url = _urlController.text;
 
-    final response = await http.get(
-      Uri.parse(ApiRoutes.login), // Endpoint to fetch user data
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> users = jsonDecode(response.body);
-
-      // Find the sender in the list of users
-      final sender = users.firstWhere(
-        (user) => user['userName'] == senderUsername,
-        orElse: () => null,
+    try {
+      // Fetch user data
+      final response = await http.get(
+        Uri.parse(ApiRoutes.login),
       );
 
-      if (sender != null) {
-        // Extract sender's data
-        final String senderId = sender['id'];
-        // Construct message data
-        final Map<String, String> messageData = {
-          'sender': senderId,
-          'recipient': senderUsername,
-          'subject': subject,
-          'content': message,
-          'url': url,
-        };
+      if (response.statusCode == 200) {
+        final List<dynamic> users = jsonDecode(response.body);
 
-        final response = await http.post(
-          Uri.parse(
-              ApiRoutes.message), // Replace with your backend endpoint URL
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(messageData),
+        // Find the sender in the list of users
+        final sender = users.firstWhere(
+          (user) => user['userName'] == senderUsername,
+          orElse: () => null,
         );
 
-        if (response.statusCode == 200) {
-          // Message sent successfully
-          print('Message sent successfully');
-          // Navigate to the next screen
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Message()),
+        if (sender != null) {
+          // Extract sender's data
+          final String senderId = sender['userName'].toString();
+          // Construct message data
+          final Map<String, String> messageData = {
+            'sender': senderId,
+            'recipient': senderUsername,
+            'subject': subject,
+            'content': message,
+            'url': url,
+          };
+
+          // Send message
+          final messageResponse = await http.post(
+            Uri.parse(ApiRoutes.message),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(messageData),
           );
+
+          if (messageResponse.statusCode == 200) {
+            // Message sent successfully
+            print('Message sent successfully');
+            // Navigate to the next screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Message()),
+            );
+          } else {
+            // Failed to send message
+            print('Failed to send message: ${messageResponse.statusCode}');
+            // You can show an error message or handle the error accordingly
+          }
         } else {
-          // Failed to send message
-          // You can show an error message or handle the error accordingly
-          print('Failed to send message');
+          // Sender not found
+          print('Sender not found');
         }
       } else {
-        // Sender not found
-        // Handle the case where the sender is not found in the users list
-        print('Sender not found');
+        // Failed to fetch user data
+        print('Failed to fetch user data: ${response.statusCode}');
       }
-    } else {
-      // Failed to fetch user data
-      // Handle the error accordingly
-      print('Failed to fetch user data');
+    } catch (error) {
+      // Handle any other errors that occur during the process
+      print('Error: $error');
     }
   }
 }
