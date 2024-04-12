@@ -106,15 +106,15 @@ class _SearchState extends State<Search> {
             ),
             SizedBox(height: 8.0),
             Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: _recentlySearched.map((term) {
-                return Text(
-                  term,
-                  style: TextStyle(color: Colors.white),
-                );
-              }).toList(),
-            ),
+            spacing: 8.0,
+            runSpacing: 8.0,
+            children: _recentlySearched.map((term) {
+              return Text(
+                term,
+                style: TextStyle(color: Colors.white),
+              );
+            }).toList(),
+          ),
             SizedBox(height: 16.0),
             Text(
               'Trending Today',
