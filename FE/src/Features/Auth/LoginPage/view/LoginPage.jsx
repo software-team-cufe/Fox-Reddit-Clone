@@ -1,4 +1,14 @@
 
+/**
+ * LoginPage component for user login.
+ * @module LoginPage
+ * @component
+ * @example
+ * return (
+ *   <LoginPage />
+ * )
+ * @returns {JSX.Element} The LoginPage component.
+ */
 import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
@@ -9,6 +19,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+
 
 export default function LoginPage({ }) {
 
