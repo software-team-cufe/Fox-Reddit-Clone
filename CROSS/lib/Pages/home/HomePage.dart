@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
     print(response.statusCode);
     if (response.statusCode == 200) {
       return json.decode(response.body);
-    } else {
+    } else {  
       throw Exception('Failed to load posts');
     }
   }
