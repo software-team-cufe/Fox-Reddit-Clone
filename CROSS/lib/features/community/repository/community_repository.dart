@@ -69,7 +69,7 @@ Stream<List<Community>> searchCommunity(String query){
   .snapshots().
   map((event) { List<Community> communities = [];
   for(var community in event.docs) {
-    communities.add(Community.fromMap(community.data() as Map<String,dynamic>),);
+    communities.add(Community.fromMap(community.data() as Map<String, dynamic>),);
   }
   return communities;
 });
