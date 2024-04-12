@@ -1,8 +1,8 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/home/saied/snap/flutter/common/flutter
-FLUTTER_APPLICATION_PATH=/media/saied/Files/Study/Software/New folder/Fox-Reddit-Clone/CROSS
+FLUTTER_ROOT=C:\flutter
+FLUTTER_APPLICATION_PATH=F:\Study\Software\Project\Fox-Reddit-Clone\CROSS
 COCOAPODS_PARALLEL_CODE_SIGN=true
-FLUTTER_TARGET=lib/main.dart
+FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0
 FLUTTER_BUILD_NUMBER=1

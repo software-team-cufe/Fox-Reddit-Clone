@@ -53,7 +53,7 @@ class _ChatScreenState extends State<ChatScreen> {
       drawer: CustomDrawer(
         drawer_Width: drawerWidth,
       ),
-      endDrawer: endDrawer(user_width: userWidth),
+      endDrawer: endDrawer(user_width: userWidth, user_Id: 1,),
       body: Column(
         children: [
           Padding(

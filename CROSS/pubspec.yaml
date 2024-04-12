@@ -61,7 +61,10 @@ dependencies:
   hidden_drawer_menu: ^3.0.0
   mockito: ^5.0.0
   lottie: ^3.1.0
-  
+  file_picker: ^8.0.0+1
+  routemaster: ^1.0.1
+  dotted_border: ^2.0.0+1
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:
@@ -89,14 +92,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-  - assets/images/google.png
-  - assets/images/loginEmote.png
-  - assets/images/logo.png
-  - assets/images/avatar.png
-  - assets/Icons/Chat.svg
-  - assets/Icons/channelIcon.png
-  - assets/images/community.png
-  - assets/images/banana.png
+  - assets/images/
+  - assets/Icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

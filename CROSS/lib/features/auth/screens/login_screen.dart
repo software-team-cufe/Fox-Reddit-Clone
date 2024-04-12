@@ -1,28 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/core/common/CustomTextBox.dart';
 import 'package:reddit_fox/features/auth/screens/ForgetPasswordScreen.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  static login(final String email, final String password) {
-    String messages = '';
-    bool valid = true;
-    if (email.trim().isEmpty) messages = "$messages Please enter email";
-    RegExp emailpaatern = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    if (!emailpaatern.hasMatch(email) ||
-        password.trim().isEmpty ||
-        email.trim().isEmpty ||
-        password.length < 7) {
-      messages = 'Please enter Valid Data';
-    }
-
-    return messages;
-  }
-
   const LoginScreen({super.key});
 
   @override
@@ -31,23 +18,50 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
+  String? errorMessage;
 
-  String? errormessage;
+  static Future<String?> login(String username, String password) async {
+    const url = ApiRoutes.login;
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final List<dynamic> users = jsonDecode(response.body);
+
+      for (final user in users) {
+        if ((user['userName'] == username || user['email'] == username) &&
+            user['password'] == password) {
+          // Login successful
+          final token = user["token"];
+
+          // Save the token in shared preferences
+          await saveToken(token);
+
+          print('login successful');
+          print("token: " + token);
+
+          return null; // No error message
+        } else {
+          print('invalid login');
+        }
+      }
+    }
+
+    // If unable to fetch data or no matching user found
+    return 'Invalid username or password';
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("login"),
+        title: const Text("Login"),
       ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              const Gap(50),
+              const SizedBox(height: 50),
               const Center(
                 child: Text(
                   "Enter your login information",
@@ -58,37 +72,44 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const Gap(20),
+              const SizedBox(height: 20),
               CustomTextBox(
-                hintText: "Email or Phone number",
+                hintText: "Email / UserName or Phone number",
                 icon: Icons.email,
-                controller: emailController, // Added controller
+                controller: emailController,
               ),
-              const Gap(10),
+              const SizedBox(height: 10),
               CustomTextBox(
                 hintText: "Password",
                 icon: Icons.password,
-                controller: passwordController, // Added controller
+                controller: passwordController,
               ),
-              const Gap(20),
-              if (errormessage != null) Text(errormessage!),
+              const SizedBox(height: 20),
+              if (errorMessage != null) Text(errorMessage!),
               CustomButton(
-                  text: "Login",
-                  onTap: () {
-                    setState(() {
-                      errormessage = LoginScreen.login(
-                          emailController.text, passwordController.text);
-                    });
-                    if (errormessage == null) {
-                      Get.to(() => const HomePage());
-                    }
-                  }),
-              const Gap(20),
+                text: "Login",
+                onTap: () async {
+                  setState(() {
+                    errorMessage = null; // Clear previous error message
+                  });
+                  final String username = emailController.text;
+                  final String password = passwordController.text;
+                  final error = await login(username, password);
+                  setState(() {
+                    errorMessage = error;
+                  });
+                  if (error == null) {
+                    // Navigate to the home page upon successful login
+                    Get.to(() => const HomePage());
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   Get.to(() => const ForgetPasswordScreen());
                 },
-                child: const Text('Forget password'),
+                child: const Text('Forgot password?'),
               ),
             ],
           ),
@@ -96,4 +117,21 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  // Function to save token in shared preferences
+
+  // Function to retrieve token from shared preferences
+}
+
+Future<void> saveToken(String token) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+  print(getToken());
+}
+
+Future<String?> getToken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('token');
+  print(token);
+  return token;
 }

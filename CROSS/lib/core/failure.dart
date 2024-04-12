@@ -1,7 +1,7 @@
 class Failure {
-  final String messge;
+  final String message;
   Failure(
-    this.messge,
+    this.message,
   );
 
 }
