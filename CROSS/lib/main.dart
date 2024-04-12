@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fox App',
       theme: Pallete.darkModeAppTheme,
-      home: const HomePage(),
+      home: StartingScreen(),
 //      locale: DevicePreview.locale(context),
       //    builder: DevicePreview.appBuilder,
     );
