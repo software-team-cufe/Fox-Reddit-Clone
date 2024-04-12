@@ -21,20 +21,6 @@ class StartingScreen extends StatelessWidget {
           Constants.logoPath,
           height: 60,
         ),
-        // actions: [
-        //   TextButton(
-        //     onPressed: () {
-        //       Navigator.push(context,
-        //           MaterialPageRoute(builder: (context) => const HomePage()));
-        //     },
-        //     child: const Text(
-        //       'Skip',
-        //       style: TextStyle(
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //   ),
-        // ],
       ),
       body: SingleChildScrollView(
         child: Padding(

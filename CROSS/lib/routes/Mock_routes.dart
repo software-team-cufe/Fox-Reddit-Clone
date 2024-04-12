@@ -14,5 +14,7 @@ class ApiRoutes {
   static String getPostsByCreatorId(int id) => '$baseUrl/posts?creatorId=$id';
   static String getUserByToken(String token) => '$baseUrl/user?token=$token';
   static const String getPopular = '$baseUrl/posts?_sort=votes,commentsNo&_order=desc,desc';
+  static const String getTrending = '$baseUrl/trendingTodat';
   static const String getRecentSearch = '$baseUrl/recentlySearched';
+  
 }
