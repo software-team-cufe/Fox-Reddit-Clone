@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'CreateCommmentsPage.dart';
 
-/// A widget that displays the details of a post, including the post title, author, content, comments, and an option to add a new comment.
 class PostDetails extends StatelessWidget {
-  const PostDetails({super.key});
+  final String redditName;
+  final String title;
+  final String picture;
+
+  const PostDetails({
+    Key? key,
+    required this.redditName,
+    required this.title,
+    this.picture = '',
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,32 +30,43 @@ class PostDetails extends StatelessWidget {
                 children: [
                   _buildAvatarIcon(),
                   const SizedBox(width: 8),
-                  const Text(
-                    "Username",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Text(
+                    redditName,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               // Display the post title
-              const Text(
-                "Post Title",
+              Text(
+                title,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              // Display a placeholder image
-              Container(
-                width: double.infinity,
-                height: 400,
-                color: Colors.grey[300],
-                child: Center(
-                  child: Icon(
-                    Icons.image,
-                    size: 100,
-                    color: Colors.grey[600],
+
+              // Display the post image
+              if (picture != null)
+                Image.network(
+                  picture!,
+                  width: double.infinity,
+                  height: 400,
+                  fit: BoxFit.cover,
+                )
+              else
+                // Display a placeholder image
+                Container(
+                  width: double.infinity,
+                  height: 400,
+                  color: Colors.grey[300],
+                  child: Center(
+                    child: Icon(
+                      Icons.image,
+                      size: 100,
+                      color: Colors.grey[600],
+                    ),
                   ),
                 ),
-              ),
+
               const SizedBox(height: 16),
               // Display the post actions (e.g., reply, upvote, downvote)
               Row(
