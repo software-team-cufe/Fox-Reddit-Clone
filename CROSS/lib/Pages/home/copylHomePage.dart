@@ -7,16 +7,31 @@ import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
 
 import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
+  
 }
 
 class _HomePageState extends State<HomePage> {
-  String _dropdownValue = 'Top'; // Declare _selectedItem here
+  String _dropdownValue = 'Top';
+  
+  String? access_token;
+  @override
+  void initState() {
+    super.initState();
+    // Retrieve token from shared preferences when the widget initializes
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        access_token = sharedPrefValue.getString('token');
+      });
+    });
+  } // Declare _selectedItem here
 
   Future<List<dynamic>> fetchPosts() async {
     var url = Uri.parse("${ApiRoutes.baseUrl}/${_dropdownValue}Posts");
@@ -115,7 +130,7 @@ class _HomePageState extends State<HomePage> {
       ),
       endDrawer: endDrawer(
         user_width: userWidth,
-        user_Id: 2,
+        token: access_token,
       ),
       bottomNavigationBar: const nBar(),
       body: FutureBuilder<List<dynamic>>(

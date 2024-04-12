@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
-import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +17,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _selectedItem = 'Home'; // Declare _selectedItem here
-  String? access_token; // Variable to store the access token
+  String? access_token;
+  late int user_Id; // Variable to store the access token
 
   @override
   void initState() {
@@ -42,6 +42,24 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<String> fetchUserProfilePic(String accessToken) async {
+    var url = Uri.parse(ApiRoutes.getUserByToken(accessToken));
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> responseData = json.decode(response.body);
+      if (responseData.isNotEmpty && responseData[0] is Map<String, dynamic> && responseData[0].containsKey('profilePic')) {
+        return responseData[0]['profilePic'];
+      } else {
+        throw Exception('User pic is not present or not a string');
+      }
+    } else {
+      throw Exception('Failed to fetch user pic');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double drawerWidth = MediaQuery.of(context).size.width * 0.8;
@@ -53,20 +71,11 @@ class _HomePageState extends State<HomePage> {
         iconTheme: const IconThemeData(color: Colors.white),
         leading: Builder(builder: (context) {
           return IconButton(
-                    icon: access_token != null
-                        ? CircleAvatar(
-                            backgroundImage: NetworkImage('https://example.com/api/user/profilePic', headers: {
-                              'Authorization': 'Bearer $access_token',
-                            }),
-                          )
-                        : CircleAvatar(
-                            // Fallback to asset image if access_token is null
-                            backgroundImage: AssetImage('assets/default_profile_pic.png'),
-                          ),
-                    onPressed: () {
-                      Scaffold.of(context).openEndDrawer();
-                    },
-                  );
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
         }),
         actions: [
           IconButton(
@@ -80,10 +89,41 @@ class _HomePageState extends State<HomePage> {
           ),
           Builder(builder: (context) {
             return IconButton(
-              icon: const CircleAvatar(),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
+              icon: access_token != null
+                ? FutureBuilder(
+                    future: fetchUserProfilePic(access_token!),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        // Handle error fetching profile picture
+                        return CircleAvatar(
+                          backgroundImage: AssetImage('assets/images/avatar.png'),
+                        );
+                      } else {
+                        // Check if profile picture URL is null or empty
+                        if (snapshot.data == null || snapshot.data.toString().isEmpty) {
+                          // Handle case where profile picture URL is empty or null
+                          return CircleAvatar(
+                            backgroundImage: AssetImage('assets/images/avatar.png'),
+                          );
+                        } else {
+                          // Display profile picture
+                          return CircleAvatar(
+                            backgroundColor: Colors.black,
+                            backgroundImage: NetworkImage(snapshot.data.toString()),
+                          );
+                        }
+                      }
+                    },
+                  )
+                : CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/avatar.png'),
+                  ),
+            onPressed: () {
+              Scaffold.of(context).openEndDrawer();
+            },
+
             );
           }),
         ],
@@ -107,8 +147,10 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      drawer: const CommunityListDrawer(),
-      endDrawer: endDrawer(user_width: userWidth, user_Id: 1,),
+      drawer: CustomDrawer(
+        drawer_Width: drawerWidth,
+      ),
+      endDrawer: endDrawer(user_width: userWidth, token: access_token,),
       bottomNavigationBar: nBar(),
       body: FutureBuilder<List<dynamic>>(
         future: fetchPosts(),
