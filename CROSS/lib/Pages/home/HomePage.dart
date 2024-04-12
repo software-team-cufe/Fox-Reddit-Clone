@@ -5,7 +5,7 @@ import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +17,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _selectedItem = 'Home'; // Declare _selectedItem here
+  String? access_token; // Variable to store the access token
 
+  @override
+  void initState() {
+    super.initState();
+    // Retrieve token from shared preferences when the widget initializes
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        access_token = sharedPrefValue.getString('token');
+      });
+    });
+  }
   Future<List<dynamic>> fetchPosts() async {
     var url = Uri.parse(_selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
     var response = await http.get(url);
@@ -40,11 +52,20 @@ class _HomePageState extends State<HomePage> {
         iconTheme: const IconThemeData(color: Colors.white),
         leading: Builder(builder: (context) {
           return IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          );
+                    icon: access_token != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage('https://example.com/api/user/profilePic', headers: {
+                              'Authorization': 'Bearer $access_token',
+                            }),
+                          )
+                        : CircleAvatar(
+                            // Fallback to asset image if access_token is null
+                            backgroundImage: AssetImage('assets/default_profile_pic.png'),
+                          ),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
         }),
         actions: [
           IconButton(
