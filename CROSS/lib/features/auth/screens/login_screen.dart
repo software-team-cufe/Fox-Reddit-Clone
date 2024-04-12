@@ -80,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 10),
               CustomTextBox(
+                isPassword: true,
                 hintText: "Password",
                 icon: Icons.password,
                 controller: passwordController,
