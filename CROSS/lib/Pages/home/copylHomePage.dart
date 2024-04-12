@@ -8,18 +8,18 @@ import 'dart:convert';
 
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reddit_fox/Pages/post_details.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
-  
 }
 
 class _HomePageState extends State<HomePage> {
   String _dropdownValue = 'Top';
-  
+
   String? access_token;
   @override
   void initState() {
@@ -173,7 +173,16 @@ class _HomePageState extends State<HomePage> {
                         ) // Adjust width and height of the image
                       : null, // Leave trailing blank if post['picture'] is null
                   onTap: () {
-                    // Navigate to post details or perform other actions
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PostDetails(
+                          redditName: post['redditName'],
+                          title: post['title'],
+                          picture: post['picture'],
+                        ),
+                      ),
+                    );
                   },
                 );
               },
