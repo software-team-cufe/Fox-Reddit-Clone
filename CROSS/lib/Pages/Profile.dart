@@ -225,7 +225,8 @@ class _ProfilePageState extends State<ProfilePage>
         final post = userPosts[index];
         return ListTile(
           title: Text(
-            post['redditName'] ?? '',           
+            post['redditName'] ?? '',
+            
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
