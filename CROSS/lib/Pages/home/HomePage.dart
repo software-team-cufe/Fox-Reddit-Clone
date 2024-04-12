@@ -9,19 +9,18 @@ import 'dart:convert';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  String _selectedItem = 'Home'; // Declare _selectedItem here
+  String _dropdownValue = 'Top'; // Declare _selectedItem here
 
   Future<List<dynamic>> fetchPosts() async {
-    var url = Uri.parse(_selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
+    var url = Uri.parse("${ApiRoutes.baseUrl}/${_dropdownValue}Posts");
     var response = await http.get(url);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -36,70 +35,100 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-        leading: Builder(builder: (context) {
-          return IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          );
-        }),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Search()),
-              );
-            },
-            icon: const Icon(Icons.search),
-          ),
-          Builder(builder: (context) {
+          backgroundColor: Colors.black,
+          iconTheme: const IconThemeData(color: Colors.white),
+          leading: Builder(builder: (context) {
             return IconButton(
-              icon: const CircleAvatar(),
+              icon: const Icon(Icons.menu),
               onPressed: () {
-                Scaffold.of(context).openEndDrawer();
+                Scaffold.of(context).openDrawer();
               },
             );
           }),
-        ],
-        title: PopupMenuButton<String>(
-          icon: Text(_selectedItem),
-          initialValue: _selectedItem,
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: "Home",
-              child: Text("Home"),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Search()),
+                );
+              },
+              icon: const Icon(Icons.search),
             ),
-            const PopupMenuItem(
-              value: "Popular",
-              child: Text("Popular"),
-            ),
+            Builder(builder: (context) {
+              return IconButton(
+                icon: const CircleAvatar(),
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+              );
+            }),
           ],
-          onSelected: (value) {
-            setState(() {
-              _selectedItem = value; // Use _selectedItem from the state class
-            });
-          },
-        ),
-      ),
+          // title: PopupMenuButton<String>(
+          //   icon: Text(_selectedItem),
+          //   initialValue: _selectedItem,
+          //   itemBuilder: (context) => [
+          //     const PopupMenuItem(
+          //       value: "Home",
+          //       child: Text("Home"),
+          //     ),
+          //     const PopupMenuItem(
+          //       value: "Popular",
+          //       child: Text("Popular"),
+          //     ),
+          //   ],
+          //   onSelected: (value) {
+          //     setState(() {
+          //       _selectedItem = value; // Use _selectedItem from the state class
+          //     });
+          //   },
+          // ),
+          title: DropdownButton<String>(
+            // value: "asda",
+            hint: Text(_dropdownValue),
+            items: const [
+              DropdownMenuItem(
+                value: 'Best',
+                child: Text('Best'),
+              ),
+              DropdownMenuItem(
+                value: 'Hot',
+                child: Text('Hot'),
+              ),
+              DropdownMenuItem(
+                value: 'New',
+                child: Text('New'),
+              ),
+              DropdownMenuItem(
+                value: 'Top',
+                child: Text('Top'),
+              ),
+            ],
+            onChanged: (String? value) {
+              setState(() {
+                _dropdownValue = value!;
+              });
+            },
+          )),
       drawer: CustomDrawer(
         drawer_Width: drawerWidth,
       ),
-      endDrawer: endDrawer(user_width: userWidth, user_Id: 2,),
-      bottomNavigationBar: nBar(),
+      endDrawer: endDrawer(
+        user_width: userWidth,
+        user_Id: 2,
+      ),
+      bottomNavigationBar: const nBar(),
       body: FutureBuilder<List<dynamic>>(
         future: fetchPosts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(), // Show a loading indicator
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text('Error: ${snapshot.error}'), // Show an error message if loading fails
+              child: Text(
+                  'Error: ${snapshot.error}'), // Show an error message if loading fails
             );
           } else {
             List<dynamic> posts = snapshot.data!;
@@ -108,17 +137,25 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 var post = posts[index];
                 return ListTile(
-                  contentPadding: EdgeInsets.all(16), // Add padding around the content
+                  contentPadding: const EdgeInsets.all(
+                      16), // Add padding around the content
                   title: Text(
                     post['redditName'],
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // Increase font size
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold), // Increase font size
                   ),
                   subtitle: Text(
                     post['title'],
-                    style: TextStyle(fontSize: 16), // Increase font size
+                    style: const TextStyle(fontSize: 16), // Increase font size
                   ),
                   trailing: post['picture'] != null
-                      ? Image.network(post['picture'], width: 100, height: 250, fit: BoxFit.cover,) // Adjust width and height of the image
+                      ? Image.network(
+                          post['picture'],
+                          width: 100,
+                          height: 250,
+                          fit: BoxFit.cover,
+                        ) // Adjust width and height of the image
                       : null, // Leave trailing blank if post['picture'] is null
                   onTap: () {
                     // Navigate to post details or perform other actions
