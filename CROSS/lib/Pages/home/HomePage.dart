@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
+import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -106,9 +107,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      drawer: CustomDrawer(
-        drawer_Width: drawerWidth,
-      ),
+      drawer: const CommunityListDrawer(),
       endDrawer: endDrawer(user_width: userWidth, user_Id: 1,),
       bottomNavigationBar: nBar(),
       body: FutureBuilder<List<dynamic>>(
