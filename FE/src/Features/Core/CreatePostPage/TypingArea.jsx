@@ -260,8 +260,8 @@ function TypingArea() {
                                         onChange={handleBannerUpload}
                                     />
                                     <div className='items-center text-center h-full w-full justify-items-center' >
-                                        <p className='text-lg font-sans  text-center  w-full py-10 px-20  sm:w-max
-                                     sm:my-8 sm:px-96 sm:py-20  '> Drag and drop or Upload Banner  image  </p>
+                                        <p className='text-lg font-sans  text-center  w-full py-10 px-10 sm:w-max
+                                     sm:my-8 sm:px-40 sm:py-20  '> Drag and drop or Upload Banner  image  </p>
                                     </div>
                                 </div>
                             </>
@@ -387,7 +387,7 @@ function TypingArea() {
                     </div>}
                 </div>
             </div>
-            <div className="bg-gray-100 h-24 mt-12 p-6">
+            <div className="bg-gray-100 h-32 mt-12 p-6">
                 <input type="checkbox" className='mx-4' />Send me post reply notifications
                 <div>
                     <p className="hover:underline text-blue-700 px-4">
