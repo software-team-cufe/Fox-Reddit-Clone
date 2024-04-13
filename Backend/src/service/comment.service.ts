@@ -32,13 +32,6 @@ async function userCommets(commentsIDS: string[], limit: number | undefined) {
   return limitedComments;
 }
 
-async function deleteComment(id: string) {
-  const comment = await CommentModel.findById(id);
-  if (!comment) {
-    throw new appError('Comment not found', 404);
-  }
-  await comment.deleteOne();
-}
 interface CommentData {
   textHTML: string;
   textJSON: string;
@@ -106,4 +99,4 @@ async function add_comment(data: CommentData, userId: string) {
 
   return result;
 }
-export { userCommets, deleteComment, add_comment };
+export { userCommets, add_comment };

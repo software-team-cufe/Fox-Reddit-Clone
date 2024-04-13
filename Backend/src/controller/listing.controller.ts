@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { addComment, deleteCommentOrPost, hidePost } from '../schema/listing.schema';
-import { deletePost, findPostById, hide, unhide } from '../service/post.service';
-import { add_comment, deleteComment, findCommentById } from '../service/comment.service';
+import { findPostById } from '../service/post.service';
+import { add_comment, findCommentById } from '../service/comment.service';
 import { findUserByUsername } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
 import UserModel from '../model/user.model';
@@ -303,84 +303,91 @@ export async function unsaveHandler(req: Request, res: Response, next: NextFunct
 }
 
 export async function editUserTextHandler(req: Request, res: Response, next: NextFunction) {
-  const user = await findUserByUsername(req.body.username as string);
-  if (!user) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Access token is missing or invalid',
-    });
-  }
-
-  if (!req.body.linkID)
-    return res.status(400).json({
-      response: 'invaild parameters',
-    });
-  const linkID = req.body.linkID;
-  delete req.body.linkID;
-  req.body.editedAt = Date.now();
-
-  // Edit Post by user
-  if (linkID[1] === '3') {
-    const post = await PostModel.findById(linkID.slice(3));
-
-    if (!post || !post.userID) {
+  try {
+    const username = req.body.username as string;
+    const user = await findUserByUsername(username);
+    if (!user) {
       return res.status(400).json({
         status: 'failed',
-        message: 'Post not found',
+        message: 'Access token is missing or invalid',
       });
     }
 
-    if (post.userID.toString() !== user._id.toString()) {
+    const linkID = req.body.linkID;
+    if (!linkID) {
       return res.status(400).json({
-        status: 'failed',
-        message: 'You are not the author of this post!',
+        response: 'invaild parameters',
       });
     }
 
-    // Update the post manually
-    const results = await PostModel.findByIdAndUpdate(
-      post._id,
-      { textJSON: req.body.text },
-      { upsert: true, new: true }
-    );
+    delete req.body.linkID;
+    req.body.editedAt = Date.now();
 
-    if (!results)
-      return res.status(400).json({
-        response: 'error',
+    if (linkID[1] === '3') {
+      const post = await PostModel.findById(linkID.slice(3));
+      if (!post || !post.userID) {
+        return res.status(400).json({
+          status: 'failed',
+          message: 'Post not found',
+        });
+      }
+
+      if (post.userID.toString() !== user._id.toString()) {
+        return res.status(400).json({
+          status: 'failed',
+          message: 'You are not the author of this post!',
+        });
+      }
+
+      const results = await PostModel.findByIdAndUpdate(
+        post._id,
+        { textJSON: req.body.text },
+        { upsert: true, new: true }
+      );
+
+      if (!results) {
+        return res.status(400).json({
+          response: 'error',
+        });
+      }
+
+      return res.status(200).json({
+        response: results,
       });
-    return res.status(200).json({
-      response: results,
-    });
+    } else if (linkID[1] === '1') {
+      const comment = await CommentModel.findById(linkID.slice(3));
+      if (!comment || !comment.authorId) {
+        return res.status(400).json({
+          status: 'failed',
+          message: 'Comment not found',
+        });
+      }
 
-    // Edit comment by user
-  } else if (linkID[1] === '1') {
-    const comment = await CommentModel.findById(linkID.slice(3));
-    if (!comment || !comment.authorId) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Comment not found',
+      if (comment.authorId.toString() !== user._id.toString()) {
+        return res.status(400).json({
+          status: 'failed',
+          message: 'You are not the author of this post!',
+        });
+      }
+
+      const results = await CommentModel.findByIdAndUpdate(
+        comment._id,
+        { textJSON: req.body.text },
+        { upsert: true, new: true }
+      );
+
+      if (!results) {
+        return res.status(400).json({
+          response: 'error',
+        });
+      }
+
+      return res.status(200).json({
+        response: results,
       });
     }
-    if (comment.authorId.toString() !== user._id.toString()) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'You are not the author of this post!',
-      });
-    }
-    // Update the comment manually
-    const results = await CommentModel.findByIdAndUpdate(
-      comment._id,
-      { textJSON: req.body.text },
-      { upsert: true, new: true }
-    );
-
-    if (!results)
-      return res.status(400).json({
-        response: 'error',
-      });
-    return res.status(200).json({
-      response: results,
-    });
+  } catch (err) {
+    return next(err);
   }
 }
 /**
