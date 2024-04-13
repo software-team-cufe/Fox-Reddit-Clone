@@ -11,7 +11,7 @@ import userModel from './Models/UserModel';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const unProtectedRoutes = [
   '/',
@@ -22,9 +22,9 @@ const unProtectedRoutes = [
 
 function MainRoute() {
   //store subreddits in array
-  const[recentCommunities,setRecentCommunities]=useState([]);
-  
-  
+  const [recentCommunities, setRecentCommunities] = useState([]);
+
+
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
@@ -50,12 +50,13 @@ function MainRoute() {
   }, [path]);
 
   const exp = new RegExp('\/chat\/?([^\/]+)?$');
-  if(exp.test(path)){
-    return <Outlet/>
+  if (exp.test(path)) {
+    return <Outlet />
   }
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg" UserName="someuser" IsOnline={true} IsLogged={true} />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg"
+        UserName="someuser" IsOnline={true} IsLogged={false} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto ">
         {
           ![
@@ -65,7 +66,7 @@ function MainRoute() {
             "/forget-password",
           ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} IsModerator={false} RecentCommunities={recentCommunities} />
         }
-        
+
         <div className={` h-full w-full overflow-y-auto  ${path.includes('submit') ? " " : "lg:p-4"}`}>
           <Outlet />
         </div>
