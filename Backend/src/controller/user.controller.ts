@@ -255,7 +255,7 @@ export async function username_availableHandler(req: Request<VerifyUserInput>, r
     const user = await findUserByUsername(username);
 
     if (user !== null) {
-      return res.status(200).json('Not Available');
+      return res.status(404).json('Not Available');
     } else {
       return res.status(200).json('Available');
     }

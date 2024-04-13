@@ -20,7 +20,7 @@ import PostModel from '../model/posts.model';
  */
 export async function deleteHandler(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = req.body.id;
+    const id = req.body.linkID;
     const desiredID = id.split('_')[1];
     const user = await findUserByUsername(req.body.username as string);
 
@@ -297,6 +297,129 @@ export async function unsaveHandler(req: Request, res: Response, next: NextFunct
       status: 'success',
       message: 'Post is unsaved successfully',
     });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+export async function editUserTextHandler(req: Request, res: Response, next: NextFunction) {
+  const user = await findUserByUsername(req.body.username as string);
+  if (!user) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Access token is missing or invalid',
+    });
+  }
+
+  if (!req.body.linkID)
+    return res.status(400).json({
+      response: 'invaild parameters',
+    });
+  const linkID = req.body.linkID;
+  delete req.body.linkID;
+  req.body.editedAt = Date.now();
+
+  // Edit Post by user
+  if (linkID[1] === '3') {
+    const post = await PostModel.findById(linkID.slice(3));
+
+    if (!post || !post.userID) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    if (post.userID.toString() !== user._id.toString()) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'You are not the author of this post!',
+      });
+    }
+
+    // Update the post manually
+    const results = await PostModel.findByIdAndUpdate(
+      post._id,
+      { textJSON: req.body.text },
+      { upsert: true, new: true }
+    );
+
+    if (!results)
+      return res.status(400).json({
+        response: 'error',
+      });
+    return res.status(200).json({
+      response: results,
+    });
+
+    // Edit comment by user
+  } else if (linkID[1] === '1') {
+    const comment = await CommentModel.findById(linkID.slice(3));
+    if (!comment || !comment.authorId) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Comment not found',
+      });
+    }
+    if (comment.authorId.toString() !== user._id.toString()) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'You are not the author of this post!',
+      });
+    }
+    // Update the comment manually
+    const results = await CommentModel.findByIdAndUpdate(
+      comment._id,
+      { textJSON: req.body.text },
+      { upsert: true, new: true }
+    );
+
+    if (!results)
+      return res.status(400).json({
+        response: 'error',
+      });
+    return res.status(200).json({
+      response: results,
+    });
+  }
+}
+/**
+ * Get post insights count
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ * @returns {object} res
+ */
+export async function insightsCountsHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const linkID = req.params.post;
+    if (!linkID) {
+      return res.status(400).json({
+        response: 'invalid parameters',
+      });
+    }
+
+    const post = await PostModel.findById(linkID.slice(3));
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Check if post is undefined before accessing its properties
+    if (post) {
+      const postInsightsCnt = post.insightCnt;
+      return res.status(200).json({
+        status: 'succeeded',
+        postInsightsCnt,
+      });
+    } else {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
   } catch (err) {
     return next(err);
   }
