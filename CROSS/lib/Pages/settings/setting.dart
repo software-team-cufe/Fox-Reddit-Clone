@@ -54,7 +54,9 @@ class _settingState extends State<setting> {
             profilePic: user['profilePic'],
             uid: user['id'],
             karma: user['karma'],
-            isAuthenticated: false);
+            isAuthenticated: false,
+            birthDate: user['date'] != null ? DateTime.parse(user['date']) : null, 
+            banner: '',);
 
         // user.name=response.body.['name'];
         return usermodel;
