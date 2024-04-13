@@ -29,7 +29,7 @@ const icons = [
    },
 ];
 
-function Sidebar({ className, IsOpen, IsModerator }) {
+function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
    // const toggleSidebar = () => {
    //    setOpen(!open);
    // };
@@ -40,6 +40,7 @@ function Sidebar({ className, IsOpen, IsModerator }) {
  * @param {Event} event - the event of clicking any button
  * @returns {void} - this function does not return anything
  */
+
    function functionToExecute(event) {
       // Get the dropdown list associated with the clicked button
       const dropdownList = event.target.nextElementSibling;
@@ -150,12 +151,21 @@ function Sidebar({ className, IsOpen, IsModerator }) {
 
                      <div id="dropdown" className="">
                         <ul className="" aria-labelledby="dropdownDefaultButton">
+                           {/*here is where the ui print the subreddits i just entered */}
                            <li>
                               <a
                                  href="#"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
-                                 must be created
+                                 {RecentCommunities.map((subreddit, index) => (
+                                    <a
+                                    key={index}
+                                    href="#"
+                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                    >
+                                       {subreddit}
+                                    </a>
+                                 ))}
                               </a>
                            </li>
                         </ul>

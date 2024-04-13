@@ -11,7 +11,7 @@ import userModel from './Models/UserModel';
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 
 const unProtectedRoutes = [
   '/',
@@ -21,7 +21,10 @@ const unProtectedRoutes = [
 ]
 
 function MainRoute() {
-
+  //store subreddits in array
+  const[recentCommunities,setRecentCommunities]=useState([]);
+  
+  
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
@@ -29,6 +32,23 @@ function MainRoute() {
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
   }
+
+  //this useEffect is to respond to any change in the page to
+  //update the recentCommunities array with the last 5 communities visited
+  //but still need to save it in database as all data vanish when refreshing the page
+  useEffect(() => {
+    const exp = /\/r\/(.*)/;
+    const match = path.match(exp);
+    if (match) {
+      const communityName = match[1];
+      if (recentCommunities.length < 5) {
+        setRecentCommunities([...recentCommunities, communityName]);
+      } else {
+        setRecentCommunities([...recentCommunities.slice(1), communityName]);
+      }
+    }
+  }, [path]);
+
   const exp = new RegExp('\/chat\/?([^\/]+)?$');
   if(exp.test(path)){
     return <Outlet/>
@@ -43,7 +63,7 @@ function MainRoute() {
             "/register",
             "/forget-username",
             "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} IsModerator={false} />
+          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} IsModerator={false} RecentCommunities={recentCommunities} />
         }
         
         <div className={` h-full w-full overflow-y-auto  ${path.includes('submit') ? " " : "lg:p-4"}`}>
