@@ -30,7 +30,7 @@ export default function Card (){
         <div className=' flex flex-col mt-6'>
               <div className='  flex flex-row mb-7'>
         <div className=' w-1/2 flex-col ml-6'>
-         <p className=' text-sm font-semibold'> 
+         <p className=' text-xs md:text-sm font-semibold'> 
            1
          </p>
          <p className=' text-xs text-slate-500'> 
@@ -38,7 +38,7 @@ export default function Card (){
          </p>
         </div>
         <div className=' w-1/2 flex-col'>
-           <p className=' text-sm font-semibold'> 
+           <p className=' text-xs md:text-sm font-semibold'> 
              0
            </p>
            <p className=' text-xs text-slate-500'> 
@@ -48,7 +48,7 @@ export default function Card (){
               </div>
              <div className='  flex flex-row'>
         <div className=' w-1/2 flex-col ml-6'>
-            <p className=' text-sm font-semibold'> 
+            <p className=' text-xs md:text-sm font-semibold'> 
              Feb 29, 2024
            </p>
           <p className=' text-xs text-slate-500'> 
@@ -56,7 +56,7 @@ export default function Card (){
           </p>
         </div>
         <div className=' w-1/2 flex-col'>
-           <p className=' text-sm font-semibold'> 
+           <p className=' text-xs md:text-sm font-semibold'> 
               0
            </p>
            <p className=' text-xs text-slate-500'> 
@@ -72,7 +72,7 @@ export default function Card (){
         <h1 className="text-xs text-gray-600 ml-6"> SETTINGS </h1>
         <br/>
 
-        <div className='flex flex-col'>
+        <div className='flex flex-col pr-2'>
           
            <div className='flex flex-row'>
                
@@ -210,7 +210,7 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 ml-10'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 lg:ml-10'> 
                   Edit Profile
                 </button>
                </div>
@@ -241,7 +241,7 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-12'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 lg:ml-10'> 
                   Style Avatar
                 </button>
                </div>
@@ -278,7 +278,7 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-14'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold p-2 hover:bg-gray-300 lg:ml-14'> 
                   Mod Settings
                 </button>
                </div>
