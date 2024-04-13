@@ -385,11 +385,11 @@ export class User {
       return false;
     }
   }
-  async save(): Promise<User> {
-    const UserModel = getModelForClass(User); // Retrieve the Mongoose model for User class
-    const user = new UserModel(this); // Create a new instance of User model
-    return await user.save(); // Save the user to the database and return the saved user object
-  }
+  // async save(): Promise<User> {
+  //   const UserModel = getModelForClass(User); // Retrieve the Mongoose model for User class
+  //   const user = new UserModel(this); // Create a new instance of User model
+  //   return await user.save(); // Save the user to the database and return the saved user object
+  // }
 }
 
 export const UserModel = getModelForClass(User);

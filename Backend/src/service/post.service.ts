@@ -1,7 +1,8 @@
 import appError from '../utils/appError';
-import PostModel from '../model/posts.model';
+import PostModel, { Post } from '../model/posts.model';
 import UserModel, { User } from '../model/user.model';
-
+import { DocumentType, Ref } from '@typegoose/typegoose';
+import { ObjectId } from 'mongodb';
 /**
  * Finds a post by their ID.
  *
@@ -53,12 +54,12 @@ async function hide(id: string, user: User) {
 
   const hiddenPosts = user.hiddenPosts ?? [];
   // Check if the post is already hidden by the user
-  if (hiddenPosts.find((el) => el.toString() === id)) {
+  if (hiddenPosts.find((el) => el.id === id)) {
     return; // Exit the function if post is already hidden
   }
   // Hide the post for the user
   hiddenPosts.push(post._id);
-  //await user.save();
+  // await user.save();
 }
 /**
  * Hides a post for the given user.
@@ -78,6 +79,72 @@ async function unhide(id: string, user: User) {
   );
   //await user.save();
 }
+
+// /**
+//  * User saves a post
+//  * @param {string} linkID - The ID of the post to save.
+//  * @param {User} user - The user object.
+//  */
+// async function save(linkID: string, user: DocumentType<User>): Promise<void> {
+//   if (!linkID) {
+//     throw new Error('No linkID is provided!');
+//   }
+//   if (!user) {
+//     throw new Error("This user doesn't exist!");
+//   }
+
+//   // Assert that savedPosts is an array of Ref<Post>
+//   const savedPosts: Ref<Post>[] = user.savedPosts || [];
+
+//   // Extract the post ID from linkID (assuming it's prefixed with 'link')
+//   const postID: Ref<Post> = new ObjectId(linkID.slice(4));
+
+//   // Check if the post is already saved by the user
+//   if (savedPosts.find((ref: Ref<Post>) => ref.equals(postID))) {
+//     return;
+//   }
+
+//   // Save the post for the user
+//   savedPosts.push(postID);
+//   user.savedPosts = savedPosts; // Update savedPosts array
+//   await user.save();
+// }
+
+// /**
+//  * User unsaves a post
+//  * @param {string} linkID - The ID of the post to unsave.
+//  * @param {User} user - The user object.
+//  */
+// async function unsave(linkID: string, user: DocumentType<User>): Promise<void> {
+//   if (!linkID) {
+//     throw new Error('No linkID is provided!');
+//   }
+//   if (!user) {
+//     throw new Error("This user doesn't exist!");
+//   }
+
+//   // Assert that savedPosts is an array of Ref<Post>
+//   const savedPosts: Ref<Post>[] = user.savedPosts || [];
+
+//   // Extract the post ID from linkID (assuming it's prefixed with 'link')
+//   const postID = new ObjectId(linkID.slice(4));
+
+//   // Find the index of the post to unsave
+//   const index = savedPosts.findIndex((id) => id.equals(postID));
+//   if (index === -1) {
+//     // Post not found in savedPosts
+//     return;
+//   }
+
+//   // Remove the post from the savedPosts array
+//   savedPosts.splice(index, 1);
+
+//   // Update the savedPosts array in the user object
+//   user.savedPosts = savedPosts;
+
+//   // Save the updated user object
+//   await user.save();
+// }
 export { userPosts, deletePost, hide, unhide };
 
 //post.service.ts

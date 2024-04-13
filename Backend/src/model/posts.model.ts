@@ -105,9 +105,9 @@ export class Post {
   @prop()
   bestFactor!: number;
 
-  // static async incrementInsightCount(doc: DocumentType<Post>) {
-  //   await PostModel.updateOne({ _id: doc._id }, { $inc: { insightCnt: 1 } });
-  // }
+  static async incrementInsightCount(doc: DocumentType<Post>) {
+    await PostModel.updateOne({ _id: doc._id }, { $inc: { insightCnt: 1 } });
+  }
   // static async preFind(next: () => void) {
   //   await PostModel.updateMany({}, { $inc: { insightCnt: 1 } }).exec();
   //   next();

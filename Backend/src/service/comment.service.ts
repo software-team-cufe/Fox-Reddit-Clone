@@ -5,6 +5,15 @@ import appError from '../utils/appError';
 import { findPostById } from './post.service';
 import { findUserById, findUserByUsername } from './user.service';
 
+/**
+ * Finds a comment by their ID.
+ *
+ * @param id - The ID of the post to find.
+ * @returns A promise that resolves to the user object if found, or null if not found.
+ */
+export function findCommentById(id: string) {
+  return CommentModel.findById(id);
+}
 async function userCommets(commentsIDS: string[], limit: number | undefined) {
   // If the request didn't contain a limit in its query, set it to 10 by default
   limit = limit || 10;
