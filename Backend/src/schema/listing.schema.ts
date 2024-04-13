@@ -29,6 +29,33 @@ export const hidePostSchema = object({
   }),
 });
 
+export const spoilerPostSchema = object({
+  body: object({
+    linkID: string({
+      required_error: 'id is required',
+    }),
+  }),
+});
+
+export const nsfwPostSchema = object({
+  body: object({
+    linkID: string({
+      required_error: 'id is required',
+    }),
+  }),
+});
+
+export const lockPostSchema = object({
+  body: object({
+    linkID: string({
+      required_error: 'id is required',
+    }),
+  }),
+});
+
 export type addComment = TypeOf<typeof addCommentSchema>;
 export type deleteCommentOrPost = TypeOf<typeof deleteCommentOrPostSchema>;
 export type hidePost = TypeOf<typeof hidePostSchema>;
+export type spoilerPost = TypeOf<typeof spoilerPostSchema>;
+export type nsfwPost = TypeOf<typeof nsfwPostSchema>;
+export type lockPost = TypeOf<typeof lockPostSchema>;

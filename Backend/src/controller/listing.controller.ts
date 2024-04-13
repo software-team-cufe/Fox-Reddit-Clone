@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { addComment, deleteCommentOrPost, hidePost } from '../schema/listing.schema';
-import { deletePost, hide, unhide } from '../service/post.service';
+import { addComment, deleteCommentOrPost, hidePost, spoilerPost, nsfwPost, lockPost } from '../schema/listing.schema';
+import { findPostById, deletePost, hide, unhide } from '../service/post.service';
 import { add_comment, deleteComment } from '../service/comment.service';
 import { findUserByUsername } from '../service/user.service';
 import { Comment } from '../model/comments.model';
+import { UserModel } from '../model/user.model';
+import PostModel from '../model/posts.model';
 // export async function addCommentHandler(req: Request<addComment['body']>, res: Response) {
 //     try{
 //         let comment=await addComment(req.body, req.username);
@@ -120,6 +122,7 @@ export async function unhidePostHandler(req: Request<hidePost['body']>, res: Res
     message: 'Post is unhidden successfully',
   });
 }
+
 // export async function addCommentHandler(req: Request<addComment['body']>, res: Response, next: NextFunction) {
 export async function addCommentHandler(req: Request, res: Response, next: NextFunction) {
   console.log('here');
@@ -130,4 +133,286 @@ export async function addCommentHandler(req: Request, res: Response, next: NextF
     return next(err);
   }
   res.status(200).json(newComment);
+}
+
+/**
+ * Handles spoiling a post.
+ * @param {Request<spoilerPost['body']>} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ */
+export async function spoilerPostHandler(req: Request<spoilerPost['body']>, res: Response, next: NextFunction) {
+  try {
+    const id = req.body.linkID;
+    const desiredID = id.split('_')[1];
+    const post = await findPostById(desiredID);
+    const user = res.locals.user;
+
+    // Check if post is not found
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if the post is already spoilered
+    if (post.spoiler) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post is already spoilered',
+      });
+    }
+
+    await PostModel.findByIdAndUpdate(post._id, { spoiler: true }, { upsert: true, new: true });
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Post is spoilered successfully',
+  });
+}
+
+/**
+ * Handles unspoiling a post.
+ * @param {Request<spoilerPost['body']>} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ */
+export async function unspoilerPostHandler(req: Request<spoilerPost['body']>, res: Response, next: NextFunction) {
+  try {
+    const id = req.body.linkID;
+    const desiredID = id.split('_')[1];
+    const post = await findPostById(desiredID);
+    const user = res.locals.user;
+
+    // Check if post is not found
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if the post is already unspoilered
+    if (!post.spoiler) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post is already unspoilered',
+      });
+    }
+
+    await PostModel.findByIdAndUpdate(post._id, { spoiler: false }, { upsert: true, new: true });
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Post is unspoilered successfully',
+  });
+}
+
+/**
+ * Handles marking a post as NSFW.
+ * @param {Request<nsfwPost['body']>} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ */
+export async function marknsfwPostHandler(req: Request<nsfwPost['body']>, res: Response, next: NextFunction) {
+  try {
+    const id = req.body.linkID;
+    const desiredID = id.split('_')[1];
+    const post = await findPostById(desiredID);
+    const user = res.locals.user;
+
+    // Check if post is not found
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if the post is already marked as NSFW
+    if (post.nsfw) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post is already marked as NSFW',
+      });
+    }
+
+    await PostModel.findByIdAndUpdate(post._id, { nsfw: true }, { upsert: true, new: true });
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Post is marked NSFW successfully',
+  });
+}
+
+/**
+ * Handles unmarking a post as NSFW.
+ * @param {Request<nsfwPost['body']>} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ */
+export async function unmarknsfwPostHandler(req: Request<nsfwPost['body']>, res: Response, next: NextFunction) {
+  try {
+    const id = req.body.linkID;
+    const desiredID = id.split('_')[1];
+    const post = await findPostById(desiredID);
+    const user = res.locals.user;
+
+    // Check if post is not found
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if the post is already unmarked as NSFW
+    if (!post.nsfw) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post is already unmarked as NSFW',
+      });
+    }
+
+    await PostModel.findByIdAndUpdate(post._id, { nsfw: false }, { upsert: true, new: true });
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Post is unmarked NSFW successfully',
+  });
+}
+
+/**
+ * Handles locking a post.
+ * @param {Request<lockPost['body']>} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ */
+export async function lockPostHandler(req: Request<lockPost['body']>, res: Response, next: NextFunction) {
+  try {
+    const id = req.body.linkID;
+    const desiredID = id.split('_')[1];
+    const post = await findPostById(desiredID);
+    const user = res.locals.user;
+
+    // Check if post is not found
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if the post is already locked
+    if (post.locked) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post is already locked',
+      });
+    }
+
+    await PostModel.findByIdAndUpdate(post._id, { locked: true }, { upsert: true, new: true });
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Post is locked successfully',
+  });
+}
+
+/**
+ * Handles unlocking a post.
+ * @param {Request<lockPost['body']>} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ */
+export async function unlockPostHandler(req: Request<lockPost['body']>, res: Response, next: NextFunction) {
+  try {
+    const id = req.body.linkID;
+    const desiredID = id.split('_')[1];
+    const post = await findPostById(desiredID);
+    const user = res.locals.user;
+
+    // Check if post is not found
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if the post is already unlocked
+    if (!post.locked) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post is already unlocked',
+      });
+    }
+
+    await PostModel.findByIdAndUpdate(post._id, { locked: false }, { upsert: true, new: true });
+  } catch (err) {
+    return next(err);
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Post is unlocked successfully',
+  });
 }

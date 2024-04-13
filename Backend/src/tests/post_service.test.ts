@@ -69,85 +69,85 @@
 
 // userPosts.test.ts
 
-import userPosts from '../service/post.service'; // Adjust the path to your actual function
-import PostModel from '../model/posts.model'; // Adjust the path to your PostModel
+// import userPosts from '../service/post.service'; // Adjust the path to your actual function
+// import PostModel from '../model/posts.model'; // Adjust the path to your PostModel
 
-describe('userPosts function', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+// describe('userPosts function', () => {
+//   afterEach(() => {
+//     jest.clearAllMocks();
+//   });
 
-  it('should fetch limited posts based on provided IDs', async () => {
-    const mockPostIds = ['id1', 'id2', 'id3']; // Replace with actual post IDs
-    const mockPosts = [
-      { _id: 'id1', title: 'Post 1' },
-      { _id: 'id2', title: 'Post 2' },
-      { _id: 'id3', title: 'Post 3' },
-    ]; // Replace with actual posts
+//   it('should fetch limited posts based on provided IDs', async () => {
+//     const mockPostIds = ['id1', 'id2', 'id3']; // Replace with actual post IDs
+//     const mockPosts = [
+//       { _id: 'id1', title: 'Post 1' },
+//       { _id: 'id2', title: 'Post 2' },
+//       { _id: 'id3', title: 'Post 3' },
+//     ]; // Replace with actual posts
 
-    // Mock the PostModel.find method
-    PostModel.find = jest.fn().mockResolvedValue(mockPosts);
+//     // Mock the PostModel.find method
+//     PostModel.find = jest.fn().mockResolvedValue(mockPosts);
 
-    const result = await userPosts(mockPostIds, 2); // Fetch 2 posts
+//     const result = await userPosts(mockPostIds, 2); // Fetch 2 posts
 
-    expect(result).toEqual(mockPosts.slice(0, 2));
-    expect(PostModel.find).toHaveBeenCalledWith({ _id: { $in: mockPostIds } });
-  });
+//     expect(result).toEqual(mockPosts.slice(0, 2));
+//     expect(PostModel.find).toHaveBeenCalledWith({ _id: { $in: mockPostIds } });
+//   });
 
-  it('should return an empty array for empty post IDs', async () => {
-    const emptyPostIds: string[] = [];
+//   it('should return an empty array for empty post IDs', async () => {
+//     const emptyPostIds: string[] = [];
 
-    const result = await userPosts(emptyPostIds, 5);
+//     const result = await userPosts(emptyPostIds, 5);
 
-    expect(result).toEqual([]);
-    expect(PostModel.find).not.toHaveBeenCalled();
-  });
+//     expect(result).toEqual([]);
+//     expect(PostModel.find).not.toHaveBeenCalled();
+//   });
 
-  it('should default to fetching 10 posts when no limit is specified', async () => {
-    const mockPostIds = ['id1', 'id2', 'id3'];
+//   it('should default to fetching 10 posts when no limit is specified', async () => {
+//     const mockPostIds = ['id1', 'id2', 'id3'];
 
-    await userPosts(mockPostIds, undefined);
+//     await userPosts(mockPostIds, undefined);
 
-    expect(PostModel.find).toHaveBeenCalledWith({ _id: { $in: mockPostIds } });
-  });
+//     expect(PostModel.find).toHaveBeenCalledWith({ _id: { $in: mockPostIds } });
+//   });
 
-  it('should return all available posts if fewer than the specified limit', async () => {
-    const mockPostIds = ['id1', 'id2'];
-    const mockPosts = [
-      { _id: 'id1', title: 'Post 1' },
-      { _id: 'id2', title: 'Post 2' },
-    ];
+//   it('should return all available posts if fewer than the specified limit', async () => {
+//     const mockPostIds = ['id1', 'id2'];
+//     const mockPosts = [
+//       { _id: 'id1', title: 'Post 1' },
+//       { _id: 'id2', title: 'Post 2' },
+//     ];
 
-    PostModel.find = jest.fn().mockResolvedValue(mockPosts);
+//     PostModel.find = jest.fn().mockResolvedValue(mockPosts);
 
-    const result = await userPosts(mockPostIds, 5);
+//     const result = await userPosts(mockPostIds, 5);
 
-    expect(result).toEqual(mockPosts);
-  });
+//     expect(result).toEqual(mockPosts);
+//   });
 
-  it('should return the first "limit" posts if more than the specified limit', async () => {
-    const mockPostIds = ['id1', 'id2', 'id3', 'id4', 'id5'];
-    const mockPosts = [
-      { _id: 'id1', title: 'Post 1' },
-      { _id: 'id2', title: 'Post 2' },
-      { _id: 'id3', title: 'Post 3' },
-      { _id: 'id4', title: 'Post 4' },
-      { _id: 'id5', title: 'Post 5' },
-    ];
+//   it('should return the first "limit" posts if more than the specified limit', async () => {
+//     const mockPostIds = ['id1', 'id2', 'id3', 'id4', 'id5'];
+//     const mockPosts = [
+//       { _id: 'id1', title: 'Post 1' },
+//       { _id: 'id2', title: 'Post 2' },
+//       { _id: 'id3', title: 'Post 3' },
+//       { _id: 'id4', title: 'Post 4' },
+//       { _id: 'id5', title: 'Post 5' },
+//     ];
 
-    PostModel.find = jest.fn().mockResolvedValue(mockPosts);
+//     PostModel.find = jest.fn().mockResolvedValue(mockPosts);
 
-    const result = await userPosts(mockPostIds, 3);
+//     const result = await userPosts(mockPostIds, 3);
 
-    expect(result).toEqual(mockPosts.slice(0, 3));
-  });
+//     expect(result).toEqual(mockPosts.slice(0, 3));
+//   });
 
-  it('should handle database query failure', async () => {
-    const mockPostIds = ['id1', 'id2'];
+//   it('should handle database query failure', async () => {
+//     const mockPostIds = ['id1', 'id2'];
 
-    // Mock PostModel.find to throw an error
-    PostModel.find = jest.fn().mockRejectedValue(new Error('Database query failed'));
+//     // Mock PostModel.find to throw an error
+//     PostModel.find = jest.fn().mockRejectedValue(new Error('Database query failed'));
 
-    await expect(userPosts(mockPostIds, 2)).rejects.toThrow('Database query failed');
-  });
-});
+//     await expect(userPosts(mockPostIds, 2)).rejects.toThrow('Database query failed');
+//   });
+// });

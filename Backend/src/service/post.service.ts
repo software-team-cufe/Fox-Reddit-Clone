@@ -78,6 +78,7 @@ async function unhide(id: string, user: User) {
   );
   //await user.save();
 }
+
 export { userPosts, deletePost, hide, unhide };
 
 //post.service.ts

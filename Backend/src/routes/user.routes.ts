@@ -36,6 +36,7 @@ import {
   getALLFollowedHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
+import deserializeUser from '../middleware/deserialzeUser';
 
 const router = express.Router();
 
@@ -66,29 +67,29 @@ router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
 router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
 
 /******************** BOUDY **************************/
-router.get('/api/v1/me/friends', getALLFriendsHandler);
+router.get('/api/v1/me/friends', deserializeUser, getALLFriendsHandler);
 
-router.get('/api/v1/me/followers', getALLFollowersHandler);
+router.get('/api/v1/me/followers', deserializeUser, getALLFollowersHandler);
 
-router.get('/api/v1/me/followed', getALLFollowedHandler);
+router.get('/api/v1/me/followed', deserializeUser, getALLFollowedHandler);
 
-router.get('/api/v1/me/friends/:username', getFriendHandler);
+router.get('/api/v1/me/friends/:username', deserializeUser, getFriendHandler);
 
-router.get('/api/v1/me/followers/:username', getFriendHandler);
+router.get('/api/v1/me/followers/:username', deserializeUser, getFriendHandler);
 
-router.get('/api/v1/me/following/:username', getFriendHandler);
+router.get('/api/v1/me/following/:username', deserializeUser, getFriendHandler);
 
-router.post('/api/friend', validateResource(friendRequestSchema), friendRequestHandler);
+router.post('/api/friend', validateResource(friendRequestSchema), deserializeUser, friendRequestHandler);
 
-router.post('/api/unfriend', validateResource(unFriendRequestSchema), unFriendRequestHandler);
+router.post('/api/unfriend', validateResource(unFriendRequestSchema), deserializeUser, unFriendRequestHandler);
 
-router.post('/api/follow', validateResource(followUserSchema), followRequestHandler);
+router.post('/api/follow', validateResource(followUserSchema), deserializeUser, followRequestHandler);
 
-router.post('/api/unfollow', validateResource(unfollowUserSchema), unfollowRequestHandler);
+router.post('/api/unfollow', validateResource(unfollowUserSchema), deserializeUser, unfollowRequestHandler);
 
-router.post('/api/block_user', validateResource(blockUserSchema), blockUserHandler);
+router.post('/api/block_user', validateResource(blockUserSchema), deserializeUser, blockUserHandler);
 
-//router.post('/api/report_user', validateResource(reportUserSchema), reportUserHandler);
+//router.post('/api/report_user', validateResource(reportUserSchema), deserializeUser, reportUserHandler);
 
 /********************************************************/
 

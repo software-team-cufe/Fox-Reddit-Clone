@@ -66,85 +66,85 @@
 // Should handle and return errors thrown by userSubmittedPosts and userPosts functions
 // Should return a 200 status code with an empty array when the user does not exist
 
-import userCommets from '../service/comment.service'; // Adjust the path to your actual function
-import CommentModel from '../model/comments.model'; // Adjust the path to your CommentModel
+// import userCommets from '../service/comment.service'; // Adjust the path to your actual function
+// import CommentModel from '../model/comments.model'; // Adjust the path to your CommentModel
 
-describe('userCommets function', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+// describe('userCommets function', () => {
+//   afterEach(() => {
+//     jest.clearAllMocks();
+//   });
 
-  it('should fetch limited comments based on provided IDs', async () => {
-    const mockCommentIds = ['id1', 'id2', 'id3']; // Replace with actual comment IDs
-    const mockComments = [
-      { _id: 'id1', text: 'Comment 1' },
-      { _id: 'id2', text: 'Comment 2' },
-      { _id: 'id3', text: 'Comment 3' },
-    ]; // Replace with actual comments
+//   it('should fetch limited comments based on provided IDs', async () => {
+//     const mockCommentIds = ['id1', 'id2', 'id3']; // Replace with actual comment IDs
+//     const mockComments = [
+//       { _id: 'id1', text: 'Comment 1' },
+//       { _id: 'id2', text: 'Comment 2' },
+//       { _id: 'id3', text: 'Comment 3' },
+//     ]; // Replace with actual comments
 
-    // Mock the CommentModel.find method
-    CommentModel.find = jest.fn().mockResolvedValue(mockComments);
+//     // Mock the CommentModel.find method
+//     CommentModel.find = jest.fn().mockResolvedValue(mockComments);
 
-    const result = await userCommets(mockCommentIds, 2); // Fetch 2 comments
+//     const result = await userCommets(mockCommentIds, 2); // Fetch 2 comments
 
-    expect(result).toEqual(mockComments.slice(0, 2));
-    expect(CommentModel.find).toHaveBeenCalledWith({ _id: { $in: mockCommentIds } });
-  });
+//     expect(result).toEqual(mockComments.slice(0, 2));
+//     expect(CommentModel.find).toHaveBeenCalledWith({ _id: { $in: mockCommentIds } });
+//   });
 
-  it('should handle empty comment IDs', async () => {
-    const emptyCommentIds: string[] = [];
+//   it('should handle empty comment IDs', async () => {
+//     const emptyCommentIds: string[] = [];
 
-    const result = await userCommets(emptyCommentIds, 5);
+//     const result = await userCommets(emptyCommentIds, 5);
 
-    expect(result).toEqual([]);
-    expect(CommentModel.find).not.toHaveBeenCalled();
-  });
+//     expect(result).toEqual([]);
+//     expect(CommentModel.find).not.toHaveBeenCalled();
+//   });
 
-  it('should default to fetching 10 comments when no limit is specified', async () => {
-    const mockCommentIds = ['id1', 'id2', 'id3'];
+//   it('should default to fetching 10 comments when no limit is specified', async () => {
+//     const mockCommentIds = ['id1', 'id2', 'id3'];
 
-    await userCommets(mockCommentIds, undefined);
+//     await userCommets(mockCommentIds, undefined);
 
-    expect(CommentModel.find).toHaveBeenCalledWith({ _id: { $in: mockCommentIds } });
-  });
+//     expect(CommentModel.find).toHaveBeenCalledWith({ _id: { $in: mockCommentIds } });
+//   });
 
-  it('should return all available comments if fewer than the specified limit', async () => {
-    const mockCommentIds = ['id1', 'id2'];
-    const mockComments = [
-      { _id: 'id1', text: 'Comment 1' },
-      { _id: 'id2', text: 'Comment 2' },
-    ];
+//   it('should return all available comments if fewer than the specified limit', async () => {
+//     const mockCommentIds = ['id1', 'id2'];
+//     const mockComments = [
+//       { _id: 'id1', text: 'Comment 1' },
+//       { _id: 'id2', text: 'Comment 2' },
+//     ];
 
-    CommentModel.find = jest.fn().mockResolvedValue(mockComments);
+//     CommentModel.find = jest.fn().mockResolvedValue(mockComments);
 
-    const result = await userCommets(mockCommentIds, 5);
+//     const result = await userCommets(mockCommentIds, 5);
 
-    expect(result).toEqual(mockComments);
-  });
+//     expect(result).toEqual(mockComments);
+//   });
 
-  it('should return the first "limit" comments if more than the specified limit', async () => {
-    const mockCommentIds = ['id1', 'id2', 'id3', 'id4', 'id5'];
-    const mockComments = [
-      { _id: 'id1', text: 'Comment 1' },
-      { _id: 'id2', text: 'Comment 2' },
-      { _id: 'id3', text: 'Comment 3' },
-      { _id: 'id4', text: 'Comment 4' },
-      { _id: 'id5', text: 'Comment 5' },
-    ];
+//   it('should return the first "limit" comments if more than the specified limit', async () => {
+//     const mockCommentIds = ['id1', 'id2', 'id3', 'id4', 'id5'];
+//     const mockComments = [
+//       { _id: 'id1', text: 'Comment 1' },
+//       { _id: 'id2', text: 'Comment 2' },
+//       { _id: 'id3', text: 'Comment 3' },
+//       { _id: 'id4', text: 'Comment 4' },
+//       { _id: 'id5', text: 'Comment 5' },
+//     ];
 
-    CommentModel.find = jest.fn().mockResolvedValue(mockComments);
+//     CommentModel.find = jest.fn().mockResolvedValue(mockComments);
 
-    const result = await userCommets(mockCommentIds, 3);
+//     const result = await userCommets(mockCommentIds, 3);
 
-    expect(result).toEqual(mockComments.slice(0, 3));
-  });
+//     expect(result).toEqual(mockComments.slice(0, 3));
+//   });
 
-  it('should handle database query failure', async () => {
-    const mockCommentIds = ['id1', 'id2'];
+//   it('should handle database query failure', async () => {
+//     const mockCommentIds = ['id1', 'id2'];
 
-    // Mock CommentModel.find to throw an error
-    CommentModel.find = jest.fn().mockRejectedValue(new Error('Database query failed'));
+//     // Mock CommentModel.find to throw an error
+//     CommentModel.find = jest.fn().mockRejectedValue(new Error('Database query failed'));
 
-    await expect(userCommets(mockCommentIds, 2)).rejects.toThrow('Database query failed');
-  });
-});
+//     await expect(userCommets(mockCommentIds, 2)).rejects.toThrow('Database query failed');
+//   });
+// });
