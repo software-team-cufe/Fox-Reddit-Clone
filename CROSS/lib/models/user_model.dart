@@ -1,25 +1,26 @@
+import 'package:reddit_fox/core/constants/constants.dart';
+
 class UserModel {
   final String name;
   final String profilePic;
-  final String banner;
+  final String? banner;
   final String uid;
   final bool isAuthenticated; // if guest or not
   final int karma;
   final String email;
-  final String password;
-  DateTime birthDate;
+  DateTime? birthDate;
+  Gender? gender;
 
-  UserModel({
-    required this.name,
-    required this.profilePic,
-    required this.banner,
-    required this.uid,
-    required this.isAuthenticated,
-    required this.karma,
-    required this.email,
-    required this.password,
-    required this.birthDate,
-  });
+  UserModel(
+      {required this.name,
+      required this.profilePic,
+      required this.uid,
+      required this.isAuthenticated,
+      required this.karma,
+      required this.email,
+      this.banner,
+      this.birthDate,
+      this.gender});
 
 // userModel.name = this. ->usermodel.copyWith(name: 'name');
 
@@ -38,7 +39,6 @@ class UserModel {
       uid: uid ?? this.uid,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       karma: karma ?? this.karma,
-      password: '',
       email: '',
       birthDate: birthDate,
     );
@@ -62,7 +62,6 @@ class UserModel {
       banner: map['banner'] ?? '',
       uid: map['uid'] ?? '',
       email: map['email'] ?? '',
-      password: map['password'] ?? '',
       birthDate: DateTime.parse(map['birthDate'].toString()),
       isAuthenticated: map['isAuthenticated'] ?? false,
       karma: map['karma']?.toInt() ?? 0,

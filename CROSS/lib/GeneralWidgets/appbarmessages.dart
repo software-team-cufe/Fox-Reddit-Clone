@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBarMessages extends StatefulWidget {
   AppBarMessages({
@@ -9,9 +10,23 @@ class AppBarMessages extends StatefulWidget {
 
   @override
   _AppBarMessagesState createState() => _AppBarMessagesState();
+  
 }
 
 class _AppBarMessagesState extends State<AppBarMessages> {
+
+  String? access_token;
+  @override
+  void initState() {
+    super.initState();
+    // Retrieve token from shared preferences when the widget initializes
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        access_token = sharedPrefValue.getString('token');
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     double userWidth = MediaQuery.of(context).size.width * 0.6;
@@ -24,7 +39,7 @@ class _AppBarMessagesState extends State<AppBarMessages> {
           children: [
             CustomDrawer(drawer_Width: drawerWidth),
             Text("Inbox"),
-            endDrawer(user_width: userWidth, user_Id: 1,),
+            endDrawer(user_width: userWidth, token: access_token,),
           ],
         ),
         Row(

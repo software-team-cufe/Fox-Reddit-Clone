@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import 'CreateCommmentsPage.dart';
 
 class PostDetails extends StatelessWidget {
-  const PostDetails({super.key});
+  final String redditName;
+  final String title;
+  final String picture;
+
+  const PostDetails({
+    Key? key,
+    required this.redditName,
+    required this.title,
+    this.picture = '',
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,38 +25,54 @@ class PostDetails extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Display the author's avatar and username
               Row(
                 children: [
                   _buildAvatarIcon(),
                   const SizedBox(width: 8),
-                  const Text(
-                    "Username",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Text(
+                    redditName,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              const Text(
-                "Post Title",
+              // Display the post title
+              Text(
+                title,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              Container(
-                width: double.infinity,
-                height: 400,
-                color: Colors.grey[300],
-                child: Center(
-                  child: Icon(
-                    Icons.image,
-                    size: 100,
-                    color: Colors.grey[600],
+
+              // Display the post image
+              if (picture != null)
+                Image.network(
+                  picture!,
+                  width: double.infinity,
+                  height: 400,
+                  fit: BoxFit.cover,
+                )
+              else
+                // Display a placeholder image
+                Container(
+                  width: double.infinity,
+                  height: 400,
+                  color: Colors.grey[300],
+                  child: Center(
+                    child: Icon(
+                      Icons.image,
+                      size: 100,
+                      color: Colors.grey[600],
+                    ),
                   ),
                 ),
-              ),
+
               const SizedBox(height: 16),
+              // Display the post actions (e.g., reply, upvote, downvote)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Display the reply, upvote, and downvote buttons
                   Row(
                     children: [
                       IconButton(
@@ -65,6 +90,7 @@ class PostDetails extends StatelessWidget {
                       ),
                     ],
                   ),
+                  // Display the comment count and share button
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -83,11 +109,13 @@ class PostDetails extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
+              // Display the comments section title
               const Text(
                 "Comments",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
+              // Display the first comment
               _buildComment(
                 username: "User1",
                 pfp: "",
@@ -100,6 +128,7 @@ class PostDetails extends StatelessWidget {
                   "Reply 2",
                 ],
               ),
+              // Display the second comment
               _buildComment(
                 username: "User2",
                 pfp: "",
@@ -113,11 +142,13 @@ class PostDetails extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
+              // Display the "Add a Comment" section title
               const Text(
                 "Add a Comment",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
+              // Display the new comment field
               _buildNewCommentField(context),
               const SizedBox(height: 16),
             ],
@@ -127,6 +158,7 @@ class PostDetails extends StatelessWidget {
     );
   }
 
+  /// Builds the avatar icon widget.
   Widget _buildAvatarIcon() {
     return const CircleAvatar(
       radius: 16,
@@ -134,6 +166,7 @@ class PostDetails extends StatelessWidget {
     );
   }
 
+  /// Builds a comment widget.
   Widget _buildComment({
     required String username,
     required String pfp,
@@ -146,6 +179,7 @@ class PostDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Display the comment author's avatar and username
         Row(
           children: [
             _buildAvatarIcon(),
@@ -157,11 +191,13 @@ class PostDetails extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
+        // Display the comment content
         Text(
           content,
           style: const TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 8),
+        // Display the comment actions (e.g., upvote, downvote, reply, share)
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -187,12 +223,14 @@ class PostDetails extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
+        // Display the comment's replies
         ...comments.map((comment) => _buildCommentWidget(comment)),
         const SizedBox(height: 8),
       ],
     );
   }
 
+  /// Builds a comment widget for a reply.
   Widget _buildCommentWidget(String comment) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -208,6 +246,7 @@ class PostDetails extends StatelessWidget {
     );
   }
 
+  /// Builds the new comment field widget.
   Widget _buildNewCommentField(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -239,6 +278,7 @@ class PostDetails extends StatelessWidget {
     );
   }
 
+  /// Shows the bottom menu modal sheet.
   void _showBottomMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -246,6 +286,7 @@ class PostDetails extends StatelessWidget {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Display the menu items
             _buildMenuItem(context, Icons.share, "Share"),
             _buildMenuItem(context, Icons.save, "Save"),
             _buildMenuItem(
@@ -263,6 +304,7 @@ class PostDetails extends StatelessWidget {
     );
   }
 
+  /// Builds a menu item widget.
   Widget _buildMenuItem(BuildContext context, IconData icon, String label) {
     return ListTile(
       leading: Icon(icon),

@@ -3,6 +3,7 @@ import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/core/common/customContainer.dart';
 import 'package:reddit_fox/navbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -24,6 +25,18 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String? access_token;
+  @override
+  void initState() {
+    super.initState();
+    // Retrieve token from shared preferences when the widget initializes
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        access_token = sharedPrefValue.getString('token');
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
       drawer: CustomDrawer(
         drawer_Width: drawerWidth,
       ),
-      endDrawer: endDrawer(user_width: userWidth, user_Id: 1,),
+      endDrawer: endDrawer(user_width: userWidth, token: access_token!),
       body: Column(
         children: [
           Padding(

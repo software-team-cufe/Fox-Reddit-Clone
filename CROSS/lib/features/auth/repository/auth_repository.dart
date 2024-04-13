@@ -7,7 +7,7 @@ import 'package:reddit_fox/core/constants/firebase_constants.dart';
 import 'package:reddit_fox/core/failure.dart';
 import 'package:reddit_fox/core/providers/firebase_providers.dart';
 import 'package:reddit_fox/core/type_defs.dart';
-import 'package:reddit_fox/models/user_model_for_google.dart';
+import 'package:reddit_fox/models/user_model.dart';
 import 'package:fpdart/fpdart.dart';
 //import 'package:flutter/foundation.dart';
 
@@ -36,7 +36,7 @@ CollectionReference get _users => _firestore.collection(FirebaseConstants.usersC
 
 Stream<User?> get authStateChange => _auth.authStateChanges();
 
-FutureEither<UserModelForGoogle>signInWithGoogle() async {
+FutureEither<UserModel>signInWithGoogle() async {
   try {
     // Sign out the user first to force them to select their Google account again.////////////////////////////////////////////////////////////////////////////////
     await _googleSignIn.signOut();
@@ -48,16 +48,17 @@ FutureEither<UserModelForGoogle>signInWithGoogle() async {
       idToken: googleAuth?.idToken,  );
 UserCredential userCredential = await _auth.signInWithCredential(credential);
 
-UserModelForGoogle userModel;
+UserModel userModel;
 
 if(userCredential.additionalUserInfo!.isNewUser){
-  userModel = UserModelForGoogle(
+  userModel = UserModel(
         name: userCredential.user!.displayName??"No Name", 
         profilePic: userCredential.user!.photoURL??Constants.avatarDefault, 
         banner: Constants.bannerDefault, 
         uid: userCredential.user!.uid, 
         isAuthenticated: true, 
         karma: 0,
+        email: userCredential.user!.email ?? ""
         );
       await _users.doc(userCredential.user!.uid).set(userModel.toMap());
 } else{
@@ -75,7 +76,7 @@ if(userCredential.additionalUserInfo!.isNewUser){
       return left(Failure(e.toString()));
     }
   }
-  Stream<UserModelForGoogle> getUserData(String uid) {
-    return _users.doc(uid).snapshots().map((event) => UserModelForGoogle.fromMap(event.data() as Map<String, dynamic>));
+  Stream<UserModel> getUserData(String uid) {
+    return _users.doc(uid).snapshots().map((event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
 }

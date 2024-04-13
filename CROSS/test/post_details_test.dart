@@ -6,7 +6,11 @@ void main() {
   testWidgets('PostDetails widget displays correctly',
       (WidgetTester tester) async {
     // Build the widget
+<<<<<<< HEAD
     await tester.pumpWidget(const MaterialApp(home: PostDetails()));
+=======
+    //await tester.pumpWidget(MaterialApp(home: PostDetails()));
+>>>>>>> cross-main
 
     // Verify if the title is displayed
     expect(find.text('Post Details'), findsOneWidget);

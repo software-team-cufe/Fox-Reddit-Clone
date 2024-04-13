@@ -41,3 +41,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Additions
+CROSS/.flutter-plugins
+CROSS/.flutter-plugins-dependenciess
+CROSS/linux/ephemeral/.plugin_symlinks/path_provider_linux
+CROSS/linux/flutter/ephemeral/.plugin_symlinks/shared_preferences_linux

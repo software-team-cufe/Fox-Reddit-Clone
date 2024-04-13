@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+=======
+import 'package:reddit_fox/GeneralWidgets/textInput.dart';
+>>>>>>> cross-main
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:reddit_fox/Pages/messages.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
+<<<<<<< HEAD
+=======
+import 'package:reddit_fox/Pages/messages.dart';
+>>>>>>> cross-main
 
 class NewMessage extends StatefulWidget {
   const NewMessage({Key? key}) : super(key: key);
@@ -16,6 +24,11 @@ class _NewMessageState extends State<NewMessage> {
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _urlController = TextEditingController();
+<<<<<<< HEAD
+=======
+
+  bool showURLInput = false;
+>>>>>>> cross-main
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +41,13 @@ class _NewMessageState extends State<NewMessage> {
               icon: const Icon(Icons.send),
               onPressed: () {
                 _sendMessage();
+<<<<<<< HEAD
+=======
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Message()),
+                );
+>>>>>>> cross-main
               },
             ),
           ],
@@ -107,10 +127,13 @@ class _NewMessageState extends State<NewMessage> {
             // Message sent successfully
             print('Message sent successfully');
             // Navigate to the next screen
+<<<<<<< HEAD
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Message()),
             );
+=======
+>>>>>>> cross-main
           } else {
             // Failed to send message
             print('Failed to send message: ${messageResponse.statusCode}');

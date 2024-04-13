@@ -1,8 +1,19 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
 import 'package:reddit_fox/GeneralWidgets/droplist.dart';
+import 'package:reddit_fox/features/auth/screens/login_screen.dart';
+import 'package:reddit_fox/features/auth/screens/switch_screen.dart';
+import 'package:reddit_fox/models/user_model.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/Pages/settings/accountSetting.dart';
+
+import 'package:http/http.dart' as http;
 
 class setting extends StatefulWidget {
   const setting({super.key});
@@ -12,6 +23,50 @@ class setting extends StatefulWidget {
 }
 
 class _settingState extends State<setting> {
+  // late UserModel user = getData(token);
+
+  String? token;
+  @override
+  void initState() {
+    super.initState();
+    // Retrieve token from shared preferences when the widget initializes
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        token = sharedPrefValue.getString('token');
+      });
+    });
+  }
+
+  getData(token) async {
+    if (token != null) {
+      final url = ApiRoutes.getUserByToken(token);
+      // final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        final user = data[0];
+
+        UserModel usermodel = UserModel(
+            email: user['email'],
+            name: user['name'],
+            profilePic: user['profilePic'],
+            uid: user['id'],
+            karma: user['karma'],
+            isAuthenticated: false);
+
+        // user.name=response.body.['name'];
+        return usermodel;
+      } else {
+        print('invalid login');
+      }
+    }
+  }
+
+  // If unable to fetch data or no matching user found
+  // return 'Invalid username or password';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +101,8 @@ class _settingState extends State<setting> {
                             ),
                           ),
                           const Text(
-                            "/Username",
+                            // user.name,
+                            'user.name',
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -333,7 +389,7 @@ class _settingState extends State<setting> {
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Dark mode'),
+                    const Text('Dark mode'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

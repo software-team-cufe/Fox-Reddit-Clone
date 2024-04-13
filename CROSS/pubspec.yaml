@@ -65,6 +65,7 @@ dependencies:
   routemaster: ^1.0.1
   dotted_border: ^2.0.0+1
   share: ^2.0.4
+  flutter_colorpicker: ^1.0.3
 
 dev_dependencies:
   flutter_test:

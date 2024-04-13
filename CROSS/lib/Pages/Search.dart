@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 
 class Search extends StatefulWidget {
@@ -14,11 +13,12 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   final TextEditingController _searchController = TextEditingController();
   List<String> _recentlySearched = [];
+  List<Map<String, dynamic>> _trendingToday = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchRecentlySearched();
+    _fetchData();
   }
 
   @override
@@ -27,21 +27,34 @@ class _SearchState extends State<Search> {
     super.dispose();
   }
 
-  void _fetchRecentlySearched() async {
+  Future<void> _fetchData() async {
+    await _fetchRecentlySearched();
+    await _fetchTrendingToday();
+  }
+
+  Future<void> _fetchRecentlySearched() async {
     final response = await http.get(Uri.parse(ApiRoutes.getRecentSearch));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print(data); // Print response body to see the structure
-      final List<dynamic> terms = data['recentlySearched'];
       setState(() {
-        _recentlySearched = terms.map((term) => term['searchTerm'].toString()).toList();
-        print(_recentlySearched);
+        _recentlySearched = List<String>.from(data['recentlySearched'].map((term) => term['searchTerm']));
       });
     } else {
       throw Exception('Failed to load recently searched terms');
     }
   }
 
+  Future<void> _fetchTrendingToday() async {
+    final response = await http.get(Uri.parse(ApiRoutes.getTrending));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        _trendingToday = List<Map<String, dynamic>>.from(data['trendingToday']);
+      });
+    } else {
+      throw Exception('Failed to load trending topics');
+    }
+  }
 
   void _clearSearch() {
     _searchController.clear();
@@ -83,16 +96,52 @@ class _SearchState extends State<Search> {
         titleSpacing: 0,
       ),
       body: Container(
-        child: ListView.builder(
-          itemCount: _recentlySearched.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(_recentlySearched[index]),
-              onTap: () {
-                // Handle tap on recently searched term
-              },
-            );
-          },
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Recently Searched',
+              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8.0),
+            Wrap(
+            spacing: 8.0,
+            runSpacing: 8.0,
+            children: _recentlySearched.map((term) {
+              return Text(
+                term,
+                style: TextStyle(color: Colors.white),
+              );
+            }).toList(),
+          ),
+            SizedBox(height: 16.0),
+            Text(
+              'Trending Today',
+              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _trendingToday.map((trending) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      trending['searchTerm'],
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 4.0),
+                    Text(
+                      trending['description'],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(height: 16.0),
+                  ],
+                );
+              }).toList(),
+            ),
+          ],
         ),
       ),
     );

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-
-import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/core/common/sign_in_with_google_button.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
@@ -21,20 +19,6 @@ class StartingScreen extends StatelessWidget {
           Constants.logoPath,
           height: 60,
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
-            },
-            child: const Text(
-              'Skip',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

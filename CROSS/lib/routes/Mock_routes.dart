@@ -12,8 +12,17 @@ class ApiRoutes {
   static const String login = '$baseUrl/user';
   static String getUserById(int id) => '$baseUrl/user/$id';
   static String getPostsByCreatorId(int id) => '$baseUrl/posts?creatorId=$id';
+<<<<<<< HEAD
   static const String getPopular =
       '$baseUrl/posts?_sort=votes,commentsNo&_order=desc,desc';
   static const String getRecentSearch = '$baseUrl/recentlySearched';
   static const String message = '$baseUrl/user?_embed=messages';
+=======
+  static String getUserByToken(String token) => '$baseUrl/user?token=$token';
+  static const String getPopular =
+      '$baseUrl/posts?_sort=votes,commentsNo&_order=desc,desc';
+  static const String getTrending = '$baseUrl/trendingTodat';
+  static const String getRecentSearch = '$baseUrl/recentlySearched';
+  static const String message = '$baseUrl/users?_embed=messages';
+>>>>>>> cross-main
 }
