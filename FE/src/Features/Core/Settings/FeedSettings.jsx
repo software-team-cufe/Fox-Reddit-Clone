@@ -4,9 +4,10 @@
  * @file feedSetting is a functional component that renders the feed settings page.
  * @module feedSettings
  */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import { getByRole } from '@testing-library/react';
+import axios from "axios";
 // import Dropdown from "./DropDownlist";
 /**
  * 
@@ -15,37 +16,33 @@ import { getByRole } from '@testing-library/react';
 
 export default function FeedSettings() {
 
-    // const [communities, setCommunities] = useState([]); // array of communities to show
+    const [communities, setCommunities] = useState([]); // array of communities to show
     // const [loading, setLoading] = useState(true); // loading state for fetching 
 
     // useEffect(() => {
-    //     axios.get("http://localhost:3002/communities") //fetch communities and organize into communities array for mapping
+    //     axios.get("http://localhost:3500/communities") //fetch communities and organize into communities array for mapping
     //       .then(response => {
     //         const newComms = response.data.map(comm => ({
-    //           id: comm.commID,
-    //           name: comm.name,
-    //           icon: comm.icon,
-    //           about: comm.description,
-    //           online: comm.onlineMembers,
-    //           members: comm.membersCount
-    //         }));
-    
-    //         setCommunities(newComms);
-    //         setLoading(false); //set loading to false after fetching to load body
-    //       })
-    //       .catch(error => {
-    //         console.error('Error:', error);
-    //         setLoading(false);
-    //       });
-    //   }, [searched]);
-
-    //   if (loading) {
-    //     return (
-    //       <div role="communitiestab" className="w-100 h-100 flex flex-col items-center justify-center">
-    //         <Spinner className="h-24 w-24" />
-    //       </div>
-    //     )
-    //   }
+    //             id: comm.commID,
+    //             name: comm.name,
+    //             icon: comm.icon,
+    //             about: comm.description,
+    //             online: comm.onlineMembers,
+    //             members: comm.membersCount,
+    //             NSFW: comm.NSFW
+    //       }));
+    //       let tempArr =[];
+    //     for (let i = 0; i < newComms.length; i++) {
+    //         if (newComms[i].NSFW === false) {
+    //             tempArr.push(newComms[i]);
+    //         }
+    //     }
+    //     setCommunities(tempArr);
+    //     console.log(communities);
+    //     //setCommunities(newComms);
+    //     //setLoading(false); //set loading to false after fetching to load body
+    //    }, []);
+    //})
 
     //state for each setting statement to be toggled
     const [showMatureContent, setShowMatureContent] = useState(false);
