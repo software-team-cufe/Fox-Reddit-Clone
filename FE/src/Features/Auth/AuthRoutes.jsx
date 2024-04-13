@@ -1,3 +1,7 @@
+/**
+ * Array of routes for authentication.
+ * @type {Array<Route>}
+ */
 import {  Route  } from 'react-router-dom';
 import LoginPage from './LoginPage/view/LoginPage';
 import RegisterPage from './RegisterPage/View/RegisterPage';

@@ -10,6 +10,51 @@ import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import { createContext, useContext } from "react";
 import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
 
+/**
+ * HomePage Component
+ * 
+ * This component is used to display the home page of the application.
+ * 
+ * @component
+ * 
+ * @example
+ * 
+ * return (
+ *   <HomePage />
+ * )
+ * 
+ * @returns {JSX.Element} The HomePage component.
+ * 
+ * Props:
+ * None
+ * 
+ * State:
+ * - selected: A state variable used to store the selected sorting option. It's initially set to "New".
+ * - period: A state variable used to store the selected period. It's initially set to "All time".
+ * 
+ * Children:
+ * - PostComponent: A component that displays a post.
+ * - Spinner: A component that displays a loading spinner.
+ * - PeriodSelect: A component that allows the user to select a period.
+ * - Sortmenu: A component that allows the user to select a sorting option.
+ * - BackToTop: A component that allows the user to quickly navigate back to the top of the page.
+ * 
+ * Functions:
+ * - setselected: A function that updates the value of the `selected` state variable.
+ * - setperiod: A function that updates the value of the `period` state variable.
+ * 
+ * Context:
+ * - HomeContext: A context that provides the `selected` and `period` state variables and their setter functions to child components.
+ * 
+ * External Libraries:
+ * - react: Used for creating the component and managing state.
+ * - react-query: Used for fetching data asynchronously.
+ * - @/Utils/UserAxios: A custom axios instance for making requests to the user API.
+ * 
+ * Provider Component:
+ * - HomeProvider: A provider component that holds the state and provides it to child components through the HomeContext.
+ */
+
 
 export const HomeContext = createContext();
 

@@ -1,8 +1,44 @@
+/**
+ * ForgetUsername Component
+ * 
+ * This component is used for recovering a user's username.
+ * @module ForgetUsername
+ * 
+ * @component
+ *  
+ * Props:
+ * None
+ * 
+ * State:
+ * - str: A string state variable used to store the value of the email input field.
+ * 
+ * Children:
+ * - Button: A general purpose button component.
+ * - TextBox: A general purpose text box component.
+ * 
+ * Functions:
+ * - setStr: A function that updates the value of the `str` state variable. It's used as the `onChange` handler for the TextBox component.
+ * 
+ * External Libraries:
+ * - react-router-dom: Used for the `Link` component, which is used to navigate to the register page.
+ * - zod: A library for creating schemas and validating data. It's imported in this file, but it's not used in the component.
+ * 
+ * @example
+ * 
+ * return (
+ *   <ForgetUsername />
+ * )
+ * 
+ * @returns {JSX.Element} The ForgetUsername component.
+ *
+ * 
+ */
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import * as z from 'zod';
+
 
 export default function ForgetUsername() {
   const [str, setStr] = useState("");
