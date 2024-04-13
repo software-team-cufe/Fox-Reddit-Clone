@@ -23,7 +23,7 @@ import {
   userCommentsIds,
   userRepliesIds,
 } from '../service/user.service';
-import { sendEmail, generateVerificationLinkToken } from '../utils/mailer';
+import { sendEmail, generateVerificationLinkToken, generatePasswordResetLinkToken } from '../utils/mailer';
 import { signJwt, verifyJwt } from '../utils/jwt';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
@@ -66,7 +66,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
   } catch (e: any) {
     if (e.code === 11000) {
       return res.status(409).json({
-        msg: 'User already exists',
+        msg: 'Invalid username or email',
       });
     }
 
@@ -88,7 +88,6 @@ export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Resp
   const token = req.params.verify_token;
   try {
     const decoded = verifyJwt<{ userId: string; verificationCode: string }>(token);
-    console.log(decoded);
     if (decoded) {
       const { userId, verificationCode } = decoded;
       const user = await findUserById(userId);
@@ -127,36 +126,45 @@ export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Resp
  * @returns A message indicating if the email exists and a password reset code has been sent.
  */
 export async function forgotPasswordHandler(req: Request<{}, {}, ForgotPasswordInput>, res: Response) {
-  const message = 'If the email exists, a password reset code will be sent to it';
+  const message = 'If the email exists, a password reset code will be sent to it'; //vague message
   const { email } = req.body;
 
-  const user = await findUserByEmail(email);
-  if (!user) {
-    log.debug(`User with email ${email} does not exist`);
-    return res.send(message);
+  try {
+    const user = await findUserByEmail(email);
+    if (!user) {
+      throw new appError(message, 404);
+    }
+
+    if (!user.verified) {
+      throw new appError(message, 401);
+    }
+
+    //Generate password reset token
+    const passwordResetCode = nanoid();
+    user.passwordResetCode = passwordResetCode;
+    const { reset_link } = generatePasswordResetLinkToken(String(user._id), user.passwordResetCode);
+    await user.save();
+
+    await sendEmail({
+      to: user.email,
+      from: {
+        name: 'Fox ',
+        email: getEnvVariable('FROM_EMAIL'),
+      },
+      subject: 'Fox password reset',
+      text: ` click here to reset your password: ${reset_link}`,
+    });
+
+    //log.debug(`Password reset code is sent for user with email ${email} `);
+    return res.status(200).json({ message });
+  } catch (err) {
+    if (err instanceof appError) {
+      return res.status(err.statusCode).json({
+        msg: err.message,
+      });
+    }
+    return res.status(500).json({ msg: 'Something went wrong' });
   }
-
-  if (!user.verified) {
-    log.debug(`User with email ${email} is not verified`);
-    return res.send("User hasn't been verified");
-  }
-
-  const passwordResetCode = nanoid();
-  user.passwordResetCode = passwordResetCode;
-  await user.save();
-
-  await sendEmail({
-    to: user.email,
-    from: {
-      name: 'Fox ',
-      email: getEnvVariable('FROM_EMAIL'),
-    },
-    subject: 'Password reset code',
-    text: `Password reset code: ${passwordResetCode}. Id ${user._id}`, //Want to render reset password page
-  });
-
-  log.debug(`Password reset code is sent for user with email ${email} `);
-  return res.send(message);
 }
 /**
  * Handles the reset password request.
@@ -166,40 +174,82 @@ export async function forgotPasswordHandler(req: Request<{}, {}, ForgotPasswordI
  * @returns {Promise<void>} - A promise that resolves when the password is reset successfully.
  */
 export async function resetPasswordHandler(
-  req: Request<ResetPasswordInput['params'], {}, ResetPasswordInput['body']>,
+  req: Request<{}, {}, ResetPasswordInput['body'], ResetPasswordInput['query']>,
   res: Response
 ) {
-  const { id, passwordResetCode } = req.params;
+  const message = ' Expired or invalid link';
+  try {
+    const { token } = req.query;
+    if (!token) {
+      throw new appError('reset failed', 400);
+    }
+    console.log(token);
 
-  const { password } = req.body;
+    const decodedToken = verifyJwt<{ userId: string; passwordResetCode: string }>(token);
+    if (!decodedToken) {
+      return res.status(400).json({
+        msg: message,
+      });
+    }
+    const { userId, passwordResetCode } = decodedToken;
+    const { password } = req.body;
 
-  const user = await findUserById(id);
+    const user = await findUserById(userId);
 
-  if (!user || !user.passwordResetCode || user.passwordResetCode !== passwordResetCode) {
-    return res.status(400).send('Could not reset password');
+    if (!user || !user.passwordResetCode || user.passwordResetCode !== passwordResetCode) {
+      return res.status(400).json({
+        msg: message,
+      });
+    }
+    // user validated for password reset
+    user.passwordResetCode = null;
+    // update password
+    user.password = password;
+    await user.save();
+    return res.status(200).json({
+      msg: 'Password reset successfully',
+    });
+  } catch (error) {
+    if (error instanceof appError) {
+      return res.status(error.statusCode).json({
+        msg: error.message,
+      });
+    }
+    return res.status(500).json({
+      msg: 'Something went wrong',
+    });
   }
-
-  user.passwordResetCode = null;
-
-  user.password = password;
-
-  await user.save();
-
-  return res.send('Password reset successfully');
 }
 
 export async function getCurrentUserHandler(req: Request, res: Response) {
-  return res.send(res.locals.user);
+  if (!res.locals.user) {
+    return res.status(401).json({
+      msg: 'Unauthorized',
+    });
+  }
+  return res.status(200).json({
+    user: res.locals.user,
+  });
 }
 
 export async function getCurrentUserPrefs(req: Request, res: Response) {
   const user = res.locals.user;
 
   if (!user) {
-    return res.status(401).send('No user logged in');
+    return res.status(401).json({
+      msg: 'User doesnt exist',
+    });
   }
 
-  return res.send(user.prefs);
+  if (user.prefs) {
+    return res.status(200).json({
+      userPrefs: user.prefs,
+    });
+  } else {
+    return res.status(404).json({
+      userPrefs: null,
+    });
+  }
 }
 
 export async function editCurrentUserPrefs(req: Request, res: Response) {

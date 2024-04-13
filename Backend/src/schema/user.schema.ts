@@ -40,9 +40,10 @@ export const forgotPasswordSchema = object({
 });
 
 export const resetPasswordSchema = object({
-  params: object({
-    id: string(),
-    passwordResetCode: string(),
+  query: object({
+    token: string({
+      required_error: 'Reset password token is required',
+    }),
   }),
   body: object({
     password: string({
