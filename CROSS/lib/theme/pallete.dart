@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, ThemeData>((ref) {
+final themeNotifierProvider =
+    StateNotifierProvider<ThemeNotifier, ThemeData>((ref) {
   return ThemeNotifier();
 });
 
@@ -30,7 +31,8 @@ class Pallete {
     ),
     primaryColor: redColor,
     colorScheme: const ColorScheme.dark().copyWith(
-    background: drawerColor,), // will be used as alternative background color
+      background: drawerColor,
+    ), // will be used as alternative background color
   );
 
   static var lightModeAppTheme = ThemeData.light().copyWith(
@@ -48,8 +50,8 @@ class Pallete {
     ),
     primaryColor: redColor,
     colorScheme: const ColorScheme.light().copyWith(
-    background: whiteColor, // Updated property
-  ),
+      background: whiteColor, // Updated property
+    ),
   );
 }
 

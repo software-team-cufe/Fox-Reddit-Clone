@@ -1,23 +1,26 @@
+import 'package:reddit_fox/core/constants/constants.dart';
+
 class UserModel {
   final String name;
   final String profilePic;
-  final String banner;
+  final String? banner;
   final String uid;
   final bool isAuthenticated; // if guest or not
   final int karma;
   final String email;
-   DateTime? birthDate;
+  DateTime? birthDate;
+  Gender? gender;
 
-  UserModel({
-    required this.name,
-    required this.profilePic,
-    required this.banner,
-    required this.uid,
-    required this.isAuthenticated,
-    required this.karma,
-    required this.email,
-     this.birthDate,
-  });
+  UserModel(
+      {required this.name,
+      required this.profilePic,
+      required this.uid,
+      required this.isAuthenticated,
+      required this.karma,
+      required this.email,
+      this.banner,
+      this.birthDate,
+      this.gender});
 
 // userModel.name = this. ->usermodel.copyWith(name: 'name');
 
