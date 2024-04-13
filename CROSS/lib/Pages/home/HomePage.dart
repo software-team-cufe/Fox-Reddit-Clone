@@ -35,9 +35,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<dynamic>> fetchPosts() async {
-    var url = Uri.parse(_selectedItem == 'Popular'
-        ? ApiRoutes.getPopular
-        : "${ApiRoutes.baseUrl}/${_sortValue}Posts");
+    var url = Uri.parse(_selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
     var response = await http.get(url);
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -46,6 +44,7 @@ class _HomePageState extends State<HomePage> {
       throw Exception('Failed to load posts');
     }
   }
+
 
   Future<String> fetchUserProfilePic(String accessToken) async {
     var url = Uri.parse(ApiRoutes.getUserByToken(accessToken));
