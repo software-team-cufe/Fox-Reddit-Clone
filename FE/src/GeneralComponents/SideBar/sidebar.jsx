@@ -10,6 +10,7 @@ import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
 import Popular from "./Popular";
 import About from "./About";
+import { key } from 'localforage';
 
 const icons = [
    {
@@ -157,15 +158,15 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                                  href="#"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
+                                 <ul>
                                  {RecentCommunities.map((subreddit, index) => (
-                                    <a
-                                    key={index}
-                                    href="#"
+                                    <li 
                                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
-                                    >
-                                       {subreddit}
-                                    </a>
+                                    key={index}>
+                                          {subreddit}
+                                    </li>
                                  ))}
+                                 </ul>
                               </a>
                            </li>
                         </ul>
