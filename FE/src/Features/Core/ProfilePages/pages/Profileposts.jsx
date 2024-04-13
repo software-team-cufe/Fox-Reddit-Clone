@@ -21,11 +21,14 @@ export default function ProfilePosts({ using, context }) {
     const [loading, setLoading] = useState(true);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
+    const [pagedone, setpagedone] = useState(false);
+    const [currentpage,setcurrentpage] = useState(0);
+    const limitpage = 2;
 
     //fetch posts on load and put into posts array
     useEffect(() => {
         setLoading(true);
-        axios.get('http://localhost:3002/posts?_limit=5')
+        axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
             //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
             .then(response => {
                 const newPosts = response.data.map(post => ({
@@ -54,8 +57,11 @@ export default function ProfilePosts({ using, context }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        axios.get('http://localhost:3002/posts?_limit=5')
+        axios.get(`http://localhost:3002/posts?_start=${currentpage+limitpage}&_limit=${limitpage}`)
             .then(response => {
+                if(response.data.length <limitpage){
+                    setpagedone(true);
+                }
                 const newPosts = response.data.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
@@ -73,6 +79,7 @@ export default function ProfilePosts({ using, context }) {
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
+                setcurrentpage(limitpage+currentpage);
 
             })
             .catch(error => {
@@ -97,7 +104,7 @@ export default function ProfilePosts({ using, context }) {
                     {Posts.map((post, index) => (
                         <PostComponent key={index} post={post} />
                     ))}
-                    {!callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
             ) : (
