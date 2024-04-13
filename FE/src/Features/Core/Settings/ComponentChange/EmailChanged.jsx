@@ -26,7 +26,7 @@ const EmailChanged = ({setChange}) => {
         </div>
 
         <p className=' mx-9 mt-3'>
-           To change your email address, you need to create a Reddit password first. We'll walk you through it.
+           To change your email address, you need to create a Reddit password first.We&apos;ll walk you through it.
         </p>
   
         <div className='flex justify-end flex-row  mt-6'>
