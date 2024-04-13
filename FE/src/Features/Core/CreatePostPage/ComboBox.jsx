@@ -7,7 +7,7 @@ const Dropdown = (props) => {
     const toggleDropdown = () => setIsOpen(!isOpen);
 
     return (
-        <div className="relative inline-block w-24 h-2 m-2 text-left">
+        <div className="relative inline-block w-24 h-2 mt-2 text-left">
             <div>
                 <button type="button" onClick={toggleDropdown} className="inline-flex text-xs justify-center
                  w-full rounded-md border border-gray-300 shadow-sm   pt-2  bg-white  

@@ -21,11 +21,13 @@ function ProfileComments({ using, context }) {
     const [loading, setLoading] = useState(true);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
-
+    const [pagedone, setpagedone] = useState(false);
+    const [currentpage,setcurrentpage] = useState(0);
+    const limitpage = 2;
     //fetch comments on load and put into comments array
     useEffect(() => {
         setLoading(true);
-        axios.get("http://localhost:3002/comments?_limit=5")
+        axios.get(`http://localhost:3002/comments?_limit=${limitpage}`)
             //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&count=10&limit=50&t=month')
             .then(response => {
                 const newComments = response.data.map(comment => ({
@@ -54,8 +56,11 @@ function ProfileComments({ using, context }) {
 
     const fetchMoreComments = () => {
         setCallingPosts(true);
-        axios.get('http://localhost:3002/comments?_limit=5')
-            .then(response => {
+        axios.get(`http://localhost:3002/comments?_start=${currentpage+limitpage}&_limit=${limitpage}`)
+        .then(response => {
+                if(response.data.length < limitpage) {
+                    setpagedone(true);
+                }
                 const newComments = response.data.map(comment => ({
                     user: {
                         image: comment.user.avatar,
@@ -73,6 +78,7 @@ function ProfileComments({ using, context }) {
 
                 setComments(prevComments => [...prevComments, ...newComments]);
                 setCallingPosts(false);
+                setcurrentpage(limitpage+currentpage);
 
             })
             .catch(error => {
@@ -100,7 +106,7 @@ function ProfileComments({ using, context }) {
                     {comments.map((comment, index) => (
                         <CommentComponent key={index} comment={comment} />
                     ))}
-                    {!callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMoreComments} className="w-fit h-fit my-2 px-3 mx-auto py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMoreComments} className="w-fit h-fit my-2 px-3 mx-auto py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
             ) : (

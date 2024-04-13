@@ -51,7 +51,9 @@ export default function CommunityPage() {
   const navigator = useNavigate();
   const loadMoreButtonRef = useRef(null);
   const [callingposts, setCallingPosts] = useState(false);
-
+  const [pagedone, setpagedone] = useState(false);
+  const [currentpage,setcurrentpage] = useState(0);
+  const limitpage = 2;
 
   const swtichJoinState = () => {
     if (user.user == null) {
@@ -93,7 +95,7 @@ export default function CommunityPage() {
 
   useEffect(() => {
     setfeed(true);
-    axios.get(`http://localhost:3002/posts?_limit=5`)
+    axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
       .then((response) => {
         const newPosts = response.data.map(post => ({
           subReddit: {
@@ -119,8 +121,11 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    axios.get('http://localhost:3002/posts?_limit=5')
-      .then(response => {
+    axios.get(`http://localhost:3002/posts?_start=${currentpage+limitpage}&_limit=${limitpage}`)
+    .then(response => {
+        if(response.data.length <limitpage){
+            setpagedone(true);
+        }
         const newPosts = response.data.map(post => ({
           subReddit: {
             image: post.attachments.subredditIcon,
@@ -138,6 +143,7 @@ export default function CommunityPage() {
 
         setPosts(prevPosts => [...prevPosts, ...newPosts]);
         setCallingPosts(false);
+        setcurrentpage(limitpage+currentpage);
 
       })
       .catch(error => {
@@ -233,7 +239,7 @@ export default function CommunityPage() {
                   {Posts.map((post, index) => (
                     <PostComponent key={index} post={post} />
                   ))}
-                  {!callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                  {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                   {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
               ) : (

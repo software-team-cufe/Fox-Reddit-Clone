@@ -14,9 +14,42 @@ import { getByRole } from '@testing-library/react';
  */
 
 export default function FeedSettings() {
+
+    // const [communities, setCommunities] = useState([]); // array of communities to show
+    // const [loading, setLoading] = useState(true); // loading state for fetching 
+
+    // useEffect(() => {
+    //     axios.get("http://localhost:3002/communities") //fetch communities and organize into communities array for mapping
+    //       .then(response => {
+    //         const newComms = response.data.map(comm => ({
+    //           id: comm.commID,
+    //           name: comm.name,
+    //           icon: comm.icon,
+    //           about: comm.description,
+    //           online: comm.onlineMembers,
+    //           members: comm.membersCount
+    //         }));
+    
+    //         setCommunities(newComms);
+    //         setLoading(false); //set loading to false after fetching to load body
+    //       })
+    //       .catch(error => {
+    //         console.error('Error:', error);
+    //         setLoading(false);
+    //       });
+    //   }, [searched]);
+
+    //   if (loading) {
+    //     return (
+    //       <div role="communitiestab" className="w-100 h-100 flex flex-col items-center justify-center">
+    //         <Spinner className="h-24 w-24" />
+    //       </div>
+    //     )
+    //   }
+
     //state for each setting statement to be toggled
     const [showMatureContent, setShowMatureContent] = useState(false);
-    const [BlurMatureImg, setBlurMatureImg] = useState(false);
+    const [blurMatureImg, setBlurMatureImg] = useState(false);
     const [autoplayMedia, setAutoplayMedia] = useState(false);
     const [communityTheme, setCommunityTheme] = useState(false);
     const [rememberingSortPerCommunity, setRememberingSortPerCommunity] = useState(false);
