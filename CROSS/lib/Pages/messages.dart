@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:reddit_fox/routes/Mock_routes.dart';
-=======
 import 'dart:convert';
 import 'package:http/http.dart' as http;
->>>>>>> cross-main
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
@@ -15,10 +9,6 @@ import 'package:reddit_fox/GeneralWidgets/dots.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 
-<<<<<<< HEAD
-class Message extends StatefulWidget {
-  const Message({Key? key}) : super(key: key);
-=======
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -30,7 +20,6 @@ class MyApp extends StatelessWidget {
 
 class Message extends StatefulWidget {
   const Message({super.key});
->>>>>>> cross-main
 
   @override
   _MessageState createState() => _MessageState();
@@ -38,8 +27,6 @@ class Message extends StatefulWidget {
 
 class _MessageState extends State<Message> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-<<<<<<< HEAD
-=======
   String? access_token;
   @override
   void initState() {
@@ -53,7 +40,6 @@ class _MessageState extends State<Message> {
     });
   }
 
->>>>>>> cross-main
   Future<List<dynamic>> fetchMessages() async {
     var url = Uri.parse(ApiRoutes.message); // Endpoint to fetch messages
     var response = await http.get(url);
@@ -96,14 +82,9 @@ class _MessageState extends State<Message> {
       ),
       endDrawer: endDrawer(
         user_width: userWidth,
-<<<<<<< HEAD
-        user_Id: 1,
-      ),
-=======
         token: access_token,
       ),
       bottomNavigationBar: nBar(),
->>>>>>> cross-main
       body: DefaultTabController(
         length: 2,
         child: Column(
@@ -121,18 +102,11 @@ class _MessageState extends State<Message> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-<<<<<<< HEAD
-                        FaIcon(FontAwesomeIcons.wolfPackBattalion, size: 100, color: Colors.white),
-                        SizedBox(height: 20),
-                        Text(
-                          'This is the second tab',
-=======
                         FaIcon(FontAwesomeIcons.wolfPackBattalion,
                             size: 100, color: Colors.white),
                         SizedBox(height: 20),
                         Text(
                           'Wow Such empty',
->>>>>>> cross-main
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
@@ -149,11 +123,6 @@ class _MessageState extends State<Message> {
                         );
                       } else if (snapshot.hasError) {
                         return Center(
-<<<<<<< HEAD
-                          child: Text(
-                              'Error: ${snapshot.error}'), // Show an error message if loading fails
-                        );
-=======
                             child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -169,7 +138,6 @@ class _MessageState extends State<Message> {
                           ],
                           // Show an error message if loading fails
                         ));
->>>>>>> cross-main
                       } else {
                         List<dynamic> messages = snapshot.data!;
                         return ListView.builder(

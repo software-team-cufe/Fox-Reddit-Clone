@@ -37,20 +37,12 @@ class CustomDrawer extends StatelessWidget {
             child: ListView(
               children: [
                 ListTile(
-<<<<<<< HEAD
-                  leading: const Icon(Icons.add, color: Colors.white), 
-=======
                   leading: const Icon(Icons.add, color: Colors.white),
->>>>>>> cross-main
                   title: const Text(
                     "Create Community",
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-<<<<<<< HEAD
-                    Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const BlankPage()));
-=======
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -110,7 +102,6 @@ class CustomDrawer extends StatelessWidget {
                                 name: '',
                               )),
                     );
->>>>>>> cross-main
                   },
                 ),
               ],

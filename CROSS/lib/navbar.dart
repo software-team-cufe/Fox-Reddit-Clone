@@ -73,15 +73,8 @@ class _nBarState extends State<nBar> {
           ),
           TextButton(
             onPressed: () {
-<<<<<<< HEAD
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const Message()));
-=======
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Message()));
->>>>>>> cross-main
             },
             child: const FaIcon(
               FontAwesomeIcons.bell,
