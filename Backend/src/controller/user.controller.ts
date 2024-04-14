@@ -75,13 +75,14 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
     });
   }
 }
+
 /**
- * Handles the verification of a user.
+ * Handles the verification of a user based on the provided token.
  *
- * @param req - The request object containing the user verification parameters.
- * @param res - The response object to send the verification result.
- *
- * @returns A promise that resolves to the verification result.
+ * @param {Request<VerifyUserInput>} req - The request object containing the verification token.
+ * @param {Response} res - The response object to send the verification status.
+ * @returns {Promise<void>} - A promise that resolves once the verification process is complete.
+ * @throws {appError} - If the user is not found or the verification code is incorrect.
  */
 export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Response) {
   //extract token from params
@@ -220,7 +221,13 @@ export async function resetPasswordHandler(
     });
   }
 }
-
+/**
+ * Handles the request to get the current user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Response} The current user information.
+ */
 export async function getCurrentUserHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -231,7 +238,13 @@ export async function getCurrentUserHandler(req: Request, res: Response) {
     user: res.locals.user,
   });
 }
-
+/**
+ * Handles the request to get the current user preferences.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Response} The user preferences.
+ */
 export async function getCurrentUserPrefs(req: Request, res: Response) {
   const user = res.locals.user;
 
