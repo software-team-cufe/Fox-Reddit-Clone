@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:reddit_fox/Pages/settings/setting.dart';
+import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
+import 'package:reddit_fox/features/auth/screens/switch_screen.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +16,7 @@ class endDrawer extends StatefulWidget {
   final double user_width;
   final String? token;
 
-  const endDrawer({Key? key, required this.user_width, required this.token}) : super(key: key);
+  const endDrawer({super.key, required this.user_width, required this.token});
 
   @override
   _endDrawerState createState() => _endDrawerState();
@@ -37,7 +41,9 @@ class _endDrawerState extends State<endDrawer> {
     );
     if (response.statusCode == 200) {
       List<dynamic> responseData = json.decode(response.body);
-      if (responseData.isNotEmpty && responseData[0] is Map<String, dynamic> && responseData[0].containsKey('id')) {
+      if (responseData.isNotEmpty &&
+          responseData[0] is Map<String, dynamic> &&
+          responseData[0].containsKey('id')) {
         profilePic = responseData[0]['profilePic'];
         return responseData[0]['id'];
       } else {
@@ -63,7 +69,7 @@ class _endDrawerState extends State<endDrawer> {
               future: userId,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.hasError) {
@@ -95,7 +101,9 @@ class _endDrawerState extends State<endDrawer> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ProfilePage(user_Id: snapshot.data!)),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ProfilePage(user_Id: snapshot.data!)),
                           );
                         },
                       ),
@@ -115,7 +123,8 @@ class _endDrawerState extends State<endDrawer> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const setting()),
+                            MaterialPageRoute(
+                                builder: (context) => const setting()),
                           );
                         },
                       ),
@@ -125,13 +134,11 @@ class _endDrawerState extends State<endDrawer> {
                         onTap: () async {
                           // Delete the saved token (assuming you're using shared preferences)
                           // Replace 'token' with the key you used to save the token
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
                           await prefs.remove('token');
 
-                          // Navigate back to the login screen
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => StartingScreen()),
-                          );
+                          Get.off(() => const AuthContainer());
                         },
                       ),
                     ],

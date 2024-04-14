@@ -23,8 +23,7 @@ class setting extends StatefulWidget {
 }
 
 class _settingState extends State<setting> {
-  // late UserModel user = getData(token);
-
+  late Map<String, dynamic> userData = {};
   String? token;
   @override
   void initState() {
@@ -34,32 +33,57 @@ class _settingState extends State<setting> {
       setState(() {
         // Store the token in the access_token variable
         token = sharedPrefValue.getString('token');
+        getData(token);
       });
     });
   }
 
+//
+  logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.remove('token');
+    Get.off(() => const AuthContainer());
+  }
+
+  deleteAcc() async {
+    final Uri url = Uri.parse(ApiRoutes.getUserByToken("ahmedtoken"));
+    dynamic response = await http.get(url);
+
+    try {
+      response = await http.delete(
+        Uri.parse(
+            "https://json-server-k6zb.onrender.com/user/${userData["id"]}"),
+        // body: jsonEncode(requestBody),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        // Email update successfullo
+        print('Deleted successfully!');
+        logout();
+      } else {
+        // Email update failed
+        print('Failed to update email. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Exception occurred
+      print('Exception: $e');
+    }
+  }
+
+//
   getData(token) async {
     if (token != null) {
       final url = ApiRoutes.getUserByToken(token);
       // final response = await http.get(Uri.parse(url));
       final response = await http.get(Uri.parse(url));
-
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        final user = data[0];
-
-        UserModel usermodel = UserModel(
-            email: user['email'],
-            name: user['name'],
-            profilePic: user['profilePic'],
-            uid: user['id'],
-            karma: user['karma'],
-            isAuthenticated: false,
-            birthDate: user['date'] != null ? DateTime.parse(user['date']) : null, 
-            banner: '',);
-
-        // user.name=response.body.['name'];
-        return usermodel;
+        setState(() {
+          userData = data[0];
+        });
       } else {
         print('invalid login');
       }
@@ -90,7 +114,8 @@ class _settingState extends State<setting> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const AccSetting()));
+                                builder: (context) =>
+                                    AccSetting(userData: userData)));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,10 +127,10 @@ class _settingState extends State<setting> {
                               height: 15,
                             ),
                           ),
-                          const Text(
+                          Text(
                             // user.name,
-                            'user.name',
-                            style: TextStyle(
+                            userData["userName"] ?? 'user.name',
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),
@@ -391,7 +416,7 @@ class _settingState extends State<setting> {
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Dark mode'),
+                    Text('Dark mode'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -705,7 +730,27 @@ class _settingState extends State<setting> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text(
+                                  'Delete your  account?',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                content:
+                                    const Text("All you data will be lost"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        deleteAcc();
+                                      },
+                                      child: const Text("Delete"))
+                                ],
+                              );
+                            });
+                      },
                       child: const Row(
                         children: [
                           Icon(

@@ -29,9 +29,13 @@ class _AuthContainerState extends State<AuthContainer> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        // access_token = sharedPrefValue.getString('token');
-        // saveToken('johntoken');
+
+        // saveToken('ahmedtoken');
+        // sharedPrefValue.remove('token');
+
         access_token = sharedPrefValue.getString('token');
+
+        print(access_token);
       });
     });
   }
@@ -78,6 +82,7 @@ class CurrentUserData {
   // static UserModel? get user => _user;
   void initState() {
     // Retrieve token from shared preferences when the widget initializes
+
     SharedPreferences.getInstance().then((sharedPrefValue) {
       // Store the token in the access_token variable
       // access_token = sharedPrefValue.getString('token');

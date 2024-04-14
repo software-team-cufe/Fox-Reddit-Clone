@@ -127,7 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
 Future<void> saveToken(String token) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
-  print(getToken());
+  // prefs.remove(token);
+  // print(getToken());
 }
 
 Future<String?> getToken() async {
