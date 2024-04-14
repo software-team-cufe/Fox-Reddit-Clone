@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
+import 'package:share/share.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,7 +36,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<dynamic>> fetchPosts() async {
-    var url = Uri.parse(_selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
+    var url = Uri.parse(
+        _selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
     var response = await http.get(url);
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -44,7 +46,6 @@ class _HomePageState extends State<HomePage> {
       throw Exception('Failed to load posts');
     }
   }
-
 
   Future<String> fetchUserProfilePic(String accessToken) async {
     var url = Uri.parse(ApiRoutes.getUserByToken(accessToken));
@@ -232,42 +233,87 @@ class _HomePageState extends State<HomePage> {
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         var post = posts[index];
-                        return ListTile(
-                          contentPadding: const EdgeInsets.all(
-                              16), // Add padding around the content
-                          title: Text(
-                            post['redditName'],
-                            style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight:
-                                    FontWeight.bold), // Increase font size
-                          ),
-                          subtitle: Text(
-                            post['title'],
-                            style: const TextStyle(
-                                fontSize: 16), // Increase font size
-                          ),
-                          trailing: post['picture'] != null
-                              ? Image.network(
-                                  post['picture'],
-                                  width: 100,
-                                  height: 250,
-                                  fit: BoxFit.cover,
-                                ) // Adjust width and height of the image
-                              : null, // Leave trailing blank if post['picture'] is null
-                          onTap: () {
-                            // Navigate to post details page
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PostDetails(
-                                  redditName: post['redditName'],
-                                  title: post['title'],
-                                  picture: post['picture'],
+                        return Column(
+                          children: [
+                           
+                            ListTile(
+                              contentPadding: const EdgeInsets.all(16),
+                              title: Text(
+                                post['redditName'],
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            );
-                          },
+                              subtitle: Text(
+                                post['title'],
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              trailing: post['picture'] != null
+                                  ? Image.network(
+                                      post['picture'],
+                                      width: 100,
+                                      height: 250,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PostDetails(
+                                      redditName: post['redditName'],
+                                      title: post['title'],
+                                      picture: post['picture'],
+                                      votes: post['votes'],
+                                      commentsNo: post['commentsNo'],
+                                      creatorId: post['creatorId'],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                             Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_upward),
+                                  onPressed: () {
+                                    // Implement upvote logic here
+                                  },
+                                ),
+                                Text(post['votes'].toString()),
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_downward),
+                                  onPressed: () {
+                                    // Implement downvote logic here
+                                  },
+                                ),
+                                const SizedBox(width: 2),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      post['commentsNo'].toString(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Icon(Icons.comment),
+
+                                    IconButton(
+                                     onPressed: () {
+                          String postUrl =
+                              'https://example.com/posts/'; // Replace with your actual post URL
+                          Share.share('\n$postUrl');
+                        },
+                                      icon: const Icon(Icons.share),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
                         );
                       },
                     );

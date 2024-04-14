@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:intl/intl.dart'; 
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
-import 'package:reddit_fox/Pages/Profile.dart'; 
 import 'package:share/share.dart';
 
 class ProfilePage extends StatefulWidget {

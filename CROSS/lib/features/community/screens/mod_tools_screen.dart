@@ -1,24 +1,24 @@
 import "package:flutter/material.dart";
 import "package:routemaster/routemaster.dart";
 //general
-import 'package:reddit_fox/features/community/screens/welcome_message_edit.dart';
-import 'package:reddit_fox/features/community/screens/insights.dart';
-import 'package:reddit_fox/features/community/screens/mod_log.dart';
-import 'package:reddit_fox/features/community/screens/community_icon.dart';
-import 'package:reddit_fox/features/community/screens/description.dart';
-import 'package:reddit_fox/features/community/screens/post_types.dart';
-import 'package:reddit_fox/features/community/screens/discovery.dart';
-//import 'package:reddit_fox/features/community/screens/modmail.dart';
-import 'package:reddit_fox/features/community/screens/mod_notifications.dart';
-import 'package:reddit_fox/features/community/screens/archive_posts.dart';
-import 'package:reddit_fox/features/community/screens/media_in_comments.dart';
+import 'package:reddit_fox/features/community/screens/modtools/welcome_message_edit.dart';
+import 'package:reddit_fox/features/community/screens/modtools/insights.dart';
+import 'package:reddit_fox/features/community/screens/modtools/mod_log.dart';
+import 'package:reddit_fox/features/community/screens/modtools/community_icon.dart';
+import 'package:reddit_fox/features/community/screens/modtools/description.dart';
+import 'package:reddit_fox/features/community/screens/modtools/post_types.dart';
+import 'package:reddit_fox/features/community/screens/modtools/discovery.dart';
+import 'package:reddit_fox/features/community/screens/modtools/modmail.dart';
+import 'package:reddit_fox/features/community/screens/modtools/mod_notifications.dart';
+import 'package:reddit_fox/features/community/screens/modtools/archive_posts.dart';
+import 'package:reddit_fox/features/community/screens/modtools/media_in_comments.dart';
 
 //content and regulation
-import 'queues_screen.dart';
-import 'rules_screen.dart';
-import 'removal_reasons_screen.dart';
-import 'post_flair_screen.dart';
-import 'safety_screen.dart';
+import 'modtools/queues_screen.dart';
+import 'modtools/rules_screen.dart';
+import 'modtools/removal_reasons_screen.dart';
+import 'modtools/post_flair_screen.dart';
+import 'modtools/safety_screen.dart';
 
 class ModToolsScreen extends StatelessWidget {
   final String name;
@@ -121,7 +121,15 @@ class ModToolsScreen extends StatelessWidget {
                 ));
               },
             ),
-            //modmail goes here
+            ListTile(
+              leading: const Icon(Icons.mail),
+              title: const Text('Modmail'),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ModMailScreen(),
+                ));
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Mod Notifications'),
@@ -304,7 +312,7 @@ class ModToolsScreen extends StatelessWidget {
                 // Navigate to Contact Fox screen or open contact options
               },
             ),
-            const SizedBox(height: 20), // Adjust the height as needed
+            const SizedBox(height: 20),
 
             const Padding(
               padding: EdgeInsets.all(8.0),

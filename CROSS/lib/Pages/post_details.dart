@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
-import 'CreateCommmentsPage.dart';
+import 'package:reddit_fox/Pages/Profile.dart';
+import 'CommentWidget.dart'; // Import the CommentWidget file
+import 'package:share/share.dart';
 
 class PostDetails extends StatelessWidget {
   final String redditName;
   final String title;
-  final String picture;
+  final String? picture;
+  final int votes;
+  final int commentsNo;
+  final int? creatorId;
+  // Add other parameters here
 
   const PostDetails({
-    Key? key,
+    super.key,
     required this.redditName,
     required this.title,
-    this.picture = '',
-  }) : super(key: key);
+    this.picture,
+    required this.votes,
+    required this.commentsNo,
+    required this.creatorId,
+    // Add other parameters here
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,140 +29,139 @@ class PostDetails extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Post Details"),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Display the author's avatar and username
-              Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Display the author's avatar and username
+            
+            GestureDetector(
+              /*
+              onTap: () {
+                // Navigate to the poster's account page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfilePage(user_Id: creatorId)),
+                );
+              },
+                */
+              child: Row(
                 children: [
                   _buildAvatarIcon(),
                   const SizedBox(width: 8),
                   Text(
                     redditName,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors
+                          .blue, // Optional: Change color to indicate it's clickable
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              // Display the post title
-              Text(
-                title,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            
+            const SizedBox(height: 16),
+            // Display the post title
+            Text(
+              title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+
+            // Display the post image if available
+            if (picture != null && picture!.isNotEmpty)
+              Image.network(
+                picture!,
+                width: double.infinity,
+                height: 400,
+                fit: BoxFit.cover,
               ),
-              const SizedBox(height: 16),
 
-              // Display the post image
-              if (picture != null)
-                Image.network(
-                  picture!,
-                  width: double.infinity,
-                  height: 400,
-                  fit: BoxFit.cover,
-                )
-              else
-                // Display a placeholder image
-                Container(
-                  width: double.infinity,
-                  height: 400,
-                  color: Colors.grey[300],
-                  child: Center(
-                    child: Icon(
-                      Icons.image,
-                      size: 100,
-                      color: Colors.grey[600],
+            // Display the post actions (e.g., reply, upvote, downvote)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Display the reply, upvote, and downvote buttons
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_upward),
+                      onPressed: () {},
                     ),
-                  ),
+                    Text(
+                      "$votes",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_downward),
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
-
-              const SizedBox(height: 16),
-              // Display the post actions (e.g., reply, upvote, downvote)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Display the reply, upvote, and downvote buttons
-                  Row(
+                // Display the comment count and share button
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.reply),
-                        onPressed: () {},
+                      Text(
+                        "$commentsNo",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
+                      const Icon(Icons.comment),
+                      const Spacer(),
                       IconButton(
-                        icon: const Icon(Icons.arrow_upward),
-                        onPressed: () {},
-                      ),
-                      const Text("100"),
-                      IconButton(
-                        icon: const Icon(Icons.arrow_downward),
-                        onPressed: () {},
+                        icon: const Icon(Icons.share),
+                        onPressed: () {
+                          String postUrl =
+                              'https://example.com/posts/'; // Replace with your actual post URL
+                          Share.share('$title\n$postUrl');
+                        },
                       ),
                     ],
                   ),
-                  // Display the comment count and share button
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("50 Comments"),
-                        const SizedBox(width: 8),
-                        IconButton(
-                          icon: const Icon(Icons.share),
-                          onPressed: () {
-                            _showBottomMenu(context);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Display the comments section title
-              const Text(
-                "Comments",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              // Display the first comment
-              _buildComment(
-                username: "User1",
-                pfp: "",
-                content: "This is a comment.",
-                upvotes: 10,
-                downvotes: 5,
-                context: context,
-                comments: [
-                  "Reply 1",
-                  "Reply 2",
-                ],
-              ),
-              // Display the second comment
-              _buildComment(
-                username: "User2",
-                pfp: "",
-                content: "Another comment here.",
-                upvotes: 15,
-                downvotes: 3,
-                context: context,
-                comments: [
-                  "Comment A",
-                  "Comment B",
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Display the "Add a Comment" section title
-              const Text(
-                "Add a Comment",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              // Display the new comment field
-              _buildNewCommentField(context),
-              const SizedBox(height: 16),
-            ],
-          ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Display the first comment
+            CommentWidget(
+              username: "User1",
+              pfp: "",
+              content: "This is a comment.",
+              upvotes: 10,
+              downvotes: 5,
+              context: context,
+              comments: const [
+                "Reply 1",
+                "Reply 2",
+              ],
+            ),
+            // Display the second comment
+            CommentWidget(
+              username: "User2",
+              pfp: "",
+              content: "Another comment here.",
+              upvotes: 15,
+              downvotes: 3,
+              context: context,
+              comments: const [
+                "Comment A",
+                "Comment B",
+              ],
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+          child: _buildNewCommentField(context),
         ),
       ),
     );
@@ -166,152 +175,43 @@ class PostDetails extends StatelessWidget {
     );
   }
 
-  /// Builds a comment widget.
-  Widget _buildComment({
-    required String username,
-    required String pfp,
-    required String content,
-    required int upvotes,
-    required int downvotes,
-    required BuildContext context,
-    required List<String> comments,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Display the comment author's avatar and username
-        Row(
-          children: [
-            _buildAvatarIcon(),
-            const SizedBox(width: 8),
-            Text(
-              username,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        // Display the comment content
-        Text(
-          content,
-          style: const TextStyle(fontSize: 16),
-        ),
-        const SizedBox(height: 8),
-        // Display the comment actions (e.g., upvote, downvote, reply, share)
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_upward),
-              onPressed: () {},
-            ),
-            Text(upvotes.toString()),
-            IconButton(
-              icon: const Icon(Icons.arrow_downward),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.reply),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.share),
-              onPressed: () {
-                _showBottomMenu(context);
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        // Display the comment's replies
-        ...comments.map((comment) => _buildCommentWidget(comment)),
-        const SizedBox(height: 8),
-      ],
-    );
-  }
-
-  /// Builds a comment widget for a reply.
-  Widget _buildCommentWidget(String comment) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: Row(
-        children: [
-          const SizedBox(width: 24),
-          Text(
-            comment,
-            style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Builds the new comment field widget.
   Widget _buildNewCommentField(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const CreateCommentsPage(),
-          ),
-        );
-      },
-      child: Row(
-        children: [
-          const Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Write a comment...",
-                border: InputBorder.none,
-              ),
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () {},
-          ),
-        ],
-      ),
-    );
-  }
+    TextEditingController commentController = TextEditingController();
 
-  /// Shows the bottom menu modal sheet.
-  void _showBottomMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Display the menu items
-            _buildMenuItem(context, Icons.share, "Share"),
-            _buildMenuItem(context, Icons.save, "Save"),
-            _buildMenuItem(
-              context,
-              Icons.notifications,
-              "Get Reply Notification",
+            TextField(
+              controller: commentController,
+              decoration: const InputDecoration(
+                hintText: 'Write a comment...',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType:
+                  TextInputType.multiline, // Allow multiline text input
+              maxLines: null, // Allow the TextField to expand as needed
+              textInputAction:
+                  TextInputAction.newline, // Enter key creates a new line
             ),
-            _buildMenuItem(context, Icons.copy, "Copy Text"),
-            _buildMenuItem(context, Icons.close_fullscreen, "Collapse Thread"),
-            _buildMenuItem(context, Icons.person_off, "Block Account"),
-            _buildMenuItem(context, Icons.flag, "Report"),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Handle sending the comment here
+                String commentText = commentController.text;
+                if (commentText.isNotEmpty) {
+                  // Send the comment logic
+                  commentController
+                      .clear(); // Clear the text field after sending
+                }
+              },
+              child: const Text('Send'),
+            ),
           ],
-        );
-      },
-    );
-  }
-
-  /// Builds a menu item widget.
-  Widget _buildMenuItem(BuildContext context, IconData icon, String label) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(label),
-      onTap: () {
-        Navigator.pop(context);
-      },
+        ),
+      ),
     );
   }
 }

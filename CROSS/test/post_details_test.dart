@@ -6,7 +6,7 @@ void main() {
   testWidgets('PostDetails widget displays correctly',
       (WidgetTester tester) async {
     // Build the widget
-    //await tester.pumpWidget(MaterialApp(home: PostDetails()));
+    //await tester.pumpWidget(MaterialApp(home: PostDetails(redditName: 'TESTUSER', title: 'POST TITLE',)));
 
     // Verify if the title is displayed
     expect(find.text('Post Details'), findsOneWidget);

@@ -151,39 +151,67 @@ class _HomePageState extends State<HomePage> {
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 var post = posts[index];
-                return ListTile(
-                  contentPadding: const EdgeInsets.all(
-                      16), // Add padding around the content
-                  title: Text(
-                    post['redditName'],
-                    style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold), // Increase font size
-                  ),
-                  subtitle: Text(
-                    post['title'],
-                    style: const TextStyle(fontSize: 16), // Increase font size
-                  ),
-                  trailing: post['picture'] != null
-                      ? Image.network(
-                          post['picture'],
-                          width: 100,
-                          height: 250,
-                          fit: BoxFit.cover,
-                        ) // Adjust width and height of the image
-                      : null, // Leave trailing blank if post['picture'] is null
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PostDetails(
-                          redditName: post['redditName'],
-                          title: post['title'],
-                          picture: post['picture'],
-                        ),
+                return Column(
+                  children: [
+                    ListTile(
+                      contentPadding: const EdgeInsets.all(16),
+                      title: Text(
+                        post['redditName'],
+                        style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold), // Increase font size
                       ),
-                    );
-                  },
+                      subtitle: Text(
+                        post['title'],
+                        style:
+                            const TextStyle(fontSize: 16), // Increase font size
+                      ),
+                      trailing: post['picture'] != null
+                          ? Image.network(
+                              post['picture'],
+                              width: 100,
+                              height: 250,
+                              fit: BoxFit.cover,
+                            ) // Adjust width and height of the image
+                          : null, // Leave trailing blank if post['picture'] is null
+                      onTap: () {
+                        // Navigate to post details page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PostDetails(
+                              redditName: post['redditName'],
+                              title: post['title'],
+                              picture: post['picture'],
+                              votes: post['votes'],
+                              commentsNo: post['commentsNo'],
+                              creatorId: post['creatorId'],
+                              // Pass other details as needed
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_upward),
+                          onPressed: () {
+                            // Implement upvote logic here
+                          },
+                        ),
+                        Text(post['votes']
+                            .toString()), // Display the total number of votes
+                        IconButton(
+                          icon: const Icon(Icons.arrow_upward),
+                          onPressed: () {
+                            // Implement downvote logic here
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
                 );
               },
             );
