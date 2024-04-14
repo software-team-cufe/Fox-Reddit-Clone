@@ -154,20 +154,14 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                         <ul className="" aria-labelledby="dropdownDefaultButton">
                            {/*here is where the ui print the subreddits i just entered */}
                            <li>
-                              <a
-                                 href="#"
-                                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
-                              >
-                                 <ul>
                                  {RecentCommunities.map((subreddit, index) => (
-                                    <li 
+                                    <a 
+                                    href="#"
                                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
                                           {subreddit}
-                                    </li>
+                                    </a>
                                  ))}
-                                 </ul>
-                              </a>
                            </li>
                         </ul>
                      </div>

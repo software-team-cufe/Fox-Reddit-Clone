@@ -29,6 +29,7 @@ function MainRoute() {
   const disp = useDispatch();
   const nav = useNavigate();
   const [OpenSideBar, setOpenSideBar] = useState(false)
+  //need to close sidebar when clicking on place on the page except the sidebar
   const handleOpenSideBar = () => {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
   }
@@ -41,11 +42,14 @@ function MainRoute() {
     const match = path.match(exp);
     if (match) {
       const communityName = match[1];
-      if (recentCommunities.length < 5) {
-        setRecentCommunities([...recentCommunities, communityName]);
-      } else {
-        setRecentCommunities([...recentCommunities.slice(1), communityName]);
-      }
+      if(!(recentCommunities.includes(communityName)))
+      {
+        if (recentCommunities.length < 5) {
+          setRecentCommunities([...recentCommunities, communityName]);
+        } else {
+            setRecentCommunities([...recentCommunities.slice(1), communityName]);
+        }
+      }  
     }
   }, [path]);
 
