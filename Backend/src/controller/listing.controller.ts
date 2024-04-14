@@ -23,7 +23,7 @@ import { date } from 'zod';
  * @param {NextFunction} next - The next middleware function
  * @return {Promise<void>} Promise representing the completion of the delete operation
  */
-export async function deleteHandler(req: Request<deleteCommentOrPost>, res: Response, next: NextFunction) {
+export async function deleteHandler(req: Request<deleteCommentOrPost['body']>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -87,8 +87,12 @@ export async function deleteHandler(req: Request<deleteCommentOrPost>, res: Resp
         message: 'Post is deleted successfully',
       });
     }
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error in deleteHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }
 
@@ -100,7 +104,7 @@ export async function deleteHandler(req: Request<deleteCommentOrPost>, res: Resp
  * @param {NextFunction} next - The next middleware function
  * @return {Promise<void>} Promise that resolves when the post is successfully hidden
  */
-export async function hidePostHandler(req: Request<hidePost>, res: Response, next: NextFunction) {
+export async function hidePostHandler(req: Request<hidePost['body']>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -141,8 +145,12 @@ export async function hidePostHandler(req: Request<hidePost>, res: Response, nex
       status: 'success',
       message: 'Post is hidden successfully',
     });
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error in hidePostHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }
 
@@ -154,7 +162,7 @@ export async function hidePostHandler(req: Request<hidePost>, res: Response, nex
  * @param {NextFunction} next - the next function in the middleware chain
  * @return {Promise<void>} a Promise that resolves when the post is successfully unhidden
  */
-export async function unhidePostHandler(req: Request<hidePost>, res: Response, next: NextFunction) {
+export async function unhidePostHandler(req: Request<hidePost['body']>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -193,8 +201,12 @@ export async function unhidePostHandler(req: Request<hidePost>, res: Response, n
       status: 'success',
       message: 'Post is unhidden successfully',
     });
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error in unhidePostHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }
 
@@ -205,7 +217,7 @@ export async function unhidePostHandler(req: Request<hidePost>, res: Response, n
  * @param {Response} res - The response object to send back the result.
  * @return {Promise<void>} A promise representing the completion of adding the comment.
  */
-export async function addCommentHandler(req: Request<addComment>, res: Response) {
+export async function addCommentHandler(req: Request<addComment['body']>, res: Response) {
   try {
     const { linkID, textHTML, textJSON } = req.body;
 
@@ -262,8 +274,12 @@ export async function addCommentHandler(req: Request<addComment>, res: Response)
     );
 
     res.status(201).json(createdComment); // 201: Created
-  } catch (err) {
-    res.status(500).json({ message: 'Internal server error' }); // Handle internal server errors
+  } catch (error) {
+    console.error('Error in addCommentHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }
 
@@ -275,7 +291,7 @@ export async function addCommentHandler(req: Request<addComment>, res: Response)
  * @param {NextFunction} next - the next middleware function
  * @return {Promise<void>} a Promise that resolves when the operation is complete
  */
-export async function saveHandler(req: Request<savePost>, res: Response, next: NextFunction) {
+export async function saveHandler(req: Request<savePost['body']>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -316,8 +332,12 @@ export async function saveHandler(req: Request<savePost>, res: Response, next: N
       status: 'success',
       message: 'Post is saved successfully',
     });
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error in saveHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }
 /**
@@ -328,7 +348,7 @@ export async function saveHandler(req: Request<savePost>, res: Response, next: N
  * @param {NextFunction} next - the next function
  * @return {Promise<void>} Promise that resolves once the post is successfully unsaved
  */
-export async function unsaveHandler(req: Request<savePost>, res: Response, next: NextFunction) {
+export async function unsaveHandler(req: Request<savePost['body']>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -367,8 +387,12 @@ export async function unsaveHandler(req: Request<savePost>, res: Response, next:
       status: 'success',
       message: 'Post is unsaved successfully',
     });
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error in unsaveHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }
 /**
@@ -379,7 +403,7 @@ export async function unsaveHandler(req: Request<savePost>, res: Response, next:
  * @param {NextFunction} next - The next function
  * @return {Promise<void>} Promise representing the completion of the function
  */
-export async function editUserTextHandler(req: Request<editUserText>, res: Response, next: NextFunction) {
+export async function editUserTextHandler(req: Request<editUserText['body']>, res: Response, next: NextFunction) {
   try {
     const user = await findUserByUsername(res.locals.user.username as string);
     if (!user) {
@@ -462,8 +486,12 @@ export async function editUserTextHandler(req: Request<editUserText>, res: Respo
         response: results,
       });
     }
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error in editUserTextHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }
 /**
@@ -504,7 +532,11 @@ export async function insightsCountsHandler(req: Request, res: Response, next: N
         message: 'Post not found',
       });
     }
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error in insightsCountsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }
