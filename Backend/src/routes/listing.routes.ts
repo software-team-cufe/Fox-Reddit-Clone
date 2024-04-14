@@ -12,25 +12,22 @@ import {
 import validateResource from '../middleware/validateResource';
 import {
   deleteCommentOrPostSchema,
-  //   hideAndUnhidePostSchema,
-  //   saveAndUnsaveSchema,
-  //   editUserTextSchema,
-  //   insightsCountsSchema,
-  //   addCommentSchema,
+  hideAndUnhidePostSchema,
+  saveAndUnsaveSchema,
+  editUserTextSchema,
+  insightsCountSchema,
+  addCommentSchema,
 } from '../schema/listing.schema';
 
 const router = express.Router();
 
-//router.post('/api/del', validateResource(deleteCommentOrPostSchema), deleteHandler);
-//router.post('/api/hide', validateResource(hidePostSchema), hidePostHandler);
-//router.post('/api/hide', validateResource(hidePostSchema), unhidePostHandler);
-router.post('/api/hide', hidePostHandler);
-router.post('/api/unhide', unhidePostHandler);
-router.post('/api/del', deleteHandler);
-router.post('/api/comment', addCommentHandler);
-router.post('/api/save', saveHandler);
-router.post('/api/unsave', unsaveHandler);
-router.patch('/api/editusertext', editUserTextHandler);
+router.post('/api/del', validateResource(deleteCommentOrPostSchema), deleteHandler);
+router.post('/api/hide', validateResource(hideAndUnhidePostSchema), hidePostHandler);
+router.post('/api/unhide', validateResource(hideAndUnhidePostSchema), unhidePostHandler);
+router.post('/api/comment', validateResource(addCommentSchema), addCommentHandler);
+router.post('/api/save', validateResource(saveAndUnsaveSchema), saveHandler);
+router.post('/api/unsave', validateResource(saveAndUnsaveSchema), unsaveHandler);
+router.patch('/api/editusertext', validateResource(editUserTextSchema), editUserTextHandler);
 router.get('/api/insights_count/:post', insightsCountsHandler);
 
 export default router;
