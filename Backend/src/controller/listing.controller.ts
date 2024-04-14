@@ -1,9 +1,24 @@
 import { NextFunction, Request, Response } from 'express';
 import { addComment, deleteCommentOrPost, hidePost } from '../schema/listing.schema';
-import { deletePost, hide, unhide } from '../service/post.service';
+import {
+  deletePost,
+  hide,
+  unhide,
+  getBestPostsFromSubreddit,
+  getHotPostsFromSubreddit,
+  getNewPostsFromSubreddit,
+  getTopPostsFromSubreddit,
+  getBestPostsFromRandom,
+  getHotPostsFromRandom,
+  getNewPostsFromRandom,
+  getTopPostsFromRandom,
+  getRandomPostsFromSubreddit,
+  getRandomPostsFromRandom,
+} from '../service/post.service';
 import { add_comment, deleteComment } from '../service/comment.service';
 import { findUserByUsername } from '../service/user.service';
 import { Comment } from '../model/comments.model';
+import { findCommunityByName } from '../service/community.service';
 // export async function addCommentHandler(req: Request<addComment['body']>, res: Response) {
 //     try{
 //         let comment=await addComment(req.body, req.username);
@@ -130,4 +145,88 @@ export async function addCommentHandler(req: Request, res: Response, next: NextF
     return next(err);
   }
   res.status(200).json(newComment);
+}
+
+export async function getBestPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let bestPosts;
+    if (subreddit) {
+      bestPosts = await getBestPostsFromSubreddit(sub);
+    } else {
+      bestPosts = await getBestPostsFromRandom();
+    }
+    res.json(bestPosts);
+  } catch (error) {
+    console.error('Error getting best posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getHotPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let hotPosts;
+    if (subreddit) {
+      hotPosts = await getHotPostsFromSubreddit(sub);
+    } else {
+      hotPosts = await getHotPostsFromRandom();
+    }
+    res.json(hotPosts);
+  } catch (error) {
+    console.error('Error getting hot posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getNewPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let newPosts;
+    if (subreddit) {
+      newPosts = await getNewPostsFromSubreddit(sub);
+    } else {
+      newPosts = await getNewPostsFromRandom();
+    }
+    res.json(newPosts);
+  } catch (error) {
+    console.error('Error getting new posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getTopPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let topPosts;
+    if (subreddit) {
+      topPosts = await getTopPostsFromSubreddit(sub);
+    } else {
+      topPosts = await getTopPostsFromRandom();
+    }
+    res.json(topPosts);
+  } catch (error) {
+    console.error('Error getting top posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+export async function getRandomPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let randomPosts;
+    if (subreddit) {
+      randomPosts = await getRandomPostsFromSubreddit(sub);
+    } else {
+      randomPosts = await getRandomPostsFromRandom();
+    }
+    res.json(randomPosts);
+  } catch (error) {
+    console.error('Error getting best posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }
