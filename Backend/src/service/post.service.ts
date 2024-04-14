@@ -3,6 +3,17 @@ import PostModel, { Post } from '../model/posts.model';
 import UserModel, { User } from '../model/user.model';
 import { DocumentType, Ref } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
+
+/**
+ * Creates a new post.
+ *
+ * @param input - The post data to create.
+ * @returns A promise that resolves to the created user.
+ */
+export function createPost(input: Partial<Post>) {
+  return PostModel.create(input);
+}
+
 /**
  * Finds a post by their ID.
  *
