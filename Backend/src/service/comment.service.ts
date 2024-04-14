@@ -5,6 +5,15 @@ import appError from '../utils/appError';
 import { findPostById } from './post.service';
 import { findUserById, findUserByUsername } from './user.service';
 
+/**
+ * Finds a comment by their ID.
+ *
+ * @param id - The ID of the post to find.
+ * @returns A promise that resolves to the user object if found, or null if not found.
+ */
+export function findCommentById(id: string) {
+  return CommentModel.findById(id);
+}
 async function userCommets(commentsIDS: string[], limit: number | undefined) {
   // If the request didn't contain a limit in its query, set it to 10 by default
   limit = limit || 10;
@@ -23,13 +32,6 @@ async function userCommets(commentsIDS: string[], limit: number | undefined) {
   return limitedComments;
 }
 
-async function deleteComment(id: string) {
-  const comment = await CommentModel.findById(id);
-  if (!comment) {
-    throw new appError('Comment not found', 404);
-  }
-  await comment.deleteOne();
-}
 interface CommentData {
   textHTML: string;
   textJSON: string;
@@ -39,6 +41,16 @@ interface CommentData {
   postID: string;
   communityID: string;
   voters: { userID: string; voteType: number }[];
+}
+
+/**
+ * Creates a new user.
+ *
+ * @param input - The user data to create.
+ * @returns A promise that resolves to the created user.
+ */
+export function createComment(input: Partial<Comment>) {
+  return CommentModel.create(input);
 }
 
 async function add_comment(data: CommentData, userId: string) {
@@ -97,4 +109,4 @@ async function add_comment(data: CommentData, userId: string) {
 
   return result;
 }
-export { userCommets, deleteComment, add_comment };
+export { userCommets, add_comment };
