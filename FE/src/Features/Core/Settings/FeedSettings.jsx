@@ -6,7 +6,7 @@
  */
 import React, { useEffect, useState } from "react";
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
-import { getByRole } from '@testing-library/react';
+import { getByRole, waitFor } from '@testing-library/react';
 import axios from "axios";
 // import Dropdown from "./DropDownlist";
 /**
@@ -16,38 +16,44 @@ import axios from "axios";
 
 export default function FeedSettings() {
 
-    //const [communities, setCommunities] = useState([]); // array of communities to show
+    const [communities, setCommunities] = useState([]); // array of communities to show
     const [showMatureContent, setShowMatureContent] = useState(true);//mature toggle view
     // const [loading, setLoading] = useState(true); // loading state for fetching 
+    
 
-    //  useEffect(() => {
-    //      axios.get("http://localhost:3500/communities") //fetch communities and organize into communities array for mapping
-    //        .then(response => {
-    //          const newComms = response.data.map(comm => ({
-    //              id: comm.commID,
-    //              name: comm.name,
-    //              icon: comm.icon,
-    //              about: comm.description,
-    //              online: comm.onlineMembers,
-    //              members: comm.membersCount,
-    //              NSFW: comm.NSFW
-    //        }));
-    //        let tempArr =[];
-    //      for (let i = 0; i < newComms.length; i++) {
-    //         if(showMatureContent === false){
-    //             if (newComms[i].NSFW === false) {
-    //                 tempArr.push(newComms[i]);
-    //             }
-    //         }else{
-    //                 tempArr.push(newComms[i]);
-    //         }
-    //         }
-    //      setCommunities(tempArr);
-    //      console.log(communities);
-    //      //setCommunities(newComms);
-    //      //setLoading(false); //set loading to false after fetching to load body
-    //     }, []);
-    // })
+      useEffect(() => {
+         axios.get("http://localhost:3500/communities") //fetch communities and organize into communities array for mapping
+            .then(response => {
+              const newComms = response.data.map(comm => ({
+                  id: comm.commID,
+                  name: comm.name,
+                  icon: comm.icon,
+                  about: comm.description,
+                  online: comm.onlineMembers,
+                  members: comm.membersCount,
+                  NSFW: comm.NSFW
+            }));
+            let tempArr =[];
+          for (let i = 0; i < newComms.length; i++) {
+             if(showMatureContent === false){
+                 if (newComms[i].NSFW === false) {
+                     tempArr.push(newComms[i]);
+                 }
+             }else{
+                     tempArr.push(newComms[i]);
+             }
+        
+            }
+            //console.log(tempArr);
+            setCommunities(tempArr);
+          //console.log(communities);
+          //setCommunities(newComms);
+          //setLoading(false); //set loading to false after fetching to load body
+         });
+     }, [showMatureContent]);
+      useEffect(() => {
+         console.log(communities);
+     }, [communities]);
 
     //state for each setting statement to be toggled
     const [blurMatureImg, setBlurMatureImg] = useState(false);
@@ -56,7 +62,7 @@ export default function FeedSettings() {
     const [rememberingSortPerCommunity, setRememberingSortPerCommunity] = useState(false);
     const [globalView, setGlobalView] = useState(false);
     const [openPostsInNewTab, setOpenPostsInNewTab] = useState(false);
-    const handleToggleInFeedMatureContent = (isChecked) => {
+    const handleToggleInFeedMatureContent = async (isChecked) => {
         setShowMatureContent(isChecked);
         console.log(isChecked);
         //console.log(showMatureContent);
