@@ -1,12 +1,17 @@
-import { object, string, TypeOf } from 'zod';
+import path from 'path';
+import { any, object, string, TypeOf } from 'zod';
 
 export const addCommentSchema = object({
   body: object({
-    linkId: string({
+    linkID: string({
       required_error: 'Link is required',
     }),
-    text: string({
-      required_error: 'Text is required',
+    textHTML: string({
+      required_error: 'textHTML is required',
+    }),
+
+    textJSON: string({
+      required_error: 'textJSON is required',
     }),
   }),
 });
@@ -15,9 +20,6 @@ export const deleteCommentOrPostSchema = object({
   body: object({
     linkID: string({
       required_error: 'id is required',
-    }),
-    username: string({
-      required_error: 'type is required',
     }),
   }),
 });
@@ -50,7 +52,7 @@ export const editUserTextSchema = object({
 });
 
 export const insightsCountSchema = object({
-  params: object({
+  path: object({
     post: string({
       required_error: 'Post ID is required',
     }),

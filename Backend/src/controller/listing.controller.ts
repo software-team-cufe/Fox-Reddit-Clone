@@ -1,28 +1,33 @@
 import { NextFunction, Request, Response } from 'express';
-import { addComment, deleteCommentOrPost, hidePost } from '../schema/listing.schema';
+import {
+  deleteCommentOrPost,
+  addComment,
+  savePost,
+  hidePost,
+  editUserText,
+  insightsCount,
+} from '../schema/listing.schema';
 import { findPostById } from '../service/post.service';
-import { add_comment, findCommentById } from '../service/comment.service';
+import { add_comment, findCommentById, createComment } from '../service/comment.service';
 import { findUserByUsername } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
 import UserModel from '../model/user.model';
 import PostModel from '../model/posts.model';
-// export async function addCommentHandler(req: Request<addComment['body']>, res: Response) {
-//     try{
-//         let comment=await addComment(req.body, req.username);
-//     }
-// }
+import { date } from 'zod';
 
 /**
- * User delete a link
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @param {NextFunction} next - The next function.
+ * Delete handler function that handles deletion of comments and posts based on the given id.
+ *
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @param {NextFunction} next - The next middleware function
+ * @return {Promise<void>} Promise representing the completion of the delete operation
  */
-export async function deleteHandler(req: Request, res: Response, next: NextFunction) {
+export async function deleteHandler(req: Request<deleteCommentOrPost>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
-    const user = await findUserByUsername(req.body.username as string);
+    const user = res.locals.user;
 
     if (!user) {
       return res.status(400).json({
@@ -88,12 +93,14 @@ export async function deleteHandler(req: Request, res: Response, next: NextFunct
 }
 
 /**
- * Handles hiding a post for a user.
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @param {NextFunction} next - The next function.
+ * Hide a post based on the given ID for the current user.
+ *
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @param {NextFunction} next - The next middleware function
+ * @return {Promise<void>} Promise that resolves when the post is successfully hidden
  */
-export async function hidePostHandler(req: Request, res: Response, next: NextFunction) {
+export async function hidePostHandler(req: Request<hidePost>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -106,7 +113,7 @@ export async function hidePostHandler(req: Request, res: Response, next: NextFun
       });
     }
 
-    const user = await findUserByUsername(req.body.username as string);
+    const user = await findUserByUsername(res.locals.user.username as string);
     if (!user) {
       return res.status(400).json({
         status: 'failed',
@@ -140,12 +147,14 @@ export async function hidePostHandler(req: Request, res: Response, next: NextFun
 }
 
 /**
- * Handles unhiding a post for a user.
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @param {NextFunction} next - The next function.
+ * Handle un-hiding a post based on user input.
+ *
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ * @param {NextFunction} next - the next function in the middleware chain
+ * @return {Promise<void>} a Promise that resolves when the post is successfully unhidden
  */
-export async function unhidePostHandler(req: Request, res: Response, next: NextFunction) {
+export async function unhidePostHandler(req: Request<hidePost>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -158,7 +167,7 @@ export async function unhidePostHandler(req: Request, res: Response, next: NextF
       });
     }
 
-    const user = await findUserByUsername(req.body.username as string);
+    const user = await findUserByUsername(res.locals.user.username as string);
     if (!user) {
       return res.status(400).json({
         status: 'failed',
@@ -189,25 +198,84 @@ export async function unhidePostHandler(req: Request, res: Response, next: NextF
   }
 }
 
-// export async function addCommentHandler(req: Request<addComment['body']>, res: Response, next: NextFunction) {
-export async function addCommentHandler(req: Request, res: Response, next: NextFunction) {
-  console.log('here');
-  let newComment: Comment = {} as Comment;
+/**
+ * Add a new comment to a post based on the user input.
+ *
+ * @param {Request} req - The request object containing user input.
+ * @param {Response} res - The response object to send back the result.
+ * @return {Promise<void>} A promise representing the completion of adding the comment.
+ */
+export async function addCommentHandler(req: Request<addComment>, res: Response) {
   try {
-    newComment = await add_comment(req.body, '660e55a8ee6a9d0206dcf794');
+    const { linkID, textHTML, textJSON } = req.body;
+
+    // Extract user and post
+    const user = await findUserByUsername(res.locals.user.username as string);
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const postID = linkID?.split('_')[1];
+    if (!postID) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Invalid post ID',
+      });
+    }
+
+    const post = await findPostById(postID);
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Create the new comment
+    const newComment = new CommentModel({
+      authorId: user._id,
+      postID,
+      textHTML,
+      textJSON,
+    });
+    const createdComment = await createComment(newComment);
+
+    // Save the new comment
+    if (!createdComment) {
+      return res.status(400).json({ message: 'Failed to create the comment' });
+    }
+
+    // Update user and post with the new comment
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { hasComment: createdComment._id } }, // Using $addToSet to avoid adding duplicate comments
+      { new: true, upsert: true }
+    );
+
+    const updatedPost = await PostModel.findByIdAndUpdate(
+      post._id,
+      { $addToSet: { postComments: createdComment._id } },
+      { new: true, upsert: true }
+    );
+
+    res.status(201).json(createdComment); // 201: Created
   } catch (err) {
-    return next(err);
+    res.status(500).json({ message: 'Internal server error' }); // Handle internal server errors
   }
-  res.status(200).json(newComment);
 }
 
 /**
- * Handles saving a post for a user.
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @param {NextFunction} next - The next function.
+ * Save a post to a user's saved posts.
+ *
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ * @param {NextFunction} next - the next middleware function
+ * @return {Promise<void>} a Promise that resolves when the operation is complete
  */
-export async function saveHandler(req: Request, res: Response, next: NextFunction) {
+export async function saveHandler(req: Request<savePost>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -220,7 +288,7 @@ export async function saveHandler(req: Request, res: Response, next: NextFunctio
       });
     }
 
-    const user = await findUserByUsername(req.body.username as string);
+    const user = await findUserByUsername(res.locals.user.username as string);
     if (!user) {
       return res.status(400).json({
         status: 'failed',
@@ -253,12 +321,14 @@ export async function saveHandler(req: Request, res: Response, next: NextFunctio
   }
 }
 /**
- * Handles unsaving a post for a user.
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @param {NextFunction} next - The next function.
+ * Handles the unsave operation for a post, removing it from the user's saved posts.
+ *
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ * @param {NextFunction} next - the next function
+ * @return {Promise<void>} Promise that resolves once the post is successfully unsaved
  */
-export async function unsaveHandler(req: Request, res: Response, next: NextFunction) {
+export async function unsaveHandler(req: Request<savePost>, res: Response, next: NextFunction) {
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -271,7 +341,7 @@ export async function unsaveHandler(req: Request, res: Response, next: NextFunct
       });
     }
 
-    const user = await findUserByUsername(req.body.username as string);
+    const user = await findUserByUsername(res.locals.user.username as string);
     if (!user) {
       return res.status(400).json({
         status: 'failed',
@@ -301,11 +371,17 @@ export async function unsaveHandler(req: Request, res: Response, next: NextFunct
     return next(err);
   }
 }
-
-export async function editUserTextHandler(req: Request, res: Response, next: NextFunction) {
+/**
+ * Function for handling user text editing based on the linkID provided.
+ *
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @param {NextFunction} next - The next function
+ * @return {Promise<void>} Promise representing the completion of the function
+ */
+export async function editUserTextHandler(req: Request<editUserText>, res: Response, next: NextFunction) {
   try {
-    const username = req.body.username as string;
-    const user = await findUserByUsername(username);
+    const user = await findUserByUsername(res.locals.user.username as string);
     if (!user) {
       return res.status(400).json({
         status: 'failed',
@@ -391,11 +467,12 @@ export async function editUserTextHandler(req: Request, res: Response, next: Nex
   }
 }
 /**
- * Get post insights count
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @param {NextFunction} next - The next function.
- * @returns {object} res
+ * Handles the request for insights counts.
+ *
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ * @param {NextFunction} next - the next function
+ * @return {Promise<void>} a promise that resolves with the response value
  */
 export async function insightsCountsHandler(req: Request, res: Response, next: NextFunction) {
   try {

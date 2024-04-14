@@ -43,6 +43,16 @@ interface CommentData {
   voters: { userID: string; voteType: number }[];
 }
 
+/**
+ * Creates a new user.
+ *
+ * @param input - The user data to create.
+ * @returns A promise that resolves to the created user.
+ */
+export function createComment(input: Partial<Comment>) {
+  return CommentModel.create(input);
+}
+
 async function add_comment(data: CommentData, userId: string) {
   console.log(data);
   console.log(userId);
