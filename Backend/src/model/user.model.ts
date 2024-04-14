@@ -13,6 +13,7 @@ import * as argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 import { Post } from './posts.model';
 import { Comment } from './comments.model';
+import { Types } from 'mongoose';
 //import { Validator } from 'validator';
 
 export const privateFields = [
@@ -382,6 +383,12 @@ export class User {
 
   @prop({ ref: () => 'Comment' })
   mentionedInComments?: Ref<Comment>[];
+
+  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
+  upvotedPosts: Types.ObjectId[];
+
+  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
+  downvotedPosts: Types.ObjectId[];
 
   // @prop({ type: [String], default: [] })
   // upvotedPosts: string[];

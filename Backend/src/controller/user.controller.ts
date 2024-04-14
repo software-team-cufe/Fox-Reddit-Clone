@@ -178,26 +178,25 @@ export async function getCurrentUserHandler(req: Request, res: Response) {
 }
 
 export async function getCurrentUserPrefs(req: Request, res: Response) {
-  const user = res.locals.user;
-
+  let user = res.locals.user;
   if (!user) {
     return res.status(401).send('No user logged in');
   }
-
+  user = await findUserById(user._id);
   return res.send(user.prefs);
 }
 
 export async function editCurrentUserPrefs(req: Request, res: Response) {
-  const user = res.locals.user;
+  let user = res.locals.user;
 
   if (!user) {
     return res.status(401).send('No user logged in');
   }
 
   // Get specific prefs to update from request body
-  const prefsToUpdate = req.body.prefs;
-
+  const prefsToUpdate = req.body;
   // Update only those prefs on the user document
+  user = await findUserById(user._id);
   Object.assign(user.prefs, prefsToUpdate);
 
   await user.save();
@@ -205,17 +204,20 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
   return res.status(200).send(user.prefs);
 }
 
-export async function getUpvotedPostsHandler(req: Request, res: Response) {
+export async function getUpvotedPostsByUsername(req: Request, res: Response) {
   try {
-    // Get the current user from the request
-    const currentUser = res.locals.user;
+    // Extract username from req.params
+    const { username } = req.params;
+    // Find the user by username
+    const user = await UserModel.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     // Retrieve the upvoted post IDs from the user document
-    const upvotedPostIds = currentUser.upvotedPosts;
-
+    const upvotedPostIds = user.upvotedPosts;
     // Query the Post model to retrieve the upvoted posts
     const upvotedPosts = await PostModel.find({ _id: { $in: upvotedPostIds } });
-
     return res.json(upvotedPosts);
   } catch (error) {
     console.error('Error fetching upvoted posts:', error);
@@ -223,20 +225,27 @@ export async function getUpvotedPostsHandler(req: Request, res: Response) {
   }
 }
 
-export async function getDownvotedPostsHandler(req: Request, res: Response) {
+export async function getDownvotedPostsByUsername(req: Request, res: Response) {
   try {
-    // Get the current user from the request
-    const currentUser = res.locals.user;
+    // Extract username from req.params
+    const { username } = req.params;
 
-    // Retrieve the downvoted post IDs from the user document
-    const downvotedPostIds = currentUser.downvotedPosts;
+    // Find the user by username
+    const user = await UserModel.findOne({ username });
 
-    // Query the Post model to retrieve the downvoted posts
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Retrieve the upvoted post IDs from the user document
+    const downvotedPostIds = user.downvotedPosts;
+
+    // Query the Post model to retrieve the upvoted posts
     const downvotedPosts = await PostModel.find({ _id: { $in: downvotedPostIds } });
 
     return res.json(downvotedPosts);
   } catch (error) {
-    console.error('Error fetching downvoted posts:', error);
+    console.error('Error fetching upvoted posts:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
