@@ -10,6 +10,8 @@ import {
   unmarknsfwPostHandler,
   lockPostHandler,
   unlockPostHandler,
+  votePostHandler,
+  submitPostHandler,
 } from '../controller/listing.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -19,6 +21,8 @@ import {
   spoilerPostSchema,
   nsfwPostSchema,
   lockPostSchema,
+  votePostSchema,
+  submitPostSchema,
 } from '../schema/listing.schema';
 import deserializeUser from '../middleware/deserialzeUser';
 
@@ -31,11 +35,13 @@ router.post('/api/hide', hidePostHandler);
 router.post('/api/unhide', unhidePostHandler);
 router.post('/api/comment', addCommentHandler);
 
-router.post('/api/spoiler', validateResource(spoilerPostSchema), deserializeUser, spoilerPostHandler);
-router.post('/api/unspoiler', validateResource(spoilerPostSchema), deserializeUser, unspoilerPostHandler);
-router.post('/api/marknsfw', validateResource(nsfwPostSchema), deserializeUser, marknsfwPostHandler);
-router.post('/api/unmarknsfw', validateResource(nsfwPostSchema), deserializeUser, unmarknsfwPostHandler);
-router.post('/api/lock', validateResource(lockPostSchema), deserializeUser, lockPostHandler);
-router.post('/api/unlock', validateResource(lockPostSchema), deserializeUser, unlockPostHandler);
+router.post('/api/spoiler', validateResource(spoilerPostSchema), spoilerPostHandler);
+router.post('/api/unspoiler', validateResource(spoilerPostSchema), unspoilerPostHandler);
+router.post('/api/marknsfw', validateResource(nsfwPostSchema), marknsfwPostHandler);
+router.post('/api/unmarknsfw', validateResource(nsfwPostSchema), unmarknsfwPostHandler);
+router.post('/api/lock', validateResource(lockPostSchema), lockPostHandler);
+router.post('/api/unlock', validateResource(lockPostSchema), unlockPostHandler);
+router.post('/api/vote', validateResource(votePostSchema), votePostHandler);
+//router.post('/api/submit', validateResource(submitPostSchema), submitPostHandler);
 
 export default router;

@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from 'zod';
+import { object, string, TypeOf, array, boolean } from 'zod';
 
 export const addCommentSchema = object({
   body: object({
@@ -32,7 +32,7 @@ export const hidePostSchema = object({
 export const spoilerPostSchema = object({
   body: object({
     linkID: string({
-      required_error: 'id is required',
+      required_error: 'linkID is required',
     }),
   }),
 });
@@ -40,7 +40,7 @@ export const spoilerPostSchema = object({
 export const nsfwPostSchema = object({
   body: object({
     linkID: string({
-      required_error: 'id is required',
+      required_error: 'linkID is required',
     }),
   }),
 });
@@ -48,7 +48,36 @@ export const nsfwPostSchema = object({
 export const lockPostSchema = object({
   body: object({
     linkID: string({
-      required_error: 'id is required',
+      required_error: 'linkID is required',
+    }),
+  }),
+});
+
+export const votePostSchema = object({
+  body: object({
+    linkID: string({
+      required_error: 'linkID is required',
+    }),
+    type: string({
+      required_error: 'Vote type is required',
+    }),
+  }),
+});
+
+export const submitPostSchema = object({
+  body: object({
+    title: string({
+      required_error: 'title is required',
+    }),
+    text: string({
+      required_error: 'text is required',
+    }),
+    attachments: array(string()),
+    nsfw: boolean({
+      required_error: 'nsfw is required',
+    }),
+    spoiler: boolean({
+      required_error: 'spoiler is required',
     }),
   }),
 });
@@ -59,3 +88,5 @@ export type hidePost = TypeOf<typeof hidePostSchema>;
 export type spoilerPost = TypeOf<typeof spoilerPostSchema>;
 export type nsfwPost = TypeOf<typeof nsfwPostSchema>;
 export type lockPost = TypeOf<typeof lockPostSchema>;
+export type votePost = TypeOf<typeof votePostSchema>;
+export type submitPost = TypeOf<typeof submitPostSchema>;

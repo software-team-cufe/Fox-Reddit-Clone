@@ -1,6 +1,16 @@
 import appError from '../utils/appError';
-import PostModel from '../model/posts.model';
+import PostModel, { Post } from '../model/posts.model';
 import UserModel, { User } from '../model/user.model';
+
+/**
+ * Creates a new post.
+ *
+ * @param input - The post data to create.
+ * @returns A promise that resolves to the created user.
+ */
+export function createPost(input: Partial<Post>) {
+  return PostModel.create(input);
+}
 
 /**
  * Finds a post by their ID.
