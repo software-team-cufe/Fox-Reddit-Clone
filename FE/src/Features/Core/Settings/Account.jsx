@@ -1,8 +1,17 @@
 
 import { useState } from "react"
 import EmailChanged from "./ComponentChange/EmailChanged";
-
+const options=['WOMAN','MAN','NON Binary','perfer Not to say','i prefer..']
 const Acount = () => {
+ 
+  
+  const[isOpen, setOpen]=useState(false);
+  const[selectedOption,setOption]=useState(null);
+
+   const clickedOption = (value)=>()=>{
+     setOption(value);
+     setOpen(false);
+   }
 
   const[changeEmail, setChange]= useState(false);
 
@@ -41,16 +50,47 @@ const Acount = () => {
             </div>
 
             <div>
-              <form action="/action_page.php">
-                <select className=" text-sm">
-                  <option value="WOMAN">WOMAN</option>
-                  <option value="MAN">MAN</option>
-                  <option value="NON-BINARY">NON-BINARY</option>
-                  <option value="I refer to myself as...">I refer to myself as...</option>
-                  <option value="I PREFER NOT TO SAY">I PREFER NOT TO SAY</option>
-                </select>
-              </form>
+            <div className='flex flex-col ml-8 mt-5'>
+    
+            <button onClick={()=>setOpen(true)} className='flex flex-row w-28' >
+                <div className=' text-sky-600'> 
+                  {selectedOption||'WOMAN'}
+               </div>
+          
+               <svg className="w-4 h-4 mt-1.5"
+                  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
+               </svg>  
+            </button>
+ 
+ 
+       { isOpen &&
+         <div className=' w-32 origin-top-right border border-gray-100 rounded-md shadow-md'> 
+     
+            {options.map((options)=> (
+                
+                // eslint-disable-next-line react/jsx-key
+                <div>
+                <button type="button"
+                 onClick={clickedOption(options)} 
+                 key={Math.random()}
+                 className=' block rounded-lg no-underline hover:bg-sky-50 text-sm px-2 '> 
+                 {options}
+                </button>
+          
+                </div>
+              )
 
+       
+            )}
+    
+       </div>
+       }
+
+       {/*في نفس ال div هنعمل الdropdown list  */}
+       
+
+    </div>
 
 
             </div>
