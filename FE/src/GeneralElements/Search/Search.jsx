@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
-import { key } from 'localforage';
+
 const SearchComponent = () => {
     const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
     const YourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
@@ -31,18 +31,8 @@ const SearchComponent = () => {
     }, [search]);
 
 
-    const remove = id => {
-        setSelected(prevSelected => {
-            const newSelected = { ...prevSelected };
-            delete newSelected[id];
-            return newSelected;
-        });
-    };
-
     const goSearch = () => {
         if (search) {
-            // setoptions([{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
-            // { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125" }])
             setShowSelector(true);
         } else {
             setShowSelector(false);
@@ -52,7 +42,6 @@ const SearchComponent = () => {
         item.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    // sm:block hidden 
     return (
         <div className={`relative border rounded-full h-12 my-2 focus:border-2  mx-auto text-xs
          w-[50%]${Focus ? 'border-blue-500 w-[50%] ' : ''}
@@ -82,11 +71,16 @@ const SearchComponent = () => {
                                 {filteredSearch.map((item, index) => (
                                     (
                                         <div key={index} onClick={() => setSelected(item)}
-                                            className="hover:bg-orange-100 cursor-pointer p-2 hover:border-light-blue-1">
-                                            {item.name}
+                                            className="hover:bg-orange-100 flex cursor-pointer p-2 hover:border-light-blue-1">
+                                            <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
+                                            <div>
+                                                <p className='mx-2 '>{item.name}</p>
+                                                <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p>
+                                            </div>
                                         </div>
                                     )
                                 ))}
+
 
                                 <div onClick={() => setSelected(item)}
                                     className="text-gray-500 h-6 flex rounded p-2 pb-8 hover:bg-gray-100">
