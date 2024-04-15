@@ -33,11 +33,13 @@ class _SearchState extends State<Search> {
   }
 
   Future<void> _fetchRecentlySearched() async {
-    final response = await http.get(Uri.parse(ApiRoutes.getRecentSearch));
+    final response =
+        await http.get(Uri.parse(ApiRoutesMockserver.getRecentSearch));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
-        _recentlySearched = List<String>.from(data['recentlySearched'].map((term) => term['searchTerm']));
+        _recentlySearched = List<String>.from(
+            data['recentlySearched'].map((term) => term['searchTerm']));
       });
     } else {
       throw Exception('Failed to load recently searched terms');
@@ -45,7 +47,7 @@ class _SearchState extends State<Search> {
   }
 
   Future<void> _fetchTrendingToday() async {
-    final response = await http.get(Uri.parse(ApiRoutes.getTrending));
+    final response = await http.get(Uri.parse(ApiRoutesMockserver.getTrending));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
@@ -102,23 +104,29 @@ class _SearchState extends State<Search> {
           children: [
             Text(
               'Recently Searched',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.0),
             Wrap(
-            spacing: 8.0,
-            runSpacing: 8.0,
-            children: _recentlySearched.map((term) {
-              return Text(
-                term,
-                style: TextStyle(color: Colors.white),
-              );
-            }).toList(),
-          ),
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: _recentlySearched.map((term) {
+                return Text(
+                  term,
+                  style: TextStyle(color: Colors.white),
+                );
+              }).toList(),
+            ),
             SizedBox(height: 16.0),
             Text(
               'Trending Today',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.0),
             Column(
@@ -129,7 +137,8 @@ class _SearchState extends State<Search> {
                   children: [
                     Text(
                       trending['searchTerm'],
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 4.0),
                     Text(

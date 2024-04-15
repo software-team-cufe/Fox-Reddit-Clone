@@ -22,28 +22,32 @@ class _LoginScreenState extends State<LoginScreen> {
   String? errorMessage;
 
   static Future<String?> login(String username, String password) async {
-    const url = ApiRoutes.login;
+    const url = ApiRoutesBackend.login;
     final response = await http.get(Uri.parse(url));
+    print("asdasdasdas${response.statusCode}");
+    print('asdjbnbasdjkb${response.body}');
     if (response.statusCode == 200) {
-      final List<dynamic> users = jsonDecode(response.body);
+      final List<dynamic> user = jsonDecode(response.body);
 
-      for (final user in users) {
-        if ((user['userName'] == username || user['email'] == username) &&
-            user['password'] == password) {
-          // Login successful
-          final token = user["token"];
+      await saveToken(user[0]['accessToken']);
+      print(getToken());
+      // saveToken(token)
+      // for (final user in users) {
+      //   if ((user['userName'] == username) && user['password'] == password) {
+      //     // Login successful
+      //     final token = user["token"];
 
-          // Save the token in shared preferences
-          await saveToken(token);
+      //     // Save the token in shared preferences
+      //     await saveToken(token);
 
-          print('login successful');
-          print("token: " + token);
+      //     print('login successful');
+      //     print("token: " + token);
 
-          return null; // No error message
-        } else {
-          print('invalid login');
-        }
-      }
+      //     return null; // No error message
+      //   } else {
+      //     print('invalid login');
+      //   }
+      // }
     }
 
     // If unable to fetch data or no matching user found

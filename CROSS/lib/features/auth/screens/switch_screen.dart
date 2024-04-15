@@ -42,7 +42,7 @@ class _AuthContainerState extends State<AuthContainer> {
 
   getData() async {
     if (access_token != null) {
-      final url = ApiRoutes.getUserByToken(access_token!);
+      final url = ApiRoutesMockserver.getUserByToken(access_token!);
       // final response = await http.get(Uri.parse(url));
       final response = await http.get(Uri.parse(url));
 

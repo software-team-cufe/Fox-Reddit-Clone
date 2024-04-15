@@ -34,7 +34,8 @@ class _HomePageState extends State<HomePage> {
   } // Declare _selectedItem here
 
   Future<List<dynamic>> fetchPosts() async {
-    var url = Uri.parse("${ApiRoutes.baseUrl}/${_dropdownValue}Posts");
+    var url =
+        Uri.parse("${ApiRoutesMockserver.baseUrl}/${_dropdownValue}Posts");
     var response = await http.get(url);
     if (response.statusCode == 200) {
       return json.decode(response.body);

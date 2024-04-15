@@ -47,7 +47,7 @@ class _settingState extends State<setting> {
   }
 
   deleteAcc() async {
-    final Uri url = Uri.parse(ApiRoutes.getUserByToken("ahmedtoken"));
+    final Uri url = Uri.parse(ApiRoutesMockserver.getUserByToken("ahmedtoken"));
     dynamic response = await http.get(url);
 
     try {
@@ -75,7 +75,7 @@ class _settingState extends State<setting> {
 //
   getData(token) async {
     if (token != null) {
-      final url = ApiRoutes.getUserByToken(token);
+      final url = ApiRoutesMockserver.getUserByToken(token);
       // final response = await http.get(Uri.parse(url));
       final response = await http.get(Uri.parse(url));
       print(response.statusCode);

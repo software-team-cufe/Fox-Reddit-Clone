@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart';
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:share/share.dart';
@@ -20,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage>
   late Map<String, dynamic> userData = {};
   late TabController _tabController;
   bool _showTitle = true;
-  late List<Map<String, dynamic>> userPosts = []; 
+  late List<Map<String, dynamic>> userPosts = [];
 
   @override
   void initState() {
@@ -37,8 +37,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   Future<void> fetchData() async {
     try {
-      final response =
-          await http.get(Uri.parse(ApiRoutes.getUserById(widget.user_Id)));
+      final response = await http
+          .get(Uri.parse(ApiRoutesMockserver.getUserById(widget.user_Id)));
       if (response.statusCode == 200) {
         setState(() {
           userData = json.decode(response.body);
@@ -49,10 +49,11 @@ class _ProfilePageState extends State<ProfilePage>
       }
 
       final postResponse = await http.get(
-          Uri.parse(ApiRoutes.getPostsByCreatorId(widget.user_Id)));
+          Uri.parse(ApiRoutesMockserver.getPostsByCreatorId(widget.user_Id)));
       if (postResponse.statusCode == 200) {
         setState(() {
-          userPosts = json.decode(postResponse.body).cast<Map<String, dynamic>>();
+          userPosts =
+              json.decode(postResponse.body).cast<Map<String, dynamic>>();
           print('fetching user posts');
         });
       } else {
@@ -144,7 +145,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20, top: 10),
+                                padding:
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Text(
                                   userData['userName'],
                                   style: TextStyle(
@@ -174,14 +176,16 @@ class _ProfilePageState extends State<ProfilePage>
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const Search()),
+                          MaterialPageRoute(
+                              builder: (context) => const Search()),
                         );
                       },
                       icon: const Icon(Icons.search),
                     ),
                     IconButton(
                       onPressed: () {
-                        Share.share('https://www.reddit.com/user/${widget.user_Id}/');
+                        Share.share(
+                            'https://www.reddit.com/user/${widget.user_Id}/');
                         print("it is pressed");
                       },
                       icon: Transform.scale(
@@ -213,8 +217,8 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
               ],
             ),
-  );
-}
+    );
+  }
 
   Widget _buildPostsContainer() {
     return ListView.builder(
@@ -225,7 +229,6 @@ class _ProfilePageState extends State<ProfilePage>
         return ListTile(
           title: Text(
             post['redditName'] ?? '',
-            
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(

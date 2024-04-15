@@ -36,8 +36,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<dynamic>> fetchPosts() async {
-    var url = Uri.parse(
-        _selectedItem == 'Popular' ? ApiRoutes.getPopular : ApiRoutes.getPosts);
+    var url = Uri.parse(_selectedItem == 'Popular'
+        ? ApiRoutesMockserver.getPopular
+        : ApiRoutesMockserver.getPosts);
     var response = await http.get(url);
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<String> fetchUserProfilePic(String accessToken) async {
-    var url = Uri.parse(ApiRoutes.getUserByToken(accessToken));
+    var url = Uri.parse(ApiRoutesMockserver.getUserByToken(accessToken));
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $accessToken'},
@@ -235,7 +236,6 @@ class _HomePageState extends State<HomePage> {
                         var post = posts[index];
                         return Column(
                           children: [
-                           
                             ListTile(
                               contentPadding: const EdgeInsets.all(16),
                               title: Text(
@@ -273,7 +273,7 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                             ),
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 IconButton(
@@ -300,13 +300,12 @@ class _HomePageState extends State<HomePage> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     const Icon(Icons.comment),
-
                                     IconButton(
-                                     onPressed: () {
-                          String postUrl =
-                              'https://example.com/posts/'; // Replace with your actual post URL
-                          Share.share('\n$postUrl');
-                        },
+                                      onPressed: () {
+                                        String postUrl =
+                                            'https://example.com/posts/'; // Replace with your actual post URL
+                                        Share.share('\n$postUrl');
+                                      },
                                       icon: const Icon(Icons.share),
                                     ),
                                   ],

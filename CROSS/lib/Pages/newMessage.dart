@@ -78,7 +78,7 @@ class _NewMessageState extends State<NewMessage> {
     try {
       // Fetch user data
       final response = await http.get(
-        Uri.parse(ApiRoutes.login),
+        Uri.parse(ApiRoutesMockserver.login),
       );
 
       if (response.statusCode == 200) {
@@ -104,7 +104,7 @@ class _NewMessageState extends State<NewMessage> {
 
           // Send message
           final messageResponse = await http.post(
-            Uri.parse(ApiRoutes.message),
+            Uri.parse(ApiRoutesMockserver.message),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },

@@ -25,29 +25,31 @@ class SignupScreen extends StatefulWidget {
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 
-  static int generateIntegerToken({int length = 32}) {
-    final random = Random.secure();
-    final values = List<int>.generate(length, (i) => random.nextInt(256));
-    final bytes = Uint8List.fromList(values);
-    return bytes.fold(0, (result, element) => (result << 8) + element);
-  }
+  // static int generateIntegerToken({int length = 32}) {
+  //   final random = Random.secure();
+  //   final values = List<int>.generate(length, (i) => random.nextInt(256));
+  //   final bytes = Uint8List.fromList(values);
+  //   return bytes.fold(0, (result, element) => (result << 8) + element);
+  // }
 
   static Future<void> signUpAPI(
       String username, String email, String password, Date) async {
-    final Uri url =
-        Uri.parse(ApiRoutes.login); // Replace with your server's endpoint
+    final Uri url = Uri.parse(
+        ApiRoutesBackend.signup); // Replace with your server's endpoint
     final Map<String, dynamic> body = {
       "email": email,
-      "userName": username,
+      "username": username,
       "password": password,
-      "Name": username,
-      "token": '${username}token',
-      "profilePic": null,
-      "created_at": Date.toIso8601String(),
-      "karma": "0"
+      "passwordConfirmation": password
     };
-    print(body);
+    print("3aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    print('asdaskjkbasdkb======$body');
+    print('asdaskjkbasdkb======${jsonEncode(body)}');
+    print("3aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
     print('_________________________________');
+    print('22222222222222222222$url');
+    print('22222222222222222222${ApiRoutesBackend.signup}');
     try {
       final response = await http.post(
         url,

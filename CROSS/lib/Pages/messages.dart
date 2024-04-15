@@ -41,7 +41,8 @@ class _MessageState extends State<Message> {
   }
 
   Future<List<dynamic>> fetchMessages() async {
-    var url = Uri.parse(ApiRoutes.message); // Endpoint to fetch messages
+    var url =
+        Uri.parse(ApiRoutesMockserver.message); // Endpoint to fetch messages
     var response = await http.get(url);
     print(response.statusCode);
     if (response.statusCode == 200) {
