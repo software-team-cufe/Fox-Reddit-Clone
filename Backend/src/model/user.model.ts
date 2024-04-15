@@ -13,9 +13,42 @@ import * as argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 import { Post } from './posts.model';
 import { Comment } from './comments.model';
+import { Types } from 'mongoose';
 //import { Validator } from 'validator';
 
-export const privateFields = ['password', 'verificationCode', 'passwordResetCode'];
+export const privateFields = [
+  'password',
+  'verificationCode',
+  'passwordResetCode',
+  'verified',
+  'prefs',
+  'upvotedPosts',
+  'downvotedPosts',
+  'contentVisibility',
+  'canCreateSubreddit',
+  'showActiveCommunities',
+  'hasVerifiedEmail',
+  'type',
+  'friendRequestToMe',
+  'friendRequestFromMe',
+  'friend',
+  'blocksFromMe',
+  'blocksToMe',
+  'hasPost',
+  'hasComment',
+  'hasReply',
+  'followPost',
+  'hiddenPosts',
+  'savedPosts',
+  'mentionedInPosts',
+  'mentionedInComments',
+  'meReturn',
+  'aboutReturn',
+  'commMember',
+  'hasVote',
+  'updatedAt',
+  '__v',
+];
 
 export class UserPrefs {
   @prop({ default: true })
@@ -332,6 +365,12 @@ export class User {
   @prop({ ref: () => 'Comment' })
   mentionedInComments?: Ref<Comment>[];
 
+  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
+  upvotedPosts: Types.ObjectId[];
+
+  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
+  downvotedPosts: Types.ObjectId[];
+
   // @prop({ type: [String], default: [] })
   // upvotedPosts: string[];
 
@@ -358,11 +397,11 @@ export class User {
       return false;
     }
   }
-  // async save(): Promise<User> {
-  //   const UserModel = getModelForClass(User); // Retrieve the Mongoose model for User class
-  //   const user = new UserModel(this); // Create a new instance of User model
-  //   return await user.save(); // Save the user to the database and return the saved user object
-  // }
+  async saveUser(): Promise<User> {
+    const UserModel = getModelForClass(User); // Retrieve the Mongoose model for User class
+    const user = new UserModel(this); // Create a new instance of User model
+    return await user.save(); // Save the user to the database and return the saved user object
+  }
 }
 
 export const UserModel = getModelForClass(User);
