@@ -34,6 +34,8 @@ import {
   unfollowRequestHandler,
   getALLFollowersHandler,
   getALLFollowedHandler,
+  getUpvotedPostsByUsername,
+  getDownvotedPostsByUsername,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 
@@ -57,9 +59,13 @@ router.get('/user/:username/overview', getUserOverviewHandler);
 router.get('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
 router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 
-router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
+router.get('/api/v1/me/prefs', requireUser, getCurrentUserPrefs);
 
-router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
+router.patch('/api/v1/me/prefs', requireUser, editCurrentUserPrefs);
+
+router.get('/api/user/:username/upvoted', getUpvotedPostsByUsername);
+
+router.get('/api/user/:username/downvoted', getDownvotedPostsByUsername);
 
 /******************** BOUDY **************************/
 router.get('/api/v1/me/friends', getALLFriendsHandler);

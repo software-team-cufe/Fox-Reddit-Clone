@@ -1,6 +1,6 @@
 import { prop, getModelForClass, Ref, DocumentType, pre, ReturnModelType, post } from '@typegoose/typegoose';
 import { User } from './user.model';
-
+import Community from './comments.model';
 class Spam {
   @prop({ ref: () => User })
   spammerID!: Ref<User>;
@@ -32,6 +32,9 @@ export class Post {
 
   @prop()
   textJSON!: string;
+
+  @prop({ ref: 'Community' })
+  communities!: Ref<typeof Community>[];
 
   @prop({ default: false })
   isDeleted!: boolean;
@@ -91,7 +94,7 @@ export class Post {
   voters!: Vote[];
 
   @prop({ type: () => [String], ref: () => User })
-  mintionedInUsers!: Ref<User>[]; ///////////////////////////////////////////////////////
+  mentionedInUsers!: Ref<User>[]; ///////////////////////////////////////////////////////
 
   @prop({ type: () => [String], ref: () => User }) //////////////////////////////////
   postComments: Ref<Comment>[];
@@ -104,15 +107,15 @@ export class Post {
 
   @prop()
   bestFactor!: number;
-
-  static async incrementInsightCount(doc: DocumentType<Post>) {
-    await PostModel.updateOne({ _id: doc._id }, { $inc: { insightCnt: 1 } });
-  }
-  // static async preFind(next: () => void) {
-  //   await PostModel.updateMany({}, { $inc: { insightCnt: 1 } }).exec();
-  //   next();
-  // }
 }
+// Add the function as a static method on the Post class
+// static async incrementInsightCount(doc: DocumentType<Post>) {
+//   await PostModel.updateOne({ _id: doc._id }, { $inc: { insightCnt: 1 } });
+// }
+// static async preFind(next: () => void) {
+//   await PostModel.updateMany({}, { $inc: { insightCnt: 1 } }).exec();
+//   next();
+// }
 
 // @pre<Post>('find', function (next) {
 //   const doc = this as DocumentType<Post>;

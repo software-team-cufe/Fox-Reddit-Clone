@@ -12,10 +12,24 @@ import {
   votePost,
   submitPost,
 } from '../schema/listing.schema';
-import { createPost, findPostById } from '../service/post.service';
+import {
+  createPost,
+  findPostById,
+  getBestPostsFromSubreddit,
+  getHotPostsFromSubreddit,
+  getNewPostsFromSubreddit,
+  getTopPostsFromSubreddit,
+  getBestPostsFromRandom,
+  getHotPostsFromRandom,
+  getNewPostsFromRandom,
+  getTopPostsFromRandom,
+  getRandomPostsFromSubreddit,
+  getRandomPostsFromRandom,
+} from '../service/post.service';
 import { add_comment, findCommentById, createComment } from '../service/comment.service';
 import { findUserByUsername } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
+import { findCommunityByName } from '../service/community.service';
 import UserModel from '../model/user.model';
 import PostModel from '../model/posts.model';
 import { date } from 'zod';
@@ -850,14 +864,6 @@ export async function votePostHandler(req: Request<votePost['body']>, res: Respo
       });
     }
 
-    // Check if post is not found
-    if (!post) {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Post not found',
-      });
-    }
-
     // Check if user is missing or invalid
     if (!user) {
       return res.status(400).json({
@@ -929,4 +935,90 @@ export async function submitPostHandler(req: Request<submitPost['body']>, res: R
     message: 'Post is unlocked successfully',
     post,
   });
+}
+
+/*YOUSEF PHASE 3 WORK */
+
+export async function getBestPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let bestPosts;
+    if (subreddit) {
+      bestPosts = await getBestPostsFromSubreddit(sub);
+    } else {
+      bestPosts = await getBestPostsFromRandom();
+    }
+    res.json(bestPosts);
+  } catch (error) {
+    console.error('Error getting best posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getHotPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let hotPosts;
+    if (subreddit) {
+      hotPosts = await getHotPostsFromSubreddit(sub);
+    } else {
+      hotPosts = await getHotPostsFromRandom();
+    }
+    res.json(hotPosts);
+  } catch (error) {
+    console.error('Error getting hot posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getNewPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let newPosts;
+    if (subreddit) {
+      newPosts = await getNewPostsFromSubreddit(sub);
+    } else {
+      newPosts = await getNewPostsFromRandom();
+    }
+    res.json(newPosts);
+  } catch (error) {
+    console.error('Error getting new posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getTopPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let topPosts;
+    if (subreddit) {
+      topPosts = await getTopPostsFromSubreddit(sub);
+    } else {
+      topPosts = await getTopPostsFromRandom();
+    }
+    res.json(topPosts);
+  } catch (error) {
+    console.error('Error getting top posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+export async function getRandomPosts(req: Request, res: Response) {
+  try {
+    const sub = req.params.subreddit;
+    const subreddit = await findCommunityByName(sub);
+    let randomPosts;
+    if (subreddit) {
+      randomPosts = await getRandomPostsFromSubreddit(sub);
+    } else {
+      randomPosts = await getRandomPostsFromRandom();
+    }
+    res.json(randomPosts);
+  } catch (error) {
+    console.error('Error getting best posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }

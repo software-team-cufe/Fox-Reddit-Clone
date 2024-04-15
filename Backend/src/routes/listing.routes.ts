@@ -16,6 +16,11 @@ import {
   unlockPostHandler,
   votePostHandler,
   submitPostHandler,
+  getBestPosts,
+  getHotPosts,
+  getNewPosts,
+  getTopPosts,
+  getRandomPosts,
 } from '../controller/listing.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -51,5 +56,10 @@ router.post('/api/lock', validateResource(lockPostSchema), lockPostHandler);
 router.post('/api/unlock', validateResource(lockPostSchema), unlockPostHandler);
 router.post('/api/vote', validateResource(votePostSchema), votePostHandler);
 //router.post('/api/submit', validateResource(submitPostSchema), submitPostHandler);
+router.get('/api/listing/posts/r/:subreddit/best', getBestPosts);
+router.get('/api/listing/posts/r/:subreddit/hot', getHotPosts);
+router.get('/api/listing/posts/r/:subreddit/new', getNewPosts);
+router.get('/api/listing/posts/r/:subreddit/top', getTopPosts);
+router.get('/api/listing/posts/r/:subreddit/random', getRandomPosts);
 
 export default router;
