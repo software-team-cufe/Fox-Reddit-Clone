@@ -3,36 +3,39 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 
 void main() {
-  testWidgets('PostDetails widget displays correctly',
-      (WidgetTester tester) async {
-    // Build the widget
-    //await tester.pumpWidget(MaterialApp(home: PostDetails(redditName: 'TESTUSER', title: 'POST TITLE',)));
+  testWidgets('PostDetails Widget Test', (WidgetTester tester) async {
+    // Build the PostDetails widget
+    await tester.pumpWidget(const MaterialApp(
+      home: PostDetails(
+        redditName: 'TestUser',
+        title: 'Test Post',
+        votes: 10,
+        commentsNo: 5,
+        creatorId: 123,
+      ),
+    ));
 
-    // Verify if the title is displayed
-    expect(find.text('Post Details'), findsOneWidget);
+    // Find widgets for testing
+    final titleFinder = find.text('Test Post');
+    final redditNameFinder = find.text('TestUser');
+    final avatarFinder = find.byType(CircleAvatar);
+    final upvoteButtonFinder = find.byIcon(Icons.arrow_upward);
+    final downvoteButtonFinder = find.byIcon(Icons.arrow_downward);
+    final commentCountFinder = find.text('5');
+    final shareButtonFinder = find.byIcon(Icons.share);
 
-    // Verify if the username is displayed
-    expect(find.text('Username'), findsOneWidget);
+    // Verify that the widgets are present
+    expect(titleFinder, findsOneWidget);
+    expect(redditNameFinder, findsOneWidget);
+    expect(avatarFinder, findsOneWidget);
+    expect(upvoteButtonFinder, findsOneWidget);
+    expect(downvoteButtonFinder, findsOneWidget);
+    expect(commentCountFinder, findsOneWidget);
+    expect(shareButtonFinder, findsOneWidget);
 
-    // Verify if the post title is displayed
-    expect(find.text('Post Title'), findsOneWidget);
-
-    // Verify if the post image placeholder's Icon is displayed within a Container WITHIN CENTER
-    expect(
-        find.descendant(
-          of: find.byType(Container),
-          matching: find.byWidgetPredicate(
-              (widget) => widget is Center && widget.child is Icon),
-        ),
-        findsOneWidget);
-
-    // Verify if the comment section header is displayed
-    expect(find.text('Comments'), findsOneWidget);
-
-    // Verify if the first comment's username is displayed
-    expect(find.text('User1'), findsOneWidget);
-
-    // Verify if the second comment's username is displayed
-    expect(find.text('User2'), findsOneWidget);
+    // Tap the share button and verify functionality
+    await tester.tap(shareButtonFinder);
+    await tester.pump();
+    // Add expect statements for share functionality if needed
   });
 }
