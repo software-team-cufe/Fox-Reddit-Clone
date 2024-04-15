@@ -8,7 +8,7 @@ const ChangeLanguage = ({setLanguage},props) => {
      
      
     
-      <div className=' flex bg-white flex-col shadow-md rounded-2xl box-border md:box-content w-[420px] h-[550px] '>
+      <div className=' flex bg-white flex-col shadow-md rounded-2xl box-border md:box-content w-[420px] h-[600px] mt-7'>
       
         <div className=' flex flex-row h-36 mb-3'>
         {/*first div for icon */}
