@@ -1,15 +1,23 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 require('dotenv').config();
 import express from 'express';
+import cors from 'cors';
+import xss from 'xss';
 import config from 'config';
 import log from './utils/logger';
 import connectToDb from './utils/connectToDb';
 import router from './routes/index';
-import { TokenExpiredError } from 'jsonwebtoken';
 import deserializeUser from '../src/middleware/deserialzeUser';
 
 const app = express();
 
+app.use(
+  cors({
+    origin: 'http://localhost:3001',
+    credentials: true,
+    exposedHeaders: ['set-cookie'],
+  })
+);
 app.use(express.json());
 app.use(deserializeUser);
 app.use(router);
