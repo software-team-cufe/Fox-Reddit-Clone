@@ -23,35 +23,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   static Future<String?> login(String username, String password) async {
     const url = ApiRoutesBackend.login;
-    final response = await http.get(Uri.parse(url));
-    print("asdasdasdas${response.statusCode}");
-    print('asdjbnbasdjkb${response.body}');
+    Map<String, dynamic> logindata = {
+      "password": password,
+      "username": username,
+    };
+    final response = await http.post(
+      Uri.parse(url),
+      body: jsonEncode(logindata),
+      headers: {'Content-Type': 'application/json'},
+    );
+
     if (response.statusCode == 200) {
-      final List<dynamic> user = jsonDecode(response.body);
-
-      await saveToken(user[0]['accessToken']);
-      print(getToken());
-      // saveToken(token)
-      // for (final user in users) {
-      //   if ((user['userName'] == username) && user['password'] == password) {
-      //     // Login successful
-      //     final token = user["token"];
-
-      //     // Save the token in shared preferences
-      //     await saveToken(token);
-
-      //     print('login successful');
-      //     print("token: " + token);
-
-      //     return null; // No error message
-      //   } else {
-      //     print('invalid login');
-      //   }
-      // }
+      final Map<String, dynamic> user = jsonDecode(response.body);
+    } else {
+      return 'Invalid username or password';
     }
-
-    // If unable to fetch data or no matching user found
-    return 'Invalid username or password';
+    return null;
   }
 
   @override
