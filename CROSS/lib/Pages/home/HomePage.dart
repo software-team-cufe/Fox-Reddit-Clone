@@ -168,16 +168,15 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: const nBar(),
       body: Column(
+        
         children: [
           Visibility(
             visible: "Home" == _selectedItem,
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width -
-                      MediaQuery.of(context).size.width / 15),
+            child: Align(
+              alignment: Alignment.topRight,
               child: DropdownButton<String>(
                 isDense: true,
-                isExpanded: true,
+                // isExpanded: true,
                 iconEnabledColor: Colors.white,
                 iconDisabledColor: Colors.white,
                 focusColor: Colors.black,

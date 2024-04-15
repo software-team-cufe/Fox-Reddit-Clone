@@ -35,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> user = jsonDecode(response.body);
+      Get.to(const HomePage());
     } else {
       return 'Invalid username or password';
     }
