@@ -397,6 +397,7 @@ export class User {
       return false;
     }
   }
+  //check this function, why saveUser?
   async saveUser(): Promise<User> {
     const UserModel = getModelForClass(User); // Retrieve the Mongoose model for User class
     const user = new UserModel(this); // Create a new instance of User model

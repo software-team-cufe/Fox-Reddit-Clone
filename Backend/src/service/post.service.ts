@@ -1,8 +1,9 @@
 import appError from '../utils/appError';
 import PostModel, { Post } from '../model/posts.model';
-import  UserModel, { User } from '../model/user.model';
+import UserModel, { User } from '../model/user.model';
 import { DocumentType, Ref } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
+import { findCommunityByName } from './community.service';
 
 /**
  * Creates a new post.
@@ -13,7 +14,6 @@ import { ObjectId } from 'mongodb';
 export function createPost(input: Partial<Post>) {
   return PostModel.create(input);
 }
-import { findCommunityByName } from './community.service';
 /**
  * Finds a post by their ID.
  *
