@@ -1,6 +1,7 @@
 
 import { useState } from "react"
 import EmailChanged from "./ComponentChange/EmailChanged";
+import ChangeLanguage from "./ComponentChange/ChangeLanguage";
 const options=['WOMAN','MAN','NON Binary','perfer Not to say','i prefer..']
 const Acount = () => {
  
@@ -14,6 +15,8 @@ const Acount = () => {
    }
 
   const[changeEmail, setChange]= useState(false);
+  const[ChangeLang , setLanguage]= useState(false);
+ 
 
   return (
     <div className="w-[75%]" >
@@ -130,7 +133,10 @@ const Acount = () => {
 
             </div>
             <div>
-              <button type="button" className="text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">Change</button>
+              <button onClick={()=>setLanguage(true)} type="button" className="text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">
+              Change
+              </button>
+              {ChangeLang && <ChangeLanguage setLanguage={setLanguage} ></ChangeLanguage> }
 
             </div>
           </div>

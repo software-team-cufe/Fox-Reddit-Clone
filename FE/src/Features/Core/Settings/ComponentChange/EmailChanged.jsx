@@ -20,10 +20,11 @@ const EmailChanged = ({setChange}) => {
         </div>
 
         <div className=' flex flex-row ml-7 '>
-        <div className=' rounded-full bg-sky-100 border border-sky-100 w-11 h-11  '>
+       <div className=' rounded-full bg-sky-100 border border-sky-100 w-11 h-11 '>
            <svg className="text-blue-600 w-7 h-8 ml-2 mt-1"
              xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 20 20" fill="currentColor">  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
-        </div>
+        
+              </div>
         <p className=' font-semibold text-xl ml-3 mt-2'> Change your email address</p>
   </div>
 
@@ -35,10 +36,10 @@ const EmailChanged = ({setChange}) => {
         </p>
   
         <div className='flex justify-end flex-row  mt-2'>
-           <button onClick={()=>setChange(false)} className=" mr-3 text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-24 hover:bg-sky-50 ">Cancel</button>
+           <button onClick={()=>setChange(false)} className=" mr-3 text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-24 h-8 hover:bg-sky-50 ">Cancel</button>
            
            <div>   
-            <button onClick={()=>setCheck(true)} className=" mr-8 text-white bg-sky-600 border-sky-600 rounded-full font-semibold text-base w-24 hover:bg-sky-600">
+            <button onClick={()=>setCheck(true)} className=" mr-8 text-white bg-sky-600 border-sky-600 rounded-full font-semibold text-base w-24 h-8 hover:bg-sky-600">
               Continue
            </button>
            {check && <ChechChange setChange={setChange}> </ChechChange>}
