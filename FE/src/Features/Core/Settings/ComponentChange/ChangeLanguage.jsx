@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const ChangeLanguage = ({setLanguage},props) => {
+
+  const[changeButton,setButton]=useState(false);
+
   return (
     
     <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center '>
@@ -62,9 +65,10 @@ const ChangeLanguage = ({setLanguage},props) => {
           {/*buttons */}
             <div className='flex flex-col justify-center items-center pt-7 space-y-2'>
 
-         <button  className=' border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
+         <button onClick={()=>setButton(false)}  className=' border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
             Afrikaans
          </button>
+
          <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
             Amharic
          </button>

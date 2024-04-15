@@ -65,14 +65,9 @@ const Acount = () => {
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                </svg>  
             </button>
- 
- 
-       { isOpen &&
-         <div className=' w-32 origin-top-right border border-gray-100 rounded-md shadow-md'> 
-     
-            {options.map((options)=> (
-                
-                // eslint-disable-next-line react/jsx-key
+            { isOpen && <div className=' w-32 origin-top-right border border-gray-100 rounded-md shadow-md'> 
+                {options.map((options)=> (
+                  // eslint-disable-next-line react/jsx-key
                 <div>
                 <button type="button"
                  onClick={clickedOption(options)} 
