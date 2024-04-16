@@ -25,40 +25,36 @@ import { toast } from "react-toastify";
 export default function LoginPage({ }) {
 
   const [loading, setLoading] = useState(false);
-  // const disp = useDispatch();
+  const disp = useDispatch();
   const nav = useNavigate();
   const login = async (e) => {
-
-    // e?.preventDefault();
+    e?.preventDefault();
     const { email, password } = Object.fromEntries(new FormData(document.getElementById("frm-login")).entries());
-    if (email == 'email' && password == 'test1234') {
-      nav('/')
+    console.log({ email, password });
+    if (!email || !password || email == "" || password == "") {
+      toast.error("Please enter all the required information.");
+      return;
     }
-    return;
-    // if (!email || !password || email == "" || password == "") {
-    //   toast.error("Please enter all the required information.");
-    //   return;
-    // }
-    // setLoading(true);
-    // try {
-    //   const res = await userAxios.post('login', { email, password });
-    //   const user = await userModel.parseAsync(res.data.user);
-    //   disp(setUser(user));
-    //   if (user.banned) {
-    //     nav(0)
-    //     return;
-    //   }
-    //   if (!user.verifiedEmail) {
-    //     nav('/verify-email');
-    //   } else {
-    //     nav('/');
-    //   }
-    // } catch (ex) {
-    //   if (ex.issues != null && ex.issues.length != 0) {
-    //     toast.error(ex.issues[0].message);
-    //   }
-    // }
-    // setLoading(false);
+    setLoading(true);
+    try {
+      const res = await userAxios.post('auth/login', { email, password });
+      const user = await userModel.parseAsync(res.data.user);
+      disp(setUser(user));
+      if (user.banned) {
+        nav(0)
+        return;
+      }
+      if (!user.verifiedEmail) {
+        nav('/verify-email');
+      } else {
+        nav('/');
+      }
+    } catch (ex) {
+      if (ex.issues != null && ex.issues.length != 0) {
+        toast.error(ex.issues[0].message);
+      }
+    }
+    setLoading(false);
   };
 
   return (

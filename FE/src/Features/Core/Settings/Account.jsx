@@ -1,7 +1,14 @@
 
+import { useState } from "react"
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import EmailChanged from "./ComponentChange/EmailChanged";
+
+
 const Acount = () => {
+
+  const[changeEmail, setChange]= useState(false);
+
   const location = useLocation(); // Get the current location
   useEffect(() => {
     const targetSection = document.getElementById('connectAccount');
@@ -11,11 +18,15 @@ const Acount = () => {
   }, []);
   return (
     <div className="w-[75%]" >
-      <h2 className=" font-semibold text-xl">Account settings</h2>
-      <div >
+    
+    <h2 className=" font-semibold text-xl">Account settings</h2>
+      
+    {/* first div ACCOUNT PREFERENCES */}
+    <div >
         <p className="text-xs text-gray-500 mt-9 mb-1">ACCOUNT PREFERENCES</p>
         <hr className="w-[70%]" />
         <div className='flex flex-col mt-7 w-[70%]'>
+        {/* first div */}
           <div className="flex flex-row mb-7 justify-between ">
             <div className='flex flex-col'>
               <p className=" font-semibold">Email address</p>
@@ -24,10 +35,13 @@ const Acount = () => {
               </div>
             </div>
             <div>
-              <button type="button" className="text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 ">Change</button>
+              
+             <button onClick={()=>setChange(true)}  className="  btn-changeEmail text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">Change</button>
+             {changeEmail && <EmailChanged setChange={setChange}></EmailChanged>}
+       
             </div>
           </div>
-
+         {/* second div */}
           <div className="flex flex-row mb-7 justify-between ">
             <div className='flex flex-col'>
               <p className=" font-semibold">Gender</p>
@@ -52,7 +66,7 @@ const Acount = () => {
             </div>
 
           </div>
-
+          {/*third div */}
           <div className="flex flex-row mb-7 justify-between ">
             <div className='flex flex-col'>
 
@@ -73,7 +87,7 @@ const Acount = () => {
         </div>
       </div>
 
-
+    {/* second div */}
       <div >
 
         <div className='flex flex-col mt-7 w-[70%]'>
@@ -86,7 +100,7 @@ const Acount = () => {
 
             </div>
             <div>
-              <button type="button" className="text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 ">Change</button>
+              <button type="button" className="text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">Change</button>
 
             </div>
           </div>
@@ -106,8 +120,8 @@ const Acount = () => {
             </div>
           </div>
         </div>
-      </div>
-
+      </div> 
+    {/* 3th div  */}
       <div >
         <p className="text-xs text-gray-500 mt-9 mb-1" id="connectAccount">CONNECTED ACCOUNTS</p>
         <hr className="w-[70%]" />
@@ -192,7 +206,7 @@ const Acount = () => {
 
         </div>
       </div>
-
+    {/* 4th div  */}
       <div>
         <p className="text-xs text-gray-500 mt-9 mb-1">BETA TESTS</p>
         <hr className="w-[70%]" />
@@ -241,7 +255,7 @@ const Acount = () => {
         </div>
       </div>
 
-
+    {/* 5th div  */}
       <div className=" justify-between ">
         <p className="text-xs text-gray-500 mt-9 mb-1">DELETE ACCOUNT</p>
         <hr className="w-[70%]" />

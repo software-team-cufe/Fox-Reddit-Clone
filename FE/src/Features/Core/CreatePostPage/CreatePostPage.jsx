@@ -43,7 +43,7 @@ function CreatePostPage() {
                                 </div>
                                 {SelectedCom.rules.map((item, index) => (
                                     <>
-                                        <p key={index} className='my-1 text-lg 
+                                        <p key={index + Math.random()} className='my-1 text-lg 
                            '>{index + 1} . {item}</p>
                                         <hr className='w-[90%] mx-4' />
                                     </>

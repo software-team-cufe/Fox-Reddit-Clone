@@ -1,6 +1,6 @@
 
 import { useNavigate, Link } from "react-router-dom";
-import React, { useState, useRef, useMemo, useEffect } from 'react'
+import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
 import { Tabs, Tab } from '../../../GeneralElements/Tabs/Tab'
 import { NotepadText, ImageUp, BarChart2, Link2, Trash2, BadgeInfo, X } from 'lucide-react'
 import ReactQuill from 'react-quill';
@@ -23,6 +23,7 @@ function TypingArea(props) {
     const [PollValueTwo, setPollValueTwo] = useState("");
     const [VoteLength, setVoteLength] = useState(0);
     const [ShowCancelPost, setShowCancelPost] = useState(false);
+    const [VideoFile, setVideoFile] = useState(false);
 
     const [ToolBar, setToolBar] = useState([['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
@@ -37,30 +38,6 @@ function TypingArea(props) {
     [{ 'color': [] }, { 'background': [] }],])       // dropdown with defaults from theme })
 
 
-    ////////////////////////////////////////////////////////////
-    //ToDo: Try making loading line
-    // const [isLoading, setIsLoading] = useState(true);
-    //  const [loadingProgress, setLoadingProgress] = useState(0);
-    //take care this hook disables drag and drop for some reason
-    // useEffect(() => {
-    //     const image = new Image();
-    //     image.src = { SelectedBannar };
-
-    //     image.addEventListener('load', (event) => {
-    //         console.log("load");
-    //         const { loaded, total } = event;
-    //         const progress = (loaded / total) * 100;
-    //         setLoadingProgress(50);
-    //     });
-    // }, []);
-    //in return:
-    //      {/* {isLoading && ( */}
-    //      <div className="w-full absolute bottom-0 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-    //      <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${loadingProgress}%` }}></div>
-    //  </div>
-    //  {/* )} */}
-    //////////////////////////////////////////////////////////////////////
-
     useEffect(() => {
         if (props.SelectedCom.name === "Choose Community")
             setDisablePoll(true);
@@ -73,25 +50,18 @@ function TypingArea(props) {
 
     useEffect(() => {
         if (OpenImageTab) {
-            // This function handles the drag over event
-            const handleDragOver = (event) => {
-                event.preventDefault();
-            };
-            // This function handles the drop event of Banner image
-            const handleBannerDrop = (event) => {
-                event.preventDefault();
-                handleBannerUpload(event, "Drop");
-            };
-
-            // Add these event listeners to the drop zone
             const imageInput = document.getElementById("DropBannerImage");
             if (!(imageInput === null)) {
-                imageInput.addEventListener('dragover', handleDragOver);
-                imageInput.addEventListener('drop', handleBannerDrop);
+                imageInput.addEventListener('dragover', () => { event.preventDefault(); });
+                imageInput.addEventListener('drop', () => {
+                    event.preventDefault();
+                    handleBannerUpload(event, "Drop");
+                });
             }
         }
 
-    }, [OpenImageTab]);
+    }, [OpenImageTab, SelectedBannar]);
+
     const handleBannerUpload = (event, UpOrDrop = "up") => {
         const reader = new FileReader();
         let file;
@@ -104,22 +74,18 @@ function TypingArea(props) {
 
         if (file) {
             reader.readAsDataURL(file);
+            // Check the file type
+            if (file.type.startsWith('image/')) {
+                setVideoFile(false);
+            } else if (file.type.startsWith('video/')) {
+                setVideoFile(true);
+            }
         }
-
         reader.onload = () => {
-            const img = new Image();
-            img.src = reader.result;
-            img.onload = () => {
-                setSelectedBannar(reader.result);
-                // const timeoutId = setTimeout(() => {
-                //     // Code to be executed after the delay
-                // }, 10000);
-
-            };
-
+            setSelectedBannar(reader.result);
         };
 
-    };
+    }
 
     const handleMaxchar = (event) => {
         if (PostTitle.length >= 300 && !(event.key === 'Backspace')) {
@@ -139,27 +105,6 @@ function TypingArea(props) {
         //ToDo: Add Api
 
     }
-
-    const handleAddOption = () => {
-        if (!ShowOption3) {
-            setShowOption3(true);
-            return;
-        }
-        if (!ShowOption4) {
-            setShowOption4(true);
-            return;
-        }
-        if (!ShowOption5) {
-            setShowOption5(true);
-            return;
-        }
-        if (!ShowOption6) {
-            setShowOption6(true);
-            return;
-        }
-    }
-
-
 
 
     return (
@@ -196,7 +141,8 @@ function TypingArea(props) {
                 <Tab label="Image & Video" num={1} addOnClick={Drag} icon={<ImageUp strokeWidth={1} color=" #e94c00" size={24} />}>
 
                     <div className='p-4 relative w-full'>
-                        <div className={`flex border rounded w-full p-1 h-fit my-2 ${FocusTitle ? 'border-gray-800' : 'border-gray-300'}`}>
+                        <div className={`flex border rounded w-full p-1 h-fit my-2 ${FocusTitle ? 'border-gray-800'
+                            : 'border-gray-300'}`}>
                             <input type="text" onChange={() => { setPostTitle(event.target.value) }}
                                 placeholder='Title' className=' focus:outline-none border-none text-sm rounded
                                   border w-full h-10 focus:border-none'
@@ -213,9 +159,17 @@ function TypingArea(props) {
                             {SelectedBannar && (
                                 <div className="w-full h-[425px] bg-white border rounded relative ">
                                     <div className=" w-full h-96 grid overflow-hidden  place-content-center relative">
-                                        <img className='object-cover object-center  w-full blur-lg ' src={SelectedBannar} alt="Selected" />
-                                        <img className='object-cover object-top h-96 absolute overflow-auto top-1/2 left-1/2
+                                        {VideoFile &&
+                                            <video controls>
+                                                <source src={SelectedBannar} />
+                                                Your browser does not support the video tag.
+                                            </video>}
+                                        {!VideoFile && <>
+                                            <img className='object-cover object-center  w-full blur-lg ' src={SelectedBannar}
+                                                alt="Selected" />
+                                            <img className='object-cover object-top h-96 absolute overflow-auto top-1/2 left-1/2
                                      transform -translate-x-1/2 -translate-y-1/2  ' src={SelectedBannar} alt="Selected" />
+                                        </>}
 
                                     </div>
                                     <Trash2 strokeWidth={1} size={30} color='#e94c00' className='absolute p-1 bg-white border
@@ -268,7 +222,7 @@ function TypingArea(props) {
                                     />
                                     <div className='items-center text-center h-full w-full justify-items-center' >
                                         <p className='text-lg font-sans  text-center  w-full py-10 px-10 sm:w-max
-                                     sm:my-8 sm:px-40 sm:py-20  '> Drag and drop or Upload Banner  image  </p>
+                                     sm:my-8 sm:px-40 sm:py-20  '> Drag and drop or Upload an image or a video  </p>
                                     </div>
                                 </div>
                             </>

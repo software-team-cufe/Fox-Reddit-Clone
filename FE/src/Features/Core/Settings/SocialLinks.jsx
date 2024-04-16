@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, ArrowLeft } from "lucide-react";
 
 function SocialLinks({ handleOpenLinkPop }) {
@@ -139,7 +139,6 @@ function SocialLinks({ handleOpenLinkPop }) {
     const handleSaveCustomLink = () => {//To do
         if (!(CustomLinkvalue.startsWith("https://") && CustomLinkvalue.includes("."))) {
             setCLWarnMess(true);
-
         }
         else
             setCLWarnMess(false);
@@ -713,22 +712,31 @@ function SocialLinks({ handleOpenLinkPop }) {
         <>
             {!(hide) && (
 
-                <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+                <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto 
+                overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full
+                 md:inset-0 h-[calc(100%-1rem)]    ">
                     <div className="relative p-4  w-2/3 mx-8  place-content-center justify-center">
                         {/* <!-- Modal content --> */}
                         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                             {/* <!-- Modal header --> */}
                             <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                                <h3 className="text-xl w-full font-semibold justify-center place-content-center
+                                 flex text-gray-900 dark:text-white">
                                     Add Social Link
                                 </h3>
-                                <button onClick={handleOpenLinkPop} type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                                <button onClick={handleOpenLinkPop} type="button" className="text-gray-400 
+                                bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 
+                                h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600
+                                 dark:hover:text-white">
                                     <X />
                                 </button>
                             </div>
                             {/* <!-- Modal body --> */}
-                            <div className="flex flex-wrap p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                <button onClick={() => { setOpenCustomLink(true); sethide(true); }} className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
+                            <div className="flex flex-wrap p-4 md:p-5 border-t border-gray-200 rounded-b
+                             dark:border-gray-600">
+                                <button role="CustomLinkButton"
+                                    onClick={() => { setOpenCustomLink(true); sethide(true); }}
+                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/link.png" alt="Link" />
                                     <div className='mx-2 text-xs font-bold'>Custom link </div>
                                 </button>
@@ -858,6 +866,7 @@ function SocialLinks({ handleOpenLinkPop }) {
 
                 </div>
             )}
+            {/* Smaller Popus */}
             {OpenCustomLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
                     {/* <!-- Modal content --> */}
@@ -877,10 +886,13 @@ function SocialLinks({ handleOpenLinkPop }) {
                                 Add Social Link
                             </h3>
 
-                            <button
+                            <button role='SaveCustomLinkButton'
                                 disabled={DisableSaveCL}
                                 onClick={handleSaveCustomLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300
+                                 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200
+                                  hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600
+                                   dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -892,10 +904,18 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Custom link </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setCustomLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleCustomLinkValue} value={CustomLinkvalue} placeholder='https://website.com' />
+                            <br />   <input role="titleInputCustom"
+                                type="text" onChange={() => { setCustomLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+
+                            <br />
+
+                            <input role="UrlInputCustom" type="text"
+                                className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handleCustomLinkValue} value={CustomLinkvalue} placeholder='https://website.com' />
                             {CLWarnMess &&
-                                <div className="text-xs text-red-500"><span>URL is not valid</span></div>
+                                <div role="customLinkMess"
+                                    className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
 
                         </form>

@@ -5,11 +5,12 @@
 
 import React from "react";
 import { useState, useContext } from "react";
-import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
+import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles, Mail, Table } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
 import Popular from "./Popular";
 import About from "./About";
+import { key } from 'localforage';
 
 const icons = [
    {
@@ -29,7 +30,7 @@ const icons = [
    },
 ];
 
-function Sidebar({ className, IsOpen, IsModerator }) {
+function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
    // const toggleSidebar = () => {
    //    setOpen(!open);
    // };
@@ -40,6 +41,7 @@ function Sidebar({ className, IsOpen, IsModerator }) {
  * @param {Event} event - the event of clicking any button
  * @returns {void} - this function does not return anything
  */
+
    function functionToExecute(event) {
       // Get the dropdown list associated with the clicked button
       const dropdownList = event.target.nextElementSibling;
@@ -108,13 +110,28 @@ function Sidebar({ className, IsOpen, IsModerator }) {
                            id="dropdownDefaultButton"
                            onClick={functionToExecute}
                            data-dropdown-toggle="dropdown"
-                           className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                           className="text-gray w-full bg-white-700 hover:bg-gray-200 txt-large focus:outline-none justify-between font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                            type="buttonn"
                         >
-                           Moderator
+                           MODERATOR
                            <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                         </button>
                         <div>
+                           <ul>
+                              <li className="flex items-center px-1 py-1 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400">
+                              <Mail className="ml-2 w-4 h-4" />
+                                 <span className=" px-2 py-2 text-gray-800">Mod mail</span>
+                              </li>
+                              <li className="flex items-center px-1 py-1 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400 ">
+                              <Table className="ml-2 w-4 h-4"/>
+                                 <span className=" px-2 py-2 text-gray-800">r/mod</span>
+                              </li>
+                              {/*
+                              <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray ">
+                                 here communities wher i am moderate should exist
+                              </li>
+                              */}
+                           </ul>
                         </div>
                      </>
                  }
@@ -126,7 +143,7 @@ function Sidebar({ className, IsOpen, IsModerator }) {
                         id="dropdownDefaultButton"
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
-                        className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                        className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none justify-between font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                         type="buttonn"
                      >
                         RECENTS
@@ -135,13 +152,16 @@ function Sidebar({ className, IsOpen, IsModerator }) {
 
                      <div id="dropdown" className="">
                         <ul className="" aria-labelledby="dropdownDefaultButton">
+                           {/*here is where the ui print the subreddits i just entered */}
                            <li>
-                              <a
-                                 href="#"
-                                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
-                              >
-                                 must be created
-                              </a>
+                                 {RecentCommunities.map((subreddit, index) => (
+                                    <a 
+                                    href="#"
+                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                    key={index}>
+                                          {subreddit}
+                                    </a>
+                                 ))}
                            </li>
                         </ul>
                      </div>
@@ -154,7 +174,7 @@ function Sidebar({ className, IsOpen, IsModerator }) {
                         id="dropdownDefaultButton1"
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
-                        className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                        className="text-gray w-full bg-white-700 hover:bg-gray-200 justify-between focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                         type="button"
                         role="button1212"
                      >
@@ -190,7 +210,7 @@ function Sidebar({ className, IsOpen, IsModerator }) {
                         id="dropdownDefaultButton2"
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
-                        className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                        className="text-gray w-full bg-white-700 hover:bg-gray-200 justify-between focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                         type="button"
                      >
                         RESOURCES
