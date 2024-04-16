@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  Get.to(() => const ForgetPasswordScreen());
+                  Get.to(() =>  ForgetPasswordScreen());
                 },
                 child: const Text('Forgot password?'),
               ),

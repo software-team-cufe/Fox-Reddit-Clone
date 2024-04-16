@@ -7,6 +7,7 @@ class ApiRoutesBackend {
       'http://foxnew.southafricanorth.cloudapp.azure.com';
   static const String signup = '$baseUrl/api/users/signup';
   static const String login = '$baseUrl/api/auth/login';
+  static const String forgetPassword = '$baseUrl/api/users/forgotpassword';
 
   // static const String getPosts2 = '$baseUrl/getPosts';
   // static const String hotPosts = '$baseUrl/hotPosts';
