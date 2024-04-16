@@ -1,3 +1,11 @@
+/**
+ * Renders the ForgetPassword component.
+ * This component allows users to reset their password by providing their username and email address.
+ *
+ * @module ForgetPassword
+ * 
+ * @returns {JSX.Element} The ForgetPassword component.
+ */
 import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";

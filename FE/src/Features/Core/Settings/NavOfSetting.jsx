@@ -1,4 +1,3 @@
-
 import { Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import EmailSetting from './EmailSetting';
 import Accountsetting from './Account';
@@ -10,6 +9,7 @@ import ChatMessaging from './chatMessaging';
 import React from 'react';
 
 /**
+ * 
  * this function is used to make user switch between settings` pages
  * @returns {JSX.Element}
  * 
@@ -24,43 +24,43 @@ function Navofsetting() {
                 <nav className="mb-10 ss:w-max  ">
                     <ul className="flex overflow-x-auto gap-10 w-screen mx-4 ">
                         <li className="block h-fit w-max text-gray-900 hover:bg-gray-200 md:hover:bg-transparent rounded-full py-1 px-2 md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <Link to={`./account`}>
+                            <Link to={`./account`} className="hover:border-b-2 hover:border-orange-500">
                                 <span>Account</span>
                             </Link>
                         </li>
 
                         <li className="block h-fit w-max text-gray-900 rounded-full py-1 px-2 hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <Link to={`./profile`}>
+                            <Link to={`./profile`} className="hover:border-b-2 hover:border-orange-500">
                                 <span>Profile</span>
                             </Link>
                         </li>
 
                         <li className="block flex-nowrap h-fit w-max text-gray-900 rounded-full py-1 px-2 hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <Link to="./safetyandprivacy">
+                            <Link to="./safetyandprivacy" className="hover:border-b-2 hover:border-orange-500">
                                 <span>Safety and Privacy</span>
                             </Link>
                         </li>
 
                         <li className="block h-fit w-max text-gray-900 rounded-full py-1 px-2 hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <Link to={`./feedsettings`}>
+                            <Link to={`./feedsettings`} className="hover:border-b-2 hover:border-orange-500">
                                 <span>Feed settings</span>
                             </Link>
                         </li>
 
                         <li className="block h-fit w-max text-gray-900 rounded-full py-1 px-2 hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <Link to="./notifications">
+                            <Link to="./notifications" className="hover:border-b-2 hover:border-orange-500">
                                 <span>Notifications</span>
                             </Link>
                         </li>
 
                         <li className="block h-fit w-max text-gray-900 rounded-full py-1 px-2 hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <Link to='./email'>
+                            <Link to='./email' className="hover:border-b-2 hover:border-orange-500">
                                 <span>Emails</span>
                             </Link>
                         </li>
 
                         <li className="block h-fit w-max text-gray-900 rounded-full py-1 px-2 hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 md:dark:hover:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <Link to={`./chat`}>
+                            <Link to={`./chSettings`} className="hover:border-b-2 hover:border-orange-500">
                                 <span>Chat & Messaging</span>
                             </Link>
                         </li>
@@ -92,7 +92,7 @@ export default function Settingpagelayout() {
                 <Route key={"/safety&privacy"} path="/safetyandprivacy" element={<SafetySettings />} />
                 <Route key={"/feedsettings"} path="/feedsettings" element={<Feedsettings />} />
                 <Route key={"/notifications"} path="/notifications" element={<Notifications />} />
-                <Route key={"/chat"} path="/chat" element={<ChatMessaging />} />
+                <Route key={"/chSettings"} path="/chSettings" element={<ChatMessaging />} />
             </Route>
         </Routes>
 

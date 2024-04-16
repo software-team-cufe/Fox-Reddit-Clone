@@ -23,3 +23,16 @@
     border: none;
 }
  
+#parentElement{
+    height: max(max-content, 100%);
+width: 100%;
+}
+
+#TypeArea{
+    z-index: 2;
+}
+#ChooseCom
+{
+    width: 800px;
+    z-index: 1;
+}
