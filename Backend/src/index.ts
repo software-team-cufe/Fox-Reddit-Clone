@@ -11,13 +11,7 @@ import deserializeUser from '../src/middleware/deserialzeUser';
 
 const app = express();
 
-app.use(
-  cors({
-    origin: 'http://localhost:3001',
-    credentials: true,
-    exposedHeaders: ['set-cookie'],
-  })
-);
+app.use(cors());
 app.use(express.json());
 app.use(deserializeUser);
 app.use(router);
