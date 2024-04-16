@@ -27,7 +27,7 @@ function ProfileComments({ using, context }) {
     //fetch comments on load and put into comments array
     useEffect(() => {
         setLoading(true);
-        axios.get(`http://localhost:3002/comments?_limit=${limitpage}`)
+        axios.get(`http://localhost:3002/comment?_limit=${limitpage}`)
             //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&count=10&limit=50&t=month')
             .then(response => {
                 const newComments = response.data.map(comment => ({

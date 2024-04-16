@@ -56,11 +56,8 @@ export default function CommunityPage() {
   const limitpage = 2;
 
   const swtichJoinState = () => {
-    if (user.user == null) {
-      setShowModal(true);
-      return;
-    }
-    axios.patch(`http://localhost:3002/communities?id=2`, { joined: !comm.joined })
+
+    axios.patch(`http://localhost:3002/communities/${comm.id}`, { joined: !comm.joined })
       .then(() => {
         setcommunity({ ...comm, joined: !comm.joined });
         console.log('Community joined state changed!');
@@ -103,7 +100,7 @@ export default function CommunityPage() {
             title: post.communityName,
           },
           images: post.attachments.postData,
-          id: post.postID,
+          id: post.id,
           title: post.title,
           subTitle: post.postText,
           votes: post.votesCount,
@@ -132,7 +129,7 @@ export default function CommunityPage() {
             title: post.communityName,
           },
           images: post.attachments.postData,
-          id: post.postID,
+          id: post.id,
           title: post.title,
           subTitle: post.postText,
           votes: post.votesCount,
