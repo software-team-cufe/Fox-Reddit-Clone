@@ -102,13 +102,14 @@ export const submitPostSchema = object({
     text: string({
       required_error: 'text is required',
     }),
-    attachments: array(string()),
+    attachments: array(string()).optional(),
     nsfw: boolean({
       required_error: 'nsfw is required',
     }),
     spoiler: boolean({
       required_error: 'spoiler is required',
     }),
+    CommunityID: string().optional(),
   }),
 });
 

@@ -2,7 +2,7 @@
 require('dotenv').config();
 import express from 'express';
 import cors from 'cors';
-import xss from 'xss';
+//import xss from 'xss';    //??????
 import config from 'config';
 import log from './utils/logger';
 import connectToDb from './utils/connectToDb';
@@ -11,13 +11,7 @@ import deserializeUser from '../src/middleware/deserialzeUser';
 
 const app = express();
 
-app.use(
-  cors({
-    origin: 'http://localhost:3001',
-    credentials: true,
-    exposedHeaders: ['set-cookie'],
-  })
-);
+app.use(cors());
 app.use(express.json());
 app.use(deserializeUser);
 app.use(router);

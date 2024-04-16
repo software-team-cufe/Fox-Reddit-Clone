@@ -84,8 +84,8 @@ export class Post {
   @prop({ type: () => [String] })
   followers!: string[];
 
-  // @prop({ ref: () => User })
-  // communityID!: Ref<User>;
+  @prop({ ref: () => User })
+  CommunityID!: Ref<User>; //change to community when community model is done
 
   @prop({ type: () => [Spam] })
   spammers!: Spam[];
