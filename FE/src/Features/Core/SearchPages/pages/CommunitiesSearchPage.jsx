@@ -49,7 +49,6 @@ export default function PeopleSearchPage({ searched = "filler" }) {
             if(response.data.length < limitpage) {
                 setpagedone(true);
             }
-            console.log(response.data)
             const newComms = response.data.map(comm => ({
               id: comm.commID,
               name: comm.name,
