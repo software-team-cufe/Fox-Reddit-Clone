@@ -6,15 +6,17 @@ import NavBar from './NavBar'
 import { useState } from "react";
 
 
-test('renders NavBar component', () => {
+test('renders NavBar in Logged in mode', () => {
     const func = jest.fn();
+    const ProfImage = "/Prof.jpg"
+    const UserName = "user";
     //To do: test login mode
     render(
         <MemoryRouter>
             <NavBar
                 SetOpenSiseBar={func}
-                ProfileImageSrc='/Prof.jpg'
-                UserName="kf"
+                ProfileImageSrc={ProfImage}
+                UserName={UserName}
                 IsOnline={true}
                 IsLogged={true}
             />
@@ -22,41 +24,52 @@ test('renders NavBar component', () => {
     );
 
     // Check if the NavBar component is rendered
-    // const navBarElement = screen.getByRole('navigation');
-    // expect(navBarElement).toBeInTheDocument();
-
-    // Check if the logo is rendered
-    // const logoElement = screen.getByText('Fox');
-    // expect(logoElement).toBeInTheDocument();
-
-    //check if adve
+    const navBarElement = screen.getByRole('navigation');
+    expect(navBarElement).toBeInTheDocument();
 
 
-
-    // // Check if the search input is rendered
-    // const searchInput = screen.getByPlaceholderText('Search');
-    // expect(searchInput).toBeInTheDocument();
-
-    // // Check if the profile icon is rendered
-    // const profileIcon = screen.getByAltText(UserName);
-    // expect(profileIcon).toBeInTheDocument();
-    // expect(profileIcon.src).toContain(ProfileImageSrc);
+    // Check if the profile icon is rendered
+    const profileIcon = screen.getByRole("ProfIcon");
+    expect(profileIcon).toBeInTheDocument();
+    // expect(profileIcon).toContain({ ProfImage });
 
     // Check if the profile menu is not initially opened
-    // const profileMenu = screen.queryByTestId('profile-menu');
-    // expect(profileMenu).not.toBeInTheDocument();
+    const profileMenu = screen.queryByRole('profile-menu');
+    expect(profileMenu).not.toBeInTheDocument();
 
     // Click on the profile icon to open the profile menu
-    // fireEvent.click(profileIcon);
+    fireEvent.click(profileIcon);
 
     // Check if the profile menu is opened
-    // const openedProfileMenu = screen.getByTestId('profile-menu');
-    // expect(openedProfileMenu).toBeInTheDocument();
+    const openedProfileMenu = screen.getByRole('profile-menu');
+    expect(openedProfileMenu).toBeInTheDocument();
 
-    // Click outside the profile menu to close it
-    // fireEvent.mouseDown(document);
+    expect(screen.getByRole('advertisement-button')).toBeInTheDocument();
+    expect(screen.getByRole('ChatButton')).toBeInTheDocument();
+    expect(screen.getByRole('CretePostButton')).toBeInTheDocument();
+    expect(screen.getByRole('NotificationsButton')).toBeInTheDocument();
 
-    // Check if the profile menu is closed
-    // const closedProfileMenu = screen.queryByTestId('profile-menu');
-    // expect(closedProfileMenu).not.toBeInTheDocument();
+});
+
+test('renders NavBar in Logged out mode', () => {
+    const func = jest.fn();
+    const ProfImage = "/Prof.jpg"
+    const UserName = "user";
+    //To do: test login mode
+    render(
+        <MemoryRouter>
+            <NavBar
+                SetOpenSiseBar={func}
+                ProfileImageSrc={ProfImage}
+                UserName={UserName}
+                IsOnline={true}
+                IsLogged={false}
+            />
+        </MemoryRouter>
+    );
+
+    expect(screen.getByRole('GetAppButton')).toBeInTheDocument();
+    expect(screen.getByRole('LogInButton')).toBeInTheDocument();
+    expect(screen.getByRole('CreateAccountButton')).toBeInTheDocument();
+
 });

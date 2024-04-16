@@ -217,7 +217,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
             </button>
 
             <Link to={'/chat/1'}>
-              <button
+              <button role="ChatButton"
                 className="bg-white hover:bg-orange-100  sm:block hidden  min-w-8 h-10 my-2 rounded-full   "
                 onMouseEnter={handleMouseEnterChat}
                 onMouseLeave={handleMouseLeaveChat}
@@ -227,7 +227,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
               </button>
             </Link>
 
-            <button
+            <button role="CretePostButton"
               className="bg-white hover:bg-orange-100 sm:block hidden   min-w-8  h-10 my-2 rounded-full   "
               onMouseEnter={handleMouseEnterCreate}
               onMouseLeave={handleMouseLeaveCreate}
@@ -240,7 +240,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
               ></Tooltip>
             </button>
             <div className="relative flex">
-              <button
+              <button role="NotificationsButton"
                 className="bg-white hover:bg-orange-100 sm:block hidden   min-w-8 h-10 my-2 rounded-full hover:   "
                 onMouseEnter={handleMouseEnterBell}
                 onMouseLeave={handleMouseLeaveBell}
@@ -255,7 +255,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
             <div className="relative "
 
             >
-              <div ref={UserProfRef}
+              <div role="ProfIcon"
+                ref={UserProfRef}
                 onClick={() => handleOpenProfList()}
 
                 onMouseEnter={handleMouseEnterProf}
@@ -269,7 +270,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
 
 
               {IsOpenProfList && (
-                <ul ref={listProfRef} className=" rounded-lg flex-col shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
+                <ul ref={listProfRef} role="profile-menu" className=" rounded-lg flex-col shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                   <li>
                     <button onClick={() => { navigator(`/user/${UserName}/posts`) }}
                       className="bg-white hover:bg-orange-100  text-black h-16 py-2 px-4 rounded inline-flex items-center w-full">
@@ -351,20 +352,21 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
             <div className="sm:flex items-center sm:visible hidden invisible w-auto">
               <div className="   lg:block  " id="navbar-default"></div>
               <Link to="/register">
-                <button
+                <button role="GetAppButton"
                   className="NavButtons flex sm:visible  invisible bg-gray-400 hover:bg-slate-500">
                   <QrCode className=" h-5 w-5 mx-1" color=" white" size={32} />
                   Get App
                 </button>
               </Link>
               <Link to="/login">
-                <button
+                <button role="LogInButton"
                   className="NavButtons sm:block hidden bg-orange-600">
                   <div>Log in</div>
                 </button>
               </Link>
               <Link to="/register">
-                <button className="NavButtons sm:block hidden bg-orange-600">
+                <button role="CreateAccountButton"
+                  className="NavButtons sm:block hidden bg-orange-600">
                   Create Account
                 </button>
               </Link>
