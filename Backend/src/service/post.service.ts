@@ -4,6 +4,7 @@ import UserModel, { User } from '../model/user.model';
 import { DocumentType, Ref } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
 import { findCommunityByName } from './community.service';
+import { QueryOptions } from 'mongoose';
 
 /**
  * Creates a new post.
@@ -41,102 +42,255 @@ export function findPostById(id: string) {
 //   }
 // }
 
-export async function findBestPostsByCommunity(community: string): Promise<Post[]> {
+export async function findBestPostsByCommunity(
+  community: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
   try {
     const communityObject = await findCommunityByName(community);
 
-    const posts = await PostModel.find({ communities: communityObject?.id }).sort({ bestFactor: -1 }).exec();
+    const queryOptions: QueryOptions = { sort: { bestFactor: -1 } };
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
     return posts;
   } catch (error) {
     throw new Error('Error finding posts by community');
   }
 }
 
-export async function findBestPostsByRandom(): Promise<Post[]> {
+export async function findBestPostsByRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
   try {
-    const posts = await PostModel.find().sort({ bestFactor: -1 }).exec();
+    const queryOptions: QueryOptions = { sort: { bestFactor: -1 } };
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    const posts = await PostModel.find({}, null, queryOptions).exec();
     return posts;
   } catch (error) {
     throw new Error('Error finding posts by community');
   }
 }
 
-export async function findHotPostsByCommunity(community: string): Promise<Post[]> {
-  try {
-    const communityObject = await findCommunityByName(community);
-    const posts = await PostModel.find({ communities: communityObject?.id }).sort({ hotnessFactor: -1 }).exec();
-    return posts;
-  } catch (error) {
-    throw new Error('Error finding posts by community');
-  }
-}
-
-export async function findHotPostsByRandom(): Promise<Post[]> {
-  try {
-    const posts = await PostModel.find().sort({ hotnessFactor: -1 }).exec();
-    return posts;
-  } catch (error) {
-    throw new Error('Error finding posts by community');
-  }
-}
-
-export async function findNewPostsByCommunity(community: string): Promise<Post[]> {
-  try {
-    const communityObject = await findCommunityByName(community);
-
-    const posts = await PostModel.find({ communities: communityObject?.id }).sort({ createdAt: -1 }).exec();
-    return posts;
-  } catch (error) {
-    throw new Error('Error finding posts by community');
-  }
-}
-
-export async function findNewPostsByRandom(): Promise<Post[]> {
-  try {
-    const posts = await PostModel.find().sort({ createdAt: -1 }).exec();
-    return posts;
-  } catch (error) {
-    throw new Error('Error finding posts by community');
-  }
-}
-
-export async function findTopPostsByCommunity(community: string): Promise<Post[]> {
+export async function findHotPostsByCommunity(
+  community: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
   try {
     const communityObject = await findCommunityByName(community);
 
-    const posts = await PostModel.find({ communities: communityObject?.id }).sort({ votesCount: -1 }).exec();
+    const queryOptions: QueryOptions = { sort: { hotnessFactor: -1 } };
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
     return posts;
   } catch (error) {
-    throw new Error('Error finding posts by community');
-  }
-}
-export async function findTopPostsByRandom(): Promise<Post[]> {
-  try {
-    const posts = await PostModel.find().sort({ votesCount: -1 }).exec();
-    return posts;
-  } catch (error) {
-    throw new Error('Error finding posts by community');
+    throw new Error('Error finding hot posts by community');
   }
 }
 
-export async function findRandomPostsByCommunity(community: string): Promise<Post[]> {
+export async function findHotPostsByRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
+  try {
+    const queryOptions: QueryOptions = { sort: { hotnessFactor: -1 } };
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    const posts = await PostModel.find({}, null, queryOptions).exec();
+    return posts;
+  } catch (error) {
+    throw new Error('Error finding hot posts randomly');
+  }
+}
+
+export async function findNewPostsByCommunity(
+  community: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
   try {
     const communityObject = await findCommunityByName(community);
 
-    const posts = await PostModel.find({ communities: communityObject?.id }).exec();
+    const queryOptions: QueryOptions = { sort: { createdAt: -1 } };
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
     return posts;
   } catch (error) {
-    throw new Error('Error finding posts by community');
+    throw new Error('Error finding new posts by community');
   }
 }
-export async function findRandomPostsByRandom(): Promise<Post[]> {
+
+export async function findNewPostsByRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
   try {
-    const posts = await PostModel.find().exec();
+    const queryOptions: QueryOptions = { sort: { createdAt: -1 } };
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    const posts = await PostModel.find({}, null, queryOptions).exec();
     return posts;
   } catch (error) {
-    throw new Error('Error finding posts by community');
+    throw new Error('Error finding new posts randomly');
   }
 }
+
+export async function findTopPostsByCommunity(
+  community: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
+  try {
+    const communityObject = await findCommunityByName(community);
+
+    const queryOptions: QueryOptions = { sort: { votesCount: -1 } };
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
+    return posts;
+  } catch (error) {
+    throw new Error('Error finding top posts by community');
+  }
+}
+
+export async function findTopPostsByRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
+  try {
+    const queryOptions: QueryOptions = { sort: { votesCount: -1 } };
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    const posts = await PostModel.find({}, null, queryOptions).exec();
+    return posts;
+  } catch (error) {
+    throw new Error('Error finding top posts randomly');
+  }
+}
+
+export async function findRandomPostsByCommunity(
+  community: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
+  try {
+    const communityObject = await findCommunityByName(community);
+
+    const queryOptions: QueryOptions = {};
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    // Randomly sample the posts
+    const posts = await PostModel.aggregate([
+      { $match: { communities: communityObject?.id } },
+      { $sample: { size: limit } }, // Randomly sample 'limit' number of documents
+    ]).exec();
+
+    return posts;
+  } catch (error) {
+    throw new Error('Error finding random posts by community');
+  }
+}
+
+export async function findRandomPostsByRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
+  try {
+    const queryOptions: QueryOptions = {};
+
+    // Apply count as skip (offset)
+    if (count > 0) {
+      queryOptions.skip = count;
+    }
+
+    // Apply limit if provided
+    if (limit > 0) {
+      queryOptions.limit = limit;
+    }
+
+    // Randomly sample the posts
+    const posts = await PostModel.aggregate([
+      { $sample: { size: limit } }, // Randomly sample 'limit' number of documents
+    ]).exec();
+
+    return posts;
+  } catch (error) {
+    throw new Error('Error finding random posts randomly');
+  }
+}
+
 async function userPosts(postIDs: string[], limit: number | undefined) {
   // If the request didn't contain a limit in its query, set it to 10 by default
   limit = limit || 10;
@@ -173,51 +327,72 @@ export { userPosts };
 // export default userPosts;
 
 //Function to get the best posts from a specific subreddit
-export async function getBestPostsFromSubreddit(subreddit: string): Promise<Post[]> {
-  const bestPosts = await findBestPostsByCommunity(subreddit);
-  return bestPosts;
-}
-export async function getBestPostsFromRandom(): Promise<Post[]> {
-  const bestPosts = await findBestPostsByRandom();
-  return bestPosts;
-}
-
-export async function getHotPostsFromSubreddit(subreddit: string): Promise<Post[]> {
-  const bestPosts = await findHotPostsByCommunity(subreddit);
+export async function getBestPostsFromSubreddit(
+  subreddit: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
+  const bestPosts = await findBestPostsByCommunity(subreddit, limit, count);
   return bestPosts;
 }
 
-export async function getHotPostsFromRandom(): Promise<Post[]> {
-  const bestPosts = await findHotPostsByRandom();
+export async function getBestPostsFromRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
+  const bestPosts = await findBestPostsByRandom(limit, count);
   return bestPosts;
 }
 
-export async function getNewPostsFromSubreddit(subreddit: string): Promise<Post[]> {
-  const bestPosts = await findNewPostsByCommunity(subreddit);
-  return bestPosts;
+export async function getHotPostsFromSubreddit(
+  subreddit: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
+  const hotPosts = await findHotPostsByCommunity(subreddit, limit, count);
+  return hotPosts;
 }
 
-export async function getNewPostsFromRandom(): Promise<Post[]> {
-  const bestPosts = await findNewPostsByRandom();
-  return bestPosts;
+export async function getHotPostsFromRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
+  const hotPosts = await findHotPostsByRandom(limit, count);
+  return hotPosts;
 }
 
-export async function getTopPostsFromSubreddit(subreddit: string): Promise<Post[]> {
-  const bestPosts = await findTopPostsByCommunity(subreddit);
-  return bestPosts;
+export async function getNewPostsFromSubreddit(
+  subreddit: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
+  const newPosts = await findNewPostsByCommunity(subreddit, limit, count);
+  return newPosts;
 }
 
-export async function getTopPostsFromRandom(): Promise<Post[]> {
-  const bestPosts = await findTopPostsByRandom();
-  return bestPosts;
+export async function getNewPostsFromRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
+  const newPosts = await findNewPostsByRandom(limit, count);
+  return newPosts;
 }
 
-export async function getRandomPostsFromSubreddit(subreddit: string): Promise<Post[]> {
-  const bestPosts = await findRandomPostsByCommunity(subreddit);
-  return bestPosts;
+export async function getTopPostsFromSubreddit(
+  subreddit: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
+  const topPosts = await findTopPostsByCommunity(subreddit, limit, count);
+  return topPosts;
 }
 
-export async function getRandomPostsFromRandom(): Promise<Post[]> {
-  const bestPosts = await findRandomPostsByRandom();
-  return bestPosts;
+export async function getTopPostsFromRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
+  const topPosts = await findTopPostsByRandom(limit, count);
+  return topPosts;
+}
+
+export async function getRandomPostsFromSubreddit(
+  subreddit: string,
+  limit: number = 10,
+  count: number = 0
+): Promise<Post[]> {
+  const randomPosts = await findRandomPostsByCommunity(subreddit, limit, count);
+  return randomPosts;
+}
+
+export async function getRandomPostsFromRandom(limit: number = 10, count: number = 0): Promise<Post[]> {
+  const randomPosts = await findRandomPostsByRandom(limit, count);
+  return randomPosts;
 }
