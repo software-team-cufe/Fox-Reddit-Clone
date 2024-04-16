@@ -7,11 +7,12 @@ import { userAxios } from './Utils/UserAxios';
 import { useDispatch } from 'react-redux';
 import { logOutUser, setUser } from './hooks/UserRedux/UserModelSlice';
 import UserProvider from './hooks/UserRedux/UserProvider';
-import userModel from './Models/UserModel';
+
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 import { useState, useEffect } from 'react';
+import { userStore } from './hooks/UserRedux/UserStore';
 
 const unProtectedRoutes = [
   '/',
@@ -34,9 +35,9 @@ function MainRoute() {
     OpenSideBar ? setOpenSideBar(false) : setOpenSideBar(true);
   }
 
-  //this useEffect is to respond to any change in the page to
-  //update the recentCommunities array with the last 5 communities visited
-  //but still need to save it in database as all data vanish when refreshing the page
+  // //this useEffect is to respond to any change in the page to
+  // //update the recentCommunities array with the last 5 communities visited
+  // //but still need to save it in database as all data vanish when refreshing the page
   useEffect(() => {
     const exp = /\/r\/(.*)/;
     const match = path.match(exp);
@@ -53,43 +54,18 @@ function MainRoute() {
     }
   }, [path]);
 
-  const exp = new RegExp('\/chat\/?([^\/]+)?$');
-  if (exp.test(path)) {
-    return <Outlet />
-  }
-  return (
-    <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg"
-        UserName="someuser" IsOnline={true} IsLogged={true} />
-      <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto ">
-        {
-          ![
-            "/login",
-            "/register",
-            "/forget-username",
-            "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} IsModerator={false} RecentCommunities={recentCommunities} />
-        }
 
-        <div className={` h-full w-full overflow-y-auto  ${path.includes('submit') ? " " : "lg:p-4"}`}>
-          <Outlet />
-        </div>
-      </div>
-    </div>
-  );
+
   const { isLoading, error, data, refetch } = useQuery(
     "get-client",
-    () => userAxios.post('login/token').then((d) => {
-      const user = userModel.parse(d.data.user);
-      if (user != null) {
-        disp(setUser(d.data.user));
-      }
-      return user;
+    () => userAxios.get('v1/me').then((d) => {
+      disp(setUser(d.data.user));
+      return d.data.user;
     }),
     {
       refetchOnWindowFocus: false,
       retry: 0,
-      enabled: localStorage.getItem('token') != null,
+      enabled: localStorage.getItem('authorization') != null,
     }
   );
   if (isLoading) {
@@ -104,7 +80,8 @@ function MainRoute() {
     window.location.href = '/';
     return
   }
-  if (data != null && localStorage.getItem('token') != null) {
+  if (data != null && localStorage.getItem('authorization') != null) {
+    console.log('aaaaaaaaaaaaaaaaaa');
     if (data.verifiedEmail && path == "/verify-email") {
       return <Navigate to={"/"} replace={true} />;
     }
@@ -122,10 +99,10 @@ function MainRoute() {
     nav(0);
     return;
   }
-
+  const store = userStore.getState().user.user;
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} ProfileImageSrc="/Prof.jpg" UserName="jhjfjy" IsOnline={true} />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} IsLogged={store != null} ProfileImageSrc="/Prof.jpg" UserName="jhjfjy" IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
           ![
@@ -133,7 +110,7 @@ function MainRoute() {
             "/register",
             "/forget-username",
             "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} />
+          ].includes(window.location.pathname) && <Sidebar RecentCommunities={[]} IsOpen={OpenSideBar} />
         }
 
         <div className='h-full w-full overflow-y-auto lg:p-4'>

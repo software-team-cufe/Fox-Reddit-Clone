@@ -1,29 +1,43 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { extractAxiosError } from "./Utils";
 
 const userAxios = axios.create({
-    baseURL: "https://c1ba-156-196-38-182.ngrok-free.app/api/",
+    baseURL: "http://foxnew.southafricanorth.cloudapp.azure.com/api/",
     withCredentials: true,
-    
+
 })
 userAxios.interceptors.request.use(request => {
 
-    request.headers.set('token', `Bearer ${localStorage.getItem('token')}`);
+    request.headers.set('authorization', `Bearer ${localStorage.getItem('authorization')}`);
+    request.headers.set('refreshToken', `Bearer ${localStorage.getItem('refreshToken')}`);
     return request;
 }, error => {
     return Promise.reject(error);
 });
 
 userAxios.interceptors.response.use(response => {
-    if (response.data.token != null) {
-        localStorage.setItem('token', response.data.token);
+
+    if (response.data.accessToken != null) {
+        localStorage.setItem('authorization', response.data.accessToken);
     }
+    if (response.data.refreshToken != null) {
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+    
     if (response != null && response.data.msg != null) {
         toast(response.data.msg);
+        return response;
     }
+
     return response;
 },
     error => {
+        const err = extractAxiosError(error);
+        if (err != null) {
+            toast.error(err);
+            return Promise.reject(error);
+        }
         if (error.response == null) {
             toast.error("Please check your internet connection and try again.");
         } else if (error.response != null && error.response.data.msg != null) {

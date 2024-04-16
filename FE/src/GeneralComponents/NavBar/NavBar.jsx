@@ -1,5 +1,4 @@
 import Logo from "@/GeneralElements/Logo/Logo";
-import { userStore } from "@/hooks/UserRedux/UserStore";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Tooltip from "@/GeneralElements/Tooltip/Tooltip";
@@ -9,11 +8,11 @@ import "./ButtonStyling.css";
 import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../profileicon/Profileicon";
 import { useLocation } from "react-router-dom";
-import React from "react";
+import { userStore } from '../../hooks/UserRedux/UserStore';
 import SearchComponent from "../../GeneralElements/Search/Search";
-
 export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOnline, IsLogged }) {
 
+  
   const navigator = useNavigate();
   const listProfRef = useRef(null);
   const UserProfRef = useRef(null);
@@ -75,7 +74,6 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
   };
   //handle click outside profile list
   useEffect(() => {
-
     const handleClickOutside = (event) => {
       if (listProfRef.current && !listProfRef.current.contains(event.target)
         && !UserProfRef.current.contains(event.target)) {

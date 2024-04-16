@@ -37,18 +37,11 @@ export default function LoginPage({ }) {
     }
     setLoading(true);
     try {
-      const res = await userAxios.post('auth/login', { email, password });
-      const user = await userModel.parseAsync(res.data.user);
-      disp(setUser(user));
-      if (user.banned) {
-        nav(0)
-        return;
-      }
-      if (!user.verifiedEmail) {
-        nav('/verify-email');
-      } else {
-        nav('/');
-      }
+      const res = await userAxios.post('auth/login', { username: email, password });
+
+      disp(setUser(res.data.user));
+     
+      nav('/');
     } catch (ex) {
       if (ex.issues != null && ex.issues.length != 0) {
         toast.error(ex.issues[0].message);
