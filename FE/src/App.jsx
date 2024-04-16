@@ -68,7 +68,7 @@ function MainRoute() {
             "/register",
             "/forget-username",
             "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} IsModerator={false} RecentCommunities={recentCommunities} />
+          ].includes(window.location.pathname) && <Sidebar IsOpen={OpenSideBar} IsModerator={true} RecentCommunities={recentCommunities} />
         }
 
         <div className={` h-full w-full overflow-y-auto  ${path.includes('submit') ? " " : "lg:p-4"}`}>
