@@ -890,12 +890,10 @@ export async function votePostHandler(req: Request<votePost['body']>, res: Respo
  * @param {Response} res - The response object.
  * @param {NextFunction} next - The next function.
  */
-export async function submitPostHandler(req: Request<submitPost['body']>, res: Response, next: NextFunction) {
-  let post;
+export async function submitPostHandler(req: Request, res: Response) {
   try {
     const user = res.locals.user;
-    console.log(user);
-    const creator = user.username;
+    const creatorID = user._id;
 
     const info = {
       title: req.body.title,
@@ -903,9 +901,10 @@ export async function submitPostHandler(req: Request<submitPost['body']>, res: R
       attachments: req.body.attachments,
       nsfw: req.body.nsfw,
       spoiler: req.body.spoiler,
-      userID: creator,
+      userID: creatorID,
+      CommunityID: req.body.CommunityID,
     };
-
+    console.log(info);
     // Check if user is missing or invalid
     if (!user) {
       return res.status(400).json({
@@ -915,18 +914,25 @@ export async function submitPostHandler(req: Request<submitPost['body']>, res: R
     }
 
     // Create the post
-    post = await createPost(info);
+    const createdPost = await createPost(info);
 
-    // Update user's hasPost array
-    await UserModel.findByIdAndUpdate(user._id, { $addToSet: { hasPost: post._id } }, { upsert: true, new: true });
-  } catch (err) {
-    return next(err);
+    // Save the new comment
+    if (!createdPost) {
+      return res.status(400).json({ message: 'Failed to create the post' });
+    }
+
+    // Update user and post with the new comment
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { hasPost: createdPost._id } }, // Using $addToSet to avoid adding duplicate comments
+      { new: true, upsert: true }
+    );
+    res.status(201).json(createdPost); // 201: Created
+  } catch (error) {
+    console.error('Error in addCommentHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
-
-  // Respond with success message and the created post
-  res.status(200).json({
-    status: 'success',
-    message: 'Post is unlocked successfully',
-    post,
-  });
 }

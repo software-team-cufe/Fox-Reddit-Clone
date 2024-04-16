@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import {
   deleteHandler,
   hidePostHandler,
@@ -50,6 +50,6 @@ router.post('/api/unmarknsfw', validateResource(nsfwPostSchema), unmarknsfwPostH
 router.post('/api/lock', validateResource(lockPostSchema), lockPostHandler);
 router.post('/api/unlock', validateResource(lockPostSchema), unlockPostHandler);
 router.post('/api/vote', validateResource(votePostSchema), votePostHandler);
-//router.post('/api/submit', validateResource(submitPostSchema), submitPostHandler);
+router.post('/api/submit', validateResource(submitPostSchema) as RequestHandler, submitPostHandler);
 
 export default router;
