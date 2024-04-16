@@ -81,7 +81,6 @@ function MainRoute() {
     return
   }
   if (data != null && localStorage.getItem('authorization') != null) {
-    console.log('aaaaaaaaaaaaaaaaaa');
     if (data.verifiedEmail && path == "/verify-email") {
       return <Navigate to={"/"} replace={true} />;
     }

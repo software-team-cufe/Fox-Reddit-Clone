@@ -75,8 +75,8 @@ function Layout() {
 
   const path = useLocation();
   const { selected } = useContext(ProfileContext);
-  const user = userStore.getState().user.user;    // fetching user info from redux store
-  const avatar = userStore.getState().user.avatar;  // fetching user avatar from redux store
+  const user = userStore.getState().user.user.username;    // fetching user info from redux store
+  const avatar = userStore.getState().user.user.avatar;  // fetching user avatar from redux store
 
   return (
     <div className="relative w-[90%] mx-auto overflow-auto" > {/* attach the ref to your scrollable element */}

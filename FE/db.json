@@ -72,7 +72,7 @@
         "No hate speech or harassment of any kind.",
         "Follow Reddit's content policy."
       ],
-      "joined": true,
+      "joined": false,
       "muted": true,
       "favourited": true,
       "NSFW": true

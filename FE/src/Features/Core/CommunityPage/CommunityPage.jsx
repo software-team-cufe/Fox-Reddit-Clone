@@ -16,6 +16,9 @@ import MainFooter from "./footers/mainFooter";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import LoginFirtstModal from "./accessories/loginFirstModal";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
+import { useQuery } from "react-query";
+import { userAxios } from "../../../Utils/UserAxios";
+
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -41,7 +44,6 @@ export function CommunityProvider({ children }) {
 export default function CommunityPage() {
   const { community } = useParams();                  // get the community name from the url
   const [comm, setcommunity] = useState({});        // store the community data
-  const [loading, setLoading] = useState(true);          // check if the data is loading
   const path = useLocation();                          // get the current path
   const { period, selected } = useContext(CommunityContext);  // get the selected sorting and period
   const [Posts, setPosts] = useState([]);              // store the Posts data
@@ -49,6 +51,7 @@ export default function CommunityPage() {
   const user = userStore.getState().user;             // get the user data
   const [showModal, setShowModal] = useState(false);
   const navigator = useNavigate();
+  const [loading, setLoading] = useState(true);
   const loadMoreButtonRef = useRef(null);
   const [callingposts, setCallingPosts] = useState(false);
   const [pagedone, setpagedone] = useState(false);
@@ -76,23 +79,23 @@ export default function CommunityPage() {
   }
 
   //to fetch the community data from the server and use them
-  useEffect(() => {
-    axios.get(`http://localhost:3002/communities`)
-      .then((response) => {
-        response.data.map((commresponse) => {
-          if (commresponse.name === community) {
-            setcommunity(commresponse);
-            setLoading(false);
-          }
-        });
-      }).catch(error => {
-        console.error('There was an error!', error);
-      });
-  }, []);
-
+  const fetchCommunity = async () => {
+      try {
+          const response = await axios.get(`http://localhost:3002/communities`);
+          response.data.map((commresponse) => {
+              if (commresponse.name === community) {
+                  setcommunity(commresponse);
+                  setLoading(false);
+              }
+          });
+      } catch (error) {
+          console.error('There was an error!', error);
+      }
+  };  
   useEffect(() => {
     setfeed(true);
-    axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
+    fetchCommunity();
+    userAxios.get(`/r/${comm.name}/${selected.toLocaleLowerCase()}?page=0&count=${currentpage}&limit=${limitpage}`)
       .then((response) => {
         const newPosts = response.data.map(post => ({
           subReddit: {
@@ -113,12 +116,13 @@ export default function CommunityPage() {
       })
       .catch(error => {
         console.error('There was an error!', error);
+        setfeed(false);
       });
   }, [period, selected]);
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    axios.get(`http://localhost:3002/posts?_start=${currentpage+limitpage}&_limit=${limitpage}`)
+    userAxios.get(`http://localhost:3002/posts`)
     .then(response => {
         if(response.data.length <limitpage){
             setpagedone(true);
