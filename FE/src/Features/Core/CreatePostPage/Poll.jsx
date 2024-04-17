@@ -62,9 +62,11 @@ function Poll(props) {
     return (
 
         <div className='w-full'>
-            <input type="text" className="border rounded w-full h-10 my-1 border-gray-300 p-2
+            <input value={props.Poll1} onChange={() => { props.SetPoll1(event.target.value) }}
+                type="text" className="border rounded w-full h-10 my-1 border-gray-300 p-2
              focus:outline-none focus:border-gray-800" placeholder="Option 1" />
-            <input type="text" className="border rounded w-full h-10 my-1 border-gray-300 p-2
+            <input value={props.Poll2} onChange={() => { props.SetPoll2(event.target.value) }}
+                type="text" className="border rounded w-full h-10 my-1 border-gray-300 p-2
              focus:outline-none focus:border-gray-800" placeholder="Option 2" />
 
             {props.PollValues.map((value, index) => (
@@ -104,7 +106,7 @@ function Poll(props) {
                 </button>
                 <div className='text-sm h-6 flex '>
                     <p className='m-1 pt-2 text-xs'> Voting length:</p>
-                    <ComboBox SelectedOption={selectedOption} SetSelectedOption={setSelectedOption} />
+                    <ComboBox SelectedOption={props.VoteLength} SetSelectedOption={props.SetVoteLength} />
                 </div>
             </div>
 

@@ -37,7 +37,7 @@ export default function LoginPage({ }) {
     }
     setLoading(true);
     try {
-      const res = await userAxios.post('auth/login', { username: email, password });
+      const res = await userAxios.post('api/auth/login', { username: email, password });
 
       disp(setUser(res.data.user));
      

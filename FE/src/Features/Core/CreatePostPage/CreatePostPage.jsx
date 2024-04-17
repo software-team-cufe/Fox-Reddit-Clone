@@ -3,10 +3,57 @@ import TypingArea from './TypingArea'
 import ChooseCommunity from './ChooseCommunity'
 import "./QuillStyle.css"
 import { Smile } from 'lucide-react'
-function CreatePostPage() {
-    const [SelectedCom, setSelectedCom] = useState({ name: "Choose Community" });
+
+function CreatePostPage(props) {
+    const [SelectedCom, setSelectedCom] = useState({ name: "Choose Community", id: "-1" }); //
     const [ComHasRules, setComHasRules] = useState(false);
     const [ShowComCard, setShowComCard] = useState(false);
+    //poll options to be one array before sent to back 
+    const [Poll1, setPoll1] = useState("");             //
+    const [Poll2, setPoll2] = useState("");               // 
+    const [Poll3, setPoll3] = useState([]);               //
+
+    //Send to API
+    const [ComID, setComID] = useState('');
+    const [UserID, setUserID] = useState("DummyUserID");  //To be changed
+    const [TitleValue, setTitleValue] = useState('');                          //
+    const [PostText, setPostText] = useState('');                                  //
+    const [PostURL, setPostURL] = useState('');                               //
+    const [NSFW, setNSFW] = useState(false);                                //
+    const [Spoiler, setSpoiler] = useState(false);                          //
+    const [PostNotifications, setPostNotifications] = useState(false);      //
+    const [VideoOrImageSrc, setVideoOrImageSrc] = useState(null);
+    const [PollOptions, setPollOptions] = useState([]);                 //ToDo
+    const [VoteLength, setVoteLength] = useState(1);                   //
+
+    const updatePollOptions = () => {
+        let newOptions = [];
+        if (Poll1) newOptions.push(Poll1);
+        if (Poll2) newOptions.push(Poll2);
+        Poll3.forEach(option => {
+            if (option.value) newOptions.push(option.value);
+        });
+        setPollOptions(newOptions);
+    };
+
+    // Call update function when any of the state variables change
+    useEffect(() => {
+        updatePollOptions();
+    }, [Poll1, Poll2, Poll3]);
+
+    let ComId = SelectedCom.id;
+
+    const Post = () => {
+        if (PostNotifications === "on")
+            setPostNotifications(true);
+        const NewPost = {
+            title: { TitleValue },
+            text: { PostText }, attachments: [VideoOrImageSrc], spoiler: { Spoiler },
+            CommunityID: { ComId }, nsfw: { NSFW }, userId: { UserID }, url: { PostURL },
+            isNotifications: { PostNotifications }, voteLength: { VoteLength }, pollOptions: { PollOptions }
+        }
+        console.log(NewPost);
+    }
 
     useEffect(() => {
         if (SelectedCom.rules)
@@ -28,9 +75,20 @@ function CreatePostPage() {
                     <div className='h-12'></div>
                     <p className='text-xl m-1 '>Create a post</p>
                     <hr className='lg:my-4' />
-                    <ChooseCommunity Selected={SelectedCom} setSelected={setSelectedCom}
+                    <ChooseCommunity
+                        Selected={SelectedCom} setSelected={setSelectedCom}
                         id="ChooseCom" />
-                    <TypingArea SelectedCom={SelectedCom}
+                    <TypingArea PostFunc={Post}
+                        Poll3={Poll3} SetPoll3={setPoll3}
+                        VoteLength={VoteLength} SetVoteLength={setVoteLength}
+                        Poll1={Poll1} SetPoll1={setPoll1} Poll2={Poll2} SetPoll2={setPoll2}
+                        VideoOrImageSrc={VideoOrImageSrc} SetVideoOrImageSrc={setVideoOrImageSrc}
+                        PostNotifications={PostNotifications} SetPostNotifications={setPostNotifications}
+                        Spoiler={Spoiler} SetSpoiler={setSpoiler}
+                        NFSW={NSFW} SetNFSW={setNSFW}
+                        PostURL={PostURL} SetPostURL={setPostURL}
+                        PostTitle={TitleValue} SetPostTitle={setTitleValue}
+                        PostText={PostText} SetPostText={setPostText} SelectedCom={SelectedCom}
                         className="h-96" id="TypeArea" />
                 </div>
                 <div className=' LeSS:hidden mt-16 m-2 w-0 md:block md:w-80'>

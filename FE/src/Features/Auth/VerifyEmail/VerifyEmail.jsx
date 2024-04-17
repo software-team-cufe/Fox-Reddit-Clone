@@ -47,7 +47,7 @@ export default function VerifyEmailPage({ }) {
     };
     const resendEmail = async () => {
         try {
-            const res = await userAxios.get('verify-account/resend');
+            const res = await userAxios.get('api/verify-account/resend');
             toast("Sent successfully.");
             return;
         } catch (ex) {

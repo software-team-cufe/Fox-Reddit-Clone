@@ -16,6 +16,9 @@ import MainFooter from "./footers/mainFooter";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import LoginFirtstModal from "./accessories/loginFirstModal";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
+import { useQuery } from "react-query";
+import { userAxios } from "../../../Utils/UserAxios";
+
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -40,8 +43,6 @@ export function CommunityProvider({ children }) {
 
 export default function CommunityPage() {
   const { community } = useParams();                  // get the community name from the url
-  const [comm, setcommunity] = useState({});        // store the community data
-  const [loading, setLoading] = useState(true);          // check if the data is loading
   const path = useLocation();                          // get the current path
   const { period, selected } = useContext(CommunityContext);  // get the selected sorting and period
   const [Posts, setPosts] = useState([]);              // store the Posts data
@@ -49,11 +50,12 @@ export default function CommunityPage() {
   const user = userStore.getState().user;             // get the user data
   const [showModal, setShowModal] = useState(false);
   const navigator = useNavigate();
+  const [loading, setLoading] = useState(true);
   const loadMoreButtonRef = useRef(null);
   const [callingposts, setCallingPosts] = useState(false);
   const [pagedone, setpagedone] = useState(false);
-  const [currentpage,setcurrentpage] = useState(0);
   const limitpage = 2;
+  const [currentpage,setcurrentpage] = useState(0);
 
   const swtichJoinState = () => {
 
@@ -76,49 +78,46 @@ export default function CommunityPage() {
   }
 
   //to fetch the community data from the server and use them
-  useEffect(() => {
-    axios.get(`http://localhost:3002/communities`)
-      .then((response) => {
-        response.data.map((commresponse) => {
-          if (commresponse.name === community) {
-            setcommunity(commresponse);
-            setLoading(false);
-          }
-        });
-      }).catch(error => {
-        console.error('There was an error!', error);
-      });
-  }, []);
+  const fetchCommunity = async () => {
+    const response = await axios.get(`http://localhost:3002/communities`);
+    const comm = response.data.find((commresponse) => commresponse.name === community);
+    fetchInitialPosts(comm);
+    return comm;
+};
 
-  useEffect(() => {
-    setfeed(true);
-    axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
-      .then((response) => {
-        const newPosts = response.data.map(post => ({
-          subReddit: {
-            image: post.attachments.subredditIcon,
-            title: post.communityName,
-          },
-          images: post.attachments.postData,
-          id: post.id,
-          title: post.title,
-          subTitle: post.postText,
-          votes: post.votesCount,
-          comments: post.commentsCount,
-          thumbnail: post.thumbnail,
-          video: null
-        }));
-        setPosts(newPosts);
-        setfeed(false);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-  }, [period, selected]);
+const fetchInitialPosts = async (comm) => {
+  setfeed(true);
+  userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&count=${currentpage}&limit=${limitpage}`)
+    .then((response) => {
+      console.log(response.data)
+      const newPosts = response.data.map(post => ({
+        subReddit: {
+          image: "https://qph.cf2.quoracdn.net/main-qimg-d2290767bcbc9eb9748ca82934e6855c-lq",
+          title: post.communityName,
+        },
+        images: post.attachments,
+        id: post._id,
+        title: post.title,
+        subTitle: post.textHTML,
+        votes: post.votesCount,
+        comments: post.postComments.length,
+        thumbnail: post.attachments[0],
+        video: null
+      }));
+      setcurrentpage(limitpage+currentpage);
+      setPosts(newPosts);
+      setfeed(false);
+    })
+    .catch(error => {
+      console.error('There was an error!', error);
+      setfeed(false);
+    })};
+
+const { data: comm, isLoading, error } = useQuery(['fetchCommunity',selected,period], fetchCommunity); 
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    axios.get(`http://localhost:3002/posts?_start=${currentpage+limitpage}&_limit=${limitpage}`)
+    userAxios.get(`r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&count=${currentpage}&limit=${limitpage}`)
     .then(response => {
         if(response.data.length <limitpage){
             setpagedone(true);
@@ -150,7 +149,7 @@ export default function CommunityPage() {
   };
 
   //to handle loading until fetch is complete
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-100 h-100 flex flex-col items-center justify-center">
         <Spinner className="h-24 w-24" />

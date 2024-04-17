@@ -12,18 +12,15 @@ import Poll from "./Poll"
 function TypingArea(props) {
     const navigator = useNavigate();
     const [DisablePoll, setDisablePoll] = useState(false); //ToDo: set by community
-    const [PostContent, setPostContent] = useState('');
-    const [PostTitle, setPostTitle] = useState("");
+    // const [PostContent, props.SetPostText] = useState('');
+    // const [PostTitle, setPostTitle] = useState("");
     const [FocusTitle, setFocusTitle] = useState(false);
-    const [SelectedBannar, setSelectedBannar] = useState("");
+    // const [props.VideoOrImageSrc, props.SetVideoOrImageSrc] = useState("");
     const [OpenImageTab, setOpenImageTab] = useState(false);
     const [ShowRemovePop, setShowRemovePop] = useState(false);
-    const [PollValusesAfterTwo, setPollValusesAfterTwo] = useState([]);
-    const [PollValueOne, setPollValueOne] = useState("");
-    const [PollValueTwo, setPollValueTwo] = useState("");
-    const [VoteLength, setVoteLength] = useState(0);
     const [ShowCancelPost, setShowCancelPost] = useState(false);
-    const [VideoFile, setVideoFile] = useState(false);
+    const [VideoFile, setVideoFile] = useState(false);    //boolean to mark the file type
+    const [DisablePost, setDisablePost] = useState(true);
 
     const [ToolBar, setToolBar] = useState([['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
@@ -37,6 +34,16 @@ function TypingArea(props) {
     [{ 'size': [false, 'large'] }],  // custom dropdown
     [{ 'color': [] }, { 'background': [] }],])       // dropdown with defaults from theme })
 
+    useEffect(() => {
+        if (props.PostTitle.length === 0)
+            setDisablePost(true);
+        else if (props.SelectedCom.name === "Choose Community")
+            setDisablePost(true);
+        else
+            setDisablePost(false);
+
+    }, [props.PostTitle, props.SelectedCom])
+
 
     useEffect(() => {
         if (props.SelectedCom.name === "Choose Community")
@@ -49,6 +56,7 @@ function TypingArea(props) {
 
 
     useEffect(() => {
+
         if (OpenImageTab) {
             const imageInput = document.getElementById("DropBannerImage");
             if (!(imageInput === null)) {
@@ -60,7 +68,8 @@ function TypingArea(props) {
             }
         }
 
-    }, [OpenImageTab, SelectedBannar]);
+
+    }, [OpenImageTab, props.VideoOrImageSrc]);
 
     const handleBannerUpload = (event, UpOrDrop = "up") => {
         const reader = new FileReader();
@@ -82,13 +91,13 @@ function TypingArea(props) {
             }
         }
         reader.onload = () => {
-            setSelectedBannar(reader.result);
+            props.SetVideoOrImageSrc(reader.result);
         };
 
     }
 
     const handleMaxchar = (event) => {
-        if (PostTitle.length >= 300 && !(event.key === 'Backspace')) {
+        if (props.PostTitle.length >= 300 && !(event.key === 'Backspace')) {
             event.preventDefault()
         }
     }
@@ -100,7 +109,7 @@ function TypingArea(props) {
     }
 
     const handleRemoveImage = () => {
-        setSelectedBannar(null);
+        props.SetVideoOrImageSrc(null);
         setShowRemovePop(false);
         //ToDo: Add Api
 
@@ -114,20 +123,21 @@ function TypingArea(props) {
                 <Tab label="Post" num={0} addOnClick={NoDrag} icon={<NotepadText strokeWidth={1} color=" #e94c00" size={24} />}>
 
                     <div className='p-4 relative'>
-                        <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ? 'border-gray-800' : 'border-gray-300'}`}>
-                            <input type="text" onChange={() => { setPostTitle(event.target.value) }}
+                        <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ?
+                            'border-gray-800' : 'border-gray-300'}`}>
+                            <input type="text" onChange={() => { props.SetPostTitle(event.target.value) }}
                                 placeholder='Title' className=' focus:outline-none border-none text-sm rounded
                                   border w-full h-10 focus:border-none'
                                 onKeyDown={handleMaxchar}
                                 onFocus={() => { event.preventDefault(); setFocusTitle(true); }}
                                 onBlur={() => { event.preventDefault(); setFocusTitle(false); }}
-                                value={PostTitle}
+                                value={props.PostTitle}
                             ></input>
-                            <p className="text-xs py-2  text-gray-500">{PostTitle.length}/300</p>
+                            <p className="text-xs py-2  text-gray-500">{props.PostTitle.length}/300</p>
                         </div>
                         <ReactQuill
-                            value={PostContent}
-                            onChange={setPostContent}
+                            value={props.PostText}
+                            onChange={props.SetPostText}
                             placeholder="Text (optional)"
                             modules={{
                                 toolbar: {
@@ -138,41 +148,45 @@ function TypingArea(props) {
 
                     </div>
                 </Tab>
-                <Tab label="Image & Video" num={1} addOnClick={Drag} icon={<ImageUp strokeWidth={1} color=" #e94c00" size={24} />}>
+                <Tab label="Image & Video" num={1} addOnClick={Drag}
+                    icon={<ImageUp strokeWidth={1} color=" #e94c00" size={24} />}>
 
                     <div className='p-4 relative w-full'>
                         <div className={`flex border rounded w-full p-1 h-fit my-2 ${FocusTitle ? 'border-gray-800'
                             : 'border-gray-300'}`}>
-                            <input type="text" onChange={() => { setPostTitle(event.target.value) }}
+                            <input type="text" onChange={() => { props.SetPostTitle(event.target.value) }}
                                 placeholder='Title' className=' focus:outline-none border-none text-sm rounded
                                   border w-full h-10 focus:border-none'
                                 onKeyDown={handleMaxchar}
                                 onFocus={() => { event.preventDefault(); setFocusTitle(true); }}
                                 onBlur={() => { event.preventDefault(); setFocusTitle(false); }}
-                                value={PostTitle}
+                                value={props.PostTitle}
                             ></input>
-                            <p className="text-xs py-2  text-gray-500">{PostTitle.length}/300</p>
+                            <p className="text-xs py-2  text-gray-500">{props.PostTitle.length}/300</p>
                         </div>
 
                         <div className="w-full h-fit ">
 
-                            {SelectedBannar && (
+                            {props.VideoOrImageSrc && (
                                 <div className="w-full h-[425px] bg-white border rounded relative ">
                                     <div className=" w-full h-96 grid overflow-hidden  place-content-center relative">
                                         {VideoFile &&
-                                            <video controls>
-                                                <source src={SelectedBannar} />
+                                            <video width={1280} height={720} controls>
+                                                <source src={props.VideoOrImageSrc} />
                                                 Your browser does not support the video tag.
                                             </video>}
                                         {!VideoFile && <>
-                                            <img className='object-cover object-center  w-full blur-lg ' src={SelectedBannar}
+                                            <img className='object-cover object-center  w-full blur-lg '
+                                                src={props.VideoOrImageSrc}
                                                 alt="Selected" />
-                                            <img className='object-cover object-top h-96 absolute overflow-auto top-1/2 left-1/2
-                                     transform -translate-x-1/2 -translate-y-1/2  ' src={SelectedBannar} alt="Selected" />
+                                            <img className='object-cover object-top h-96 absolute
+                                             overflow-auto top-1/2 left-1/2
+                                     transform -translate-x-1/2 -translate-y-1/2  ' src={props.VideoOrImageSrc} alt="Selected" />
                                         </>}
 
                                     </div>
-                                    <Trash2 strokeWidth={1} size={30} color='#e94c00' className='absolute p-1 bg-white border
+                                    <Trash2 strokeWidth={1} size={30} color='#e94c00' className='absolute p-1
+                                     bg-white border
                                      rounded-full bottom-1 right-1 hover:bg-gray-300'
                                         onClick={() => { ShowRemovePop ? setShowRemovePop(false) : setShowRemovePop(true); }}
                                     />
@@ -190,7 +204,8 @@ function TypingArea(props) {
                                                     <button
                                                         onClick={() => { setShowRemovePop(false); }}
                                                         type="submit"
-                                                        className="bg-white text-black border rounded-full  p-1 px-2 m-1 border-orange-600 
+                                                        className="bg-white text-black border rounded-full 
+                                                         p-1 px-2 m-1 border-orange-600 
                                                          hover:bg-orange-800 hover:text-white"
                                                     >
                                                         keep
@@ -198,7 +213,8 @@ function TypingArea(props) {
                                                     <button
                                                         onClick={handleRemoveImage}
                                                         type="submit"
-                                                        className="bg-orange-600 text-white rounded-full m-1 p-1 px-2 hover:bg-orange-800"
+                                                        className="bg-orange-600 text-white rounded-full
+                                                         m-1 p-1 px-2 hover:bg-orange-800"
                                                     >
                                                         Remove
                                                     </button>
@@ -209,7 +225,7 @@ function TypingArea(props) {
                                 </div>
                             )}
 
-                            {!SelectedBannar && (<>
+                            {!props.VideoOrImageSrc && (<>
                                 <div id="DropBannerImage" className='relative text-center border-dashed hover:cursor-pointer
                     	         border border-[#e94c00] h-full  w-full bg-white  rounded'
                                     onClick={() => document.getElementById("Banner-load").click()}>
@@ -234,36 +250,39 @@ function TypingArea(props) {
                     <div className='p-4 relative'>
                         <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ?
                             'border-gray-800' : 'border-gray-300'}`}>
-                            <input type="text" onChange={() => { setPostTitle(event.target.value) }}
+                            <input type="text" onChange={() => { props.SetPostTitle(event.target.value) }}
                                 placeholder='Title' className=' focus:outline-none border-none text-sm rounded
                                   border w-full h-10 focus:border-none'
                                 onKeyDown={handleMaxchar}
                                 onFocus={() => { event.preventDefault(); setFocusTitle(true); }}
                                 onBlur={() => { event.preventDefault(); setFocusTitle(false); }}
-                                value={PostTitle}
+                                value={props.PostTitle}
                             ></input>
-                            <p className="text-xs py-2  text-gray-500">{PostTitle.length}/300</p>
+                            <p className="text-xs py-2  text-gray-500">{props.PostTitle.length}/300</p>
                         </div>
-                        <input type="text" className="border rounded w-full h-12 border-gray-300 p-2
+                        <input value={props.PostURL} onChange={() => { props.SetPostURL(event.target.value) }}
+                            type="text" className="border rounded w-full h-12 border-gray-300 p-2
                          focus:outline-none focus:border-gray-800" placeholder="Url" />
                     </div>
                 </Tab>
-                <Tab label="Poll" enable={DisablePoll} num={3} addOnClick={NoDrag} icon={<BarChart2 strokeWidth={1} color=" #e94c00" size={24} />}>
+                <Tab label="Poll" enable={DisablePoll} num={3} addOnClick={NoDrag} icon={<BarChart2 strokeWidth={1}
+                    color=" #e94c00" size={24} />}>
                     <div className='p-4 relative'>
-                        <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ? 'border-gray-800' : 'border-gray-300'}`}>
-                            <input type="text" onChange={() => { setPostTitle(event.target.value) }}
+                        <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ? 'border-gray-800' :
+                            'border-gray-300'}`}>
+                            <input type="text" onChange={() => { props.SetPostTitle(event.target.value) }}
                                 placeholder='Title' className=' focus:outline-none border-none text-sm rounded
                                   border w-full h-10 focus:border-none'
                                 onKeyDown={handleMaxchar}
                                 onFocus={() => { event.preventDefault(); setFocusTitle(true); }}
                                 onBlur={() => { event.preventDefault(); setFocusTitle(false); }}
-                                value={PostTitle}
+                                value={props.PostTitle}
                             ></input>
-                            <p className="text-xs py-2  text-gray-500">{PostTitle.length}/300</p>
+                            <p className="text-xs py-2  text-gray-500">{props.PostTitle.length}/300</p>
                         </div>
                         <ReactQuill
-                            value={PostContent}
-                            onChange={setPostContent}
+                            value={props.PostText}
+                            onChange={props.SetPostText}
                             placeholder="Text (optional)"
                             modules={{
                                 toolbar: {
@@ -273,10 +292,11 @@ function TypingArea(props) {
                         />
                         <div className="border flex p-2">
                             <div className="w-4/6">
-                                <Poll className="w-5/6" PollValues={PollValusesAfterTwo} DisablePoll={DisablePoll}
-                                    FirstPoll={setPollValueOne} SecPoll={setPollValueTwo}
-                                    SetPollValues={setPollValusesAfterTwo} VoteLength={VoteLength}
-                                    setVoteLength={setVoteLength} />
+                                <Poll Poll2={props.Poll2} SetPoll2={props.SetPoll2}
+                                    Poll1={props.Poll1} SetPoll1={props.SetPoll1}
+                                    className="w-5/6" PollValues={props.Poll3} DisablePoll={DisablePoll}
+                                    SetPollValues={props.SetPoll3} VoteLength={props.VoteLength}
+                                    SetVoteLength={props.SetVoteLength} />
 
                             </div>
                             <div  >
@@ -296,12 +316,14 @@ function TypingArea(props) {
                 </Tab>
 
             </Tabs>
-            <CheckButton label="Spoiler" />
-            <CheckButton label="NSFW" />
+            <CheckButton IsChecked={props.Spoiler}
+                SetIsChecked={props.SetSpoiler} label="Spoiler" />
+            <CheckButton IsChecked={props.NFSW}
+                SetIsChecked={props.SetNFSW} label="NSFW" />
             <hr className="w-[100%-2] my-4 grid mx-5" />
             <div className="w-full relative h-6 ">
-                <button
-                    disabled={DisablePoll}
+                <button onClick={props.PostFunc}
+                    disabled={DisablePost}
                     type="submit"
                     className="bg-orange-600 text-white rounded-full px-4 py-2 
                     absolute right-4  hover:bg-orange-800 disabled:bg-gray-400"
@@ -351,7 +373,9 @@ function TypingArea(props) {
                 </div>
             </div>
             <div className="bg-gray-100 h-32 mt-12 p-6">
-                <input type="checkbox" className='mx-4' />Send me post reply notifications
+                <input checked={!!props.PostNotifications}
+                    onChange={(event) => { props.SetPostNotifications(event.target.checked) }}
+                    type="checkbox" className='mx-4' />Send me post reply notifications
                 <div>
                     <p className="hover:underline text-blue-700 px-4">
                         <Link to="/setting/account#connectAccount">Connect accounts to share your post</Link>
