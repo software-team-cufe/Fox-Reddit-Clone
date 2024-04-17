@@ -17,6 +17,7 @@
     "docs": " typedoc --out docs Backend"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/config": "^3.3.3",
     "@types/dotenv-safe": "^8.1.6",
     "@types/express": "^4.17.21",
@@ -57,6 +58,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/nanoid": "^3.0.0",
     "@types/nodemailer-sendgrid": "^1.0.3",
+    "Faker": "^0.7.2",
     "argon2": "^0.40.1",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
