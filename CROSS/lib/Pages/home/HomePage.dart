@@ -9,9 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 import 'package:share/share.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -140,21 +141,31 @@ class _HomePageState extends State<HomePage> {
           }),
         ],
         title: PopupMenuButton<String>(
-          icon: Text(_selectedItem),
+          icon: _selectedItem == 'Home'
+          ? Text(
+              "FOX",
+              style: (TextStyle(fontSize: 26, color: Color(0xFFe74c3c), fontWeight: FontWeight.bold,)),
+            )
+          : Text(
+              _selectedItem,
+              style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+
+          
           initialValue: _selectedItem,
           itemBuilder: (context) => [
             const PopupMenuItem(
               value: "Home",
-              child: Text("Home"),
+              child: Text("Home", style: TextStyle(fontSize: 16)),
             ),
             const PopupMenuItem(
               value: "Popular",
-              child: Text("Popular"),
+              child: Text("Popular", style: TextStyle(fontSize: 16)),
             ),
           ],
           onSelected: (value) {
             setState(() {
-              _selectedItem = value; // Use _selectedItem from the state class
+              _selectedItem = value; // Update the selected item
             });
           },
         ),
@@ -168,7 +179,6 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: const nBar(),
       body: Column(
-        
         children: [
           Visibility(
             visible: "Home" == _selectedItem,
@@ -176,7 +186,6 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.topRight,
               child: DropdownButton<String>(
                 isDense: true,
-                // isExpanded: true,
                 iconEnabledColor: Colors.white,
                 iconDisabledColor: Colors.white,
                 focusColor: Colors.black,
@@ -185,7 +194,6 @@ class _HomePageState extends State<HomePage> {
                   _sortValue,
                   style: const TextStyle(color: Colors.white),
                 ),
-                // value: "asda",
                 items: const [
                   DropdownMenuItem(
                     value: 'Best',
@@ -219,13 +227,11 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child:
-                          CircularProgressIndicator(), // Show a loading indicator
+                      child: CircularProgressIndicator(),
                     );
                   } else if (snapshot.hasError) {
                     return Center(
-                      child: Text(
-                          'Error: ${snapshot.error}'), // Show an error message if loading fails
+                      child: Text('Error: ${snapshot.error}'),
                     );
                   } else {
                     List<dynamic> posts = snapshot.data!;
