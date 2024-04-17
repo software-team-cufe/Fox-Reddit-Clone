@@ -3,7 +3,7 @@ import TypingArea from './TypingArea'
 import ChooseCommunity from './ChooseCommunity'
 import "./QuillStyle.css"
 import { Smile } from 'lucide-react'
-import { Attachment } from '@mui/icons-material'
+
 function CreatePostPage(props) {
     const [SelectedCom, setSelectedCom] = useState({ name: "Choose Community", id: "-1" }); //
     const [ComHasRules, setComHasRules] = useState(false);
