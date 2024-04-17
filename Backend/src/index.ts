@@ -2,7 +2,6 @@
 require('dotenv').config();
 import express from 'express';
 import cors from 'cors';
-//import xss from 'xss';    //??????
 import config from 'config';
 import log from './utils/logger';
 import connectToDb from './utils/connectToDb';
