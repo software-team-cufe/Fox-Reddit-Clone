@@ -2,6 +2,7 @@
 import { useState } from "react"
 import EmailChanged from "./ComponentChange/EmailChanged";
 import ChangeLanguage from "./ComponentChange/ChangeLanguage";
+import PopUp from "./ComponentChange/PopUp";
 const options=['WOMAN','MAN','NON Binary','perfer Not to say','i prefer..']
 const Acount = () => {
  
@@ -16,6 +17,7 @@ const Acount = () => {
 
   const[changeEmail, setChange]= useState(false);
   const[ChangeLang , setLanguage]= useState(false);
+  const[handleClicked , setOpt]=useState(false);
  
 
   return (
@@ -36,11 +38,12 @@ const Acount = () => {
                 ay7aghjc77@gmail.com
               </div>
             </div>
+
             <div>
-              
-             <button onClick={()=>setChange(true)}  className="  btn-changeEmail text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">Change</button>
-             {changeEmail && <EmailChanged setChange={setChange}></EmailChanged>}
-       
+             <button onClick={()=>setChange(true)}  className="  btn-changeEmail text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">
+             Change
+             </button>
+               {changeEmail && <EmailChanged setChange={setChange}></EmailChanged>}
             </div>
           </div>
          {/* second div */}
@@ -271,8 +274,10 @@ const Acount = () => {
               </p>
             </div>
 
+
+             {/* fe pop up here  */}
             <div className=" mt-4">
-              <label className="relative inline-flex cursor-pointer items-center">
+              <label onClick={()=>setOpt(true)} className="relative inline-flex cursor-pointer items-center o">
                 <input id="switch" type="checkbox" className="peer sr-only" />
                 <label htmlFor="switch" className="hidden" />
                 <div
@@ -280,6 +285,7 @@ const Acount = () => {
                           peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"
                 />
               </label>
+             {handleClicked && <PopUp setOpt={setOpt}></PopUp>}
             </div>
           </div>
 
