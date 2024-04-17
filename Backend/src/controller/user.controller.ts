@@ -550,7 +550,6 @@ export async function getALLFriendsHandler(req: Request, res: Response) {
   }
 }
 
-//done change token only
 export async function friendRequestHandler(req: Request<friendRequest['body']>, res: Response) {
   try {
     const { username, type } = req.body;

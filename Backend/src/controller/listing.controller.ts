@@ -571,7 +571,7 @@ export async function spoilerPostHandler(req: Request<spoilerPost['body']>, res:
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
     const post = await findPostById(desiredID);
-    const user = res.locals.user;
+    const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
     if (!post) {
@@ -618,7 +618,7 @@ export async function unspoilerPostHandler(req: Request<spoilerPost['body']>, re
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
     const post = await findPostById(desiredID);
-    const user = res.locals.user;
+    const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
     if (!post) {
@@ -665,7 +665,7 @@ export async function marknsfwPostHandler(req: Request<nsfwPost['body']>, res: R
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
     const post = await findPostById(desiredID);
-    const user = res.locals.user;
+    const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
     if (!post) {
@@ -712,7 +712,7 @@ export async function unmarknsfwPostHandler(req: Request<nsfwPost['body']>, res:
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
     const post = await findPostById(desiredID);
-    const user = res.locals.user;
+    const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
     if (!post) {
@@ -759,7 +759,7 @@ export async function lockPostHandler(req: Request<lockPost['body']>, res: Respo
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
     const post = await findPostById(desiredID);
-    const user = res.locals.user;
+    const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
     if (!post) {
@@ -806,7 +806,7 @@ export async function unlockPostHandler(req: Request<lockPost['body']>, res: Res
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
     const post = await findPostById(desiredID);
-    const user = res.locals.user;
+    const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
     if (!post) {
@@ -854,7 +854,7 @@ export async function votePostHandler(req: Request<votePost['body']>, res: Respo
     const type = req.body.type;
     const desiredID = id.split('_')[1];
     const post = await findPostById(desiredID);
-    const user = res.locals.user;
+    const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
     if (!post) {
