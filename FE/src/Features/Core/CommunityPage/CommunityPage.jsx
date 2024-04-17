@@ -22,7 +22,7 @@ import { userAxios } from "../../../Utils/UserAxios";
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
-  selected: "New",
+  selected: "Top",
   setselected: (selected) => { },
   period: "All time",
   setperiod: (period) => { },
@@ -30,7 +30,7 @@ export const CommunityContext = createContext({
 
 // Create a provider component that holds the state
 export function CommunityProvider({ children }) {
-  const [selected, setselected] = useState("New");
+  const [selected, setselected] = useState("Top");
   const [period, setperiod] = useState("All time");
 
   return (
@@ -46,22 +46,60 @@ export default function CommunityPage() {
   const path = useLocation();                          // get the current path
   const { period, selected } = useContext(CommunityContext);  // get the selected sorting and period
   const [Posts, setPosts] = useState([]);              // store the Posts data
-  const [feed, setfeed] = useState(true);                // store the feed loading state
   const user = userStore.getState().user;             // get the user data
   const [showModal, setShowModal] = useState(false);
   const navigator = useNavigate();
-  const [loading, setLoading] = useState(true);
   const loadMoreButtonRef = useRef(null);
   const [callingposts, setCallingPosts] = useState(false);
   const [pagedone, setpagedone] = useState(false);
   const limitpage = 2;
   const [currentpage,setcurrentpage] = useState(0);
+  const [feed, setFeed] = useState(false);
+
+    //to fetch the community data from the server and use them
+    const fetchCommunity = async () => {
+      const response = await axios.get(`http://localhost:3002/communities`);
+      const commData = response.data.find((commresponse) => commresponse.name === community);
+      return commData;
+  };
+  
+  let { data: comm, isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity });
+
+  const fetchInitialPosts = () => {
+    setFeed(true);
+    userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&count=${currentpage}&limit=${limitpage}`)
+      .then((response) => {
+        const newPosts = response.data.map(post => ({
+          subReddit: {
+            image: "https://qph.cf2.quoracdn.net/main-qimg-d2290767bcbc9eb9748ca82934e6855c-lq",
+            title: post.communityName,
+          },
+          images: post.attachments,
+          id: post._id,
+          title: post.title,
+          subTitle: post.textHTML,
+          votes: post.votesCount,
+          comments: post.postComments.length,
+          thumbnail: post.attachments[0],
+          video: null
+        }));
+        setcurrentpage(limitpage+currentpage);
+        setPosts(newPosts);
+        setFeed(false);
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+        setFeed(false);
+      })};
+  
+      const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], 
+      () => fetchInitialPosts(), {enabled: !loading});
 
   const swtichJoinState = () => {
 
     axios.patch(`http://localhost:3002/communities/${comm.id}`, { joined: !comm.joined })
       .then(() => {
-        setcommunity({ ...comm, joined: !comm.joined });
+        comm = { ...comm, joined: !comm.joined };
         console.log('Community joined state changed!');
       })
       .catch(error => {
@@ -77,43 +115,7 @@ export default function CommunityPage() {
     navigator('/submit');
   }
 
-  //to fetch the community data from the server and use them
-  const fetchCommunity = async () => {
-    const response = await axios.get(`http://localhost:3002/communities`);
-    const comm = response.data.find((commresponse) => commresponse.name === community);
-    fetchInitialPosts(comm);
-    return comm;
-};
 
-const fetchInitialPosts = async (comm) => {
-  setfeed(true);
-  userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&count=${currentpage}&limit=${limitpage}`)
-    .then((response) => {
-      console.log(response.data)
-      const newPosts = response.data.map(post => ({
-        subReddit: {
-          image: "https://qph.cf2.quoracdn.net/main-qimg-d2290767bcbc9eb9748ca82934e6855c-lq",
-          title: post.communityName,
-        },
-        images: post.attachments,
-        id: post._id,
-        title: post.title,
-        subTitle: post.textHTML,
-        votes: post.votesCount,
-        comments: post.postComments.length,
-        thumbnail: post.attachments[0],
-        video: null
-      }));
-      setcurrentpage(limitpage+currentpage);
-      setPosts(newPosts);
-      setfeed(false);
-    })
-    .catch(error => {
-      console.error('There was an error!', error);
-      setfeed(false);
-    })};
-
-const { data: comm, isLoading, error } = useQuery(['fetchCommunity',selected,period], fetchCommunity); 
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
@@ -149,7 +151,7 @@ const { data: comm, isLoading, error } = useQuery(['fetchCommunity',selected,per
   };
 
   //to handle loading until fetch is complete
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="w-100 h-100 flex flex-col items-center justify-center">
         <Spinner className="h-24 w-24" />
@@ -229,7 +231,7 @@ const { data: comm, isLoading, error } = useQuery(['fetchCommunity',selected,per
 
             {/* the feed of the community*/}
             {!feed ? (<div role="communityFeed" className="flex flex-col md:w-full w-full h-fit my-4 items-center">
-              {/* if there are no downvoted Posts, show no results */}
+              {/* if there are no Posts, show no results */}
               {Posts.length > 0 ? (
                 <>
                   {Posts.map((post, index) => (
