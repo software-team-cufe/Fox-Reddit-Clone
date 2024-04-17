@@ -7,7 +7,6 @@ import { userAxios } from './Utils/UserAxios';
 import { useDispatch } from 'react-redux';
 import { logOutUser, setUser } from './hooks/UserRedux/UserModelSlice';
 import UserProvider from './hooks/UserRedux/UserProvider';
-
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
