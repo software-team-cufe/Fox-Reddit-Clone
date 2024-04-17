@@ -15,6 +15,8 @@ import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 
+
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:math';
@@ -141,23 +143,21 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: nameController,
               ),
               const SizedBox(height: 20),
-              CustomTextBox(
-                hintText: "Email",
-                icon: FluentIcons.mail_28_regular,
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Email",
+                  prefixIcon: Icon(FluentIcons.mail_28_regular)),
                 controller: emailController,
+                keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 20),
-              CustomTextBox(
+              TextField(
+                decoration: InputDecoration(
                 hintText: "Password",
-                isPassword: showPass,
-                icon: FluentIcons.password_24_regular,
-                showEyeIcon: true,
-                onChangeVisability: () {
-                  setState(() {
-                    showPass = !showPass;
-                  });
-                },
+                prefixIcon: Icon(FluentIcons.password_24_regular,)),
                 controller: passwordController,
+                obscureText: true,
+                keyboardType: TextInputType.text,
               ),
               const SizedBox(height: 20),
               // CustomDatePicker(

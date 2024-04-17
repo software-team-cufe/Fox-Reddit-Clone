@@ -4,13 +4,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
-import 'package:reddit_fox/core/common/CustomTextBox.dart';
 import 'package:reddit_fox/features/auth/screens/ForgetPasswordScreen.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -65,17 +64,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              CustomTextBox(
-                hintText: "Email / UserName or Phone number",
-                icon: Icons.email,
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Email / UserName or Phone number",
+                  prefixIcon: Icon(Icons.email),
+                ),
                 controller: emailController,
+                keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 10),
-              CustomTextBox(
-                isPassword: true,
-                hintText: "Password",
-                icon: Icons.password,
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  prefixIcon: Icon(Icons.password),
+                ),
                 controller: passwordController,
+                obscureText: true,
+                keyboardType: TextInputType.text,
               ),
               const SizedBox(height: 20),
               if (errorMessage != null) Text(errorMessage!),
@@ -100,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  Get.to(() =>  ForgetPasswordScreen());
+                  Get.to(() => ForgetPasswordScreen());
                 },
                 child: const Text('Forgot password?'),
               ),
@@ -110,17 +115,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  // Function to save token in shared preferences
-
-  // Function to retrieve token from shared preferences
 }
 
 Future<void> saveToken(String token) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
-  // prefs.remove(token);
-  // print(getToken());
 }
 
 Future<String?> getToken() async {
