@@ -53,7 +53,7 @@ export default function CommunityPage() {
   const [callingposts, setCallingPosts] = useState(false);
   const [pagedone, setpagedone] = useState(false);
   const limitpage = 2;
-  const [currentpage,setcurrentpage] = useState(0);
+  const [currentpage,setcurrentpage] = useState(1);
   const [feed, setFeed] = useState(false);
 
     //to fetch the community data from the server and use them
@@ -67,7 +67,7 @@ export default function CommunityPage() {
 
   const fetchInitialPosts = () => {
     setFeed(true);
-    userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&count=${currentpage}&limit=${limitpage}`)
+    userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&count=0&limit=${limitpage}`)
       .then((response) => {
         const newPosts = response.data.map(post => ({
           subReddit: {
@@ -83,7 +83,7 @@ export default function CommunityPage() {
           thumbnail: post.attachments[0],
           video: null
         }));
-        setcurrentpage(limitpage+currentpage);
+        setcurrentpage(1+currentpage);
         setPosts(newPosts);
         setFeed(false);
       })
@@ -119,7 +119,7 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    userAxios.get(`r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&count=${currentpage}&limit=${limitpage}`)
+    userAxios.get(`r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&count=0&limit=${limitpage}`)
     .then(response => {
         if(response.data.length <limitpage){
             setpagedone(true);
