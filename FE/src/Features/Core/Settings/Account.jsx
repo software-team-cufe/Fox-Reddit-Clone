@@ -3,6 +3,7 @@ import { useState } from "react"
 import EmailChanged from "./ComponentChange/EmailChanged";
 import ChangeLanguage from "./ComponentChange/ChangeLanguage";
 import PopUp from "./ComponentChange/PopUp";
+import DeleteAccount from "./ComponentChange/DeleteAccount";
 const options=['WOMAN','MAN','NON Binary','perfer Not to say','i prefer..']
 const Acount = () => {
  
@@ -18,6 +19,7 @@ const Acount = () => {
   const[changeEmail, setChange]= useState(false);
   const[ChangeLang , setLanguage]= useState(false);
   const[handleClicked , setOpt]=useState(false);
+  const[deleteccount,setDelete]=useState(false);
  
 
   return (
@@ -297,18 +299,18 @@ const Acount = () => {
         <p className="text-xs text-gray-500 mt-9 mb-1">DELETE ACCOUNT</p>
         <hr className="w-[70%]" />
 
-        <div className="flex flex-row mb-7 text-xs font-semibold w-[70%] justify-end">
+        <div className="flex flex-row mb-7 text-xs font-semibold w-[70%] justify-end h-[100px]">
 
 
-          <button type="button" className="bg-white text-red-500 flex flex-row mt-9 ">
+          <button onClick={()=>setDelete(true)} type="button" className="bg-white text-red-500 flex flex-row mt-9 ">
 
             <svg className=" w-4 h-4"
               xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 20 20" fill="currentColor">  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
-            <p >
+            <p className=" ml-1">
               DELETE ACCOUNT
             </p>
           </button>
-
+           {deleteccount && <DeleteAccount setDelete={setDelete}></DeleteAccount>}
 
         </div>
 
