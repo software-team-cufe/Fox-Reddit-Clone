@@ -25,7 +25,7 @@ import {
   getUserCommentsHandler,
   getUserOverviewHandler,
   getUserSubmittedHandler,
-  getFriendHandler,
+  getUserHandler,
   getALLFriendsHandler,
   unFriendRequestHandler,
   friendRequestHandler,
@@ -33,11 +33,10 @@ import {
   followRequestHandler,
   unfollowRequestHandler,
   getALLFollowersHandler,
-  getALLFollowedHandler,
-  getUpvotedPostsByUsername,
-  getDownvotedPostsByUsername,
+  getALLFollowingHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
+import deserializeUser from '../middleware/deserialzeUser';
 
 const router = express.Router();
 
@@ -56,41 +55,41 @@ router.get('/user/:username/comments', getUserCommentsHandler);
 
 router.get('/user/:username/overview', getUserOverviewHandler);
 
-router.get('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
+router.post(
+  '/api/users/resetpassword/:id/:passwordResetCode',
+  validateResource(resetPasswordSchema),
+  resetPasswordHandler
+);
 router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 
-router.get('/api/v1/me/prefs', requireUser, getCurrentUserPrefs);
+router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
 
-router.patch('/api/v1/me/prefs', requireUser, editCurrentUserPrefs);
-
-router.get('/api/user/:username/upvoted', getUpvotedPostsByUsername);
-
-router.get('/api/user/:username/downvoted', getDownvotedPostsByUsername);
+router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
 
 /******************** BOUDY **************************/
-router.get('/api/v1/me/friends', getALLFriendsHandler);
+router.get('/api/v1/me/friends', deserializeUser, getALLFriendsHandler);
 
-router.get('/api/v1/me/followers', getALLFollowersHandler);
+router.get('/api/v1/me/followers', deserializeUser, getALLFollowersHandler);
 
-router.get('/api/v1/me/followed', getALLFollowedHandler);
+router.get('/api/v1/me/followings', deserializeUser, getALLFollowingHandler);
 
-router.get('/api/v1/me/friends/:username', getFriendHandler);
+router.get('/api/v1/me/friends/:username', deserializeUser, getUserHandler);
 
-router.get('/api/v1/me/followers/:username', getFriendHandler);
+router.get('/api/v1/me/followers/:username', deserializeUser, getUserHandler);
 
-router.get('/api/v1/me/following/:username', getFriendHandler);
+router.get('/api/v1/me/followings/:username', deserializeUser, getUserHandler);
 
-router.post('/api/friend', validateResource(friendRequestSchema), friendRequestHandler);
+router.post('/api/friend', validateResource(friendRequestSchema), deserializeUser, friendRequestHandler);
 
-router.post('/api/unfriend', validateResource(unFriendRequestSchema), unFriendRequestHandler);
+router.post('/api/unfriend', validateResource(unFriendRequestSchema), deserializeUser, unFriendRequestHandler);
 
-router.post('/api/follow', validateResource(followUserSchema), followRequestHandler);
+router.post('/api/follow', validateResource(followUserSchema), deserializeUser, followRequestHandler);
 
-router.post('/api/unfollow', validateResource(unfollowUserSchema), unfollowRequestHandler);
+router.post('/api/unfollow', validateResource(unfollowUserSchema), deserializeUser, unfollowRequestHandler);
 
-router.post('/api/block_user', validateResource(blockUserSchema), blockUserHandler);
+router.post('/api/block_user', validateResource(blockUserSchema), deserializeUser, blockUserHandler);
 
-//router.post('/api/report_user', validateResource(reportUserSchema), reportUserHandler);
+//router.post('/api/report_user', validateResource(reportUserSchema), deserializeUser, reportUserHandler);
 
 /********************************************************/
 

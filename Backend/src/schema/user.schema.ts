@@ -125,10 +125,7 @@ export const blockUserSchema = object({
     type: string({
       required_error: 'type is required',
     }),
-    username1: string({
-      required_error: 'Username is required',
-    }),
-    username2: string({
+    username: string({
       required_error: 'Username is required',
     }),
   }),
@@ -136,10 +133,7 @@ export const blockUserSchema = object({
 
 export const followUserSchema = object({
   body: object({
-    username1: string({
-      required_error: 'Username is required',
-    }),
-    username2: string({
+    username: string({
       required_error: 'Username is required',
     }),
   }),
@@ -147,10 +141,7 @@ export const followUserSchema = object({
 
 export const unfollowUserSchema = object({
   body: object({
-    username1: string({
-      required_error: 'Username is required',
-    }),
-    username2: string({
+    username: string({
       required_error: 'Username is required',
     }),
   }),

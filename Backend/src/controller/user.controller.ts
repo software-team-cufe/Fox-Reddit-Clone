@@ -483,21 +483,27 @@ export async function getUserOverviewHandler(req: Request, res: Response, next: 
 
 /****************************** BOUDY ***********************************/
 
-export async function getFriendHandler(req: Request, res: Response) {
+export async function getUserHandler(req: Request, res: Response) {
   try {
     const username: string = req.params.username as string;
-    const user = await findUserByUsername(username);
+    const friend = await findUserByUsername(username);
+    const user = await findUserByUsername(res.locals.user.username);
 
     if (!user) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else if (!friend) {
       return res.status(404).json({
         status: 'failed',
-        message: 'friend is not found',
+        message: 'User is not found',
       });
     } else {
       res.status(200).json({
-        id: user._id,
-        avatar: user.avatar,
-        about: user.about,
+        id: friend._id,
+        avatar: friend.avatar,
+        about: friend.about,
       });
     }
   } catch (error) {
@@ -510,10 +516,8 @@ export async function getFriendHandler(req: Request, res: Response) {
 }
 
 export async function getALLFriendsHandler(req: Request, res: Response) {
-  const { username } = req.body;
-  //const username = res.local.user;
+  const user = await findUserByUsername(res.locals.user.username);
 
-  const user = await findUserByUsername(username);
   try {
     if (!user) {
       return res.status(401).json({
@@ -551,8 +555,7 @@ export async function friendRequestHandler(req: Request<friendRequest['body']>, 
   try {
     const { username, type } = req.body;
     const reciever = await findUserByUsername(username);
-    const sender = reciever;
-    //const sender = res.local.user;
+    const sender = await findUserByUsername(res.locals.user.username);
 
     if (!reciever && !sender) {
       return res.status(405).json({
@@ -602,8 +605,7 @@ export async function unFriendRequestHandler(req: Request<unFriendRequest['body'
   try {
     const { username, type } = req.body;
     const reciever = await findUserByUsername(username);
-    const sender = reciever;
-    //const sender = res.local.user;
+    const sender = await findUserByUsername(res.locals.user.username);
 
     if (!reciever && !sender) {
       return res.status(405).json({
@@ -648,18 +650,12 @@ export async function unFriendRequestHandler(req: Request<unFriendRequest['body'
     });
   }
 }
-// export async function reportUserHandler(req: Request<reportUser['body']>, res: Response) {
-//   const { usernameid } = req.body;
-
-//   const user = await findUserByUsername(usernameid);
-// }
 
 export async function blockUserHandler(req: Request<blockUserInput['body']>, res: Response) {
   try {
-    const { username1, username2, type } = req.body; // type block or unblock
-    const blocked = await findUserByUsername(username1);
-    const blocker = await findUserByUsername(username2);
-    //const blocker = res.local.user;
+    const { username, type } = req.body;
+    const blocked = await findUserByUsername(username);
+    const blocker = await findUserByUsername(res.locals.user.username);
 
     if (!blocked && !blocker) {
       return res.status(405).json({
@@ -711,10 +707,9 @@ export async function blockUserHandler(req: Request<blockUserInput['body']>, res
 
 export async function followRequestHandler(req: Request<followUserInput['body']>, res: Response) {
   try {
-    const { username1, username2 } = req.body; // type block or unblock
-    const followed = await findUserByUsername(username1);
-    const follows = await findUserByUsername(username2);
-    //const followes = res.local.user;
+    const { username } = req.body;
+    const followed = await findUserByUsername(username);
+    const follows = await findUserByUsername(res.locals.user.username);
 
     if (!followed && !follows) {
       return res.status(405).json({
@@ -756,10 +751,9 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
 
 export async function unfollowRequestHandler(req: Request<unfollowUserInput['body']>, res: Response) {
   try {
-    const { username1, username2 } = req.body; // type block or unblock
-    const followed = await findUserByUsername(username1);
-    const follows = await findUserByUsername(username2);
-    //const followes = res.local.user;
+    const { username } = req.body;
+    const followed = await findUserByUsername(username);
+    const follows = await findUserByUsername(res.locals.user.username);
 
     if (!followed && !follows) {
       return res.status(405).json({
@@ -792,10 +786,8 @@ export async function unfollowRequestHandler(req: Request<unfollowUserInput['bod
 }
 
 export async function getALLFollowersHandler(req: Request, res: Response) {
-  const { username } = req.body;
-  //const username = res.local.user;
+  const user = await findUserByUsername(res.locals.user.username);
 
-  const user = await findUserByUsername(username);
   try {
     if (!user) {
       return res.status(401).json({
@@ -828,11 +820,9 @@ export async function getALLFollowersHandler(req: Request, res: Response) {
   }
 }
 
-export async function getALLFollowedHandler(req: Request, res: Response) {
-  const { username } = req.body;
-  //const username = res.local.user;
+export async function getALLFollowingHandler(req: Request, res: Response) {
+  const user = await findUserByUsername(res.locals.user.username);
 
-  const user = await findUserByUsername(username);
   try {
     if (!user) {
       return res.status(401).json({
@@ -842,7 +832,7 @@ export async function getALLFollowedHandler(req: Request, res: Response) {
     } else if (!user.followers || user.followers.length === 0) {
       return res.status(402).json({
         status: 'failed',
-        message: 'User does not have followed',
+        message: 'User does not have followings',
       });
     } else {
       const followedIDs = user.followers ? user.followers.map((followedID) => followedID.toString()) : [];
