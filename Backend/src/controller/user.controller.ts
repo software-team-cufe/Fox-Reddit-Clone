@@ -27,7 +27,7 @@ import { sendEmail, generateVerificationLinkToken, generatePasswordResetLinkToke
 import { signJwt, verifyJwt } from '../utils/jwt';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
-import { UserModel, privateFields } from '../model/user.model';
+import { UserModel, Vote } from '../model/user.model';
 import { omit } from 'lodash';
 import { get } from 'config';
 import PostModel from '../model/posts.model';
@@ -35,6 +35,7 @@ import { userComments } from '../service/comment.service';
 import { userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
+import { Types } from 'mongoose';
 /**
  * Handles the creation of a user.
  *
@@ -309,18 +310,38 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
 
 export async function getUpvotedPostsByUsername(req: Request, res: Response) {
   try {
-    // Extract username from req.params
+    // Extract username, limit, count, and page from req.params
     const { username } = req.params;
+    // Convert limit, count, and page to numbers (defaults: limit = 10, count = 0, page = 1)
+    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
+    const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
+    const page = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
+
+    // Calculate skip based on page and count
+    const skip = (page - 1) * count;
+
     // Find the user by username
     const user = await UserModel.findOne({ username });
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     // Retrieve the upvoted post IDs from the user document
-    const upvotedPostIds = user.upvotedPosts;
-    // Query the Post model to retrieve the upvoted posts
-    const upvotedPosts = await PostModel.find({ _id: { $in: upvotedPostIds } });
+    let upvotedPostIds: string[] = [];
+    if (user.hasVote) {
+      upvotedPostIds = user.hasVote
+        .filter((vote) => vote.type === 1 && vote.postID) // Filter for upvotes and ensure postID is defined
+        .map((vote) => (vote.postID as Types.ObjectId).toString()); // Convert ObjectId to string
+    } else {
+      upvotedPostIds = [];
+    }
+
+    // Query the Post model to retrieve the upvoted posts with pagination
+    const upvotedPosts = await PostModel.find({ _id: { $in: upvotedPostIds } })
+      .skip(skip)
+      .limit(limit);
+
     return res.json(upvotedPosts);
   } catch (error) {
     console.error('Error fetching upvoted posts:', error);
@@ -330,8 +351,15 @@ export async function getUpvotedPostsByUsername(req: Request, res: Response) {
 
 export async function getDownvotedPostsByUsername(req: Request, res: Response) {
   try {
-    // Extract username from req.params
+    // Extract username, limit, count, and page from req.params
     const { username } = req.params;
+    // Convert limit, count, and page to numbers (defaults: limit = 10, count = 0, page = 1)
+    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
+    const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
+    const page = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
+
+    // Calculate skip based on page and count
+    const skip = (page - 1) * count;
 
     // Find the user by username
     const user = await UserModel.findOne({ username });
@@ -341,12 +369,21 @@ export async function getDownvotedPostsByUsername(req: Request, res: Response) {
     }
 
     // Retrieve the upvoted post IDs from the user document
-    const downvotedPostIds = user.downvotedPosts;
+    let downvotedPostIds: string[] = [];
+    if (user.hasVote) {
+      downvotedPostIds = user.hasVote
+        .filter((vote) => vote.type === -1 && vote.postID) // Filter for upvotes and ensure postID is defined
+        .map((vote) => (vote.postID as Types.ObjectId).toString()); // Convert ObjectId to string
+    } else {
+      downvotedPostIds = [];
+    }
 
-    // Query the Post model to retrieve the upvoted posts
-    const downvotedPosts = await PostModel.find({ _id: { $in: downvotedPostIds } });
+    // Query the Post model to retrieve the upvoted posts with pagination
+    const upvotedPosts = await PostModel.find({ _id: { $in: downvotedPostIds } })
+      .skip(skip)
+      .limit(limit);
 
-    return res.json(downvotedPosts);
+    return res.json(upvotedPosts);
   } catch (error) {
     console.error('Error fetching upvoted posts:', error);
     return res.status(500).json({ error: 'Internal Server Error' });

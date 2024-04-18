@@ -406,5 +406,5 @@ export class User {
 }
 
 export const UserModel = getModelForClass(User);
-
+export { Vote };
 export default UserModel;
