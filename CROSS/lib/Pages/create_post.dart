@@ -91,14 +91,15 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
-  Future<void> submitPost(String title, String text) async {
+  Future<void> submitPost(
+      String title, String text, bool isNsfw, bool isSpoiler) async {
     final postData = {
       'title': title,
       'text': text,
-      'attachments': [], // Add attachments if any
+      'attachments': ['screen.png'], // Add attachments if any
       'nsfw': isNsfw, // Include value of NSFW switch
       'spoiler': isSpoiler, // Include value of spoiler switch
-      'CommunityID': '', // Add community ID if needed
+      // 'CommunityID': '', // Add community ID if needed
     };
 
     final response = await http.post(
@@ -149,7 +150,7 @@ class _CreatePostState extends State<CreatePost> {
                           return;
                         }
                         // Proceed with submitting post
-                        submitPost(title, body);
+                        submitPost(title, body, isNsfw, isSpoiler);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
