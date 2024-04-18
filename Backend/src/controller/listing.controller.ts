@@ -939,111 +939,40 @@ export async function submitPostHandler(req: Request, res: Response) {
 
 /*YOUSEF PHASE 3 WORK */
 
-export async function getBestPosts(req: Request, res: Response) {
+export async function getSortedPosts(req: Request, res: Response) {
   try {
     const sub = req.params.subreddit;
     const subreddit = await findCommunityByName(sub);
-
+    const sort = req.params.sort;
     // Access query parameters and parse them into numbers
     const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
     const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
-
-    let bestPosts;
+    const page = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
+    let Posts;
     if (subreddit) {
-      bestPosts = await getBestPostsFromSubreddit(sub, limit, count);
+      if (sort) {
+        if (sort == 'best') Posts = await getBestPostsFromSubreddit(sub, limit, page, count);
+        if (sort == 'hot') Posts = await getHotPostsFromSubreddit(sub, limit, page, count);
+        if (sort == 'Top') Posts = await getTopPostsFromSubreddit(sub, limit, page, count);
+        if (sort == 'new') Posts = await getNewPostsFromSubreddit(sub, limit, page, count);
+        if (sort == 'random') Posts = await getRandomPostsFromSubreddit(sub, limit, page, count);
+      } else {
+        Posts = await getRandomPostsFromSubreddit(sub, limit, page, count);
+      }
     } else {
-      bestPosts = await getBestPostsFromRandom(limit, count);
+      if (sort) {
+        if (sort == 'best') Posts = await getBestPostsFromRandom(limit, page, count);
+        if (sort == 'hot') Posts = await getHotPostsFromRandom(limit, page, count);
+        if (sort == 'Top') Posts = await getTopPostsFromRandom(limit, page, count);
+        if (sort == 'new') Posts = await getNewPostsFromRandom(limit, page, count);
+        if (sort == 'random') Posts = await getRandomPostsFromRandom(limit, page, count);
+      } else {
+        Posts = await getRandomPostsFromRandom(limit, page, count);
+      }
     }
-    res.json(bestPosts);
+    res.json(Posts);
   } catch (error) {
     console.error('Error getting Best posts:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-
-export async function getHotPosts(req: Request, res: Response) {
-  try {
-    const sub = req.params.subreddit;
-    const subreddit = await findCommunityByName(sub);
-
-    // Access query parameters and parse them into numbers
-    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
-    const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
-
-    let hotPosts;
-    if (subreddit) {
-      hotPosts = await getHotPostsFromSubreddit(sub, limit, count);
-    } else {
-      hotPosts = await getHotPostsFromRandom(limit, count);
-    }
-    res.json(hotPosts);
-  } catch (error) {
-    console.error('Error getting Hot posts:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-
-export async function getNewPosts(req: Request, res: Response) {
-  try {
-    const sub = req.params.subreddit;
-    const subreddit = await findCommunityByName(sub);
-
-    // Access query parameters and parse them into numbers
-    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
-    const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
-
-    let NewPosts;
-    if (subreddit) {
-      NewPosts = await getNewPostsFromSubreddit(sub, limit, count);
-    } else {
-      NewPosts = await getNewPostsFromRandom(limit, count);
-    }
-    res.json(NewPosts);
-  } catch (error) {
-    console.error('Error getting New posts:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-
-export async function getTopPosts(req: Request, res: Response) {
-  try {
-    const sub = req.params.subreddit;
-    const subreddit = await findCommunityByName(sub);
-
-    // Access query parameters and parse them into numbers
-    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
-    const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
-
-    let TopPosts;
-    if (subreddit) {
-      TopPosts = await getTopPostsFromSubreddit(sub, limit, count);
-    } else {
-      TopPosts = await getTopPostsFromRandom(limit, count);
-    }
-    res.json(TopPosts);
-  } catch (error) {
-    console.error('Error getting Top posts:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-export async function getRandomPosts(req: Request, res: Response) {
-  try {
-    const sub = req.params.subreddit;
-    const subreddit = await findCommunityByName(sub);
-
-    // Access query parameters and parse them into numbers
-    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
-    const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
-
-    let RandomPosts;
-    if (subreddit) {
-      RandomPosts = await getRandomPostsFromSubreddit(sub, limit, count);
-    } else {
-      RandomPosts = await getRandomPostsFromRandom(limit, count);
-    }
-    res.json(RandomPosts);
-  } catch (error) {
-    console.error('Error getting Random posts:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
