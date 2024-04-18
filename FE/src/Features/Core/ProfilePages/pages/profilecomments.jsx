@@ -23,14 +23,13 @@ function ProfileComments({ using, context }) {
     const limitpage = 5;
     //fetch comments on load and put into comments array
     const fetchInitialComments = () => {
-        userAxios.get(`/user/${using}/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/boudie_test/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                console.log(response.data.comments);
                 const newComments = response.data.comments.map(comment => ({
                     user: {
                         image: comment.user.avatar,
                         Username: comment.user.username,
-                        id: comment.user.userID
+                        id: comment.user.authorID
                     },
                     info: {
                         votes: comment.votesCount,

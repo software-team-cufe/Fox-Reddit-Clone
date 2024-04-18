@@ -22,7 +22,7 @@ export default function ProfileHidden({ using }) {
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage, setcurrentpage] = useState(0);
+    const [currentpage, setcurrentpage] = useState(1);
     const limitpage = 2;
 
     const unhidePost = (postId) => {
@@ -40,7 +40,7 @@ export default function ProfileHidden({ using }) {
     //fetch posts on load and put into posts array
     useEffect(() => {
         setLoading(true);
-        axios.get(`http://localhost:3002/posts?_limit=${limitpage}&_start=${currentpage}`)
+        axios.get(`http://localhost:3002/posts?_page=${currentpage}&_limit=${limitpage}`)
             .then(response => {
                 const newPosts = response.data
                     .filter(post => post.hidden === true)
@@ -59,7 +59,6 @@ export default function ProfileHidden({ using }) {
                         video: null,
                         hidden: post.hidden
                     }));
-                console.log(newPosts);
                 setPosts(newPosts);
                 setLoading(false);
             })
@@ -71,7 +70,7 @@ export default function ProfileHidden({ using }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        axios.get(`http://localhost:3002/posts?_start=${currentpage + limitpage}&_limit=${limitpage}`)
+        axios.get(`http://localhost:3002/posts?_start=${currentpage + 1}&_limit=${limitpage}`)
             .then(response => {
                 if (response.data.length < limitpage) {
                     setpagedone(true);
@@ -96,7 +95,7 @@ export default function ProfileHidden({ using }) {
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
-                setcurrentpage(limitpage + currentpage);
+                setcurrentpage(1 + currentpage);
 
             })
             .catch(error => {

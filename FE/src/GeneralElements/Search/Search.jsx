@@ -24,6 +24,7 @@ const SearchComponent = () => {
     const [selected, setSelected] = useState("");
     const [Focus, setFocus] = useState(false);
     const navigator = useNavigate();
+    const [hideit, sethideit] = useState(false);
 
     useEffect(() => {
         const timer = setTimeout(goSearch, 200);
@@ -34,9 +35,14 @@ const SearchComponent = () => {
 
     const navToSearch = (value) => {
         setSelected(value);
+        sethideit(true);
         navigator(`/search/${value}`);
     };
 
+    const handlechange = (comingvalue) => {
+        setSearch(comingvalue);
+        sethideit(false);
+    };
     const goSearch = () => {
         if (search) {
             setShowSelector(true);
@@ -65,7 +71,7 @@ const SearchComponent = () => {
 
                 <div className="flex-1">
                     <input type="text" value={search}
-                        onChange={e => setSearch(e.target.value)} placeholder="Search"
+                        onChange={e => handlechange(e.target.value)} placeholder="Search"
                         className="w-full border-0 focus:border-0 
                          focus:outline-none focus:ring-0 py-1 px-0"
                         onFocus={() => { setFocus(true); }}
@@ -88,13 +94,13 @@ const SearchComponent = () => {
                                 ))}
 
 
-                                <div onClick={() => navToSearch(search)}
+                                {!hideit && <div onClick={() => navToSearch(search)}
                                     className="text-gray-500 h-6 flex rounded p-2 pb-8 hover:bg-gray-100">
                                     <Search size={16} className='mx-4 ' />
                                     <p className='text-sm'>
                                         Search for {search}
                                     </p>
-                                </div>
+                                </div>}
 
                             </div>
                         </div>

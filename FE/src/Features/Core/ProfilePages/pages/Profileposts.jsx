@@ -26,7 +26,7 @@ export default function ProfilePosts({ using, context }) {
 
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
-        userAxios.get(`/user/${using}/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`user/boudie_test/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
