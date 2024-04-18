@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:reddit_fox/GeneralWidgets/droplist.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
+import 'package:reddit_fox/Pages/settings/blockedAccounts.dart';
 import 'package:reddit_fox/Pages/settings/chatPermission.dart';
 import 'package:reddit_fox/Pages/settings/email.dart';
 import 'package:reddit_fox/Pages/settings/notificationSettings.dart';
@@ -39,7 +42,7 @@ class _AccSettingState extends State<AccSetting> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the accessToken variable
-        accessToken = sharedPrefValue.getString('token');
+        accessToken = sharedPrefValue.getString('mocktoken');
       });
     });
   }
@@ -510,7 +513,9 @@ class _AccSettingState extends State<AccSetting> {
                   children: [
                     const Text('Safety'),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(const BlockedAccounts());
+                      },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

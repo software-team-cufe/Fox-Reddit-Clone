@@ -7,6 +7,7 @@ import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
 import 'package:reddit_fox/features/auth/screens/switch_screen.dart';
 import 'package:reddit_fox/firebase_options.dart';
 import 'package:reddit_fox/theme/pallete.dart';
+import 'package:reddit_fox/Pages/settings/setting.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

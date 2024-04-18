@@ -32,7 +32,7 @@ class _settingState extends State<setting> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        token = sharedPrefValue.getString('token');
+        token = sharedPrefValue.getString('mocktoken');
         getData(token);
       });
     });

@@ -30,10 +30,10 @@ class _AuthContainerState extends State<AuthContainer> {
       setState(() {
         // Store the token in the access_token variable
 
-        // saveToken('ahmedtoken');
+        saveToken('jessicatoken', "mocktoken");
         // sharedPrefValue.remove('token');
 
-        access_token = sharedPrefValue.getString('token');
+        access_token = sharedPrefValue.getString('mocktoken');
 
         print(access_token);
       });
@@ -85,8 +85,8 @@ class CurrentUserData {
 
     SharedPreferences.getInstance().then((sharedPrefValue) {
       // Store the token in the access_token variable
-      // access_token = sharedPrefValue.getString('token');
-      access_token = sharedPrefValue.getString('token');
+      // access_token = sharedPrefValue.getString('mocktoken');
+      access_token = sharedPrefValue.getString('mocktoken');
     });
   }
 

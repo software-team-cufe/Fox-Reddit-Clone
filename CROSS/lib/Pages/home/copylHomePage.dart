@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        access_token = sharedPrefValue.getString('token');
+        access_token = sharedPrefValue.getString('mocktoken');
       });
     });
   } // Declare _selectedItem here

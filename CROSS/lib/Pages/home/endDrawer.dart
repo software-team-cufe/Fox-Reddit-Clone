@@ -35,12 +35,16 @@ class _endDrawerState extends State<endDrawer> {
 
   Future<int> fetchUserID(String accessToken) async {
     var url = Uri.parse(ApiRoutesMockserver.getUserByToken(accessToken));
+    print(accessToken);
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $accessToken'},
     );
     if (response.statusCode == 200) {
       List<dynamic> responseData = json.decode(response.body);
+      print(response.body);
+      print(response.statusCode);
+      print("response.statusCode");
       if (responseData.isNotEmpty &&
           responseData[0] is Map<String, dynamic> &&
           responseData[0].containsKey('id')) {

@@ -12,7 +12,7 @@ import 'package:share/share.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key, Key? key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        access_token = sharedPrefValue.getString('token');
+        access_token = sharedPrefValue.getString('mocktoken');
       });
     });
   }
@@ -142,16 +142,21 @@ class _HomePageState extends State<HomePage> {
         ],
         title: PopupMenuButton<String>(
           icon: _selectedItem == 'Home'
-          ? Text(
-              "FOX",
-              style: (TextStyle(fontSize: 26, color: Color(0xFFe74c3c), fontWeight: FontWeight.bold,)),
-            )
-          : Text(
-              _selectedItem,
-              style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-
-          
+              ? const Text(
+                  "FOX",
+                  style: (TextStyle(
+                    fontSize: 26,
+                    color: Color(0xFFe74c3c),
+                    fontWeight: FontWeight.bold,
+                  )),
+                )
+              : Text(
+                  _selectedItem,
+                  style: const TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
           initialValue: _selectedItem,
           itemBuilder: (context) => [
             const PopupMenuItem(

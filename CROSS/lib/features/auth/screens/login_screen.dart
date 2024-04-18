@@ -31,9 +31,14 @@ class _LoginScreenState extends State<LoginScreen> {
       body: jsonEncode(logindata),
       headers: {'Content-Type': 'application/json'},
     );
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> user = jsonDecode(response.body);
+      print(response.body);
+      saveToken(user["accessToken"], 'backtoken');
+      saveToken('jessicatoken', 'mocktoken');
+
       Get.to(const HomePage());
     } else {
       return 'Invalid username or password';
@@ -117,14 +122,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-Future<void> saveToken(String token) async {
+Future<void> saveToken(String token, String mockBackend) //mocktoken,backtoken
+async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
+  await prefs.setString(mockBackend, token);
 }
 
-Future<String?> getToken() async {
+Future<String?> getToken(String mockBackend) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? token = prefs.getString('token');
+  String? token = prefs.getString(mockBackend);
   print(token);
   return token;
 }
