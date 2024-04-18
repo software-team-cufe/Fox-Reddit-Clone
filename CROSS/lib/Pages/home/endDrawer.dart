@@ -25,10 +25,12 @@ class endDrawer extends StatefulWidget {
 class _endDrawerState extends State<endDrawer> {
   late Future<String?> userId;
   late String? profilePic;
+  late String? accessToken;
 
   @override
   void initState() {
     super.initState();
+    accessToken = widget.token;
     // Fetch the user ID using the provided token
     userId = fetchUserID(widget.token!);
   }
@@ -43,6 +45,7 @@ class _endDrawerState extends State<endDrawer> {
       Map<String, dynamic> responseData = json.decode(response.body);
       print(response.statusCode);
       print("response.statusCode");
+      print(responseData);
       if (responseData.containsKey('user')) {
         Map<String, dynamic> user = responseData['user'];
         profilePic = user['avatar'];
@@ -109,7 +112,7 @@ class _endDrawerState extends State<endDrawer> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProfilePage(user_Id: snapshot.data!)),
+                                builder: (context) => ProfilePage(user_Id: snapshot.data!, myProfile: true,access_token:accessToken!,)),
                           );
                         },
                       ),
