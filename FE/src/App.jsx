@@ -57,6 +57,7 @@ function MainRoute() {
   // Store recentCommunities in local storage whenever it changes
   useEffect(() => {
     localStorage.setItem('recentCommunities', JSON.stringify(recentCommunities));
+    //localStorage.removeItem('recentCommunities');
   }, [recentCommunities]);
 
 
