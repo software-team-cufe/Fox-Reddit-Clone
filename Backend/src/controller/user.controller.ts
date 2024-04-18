@@ -431,6 +431,12 @@ export async function aboutHandler(req: Request, res: Response) {
  */
 export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
   try {
+    // Extract params
+    const user = await findUserByUsername(req.params.username as string);
+
+    if (!user) {
+      return res.status(404).send("This user doesn't exist!");
+    }
     const username: string = req.params.username as string;
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
@@ -456,6 +462,12 @@ export async function getUserSubmittedHandler(req: Request, res: Response, next:
  */
 export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
   try {
+    // Extract params
+    const user = await findUserByUsername(req.params.username as string);
+
+    if (!user) {
+      return res.status(404).send("This user doesn't exist!");
+    }
     const username: string = req.params.username as string;
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
@@ -481,6 +493,12 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
  */
 export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
   try {
+    // Extract params
+    const user = await findUserByUsername(req.params.username as string);
+
+    if (!user) {
+      return res.status(404).send("This user doesn't exist!");
+    }
     const username: string = req.params.username as string;
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
@@ -742,22 +760,22 @@ export async function getALLFollowersHandler(req: Request, res: Response) {
     } else if (!user.followers || user.followers.length === 0) {
       return res.status(402).json({
         status: 'failed',
-        message: 'User does not have followings',
+        message: 'User does not have followers',
       });
     } else {
       const followedIDs = user.followers ? user.followers.map((followedID) => followedID.toString()) : [];
       const followeds = await UserModel.find({ _id: { $in: followedIDs } });
-      const followedData = followeds.map((followed) => ({
+      const followersData = followeds.map((followed) => ({
         username: followed.username,
         about: followed.about,
         avatar: followed.avatar,
       }));
       res.status(200).json({
-        followedData,
+        followersData,
       });
     }
   } catch (error) {
-    console.error('Error in getALLFollowedHandler:', error);
+    console.error('Error in getALLFollowersHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
@@ -777,22 +795,22 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
     } else if (!user.userFollows || user.userFollows.length === 0) {
       return res.status(402).json({
         status: 'failed',
-        message: 'User does not have followers',
+        message: 'User does not have followings',
       });
     } else {
       const followersIDs = user.userFollows ? user.userFollows.map((followerID) => followerID.toString()) : [];
       const followers = await UserModel.find({ _id: { $in: followersIDs } });
-      const followersData = followers.map((follower) => ({
+      const followingsData = followers.map((follower) => ({
         username: follower.username,
         about: follower.about,
         avatar: follower.avatar,
       }));
       res.status(200).json({
-        followersData,
+        followingsData,
       });
     }
   } catch (error) {
-    console.error('Error in getALLFollowersHandler:', error);
+    console.error('Error in getALLFollowingHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
