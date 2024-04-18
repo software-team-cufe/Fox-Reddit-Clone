@@ -8,5 +8,5 @@ const router = express.Router();
 
 router.post('/api/auth/login', validateResource(createSessionSchema), createSessionHandeler);
 
-router.post('/api/sessions/refresh', refreshAccessTokenHandler);
+router.post('/api/auth/refresh', refreshAccessTokenHandler);
 export default router;

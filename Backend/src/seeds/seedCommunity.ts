@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { CommunityModel } from '../model/community.model';
-import UserModel from '../model/user.model';
+import UserModel, { User } from '../model/user.model';
 import PostModel from '../model/posts.model';
 import { faker } from '@faker-js/faker';
 
@@ -10,18 +10,22 @@ export async function seedCommunity() {
     // Generate data for one community
     for (let i = 0; i < 3; i++) {
       // Generating data for 3 communities
-      const randomPost = await PostModel.aggregate([{ $sample: { size: 1 } }]);
       // Fetch all users
       const allUsers = await UserModel.find();
 
       // Shuffle users to ensure randomness
-      const shuffledUsers = allUsers.sort(() => Math.random() - 0.5);
-
+      const shuffledUsers = shuffleArray(allUsers);
       // Select three unique users
-      const [member, creator, moderator] = shuffledUsers.slice(0, 3);
+      const [member, creator, moderator] = shuffledUsers.slice(i * 3, (i + 1) * 3);
+      // Generate a unique subreddit name
+      const subredditName = `example_subreddit_${i + 1}_${faker.internet.domainWord()}`;
+
+      // Select a random post for each community
+      const randomPost = await PostModel.aggregate([{ $sample: { size: 1 } }]);
+
       const communityData = {
         //  _id: new mongoose.Types.ObjectId(), // Generate a valid ObjectId string
-        subreddit: 'Example_Subreddit ' + faker.internet.displayName(), // Generate a random subreddit name
+        subreddit: subredditName, // Generate a random subreddit name
         description: 'This is a sample community description.' + faker.lorem.sentence(), // Generate a random description
         icon: faker.image.url(), // Generate a random image URL
         banner: faker.image.url(), // Generate a random image URL
@@ -46,7 +50,7 @@ export async function seedCommunity() {
           privacyType: faker.helpers.arrayElement(['public', 'private', 'restricted']), // Randomly choose from given options
           spamsNumBeforeRemove: faker.number.int({ min: 10, max: 100 }),
         },
-        members: Array.from({ length: faker.number.int({ min: 1, max: 2 }) }, () => ({
+        members: Array.from({ length: 1 }, () => ({
           userID: member._id,
           isMuted: {
             value: faker.datatype.boolean(),
@@ -105,4 +109,13 @@ export async function seedCommunity() {
   } catch (error) {
     console.error('Error seeding communities:', error);
   }
+}
+
+// Function to shuffle an array using Fisher-Yates algorithm
+function shuffleArray<T>(array: Array<T>): Array<T> {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

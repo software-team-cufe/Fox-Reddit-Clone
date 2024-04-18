@@ -49,7 +49,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
   try {
     const user = await createUser(body);
 
-    const { verify_link, verify_token } = generateVerificationLinkToken(String(user._id), user.verificationCode);
+    const { verify_link } = generateVerificationLinkToken(String(user._id), user.verificationCode);
     await sendEmail({
       to: user.email,
       from: {
@@ -60,10 +60,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
       text: ` click here to verify your account: ${verify_link}`,
     });
 
-    return res.status(200).json({
-      token: verify_token,
-      username: user.username,
-    });
+    return res.status(200);
   } catch (e: any) {
     if (e.code === 11000) {
       return res.status(409).json({

@@ -16,10 +16,10 @@ async function connectToDb() {
     log.info('Connected to MongoDB');
 
     //call seeding function to seed the database
-    // await seedCommunity();
+    //await seedCommunity();
     //log.info('Database seeded');
   } catch (e) {
-    // log.error('Error connecting to database or seeding:', e);
+    //log.error('Error connecting to database or seeding:', e);
     process.exit(1);
   }
 }
