@@ -25,12 +25,14 @@ const Dropdown = (props) => {
                     <div className="py-1 rounded-md bg-white shadow-xs" role="menu"
                         aria-orientation="vertical" aria-labelledby="options-menu">
                         {options.map((option) => (
-                            <a key={option} href="#" className="block  py-2 px-4 text-xs
-                             text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                            <button key={option} className="block w-full rounded  py-2 px-4 text-xs
+                            text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" onClick={() => {
                                     props.SetSelectedOption(option);
                                     toggleDropdown();
-                                }}>{option} Day</a>
+                                }}
+                            > {option} Day</button>
+
                         ))}
                     </div>
                 </div>

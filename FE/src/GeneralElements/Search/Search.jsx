@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom';
 
 const SearchComponent = () => {
     const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
@@ -20,8 +21,10 @@ const SearchComponent = () => {
     { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125" }]);
     const [search, setSearch] = useState('');
     const [showSelector, setShowSelector] = useState(false);
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState("");
     const [Focus, setFocus] = useState(false);
+    const navigator = useNavigate();
+    const [hideit, sethideit] = useState(false);
 
     useEffect(() => {
         const timer = setTimeout(goSearch, 200);
@@ -30,7 +33,16 @@ const SearchComponent = () => {
 
     }, [search]);
 
+    const navToSearch = (value) => {
+        setSelected(value);
+        sethideit(true);
+        navigator(`/search/${value}`);
+    };
 
+    const handlechange = (comingvalue) => {
+        setSearch(comingvalue);
+        sethideit(false);
+    };
     const goSearch = () => {
         if (search) {
             setShowSelector(true);
@@ -50,8 +62,8 @@ const SearchComponent = () => {
                 onClick={() => setShowSelector(false)}>
                 {selected &&
                     <div className="bg-gray-200 rounded-full flex items-center">
-                        <div className="p-2">{selected.name}</div>
-                        <div onClick={() => setSelected(null)} className="p-2 select-none rounded-r-md 
+                        <div className="p-2">{selected}</div>
+                        <div onClick={() => setSelected("")} className="p-2 select-none rounded-r-md 
                         cursor-pointer hover:bg-magma-orange-clear">
                             <X strokeWidth={1} size={12} className='hover:bg-slate-300 rounded' />
                         </div>
@@ -59,18 +71,18 @@ const SearchComponent = () => {
 
                 <div className="flex-1">
                     <input type="text" value={search}
-                        onChange={e => setSearch(e.target.value)} placeholder="Search"
+                        onChange={e => handlechange(e.target.value)} placeholder="Search"
                         className="w-full border-0 focus:border-0 
                          focus:outline-none focus:ring-0 py-1 px-0"
                         onFocus={() => { setFocus(true); }}
                         onBlur={() => { setFocus(false); }}
-                        onKeyDown={() => { if (search && event.keyCode === 13) setSelected(search) }} />
+                        onKeyDown={(e) => { if (search && e.key === 'Enter') navToSearch(search) }} />
                     {showSelector && (
                         <div className="absolute left-0 bg-white shadow h-max z-30 w-full rounded-b-md font-medium">
                             <div className="p-2 space-y-1">
                                 {filteredSearch.map((item, index) => (
                                     (
-                                        <div key={index} onClick={() => setSelected(item)}
+                                        <div key={index} onClick={() => navToSearch(item)}
                                             className="hover:bg-orange-100 flex cursor-pointer p-2 hover:border-light-blue-1">
                                             <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
                                             <div>
@@ -82,13 +94,13 @@ const SearchComponent = () => {
                                 ))}
 
 
-                                <div onClick={() => setSelected(item)}
+                                {!hideit && <div onClick={() => navToSearch(search)}
                                     className="text-gray-500 h-6 flex rounded p-2 pb-8 hover:bg-gray-100">
                                     <Search size={16} className='mx-4 ' />
                                     <p className='text-sm'>
                                         Search for {search}
                                     </p>
-                                </div>
+                                </div>}
 
                             </div>
                         </div>

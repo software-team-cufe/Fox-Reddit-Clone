@@ -1,9 +1,9 @@
 import React, { useContext, useRef } from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from 'axios';
-import Spinner from "@/GeneralElements/Spinner/Spinner";
-
+import { userAxios } from "@/Utils/UserAxios";
+import { useQuery } from "react-query";
 /**
  * Renders the profile posts component.
  *
@@ -18,20 +18,17 @@ export default function ProfilePosts({ using, context }) {
     // states for collecting posts from request and loading state
     const { selected, period } = useContext(context);
     const [Posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage,setcurrentpage] = useState(0);
-    const limitpage = 2;
+    const [currentpage,setcurrentpage] = useState(1);
+    const limitpage = 5;
 
     //fetch posts on load and put into posts array
-    useEffect(() => {
-        setLoading(true);
-        axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
-            //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
+    const fetchInitialPosts = () => {
+        userAxios.get(`user/boudie_test/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                const newPosts = response.data.map(post => ({
+                const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
@@ -45,19 +42,19 @@ export default function ProfilePosts({ using, context }) {
                     thumbnail: post.thumbnail,
                     video: null
                 }));
-
+                setcurrentpage(currentpage+1);
                 setPosts(newPosts);
-                setLoading(false);
             })
             .catch(error => {
                 console.error('Error:', error);
-                setLoading(false);
             });
-    }, [selected, period]);
+    };
+
+    const { isLoading:loading, error: postsError } = useQuery(['fetchInitialProfilePosts', selected, period],fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        axios.get(`http://localhost:3002/posts?_start=${currentpage+limitpage}&_limit=${limitpage}`)
+        userAxios.get(`/user/${using}/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 if(response.data.length <limitpage){
                     setpagedone(true);
@@ -79,7 +76,7 @@ export default function ProfilePosts({ using, context }) {
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
-                setcurrentpage(limitpage+currentpage);
+                setcurrentpage(1+currentpage);
 
             })
             .catch(error => {
@@ -91,7 +88,7 @@ export default function ProfilePosts({ using, context }) {
     if (loading) {
         return (
             <div role='poststab' className="w-100 h-100 flex flex-col items-center justify-center">
-                <Spinner className="h-24 w-24" />
+               <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }

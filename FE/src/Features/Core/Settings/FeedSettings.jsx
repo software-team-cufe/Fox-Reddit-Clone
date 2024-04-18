@@ -41,7 +41,7 @@ export default function FeedSettings() {
                  }
              }else{
                      tempArr.push(newComms[i]);
-             }
+            }
         
             }
             //console.log(tempArr);

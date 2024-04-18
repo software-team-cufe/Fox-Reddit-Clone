@@ -7,7 +7,6 @@ import { userAxios } from './Utils/UserAxios';
 import { useDispatch } from 'react-redux';
 import { logOutUser, setUser } from './hooks/UserRedux/UserModelSlice';
 import UserProvider from './hooks/UserRedux/UserProvider';
-
 import NotFoundPage from './Features/Core/404/NotFoundPage';
 import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
@@ -23,7 +22,9 @@ const unProtectedRoutes = [
 
 function MainRoute() {
   //store subreddits in array
-  const [recentCommunities, setRecentCommunities] = useState([]);
+  const [recentCommunities, setRecentCommunities] = useState(() => {
+    const storedCommunities = localStorage.getItem('recentCommunities');
+    return storedCommunities ? JSON.parse(storedCommunities) : [];});
 
 
   const path = window.location.pathname;
@@ -43,16 +44,21 @@ function MainRoute() {
     const match = path.match(exp);
     if (match) {
       const communityName = match[1];
-      if(!(recentCommunities.includes(communityName)))
-      {
+      if (!(recentCommunities.includes(communityName))) {
         if (recentCommunities.length < 5) {
           setRecentCommunities([...recentCommunities, communityName]);
         } else {
-            setRecentCommunities([...recentCommunities.slice(1), communityName]);
+          setRecentCommunities([...recentCommunities.slice(1), communityName]);
         }
-      }  
+      }
     }
-  }, [path]);
+  }, [path]); // Include recentCommunities in the dependency array
+
+  // Store recentCommunities in local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('recentCommunities', JSON.stringify(recentCommunities));
+    //localStorage.removeItem('recentCommunities');
+  }, [recentCommunities]);
 
 
 
@@ -81,7 +87,6 @@ function MainRoute() {
     return
   }
   if (data != null && localStorage.getItem('authorization') != null) {
-    console.log('aaaaaaaaaaaaaaaaaa');
     if (data.verifiedEmail && path == "/verify-email") {
       return <Navigate to={"/"} replace={true} />;
     }
@@ -110,7 +115,7 @@ function MainRoute() {
             "/register",
             "/forget-username",
             "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar RecentCommunities={[]} IsOpen={OpenSideBar} />
+          ].includes(window.location.pathname) && <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
         }
 
         <div className='h-full w-full overflow-y-auto lg:p-4'>

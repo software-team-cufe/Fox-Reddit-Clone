@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import axios from 'axios';
-import Spinner from "@/GeneralElements/Spinner/Spinner";
 import { ProfileContext } from "../ProfilePagesRoutes";
+import { useQuery } from "react-query";
+import { userAxios } from "../../../../Utils/UserAxios";
 
 /**
  * Renders the profile saved page.
@@ -18,20 +19,17 @@ export default function ProfileSaved({ using }) {
     // states for collecting saved posts from request and loading state
     const { selected, period } = useContext(ProfileContext);
     const [Posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage,setcurrentpage] = useState(0);
-    const limitpage = 2;
+    const [currentpage,setcurrentpage] = useState(1);
+    const limitpage = 5;
 
     //fetch posts on load and put into posts array
-    useEffect(() => {
-        setLoading(true);
-        axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
-            //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
+    const fetchInitialPosts = () => {
+        userAxios.get(`/user/${using}/saved?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                const newPosts = response.data.map(post => ({
+                const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
@@ -45,19 +43,19 @@ export default function ProfileSaved({ using }) {
                     thumbnail: post.thumbnail,
                     video: null
                 }));
-
+                setcurrentpage(currentpage+1);
                 setPosts(newPosts);
-                setLoading(false);
             })
             .catch(error => {
                 console.error('Error:', error);
-                setLoading(false);
             });
-    }, [selected, period]);
+    };
+
+    const { isLoading:loading, error: postsError } = useQuery(['fetchInitialProfileSaved', selected, period],fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        axios.get(`http://localhost:3002/posts?_start=${currentpage+limitpage}&_limit=${limitpage}`)
+        userAxios.get(`/user/${using}/saved?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 if(response.data.length <limitpage){
                     setpagedone(true);
@@ -79,7 +77,7 @@ export default function ProfileSaved({ using }) {
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
-                setcurrentpage(limitpage+currentpage);
+                setcurrentpage(1+currentpage);
 
             })
             .catch(error => {
@@ -91,7 +89,7 @@ export default function ProfileSaved({ using }) {
     if (loading) {
         return (
             <div role='savedtab' className="w-100 h-100 flex flex-col items-center justify-center">
-                <Spinner className="h-24 w-24" />
+                <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }
@@ -111,7 +109,7 @@ export default function ProfileSaved({ using }) {
                 <>
                     {/*no results view*/}
                     <img src={'/confusedSnoo.png'} className="w-16 h-24 mb-2" alt="Confused Snoo"></img>
-                    <p className="text-lg font-bold">u/{using} has no posts yet</p>
+                    <p className="text-lg font-bold">u/{using} has no saves yet</p>
                 </>
             )}
         </div>
