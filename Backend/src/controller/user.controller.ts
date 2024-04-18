@@ -31,7 +31,7 @@ import { UserModel, privateFields } from '../model/user.model';
 import { omit } from 'lodash';
 import { get } from 'config';
 import PostModel from '../model/posts.model';
-import { userCommets } from '../service/comment.service';
+import { userComments } from '../service/comment.service';
 import { userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
@@ -400,24 +400,29 @@ export async function aboutHandler(req: Request, res: Response) {
   }
 }
 /**
- * Get user posts
+ * Get user posts with pagination support.
  * @param {function} (req, res)
  * @returns {object} res
  */
 export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
-  let posts;
   try {
     const username: string = req.params.username as string;
-    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
-    if (!req.query || !username || isNaN(limit)) {
-      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
     }
-    const postIDS = await userSubmittedPosts(username);
-    posts = await userPosts(postIDS, limit);
+
+    const postIDS = await userSubmittedPosts(username, page, count);
+    const posts = await userPosts(postIDS, limit);
+
+    res.status(200).json({ posts });
   } catch (err) {
     return next(err);
   }
-  res.status(200).json({ posts });
 }
 /**
  * Get user posts
@@ -425,61 +430,63 @@ export async function getUserSubmittedHandler(req: Request, res: Response, next:
  * @returns {object} res
  */
 export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
-  let comments;
   try {
     const username: string = req.params.username as string;
-    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
-    if (!req.query || !username || isNaN(limit)) {
-      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
     }
-    const commmentsIDS = await userCommentsIds(username);
-    comments = await userCommets(commmentsIDS, limit);
+    const commmentsIDS = await userCommentsIds(username, page, count);
+    const comments = await userComments(commmentsIDS, limit);
+
+    res.status(200).json({ comments });
   } catch (err) {
     return next(err);
   }
-  res.status(200).json({
-    comments,
-  });
 }
 
-/**
- * Get user overview
- * @param {function} (req, res)
- * @returns {object} res
- */
-export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
-  try {
-    const username: string = req.params.username as string;
-    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
-    if (!req.query || !username || isNaN(limit)) {
-      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
-    }
-    // get user posts by username
-    const postIds = await userSubmittedPosts(username);
-    const posts = await userPosts(postIds, limit);
+// /**
+//  * Get user overview
+//  * @param {function} (req, res)
+//  * @returns {object} res
+//  */
+// export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const username: string = req.params.username as string;
+//     const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
+//     if (!req.query || !username || isNaN(limit)) {
+//       return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+//     }
+//     // get user posts by username
+//     const postIds = await userSubmittedPosts(username);
+//     const posts = await userPosts(postIds, limit);
 
-    // get user comments by username
-    const commentIds = await userCommentsIds(username);
-    const comments = await userCommets(commentIds, limit);
+//     // get user comments by username
+//     const commentIds = await userCommentsIds(username);
+//     const comments = await userCommets(commentIds, limit);
 
-    // get user replies by username
-    const replyIds = await userRepliesIds(username);
-    const replies = await userCommets(replyIds, limit);
+//     // get user replies by username
+//     const replyIds = await userRepliesIds(username);
+//     const replies = await userCommets(replyIds, limit);
 
-    // // Assuming mergeTwo returns an array of Post objects
-    // const merged = await mergeTwo(posts, comments);
-    // const overviewReturn = (await mergeTwo(merged, replies)).reverse();
+//     // // Assuming mergeTwo returns an array of Post objects
+//     // const merged = await mergeTwo(posts, comments);
+//     // const overviewReturn = (await mergeTwo(merged, replies)).reverse();
 
-    res.status(200).json({
-      //overview: overviewReturn,
-      posts,
-      comments,
-      replies,
-    });
-  } catch (err) {
-    next(err);
-  }
-}
+//     res.status(200).json({
+//       //overview: overviewReturn,
+//       posts,
+//       comments,
+//       replies,
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// }
 
 /****************************** BOUDY ***********************************/
 

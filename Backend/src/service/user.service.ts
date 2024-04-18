@@ -44,7 +44,7 @@ export async function findUserByUsername(username: string) {
   try {
     return await UserModel.findOne({ username });
   } catch (error) {
-    throw new appError('User not found ', 404); //vague error Re-throw the error to be caught by the caller
+    throw new appError('User not found ', 404); //vague error Re-throw the error to be caught by the caller
   }
 }
 /**
@@ -76,41 +76,68 @@ export async function findUserIdByUsername(username: string) {
 }
 
 /**
- * Finds user posts by username.
+ * Finds user posts by username with pagination support.
  *
  * @param username - The username of the user to find posts for.
- * @returns posts ids of the user  by username.
+ * @param page - The page number for pagination.
+ * @param count - The number of posts per page.
+ * @returns post ids of the user by username for the specified page.
  */
-export async function userSubmittedPosts(username: string) {
-  // Find the user by username and retrieve their user submitted posts
-  const user = await UserModel.findOne({ username: username }, 'hasPost');
+export async function userSubmittedPosts(username: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
+
+  // Find the user by username and retrieve their user submitted posts with pagination
+  const user = await UserModel.findOne({ username: username }, 'hasPost')
+    .lean()
+    .populate({
+      path: 'hasPost',
+      options: { skip: skip, limit: count },
+    });
+
   // If user is not found, throw an error
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
+
   // Extract the post IDs from the user's submitted posts if it exists
-  const postsIDS = user.hasPost ? user.hasPost.map((post) => post.toString()) : [];
+  const postIDs = user.hasPost ? user.hasPost.map((post) => post._id.toString()) : [];
+
   // Return the post IDs
-  return postsIDS;
+  return postIDs;
 }
+
 /**
- * Finds user comments by username.
+ * Finds user comments by username with pagination support.
  *
- * @param username - The username of the user to find posts for.
- * @returns comments ids of the user  by username.
+ * @param username - The username of the user to find comments for.
+ * @param page - The page number for pagination.
+ * @param count - The number of comments per page.
+ * @returns comment ids of the user by username for the specified page.
  */
-export async function userCommentsIds(username: string) {
-  // Find the user by username and retrieve their user comments
-  const user = await UserModel.findOne({ username: username }, 'hasComment');
+export async function userCommentsIds(username: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
+
+  // Find the user by username and retrieve their user submitted posts with pagination
+  const user = await UserModel.findOne({ username: username }, 'hasComment')
+    .lean()
+    .populate({
+      path: 'hasComment',
+      options: { skip: skip, limit: count },
+    });
+
   // If user is not found, throw an error
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
-  // Extract the post IDs from the user's comments if it exists
-  const commentsIDS = user.hasComment ? user.hasComment.map((comment) => comment.toString()) : [];
-  // Return the comments IDs
+
+  // Extract the comment IDs from the user's comments if it exists
+  const commentsIDS = user.hasComment ? user.hasComment.map((comment) => comment._id.toString()) : [];
+  // Return the comment IDs
   return commentsIDS;
 }
+
 /**
  * Finds user replies by username.
  *

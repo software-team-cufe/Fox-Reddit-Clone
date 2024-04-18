@@ -137,21 +137,18 @@ export async function findRandomPostsByRandom(): Promise<Post[]> {
     throw new Error('Error finding posts by community');
   }
 }
-async function userPosts(postIDs: string[], limit: number | undefined) {
-  // If the request didn't contain a limit in its query, set it to 10 by default
-  limit = limit || 10;
-
-  // Fetch comments based on the provided postIDs
+/**
+ * Retrieves posts based on their IDs.
+ *
+ * @param postIDs - Array of post IDs.
+ * @param limit - Maximum number of posts to retrieve.
+ * @returns An array of post objects.
+ */
+export async function userPosts(postIDs: string[], limit: number) {
+  // Assuming there's a PostModel that represents the posts in the database
   const posts = await PostModel.find({ _id: { $in: postIDs } }).limit(limit);
-
-  // Populate user and community information
-  //posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
-  //posts = await PostModel.populate(posts, { path: 'communityID', select: '_id icon' });
-
-  // Return the populated posts
   return posts;
 }
-export { userPosts };
 
 //post.service.ts
 // import PostModel, { Post } from '../model/posts.model';
