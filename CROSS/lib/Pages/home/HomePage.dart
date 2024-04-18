@@ -272,14 +272,13 @@ class _HomePageState extends State<HomePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => PostDetails(
-                                      redditName: post['redditName'],
-                                      title: post['title'],
-                                      picture: post['picture'],
-                                      votes: post['votes'],
-                                      commentsNo: post['commentsNo'],
-                                      creatorId: post['creatorId'],
-                                      postId: post['id']
-                                    ),
+                                        redditName: post['redditName'],
+                                        title: post['title'],
+                                        picture: post['picture'],
+                                        votes: post['votes'],
+                                        commentsNo: post['commentsNo'],
+                                        creatorId: post['creatorId'],
+                                        postId: post['id']),
                                   ),
                                 );
                               },

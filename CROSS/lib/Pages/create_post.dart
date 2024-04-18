@@ -1,28 +1,60 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/GeneralWidgets/poll.dart';
+import 'package:reddit_fox/GeneralWidgets/switchpost.dart';
 import 'package:reddit_fox/GeneralWidgets/textInput.dart';
 import 'package:reddit_fox/GeneralWidgets/browse_row.dart';
 import 'package:reddit_fox/GeneralWidgets/video_display.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
+import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreatePost extends StatefulWidget {
-  const CreatePost({super.key});
+  const CreatePost({Key? key}) : super(key: key);
 
   @override
   State<CreatePost> createState() => _CreatePostState();
 }
 
 class _CreatePostState extends State<CreatePost> {
+  late TextEditingController _titleController;
+  late TextEditingController _bodyController;
   Widget? addedWidget;
   bool isPollVisible = false;
   bool isIconSizeDoubled = false;
   double iconsize = 25.0;
   double arrowsize = 25.0;
-  late String imagePath;
-  late String videoPath;
-  bool isFieldEmpty = true;
+  bool isTitleEmpty = true;
+  bool isBodyEmpty = true;
+  late String access_token;
+
+  // Variables to hold the states of the switches
+  bool isSpoiler = false;
+  bool isNsfw = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController();
+    _bodyController = TextEditingController();
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        access_token = sharedPrefValue.getString('backtoken')!;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _bodyController.dispose();
+    super.dispose();
+  }
 
   void togglePollVisibility() {
     setState(() {
@@ -36,28 +68,18 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   void doubleIconSizeOnce() {
-    if (!isIconSizeDoubled) {
-      setState(() {
-        iconsize *= 2;
-        arrowsize = 0.0;
-        isIconSizeDoubled = true;
-      });
-    } else {
-      setState(() {
-        iconsize /= 2;
-        arrowsize = 25.0;
-        isIconSizeDoubled = false;
-      });
-    }
+    setState(() {
+      isIconSizeDoubled = !isIconSizeDoubled;
+      iconsize = isIconSizeDoubled ? 50.0 : 25.0;
+      arrowsize = isIconSizeDoubled ? 0.0 : 25.0;
+    });
   }
 
   void pickVideo() async {
     final pickedFile =
         await ImagePicker().pickVideo(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
-        videoPath = pickedFile.path;
-      });
+      final videoPath = pickedFile.path;
       print('Video picked: $videoPath');
       addWidget(VideoDisplay(videoPath: videoPath));
     }
@@ -67,6 +89,33 @@ class _CreatePostState extends State<CreatePost> {
     setState(() {
       addedWidget = widgetToAdd;
     });
+  }
+
+  Future<void> submitPost(
+      String title, String text, bool isNsfw, bool isSpoiler) async {
+    final postData = {
+      'title': title,
+      'text': text,
+      'attachments': ['screen.png'], // Add attachments if any
+      'nsfw': isNsfw, // Include value of NSFW switch
+      'spoiler': isSpoiler, // Include value of spoiler switch
+      // 'CommunityID': '', // Add community ID if needed
+    };
+
+    final response = await http.post(
+      Uri.parse('http://foxnew.southafricanorth.cloudapp.azure.com/api/submit'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        // Add any required headers
+      },
+      body: jsonEncode(postData),
+    );
+
+    if (response.statusCode == 201) {
+      print('Post submitted successfully');
+    } else {
+      print('Error submitting post: ${response.body}');
+    }
   }
 
   @override
@@ -94,33 +143,73 @@ class _CreatePostState extends State<CreatePost> {
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        final title = _titleController.text;
+                        final body = _bodyController.text;
+                        if (title.isEmpty || body.isEmpty) {
+                          // Show error message or handle empty fields
+                          return;
+                        }
+                        // Proceed with submitting post
+                        submitPost(title, body, isNsfw, isSpoiler);
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const BlankPage()));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage()),
+                        );
                       },
-                      style: ButtonStyle(
-                        backgroundColor: !isFieldEmpty
-                            ? MaterialStateProperty.all<Color>(Colors.blue)
-                            : MaterialStateProperty.all<Color>(Colors
-                                .grey), // Change colors based on isFieldEmpty condition
-                      ),
                       child: const Text('Next'),
                     )
                   ],
                 ),
-                MyTextInputWidget(
-                  inputTitle: 'Title',
-                  sheight: 50.0,
+                TextField(
+                  controller: _titleController,
+                  decoration: InputDecoration(
+                    labelText: 'Title',
+                  ),
                   onChanged: (text) {
                     setState(() {
-                      isFieldEmpty = text.isEmpty;
+                      isTitleEmpty = text.isEmpty;
                     });
                   },
                 ),
-                const MyTextInputWidget(
-                  inputTitle: 'body text(optional)',
-                  sheight: 300.0,
+                TextField(
+                  controller: _bodyController,
+                  decoration: InputDecoration(
+                    labelText: 'Body Text (optional)',
+                  ),
+                  onChanged: (text) {
+                    setState(() {
+                      isBodyEmpty = text.isEmpty;
+                    });
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Spoiler'),
+                    Switch(
+                      value: isSpoiler,
+                      onChanged: (value) {
+                        setState(() {
+                          isSpoiler = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('NSFW'),
+                    Switch(
+                      value: isNsfw,
+                      onChanged: (value) {
+                        setState(() {
+                          isNsfw = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
