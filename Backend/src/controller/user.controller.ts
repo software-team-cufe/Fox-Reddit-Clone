@@ -22,6 +22,7 @@ import {
   userSubmittedPosts,
   userCommentsIds,
   userRepliesIds,
+  findUserIdByUsername,
 } from '../service/user.service';
 import { sendEmail, generateVerificationLinkToken, generatePasswordResetLinkToken } from '../utils/mailer';
 import { signJwt, verifyJwt } from '../utils/jwt';
@@ -308,7 +309,7 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
 export async function getUpvotedPostsByUsername(req: Request, res: Response) {
   try {
     // Extract username, limit, count, and page from req.params
-    const { username } = req.params;
+    const username: string = req.params.username;
     // Convert limit, count, and page to numbers (defaults: limit = 10, count = 0, page = 1)
     const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
     const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
@@ -318,8 +319,11 @@ export async function getUpvotedPostsByUsername(req: Request, res: Response) {
     const skip = (page - 1) * count;
 
     // Find the user by username
-    const user = await UserModel.findOne({ username });
+    const userId = await findUserIdByUsername(username);
+    let user = null;
 
+    if (userId) user = await findUserById(userId);
+    console.log(user?.hasVote);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }

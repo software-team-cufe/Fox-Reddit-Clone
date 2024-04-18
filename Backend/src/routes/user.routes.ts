@@ -58,13 +58,13 @@ router.get('/user/:username/overview', getUserOverviewHandler);
 router.post('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
 router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 
-router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
+router.get('/api/v1/me/prefs', getCurrentUserPrefs);
 
-router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
+router.patch('/api/v1/me/prefs', editCurrentUserPrefs);
 
-router.patch('/api/user/:subreddit/upvoted', getUpvotedPostsByUsername);
+router.get('/api/user/:username/upvoted', getUpvotedPostsByUsername);
 
-router.patch('/api/user/:subreddit/downvoted', getDownvotedPostsByUsername);
+router.get('/api/user/:username/downvoted', getDownvotedPostsByUsername);
 
 router.get('/api/user/userIDfromToken', deserializeUser, getUserIDfromTokenHandler);
 
