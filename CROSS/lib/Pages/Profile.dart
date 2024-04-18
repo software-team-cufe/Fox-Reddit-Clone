@@ -9,7 +9,7 @@ import 'package:share/share.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key, required this.user_Id}) : super(key: key);
-  final int user_Id;
+  final String user_Id;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage>
   Future<void> fetchData() async {
     try {
       final response = await http
-          .get(Uri.parse(ApiRoutesMockserver.getUserById(widget.user_Id)));
+          .get(Uri.parse(ApiRoutesBackend.getUserById(widget.user_Id)));
       if (response.statusCode == 200) {
         setState(() {
           userData = json.decode(response.body);
@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage>
       }
 
       final postResponse = await http.get(
-          Uri.parse(ApiRoutesMockserver.getPostsByCreatorId(widget.user_Id)));
+          Uri.parse(ApiRoutesBackend.getPostsByCreatorId(widget.user_Id)));
       if (postResponse.statusCode == 200) {
         setState(() {
           userPosts =
