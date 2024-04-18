@@ -12,9 +12,7 @@ import 'package:share/share.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-  });
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -33,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        access_token = sharedPrefValue.getString('mocktoken');
+        access_token = sharedPrefValue.getString('backtoken');
       });
     });
   }
@@ -52,7 +50,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<String> fetchUserProfilePic(String accessToken) async {
-    var url = Uri.parse(ApiRoutesMockserver.getUserByToken(accessToken));
+    var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $accessToken'},

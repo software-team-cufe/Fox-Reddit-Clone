@@ -16,14 +16,14 @@ class endDrawer extends StatefulWidget {
   final double user_width;
   final String? token;
 
-  const endDrawer({super.key, required this.user_width, required this.token});
+  const endDrawer({Key? key, required this.user_width, required this.token}) : super(key: key);
 
   @override
   _endDrawerState createState() => _endDrawerState();
 }
 
 class _endDrawerState extends State<endDrawer> {
-  late Future<int> userId;
+  late Future<String?> userId;
   late String? profilePic;
 
   @override
@@ -33,30 +33,33 @@ class _endDrawerState extends State<endDrawer> {
     userId = fetchUserID(widget.token!);
   }
 
-  Future<int> fetchUserID(String accessToken) async {
-    var url = Uri.parse(ApiRoutesMockserver.getUserByToken(accessToken));
-    print(accessToken);
+  Future<String?> fetchUserID(String accessToken) async {
+    var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $accessToken'},
     );
     if (response.statusCode == 200) {
-      List<dynamic> responseData = json.decode(response.body);
-      print(response.body);
+      Map<String, dynamic> responseData = json.decode(response.body);
       print(response.statusCode);
       print("response.statusCode");
-      if (responseData.isNotEmpty &&
-          responseData[0] is Map<String, dynamic> &&
-          responseData[0].containsKey('id')) {
-        profilePic = responseData[0]['profilePic'];
-        return responseData[0]['id'];
+      if (responseData.containsKey('user')) {
+        Map<String, dynamic> user = responseData['user'];
+        profilePic = user['avatar'];
+        if(profilePic == 'default.jpg'){
+          profilePic = null;
+        }
+        print("profilePic");
+        print("user ID " + user['_id']);
+        return user['_id'].toString();
       } else {
-        throw Exception('User ID is not present or not an integer');
+        throw Exception('User data is not present in the response');
       }
     } else {
-      throw Exception('Failed to fetch user ID');
+      throw Exception('Failed to fetch user data, status code: ${response.statusCode}');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,7 @@ class _endDrawerState extends State<endDrawer> {
           width: widget.user_width,
           child: Drawer(
             backgroundColor: Colors.black,
-            child: FutureBuilder<int>(
+            child: FutureBuilder<String?>(
               future: userId,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -106,8 +109,7 @@ class _endDrawerState extends State<endDrawer> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ProfilePage(user_Id: snapshot.data!)),
+                                builder: (context) => ProfilePage(user_Id: snapshot.data!)),
                           );
                         },
                       ),
@@ -136,15 +138,18 @@ class _endDrawerState extends State<endDrawer> {
                         leading: const Icon(Icons.logout),
                         title: const Text('Logout'),
                         onTap: () async {
-                          // Delete the saved token (assuming you're using shared preferences)
-                          // Replace 'token' with the key you used to save the token
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          await prefs.remove('token');
+                          // Delete the saved tokens from SharedPreferences
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          await prefs.remove('backtoken');
+                          await prefs.remove('mocktoken');
 
-                          Get.off(() => const AuthContainer());
+                          // Navigate to the authentication screen
+                         Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => AuthContainer()),
+                        );
                         },
                       ),
+
                     ],
                   );
                 }
