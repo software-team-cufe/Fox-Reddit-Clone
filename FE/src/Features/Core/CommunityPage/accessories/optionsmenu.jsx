@@ -6,7 +6,7 @@ import { Fragment } from "react";
   
 export default function optionsMenu(muted, favourited, name) {
     return (
-      <Menu as="div" className="relative inline-block text-left z-40">
+      <Menu as="div" className="relative inline-block text-left z-30">
   
         {/* Sort button header*/}
         <Menu.Button role="dropDownButton" className="inline-flex justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full w-fill py-2 px-2 bg-white text-sm text-gray-900 ">

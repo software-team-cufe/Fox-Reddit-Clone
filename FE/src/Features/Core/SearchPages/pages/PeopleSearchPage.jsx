@@ -72,7 +72,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   if (loading) {
     return (
       <div role="peoplestab" className="w-100 h-100 flex flex-col items-center justify-center">
-        <Spinner className="h-24 w-24" />
+        <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
       </div>
     )
   }

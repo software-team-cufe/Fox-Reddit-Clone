@@ -63,11 +63,11 @@ export default function CommunityPage() {
       return commData;
   };
   
-  let { data: comm, isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity });
+  let { data: comm, isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
 
   const fetchInitialPosts = () => {
     setFeed(true);
-    userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&count=0&limit=${limitpage}`)
+    userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`)
       .then((response) => {
         const newPosts = response.data.map(post => ({
           subReddit: {
@@ -92,8 +92,7 @@ export default function CommunityPage() {
         setFeed(false);
       })};
   
-      const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], 
-      () => fetchInitialPosts(), {enabled: !loading});
+      const { error: postsError } = useQuery(['fetchInitialPosts', selected, period],fetchInitialPosts, {enabled: !loading, retry: 0, refetchOnWindowFocus: false });
 
   const swtichJoinState = () => {
 
@@ -115,11 +114,9 @@ export default function CommunityPage() {
     navigator('/submit');
   }
 
-
-
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    userAxios.get(`r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&count=0&limit=${limitpage}`)
+    userAxios.get(`r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`)
     .then(response => {
         if(response.data.length <limitpage){
             setpagedone(true);
@@ -154,7 +151,7 @@ export default function CommunityPage() {
   if (loading) {
     return (
       <div className="w-100 h-100 flex flex-col items-center justify-center">
-        <Spinner className="h-24 w-24" />
+        <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
       </div>
     )
   }
@@ -252,7 +249,7 @@ export default function CommunityPage() {
               )}</div>
             ) : (
               <div className="w-100 h-100 flex flex-col items-center justify-center">
-                <Spinner className="h-24 w-24" />
+                <img src={'/logo.png'} className="h-12 mt-24 w-12 mx-auto animate-ping" alt="Logo" />
               </div>
             )}
           </div>
