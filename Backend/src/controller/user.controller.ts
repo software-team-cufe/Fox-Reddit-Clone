@@ -510,29 +510,39 @@ export async function getUserOverviewHandler(req: Request, res: Response, next: 
 
 export async function getUserHandler(req: Request, res: Response) {
   try {
+    // Extract username from request parameters
     const username: string = req.params.username as string;
-    const friend = await findUserByUsername(username);
-    const user = await findUserByUsername(res.locals.user.username);
 
-    if (!user || !res.locals.user.username) {
+    // Check if res.locals.user is defined and contains the expected properties
+    if (!res.locals.user || !res.locals.user.username) {
       return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',
       });
-    } else if (!friend) {
+    }
+
+    // Find the friend user by username
+    const friend = await findUserByUsername(username);
+
+    // Find the user by username from res.locals.user
+    const user = await findUserByUsername(res.locals.user.username);
+
+    // Check if friend user exists
+    if (!friend) {
       return res.status(404).json({
         status: 'failed',
         message: 'User is not found',
       });
-    } else {
-      res.status(200).json({
-        id: friend._id,
-        avatar: friend.avatar,
-        about: friend.about,
-      });
     }
+
+    // Respond with friend user's details
+    return res.status(200).json({
+      username: friend.username,
+      avatar: friend.avatar,
+      about: friend.about,
+    });
   } catch (error) {
-    console.error('Error in friendRequestUserHandler:', error);
+    console.error('Error in getUserHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
