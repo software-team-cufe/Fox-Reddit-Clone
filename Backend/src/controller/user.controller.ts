@@ -521,29 +521,39 @@ export async function getUserOverviewHandler(req: Request, res: Response, next: 
 
 export async function getUserHandler(req: Request, res: Response) {
   try {
+    // Extract username from request parameters
     const username: string = req.params.username as string;
-    const friend = await findUserByUsername(username);
-    const user = await findUserByUsername(res.locals.user.username);
 
-    if (!user || !res.locals.user.username) {
+    // Check if res.locals.user is defined and contains the expected properties
+    if (!res.locals.user || !res.locals.user.username) {
       return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',
       });
-    } else if (!friend) {
+    }
+
+    // Find the friend user by username
+    const friend = await findUserByUsername(username);
+
+    // Find the user by username from res.locals.user
+    const user = await findUserByUsername(res.locals.user.username);
+
+    // Check if friend user exists
+    if (!friend) {
       return res.status(404).json({
         status: 'failed',
         message: 'User is not found',
       });
-    } else {
-      res.status(200).json({
-        username: friend.username,
-        avatar: friend.avatar,
-        about: friend.about,
-      });
     }
+
+    // Respond with friend user's details
+    return res.status(200).json({
+      username: friend.username,
+      avatar: friend.avatar,
+      about: friend.about,
+    });
   } catch (error) {
-    console.error('Error in friendRequestUserHandler:', error);
+    console.error('Error in getUserHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
@@ -729,41 +739,6 @@ export async function getALLFollowersHandler(req: Request, res: Response) {
         status: 'failed',
         message: 'Access token is missing or invalid',
       });
-    } else if (!user.userFollows || user.userFollows.length === 0) {
-      return res.status(402).json({
-        status: 'failed',
-        message: 'User does not have followers',
-      });
-    } else {
-      const followersIDs = user.userFollows ? user.userFollows.map((followerID) => followerID.toString()) : [];
-      const followers = await UserModel.find({ _id: { $in: followersIDs } });
-      const followersData = followers.map((follower) => ({
-        username: follower.username,
-        about: follower.about,
-        avatar: follower.avatar,
-      }));
-      res.status(200).json({
-        followersData,
-      });
-    }
-  } catch (error) {
-    console.error('Error in getALLFollowersHandler:', error);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
-  }
-}
-
-export async function getALLFollowingHandler(req: Request, res: Response) {
-  const user = await findUserByUsername(res.locals.user.username);
-
-  try {
-    if (!user || !res.locals.user.username) {
-      return res.status(401).json({
-        status: 'failed',
-        message: 'Access token is missing or invalid',
-      });
     } else if (!user.followers || user.followers.length === 0) {
       return res.status(402).json({
         status: 'failed',
@@ -790,7 +765,43 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
   }
 }
 
+export async function getALLFollowingHandler(req: Request, res: Response) {
+  const user = await findUserByUsername(res.locals.user.username);
+
+  try {
+    if (!user || !res.locals.user.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else if (!user.userFollows || user.userFollows.length === 0) {
+      return res.status(402).json({
+        status: 'failed',
+        message: 'User does not have followers',
+      });
+    } else {
+      const followersIDs = user.userFollows ? user.userFollows.map((followerID) => followerID.toString()) : [];
+      const followers = await UserModel.find({ _id: { $in: followersIDs } });
+      const followersData = followers.map((follower) => ({
+        username: follower.username,
+        about: follower.about,
+        avatar: follower.avatar,
+      }));
+      res.status(200).json({
+        followersData,
+      });
+    }
+  } catch (error) {
+    console.error('Error in getALLFollowersHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 /****************************** BOUDY ***********************************/
+
 /**
  * Retrieves the user ID from the access token in the request.
  *
