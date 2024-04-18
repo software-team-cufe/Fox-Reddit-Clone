@@ -72,8 +72,6 @@ router.get('/api/v1/me/followings', deserializeUser, getALLFollowingHandler);
 
 router.get('/api/v1/me/blocked', deserializeUser, getALLBlockedHandler);
 
-router.get('/api/v1/me/friends/:username', deserializeUser, getUserHandler);
-
 router.get('/api/v1/me/followers/:username', deserializeUser, getUserHandler);
 
 router.get('/api/v1/me/followings/:username', deserializeUser, getUserHandler);
