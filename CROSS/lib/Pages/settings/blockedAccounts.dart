@@ -1,9 +1,15 @@
+
+///blockedaccs
+
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:reddit_fox/NetworkService.dart';
 
 List<Map<String, String>> blockedAccounts = [
   {"id": "1", "name": "Blocked User 1"},
@@ -13,7 +19,6 @@ List<Map<String, String>> blockedAccounts = [
 
 class BlockedAccounts extends StatefulWidget {
   const BlockedAccounts({super.key});
-
   @override
   State<BlockedAccounts> createState() => _BlockedAccountsState();
 }
@@ -21,14 +26,38 @@ class BlockedAccounts extends StatefulWidget {
 class _BlockedAccountsState extends State<BlockedAccounts>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  String? accessToken;
 
-  blockListAPI() async {
+  blockListAPI(String accessToken) async {
     const url = ApiRoutesBackend.blockedAccs;
+    // NetworkService.initDio();
 
+    // NetworkService.accessToken = accessToken;
+    
+    print(accessToken);
     print(url);
-    final res = await http.get(
-      Uri.parse(url),
-    );
+    // final res = await NetworkService.instance.get(url);
+    print({'Authorization': 'Bearer $accessToken'});
+    try {
+      // final res = await NetworkService.instance.get(url);
+
+      final res = await http.get(
+        Uri.parse(url),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+      // print()
+
+      // headers: {
+
+      // HttpHeaders.authorizationHeader: 'Basic your_api_token_here',
+      print(res.body);
+      print(res.statusCode);
+      // Your code to handle the response
+    } catch (e) {
+      // Handle any errors that occur during the network request
+      print('Error occurred: $e');
+    }
+
     // // blockedAccounts=res.body;
     // // Map<String, dynamic> blocked = jsonDecode(res.body);
     // print(blockedAccounts["blocked_accounts"]);
@@ -39,11 +68,17 @@ class _BlockedAccountsState extends State<BlockedAccounts>
 
   List<Map<String, String>> filteredBlockedAccounts = [];
 
-  @override 
+  @override
   void initState() {
     super.initState();
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        accessToken = sharedPrefValue.getString('backtoken');
+        blockListAPI(accessToken!);
+      });
+    });
     filteredBlockedAccounts = List.from(blockedAccounts);
-    blockListAPI();
     _controller = AnimationController(vsync: this);
   }
 

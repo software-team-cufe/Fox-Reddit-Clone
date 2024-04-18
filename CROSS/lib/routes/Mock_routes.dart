@@ -8,7 +8,7 @@ class ApiRoutesBackend {
   static const String signup = '$baseUrl/api/users/signup';
   static const String login = '$baseUrl/api/auth/login';
   static const String forgetPassword = '$baseUrl/api/users/forgotpassword';
-  static const String blockedAccs = '$baseUrl/api/users/forgotpassword';
+  static const String blockedAccs = '$baseUrl/api/v1/me/blocked';
   static String getUserByToken(String token) => '$baseUrl/api/v1/me';
   static String getUserById(String id) => '$baseUrl/user/$id';
   static String getPostsByCreatorId(String id) => '$baseUrl/posts?creatorId=$id';
