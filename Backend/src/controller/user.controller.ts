@@ -449,44 +449,48 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
   }
 }
 
-// /**
-//  * Get user overview
-//  * @param {function} (req, res)
-//  * @returns {object} res
-//  */
-// export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const username: string = req.params.username as string;
-//     const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
-//     if (!req.query || !username || isNaN(limit)) {
-//       return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
-//     }
-//     // get user posts by username
-//     const postIds = await userSubmittedPosts(username);
-//     const posts = await userPosts(postIds, limit);
+/**
+ * Get user overview
+ * @param {function} (req, res)
+ * @returns {object} res
+ */
+export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const username: string = req.params.username as string;
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
 
-//     // get user comments by username
-//     const commentIds = await userCommentsIds(username);
-//     const comments = await userCommets(commentIds, limit);
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
+    }
+    // get user posts by username
+    const postIDS = await userSubmittedPosts(username, page, count);
+    const posts = await userPosts(postIDS, limit);
 
-//     // get user replies by username
-//     const replyIds = await userRepliesIds(username);
-//     const replies = await userCommets(replyIds, limit);
+    // get user comments by username
+    const commmentsIDS = await userCommentsIds(username, page, count);
+    const comments = await userComments(commmentsIDS, limit);
 
-//     // // Assuming mergeTwo returns an array of Post objects
-//     // const merged = await mergeTwo(posts, comments);
-//     // const overviewReturn = (await mergeTwo(merged, replies)).reverse();
+    // get user replies by username
+    const replyIds = await userRepliesIds(username, page, count);
+    const replies = await userComments(replyIds, limit);
 
-//     res.status(200).json({
-//       //overview: overviewReturn,
-//       posts,
-//       comments,
-//       replies,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// }
+    // // Assuming mergeTwo returns an array of Post objects
+    // const merged = await mergeTwo(posts, comments);
+    // const overviewReturn = (await mergeTwo(merged, replies)).reverse();
+
+    res.status(200).json({
+      //overview: overviewReturn,
+      posts,
+      comments,
+      replies,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
 
 /****************************** BOUDY ***********************************/
 

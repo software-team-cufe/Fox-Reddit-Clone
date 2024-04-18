@@ -144,22 +144,27 @@ export async function userCommentsIds(username: string, page: number, count: num
  * @param username - The username of the user to find posts for.
  * @returns replies ids of the user  by username.
  */
-export async function userRepliesIds(username: string) {
-  // Find the user by username and retrieve their user comments
-  const user = await UserModel.findOne({ username: username }, 'hasReply');
-  //console.log('inside user service');
-  //console.log(user);
+export async function userRepliesIds(username: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
+
+  // Find the user by username and retrieve their user submitted posts with pagination
+  const user = await UserModel.findOne({ username: username }, 'hasReply')
+    .lean()
+    .populate({
+      path: 'hasReply',
+      options: { skip: skip, limit: count },
+    });
+
   // If user is not found, throw an error
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
 
-  // Extract the post IDs from the user's comments if it exists
-  const repliesIDS = user.hasReply ? user.hasReply.map((comment) => comment.toString()) : [];
-  //console.log('insside user service');
-  //console.log(commentsIDS);
-  // Return the comments IDs
-  return repliesIDS;
+  // Extract the comment IDs from the user's comments if it exists
+  const commentsIDS = user.hasReply ? user.hasReply.map((comment) => comment._id.toString()) : [];
+  // Return the comment IDs
+  return commentsIDS;
 }
 
 /*************************Boudy ***************************
