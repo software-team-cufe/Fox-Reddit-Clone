@@ -4,7 +4,6 @@ import { User, UserModel } from '../model/user.model';
 import appError from '../utils/appError';
 import { findPostById } from './post.service';
 import { findUserById, findUserByUsername } from './user.service';
-
 /**
  * Finds a comment by their ID.
  *
@@ -14,22 +13,20 @@ import { findUserById, findUserByUsername } from './user.service';
 export function findCommentById(id: string) {
   return CommentModel.findById(id);
 }
-async function userCommets(commentsIDS: string[], limit: number | undefined) {
-  // If the request didn't contain a limit in its query, set it to 10 by default
-  limit = limit || 10;
 
-  // Fetch comments based on the provided postIDs
-  const comments = await CommentModel.find({ _id: { $in: commentsIDS } });
+/**
+ * Retrieves comments based on their IDs with pagination support.
+ *
+ * @param commentsIDS - Array of comment IDs.
+ * @param limit - Maximum number of comments to retrieve.
+ * @returns An array of comment objects.
+ */
+export async function userComments(commentsIDS: string[], limit: number) {
+  // Fetch comments based on the provided commentIDs
+  const comments = await CommentModel.find({ _id: { $in: commentsIDS } }).limit(limit);
 
-  // Limit the number of fetched posts to the provided limit
-  const limitedComments = comments.slice(0, limit);
-
-  // Populate user and community information
-  //comments = await CommentModel.populate(comments, { path: 'userID', select: '_id avatar' });
-  //posts = await PostModel.populate(posts, { path: 'communityID', select: '_id icon' });
-
-  // Return the populated posts
-  return limitedComments;
+  // Return the fetched comments
+  return comments;
 }
 
 interface CommentData {
@@ -109,4 +106,4 @@ async function add_comment(data: CommentData, userId: string) {
 
   return result;
 }
-export { userCommets, add_comment };
+export { add_comment };
