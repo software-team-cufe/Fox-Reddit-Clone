@@ -30,7 +30,7 @@ function classNames(...classes) {
 export default function Sortmenu({context}) {
 
   //managing current state selection and passing data to parent eleement to change the sorting
-  const [current, switchstates] = useState("Top");
+  const [current, switchstates] = useState("New");
   const { setselected } = useContext(context);
   const path = useLocation().pathname;
 

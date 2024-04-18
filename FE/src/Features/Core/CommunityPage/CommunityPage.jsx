@@ -95,7 +95,10 @@ export default function CommunityPage() {
       const { error: postsError } = useQuery(['fetchInitialPosts', selected, period],fetchInitialPosts, {enabled: !loading, retry: 0, refetchOnWindowFocus: false });
 
   const swtichJoinState = () => {
-
+    if (user.user == null) {
+      setShowModal(true);
+      return;
+    }
     axios.patch(`http://localhost:3002/communities/${comm.id}`, { joined: !comm.joined })
       .then(() => {
         comm = { ...comm, joined: !comm.joined };

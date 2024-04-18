@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
-import axios from 'axios';
+import React, {  useState, useContext, useRef } from "react";
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
-import { comment } from "postcss";
-import Spinner from "@/GeneralElements/Spinner/Spinner";
-
+import { useQuery } from "react-query";
+import { userAxios } from "../../../../Utils/UserAxios";
 /**
  * Renders the profile comments section.
  *
@@ -18,19 +16,17 @@ function ProfileComments({ using, context }) {
     // states for collecting comments from request and loading state
     const { selected, period } = useContext(context);
     const [comments, setComments] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage,setcurrentpage] = useState(0);
-    const limitpage = 2;
+    const [currentpage,setcurrentpage] = useState(1);
+    const limitpage = 5;
     //fetch comments on load and put into comments array
-    useEffect(() => {
-        setLoading(true);
-        axios.get(`http://localhost:3002/comments?_limit=${limitpage}`)
-            //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&count=10&limit=50&t=month')
+    const fetchInitialComments = () => {
+        userAxios.get(`/user/${using}/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                const newComments = response.data.map(comment => ({
+                console.log(response.data.comments);
+                const newComments = response.data.comments.map(comment => ({
                     user: {
                         image: comment.user.avatar,
                         Username: comment.user.username,
@@ -44,19 +40,19 @@ function ProfileComments({ using, context }) {
                         text: comment.commentText
                     }
                 }));
-
+                setcurrentpage(currentpage+1);
                 setComments(newComments);
-                setLoading(false);
             })
             .catch(error => {
                 console.error('Error:', error);
-                setLoading(false);
             });
-    }, [period, selected]);
+    };
+
+    const { isLoading:loading, error: postsError } = useQuery(['fetchInitialProfileComments', selected, period],fetchInitialComments, { retry: 0, refetchOnWindowFocus: false });
 
     const fetchMoreComments = () => {
         setCallingPosts(true);
-        axios.get(`http://localhost:3002/comments?_start=${currentpage+limitpage}&_limit=${limitpage}`)
+        userAxios.get(`/user/${using}/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
         .then(response => {
                 if(response.data.length < limitpage) {
                     setpagedone(true);
@@ -78,7 +74,7 @@ function ProfileComments({ using, context }) {
 
                 setComments(prevComments => [...prevComments, ...newComments]);
                 setCallingPosts(false);
-                setcurrentpage(limitpage+currentpage);
+                setcurrentpage(1+currentpage);
 
             })
             .catch(error => {
@@ -112,8 +108,8 @@ function ProfileComments({ using, context }) {
             ) : (
                 <>
                     {/*no results view*/}
-                    <img src={'/confusedSnoo.png'} className="w-16 h-24 mb-2" alt="Confused Snoo"></img>
-                    <p className="text-lg font-bold">looks like you haven't commented on anything</p>
+                    <img src={'/confusedSnoo.png'} className="w-16 mx-auto h-24 mb-2" alt="Confused Snoo"></img>
+                    <p className="text-lg mx-auto font-bold">looks like you haven't commented on anything</p>
                 </>
             )}
         </div>
