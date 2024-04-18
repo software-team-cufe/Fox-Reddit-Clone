@@ -36,6 +36,7 @@ import {
   getALLFollowedHandler,
   getUpvotedPostsByUsername,
   getDownvotedPostsByUsername,
+  getUserIDfromToken,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 
@@ -66,6 +67,8 @@ router.patch('/api/v1/me/prefs', requireUser, editCurrentUserPrefs);
 router.get('/api/user/:username/upvoted', getUpvotedPostsByUsername);
 
 router.get('/api/user/:username/downvoted', getDownvotedPostsByUsername);
+
+router.get('/api/user/userIDfromToken', getUserIDfromToken);
 
 /******************** BOUDY **************************/
 router.get('/api/v1/me/friends', getALLFriendsHandler);

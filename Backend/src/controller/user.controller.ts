@@ -864,4 +864,33 @@ export async function getALLFollowedHandler(req: Request, res: Response) {
     });
   }
 }
-/****************************** BOUDY ***********************************/
+/**
+ * Retrieves the user ID from the access token in the request.
+ *
+ * @param {Request} req - The request object containing the access token.
+ * @param {Response} res - The response object to send the user ID in.
+ * @return {Promise<void>} A promise that resolves when the user ID is retrieved and sent in the response.
+ * @throws {Error} If the access token is missing or invalid, or an internal server error occurs.
+ */
+export async function getUserIDfromToken(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    // Return the user ID in the response
+    res.status(200).json({
+      userId: user._id, // Corrected property name
+    });
+  } catch (error) {
+    console.error('Error in getUserIDfromToken:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
