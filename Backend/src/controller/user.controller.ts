@@ -489,7 +489,7 @@ export async function getUserHandler(req: Request, res: Response) {
     const friend = await findUserByUsername(username);
     const user = await findUserByUsername(res.locals.user.username);
 
-    if (!user) {
+    if (!user || !res.locals.user.username) {
       return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',
@@ -515,148 +515,13 @@ export async function getUserHandler(req: Request, res: Response) {
   }
 }
 
-export async function getALLFriendsHandler(req: Request, res: Response) {
-  const user = await findUserByUsername(res.locals.user.username);
-
-  try {
-    if (!user) {
-      return res.status(401).json({
-        status: 'failed',
-        message: 'Access token is missing or invalid',
-      });
-    } else if (!user.friend || user.friend.length === 0) {
-      return res.status(402).json({
-        status: 'failed',
-        message: 'User does not have friends',
-      });
-    } else {
-      const friendsIDs = user.friend ? user.friend.map((friendID) => friendID.toString()) : [];
-      const friends = await UserModel.find({ _id: { $in: friendsIDs } });
-      const friendsData = friends.map((friend) => ({
-        username: friend.username,
-        about: friend.about,
-        avatar: friend.avatar,
-      }));
-      res.status(200).json({
-        friendsData,
-      });
-    }
-  } catch (error) {
-    console.error('Error in getALLFriendsHandler:', error);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
-  }
-}
-
-export async function friendRequestHandler(req: Request<friendRequest['body']>, res: Response) {
-  try {
-    const { username, type } = req.body;
-    const reciever = await findUserByUsername(username);
-    const sender = await findUserByUsername(res.locals.user.username);
-
-    if (!reciever && !sender) {
-      return res.status(405).json({
-        status: 'failed',
-        message: 'Account is not found and Access token is missing or invalid',
-      });
-    } else if (!reciever) {
-      return res.status(404).json({
-        status: 'failed',
-        message: 'Account is not found',
-      });
-    } else if (!sender) {
-      return res.status(401).json({
-        status: 'failed',
-        message: 'Access token is missing or invalid',
-      });
-    } else if (type == 'frindRequest') {
-      await UserModel.findByIdAndUpdate(
-        sender._id,
-        { $addToSet: { friendRequestFromMe: sender._id } },
-        { upsert: true, new: true }
-      );
-      await UserModel.findByIdAndUpdate(
-        reciever._id,
-        { $addToSet: { friendRequestToMe: reciever._id } },
-        { upsert: true, new: true }
-      );
-    } else {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Invalid type',
-      });
-    }
-    return res.status(200).json({
-      status: 'succeeded',
-    });
-  } catch (error) {
-    console.error('Error in friendRequestUserHandler:', error);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
-  }
-}
-
-export async function unFriendRequestHandler(req: Request<unFriendRequest['body']>, res: Response) {
-  try {
-    const { username, type } = req.body;
-    const reciever = await findUserByUsername(username);
-    const sender = await findUserByUsername(res.locals.user.username);
-
-    if (!reciever && !sender) {
-      return res.status(405).json({
-        status: 'failed',
-        message: 'Account is not found and Access token is missing or invalid',
-      });
-    } else if (!reciever) {
-      return res.status(404).json({
-        status: 'failed',
-        message: 'Account is not found',
-      });
-    } else if (!sender) {
-      return res.status(401).json({
-        status: 'failed',
-        message: 'Access token is missing or invalid',
-      });
-    } else if (type == 'unfrindRequest') {
-      await UserModel.findByIdAndUpdate(
-        sender._id,
-        { $pull: { friendRequestFromMe: sender._id } },
-        { upsert: true, new: true }
-      );
-      await UserModel.findByIdAndUpdate(
-        reciever._id,
-        { $pull: { friendRequestToMe: reciever._id } },
-        { upsert: true, new: true }
-      );
-    } else {
-      return res.status(400).json({
-        status: 'failed',
-        message: 'Invalid type',
-      });
-    }
-    return res.status(200).json({
-      status: 'succeeded',
-    });
-  } catch (error) {
-    console.error('Error in unfriendRequestUserHandler:', error);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
-    });
-  }
-}
-
 export async function blockUserHandler(req: Request<blockUserInput['body']>, res: Response) {
   try {
     const { username, type } = req.body;
     const blocked = await findUserByUsername(username);
     const blocker = await findUserByUsername(res.locals.user.username);
 
-    if (!blocked && !blocker) {
+    if (!blocked && !res.locals.user.username) {
       return res.status(405).json({
         status: 'failed',
         message: 'Account is not found and Access token is missing or invalid',
@@ -666,7 +531,7 @@ export async function blockUserHandler(req: Request<blockUserInput['body']>, res
         status: 'failed',
         message: 'Account is not found',
       });
-    } else if (!blocker) {
+    } else if (!blocker || !res.locals.user.username) {
       return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',
@@ -704,13 +569,48 @@ export async function blockUserHandler(req: Request<blockUserInput['body']>, res
   }
 }
 
+export async function getALLBlockedHandler(req: Request, res: Response) {
+  const user = await findUserByUsername(res.locals.user.username);
+
+  try {
+    if (!user || !res.locals.user.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else if (!user.blocksFromMe || user.blocksFromMe.length === 0) {
+      return res.status(402).json({
+        status: 'failed',
+        message: 'User does not have blocked users',
+      });
+    } else {
+      const blockedIDs = user.blocksFromMe ? user.blocksFromMe.map((blockedID) => blockedID.toString()) : [];
+      const blockeds = await UserModel.find({ _id: { $in: blockedIDs } });
+      const blockedsData = blockeds.map((block) => ({
+        username: block.username,
+        about: block.about,
+        avatar: block.avatar,
+      }));
+      res.status(200).json({
+        blockedsData,
+      });
+    }
+  } catch (error) {
+    console.error('Error in getALLBlockedHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 export async function followRequestHandler(req: Request<followUserInput['body']>, res: Response) {
   try {
     const { username } = req.body;
     const followed = await findUserByUsername(username);
     const follows = await findUserByUsername(res.locals.user.username);
 
-    if (!followed && !follows) {
+    if (!followed && !res.locals.user.username) {
       return res.status(405).json({
         status: 'failed',
         message: 'Account is not found and Access token is missing or invalid',
@@ -720,7 +620,7 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
         status: 'failed',
         message: 'Account is not found',
       });
-    } else if (!follows) {
+    } else if (!res.locals.user.username || !follows) {
       return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',
@@ -754,7 +654,7 @@ export async function unfollowRequestHandler(req: Request<unfollowUserInput['bod
     const followed = await findUserByUsername(username);
     const follows = await findUserByUsername(res.locals.user.username);
 
-    if (!followed && !follows) {
+    if (!followed && !res.locals.user.username) {
       return res.status(405).json({
         status: 'failed',
         message: 'Account is not found and Access token is missing or invalid',
@@ -764,7 +664,7 @@ export async function unfollowRequestHandler(req: Request<unfollowUserInput['bod
         status: 'failed',
         message: 'Account is not found',
       });
-    } else if (!follows) {
+    } else if (!res.locals.user.username || !follows) {
       return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',
@@ -788,7 +688,7 @@ export async function getALLFollowersHandler(req: Request, res: Response) {
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
-    if (!user) {
+    if (!user || !res.locals.user.username) {
       return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',
@@ -823,7 +723,7 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
-    if (!user) {
+    if (!user || !res.locals.user.username) {
       return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',

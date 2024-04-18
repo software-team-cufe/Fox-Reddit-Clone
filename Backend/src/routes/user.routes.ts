@@ -5,8 +5,6 @@ import {
   verifyUserSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-  friendRequestSchema,
-  unFriendRequestSchema,
   blockUserSchema,
   reportUserSchema,
   followUserSchema,
@@ -26,14 +24,12 @@ import {
   getUserOverviewHandler,
   getUserSubmittedHandler,
   getUserHandler,
-  getALLFriendsHandler,
-  unFriendRequestHandler,
-  friendRequestHandler,
   blockUserHandler,
   followRequestHandler,
   unfollowRequestHandler,
   getALLFollowersHandler,
   getALLFollowingHandler,
+  getALLBlockedHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -67,21 +63,18 @@ router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
 router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
 
 /******************** BOUDY **************************/
-router.get('/api/v1/me/friends', deserializeUser, getALLFriendsHandler);
 
 router.get('/api/v1/me/followers', deserializeUser, getALLFollowersHandler);
 
 router.get('/api/v1/me/followings', deserializeUser, getALLFollowingHandler);
+
+router.get('/api/v1/me/blocked', deserializeUser, getALLBlockedHandler);
 
 router.get('/api/v1/me/friends/:username', deserializeUser, getUserHandler);
 
 router.get('/api/v1/me/followers/:username', deserializeUser, getUserHandler);
 
 router.get('/api/v1/me/followings/:username', deserializeUser, getUserHandler);
-
-router.post('/api/friend', validateResource(friendRequestSchema), deserializeUser, friendRequestHandler);
-
-router.post('/api/unfriend', validateResource(unFriendRequestSchema), deserializeUser, unFriendRequestHandler);
 
 router.post('/api/follow', validateResource(followUserSchema), deserializeUser, followRequestHandler);
 
