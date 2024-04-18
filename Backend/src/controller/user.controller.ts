@@ -537,7 +537,7 @@ export async function getUserHandler(req: Request, res: Response) {
       });
     } else {
       res.status(200).json({
-        id: friend._id,
+        username: friend.username,
         avatar: friend.avatar,
         about: friend.about,
       });
