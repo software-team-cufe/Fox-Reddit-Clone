@@ -71,10 +71,9 @@ export function HomeProvider({ children }) {
 }
 
 export default function HomePage() {
-
   const { selected } = useContext(HomeContext);
-  const { isLoading, isError, error, data, } = useQuery('get-post',
-    () => userAxios.get("posts"),
+  const { isLoading, isError, error, data, } = useQuery(['get-post'],
+    () => userAxios.get(`posts`),
     {
       retry: 0,
       refetchOnWindowFocus: false,

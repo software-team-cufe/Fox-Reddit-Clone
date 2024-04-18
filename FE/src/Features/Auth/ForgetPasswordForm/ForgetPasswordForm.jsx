@@ -33,21 +33,44 @@
  *
  * 
  */
+import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
+import { userAxios } from "@/Utils/UserAxios";
+import { setUser } from "@/hooks/UserRedux/UserModelSlice";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import * as z from 'zod';
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useDispatch } from 'react-redux'
 
-
-export default function ForgetUsername() {
+export default function ForgetPasswordForm() {
   const [str, setStr] = useState("");
+  const { token } = useParams();
+  const [loading, setLoading] = useState(false);
+  const disp = useDispatch();
+  const nav = useNavigate();
+
+  const resetPassword = async (e) => {
+    e.preventDefault();
+    const obj = Object.fromEntries(new FormData(document.getElementById("forgetPassword")).entries());
+    console.log(obj);
+
+    setLoading(true);
+    try {
+      const res = await userAxios.get(`api/users/resetpassword?token=${token}`, obj);
+      nav('/login');
+      setLoading(false);
+    } catch (ex) {
+      console.log(ex);
+      setLoading(false);
+    }
+  }
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <div className=" max-w-[400px] border shadow p-6 rounded-lg">
-        <h2 className="mb-3 text-xl font-bold">Recover your username</h2>
-        <p className="text-sm">Tell us the email address associated with your Reddit account, and we'll send you an email with your username.</p>
-        <TextBox value={str} onChanged={(e) => setStr(e.target.value)} className="mb-6 mt-4" placeholder="Email" />
+      <form onSubmit={resetPassword} id="forgetPassword" className=" max-w-[400px] border shadow p-6 rounded-lg">
+        <h2 className="mb-3 text-xl font-bold">Reset your password`</h2>
+        <TextBox name={"password"} className="mb-6 mt-4" placeholder="Password" />
+        <TextBox name={"confirmedNewPassword"} className="mb-6 mt-4" placeholder="Confirm Password" />
         <div className="flex items-center gap-3 my-4 ">
           <Link className="text-blue-700 underline text-sm" to={`/register`}>
             Sign Up
@@ -57,8 +80,8 @@ export default function ForgetUsername() {
             Log In
           </Link>
         </div>
-        <Button disabled={!z.string().email().safeParse(str).success} className="w-full">Email me</Button>
-      </div>
+        <Button disabled={loading} loading={loading} className="w-full">Email me</Button>
+      </form>
     </div>
   )
 }

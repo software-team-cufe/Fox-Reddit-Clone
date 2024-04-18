@@ -12,7 +12,7 @@ import { userStore } from '../../hooks/UserRedux/UserStore';
 import SearchComponent from "../../GeneralElements/Search/Search";
 export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOnline, IsLogged }) {
 
-  
+
   const navigator = useNavigate();
   const listProfRef = useRef(null);
   const UserProfRef = useRef(null);
@@ -281,7 +281,11 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                   </li>
 
                   <li>
-                    <button className="bg-white hover:bg-orange-100 text-black h-12 py-1 px-1  rounded inline-flex items-center w-full">
+                    <button onClick={() => {
+                      localStorage.removeItem('authorization');
+                      localStorage.removeItem('refreshToken');
+                      window.location.href = '/'
+                    }} className="bg-white hover:bg-orange-100 text-black h-12 py-1 px-1  rounded inline-flex items-center w-full">
                       <LogOut strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                       Log out
                     </button>

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { extractAxiosError } from "./Utils";
 
 const userAxios = axios.create({
-    baseURL: "http://foxnew.southafricanorth.cloudapp.azure.com/api/",
+    baseURL: "http://foxnew.southafricanorth.cloudapp.azure.com/",
     withCredentials: true,
 
 })
@@ -17,9 +17,9 @@ userAxios.interceptors.request.use(request => {
 });
 
 userAxios.interceptors.response.use(response => {
-
-    if (response.data.accessToken != null) {
-        localStorage.setItem('authorization', response.data.accessToken);
+    const token = response.data.accessToken ?? response.data.token;
+    if (token != null) {
+        localStorage.setItem('authorization', token);
     }
     if (response.data.refreshToken != null) {
         localStorage.setItem('refreshToken', response.data.refreshToken);

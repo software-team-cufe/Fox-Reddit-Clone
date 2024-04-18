@@ -58,7 +58,7 @@ function MainRoute() {
 
   const { isLoading, error, data, refetch } = useQuery(
     "get-client",
-    () => userAxios.get('v1/me').then((d) => {
+    () => userAxios.get('api/v1/me').then((d) => {
       disp(setUser(d.data.user));
       return d.data.user;
     }),
