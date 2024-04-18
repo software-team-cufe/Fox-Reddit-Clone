@@ -107,6 +107,9 @@ export class Post {
 
   @prop()
   bestFactor!: number;
+
+  @prop() ///////////////////////////////////////////to be edited with correct one
+  communityimage!: string;
 }
 // Add the function as a static method on the Post class
 // static async incrementInsightCount(doc: DocumentType<Post>) {
