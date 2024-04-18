@@ -9,7 +9,7 @@ import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -65,8 +65,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 20),
               TextField(
-                decoration: InputDecoration(
-                  hintText: "Email / UserName or Phone number",
+                decoration: const InputDecoration(
+                  hintText: "Email",
                   prefixIcon: Icon(Icons.email),
                 ),
                 controller: emailController,
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 10),
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Password",
                   prefixIcon: Icon(Icons.password),
                 ),
@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  Get.to(() => ForgetPasswordScreen());
+                  Get.to(() => const ForgetPasswordScreen());
                 },
                 child: const Text('Forgot password?'),
               ),

@@ -1,25 +1,16 @@
-import 'dart:typed_data';
-
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/models/user_model.dart';
 import '../../../core/common/CustomCheckBox.dart';
 import '../../../core/common/CustomTextBox.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
-import 'dart:typed_data';
-import 'package:crypto/crypto.dart';
-
-
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:math';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -33,8 +24,46 @@ class SignupScreen extends StatefulWidget {
   //   final bytes = Uint8List.fromList(values);
   //   return bytes.fold(0, (result, element) => (result << 8) + element);
   // }
+}
 
-  static Future<void> signUpAPI(
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final UserModel user = UserModel(
+    name: "",
+    profilePic: "",
+    banner: "",
+    uid: "",
+    isAuthenticated: false,
+    karma: 1,
+    email: '',
+  );
+
+  bool valid = true;
+  bool acceptTerms = false;
+  bool showPass = false;
+  String? errorMessage;
+
+  String? signup(final String email, final String password, String? name,
+      DateTime? birthDate, bool termsandconditions) {
+    String? errorMessage;
+    if (email.trim().isEmpty) errorMessage = "Please enter email";
+    RegExp emailPattern = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    if (!emailPattern.hasMatch(email) ||
+        password.trim().isEmpty ||
+        password.length < 7 ||
+        name == null) {
+      return 'Please enter Valid Data and accept termsandconditions';
+    }
+    signUpAPI(name, email, password, DateTime.now());
+
+    return null;
+  }
+
+  Future<void> signUpAPI(
       String username, String email, String password, Date) async {
     final Uri url = Uri.parse(
         ApiRoutesBackend.signup); // Replace with your server's endpoint
@@ -63,9 +92,10 @@ class SignupScreen extends StatefulWidget {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Sign-up successful
         print('Sign-up successful!');
-      } else {
+      } else if (response.statusCode == 400) {
         // Error occurred
         print('Error: ${response.statusCode}');
+        ;
       }
     } catch (e) {
       // Exception occurred
@@ -73,44 +103,6 @@ class SignupScreen extends StatefulWidget {
     }
     print('_________________________________');
   }
-
-  static String? signup(final String email, final String password, String? name,
-      DateTime? birthDate, bool termsandconditions) {
-    String? errorMessage;
-    if (email.trim().isEmpty) errorMessage = "Please enter email";
-    RegExp emailPattern = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    if (!emailPattern.hasMatch(email) ||
-        password.trim().isEmpty ||
-        password.length < 7 ||
-        name == null) {
-      return 'Please enter Valid Data and accept termsandconditions';
-    }
-    signUpAPI(name, email, password, DateTime.now());
-
-    return null;
-  }
-}
-
-class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  final UserModel user = UserModel(
-    name: "",
-    profilePic: "",
-    banner: "",
-    uid: "",
-    isAuthenticated: false,
-    karma: 1,
-    email: '',
-  );
-
-  bool valid = true;
-  bool acceptTerms = false;
-  bool showPass = false;
-  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -144,17 +136,19 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(height: 20),
               TextField(
-                decoration: InputDecoration(
-                  hintText: "Email",
-                  prefixIcon: Icon(FluentIcons.mail_28_regular)),
+                decoration: const InputDecoration(
+                    hintText: "Email",
+                    prefixIcon: Icon(FluentIcons.mail_28_regular)),
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 20),
               TextField(
-                decoration: InputDecoration(
-                hintText: "Password",
-                prefixIcon: Icon(FluentIcons.password_24_regular,)),
+                decoration: const InputDecoration(
+                    hintText: "Password",
+                    prefixIcon: Icon(
+                      FluentIcons.password_24_regular,
+                    )),
                 controller: passwordController,
                 obscureText: true,
                 keyboardType: TextInputType.text,
@@ -187,7 +181,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 text: "Create account",
                 onTap: () {
                   setState(() {
-                    errorMessage = SignupScreen.signup(
+                    errorMessage = signup(
                       emailController.text,
                       passwordController.text,
                       nameController.text,
@@ -196,7 +190,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     );
                   });
                   if (errorMessage == null) {
-                    Get.to(() => const LoginScreen());
+                    Future.delayed(const Duration(seconds: 5), () {
+                      Get.to(() => const LoginScreen());
+                    });
                   }
                 },
               ),
