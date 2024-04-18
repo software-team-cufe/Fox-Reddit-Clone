@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 
 const ChangeLanguage = ({setLanguage},props) => {
 
-  const[changeButton,setButton]=useState(false);
-
+  
   return (
     
     <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center '>
@@ -63,64 +62,194 @@ const ChangeLanguage = ({setLanguage},props) => {
           </div>
 
           {/*buttons */}
-            <div className='flex flex-col justify-center items-center pt-7 space-y-2'>
-
-         <button onClick={()=>setButton(false)}  className=' border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Afrikaans
-         </button>
-
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Amharic
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Arabic
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Armenian
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Assamese 
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-           Azerbaijani
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Basque
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-           Belarusian
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-           English
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-           Bengali
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Bosnian
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-           Bulgarian
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Catalan
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-             Chinese 
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-             Dutch
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            Filipino
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-            French
-         </button>
-         <button className='border border-zinc-200 bg-zinc-200 h-12 rounded-3xl w-[370px] font-semibold hover:bg-zinc-50'>
-          Japanese
-         </button>
-            </div>
+          <div className='flex flex-col justify-center items-center pt-7 space-y-2'>
+           <div className="flex">
+            <input type="checkbox" id="Afrikaans" className="peer hidden" />
+               <label
+                 htmlFor="Afrikaans"
+                 className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+                 py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+                 >
+                {" "}  Afrikaans{" "}
+               </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="Arabic" className="peer hidden" />
+           <label
+           htmlFor="Arabic"
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+               {" "}
+               Arabic{" "}
+              </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="French" className="peer hidden" />
+           <label
+           htmlFor="French"
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+               {" "}
+               French {" "}
+              </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="Finnish " className="peer hidden" />
+           <label
+           htmlFor="Finnish "
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+               {" "}
+               Finnish {" "}
+              </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="Danish " className="peer hidden" />
+           <label
+           htmlFor="Danish "
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+               {" "}
+               Danish {" "}
+              </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="Dutch" className="peer hidden" />
+           <label
+           htmlFor="Dutch"
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+               {" "}
+               Dutch{" "}
+              </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="German" className="peer hidden" />
+           <label
+           htmlFor="German"
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+               {" "}
+               German{" "}
+              </label>
+           </div>
+           <div className="flex">
+             <input type="checkbox" id="Greek " className="peer hidden" />
+             <label
+             htmlFor="Greek "
+             className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+             py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+             >
+               {" "}
+               Greek {" "}
+              </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="Hungarian" className="peer hidden" />
+           <label
+           htmlFor="Hungarian"
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+             {" "}
+             Hungarian{" "}
+            </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="Italian" className="peer hidden" />
+           <label
+           htmlFor="Italian"
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+             {" "}
+             Italian{" "}
+            </label>
+           </div>
+           <div className="flex">
+            <input type="checkbox" id="Portuguese " className="peer hidden" />
+            <label
+            htmlFor="Portuguese "
+            className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+            py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+            >
+             {" "}
+             Portuguese {" "}
+             </label>
+           </div>
+           <div className="flex">
+            <input type="checkbox" id="Norwegian " className="peer hidden" />
+            <label
+            htmlFor="Norwegian "
+            className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+            py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+            >
+             {" "}
+             Norwegian {" "}
+            </label>
+           </div>
+           <div className="flex">
+            <input type="checkbox" id="Spanish " className="peer hidden" />
+            <label
+            htmlFor="Spanish "
+            className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+            py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+            >
+             {" "}
+             Spanish {" "}
+            </label>
+           </div>
+           <div className="flex">
+            <input type="checkbox" id="Russian" className="peer hidden" />
+            <label
+           htmlFor="Russian"
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+             {" "}
+             Russian{" "}
+            </label>
+           </div>
+           <div className="flex">
+            <input type="checkbox" id="Turkish" className="peer hidden" />
+            <label
+            htmlFor="Turkish"
+            className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+            py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+            >
+             {" "}
+             Turkish{" "}
+            </label>
+           </div>
+            <div className="flex">
+            <input type="checkbox" id="Chinese " className="peer hidden" />
+            <label
+            htmlFor="Chinese "
+            className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+            py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+            >
+              {" "}
+              Chinese {" "}
+            </label>
+           </div>
+           <div className="flex">
+           <input type="checkbox" id="Korean " className="peer hidden" />
+           <label
+           htmlFor="Korean "
+           className="select-none cursor-pointerrounded-3xl border border-zinc-200 bg-zinc-200  w-[370px] hover:bg-zinc-50
+           py-3 px-6 font-semibold transition-colors duration-200 ease-in-out peer-checked:bg-orange-200 peer-checked:hover:bg-orange-100 peer-checked:border-orange-300 "
+           >
+             {" "}
+             Korean {" "}
+           </label>
+          </div>
+          </div>
  
         </div>
     
