@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class MyTextInputWidget extends StatefulWidget {
   final String inputTitle;
   final double sheight;
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onTextChanged;
 
   const MyTextInputWidget({
-    super.key,
+    Key? key,
     required this.inputTitle,
     this.sheight = 0.0,
-    this.onChanged,
-  });
+    this.onTextChanged,
+  }) : super(key: key);
 
   @override
   _MyTextInputWidgetState createState() => _MyTextInputWidgetState();
@@ -27,7 +27,11 @@ class _MyTextInputWidgetState extends State<MyTextInputWidget> {
           height: widget.sheight,
           child: TextField(
             controller: _textEditingController,
-            onChanged: widget.onChanged,
+            onChanged: (text) {
+              if (widget.onTextChanged != null) {
+                widget.onTextChanged!(text);
+              }
+            },
             decoration: InputDecoration(
               border: InputBorder.none,
               labelText: widget.inputTitle,
@@ -39,8 +43,8 @@ class _MyTextInputWidgetState extends State<MyTextInputWidget> {
     );
   }
 
-  bool hasData() {
-    return _textEditingController.text.isNotEmpty;
+  String getInputText() {
+    return _textEditingController.text;
   }
 
   @override

@@ -12,7 +12,9 @@ import 'package:share/share.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, Key? key});
+  const HomePage({
+    super.key,
+  });
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -272,14 +274,13 @@ class _HomePageState extends State<HomePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => PostDetails(
-                                      redditName: post['redditName'],
-                                      title: post['title'],
-                                      picture: post['picture'],
-                                      votes: post['votes'],
-                                      commentsNo: post['commentsNo'],
-                                      creatorId: post['creatorId'],
-                                      postId: post['id']
-                                    ),
+                                        redditName: post['redditName'],
+                                        title: post['title'],
+                                        picture: post['picture'],
+                                        votes: post['votes'],
+                                        commentsNo: post['commentsNo'],
+                                        creatorId: post['creatorId'],
+                                        postId: post['id']),
                                   ),
                                 );
                               },
