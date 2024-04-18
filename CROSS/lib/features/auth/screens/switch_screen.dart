@@ -56,7 +56,8 @@ class _AuthContainerState extends State<AuthContainer> {
             profilePic: user['profilePic'],
             uid: user['id'],
             karma: user['karma'],
-            isAuthenticated: false);
+            isAuthenticated: false,
+            banner: '');
         CurrentUserData.setUser(usermodel);
 
         // user.name=response.body.['name'];
@@ -75,8 +76,6 @@ class _AuthContainerState extends State<AuthContainer> {
     }
   }
 }
-
-
 
 class CurrentUserData {
   static UserModel? _user;
