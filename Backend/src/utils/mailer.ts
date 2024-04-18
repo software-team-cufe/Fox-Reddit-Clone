@@ -22,10 +22,9 @@ export function generateVerificationLinkToken(
   verificationCode: string
 ): {
   verify_link: string;
-  verify_token: string;
 } {
   // Assuming your frontend URL is stored in an environment variable
-  const frontendURL = 'http://localhost:3000';
+  const frontendURL = process.env.FrontURL;
 
   // Construct payload for JWT verification
   const payload = { userId, verificationCode };
@@ -34,10 +33,10 @@ export function generateVerificationLinkToken(
   const verificationToken = signJwt(payload, { expiresIn: '1d' });
 
   // Construct the verification link using the frontend URL and include the token as a query parameter
-  const verificationLink = `${frontendURL}/api/users/signup/verify/${verificationToken}`;
+  const verificationLink = `${frontendURL}/verify-email/${verificationToken}`;
 
   // Return an object containing both the verification link and the verification token
-  return { verify_link: verificationLink, verify_token: verificationToken };
+  return { verify_link: verificationLink };
 }
 
 export function generatePasswordResetLinkToken(
@@ -47,7 +46,7 @@ export function generatePasswordResetLinkToken(
   reset_link: string;
 } {
   // Assuming your frontend URL is stored in an environment variable
-  const frontendURL = 'http://localhost:3000';
+  const frontendURL = process.env.FrontURL;
 
   // Construct payload for JWT verification
   const payload = { userId, passwordResetCode };
@@ -55,7 +54,7 @@ export function generatePasswordResetLinkToken(
   // Generate JWT password reset token
   const resetToken = signJwt(payload, { expiresIn: '15m' });
   // Construct the reset link using the frontend URL and include the token as a query parameter
-  const resetLink = `${frontendURL}/api/users/resetpassword/?token=${resetToken}`;
+  const resetLink = `${frontendURL}/forget-password/${resetToken}`;
 
   // Return an object containing both the reset link and the reset token
   return { reset_link: resetLink };

@@ -56,7 +56,7 @@ router.get('/user/:username/comments', getUserCommentsHandler);
 
 router.get('/user/:username/overview', getUserOverviewHandler);
 
-router.get('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
+router.post('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
 router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 
 router.get('/api/v1/me/prefs', requireUser, getCurrentUserPrefs);
