@@ -76,6 +76,31 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
   }
 }
 
+export async function deleteUserHandler(req: Request, res: Response) {
+  const user = await findUserByUsername(res.locals.user.username);
+
+  try {
+    if (!user || !res.locals.user.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else {
+      const deletedUser = await UserModel.findByIdAndDelete(user._id);
+      return res.status(200).json({
+        status: 'success',
+        message: 'User deleted successfully',
+      });
+    }
+  } catch (error) {
+    console.error('Error in deleteUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 /**
  * Handles the verification of a user based on the provided token.
  *
@@ -753,4 +778,5 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
     });
   }
 }
+
 /****************************** BOUDY ***********************************/
