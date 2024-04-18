@@ -941,38 +941,43 @@ export async function submitPostHandler(req: Request, res: Response) {
 
 export async function getSortedPosts(req: Request, res: Response) {
   try {
-    const sub = req.params.subreddit;
+    const sub = req.params.subreddit || ' ';
     const subreddit = await findCommunityByName(sub);
-    const sort = req.params.sort;
+    let sort = req.params.sort || ' ';
+    if (sort) sort = sort.toLowerCase();
     // Access query parameters and parse them into numbers
     const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
     const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
     const page = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
     let Posts;
     if (subreddit) {
-      if (sort) {
+      if (sort != ' ') {
         if (sort == 'best') Posts = await getBestPostsFromSubreddit(sub, limit, page, count);
         if (sort == 'hot') Posts = await getHotPostsFromSubreddit(sub, limit, page, count);
-        if (sort == 'Top') Posts = await getTopPostsFromSubreddit(sub, limit, page, count);
+        if (sort == 'top') Posts = await getTopPostsFromSubreddit(sub, limit, page, count);
         if (sort == 'new') Posts = await getNewPostsFromSubreddit(sub, limit, page, count);
         if (sort == 'random') Posts = await getRandomPostsFromSubreddit(sub, limit, page, count);
+        if (sort != 'random' && sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new')
+          Posts = await getRandomPostsFromSubreddit(sub, limit, page, count);
       } else {
         Posts = await getRandomPostsFromSubreddit(sub, limit, page, count);
       }
     } else {
-      if (sort) {
+      if (sort != ' ') {
         if (sort == 'best') Posts = await getBestPostsFromRandom(limit, page, count);
         if (sort == 'hot') Posts = await getHotPostsFromRandom(limit, page, count);
-        if (sort == 'Top') Posts = await getTopPostsFromRandom(limit, page, count);
+        if (sort == 'top') Posts = await getTopPostsFromRandom(limit, page, count);
         if (sort == 'new') Posts = await getNewPostsFromRandom(limit, page, count);
         if (sort == 'random') Posts = await getRandomPostsFromRandom(limit, page, count);
+        if (sort != 'random' && sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new')
+          Posts = await getRandomPostsFromRandom(limit, page, count);
       } else {
         Posts = await getRandomPostsFromRandom(limit, page, count);
       }
     }
     res.json(Posts);
   } catch (error) {
-    console.error('Error getting Best posts:', error);
+    console.error('Error getting sorted posts:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
