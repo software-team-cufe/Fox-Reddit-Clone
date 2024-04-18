@@ -8,19 +8,18 @@ class UserModel {
   final bool isAuthenticated; // if guest or not
   final int karma;
   final String email;
-  DateTime? birthDate;
-  Gender? gender;
+   DateTime? birthDate;
 
-  UserModel(
-      {required this.name,
-      required this.profilePic,
-      required this.uid,
-      required this.isAuthenticated,
-      required this.karma,
-      required this.email,
-      this.banner,
-      this.birthDate,
-      this.gender});
+  UserModel({
+    required this.name,
+    required this.profilePic,
+    required this.banner,
+    required this.uid,
+    required this.isAuthenticated,
+    required this.karma,
+    required this.email,
+     this.birthDate,
+  });
 
 // userModel.name = this. ->usermodel.copyWith(name: 'name');
 
