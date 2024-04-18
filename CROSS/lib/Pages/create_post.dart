@@ -93,13 +93,14 @@ class _CreatePostState extends State<CreatePost> {
 
   Future<void> submitPost(
       String title, String text, bool isNsfw, bool isSpoiler) async {
-    final postData = {
+    Map<String, dynamic> postData = {
       'title': title,
       'text': text,
-      'attachments': ['screen.png'], // Add attachments if any
+      'attachments': [], // Add attachments if any
       'nsfw': isNsfw, // Include value of NSFW switch
-      'spoiler': isSpoiler, // Include value of spoiler switch
-      // 'CommunityID': '', // Add community ID if needed
+      'spoiler': isSpoiler,
+
+// Include value of spoiler switch
     };
 
     final response = await http.post(
@@ -107,14 +108,16 @@ class _CreatePostState extends State<CreatePost> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         // Add any required headers
+        'Authorization': 'Bearer $access_token'
       },
       body: jsonEncode(postData),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       print('Post submitted successfully');
+      print('access_token ' + access_token);
     } else {
-      print('Error submitting post: ${response.body}');
+      print('Error submitting post: ${response.statusCode}');
     }
   }
 
