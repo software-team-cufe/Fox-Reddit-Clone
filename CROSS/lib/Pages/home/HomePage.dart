@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String _selectedItem = 'Home'; // Declare _selectedItem here
   String? access_token;
+  late String? profilePic;
   late int user_Id; // Variable to store the access token
   String _sortValue = "Top";
 
@@ -56,11 +57,14 @@ class _HomePageState extends State<HomePage> {
       headers: {'Authorization': 'Bearer $accessToken'},
     );
     if (response.statusCode == 200) {
-      List<dynamic> responseData = json.decode(response.body);
-      if (responseData.isNotEmpty &&
-          responseData[0] is Map<String, dynamic> &&
-          responseData[0].containsKey('profilePic')) {
-        return responseData[0]['profilePic'];
+     Map<String, dynamic> responseData = json.decode(response.body);
+      if (responseData.containsKey('user')) {
+        Map<String, dynamic> user = responseData['user'];
+        profilePic = user['avatar'];
+        if(profilePic == 'default.jpg'){
+          profilePic = null;
+        }
+        return profilePic!;
       } else {
         throw Exception('User pic is not present or not a string');
       }
@@ -108,6 +112,7 @@ class _HomePageState extends State<HomePage> {
                         } else if (snapshot.hasError) {
                           // Handle error fetching profile picture
                           return const CircleAvatar(
+                            backgroundColor: Colors.black,
                             backgroundImage:
                                 AssetImage('assets/images/avatar.png'),
                           );
@@ -117,6 +122,7 @@ class _HomePageState extends State<HomePage> {
                               snapshot.data.toString().isEmpty) {
                             // Handle case where profile picture URL is empty or null
                             return const CircleAvatar(
+                              backgroundColor: Colors.black,
                               backgroundImage:
                                   AssetImage('assets/images/avatar.png'),
                             );

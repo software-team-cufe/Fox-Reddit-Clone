@@ -4,9 +4,11 @@
   import 'dart:typed_data';
   import 'package:intl/intl.dart';
   import 'package:reddit_fox/Pages/Search.dart';
+  import 'package:reddit_fox/Pages/EditProfile.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
   import 'package:shared_preferences/shared_preferences.dart';
+
 
   class ProfilePage extends StatefulWidget {
     ProfilePage({Key? key, required this.user_Id, this.myProfile = false, this.access_token = null}) : super(key: key);
@@ -182,7 +184,10 @@ Widget _buildTitleView() {
                               height: 35,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // Add functionality for the button
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => EditProfilePage()),
+                                  );
                                 },
                                 child: Text('Edit Profile'),
                               ),
