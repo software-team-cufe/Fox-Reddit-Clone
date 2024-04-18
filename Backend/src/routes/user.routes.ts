@@ -31,6 +31,7 @@ import {
   getALLFollowingHandler,
   getALLBlockedHandler,
   deleteUserHandler,
+  getUserIDfromTokenHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -62,6 +63,8 @@ router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 router.get('/api/v1/me/prefs/:id', getCurrentUserPrefs);
 
 router.patch('/api/v1/me/prefs/:id', editCurrentUserPrefs);
+
+router.get('/api/user/userIDfromToken', deserializeUser, getUserIDfromTokenHandler);
 
 /******************** BOUDY **************************/
 router.delete('/api/users/delete_user', deserializeUser, deleteUserHandler);

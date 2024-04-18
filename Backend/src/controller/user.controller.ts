@@ -31,7 +31,7 @@ import { UserModel, privateFields } from '../model/user.model';
 import { omit } from 'lodash';
 import { get } from 'config';
 import PostModel from '../model/posts.model';
-import { userCommets } from '../service/comment.service';
+import { userComments } from '../service/comment.service';
 import { userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
@@ -425,24 +425,29 @@ export async function aboutHandler(req: Request, res: Response) {
   }
 }
 /**
- * Get user posts
+ * Get user posts with pagination support.
  * @param {function} (req, res)
  * @returns {object} res
  */
 export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
-  let posts;
   try {
     const username: string = req.params.username as string;
-    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
-    if (!req.query || !username || isNaN(limit)) {
-      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
     }
-    const postIDS = await userSubmittedPosts(username);
-    posts = await userPosts(postIDS, limit);
+
+    const postIDS = await userSubmittedPosts(username, page, count);
+    const posts = await userPosts(postIDS, limit);
+
+    res.status(200).json({ posts });
   } catch (err) {
     return next(err);
   }
-  res.status(200).json({ posts });
 }
 /**
  * Get user posts
@@ -450,21 +455,23 @@ export async function getUserSubmittedHandler(req: Request, res: Response, next:
  * @returns {object} res
  */
 export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
-  let comments;
   try {
     const username: string = req.params.username as string;
-    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
-    if (!req.query || !username || isNaN(limit)) {
-      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
     }
-    const commmentsIDS = await userCommentsIds(username);
-    comments = await userCommets(commmentsIDS, limit);
+    const commmentsIDS = await userCommentsIds(username, page, count);
+    const comments = await userComments(commmentsIDS, limit);
+
+    res.status(200).json({ comments });
   } catch (err) {
     return next(err);
   }
-  res.status(200).json({
-    comments,
-  });
 }
 
 /**
@@ -475,21 +482,25 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
 export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const username: string = req.params.username as string;
-    const limit: number = parseInt(req.query.limit as string, 10); // Explicitly convert to number
-    if (!req.query || !username || isNaN(limit)) {
-      return res.status(400).json({ error: 'Invalid request. Limit parameter is missing or invalid.' });
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
     }
     // get user posts by username
-    const postIds = await userSubmittedPosts(username);
-    const posts = await userPosts(postIds, limit);
+    const postIDS = await userSubmittedPosts(username, page, count);
+    const posts = await userPosts(postIDS, limit);
 
     // get user comments by username
-    const commentIds = await userCommentsIds(username);
-    const comments = await userCommets(commentIds, limit);
+    const commmentsIDS = await userCommentsIds(username, page, count);
+    const comments = await userComments(commmentsIDS, limit);
 
     // get user replies by username
-    const replyIds = await userRepliesIds(username);
-    const replies = await userCommets(replyIds, limit);
+    const replyIds = await userRepliesIds(username, page, count);
+    const replies = await userComments(replyIds, limit);
 
     // // Assuming mergeTwo returns an array of Post objects
     // const merged = await mergeTwo(posts, comments);
@@ -780,3 +791,33 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
 }
 
 /****************************** BOUDY ***********************************/
+/**
+ * Retrieves the user ID from the access token in the request.
+ *
+ * @param {Request} req - The request object containing the access token.
+ * @param {Response} res - The response object to send the user ID in.
+ * @return {Promise<void>} A promise that resolves when the user ID is retrieved and sent in the response.
+ * @throws {Error} If the access token is missing or invalid, or an internal server error occurs.
+ */
+export async function getUserIDfromTokenHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    // Return the user ID in the response
+    res.status(200).json({
+      userId: user._id, // Corrected property name
+    });
+  } catch (error) {
+    console.error('Error in getUserIDfromToken:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
