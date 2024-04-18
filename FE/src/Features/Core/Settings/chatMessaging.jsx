@@ -15,18 +15,18 @@ import { userAxios } from "../../../Utils/UserAxios";
 export default function ChatMessaging() {
 
 
-    const { isLoading, error, data, refetch } = useQuery(
-        "get-client",
-        () => userAxios.get('user/me/prefs').then((d) => {
-            disp(setUser(d.data.user));
-            return userAxios.post('user/me/markAllAsRead').then(() => d.data.user);
-        }),
-        {
-            refetchOnWindowFocus: false,
-            retry: 0,
-            enabled: localStorage.getItem('authorization') != null,
-        }
-    );
+    // const { isLoading, error, data, refetch } = useQuery(
+    //     "get-client",
+    //     () => userAxios.get('api/user/me/prefs').then((d) => {
+    //         disp(setUser(d.data.user));
+    //         return userAxios.post('user/me/markAllAsRead').then(() => d.data.user);
+    //     }),
+    //     {
+    //         refetchOnWindowFocus: false,
+    //         retry: 0,
+    //         enabled: localStorage.getItem('authorization') != null,
+    //     }
+    // );
 
     return (
         <div className="w-[75%]">
