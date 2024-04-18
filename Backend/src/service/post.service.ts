@@ -53,25 +53,16 @@ export async function findBestPostsByCommunity(
 
     const queryOptions: QueryOptions = { sort: { bestFactor: -1 } };
 
-    // Apply count as skip (offset)
-    if (count > 0) {
-      queryOptions.skip = count;
-    }
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit;
 
-    // Apply limit if provided
-    if (limit > 0) {
-      queryOptions.limit = limit;
-    }
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
 
     const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
-    const startIndex = (page - 1) * limit;
-    // Check if the start index exceeds the total number of records
-    if (startIndex >= posts.length) {
-      return []; // Return an empty array if there are no more records
-    }
 
-    // Return a slice of the posts array with the specified limit and start index
-    return posts.slice(startIndex, startIndex + limit);
+    return posts;
   } catch (error) {
     throw new Error('Error finding posts by community');
   }
@@ -81,25 +72,16 @@ export async function findBestPostsByRandom(limit: number = 10, page: number = 1
   try {
     const queryOptions: QueryOptions = { sort: { bestFactor: -1 } };
 
-    // Apply count as skip (offset)
-    if (count > 0) {
-      queryOptions.skip = count;
-    }
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit;
 
-    // Apply limit if provided
-    if (limit > 0) {
-      queryOptions.limit = limit;
-    }
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
 
     const posts = await PostModel.find({}, null, queryOptions).exec();
-    const startIndex = (page - 1) * limit;
-    // Check if the start index exceeds the total number of records
-    if (startIndex >= posts.length) {
-      return []; // Return an empty array if there are no more records
-    }
 
-    // Return a slice of the posts array with the specified limit and start index
-    return posts.slice(startIndex, startIndex + limit);
+    return posts;
   } catch (error) {
     throw new Error('Error finding posts by community');
   }
@@ -116,27 +98,18 @@ export async function findHotPostsByCommunity(
 
     const queryOptions: QueryOptions = { sort: { hotnessFactor: -1 } };
 
-    // Apply count as skip (offset)
-    if (count > 0) {
-      queryOptions.skip = count;
-    }
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit;
 
-    // Apply limit if provided
-    if (limit > 0) {
-      queryOptions.limit = limit;
-    }
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
 
     const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
-    const startIndex = (page - 1) * limit;
-    // Check if the start index exceeds the total number of records
-    if (startIndex >= posts.length) {
-      return []; // Return an empty array if there are no more records
-    }
 
-    // Return a slice of the posts array with the specified limit and start index
-    return posts.slice(startIndex, startIndex + limit);
+    return posts;
   } catch (error) {
-    throw new Error('Error finding hot posts by community');
+    throw new Error('Error finding posts by community');
   }
 }
 
@@ -144,27 +117,18 @@ export async function findHotPostsByRandom(limit: number = 10, page: number = 1,
   try {
     const queryOptions: QueryOptions = { sort: { hotnessFactor: -1 } };
 
-    // Apply count as skip (offset)
-    if (count > 0) {
-      queryOptions.skip = count;
-    }
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit;
 
-    // Apply limit if provided
-    if (limit > 0) {
-      queryOptions.limit = limit;
-    }
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
 
     const posts = await PostModel.find({}, null, queryOptions).exec();
-    const startIndex = (page - 1) * limit;
-    // Check if the start index exceeds the total number of records
-    if (startIndex >= posts.length) {
-      return []; // Return an empty array if there are no more records
-    }
 
-    // Return a slice of the posts array with the specified limit and start index
-    return posts.slice(startIndex, startIndex + limit);
+    return posts;
   } catch (error) {
-    throw new Error('Error finding hot posts randomly');
+    throw new Error('Error finding posts by community');
   }
 }
 
@@ -179,27 +143,18 @@ export async function findNewPostsByCommunity(
 
     const queryOptions: QueryOptions = { sort: { createdAt: -1 } };
 
-    // Apply count as skip (offset)
-    if (count > 0) {
-      queryOptions.skip = count;
-    }
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit;
 
-    // Apply limit if provided
-    if (limit > 0) {
-      queryOptions.limit = limit;
-    }
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
 
     const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
-    const startIndex = (page - 1) * limit;
-    // Check if the start index exceeds the total number of records
-    if (startIndex >= posts.length) {
-      return []; // Return an empty array if there are no more records
-    }
 
-    // Return a slice of the posts array with the specified limit and start index
-    return posts.slice(startIndex, startIndex + limit);
+    return posts;
   } catch (error) {
-    throw new Error('Error finding new posts by community');
+    throw new Error('Error finding posts by community');
   }
 }
 
@@ -207,27 +162,18 @@ export async function findNewPostsByRandom(limit: number = 10, page: number = 1,
   try {
     const queryOptions: QueryOptions = { sort: { createdAt: -1 } };
 
-    // Apply count as skip (offset)
-    if (count > 0) {
-      queryOptions.skip = count;
-    }
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit;
 
-    // Apply limit if provided
-    if (limit > 0) {
-      queryOptions.limit = limit;
-    }
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
 
     const posts = await PostModel.find({}, null, queryOptions).exec();
-    const startIndex = (page - 1) * limit;
-    // Check if the start index exceeds the total number of records
-    if (startIndex >= posts.length) {
-      return []; // Return an empty array if there are no more records
-    }
 
-    // Return a slice of the posts array with the specified limit and start index
-    return posts.slice(startIndex, startIndex + limit);
+    return posts;
   } catch (error) {
-    throw new Error('Error finding new posts randomly');
+    throw new Error('Error finding posts by community');
   }
 }
 
@@ -242,27 +188,18 @@ export async function findTopPostsByCommunity(
 
     const queryOptions: QueryOptions = { sort: { votesCount: -1 } };
 
-    // Apply count as skip (offset)
-    if (count > 0) {
-      queryOptions.skip = count;
-    }
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit;
 
-    // Apply limit if provided
-    if (limit > 0) {
-      queryOptions.limit = limit;
-    }
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
 
     const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
-    const startIndex = (page - 1) * limit;
-    // Check if the start index exceeds the total number of records
-    if (startIndex >= posts.length) {
-      return []; // Return an empty array if there are no more records
-    }
 
-    // Return a slice of the posts array with the specified limit and start index
-    return posts.slice(startIndex, startIndex + limit);
+    return posts;
   } catch (error) {
-    throw new Error('Error finding top posts by community');
+    throw new Error('Error finding posts by community');
   }
 }
 
@@ -270,27 +207,18 @@ export async function findTopPostsByRandom(limit: number = 10, page: number = 1,
   try {
     const queryOptions: QueryOptions = { sort: { votesCount: -1 } };
 
-    // Apply count as skip (offset)
-    if (count > 0) {
-      queryOptions.skip = count;
-    }
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit;
 
-    // Apply limit if provided
-    if (limit > 0) {
-      queryOptions.limit = limit;
-    }
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
 
     const posts = await PostModel.find({}, null, queryOptions).exec();
-    const startIndex = (page - 1) * limit;
-    // Check if the start index exceeds the total number of records
-    if (startIndex >= posts.length) {
-      return []; // Return an empty array if there are no more records
-    }
 
-    // Return a slice of the posts array with the specified limit and start index
-    return posts.slice(startIndex, startIndex + limit);
+    return posts;
   } catch (error) {
-    throw new Error('Error finding top posts randomly');
+    throw new Error('Error finding posts by community');
   }
 }
 

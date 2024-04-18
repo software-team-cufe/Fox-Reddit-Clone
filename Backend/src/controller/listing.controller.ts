@@ -949,6 +949,9 @@ export async function getSortedPosts(req: Request, res: Response) {
     const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
     const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
     const page = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
+    if (isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
+    }
     let Posts;
     if (subreddit) {
       if (sort != ' ') {
