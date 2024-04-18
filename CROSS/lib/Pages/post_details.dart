@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
-import 'CommentWidget.dart'; // Import the CommentWidget file
 import 'package:share/share.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'CommentSection.dart'; // Import the CommentSection.dart file
 
 class PostDetails extends StatelessWidget {
   final String redditName;
@@ -10,24 +14,142 @@ class PostDetails extends StatelessWidget {
   final int votes;
   final int commentsNo;
   final int? creatorId;
+  final int postId;
   // Add other parameters here
 
   const PostDetails({
-    super.key,
+    Key? key,
     required this.redditName,
     required this.title,
     this.picture,
     required this.votes,
     required this.commentsNo,
     required this.creatorId,
-    // Add other parameters here
-  });
+    required this.postId,
+  }) : super(key: key);
+
+  Future<void> _downloadImage(BuildContext context) async {
+  // Check if permission is granted
+  var status = await Permission.storage.status;
+  if (status.isGranted) {
+    // Permission is already granted, proceed with download
+    _startDownload(context);
+  } else {
+    // Permission is not granted, request permission
+    status = await Permission.storage.request();
+    if (status.isGranted) {
+      // Permission granted after request, start download
+      _startDownload(context);
+    } else {
+      // Permission denied or restricted
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Permission denied for image download"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+}
+
+void _startDownload(BuildContext context) async {
+  try {
+    // Get the downloads directory
+    Directory? downloadsDir = await getDownloadsDirectory();
+    String savePath = "${downloadsDir!.path}/$title.jpg";
+
+    // Download the image
+    var response = await http.get(Uri.parse(picture!));
+    File file = File(savePath);
+    await file.writeAsBytes(response.bodyBytes);
+
+    // Show a snackbar indicating successful download
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Image downloaded successfully"),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  } catch (e) {
+    // Handle download errors
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Error downloading image"),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Post Details"),
+        actions: [
+          PopupMenuButton(
+            icon: const Icon(Icons.more_vert),
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  child: const Text("Save"),
+                  onTap: () {
+                    // Handle save action
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text("Copy Text"),
+                  onTap: () {
+                    // Handle copy text action
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text("Turn on Captions"),
+                  onTap: () {
+                    // Handle turn on captions action
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text("Crosspost to Community"),
+                  onTap: () {
+                    // Handle crosspost action
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text("Copy Image"),
+                  onTap: () {
+                    // Handle copy image action
+                  },
+                ),
+                PopupMenuItem(
+                  onTap: picture != null && picture!.isNotEmpty
+                      ? () => _downloadImage(context)
+                      : null,
+                  child: const Text("Download Image"),
+                ),
+                PopupMenuItem(
+                  child: const Text("Report"),
+                  onTap: () {
+                    // Handle report action
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text("Block Account"),
+                  onTap: () {
+                    // Handle block account action
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text("Hide"),
+                  onTap: () {
+                    // Handle hide action
+                  },
+                ),
+              ];
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -35,7 +157,6 @@ class PostDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Display the author's avatar and username
-            
             GestureDetector(
               /*
               onTap: () {
@@ -46,7 +167,7 @@ class PostDetails extends StatelessWidget {
                       builder: (context) => ProfilePage(user_Id: creatorId)),
                 );
               },
-                */
+              */
               child: Row(
                 children: [
                   _buildAvatarIcon(),
@@ -56,14 +177,12 @@ class PostDetails extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors
-                          .blue, // Optional: Change color to indicate it's clickable
+                      color: Colors.blue,
                     ),
                   ),
                 ],
               ),
             ),
-            
             const SizedBox(height: 16),
             // Display the post title
             Text(
@@ -128,40 +247,9 @@ class PostDetails extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Display the first comment
-            CommentWidget(
-              username: "User1",
-              pfp: "",
-              content: "This is a comment.",
-              upvotes: 10,
-              downvotes: 5,
-              context: context,
-              comments: const [
-                "Reply 1",
-                "Reply 2",
-              ],
-            ),
-            // Display the second comment
-            CommentWidget(
-              username: "User2",
-              pfp: "",
-              content: "Another comment here.",
-              upvotes: 15,
-              downvotes: 3,
-              context: context,
-              comments: const [
-                "Comment A",
-                "Comment B",
-              ],
-            ),
-            const SizedBox(height: 16),
+            // Add the CommentSection widget below the post content
+            //CommentSection(postId: "$postId",),
           ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-          child: _buildNewCommentField(context),
         ),
       ),
     );
@@ -172,46 +260,6 @@ class PostDetails extends StatelessWidget {
     return const CircleAvatar(
       radius: 16,
       child: Icon(Icons.account_circle),
-    );
-  }
-
-  Widget _buildNewCommentField(BuildContext context) {
-    TextEditingController commentController = TextEditingController();
-
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: commentController,
-              decoration: const InputDecoration(
-                hintText: 'Write a comment...',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType:
-                  TextInputType.multiline, // Allow multiline text input
-              maxLines: null, // Allow the TextField to expand as needed
-              textInputAction:
-                  TextInputAction.newline, // Enter key creates a new line
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Handle sending the comment here
-                String commentText = commentController.text;
-                if (commentText.isNotEmpty) {
-                  // Send the comment logic
-                  commentController
-                      .clear(); // Clear the text field after sending
-                }
-              },
-              child: const Text('Send'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

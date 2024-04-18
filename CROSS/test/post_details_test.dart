@@ -12,6 +12,7 @@ void main() {
         votes: 10,
         commentsNo: 5,
         creatorId: 123,
+        postId: 2,
       ),
     ));
 
