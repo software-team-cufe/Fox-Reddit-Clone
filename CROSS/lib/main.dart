@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:reddit_fox/Pages/settings/blockedAccounts.dart';
 // import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
 import 'package:reddit_fox/features/auth/screens/switch_screen.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fox App',
       theme: Pallete.darkModeAppTheme,
-      home: const AuthContainer(),
+      home: BlockedAccounts(),
 //      locale: DevicePreview.locale(context),
       //    builder: DevicePreview.appBuilder,
     );

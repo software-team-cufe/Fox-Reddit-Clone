@@ -46,8 +46,6 @@ class SignupScreen extends StatefulWidget {
       "created_at": Date.toIso8601String(),
       "karma": "0"
     };
-    print(body);
-    print('_________________________________');
     try {
       final response = await http.post(
         url,
