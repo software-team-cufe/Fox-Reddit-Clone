@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 
-class SwitchPostWidget extends StatefulWidget {
-  const SwitchPostWidget({Key? key}) : super(key: key);
+
+class SwitchWidget extends StatefulWidget {
+  final bool value;
+
+  const SwitchWidget({required this.value, Key? key}) : super(key: key);
 
   @override
-  _SwitchPostWidgetState createState() => _SwitchPostWidgetState();
+  _SwitchWidgetState createState() => _SwitchWidgetState();
 }
 
-class _SwitchPostWidgetState extends State<SwitchPostWidget> {
-  bool _switchValue = false;
+class _SwitchWidgetState extends State<SwitchWidget> {
+  late bool _switchValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _switchValue = widget.value;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Switch(
-          value: _switchValue,
-          onChanged: (value) {
-            setState(() {
-              _switchValue = value;
-            });
-            print(_switchValue); // For debugging, you can print the value
-          },
-          activeTrackColor: Colors.lightGreenAccent,
-          activeColor: Colors.green,
-        ),
-        Text(_switchValue
-            .toString()), // For debugging, you can display the value
-      ],
+    return Switch(
+      value: _switchValue,
+      onChanged: (newValue) {
+        setState(() {
+          _switchValue = newValue;
+        });
+      },
     );
   }
 }
