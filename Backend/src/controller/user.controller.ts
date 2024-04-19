@@ -61,7 +61,10 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
       text: ` click here to verify your account: ${verify_link}`,
     });
 
-    return res.status(200);
+    return res.status(200).json({
+      status: 'success',
+      msg: 'Verification Email Sent. Please verify your account',
+    });
   } catch (e: any) {
     if (e.code === 11000) {
       return res.status(409).json({
