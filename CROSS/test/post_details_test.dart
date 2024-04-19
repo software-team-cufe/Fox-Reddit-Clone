@@ -13,6 +13,7 @@ void main() {
         commentsNo: 5,
         creatorId: 123,
         postId: 2,
+        nsfw: false,
       ),
     ));
 

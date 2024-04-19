@@ -284,7 +284,10 @@ class _HomePageState extends State<HomePage> {
                                         votes: post['votes'],
                                         commentsNo: post['commentsNo'],
                                         creatorId: post['creatorId'],
-                                        postId: post['id']),
+                                        postId: post['id'],
+                                        nsfw: post['nsfw'],
+                                        description: post['description'],
+                                        ),
                                   ),
                                 );
                               },

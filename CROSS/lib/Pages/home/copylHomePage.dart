@@ -188,7 +188,8 @@ class _HomePageState extends State<HomePage> {
                               commentsNo: post['commentsNo'],
                               creatorId: post['creatorId'],
                               postId: post['id'],
-                              // Pass other details as needed
+                              nsfw: post['nsfw'],
+                              description: post['description'],
                             ),
                           ),
                         );
