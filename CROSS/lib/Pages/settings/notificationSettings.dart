@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
 
-
 class NotificationSettting extends StatefulWidget {
   const NotificationSettting({super.key});
 
@@ -10,8 +9,6 @@ class NotificationSettting extends StatefulWidget {
 }
 
 class _NotificationSetttingState extends State<NotificationSettting> {
- 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(

@@ -15,7 +15,12 @@ class ApiRoutesBackend {
       '$baseUrl/posts?creatorId=$id';
   static const String submitPost = '$baseUrl/api/submit';
   static const String delelteUser = '$baseUrl/api/users/delete_user';
-  static String getPosts(String category, int page, int count, int limit) => '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
+
+  // static const String getPosts2 = '$baseUrl/getPosts';
+  // static const String hotPosts = '$baseUrl/hotPosts';
+  // static const String topPosts = '$baseUrl/topPosts';
+  // static const String bestPosts = '$baseUrl/bestPosts';
+  // static const String getPosts = '$baseUrl/posts';
   // static const String login = '$baseUrl/user';
   // static String getUserById(int id) => '$baseUrl/user/$id';
   // static String getPostsByCreatorId(int id) => '$baseUrl/posts?creatorId=$id';

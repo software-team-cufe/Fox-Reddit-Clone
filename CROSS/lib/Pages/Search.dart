@@ -68,34 +68,30 @@ class _SearchState extends State<Search> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        toolbarHeight: 80,
         title: Container(
-          padding: const EdgeInsets.only(top: 20.0, right: 20.0, bottom: 20.0),
+          padding: const EdgeInsets.only(top: 20.0, right: 20.0),
           child: Center(
-            child: SizedBox(
-              height: 50,
-              child: TextField(
-                controller: _searchController,
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  hintText: 'Search Reddit',
-                  filled: true,
-                  fillColor: const Color.fromARGB(255, 50, 50, 50),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0), // Adjust border radius
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: const Icon(Icons.search, color: Colors.white),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.white),
-                    onPressed: _clearSearch,
-                  ),
+            child: TextField(
+              controller: _searchController,
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                hintText: 'Search Reddit',
+                filled: true,
+                fillColor: const Color.fromARGB(255, 50, 50, 50),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: BorderSide.none,
                 ),
-                style: const TextStyle(color: Colors.white),
-                onChanged: (value) {
-                  // Handle text field changes
-                },
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear, color: Colors.white),
+                  onPressed: _clearSearch,
+                ),
               ),
+              style: const TextStyle(color: Colors.white),
+              onChanged: (value) {
+                // Handle text field changes
+              },
             ),
           ),
         ),
