@@ -3,8 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
 import { Tabs, Tab } from '../../../GeneralElements/Tabs/Tab'
 import { NotepadText, ImageUp, BarChart2, Link2, Trash2, BadgeInfo, X } from 'lucide-react'
-
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 import './QuillStyle.css'
 import CheckButton from "../../../GeneralElements/CheckButton/CheckButton";
 import Poll from "./Poll"
