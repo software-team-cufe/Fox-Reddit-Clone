@@ -15,8 +15,12 @@ import 'package:reddit_fox/routes/Mock_routes.dart'; // Mock routes for testing
 // Define a stateful widget for the followed Accounts screen
 class FollowersPage extends StatefulWidget {
   const FollowersPage({super.key});
+
+  get filteredfollowedAccounts => null;
   @override
   State<FollowersPage> createState() => _FollowersPage();
+
+  void filterfollowedAccounts(String s) {}
 }
 
 // State class for the followed Accounts screen
@@ -77,7 +81,7 @@ class _FollowersPage extends State<FollowersPage>
 
   // Filters the list of followed accounts based on the provided query
   // [query] - The search query
-  void _filterfollowedAccounts(String query) {
+  void filterfollowedAccounts(String query) {
     setState(() {
       filteredfollowedAccounts = filteredfollowedAccounts
           .where((account) =>
@@ -85,6 +89,7 @@ class _FollowersPage extends State<FollowersPage>
           .toList();
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +112,7 @@ class _FollowersPage extends State<FollowersPage>
                 ),
               ),
               onChanged:
-                  _filterfollowedAccounts, // Call filter function on text change
+                  filterfollowedAccounts, // Call filter function on text change
             ),
           ),
           Expanded(
