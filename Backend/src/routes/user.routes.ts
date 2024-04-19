@@ -32,8 +32,8 @@ import {
   getALLBlockedHandler,
   deleteUserHandler,
   getUserIDfromTokenHandler,
-  getUpvotedPostsByUsername,
-  getDownvotedPostsByUsername,
+  getUpvotedPosts,
+  getDownvotedPosts,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -63,9 +63,9 @@ router.get('/api/v1/me/prefs', getCurrentUserPrefs);
 
 router.patch('/api/v1/me/prefs', editCurrentUserPrefs);
 
-router.get('/api/user/me/upvoted', getUpvotedPostsByUsername);
+router.get('/api/user/me/upvoted/:sort', getUpvotedPosts);
 
-router.get('/api/user/:username/downvoted', getDownvotedPostsByUsername);
+router.get('/api/user/me/downvoted/:sort', getDownvotedPosts);
 
 router.get('/api/user/userIDfromToken', deserializeUser, getUserIDfromTokenHandler);
 

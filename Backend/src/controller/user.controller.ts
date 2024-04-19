@@ -29,14 +29,14 @@ import { signJwt, verifyJwt } from '../utils/jwt';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
 import { UserModel, Vote } from '../model/user.model';
-import { omit } from 'lodash';
+import { omit, shuffle } from 'lodash';
 import { get } from 'config';
 import PostModel from '../model/posts.model';
 import { userComments } from '../service/comment.service';
 import { findPostById, userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
-import { Types, ObjectId } from 'mongoose';
+
 /**
  * Handles the creation of a user.
  *
@@ -331,10 +331,10 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
   return res.status(200).send(user.prefs);
 }
 
-export async function getUpvotedPostsByUsername(req: Request, res: Response) {
+export async function getUpvotedPosts(req: Request, res: Response) {
   try {
     let user = res.locals.user;
-
+    const sort = req.params.sort.toLowerCase();
     if (!user) {
       return res.status(401).send('No user logged in');
     }
@@ -359,7 +359,23 @@ export async function getUpvotedPostsByUsername(req: Request, res: Response) {
 
     const paginatedUpvotedPostIds = upvotedPostIds.slice(skip, skip + limit);
 
-    const upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } });
+    let upvotedPosts;
+
+    if (sort) {
+      if (sort == 'best')
+        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ bestFactor: -1 });
+      if (sort == 'hot')
+        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ hotnessFactor: -1 });
+      if (sort == 'top')
+        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ votesCount: -1 });
+      if (sort == 'new')
+        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ createdAt: -1 });
+      if (sort == 'random') upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+      if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
+        upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+    } else {
+      upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+    }
 
     return res.json({
       upvotedPosts,
@@ -367,6 +383,7 @@ export async function getUpvotedPostsByUsername(req: Request, res: Response) {
       limit,
       totalPages,
       totalUpvotedPosts,
+      sort,
     });
   } catch (error) {
     console.error('Error fetching upvoted posts:', error);
@@ -374,10 +391,10 @@ export async function getUpvotedPostsByUsername(req: Request, res: Response) {
   }
 }
 
-export async function getDownvotedPostsByUsername(req: Request, res: Response) {
+export async function getDownvotedPosts(req: Request, res: Response) {
   try {
     let user = res.locals.user;
-
+    const sort = req.params.sort.toLowerCase();
     if (!user) {
       return res.status(401).send('No user logged in');
     }
@@ -402,7 +419,23 @@ export async function getDownvotedPostsByUsername(req: Request, res: Response) {
 
     const paginatedDownvotedPostIds = downvotedPostIds.slice(skip, skip + limit);
 
-    const downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } });
+    let downvotedPosts;
+
+    if (sort) {
+      if (sort == 'best')
+        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ bestFactor: -1 });
+      if (sort == 'hot')
+        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ hotnessFactor: -1 });
+      if (sort == 'top')
+        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ votesCount: -1 });
+      if (sort == 'new')
+        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ createdAt: -1 });
+      if (sort == 'random') downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+      if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
+        downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+    } else {
+      downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+    }
 
     return res.json({
       downvotedPosts,
@@ -410,6 +443,7 @@ export async function getDownvotedPostsByUsername(req: Request, res: Response) {
       limit,
       totalPages,
       totalDownvotedPosts,
+      sort,
     });
   } catch (error) {
     console.error('Error fetching upvoted posts:', error);
