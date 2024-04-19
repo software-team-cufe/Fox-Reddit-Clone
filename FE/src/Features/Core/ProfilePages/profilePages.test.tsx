@@ -3,6 +3,8 @@ import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing
 import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/hooks/UserRedux/UserModelSlice";
 
 class MockIntersectionObserver {
     constructor(public callback: IntersectionObserverCallback, public options?: IntersectionObserverInit) { }

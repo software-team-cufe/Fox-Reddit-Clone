@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>JSDoc: Source: Features/Core/ProfilePages/pages/profilehidden.jsx</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -30,8 +30,9 @@
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
-import Spinner from "@/GeneralElements/Spinner/Spinner";
 import { ProfileContext } from "../ProfilePagesRoutes";
+import HiddenPost from "./extras/hiddenPost";
+
 /**
  * Renders the profile hidden page.
  *
@@ -48,28 +49,44 @@ export default function ProfileHidden({ using }) {
     const [loading, setLoading] = useState(true);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
+    const [pagedone, setpagedone] = useState(false);
+    const [currentpage, setcurrentpage] = useState(1);
+    const limitpage = 2;
+
+    const unhidePost = (postId) => {
+        // Send the unhide request
+        userAxios.post(`api/unhide/${postId}`)
+            .then(() => {
+                // If the request is successful, remove the post from the posts array
+                setPosts(posts.filter(post => post.id !== postId));
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
 
     //fetch posts on load and put into posts array
     useEffect(() => {
         setLoading(true);
-        axios.get('http://localhost:3002/posts?_limit=5')
-            //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
+        axios.get(`http://localhost:3002/posts?_page=${currentpage}&amp;_limit=${limitpage}`)
             .then(response => {
-                const newPosts = response.data.map(post => ({
-                    subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
-                    },
-                    images: post.attachments.postData,
-                    id: post.postID,
-                    title: post.title,
-                    subTitle: post.postText,
-                    votes: post.votesCount,
-                    comments: post.commentsCount,
-                    thumbnail: post.thumbnail,
-                    video: null
-                }));
-
+                const newPosts = response.data
+                    .filter(post => post.hidden === true)
+                    .map(post => ({
+                        subReddit: {
+                            image: post.attachments.subredditIcon,
+                            title: post.communityName,
+                        },
+                        images: post.attachments.postData,
+                        id: post.id,
+                        title: post.title,
+                        subTitle: post.postText,
+                        votes: post.votesCount,
+                        comments: post.commentsCount,
+                        thumbnail: post.thumbnail,
+                        video: null,
+                        hidden: post.hidden
+                    }));
                 setPosts(newPosts);
                 setLoading(false);
             })
@@ -81,25 +98,32 @@ export default function ProfileHidden({ using }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        axios.get('http://localhost:3002/posts?_limit=5')
+        axios.get(`http://localhost:3002/posts?_start=${currentpage + 1}&amp;_limit=${limitpage}`)
             .then(response => {
-                const newPosts = response.data.map(post => ({
-                    subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
-                    },
-                    images: post.attachments.postData,
-                    id: post.postID,
-                    title: post.title,
-                    subTitle: post.postText,
-                    votes: post.votesCount,
-                    comments: post.commentsCount,
-                    thumbnail: post.thumbnail,
-                    video: null
-                }));
+                if (response.data.length &lt; limitpage) {
+                    setpagedone(true);
+                }
+                const newPosts = response.data
+                    .filter(post => post.hidden === true)
+                    .map(post => ({
+                        subReddit: {
+                            image: post.attachments.subredditIcon,
+                            title: post.communityName,
+                        },
+                        images: post.attachments.postData,
+                        id: post.id,
+                        title: post.title,
+                        subTitle: post.postText,
+                        votes: post.votesCount,
+                        comments: post.commentsCount,
+                        thumbnail: post.thumbnail,
+                        video: null,
+                        hidden: post.hidden
+                    }));
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
+                setcurrentpage(1 + currentpage);
 
             })
             .catch(error => {
@@ -111,7 +135,7 @@ export default function ProfileHidden({ using }) {
     if (loading) {
         return (
             &lt;div role='hiddentab' className="w-100 h-100 flex flex-col items-center justify-center">
-                &lt;Spinner className="h-24 w-24" />
+                &lt;img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
             &lt;/div>
         )
     }
@@ -122,9 +146,9 @@ export default function ProfileHidden({ using }) {
             {Posts.length > 0 ? (
                 &lt;>
                     {Posts.map((post, index) => (
-                        &lt;PostComponent key={index} post={post} />
+                        &lt;HiddenPost key={index} post={post} setpost={setPosts} posts={Posts} />
                     ))}
-                    {!callingposts &amp;&amp; (&lt;button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more&lt;/button>)}
+                    {!pagedone &amp;&amp; !callingposts &amp;&amp; (&lt;button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more&lt;/button>)}
                     {callingposts &amp;&amp; (&lt;img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 &lt;/>
             ) : (
@@ -146,13 +170,13 @@ export default function ProfileHidden({ using }) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Apr 12 2024 11:10:49 GMT+0200 (Eastern European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Apr 19 2024 20:58:58 GMT+0200 (Eastern European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

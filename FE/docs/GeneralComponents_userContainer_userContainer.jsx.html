@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: ChatMessaging</title>
+    <title>JSDoc: Source: GeneralComponents/userContainer/userContainer.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,96 +17,50 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: ChatMessaging</h1>
+    <h1 class="page-title">Source: GeneralComponents/userContainer/userContainer.jsx</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import { Link } from 'react-router-dom';
+import { userStore } from '@/hooks/UserRedux/UserStore';
 
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>chatMessaging is a functional component that has mark all as read option .</p></div>
-        
+/**
+ * Renders a user component.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.user - The user object.
+ * @returns {JSX.Element} The rendered UserComponent.
+ */
+export default function UserComponent({ user }) {
+    let mainuser = null;
+    if(userStore.getState().user.user == null){
+        mainuser = "anas"
+    }
+    else{
+        mainuser = userStore.getState().user.user.username;
+    }
 
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Features_Core_Settings_chatMessaging.jsx.html">Features/Core/Settings/chatMessaging.jsx</a>, <a href="Features_Core_Settings_chatMessaging.jsx.html#line10">line 10</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    return (
+        &lt;div>
+            &lt;Link role="userContainer"to={user.name === mainuser ? `/user/${user.name}/overview` : `/viewer/${user.name}/overview`} className="hover:bg-gray-100 rounded-3xl flex flex-1 gap-4 w-full p-4 h-fit min-h-[30px]">
+                &lt;img role="userimage" src={user.avatar} alt="user avatar" className="w-16 mt-2 ml-2 h-16 rounded-full" />
+                &lt;div className="flex flex-col justify-center">
+                    &lt;p className="font-semibold text-sm mb-2">u/{user.name}&lt;/p>
+                    &lt;p className="text-gray-500 text-xs">{user.karma} karma&lt;/p>
+                    &lt;p role="userabout" className="text-gray-900 text-sm">{user.about}&lt;/p>
+                &lt;/div>
+            &lt;/Link>
+        &lt;/div>
+    )
+}</code></pre>
+        </article>
+    </section>
 
 
 

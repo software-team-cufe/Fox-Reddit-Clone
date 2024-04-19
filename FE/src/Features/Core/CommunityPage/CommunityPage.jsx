@@ -1,6 +1,11 @@
+
 /**
- * @file FILEPATH: /d:/Projects/Fox-Reddit-Clone/FE/src/Features/Core/CommunityPage/CommunityPage.jsx
- * @desc This file contains the implementation of the CommunityPage component, which displays a community page with posts, sorting options, and community information.
+ * This file represents the CommunityPage component.
+ * It displays a community page with posts, sorting options, and community information.
+ * The component uses React Router for routing and axios for making HTTP requests.
+ * It also utilizes React Query for data fetching and state management.
+ * The component is wrapped in a CommunityProvider component that provides the selected sorting and period values.
+ * @file FILEPATH
  */
 import React, { useContext, createContext, useEffect, useState, useRef } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
@@ -11,14 +16,14 @@ import Spinner from '@/GeneralElements/Spinner/Spinner';
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { Plus } from 'lucide-react';
 import bellMenu from "./accessories/bellmenu";
-import optionsMenu from "./accessories/optionsmenu";
+import OptionsMenu from "./accessories/optionsmenu";
 import MainFooter from "./footers/mainFooter";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import LoginFirtstModal from "./accessories/loginFirstModal";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
 import { useQuery } from "react-query";
 import { userAxios } from "../../../Utils/UserAxios";
-
+import { toast } from 'react-toastify';
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -55,15 +60,16 @@ export default function CommunityPage() {
   const limitpage = 5;
   const [currentpage,setcurrentpage] = useState(1);
   const [feed, setFeed] = useState(false);
+  const [comm, setComm] = useState(null);
 
     //to fetch the community data from the server and use them
     const fetchCommunity = async () => {
       const response = await axios.get(`http://localhost:3002/communities`);
       const commData = response.data.find((commresponse) => commresponse.name === community);
-      return commData;
+      setComm(commData);
   };
   
-  let { data: comm, isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
+  let {isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
 
   const fetchInitialPosts = () => {
     setFeed(true);
@@ -105,7 +111,12 @@ export default function CommunityPage() {
     }
     axios.patch(`http://localhost:3002/communities/${comm.id}`, { joined: !comm.joined })
       .then(() => {
-        comm = { ...comm, joined: !comm.joined };
+        if(comm.joined) {
+        toast.success(`r/${comm.name} ${comm.joined ? 'unjoined' : 'joined'}!`)
+        } else {
+          toast.success(`r/${comm.name} ${comm.joined ? 'unjoined' : 'joined'}!`)
+        }
+        setComm({ ...comm, joined: !comm.joined });
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -160,7 +171,7 @@ export default function CommunityPage() {
   //to handle loading until fetch is complete
   if (loading) {
     return (
-      <div className="w-100 h-100 flex flex-col items-center justify-center">
+      <div role="communitypage" className="w-100 h-100 flex flex-col items-center justify-center">
         <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
       </div>
     )
@@ -169,11 +180,11 @@ export default function CommunityPage() {
   //main body of the page
 
   return (
-    <div>
+    <div role="communitypage">
       <div className={`flex-1 -mt-4 md:w-3/4 w-full md:mx-auto relative`}>
         {showModal && <LoginFirtstModal onClose={setShowModal} />}
         <BackToTop />
-        {/* backgroyund image of the community */}
+        {/* background image of the community */}
         <img src={comm.backimage} alt='community' className='w-full md:mx-auto h-20 md:h-36 md:rounded-lg object-cover' />
 
         {/* community name and (members count in mobile mode)*/}
@@ -197,7 +208,7 @@ export default function CommunityPage() {
               <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}</span>
             </button>
             {comm.joined ? bellMenu() : <></>}
-            {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : <></>}
+            {user.user ? <OptionsMenu comm={comm} setComm={setComm}/>: <></>}
           </div>
         </div>
 
@@ -211,7 +222,7 @@ export default function CommunityPage() {
             <span className={`inline font-bold text-xs ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}</span>
           </button>
           {comm.joined ? bellMenu() : <></>}
-          {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : <></>}
+          {user.user ? <OptionsMenu comm={comm} setComm={setComm}/> : <></>}
         </div>
 
         {/* the feed with its sort elements and the community description and rules and other tools on the right*/}

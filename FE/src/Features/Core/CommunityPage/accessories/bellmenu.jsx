@@ -3,6 +3,11 @@ import { Menu, Transition } from '@headlessui/react';
 import { Bell, BellRing, BellOff } from "lucide-react";
 import { Fragment } from "react";
 
+/**
+ * Renders a bell menu component.
+ *
+ * @returns {JSX.Element} The bell menu component.
+ */
 export default function bellMenu() {
     return (
       <Menu as="div" className="relative inline-block text-left z-30">

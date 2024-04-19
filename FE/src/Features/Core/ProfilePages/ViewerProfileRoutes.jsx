@@ -80,7 +80,7 @@ function Layout() {
   // loading spinner to wait for fetch then load body of apge
   if (loading) {
     return (
-      <div className="w-100 h-100 flex flex-col items-center justify-center">
+      <div role="ViewerPage" className="w-100 h-100 flex flex-col items-center justify-center">
             <img src={'/logo.png'} className="h-20 w-20 mt-24 mx-auto animate-ping" alt="Logo" />
       </div>
     )
@@ -88,7 +88,7 @@ function Layout() {
 
   //main body of page
   return (
-    <div className="flex gap-10 w-[80%] mx-auto">
+    <div role="ViewerPage" className="flex gap-10 w-[80%] mx-auto">
       <div className="relative flex-grow md:w-[55%]">
         <BackToTop />
         <div role="avatarHeader" className='relative flex mb-8'>
