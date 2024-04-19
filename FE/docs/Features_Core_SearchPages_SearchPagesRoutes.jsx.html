@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Features/Core/SearchPages/SearchPagesRoutes.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Features/Core/SearchPages/SearchPagesRoutes.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Link, Outlet, Route, Routes, useLocation, useParams } from "react-router-dom";
+import SearchSortMenu from "@/GeneralComponents/SearchSortMenu/SearchSortMenu";
+import { useState } from "react";
+import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
+import PostsSearchPage from "./pages/PostsSearchPage";
+import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
+import PeopleSearchPage from "./pages/PeopleSearchPage";
+import CommentsSearchPage from "./pages/CommentsSearchPage";
+import React, { useContext, createContext } from "react";
+
+/**
+ * Array of buttons for mapping.
+ * @type {Array&lt;{text: string, path: string}>}
+ */
+const buttons = [
+  {
+    text: "Posts",
+    path: "Posts",
+  },
+  {
+    text: "Communities",
+    path: "Communities",
+  },
+  {
+    text: "Comments",
+    path: "Comments",
+  },
+  {
+    text: "People",
+    path: "People",
+  },
+];
+
+/**
+ * Context for search state.
+ * @type {React.Context&lt;{selected: string, setselected: Function, period: string, setperiod: Function}>}
+ */
+export const SearchContext = createContext({
+  selected: "Relevance",
+  setselected: (selected) => {},
+  period: "All time",
+  setperiod: (period) => {},
+});
+
+/**
+ * Provider component that holds the search state.
+ * @param {Object} props - The component props.
+ * @param {React.ReactNode} props.children - The child components.
+ * @returns {React.ReactNode} The rendered component.
+ */
+export function SearchProvider({ children }) {
+  const [selected, setselected] = useState("Relevance");
+  const [period, setperiod] = useState("All time");
+
+  return (
+    &lt;SearchContext.Provider value={{ selected, setselected, period, setperiod }}>
+      {children}
+    &lt;/SearchContext.Provider>
+  );
+}
+
+/**
+ * Layout component for search pages.
+ * @returns {React.ReactNode} The rendered component.
+ */
+function Layout() {
+  const path = useLocation(); // accessing current path
+  const { selected } = useContext(SearchContext);
+  const { searchkey } = useParams(); // accessing search key
+
+  return (
+    &lt;div className="max-w-[80%] w-screen m-2">
+      {/* search by bar header */}
+      &lt;div role="searchLabel" className="flex gap-3">
+        &lt;span className="mt-[13px] text-xs">SEARCH RESULTS&lt;/span>
+
+        {/* search by bar items */}
+        &lt;ul role="searchBySelect" className="flex gap-3 overflow-x-auto mb-3">
+          {buttons.map((btn, index) => (
+            &lt;li key={index}>
+              &lt;Link role={`${btn.text}Button`} to={`/search/${searchkey}/${btn.path}`}>
+                &lt;button
+                  className={`rounded-3xl font-sans text-sm font-semibold w-fit px-4 h-10 ${
+                    path.pathname == `/search/${searchkey}/${btn.path}` ? "bg-gray-300" : "bg-white"
+                  }`}
+                >
+                  {btn.text}
+                &lt;/button>
+              &lt;/Link>
+            &lt;/li>
+          ))}
+        &lt;/ul>
+      &lt;/div>
+
+      {/* sort by and period select only on posts and comments selections*/}
+      {path.pathname !== `/search/${searchkey}/People` &amp;&amp; path.pathname !== `/search/${searchkey}/Communities` &amp;&amp; (
+        &lt;>
+          &lt;div className="flex gap-1 mt-2">
+            &lt;span className="text-xs text-gray-500 mt-[12px] ml-2">sort by:&lt;/span>
+            &lt;div role="searchsortmenu">
+              &lt;SearchSortMenu />
+            &lt;/div>
+            &lt;div role="periodselect">
+              &lt;PeriodSelect appearance={selected} context={SearchContext} />
+            &lt;/div>
+            &lt;div className="flex-1 mt-[18px]">
+              &lt;hr className="font-bold text-black" />
+            &lt;/div>
+          &lt;/div>
+        &lt;/>
+      )}
+      &lt;Outlet />
+    &lt;/div>
+  );
+}
+
+/**
+ * Search pages layout component.
+ * @returns {React.ReactNode} The rendered component.
+ */
+export default function SearchPagesLayout() {
+  const { searchkey } = useParams(); // accessing search key
+
+  return (
+    // routes to whatever selection is made for search by: people.posts...etc
+    &lt;SearchProvider>
+      &lt;Routes>
+        &lt;Route element={&lt;Layout />}>
+          &lt;Route key={"/search"} path="/" element={&lt;>&lt;/>} />
+          &lt;Route key={"/Posts"} path={`Posts`} element={&lt;PostsSearchPage searched={searchkey} />} />
+          &lt;Route key={"/Communities"} path={`Communities`} element={&lt;CommunitiesSearchPage searched={searchkey} />} />
+          &lt;Route key={"/People"} path={`People`} element={&lt;PeopleSearchPage searched={searchkey} />} />
+          &lt;Route key={"/COmments"} path={`Comments`} element={&lt;CommentsSearchPage searched={searchkey} />} />
+        &lt;/Route>
+      &lt;/Routes>
+    &lt;/SearchProvider>
+  );
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Apr 19 2024 20:58:58 GMT+0200 (Eastern European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

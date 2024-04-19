@@ -1,12 +1,16 @@
+/**
+ * @file Sidebar component for the Fox Reddit Clone application.
+ * @module Sidebar
+ */
+
+import React from "react";
 import { useState, useContext } from "react";
-import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles } from 'lucide-react';
+import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles, Mail, Table } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
-import React from "react";
 import Popular from "./Popular";
 import About from "./About";
-
-
+import { key } from 'localforage';
 
 const icons = [
    {
@@ -26,13 +30,17 @@ const icons = [
    },
 ];
 
-function Sidebar({className,IsOpen}) {
-   const [open, setOpen] = useState(true);
-
+function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
    // const toggleSidebar = () => {
    //    setOpen(!open);
    // };
 
+/**
+ * this function open resources , community , and Recents dropdown list
+ * 
+ * @param {Event} event - the event of clicking any button
+ * @returns {void} - this function does not return anything
+ */
 
    function functionToExecute(event) {
       // Get the dropdown list associated with the clicked button
@@ -63,22 +71,22 @@ function Sidebar({className,IsOpen}) {
    };
 
    const path = useLocation();
-   
+
    return (
       <>
          <aside
             id="sidebar-multi-level-sidebar"
             role="sidebarr"
             data-testid="sidebar"
-            className={`${className} ${IsOpen ? "w-80" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""}
-            md:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
+            className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-50 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
+            lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
 
 
             <div
-               className={`h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
-                  } md:visible`}
+               className={` ${path.pathname.includes('submit') ? "hidden" : ""} h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
+                  }  lg:visible`}
             >
                <ul className="space-y-2 font-light">
                   {icons.map((e, idx) => (
@@ -92,6 +100,42 @@ function Sidebar({className,IsOpen}) {
                         </Link>
                      </li>
                   ))}
+                  
+                  
+
+                  {IsModerator &&
+                     <>
+                        <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                        <button
+                           id="dropdownDefaultButton"
+                           onClick={functionToExecute}
+                           data-dropdown-toggle="dropdown"
+                           className="text-gray w-full bg-white-700 hover:bg-gray-200 txt-large focus:outline-none justify-between font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                           type="buttonn"
+                        >
+                           MODERATOR
+                           <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
+                        </button>
+                        <div>
+                           <ul>
+                              <li className="flex items-center px-1 py-1 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400">
+                              <Mail className="ml-2 w-4 h-4" />
+                                 <span className=" px-2 py-2 text-gray-800">Mod mail</span>
+                              </li>
+                              <li className="flex items-center px-1 py-1 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400 ">
+                              <Table className="ml-2 w-4 h-4"/>
+                                 <span className=" px-2 py-2 text-gray-800">r/mod</span>
+                              </li>
+                              {/*
+                              <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray ">
+                                 here communities wher i am moderate should exist
+                              </li>
+                              */}
+                           </ul>
+                        </div>
+                     </>
+                 }
+
                   <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
@@ -99,41 +143,44 @@ function Sidebar({className,IsOpen}) {
                         id="dropdownDefaultButton"
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
-                        className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                        className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none justify-between font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                         type="buttonn"
                      >
                         RECENTS
-                     <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      </button>
 
                      <div id="dropdown" className="">
                         <ul className="" aria-labelledby="dropdownDefaultButton">
+                           {/*here is where the ui print the subreddits i just entered */}
                            <li>
-                              <a
-                                 href="#"
-                                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
-                              >
-                                 must be created
-                              </a>
+                                 {RecentCommunities.map((subreddit, index) => (
+                                    <a 
+                                    href={`/r/${subreddit}`}
+                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                    key={index}>
+                                          {subreddit}
+                                    </a>
+                                 ))}
                            </li>
                         </ul>
                      </div>
                   </li>
 
-               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
                         id="dropdownDefaultButton1"
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
-                        className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                        className="text-gray w-full bg-white-700 hover:bg-gray-200 justify-between focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                         type="button"
                         role="button1212"
                      >
                         YOUR COMMUNITIES
-                        <ChevronDown 
-                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        <ChevronDown
+                           className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      </button>
 
                      <div id="dropdown1" className="">
@@ -156,18 +203,18 @@ function Sidebar({className,IsOpen}) {
                      </div>
                   </li>
 
-               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>
                      <button
                         id="dropdownDefaultButton2"
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
-                        className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
+                        className="text-gray w-full bg-white-700 hover:bg-gray-200 justify-between focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
                         type="button"
                      >
                         RESOURCES
-                        <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"/>
+                        <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      </button>
 
                      <div id="dropdown2" className="">
@@ -233,7 +280,7 @@ function Sidebar({className,IsOpen}) {
                               >
                                  <i className="fa-solid fa-users-between-lines w-5 h-5"></i>
                                  <span className="px-2 py-2 text-gray-800" >Communities</span>
-                                 
+
                               </a>
                            </li>
 
@@ -257,14 +304,14 @@ function Sidebar({className,IsOpen}) {
                               </a>
                            </li>
 
-                        <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                           <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                            <li>
                               <a
                                  href="/Contentpolicy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <Siren className="w-5 h-5"/>
+                                 <Siren className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">content policy</span>
                               </a>
                            </li>
@@ -273,7 +320,7 @@ function Sidebar({className,IsOpen}) {
                                  href="/PrivacyPolicy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <BookLock className="w-5 h-5"/>
+                                 <BookLock className="w-5 h-5" />
                                  <span className="px-2 py-2 text-gray-800">Privacy policy</span>
                               </a>
                            </li>
@@ -283,7 +330,7 @@ function Sidebar({className,IsOpen}) {
                                  href="/Useragreement"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
-                                 <Handshake className="w-5 h-5"/>
+                                 <Handshake className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">User agreement</span>
                               </a>
                            </li>
@@ -292,7 +339,6 @@ function Sidebar({className,IsOpen}) {
                   </li>
                </ul>
             </div>
-            
          </aside>
       </>
    );

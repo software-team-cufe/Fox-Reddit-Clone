@@ -3,9 +3,40 @@ import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing
 import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/hooks/UserRedux/UserModelSlice";
 
+class MockIntersectionObserver {
+    constructor(public callback: IntersectionObserverCallback, public options?: IntersectionObserverInit) { }
 
-afterEach(() =>{
+    disconnect() {
+        return null;
+    }
+
+    observe() {
+        return null;
+    }
+
+    unobserve() {
+        return null;
+    }
+
+    takeRecords() {
+        return [];
+    }
+
+    root = null;
+    rootMargin = '';
+    thresholds = [0];
+}
+
+Object.defineProperty(window, 'IntersectionObserver', {
+    writable: true,
+    configurable: true,
+    value: MockIntersectionObserver,
+});
+
+afterEach(() => {
     cleanup();
 });
 
@@ -56,7 +87,7 @@ describe('profile sections navigation correctly', () => {
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/user/anas']}>
+            <MemoryRouter initialEntries={['/user/anas/']}>
                 <Routes>
                     <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
                 </Routes>

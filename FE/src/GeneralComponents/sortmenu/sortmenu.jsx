@@ -2,13 +2,26 @@ import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDown } from 'lucide-react'
 import React,{useContext} from 'react';
+import { useLocation } from 'react-router-dom';
 
 //for mapping the sorting button options
-const sortings = [
-  { name: 'Hot'},
-  { name: 'New'},
-  { name: 'Top'},
-]
+/**
+ * Checks if the given path is a valid best path.
+ * @param {string} path - The path to be checked.
+ * @returns {boolean} - Returns true if the path is a valid best path, otherwise returns false.
+ */
+function isValidBest(path){
+  const bestpaths = ['/', '/Popular', '/All'];
+
+  if(path.startsWith('/posts/'))
+    return true;
+
+  if(bestpaths.includes(path))
+    return true;
+
+  else
+    return false;
+}
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -19,6 +32,7 @@ export default function Sortmenu({context}) {
   //managing current state selection and passing data to parent eleement to change the sorting
   const [current, switchstates] = useState("New");
   const { setselected } = useContext(context);
+  const path = useLocation().pathname;
 
   const handleSwitch = (period) => {
     switchstates(period);
@@ -53,16 +67,30 @@ export default function Sortmenu({context}) {
             <div role="menuBodyHeader" className='font-semibold text-sm mx-3 my-3 text-gray-700'>Sort by</div>
 
             {/* Sort option mapped*/}
-            {sortings.map((sorting, index) => {
-              return (
-                <Menu.Item key={index}>
+                <Menu.Item >
                   {({ active }) => (
-                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === sorting.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(sorting.name)}>
-                      {sorting.name}
+                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Best' ? 'bg-gray-200' : '', isValidBest(path) ? '': 'hidden')} onClick={() => handleSwitch("Best")}>
+                      Best
                     </div>
-                  )}
-                </Menu.Item>);
-            })}
+                  )}</Menu.Item>
+                <Menu.Item >
+                  {({ active }) => (
+                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Hot' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Hot")}>
+                      Hot
+                    </div>
+                  )}</Menu.Item>
+                <Menu.Item >
+                  {({ active }) => (
+                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'New' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("New")}>
+                      New
+                    </div>
+                  )}</Menu.Item>
+                <Menu.Item >
+                  {({ active }) => (
+                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Top' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Top")}>
+                      Top
+                    </div>
+                  )}</Menu.Item>
         </Menu.Items>
       </Transition>
     </Menu>

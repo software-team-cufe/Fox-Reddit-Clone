@@ -3,7 +3,7 @@ import React from 'react';
 //git
 export default function Card (){
     return(
-        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[240px] w-[337px] min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
+        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
         
         <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
             <button className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
@@ -30,7 +30,7 @@ export default function Card (){
         <div className=' flex flex-col mt-6'>
               <div className='  flex flex-row mb-7'>
         <div className=' w-1/2 flex-col ml-6'>
-         <p className=' text-sm font-semibold'> 
+         <p className=' text-xs md:text-sm font-semibold'> 
            1
          </p>
          <p className=' text-xs text-slate-500'> 
@@ -38,7 +38,7 @@ export default function Card (){
          </p>
         </div>
         <div className=' w-1/2 flex-col'>
-           <p className=' text-sm font-semibold'> 
+           <p className=' text-xs md:text-sm font-semibold'> 
              0
            </p>
            <p className=' text-xs text-slate-500'> 
@@ -48,7 +48,7 @@ export default function Card (){
               </div>
              <div className='  flex flex-row'>
         <div className=' w-1/2 flex-col ml-6'>
-            <p className=' text-sm font-semibold'> 
+            <p className=' text-xs md:text-sm font-semibold'> 
              Feb 29, 2024
            </p>
           <p className=' text-xs text-slate-500'> 
@@ -56,7 +56,7 @@ export default function Card (){
           </p>
         </div>
         <div className=' w-1/2 flex-col'>
-           <p className=' text-sm font-semibold'> 
+           <p className=' text-xs md:text-sm font-semibold'> 
               0
            </p>
            <p className=' text-xs text-slate-500'> 
@@ -72,7 +72,7 @@ export default function Card (){
         <h1 className="text-xs text-gray-600 ml-6"> SETTINGS </h1>
         <br/>
 
-        <div className='flex flex-col'>
+        <div className='flex flex-col pr-2'>
           
            <div className='flex flex-row'>
                
@@ -201,6 +201,7 @@ export default function Card (){
                </g>
                   </svg>    
                </div>
+               <div className='justify-between gap-5 flex'>
                <div className='flex flex-col ml-1'>
                   <p className=' text-sm text-gray-700'>
                      Profile
@@ -210,11 +211,11 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 ml-10'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300'> 
                   Edit Profile
                 </button>
                </div>
-          
+               </div>
            </div>
            <br></br>
            <div className='flex flex-row'>
@@ -232,6 +233,7 @@ export default function Card (){
                <path d="m19.683 5.252-3.87-3.92a1.128 1.128 0 0 0-.8-.332h-1.55a1.093 1.093 0 0 0-1.1.91 1.9 1.9 0 0 1-3.744 0A1.094 1.094 0 0 0 7.533 1h-1.55c-.3 0-.588.12-.8.332L1.317 5.253a1.1 1.1 0 0 0 .014 1.557l1.87 1.829a1.121 1.121 0 0 0 1.48.076l.32-.24v1.936c.344-.31.786-.49 1.25-.511V5.977L3.993 7.668l-1.68-1.646L6.036 2.25H7.42a3.156 3.156 0 0 0 6.16 0h1.383l3.723 3.772-1.7 1.668-2.236-1.749v8.138c.501.337.927.774 1.25 1.284V8.509l.338.264a1.117 1.117 0 0 0 1.436-.109l1.894-1.853a1.101 1.101 0 0 0 .015-1.559ZM13.691 20H1.31A1.325 1.325 0 0 1 0 18.663v-4.916a1.03 1.03 0 0 1 .5-.884.988.988 0 0 1 .98-.014 3 3 0 0 0 3.3-.266c.334-.342.649-.702.944-1.078a.624.624 0 0 1 .775-.163l6.75 3.5A2.945 2.945 0 0 1 15 17.584v1.079A1.325 1.325 0 0 1 13.691 20Zm-12.44-5.873v4.536c0 .054.033.087.058.087h12.382c.025 0 .06-.033.06-.087v-1.079a1.72 1.72 0 0 0-1.035-1.609l-6.349-3.29a9.24 9.24 0 0 1-.76.831 4.235 4.235 0 0 1-4.357.611Zm4.022 4.042-.9-.862 3.138-3.3.9.862-3.138 3.3Zm3.04 0-.913-.857 2.09-2.219.91.857-2.088 2.219Z" />
                   </svg>
                </div>
+               <div className='flex justify-between gap-7'>
                <div className='flex flex-col ml-3'>
                   <p className=' text-sm text-gray-700'>
                   Avatar
@@ -241,11 +243,11 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-12'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300'> 
                   Style Avatar
                 </button>
                </div>
-          
+                </div>
            </div>
            <br/>
            <div className='flex flex-row'>
@@ -267,8 +269,8 @@ export default function Card (){
                     <path stroke="none" d="M0 0h24v24H0z" />{" "}
                     <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
                 </svg>
-
                </div>
+               <div className='flex justify-between gap-2 xl:gap-10'>
                <div className='flex flex-col ml-2 '>
                   <p className=' text-sm text-gray-700'>
                   Moderation
@@ -278,10 +280,12 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-14'> 
+                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold p-2 hover:bg-gray-300'> 
                   Mod Settings
                 </button>
                </div>
+              </div>
+
           
            </div>
 

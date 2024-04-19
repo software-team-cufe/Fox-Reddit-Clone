@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 function SafetySettings() {
     const [FocusBlock, setFocusBlock] = useState(false);
@@ -55,7 +55,7 @@ function SafetySettings() {
                     onBlur={() => { if (BlockValue.length === 0) setFocusBlock(false); setIsFocusedB("border-gray-400"); }}
                     className={`relative h-12 flex  border p-1 my-4  focus:border  rounded-md  ${isFocusedB}`}>
                     <label htmlFor="BlockIn" className="hidden"></label>
-                    <input id="BlockIn"
+                    <input role="BlockIn"
                         value={BlockValue}
                         onChange={handleBlockInputValue}
                         onFocus={() => { setFocusBlock(true); }}
@@ -76,7 +76,7 @@ function SafetySettings() {
                         onBlur={() => { if (MuteValue.length === 0) setFocusMute(false); setIsFocusedM("border-gray-400"); }}
                         className={`relative h-12 flex border  p-1 my-4 rounded-md  ${isFocusedM}`}>
                         <label htmlFor="MuteIn" className="hidden"></label>
-                        <input id="MuteIn"
+                        <input role="MuteIn"
                             value={MuteValue}
                             onChange={handleMuteInputValue}
                             onFocus={() => { setFocusMute(true); }}

@@ -1,0 +1,38 @@
+.quill
+{ 
+    border: solid 1px rgb(227, 226, 226);
+    border-radius: 10px;
+}
+
+.quill .ql-toolbar
+{ 
+    background-color: rgb(236, 235, 235);
+    border: solid 1px rgb(181, 180, 180);
+    border-radius: 5px;
+}
+
+.quill .ql-container :focus
+{ 
+   
+    border: solid 1px rgb(19, 18, 18);
+    border-radius: 5px;
+}
+
+
+.quill .ql-container {
+    border: none;
+}
+ 
+#parentElement{
+    height: max(max-content, 100%);
+width: 100%;
+}
+
+#TypeArea{
+    z-index: 2;
+}
+#ChooseCom
+{
+    width: 800px;
+    z-index: 1;
+}

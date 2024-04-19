@@ -5,6 +5,10 @@ import React, { useContext } from 'react';
 
 
 //for mapping periods options
+/**
+ * Array of periods for selection.
+ * @type {Array<Object>}
+ */
 const periods = [
   { name: 'All time'},
   { name: 'Past year'},

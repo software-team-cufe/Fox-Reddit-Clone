@@ -1,4 +1,14 @@
 
+/**
+ * LoginPage component for user login.
+ * @module LoginPage
+ * @component
+ * @example
+ * return (
+ *   <LoginPage />
+ * )
+ * @returns {JSX.Element} The LoginPage component.
+ */
 import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
@@ -10,43 +20,34 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+
+
 export default function LoginPage({ }) {
 
   const [loading, setLoading] = useState(false);
-  // const disp = useDispatch();
+  const disp = useDispatch();
   const nav = useNavigate();
   const login = async (e) => {
-
-    // e?.preventDefault();
+    e?.preventDefault();
     const { email, password } = Object.fromEntries(new FormData(document.getElementById("frm-login")).entries());
-    if (email == 'email' && password == 'test1234') {
-      nav('/')
+    console.log({ email, password });
+    if (!email || !password || email == "" || password == "") {
+      toast.error("Please enter all the required information.");
+      return;
     }
-    return;
-    // if (!email || !password || email == "" || password == "") {
-    //   toast.error("Please enter all the required information.");
-    //   return;
-    // }
-    // setLoading(true);
-    // try {
-    //   const res = await userAxios.post('login', { email, password });
-    //   const user = await userModel.parseAsync(res.data.user);
-    //   disp(setUser(user));
-    //   if (user.banned) {
-    //     nav(0)
-    //     return;
-    //   }
-    //   if (!user.verifiedEmail) {
-    //     nav('/verify-email');
-    //   } else {
-    //     nav('/');
-    //   }
-    // } catch (ex) {
-    //   if (ex.issues != null && ex.issues.length != 0) {
-    //     toast.error(ex.issues[0].message);
-    //   }
-    // }
-    // setLoading(false);
+    setLoading(true);
+    try {
+      const res = await userAxios.post('api/auth/login', { username: email, password });
+
+      disp(setUser(res.data.user));
+     
+      nav('/');
+    } catch (ex) {
+      if (ex.issues != null && ex.issues.length != 0) {
+        toast.error(ex.issues[0].message);
+      }
+    }
+    setLoading(false);
   };
 
   return (

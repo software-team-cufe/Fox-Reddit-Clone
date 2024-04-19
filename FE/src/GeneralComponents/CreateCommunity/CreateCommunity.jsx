@@ -6,6 +6,12 @@ import axios from 'axios';
 import { Switch } from '@headlessui/react'
 
 
+/**
+ * Component for creating a community.
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClose - The function to be called when the component is closed.
+ * @returns {JSX.Element} The CreateCommunity component.
+ */
 export default function CreateCommunity({ onClose = () => { } }) {
 
     const validText = <div className={` text-green-500 text-xs mt-1 ml-5`}>Choose wisely. Once you pick a name, it can't be changed.</div>;
@@ -40,21 +46,23 @@ export default function CreateCommunity({ onClose = () => { } }) {
             toast.error('Please select a community type');
         }
         else {
-            axios.post('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/api/createCommunity', {
+            axios.post('http://localhost:3002/communities', {
+                id: 99,
                 name: inputValue,
-                type: commType,
+                muted:false,
+                joined:true,
+                favourited: false,
                 NSFW: NSFW,
-                description: '',
-                Banner: null,
-                Icon: null
+                description: "",
+                membersCount: 1,
+                onlineMembers: 0,
+                rules: [],
+                backimage: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q==",
+                icon: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q=="
             })
             .then(response => {
-                if (response.status === 200) {
                     toast.success('Community created successfully');
                     handleClose();
-                } else {
-                    toast.error('Failed to create community');
-                }
             })
             .catch((error) => {
                 if (error.response && error.response.status === 400) {
@@ -72,9 +80,9 @@ export default function CreateCommunity({ onClose = () => { } }) {
                 <div className="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div className="fixed inset-0 w-screen overflow-y-auto">
-                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0 ">
-                            <div role="createForm" className="relative transform overflow-hidden rounded-xl w-80 h-[635px] bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0 ">
+                            <div role="createForm" className="relative transform  rounded-xl w-80 h-3/4 bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 rounded-full">
 
                                     {/* Create a community heading */}
                                     <div className='flex gap-2'>

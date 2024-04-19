@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import EmailChanged from "./ComponentChange/EmailChanged";
 import ChangeLanguage from "./ComponentChange/ChangeLanguage";
 import PopUp from "./ComponentChange/PopUp";
@@ -164,7 +166,7 @@ const Acount = () => {
       </div> 
     {/* 3th div  */}
       <div >
-        <p className="text-xs text-gray-500 mt-9 mb-1">CONNECTED ACCOUNTS</p>
+        <p className="text-xs text-gray-500 mt-9 mb-1" id="connectAccount">CONNECTED ACCOUNTS</p>
         <hr className="w-[70%]" />
 
         <div className='flex flex-col mt-7 w-[70%]'>
