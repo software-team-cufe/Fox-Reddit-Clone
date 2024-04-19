@@ -1,17 +1,13 @@
 import React from 'react'
 import axios from 'axios'
+import { userAxios } from '../../../../Utils/UserAxios';
 const DeleteAccount = ({setDelete}) => {
 
   const handleDelete=async()=>{
     try{
-        const serverEndpoint = "http://localhost:3000/api/users/delete_user";
-        const authToken ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAzNWVkZTI2Y2Q0NmNhOWMzNjMyZjUiLCJlbWFpbCI6InNoYXJpZkBob3RtYWlsLmNvbSIsInVzZXJuYW1lIjoic2hhcmlmX3Rlc3Q0IiwiY3JlYXRlZEF0IjoiMjAyNC0wMy0yNlQyMzo0ODo0Ni4yNjRaIiwidXBkYXRlZEF0IjoiMjAyNC0wMy0yNlQyMzo1MTozMi4yMDBaIiwiX192IjowLCJpYXQiOjE3MTE4OTIxNjMsImV4cCI6MTcxMTg5MzA2M30.cCjv9VFE-w6Iy62e6WwPZ46Elfwzj8bBLsEY-_7yGug'
-
-        await axios.delete(serverEndpoint, {
-            headers: {
-                'Authorization': `Bearer ${authToken}`
-            }
-        });
+        const serverEndpoint = "/api/users/delete_user";
+   
+        await userAxios.delete(serverEndpoint);
         console.log('User deleted successfully.');
        } 
 
