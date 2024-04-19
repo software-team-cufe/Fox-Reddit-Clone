@@ -28,6 +28,8 @@ class Message extends StatefulWidget {
 class _MessageState extends State<Message> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? access_token;
+  late String? profilePic;
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +42,8 @@ class _MessageState extends State<Message> {
     });
   }
 
+
+
   Future<List<dynamic>> fetchMessages() async {
     var url =
         Uri.parse(ApiRoutesMockserver.message); // Endpoint to fetch messages
@@ -51,6 +55,30 @@ class _MessageState extends State<Message> {
       throw Exception('Failed to load messages');
     }
   }
+
+    Future<String> fetchUserProfilePic(String accessToken) async {
+    var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      if (responseData.containsKey('user')) {
+        Map<String, dynamic> user = responseData['user'];
+        profilePic = user['avatar'];
+        if (profilePic == 'default.jpg') {
+          profilePic = null;
+        }
+        return profilePic!;
+      } else {
+        throw Exception('User pic is not present or not a string');
+      }
+    } else {
+      throw Exception('Failed to fetch user pic');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +96,51 @@ class _MessageState extends State<Message> {
           },
         ),
         actions: [
-          WidgetButton(),
-          IconButton(
-            icon: const CircleAvatar(),
-            onPressed: () {
-              _scaffoldKey.currentState!.openEndDrawer();
-            },
-          ),
+          Builder(builder: (context) {
+            return IconButton(
+              icon: access_token != null
+                  ? FutureBuilder(
+                      future: fetchUserProfilePic(access_token!),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          // Handle error fetching profile picture
+                          return const CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            backgroundImage:
+                                AssetImage('assets/images/avatar.png'),
+                          );
+                        } else {
+                          // Check if profile picture URL is null or empty
+                          if (snapshot.data == null ||
+                              snapshot.data.toString().isEmpty) {
+                            // Handle case where profile picture URL is empty or null
+                            return const CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage:
+                                  AssetImage('assets/images/avatar.png'),
+                            );
+                          } else {
+                            // Display profile picture
+                            return CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage:
+                                  NetworkImage(snapshot.data.toString()),
+                            );
+                          }
+                        }
+                      },
+                    )
+                  : const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/avatar.png'),
+                    ),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            );
+          }),
         ],
         title: const Text("Inbox"),
       ),

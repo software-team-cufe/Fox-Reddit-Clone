@@ -35,11 +35,12 @@ class _SearchState extends State<Search> {
   Future<void> _fetchRecentlySearched() async {
     final response =
         await http.get(Uri.parse(ApiRoutesMockserver.getRecentSearch));
+        print("statuseCode:  $response.statusCode");
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
         _recentlySearched = List<String>.from(
-            data['recentlySearched'].map((term) => term['searchTerm']));
+            data.map((term) => term['searchTerm']));
       });
     } else {
       throw Exception('Failed to load recently searched terms');
@@ -51,7 +52,7 @@ class _SearchState extends State<Search> {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
-        _trendingToday = List<Map<String, dynamic>>.from(data['trendingToday']);
+        _trendingToday = List<Map<String, dynamic>>.from(data);
       });
     } else {
       throw Exception('Failed to load trending topics');
@@ -103,59 +104,70 @@ class _SearchState extends State<Search> {
       ),
       body: Container(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Recently Searched',
-              style: TextStyle(
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                'Recently Searched',
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             SizedBox(height: 8.0),
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: _recentlySearched.map((term) {
-                return Text(
-                  term,
-                  style: TextStyle(color: Colors.white),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _recentlySearched.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(
+                    _recentlySearched[index],
+                    style: TextStyle(color: Colors.white),
+                  ),
                 );
-              }).toList(),
+              },
             ),
             SizedBox(height: 16.0),
-            Text(
-              'Trending Today',
-              style: TextStyle(
+            ListTile(
+              title: Text(
+                'Trending Today',
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             SizedBox(height: 8.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _trendingToday.map((trending) {
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _trendingToday.length,
+              itemBuilder: (BuildContext context, int index) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      trending['searchTerm'],
+                      _trendingToday[index]['searchTerm'],
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 4.0),
                     Text(
-                      trending['description'],
+                      _trendingToday[index]['description'],
                       style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(height: 16.0),
                   ],
                 );
-              }).toList(),
+              },
             ),
           ],
         ),
+
       ),
     );
   }

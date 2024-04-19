@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/core/common/customContainer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:http/http.dart' as http;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,6 +30,8 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? access_token;
+  late String? profilePic;
+
   @override
   void initState() {
     super.initState();
@@ -33,9 +39,33 @@ class _ChatScreenState extends State<ChatScreen> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        access_token = sharedPrefValue.getString('mocktoken');
+        access_token = sharedPrefValue.getString('backtoken');
       });
     });
+  }
+
+
+  Future<String> fetchUserProfilePic(String accessToken) async {
+    var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      if (responseData.containsKey('user')) {
+        Map<String, dynamic> user = responseData['user'];
+        profilePic = user['avatar'];
+        if (profilePic == 'default.jpg') {
+          profilePic = null;
+        }
+        return profilePic!;
+      } else {
+        throw Exception('User pic is not present or not a string');
+      }
+    } else {
+      throw Exception('Failed to fetch user pic');
+    }
   }
 
   @override
@@ -54,12 +84,51 @@ class _ChatScreenState extends State<ChatScreen> {
           },
         ),
         actions: [
-          IconButton(
-            icon: const CircleAvatar(),
-            onPressed: () {
-              _scaffoldKey.currentState!.openEndDrawer();
-            },
-          ),
+          Builder(builder: (context) {
+            return IconButton(
+              icon: access_token != null
+                  ? FutureBuilder(
+                      future: fetchUserProfilePic(access_token!),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          // Handle error fetching profile picture
+                          return const CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            backgroundImage:
+                                AssetImage('assets/images/avatar.png'),
+                          );
+                        } else {
+                          // Check if profile picture URL is null or empty
+                          if (snapshot.data == null ||
+                              snapshot.data.toString().isEmpty) {
+                            // Handle case where profile picture URL is empty or null
+                            return const CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage:
+                                  AssetImage('assets/images/avatar.png'),
+                            );
+                          } else {
+                            // Display profile picture
+                            return CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage:
+                                  NetworkImage(snapshot.data.toString()),
+                            );
+                          }
+                        }
+                      },
+                    )
+                  : const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/avatar.png'),
+                    ),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            );
+          }),
         ],
         title: const Text("Chat"),
       ),

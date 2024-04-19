@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,23 +8,25 @@ import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
 
+/// A StatefulWidget that represents the home page of the Reddit Fox application.
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  /// Constructs a [HomePage] instance.
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
+/// The state class associated with the [HomePage] StatefulWidget.
 class _HomePageState extends State<HomePage> {
-  String _selectedItem = 'Home'; // Declare _selectedItem here
+  late String _selectedItem = 'Home'; // Declare _selectedItem here
   String? access_token;
   late String? profilePic;
   late int user_Id; // Variable to store the access token
@@ -40,6 +44,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  /// Fetches the list of posts based on the selected item.
   Future<List<dynamic>> fetchPosts() async {
     var url = Uri.parse(_selectedItem == 'Popular'
         ? ApiRoutesMockserver.getPopular
@@ -53,6 +58,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  /// Fetches the user profile picture using the provided access token.
   Future<String> fetchUserProfilePic(String accessToken) async {
     var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
     var response = await http.get(
@@ -95,6 +101,64 @@ class _HomePageState extends State<HomePage> {
         }),
         actions: [
           IconButton(
+            icon: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                'assets/Icons/filter.png',
+                width: 24,
+                height: 24,
+              ),
+            ),
+            onPressed: () {
+              final RenderBox overlay =
+                  Overlay.of(context)!.context.findRenderObject()! as RenderBox;
+              final buttonPosition = overlay.localToGlobal(Offset.zero);
+              final buttonWidth = 24.0; // Adjust the width as needed
+              final buttonHeight = 24.0; // Adjust the height as needed
+
+              final screenSize = MediaQuery.of(context).size;
+              final appBarHeight = AppBar().preferredSize.height;
+              final topOffset = appBarHeight + 22; // Adjust the vertical offset as needed
+              final horizontalOffset = buttonPosition.dx +
+                  ((screenSize.width - buttonWidth) /
+                      2); // Center horizontally under the button
+
+              showMenu<String>(
+                context: context,
+                position: RelativeRect.fromLTRB(
+                    horizontalOffset + buttonWidth,
+                    topOffset,
+                    screenSize.width - horizontalOffset + buttonWidth,
+                    0),
+                items: [
+                  PopupMenuItem<String>(
+                    value: 'Best',
+                    child: Text('Best'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'Hot',
+                    child: Text('Hot'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'New',
+                    child: Text('New'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'Top',
+                    child: Text('Top'),
+                  ),
+                ],
+                elevation: 8.0,
+              ).then((value) {
+                if (value != null) {
+                  setState(() {
+                    _sortValue = value;
+                  });
+                }
+              });
+            },
+          ),
+          IconButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -115,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                         } else if (snapshot.hasError) {
                           // Handle error fetching profile picture
                           return const CircleAvatar(
-                            backgroundColor: Colors.black,
+                            backgroundColor: Colors.transparent,
                             backgroundImage:
                                 AssetImage('assets/images/avatar.png'),
                           );
@@ -125,14 +189,14 @@ class _HomePageState extends State<HomePage> {
                               snapshot.data.toString().isEmpty) {
                             // Handle case where profile picture URL is empty or null
                             return const CircleAvatar(
-                              backgroundColor: Colors.black,
+                              backgroundColor: Colors.transparent,
                               backgroundImage:
                                   AssetImage('assets/images/avatar.png'),
                             );
                           } else {
                             // Display profile picture
                             return CircleAvatar(
-                              backgroundColor: Colors.black,
+                              backgroundColor: Colors.transparent,
                               backgroundImage:
                                   NetworkImage(snapshot.data.toString()),
                             );
@@ -168,13 +232,27 @@ class _HomePageState extends State<HomePage> {
                 ),
           initialValue: _selectedItem,
           itemBuilder: (context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: "Home",
-              child: Text("Home", style: TextStyle(fontSize: 16)),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  radius: 12,
+                  backgroundImage: AssetImage('assets/Icons/home.png'),
+                ),
+                title: Text("Home", style: TextStyle(fontSize: 16)),
+              ),
             ),
-            const PopupMenuItem(
+            PopupMenuItem(
               value: "Popular",
-              child: Text("Popular", style: TextStyle(fontSize: 16)),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  radius: 16,
+                  backgroundImage: AssetImage('assets/Icons/popular.png'),
+                ),
+                title: Text("Popular", style: TextStyle(fontSize: 16)),
+              ),
             ),
           ],
           onSelected: (value) {
@@ -198,40 +276,6 @@ class _HomePageState extends State<HomePage> {
             visible: "Home" == _selectedItem,
             child: Align(
               alignment: Alignment.topRight,
-              child: DropdownButton<String>(
-                isDense: true,
-                iconEnabledColor: Colors.white,
-                iconDisabledColor: Colors.white,
-                focusColor: Colors.black,
-                dropdownColor: Colors.black,
-                hint: Text(
-                  _sortValue,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                items: const [
-                  DropdownMenuItem(
-                    value: 'Best',
-                    child: Text('Best'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Hot',
-                    child: Text('Hot'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'New',
-                    child: Text('New'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Top',
-                    child: Text('Top'),
-                  ),
-                ],
-                onChanged: (String? value) {
-                  setState(() {
-                    _sortValue = value!;
-                  });
-                },
-              ),
             ),
           ),
           Expanded(
@@ -340,7 +384,8 @@ class _HomePageState extends State<HomePage> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 4, vertical: 1),
-                                    margin: const EdgeInsets.only( right: 0, left: 15),
+                                    margin: const EdgeInsets.only(
+                                        right: 0, left: 15),
                                     decoration: BoxDecoration(
                                       color: Colors.red,
                                       borderRadius: BorderRadius.circular(4),
@@ -364,8 +409,8 @@ class _HomePageState extends State<HomePage> {
                                         horizontal: 4, vertical: 1),
                                     margin: const EdgeInsets.only(left: 15),
                                     decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 137, 137, 137),
+                                      color:
+                                          const Color.fromARGB(255, 137, 137, 137),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: const Text(
