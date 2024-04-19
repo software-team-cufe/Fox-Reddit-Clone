@@ -9,6 +9,7 @@ import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
 
 import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 
@@ -158,54 +159,61 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ListTile(
                       contentPadding: const EdgeInsets.all(16),
+                      leading: post['redditpic'] != null
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(post['redditpic']),
+                            )
+                          : null,
                       title: Text(
                         post['redditName'],
                         style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold), // Increase font size
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       subtitle: Text(
                         post['title'],
-                        style:
-                            const TextStyle(fontSize: 16), // Increase font size
+                        style: const TextStyle(fontSize: 16),
                       ),
-                                                 trailing: post['picture'] != null && post['nsfw']
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Container(
-                                        width: 100,
-                                        height: 250,
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                              sigmaX: 10,
-                                              sigmaY:
-                                                  10), // Adjust blur intensity as needed
-                                          child: Container(
-                                            color: Color.fromARGB(0, 0, 0, 0)
-                                                .withOpacity(
-                                                    0), // Adjust opacity for blur effect
-                                            child: Image.network(
-                                              post['picture'],
-                                              width: 100,
-                                              height: 250,
-                                              fit: BoxFit.cover,
-                                              colorBlendMode:
-                                                  BlendMode.saturation,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                      trailing: post['picture'] != null &&
+                              (post['nsfw'] || post['spoiler'])
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: SizedBox(
+                                width: 100,
+                                height: 200,
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                      sigmaX: 10,
+                                      sigmaY:
+                                          10), // Adjust blur intensity as needed
+                                  child: Container(
+                                    color: const Color.fromARGB(0, 0, 0, 0)
+                                        .withOpacity(
+                                            0), // Adjust opacity for blur effect
+                                    child: Image.network(
+                                      post['picture'],
+                                      width: 100,
+                                      height: 250,
+                                      fit: BoxFit.cover,
+                                      colorBlendMode: BlendMode.saturation,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: post['picture'] != null
+                                  ? Image.network(
+                                      post['picture'],
+                                      width: 100,
+                                      height: 250,
+                                      fit: BoxFit.cover,
                                     )
-                                  : post['picture'] != null
-                                      ? Image.network(
-                                          post['picture'],
-                                          width: 100,
-                                          height: 250,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
+                                  : null,
+                            ),
                       onTap: () {
-                        // Navigate to post details page
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -219,13 +227,60 @@ class _HomePageState extends State<HomePage> {
                               postId: post['id'],
                               nsfw: post['nsfw'],
                               description: post['description'],
+                              spoiler: post['spoiler'],
                             ),
                           ),
                         );
                       },
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (post['nsfw']) // Check if the post is NSFW
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 2),
+                              margin: const EdgeInsets.only(top: 2, right: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text(
+                                'NSFW',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (post['spoiler']) // Check if the post is a spoiler
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 2),
+                              margin: const EdgeInsets.only(top: 2),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 137, 137, 137),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text(
+                                'Spoiler',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
                           icon: const Icon(Icons.arrow_upward),
@@ -233,15 +288,43 @@ class _HomePageState extends State<HomePage> {
                             // Implement upvote logic here
                           },
                         ),
-                        Text(post['votes']
-                            .toString()), // Display the total number of votes
+                        Text(post['votes'].toString()),
                         IconButton(
-                          icon: const Icon(Icons.arrow_upward),
+                          icon: const Icon(Icons.arrow_downward),
                           onPressed: () {
                             // Implement downvote logic here
                           },
                         ),
+                        const SizedBox(width: 2),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 4),
+                            Text(
+                              post['commentsNo'].toString(),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const Icon(Icons.comment),
+                            IconButton(
+                              onPressed: () {
+                                int postId = post['id'];
+                                String postUrl =
+                                    'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
+                                Share.share('${post['title']}\n$postUrl');
+                              },
+                              icon: const Icon(Icons.share),
+                            ),
+                          ],
+                        ),
                       ],
+                    ),
+                    Divider(
+                      height: 1,
+                      color: Colors.grey[300], // Adjust color as needed
+                      thickness: 1,
+                      indent: 16, // Adjust left indent as needed
+                      endIndent: 16, // Adjust right indent as needed
                     ),
                   ],
                 );
