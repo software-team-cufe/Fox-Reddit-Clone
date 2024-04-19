@@ -4,6 +4,11 @@ import UserModel, { User } from '../model/user.model';
 import PostModel from '../model/posts.model';
 import { faker } from '@faker-js/faker';
 
+/**
+ * Seeds the community database with sample data.
+ *
+ * @return {Promise<void>} A promise that resolves when the communities are seeded successfully.
+ */
 export async function seedCommunity() {
   try {
     const communitiesData = [];
