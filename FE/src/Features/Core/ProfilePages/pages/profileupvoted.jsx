@@ -1,9 +1,10 @@
 import React, {useContext} from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
-import { useState, useEffect, useRef } from "react";
-import axios from 'axios';
-import Spinner from "@/GeneralElements/Spinner/Spinner";
+import { useState, useRef } from "react";
 import { ProfileContext } from "../ProfilePagesRoutes";
+import { userAxios } from "@/Utils/UserAxios";
+import { useQuery } from "react-query";
+import { toast } from "react-toastify";
 
 /**
  * Renders the profile upvoted page.
@@ -18,7 +19,7 @@ export default function ProfileUpvoted({using}) {
     // states for collecting posts from request and loading state
     const { selected, period } = useContext(ProfileContext);
     const [Posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setload] = useState(true);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
@@ -26,18 +27,52 @@ export default function ProfileUpvoted({using}) {
     const limitpage = 2;
     
     //fetch posts on load and put into posts array
-    useEffect(() => {
-        setLoading(true);
-        axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
-            //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/posts')
+    const fetchInitialPosts = () => {
+        setcurrentpage(1);
+        setload(true);
+        userAxios.get(`user/boudie_test/upvoted?page=1&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
-                const newPosts = response.data.map(post => ({
+                const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
-                    images: post.attachments.postData,
-                    id: post.id,
+                    images: post.attachments,
+                    id: post._id,
+                    title: post.title,
+                    subTitle: post.postText,
+                    votes: post.votesCount,
+                    comments: post.commentsCount,
+                    thumbnail: post.thumbnail,
+                    video: null
+                }));
+                setcurrentpage(2);
+                setPosts(newPosts);
+                setload(false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                toast.error("there was an issue with loading your posts please try again")
+                setload(false);
+            });
+    };
+
+    const {error: postsError } = useQuery(['fetchInitialProfileUpvoted', selected, period],fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
+
+    const fetchMorePosts = () => {
+        setCallingPosts(true);
+        userAxios.get(`/user/boudie_test/upvoted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+            .then(response => {
+                if(response.data.posts.length <limitpage){
+                    setpagedone(true);
+                }
+                const newPosts = response.data.posts.map(post => ({
+                    subReddit: {
+                        image: post.attachments.subredditIcon,
+                        title: post.communityName,
+                    },
+                    images: post.attachments,
+                    id: post._id,
                     title: post.title,
                     subTitle: post.postText,
                     votes: post.votesCount,
@@ -46,47 +81,25 @@ export default function ProfileUpvoted({using}) {
                     video: null
                 }));
 
-                setPosts(newPosts);
-                setLoading(false);
+                setPosts(prevPosts => [...prevPosts, ...newPosts]);
+                setCallingPosts(false);
+                setcurrentpage(1+currentpage);
+
             })
             .catch(error => {
                 console.error('Error:', error);
-                setLoading(false);
+                toast.error("there was an issue with loading your posts please try again")
+                setCallingPosts(false);
             });
-    }, [selected, period]);
-
-    const fetchMorePosts = () => {
-        setCallingPosts(true);
-        axios.get(`http://localhost:3002/posts?_start=${currentpage+limitpage}&_limit=${limitpage}`)
-            .then(response => {
-                if(response.data.length <limitpage){
-                    setpagedone(true);
-                }
-            const newPosts = response.data.map(post => ({
-                subReddit: {
-                    image: post.attachments.subredditIcon,
-                    title: post.communityName,
-                },
-                images: post.attachments.postData,
-                id: post.id,
-                title: post.title,
-                subTitle: post.postText,
-                votes: post.votesCount,
-                comments: post.commentsCount,
-                thumbnail: post.thumbnail,
-                video: null
-            }));
-    
-            setPosts(prevPosts => [...prevPosts, ...newPosts]);
-            setCallingPosts(false);
-            setcurrentpage(limitpage+currentpage);
-
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            setCallingPosts(false);
-        });
     };
+
+    if (loading) {
+        return (
+            <div role='poststab' className="w-100 h-100 flex flex-col items-center justify-center">
+               <img src={'/logo.png'} className="h-10 w-10 mt-24 mx-auto animate-ping" alt="Logo" />
+            </div>
+        )
+    }
 
     if (loading) {
         return (

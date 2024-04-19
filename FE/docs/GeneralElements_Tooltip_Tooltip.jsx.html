@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: ChatMessaging</title>
+    <title>JSDoc: Source: GeneralElements/Tooltip/Tooltip.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,96 +17,53 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: ChatMessaging</h1>
+    <h1 class="page-title">Source: GeneralElements/Tooltip/Tooltip.jsx</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import "tailwindcss/tailwind.css";
 
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>chatMessaging is a functional component that has mark all as read option .</p></div>
-        
+/**
+ * @file The Tooltip component is a reusable component 
+ * that displays a tooltip with a title when hovered over.
+ *  It provides a simple way to add tooltips to various elements in a React application.
+ * @module Tooltip
+ */
 
-        
+function Tooltip({ title, status }) {
+  const [IsHovered, setIsHovered] = useState(false);
 
+  return (
+    &lt;div
+      className={`  flex-col    absolute ${status ? "opacity-100  " : "opacity-0  "
+        }`}
+    >
+      &lt;svg
+        className="absolute text-gray-100 h-4 left-0 ml-3  "
+        x="0px"
+        y="0px"
+        viewBox="0 0 300 300"
+        xmlSpace="preserve"
+      >
+        &lt;polygon className="fill-current" points="200,10 250,150 150,190" />
+      &lt;/svg>
+      &lt;div className="bg-gray-100 text-black text-xs rounded py-1 px-4 mt-2  bottom-full">
+        {title}
+      &lt;/div>
+    &lt;/div>
+  );
+}
 
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Features_Core_Settings_chatMessaging.jsx.html">Features/Core/Settings/chatMessaging.jsx</a>, <a href="Features_Core_Settings_chatMessaging.jsx.html#line10">line 10</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+export default Tooltip;
+</code></pre>
+        </article>
+    </section>
 
 
 

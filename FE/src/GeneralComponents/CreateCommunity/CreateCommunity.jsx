@@ -46,21 +46,23 @@ export default function CreateCommunity({ onClose = () => { } }) {
             toast.error('Please select a community type');
         }
         else {
-            axios.post('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/api/createCommunity', {
+            axios.post('http://localhost:3002/communities', {
+                id: 99,
                 name: inputValue,
-                type: commType,
+                muted:false,
+                joined:true,
+                favourited: false,
                 NSFW: NSFW,
-                description: '',
-                Banner: null,
-                Icon: null
+                description: "",
+                membersCount: 1,
+                onlineMembers: 0,
+                rules: [],
+                backimage: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q==",
+                icon: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q=="
             })
             .then(response => {
-                if (response.status === 200) {
                     toast.success('Community created successfully');
                     handleClose();
-                } else {
-                    toast.error('Failed to create community');
-                }
             })
             .catch((error) => {
                 if (error.response && error.response.status === 400) {

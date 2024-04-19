@@ -4,6 +4,9 @@ import SocialLinks from './SocialLinks';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
+import { userAxios } from "@/Utils/UserAxios";
+
+import axios from 'axios';
 
 function ProfileSettings() {
     const [DisplayName, setDisplayName] = useState("");
@@ -15,6 +18,7 @@ function ProfileSettings() {
     const [SelectedBannar, setSelectedBannar] = useState(null);
 
     useEffect(() => {
+        FetchData();
         // This function handles the drag over event
         const handleDragOver = (event) => {
             event.preventDefault();
@@ -40,6 +44,24 @@ function ProfileSettings() {
         document.getElementById("DropBannerImage").addEventListener('drop', handleBannerDrop, false);
 
     }, []);
+
+    const FetchData = async () => {
+        // try {
+        const test = await axios.get("https://f4362ce0-e2a2-4f35-98bc-eb55829af321.mock.pstmn.io/test");
+        console.log(test.data);
+
+        // const res = await userAxios.post('api/auth/login', { username: email, password });
+
+        // disp(setUser(res.data.user));
+
+        // nav('/');
+        //   } catch (ex) {
+        //     if (ex.issues != null && ex.issues.length != 0) {
+        //       toast.error(ex.issues[0].message);
+        //     }
+        //   }
+
+    }
 
     const handleBannerUpload = (event, UpOrDrop = "up") => {
         const reader = new FileReader();

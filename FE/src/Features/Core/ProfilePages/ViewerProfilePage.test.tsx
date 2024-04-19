@@ -2,8 +2,8 @@ import React = require("react");
 import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
 import ViewerProfilePage from "./ViewerProfileRoutes";
 import '@testing-library/jest-dom';
-import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
-
+import {MemoryRouter, Routes, Route} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 class MockIntersectionObserver {
     constructor(public callback: IntersectionObserverCallback, public options?: IntersectionObserverInit) { }
@@ -39,14 +39,18 @@ afterEach(() => {
     cleanup();
 });
 
+const queryClient = new QueryClient();
+    
 describe('component renders correctly', () => {
     test('avatar header renders correctly', async () => {
         render(
-            <MemoryRouter initialEntries={['/viewer/anas/']}>
-                <Routes>
-                    <Route path="/viewer/:viewer/*" element={<ViewerProfilePage />} />
-                </Routes>
+            <QueryClientProvider client={queryClient}>
+            <MemoryRouter initialEntries={['/viewer/1']}>
+              <Routes>
+                <Route path="/viewer/:id/*" element={<ViewerProfilePage />} />
+              </Routes>
             </MemoryRouter>
+          </QueryClientProvider>
         );
 
         await waitFor(() =>
@@ -76,11 +80,13 @@ describe('profile sections navigation correctly', () => {
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/viewer/anas/']}>
-                <Routes>
-                    <Route path="/viewer/:viewer/*" element={<ViewerProfilePage />} />
-                </Routes>
+            <QueryClientProvider client={queryClient}>
+            <MemoryRouter initialEntries={['/viewer/1']}>
+              <Routes>
+                <Route path="/viewer/:id/*" element={<ViewerProfilePage />} />
+              </Routes>
             </MemoryRouter>
+          </QueryClientProvider>
         );
 
         const overviewButton = await screen.findByRole('overviewButton');

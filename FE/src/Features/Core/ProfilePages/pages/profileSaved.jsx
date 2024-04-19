@@ -22,14 +22,14 @@ export default function ProfileSaved({ using }) {
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage,setcurrentpage] = useState(1);
+    const [currentpage,setcurrentpage] = useState(0);
     const limitpage = 5;
 
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
-        userAxios.get(`/user/${using}/saved?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        axios.get(`http://localhost:3002/posts?_limit=${limitpage}&_start=${currentpage}`)
             .then(response => {
-                const newPosts = response.data.posts.map(post => ({
+                const newPosts = response.data.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
@@ -43,7 +43,7 @@ export default function ProfileSaved({ using }) {
                     thumbnail: post.thumbnail,
                     video: null
                 }));
-                setcurrentpage(currentpage+1);
+                setcurrentpage(currentpage+limitpage);
                 setPosts(newPosts);
             })
             .catch(error => {
@@ -55,7 +55,7 @@ export default function ProfileSaved({ using }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`/user/${using}/saved?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        axios.get(`http://localhost:3002/posts?_limit=${limitpage}&_start=${currentpage}`)
             .then(response => {
                 if(response.data.length <limitpage){
                     setpagedone(true);
@@ -77,7 +77,7 @@ export default function ProfileSaved({ using }) {
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
-                setcurrentpage(1+currentpage);
+                setcurrentpage(limitpage+currentpage);
 
             })
             .catch(error => {

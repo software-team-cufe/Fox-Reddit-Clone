@@ -76,7 +76,7 @@ function MainRoute() {
   );
   if (isLoading) {
     return <div className='w-screen h-screen flex justify-center items-center'>
-      <Spinner className=' text-xl' />
+          <img src={'/logo.png'} className="h-24 w-24 my-atuo mx-auto animate-ping" alt="Logo" />
     </div>;
   }
 

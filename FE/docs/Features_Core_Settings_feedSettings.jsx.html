@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>JSDoc: Source: Features/Core/Settings/FeedSettings.jsx</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -32,9 +32,10 @@
  * @file feedSetting is a functional component that renders the feed settings page.
  * @module feedSettings
  */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
-import { getByRole } from '@testing-library/react';
+import { getByRole, waitFor } from '@testing-library/react';
+import axios from "axios";
 // import Dropdown from "./DropDownlist";
 /**
  * 
@@ -43,44 +44,83 @@ import { getByRole } from '@testing-library/react';
 
 export default function FeedSettings() {
 
-    const [showMatureContent, setShowMatureContent] = useState(false);
-    const [BlurMatureImg, setBlurMatureImg] = useState(false);
+    const [communities, setCommunities] = useState([]); // array of communities to show
+    const [showMatureContent, setShowMatureContent] = useState(true);//mature toggle view
+    // const [loading, setLoading] = useState(true); // loading state for fetching 
+    
+
+      useEffect(() => {
+         axios.get("http://localhost:3500/communities") //fetch communities and organize into communities array for mapping
+            .then(response => {
+              const newComms = response.data.map(comm => ({
+                  id: comm.commID,
+                  name: comm.name,
+                  icon: comm.icon,
+                  about: comm.description,
+                  online: comm.onlineMembers,
+                  members: comm.membersCount,
+                  NSFW: comm.NSFW
+            }));
+            let tempArr =[];
+          for (let i = 0; i &lt; newComms.length; i++) {
+             if(showMatureContent === false){
+                 if (newComms[i].NSFW === false) {
+                     tempArr.push(newComms[i]);
+                 }
+             }else{
+                     tempArr.push(newComms[i]);
+            }
+        
+            }
+            //console.log(tempArr);
+            setCommunities(tempArr);
+          //console.log(communities);
+          //setCommunities(newComms);
+          //setLoading(false); //set loading to false after fetching to load body
+         });
+     }, [showMatureContent]);
+      useEffect(() => {
+         console.log(communities);
+     }, [communities]);
+
+    //state for each setting statement to be toggled
+    const [blurMatureImg, setBlurMatureImg] = useState(false);
     const [autoplayMedia, setAutoplayMedia] = useState(false);
     const [communityTheme, setCommunityTheme] = useState(false);
     const [rememberingSortPerCommunity, setRememberingSortPerCommunity] = useState(false);
     const [globalView, setGlobalView] = useState(false);
     const [openPostsInNewTab, setOpenPostsInNewTab] = useState(false);
-    const handleToggleInFeed = (isChecked) => {
+    const handleToggleInFeedMatureContent = async (isChecked) => {
         setShowMatureContent(isChecked);
         console.log(isChecked);
         //console.log(showMatureContent);
     }
-    const handleToggleInFeed2 = (isChecked2) => {
+    const handleToggleInFeedBlurImage = (isChecked2) => {
         setBlurMatureImg(isChecked2);
         console.log(isChecked2);
         //console.log(BlurMatureImg);
     }
-    const handleToggleInFeed3 = (isChecked3) => {
+    const handleToggleInFeedAutoplay = (isChecked3) => {
         setAutoplayMedia(isChecked3);
         console.log(isChecked3);
         //console.log(autoplayMedia);
     }
-    const handleToggleInFeed4 = (isChecked4) => {
+    const handleToggleInFeedCommunityTheme = (isChecked4) => {
         setCommunityTheme(isChecked4);
         console.log(isChecked4);
         //console.log(communityTheme);
     }
-    const handleToggleInFeed5 = (isChecked5) => {
+    const handleToggleInFeedRememberSort = (isChecked5) => {
         setRememberingSortPerCommunity(isChecked5);
         console.log(isChecked5);
         //console.log(rememberingSortPerCommunity);
     }
-    const handleToggleInFeed6 = (isChecked6) => {
+    const handleToggleInFeedGlobalView = (isChecked6) => {
         setGlobalView(isChecked6);
         console.log(isChecked6);
         //console.log(globalView);
     }
-    const handleToggleInFeed7 = (isChecked7) => {
+    const handleToggleInFeedNewTab = (isChecked7) => {
         setOpenPostsInNewTab(isChecked7);
         console.log(isChecked7);
         //console.log(openPostsInNewTab);
@@ -107,7 +147,7 @@ export default function FeedSettings() {
                                 See NSFW (Not Safe for Work) mature and adult images, videos, written content, and other media in your Reddit feeds and search results.
                             &lt;/p>
                         &lt;/div >
-                        &lt;ToggleButton onToggle={handleToggleInFeed} />
+                        &lt;ToggleButton onToggle={handleToggleInFeedMatureContent} />
                     &lt;/div>
 
                     &lt;div className="flex flex-row mb-7 justify-between" role="toggleButton">
@@ -120,7 +160,7 @@ export default function FeedSettings() {
                                 Blur previews and thumbnails for any images or videos tagged as NSFW (Not Safe for Work).
                             &lt;/p>
                         &lt;/div>
-                        &lt;ToggleButton onToggle={handleToggleInFeed2} />
+                        &lt;ToggleButton onToggle={handleToggleInFeedBlurImage} />
                     &lt;/div>
 
                 &lt;/div>
@@ -139,7 +179,7 @@ export default function FeedSettings() {
                             Play videos and gifs automatically when in the viewport.
                         &lt;/div>
                         &lt;div role="toggleButton" >
-                            &lt;ToggleButton onToggle={handleToggleInFeed3} />
+                            &lt;ToggleButton onToggle={handleToggleInFeedAutoplay} />
                         &lt;/div>
 
                     &lt;/div>
@@ -156,7 +196,7 @@ export default function FeedSettings() {
                         &lt;/div>
 
                         &lt;div role="toggleButton">
-                            &lt;ToggleButton onToggle={handleToggleInFeed4} />
+                            &lt;ToggleButton onToggle={handleToggleInFeedCommunityTheme} />
                         &lt;/div>
                     &lt;/div>
 
@@ -183,7 +223,7 @@ export default function FeedSettings() {
                             &lt;/p>
                         &lt;/div>
                         &lt;div>
-                            &lt;ToggleButton onToggle={handleToggleInFeed5} />
+                            &lt;ToggleButton onToggle={handleToggleInFeedRememberSort} />
                         &lt;/div>
                     &lt;/div>
 
@@ -210,7 +250,7 @@ export default function FeedSettings() {
                             &lt;/p>
                         &lt;/div>
                         &lt;div role="TextOfButtons">
-                            &lt;ToggleButton onToggle={handleToggleInFeed6} />
+                            &lt;ToggleButton onToggle={handleToggleInFeedGlobalView} />
                         &lt;/div>
                     &lt;/div>
 
@@ -225,7 +265,7 @@ export default function FeedSettings() {
                             &lt;/div>
                         &lt;/div>
                         &lt;div role="toggleButton">
-                            &lt;ToggleButton onToggle={handleToggleInFeed7} />
+                            &lt;ToggleButton onToggle={handleToggleInFeedNewTab} />
                         &lt;/div>
                     &lt;/div>
                 &lt;/div>
@@ -242,13 +282,13 @@ export default function FeedSettings() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Apr 12 2024 11:10:49 GMT+0200 (Eastern European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Apr 19 2024 20:58:58 GMT+0200 (Eastern European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
