@@ -1,6 +1,25 @@
 import React from 'react'
-
+import axios from 'axios'
 const DeleteAccount = ({setDelete}) => {
+
+  const handleDelete=async()=>{
+    try{
+        const serverEndpoint = "http://localhost:3000/api/users/delete_user";
+        const authToken ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAzNWVkZTI2Y2Q0NmNhOWMzNjMyZjUiLCJlbWFpbCI6InNoYXJpZkBob3RtYWlsLmNvbSIsInVzZXJuYW1lIjoic2hhcmlmX3Rlc3Q0IiwiY3JlYXRlZEF0IjoiMjAyNC0wMy0yNlQyMzo0ODo0Ni4yNjRaIiwidXBkYXRlZEF0IjoiMjAyNC0wMy0yNlQyMzo1MTozMi4yMDBaIiwiX192IjowLCJpYXQiOjE3MTE4OTIxNjMsImV4cCI6MTcxMTg5MzA2M30.cCjv9VFE-w6Iy62e6WwPZ46Elfwzj8bBLsEY-_7yGug'
+
+        await axios.delete(serverEndpoint, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        console.log('User deleted successfully.');
+       } 
+
+      catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  
+  };
   return (
       <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center '>
        
@@ -33,7 +52,7 @@ const DeleteAccount = ({setDelete}) => {
       <div className='flex justify-end flex-row  mt-2'>
       <button onClick={()=>setDelete(false)} className=" mr-3 text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-24 h-8 hover:bg-sky-50 ">Cancel</button>
       
-       <button  className=" mr-8 text-white bg-sky-600 border-sky-600 rounded-full font-semibold text-base w-24 h-8 hover:bg-sky-600">
+       <button  onClick={handleDelete} className=" mr-8 text-white bg-sky-600 border-sky-600 rounded-full font-semibold text-base w-24 h-8 hover:bg-sky-600">
          Continue
       </button>   
       </div>

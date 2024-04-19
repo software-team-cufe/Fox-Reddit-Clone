@@ -42,7 +42,7 @@ const Acount = () => {
             <div className='flex flex-col'>
               <p className=" font-semibold">Email address</p>
               <div className="text-xs text-gray-500">
-                ay7aghjc77@gmail.com
+                 <input> ay7aghjc77@gmail.com</input>
               </div>
             </div>
 
