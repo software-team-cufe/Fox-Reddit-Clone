@@ -12,8 +12,19 @@ import { QueryOptions } from 'mongoose';
  * @param input - The post data to create.
  * @returns A promise that resolves to the created user.
  */
-export function createPost(input: Partial<Post>) {
-  return PostModel.create(input);
+export async function createPost(input: Partial<Post>) {
+  try {
+    // Create the post using the input data
+    const newPost = await PostModel.create(input);
+
+    // Return the newly created post
+    return newPost;
+  } catch (error) {
+    // If an error occurs during the creation process, log it
+    console.error('Error creating post:', error);
+    // Rethrow the error to be caught by the caller, if necessary
+    throw error;
+  }
 }
 /**
  * Finds a post by their ID.

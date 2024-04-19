@@ -916,15 +916,15 @@ export async function submitPostHandler(req: Request, res: Response) {
     // Create the post
     const createdPost = await createPost(info);
 
-    // Save the new comment
+    // Save the new post
     if (!createdPost) {
       return res.status(400).json({ message: 'Failed to create the post' });
     }
 
-    // Update user and post with the new comment
+    // Update user and post with the new post
     const updatedUser = await UserModel.findByIdAndUpdate(
       user._id,
-      { $addToSet: { hasPost: createdPost._id } }, // Using $addToSet to avoid adding duplicate comments
+      { $addToSet: { hasPost: createdPost._id } }, // Using $addToSet to avoid adding duplicate posts
       { new: true, upsert: true }
     );
     res.status(201).json(createdPost); // 201: Created
