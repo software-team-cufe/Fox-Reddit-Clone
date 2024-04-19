@@ -166,7 +166,43 @@ export async function userRepliesIds(username: string, page: number, count: numb
   // Return the comment IDs
   return commentsIDS;
 }
-
+/**
+ * Add user to community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function addUserToComm(user: User, communityID: string) {
+  const userModerator = {
+    communityId: communityID,
+    role: 'creator',
+  };
+  const userMember = {
+    communityId: communityID,
+    isMuted: {
+      value: false,
+    },
+    isBanned: {
+      value: false,
+    },
+  };
+  const modarr = user.;
+  modarr.push(userModerator);
+  const memarr = user.member;
+  memarr.push(userMember);
+  try {
+    await this.updateOne({ _id: user._id }, { moderators: modarr, member: memarr });
+  } catch {
+    return {
+      status: false,
+      error: 'operation failed',
+    };
+  }
+  return {
+    status: true,
+  };
+}
 /*************************Boudy ***************************
 // export async function blockUser1(blocked: User, blocker: User) {
 //   try {

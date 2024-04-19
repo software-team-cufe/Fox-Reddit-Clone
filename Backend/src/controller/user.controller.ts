@@ -431,6 +431,12 @@ export async function aboutHandler(req: Request, res: Response) {
  */
 export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
   try {
+    // Extract params
+    const user = await findUserByUsername(req.params.username as string);
+
+    if (!user) {
+      return res.status(404).send("This user doesn't exist!");
+    }
     const username: string = req.params.username as string;
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
