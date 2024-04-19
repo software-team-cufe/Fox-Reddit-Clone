@@ -18,34 +18,32 @@ export default function FeedSettings() {
 
     const [communities, setCommunities] = useState([]); // array of communities to show
     const [showMatureContent, setShowMatureContent] = useState(true);//mature toggle view
+    const [postsForusers,setPostsForusers] = useState([]); // array of posts to show
     // const [loading, setLoading] = useState(true); // loading state for fetching 
     
 
       useEffect(() => {
-         axios.get("http://localhost:3500/communities") //fetch communities and organize into communities array for mapping
+         axios.get("http://localhost:3002/communities") //fetch communities and organize into communities array for mapping
             .then(response => {
               const newComms = response.data.map(comm => ({
-                  id: comm.commID,
-                  name: comm.name,
-                  icon: comm.icon,
-                  about: comm.description,
-                  online: comm.onlineMembers,
-                  members: comm.membersCount,
-                  NSFW: comm.NSFW
+                name: comm.name,  
+                id: comm.id,
+                NSFW: comm.NSFW
             }));
-            let tempArr =[];
+        
+            let tempcomm =[];
           for (let i = 0; i < newComms.length; i++) {
              if(showMatureContent === false){
                  if (newComms[i].NSFW === false) {
-                     tempArr.push(newComms[i]);
+                    tempcomm.push(newComms[i]);
                  }
              }else{
-                     tempArr.push(newComms[i]);
+                tempcomm.push(newComms[i]);
             }
         
             }
-            //console.log(tempArr);
-            setCommunities(tempArr);
+            //console.log(tempcomm);
+            setCommunities(tempcomm);
           //console.log(communities);
           //setCommunities(newComms);
           //setLoading(false); //set loading to false after fetching to load body
@@ -56,12 +54,12 @@ export default function FeedSettings() {
      }, [communities]);
 
     //state for each setting statement to be toggled
-    const [blurMatureImg, setBlurMatureImg] = useState(false);
-    const [autoplayMedia, setAutoplayMedia] = useState(false);
-    const [communityTheme, setCommunityTheme] = useState(false);
-    const [rememberingSortPerCommunity, setRememberingSortPerCommunity] = useState(false);
-    const [globalView, setGlobalView] = useState(false);
-    const [openPostsInNewTab, setOpenPostsInNewTab] = useState(false);
+    const [blurMatureImg, setBlurMatureImg] = useState(true);
+    const [autoplayMedia, setAutoplayMedia] = useState(true);
+    const [communityTheme, setCommunityTheme] = useState(true);
+    const [rememberingSortPerCommunity, setRememberingSortPerCommunity] = useState(true);
+    const [globalView, setGlobalView] = useState(true);
+    const [openPostsInNewTab, setOpenPostsInNewTab] = useState(true);
     const handleToggleInFeedMatureContent = async (isChecked) => {
         setShowMatureContent(isChecked);
         console.log(isChecked);
@@ -97,7 +95,44 @@ export default function FeedSettings() {
         console.log(isChecked7);
         //console.log(openPostsInNewTab);
     };
-
+    //here i check that i get posts that is marked blurred
+    useEffect(()=> {
+        axios.get("http://localhost:3002/users") //fetch posts and organize into posts array for mapping
+        .then(response => {
+        const newusers = response.data.map(user => ({
+            name: user.name,
+            id: user.id,
+            blur: user.blur
+        }));
+        let tempContentToBlur =[];
+          for (let i = 0; i < newusers.length; i++) {
+                if(showMatureContent === true){
+                    if(blurMatureImg === true){
+                        if (newusers[i].blur === true) {
+                            tempContentToBlur.push(newusers[i]);
+                        }
+                    }else{
+                        tempContentToBlur.push(newusers[i]);
+                    }
+                }
+            }
+            setPostsForusers(tempContentToBlur);
+        })
+    },[blurMatureImg]);
+    useEffect(() => {
+        console.log(postsForusers);
+        const updatedPosts = postsForusers.map(postsForuser => ({
+          ...postsForuser,
+          blur: blurMatureImg
+        }));
+        updatedPosts.forEach(postsForuser => {
+          axios.patch(`http://localhost:3002/users/${postsForuser.id}`, { blur: postsForuser.blur });
+        });
+        console.log("2222222222222222222222");
+        console.log(updatedPosts);
+        console.log("3333333333333333333333");
+        console.log(postsForusers);
+      }, [blurMatureImg]);
 
     return (
         <div className="w-[75%]">

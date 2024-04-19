@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: Tooltip</title>
+    <title>JSDoc: Source: GeneralElements/ToggleButton/ToggleButton.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,98 +17,50 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: Tooltip</h1>
+    <h1 class="page-title">Source: GeneralElements/ToggleButton/ToggleButton.jsx</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react"
+/**
+ * A toggle button component.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.onToggle - The callback function to be called when the toggle button is clicked.
+ * @returns {JSX.Element} The toggle button component.
+ */
+function ToggleButton({ onToggle }) {
+    const [trueFalse, setTrueFalse] = useState(true);
 
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>The Tooltip component is a reusable component
-that displays a tooltip with a title when hovered over.
-It provides a simple way to add tooltips to various elements in a React application.</p></div>
-        
+    /**
+     * Handles the toggle button click event.
+     */
+    const handleToggle = () => {
+        const newState = !trueFalse;
+        setTrueFalse(newState);
+        onToggle(newState); // Call the callback function with the new state
+    };
 
-        
+    return (
+        &lt;div>
+            &lt;label className="relative inline-flex cursor-pointer items-center">
+                &lt;input type="checkbox" className="peer sr-only" checked={trueFalse} onChange={handleToggle} />
 
+                &lt;div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
+         peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300">&lt;/div>
+            &lt;/label>
+        &lt;/div>
+    );
+}
 
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GeneralElements_Tooltip_Tooltip.jsx.html">GeneralElements/Tooltip/Tooltip.jsx</a>, <a href="GeneralElements_Tooltip_Tooltip.jsx.html#line4">line 4</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+export default ToggleButton;</code></pre>
+        </article>
+    </section>
 
 
 

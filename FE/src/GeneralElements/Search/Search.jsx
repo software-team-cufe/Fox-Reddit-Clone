@@ -1,3 +1,14 @@
+
+/**
+ * SearchComponent is a React component that provides a search input field with a dropdown selector.
+ * It allows users to search for communities and navigate to the search results page.
+ *
+ * @component
+ * @example
+ * return (
+ *   <SearchComponent />
+ * )
+ */
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
