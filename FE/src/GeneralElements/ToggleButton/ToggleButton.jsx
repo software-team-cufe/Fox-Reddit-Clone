@@ -1,13 +1,23 @@
 import React, { useState } from "react"
+/**
+ * A toggle button component.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.onToggle - The callback function to be called when the toggle button is clicked.
+ * @returns {JSX.Element} The toggle button component.
+ */
 function ToggleButton({ onToggle }) {
-    
-    const[trueFalse,setTrueFalse]=useState(true);
+    const [trueFalse, setTrueFalse] = useState(true);
+
+    /**
+     * Handles the toggle button click event.
+     */
     const handleToggle = () => {
         const newState = !trueFalse;
         setTrueFalse(newState);
         onToggle(newState); // Call the callback function with the new state
     };
-    
+
     return (
         <div>
             <label className="relative inline-flex cursor-pointer items-center">
@@ -17,7 +27,7 @@ function ToggleButton({ onToggle }) {
          peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
             </label>
         </div>
-    )
+    );
 }
 
 export default ToggleButton;

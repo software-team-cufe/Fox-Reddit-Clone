@@ -7,7 +7,8 @@
       "about": "Hi, I'm user1. I love hiking, reading books, and playing the guitar in my free time.",
       "totalKarma": 2424,
       "isModerator": true,
-      "blur": true
+      "blur": true,
+      "autoPlayVideos": true
     },
     {
       "name": "user2",
@@ -16,7 +17,8 @@
       "about": "Hello, I'm user2. My hobbies include painting, cooking, and playing video games.",
       "totalKarma": 5342,
       "isModerator": false,
-      "blur": true
+      "blur": true,
+      "autoPlayVideos": false
     },
     {
       "name": "user3",
@@ -25,7 +27,8 @@
       "about": "Hey, I'm user3. I enjoy traveling, photography, and learning new languages.",
       "totalKarma": 1234,
       "isModerator": true,
-      "blur": true
+      "blur": true,
+      "autoPlayVideos": true
     },
     {
       "name": "user4",
@@ -34,7 +37,8 @@
       "about": "Hi there, I'm user4. I'm a big fan of sports, especially football and basketball, and I also love to write.",
       "totalKarma": 2345,
       "isModerator": false,
-      "blur": true
+      "blur": true,
+      "autoPlayVideos": false
     },
     {
       "name": "user5",
@@ -43,7 +47,8 @@
       "about": "Hello, I'm user5. In my spare time, I like to go fishing, watch movies, and play board games with friends.",
       "totalKarma": 434,
       "isModerator": true,
-      "blur": true
+      "blur": true,
+      "autoPlayVideos": true
     }
   ],
   "communities": [

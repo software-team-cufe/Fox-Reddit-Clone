@@ -1,4 +1,13 @@
 
+/**
+ * CheckButton component.
+ * @module CheckButton
+ * @param {Object} props - The component props.
+ * @param {boolean} props.IsChecked - The current checked state.
+ * @param {function} props.SetIsChecked - The function to set the checked state.
+ * @param {string} props.label - The label for the button.
+ * @returns {JSX.Element} The rendered CheckButton component.
+ */
 import React, { useState } from 'react'
 import { Check, Plus } from 'lucide-react'
 function CheckButton(props) {      //inputs: SetIsChecked, IsChecked

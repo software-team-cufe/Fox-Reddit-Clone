@@ -1,3 +1,14 @@
+/**
+ * ComboBox component.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.role - The role attribute for accessibility.
+ * @param {Array} props.items - The array of items for the select options.
+ * @param {string} props.title - The title for the ComboBox.
+ * @param {string} props.selected - The default selected value for the ComboBox.
+ * @param {string} props.className - The additional CSS class name for the ComboBox.
+ * @returns {JSX.Element} The ComboBox component.
+ */
 import React from "react";
 export default function ComboBox({ role, items = [], title, selected, className = "", }) {
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: Tooltip</title>
+    <title>JSDoc: Source: GeneralElements/CheckButton/CheckButton.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,98 +17,46 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: Tooltip</h1>
+    <h1 class="page-title">Source: GeneralElements/CheckButton/CheckButton.jsx</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * CheckButton component.
+ * @module CheckButton
+ * @param {Object} props - The component props.
+ * @param {boolean} props.IsChecked - The current checked state.
+ * @param {function} props.SetIsChecked - The function to set the checked state.
+ * @param {string} props.label - The label for the button.
+ * @returns {JSX.Element} The rendered CheckButton component.
+ */
+import React, { useState } from 'react'
+import { Check, Plus } from 'lucide-react'
+function CheckButton(props) {      //inputs: SetIsChecked, IsChecked
 
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>The Tooltip component is a reusable component
-that displays a tooltip with a title when hovered over.
-It provides a simple way to add tooltips to various elements in a React application.</p></div>
-        
+    return (
+        &lt;button onClick={() => { props.IsChecked ? props.SetIsChecked(false) : props.SetIsChecked(true); }}
+            className={`border rounded-full ml-5 p-2 ${props.IsChecked ?
+                'bg-orange-600 text-white' : 'bg-white text-gray-500'} `}
+        >
+            &lt;div className='flex'>
+                {props.IsChecked &amp;&amp; &lt;Check strokeWidth={1} />}
+                {!props.IsChecked &amp;&amp; &lt;Plus strokeWidth={1} />}
+                {props.label}
+            &lt;/div>
+        &lt;/button>
+    )
+}
 
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GeneralElements_Tooltip_Tooltip.jsx.html">GeneralElements/Tooltip/Tooltip.jsx</a>, <a href="GeneralElements_Tooltip_Tooltip.jsx.html#line4">line 4</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+export default CheckButton</code></pre>
+        </article>
+    </section>
 
 
 
