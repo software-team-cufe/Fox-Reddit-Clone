@@ -15,6 +15,7 @@ void main() {
         postId: 2,
         nsfw: false,
         description: 'blah blah blah',
+        spoiler: true,
       ),
     ));
 

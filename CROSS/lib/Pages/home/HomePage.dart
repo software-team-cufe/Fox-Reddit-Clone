@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                                     backgroundImage:
                                         NetworkImage(post['redditpic']),
                                   )
-                                : null,
+                                : null, // Use the poster's avatar if available, otherwise, leave it empty
                             title: Text(
                               post['redditName'],
                               style: const TextStyle(
@@ -339,9 +339,9 @@ class _HomePageState extends State<HomePage> {
                                   alignment: Alignment.centerLeft,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 2),
+                                        horizontal: 4, vertical: 1),
                                     margin:
-                                        const EdgeInsets.only(top: 2, right: 4),
+                                        const EdgeInsets.only( right: 4, left: 15),
                                     decoration: BoxDecoration(
                                       color: Colors.red,
                                       borderRadius: BorderRadius.circular(4),
@@ -362,8 +362,7 @@ class _HomePageState extends State<HomePage> {
                                   alignment: Alignment.centerLeft,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 2),
-                                    margin: const EdgeInsets.only(top: 2),
+                                        horizontal: 4, vertical: 1),
                                     decoration: BoxDecoration(
                                       color: const Color.fromARGB(
                                           255, 137, 137, 137),
