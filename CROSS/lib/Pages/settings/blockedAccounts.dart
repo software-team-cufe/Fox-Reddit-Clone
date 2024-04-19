@@ -1,21 +1,14 @@
-
 ///blockedaccs
+library;
 
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:reddit_fox/NetworkService.dart';
 
-List<Map<String, String>> blockedAccounts = [
-  {"id": "1", "name": "Blocked User 1"},
-  {"id": "2", "name": "Blocked User 2"},
-  {"id": "3", "name": "Blocked User 3"},
-];
 
 class BlockedAccounts extends StatefulWidget {
   const BlockedAccounts({super.key});
@@ -28,45 +21,59 @@ class _BlockedAccountsState extends State<BlockedAccounts>
   late AnimationController _controller;
   String? accessToken;
 
-  blockListAPI(String accessToken) async {
-    const url = ApiRoutesBackend.blockedAccs;
-    // NetworkService.initDio();
+  // blockListAPI(String accessToken) async {
+  //   const url = ApiRoutesBackend.blockedAccs;
+  //   // NetworkService.initDio();
 
-    // NetworkService.accessToken = accessToken;
-    
-    print(accessToken);
-    print(url);
-    // final res = await NetworkService.instance.get(url);
-    print({'Authorization': 'Bearer $accessToken'});
-    try {
-      // final res = await NetworkService.instance.get(url);
+  //   // NetworkService.accessToken = accessToken;
 
-      final res = await http.get(
-        Uri.parse(url),
-        headers: {'Authorization': 'Bearer $accessToken'},
-      );
-      // print()
+  //   print(accessToken);
+  //   print(url);
+  //   // final res = await NetworkService.instance.get(url);
+  //   print({'Authorization': 'Bearer $accessToken'});
+  //   try {
+  //     // final res = await NetworkService.instance.get(url);
 
-      // headers: {
+  //     final res = await http.get(
+  //       Uri.parse(url),
+  //       headers: {'Authorization': 'Bearer $accessToken'},
+  //     );
+  //     // print()
 
-      // HttpHeaders.authorizationHeader: 'Basic your_api_token_here',
-      print(res.body);
-      print(res.statusCode);
-      // Your code to handle the response
-    } catch (e) {
-      // Handle any errors that occur during the network request
-      print('Error occurred: $e');
+  //     // headers: {
+  //     filteredBlockedAccounts = json.decode(res.body);
+  //     // HttpHeaders.authorizationHeader: 'Basic your_api_token_here',
+  //     print(res.body);
+
+  //     print("a3aaaaaaaaa:${res.statusCode}");
+
+  //     // Your code to handle the response
+  //   } catch (e) {
+  //     // Handle any errors that occur during the network request
+  //     print('Error occurred: $e');
+  //   }
+  // }
+blockListAPI(String accessToken) async {
+  const url = ApiRoutesBackend.blockedAccs;
+  try {
+    final res = await http.get(
+      Uri.parse(url),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if (res.statusCode == 200) {
+      setState(() {
+        // Update filteredBlockedAccounts with the response data
+        filteredBlockedAccounts = List<Map<String, dynamic>>.from(jsonDecode(res.body)["blockedsData"]);
+      }); 
+    } else {
+      print('Failed to load blocked accounts');
     }
-
-    // // blockedAccounts=res.body;
-    // // Map<String, dynamic> blocked = jsonDecode(res.body);
-    // print(blockedAccounts["blocked_accounts"]);
-    // print(blocked["followers"]);
-    // print(res.body);
-    // print(res.body[0]['blocked']);
+  } catch (e) {
+    print('Error occurred: $e');
   }
+}
 
-  List<Map<String, String>> filteredBlockedAccounts = [];
+  List<Map<String, dynamic>> filteredBlockedAccounts = [];
 
   @override
   void initState() {
@@ -76,9 +83,12 @@ class _BlockedAccountsState extends State<BlockedAccounts>
         // Store the token in the access_token variable
         accessToken = sharedPrefValue.getString('backtoken');
         blockListAPI(accessToken!);
+
+        // print(  blockListAPI(accessToken!)["blocked_accounts"]);
       });
     });
-    filteredBlockedAccounts = List.from(blockedAccounts);
+    // filteredBlockedAccounts = List.from(blockedAccounts);
+    // filteredBlockedAccounts = List.from(blockedAccounts);
     _controller = AnimationController(vsync: this);
   }
 
@@ -90,9 +100,9 @@ class _BlockedAccountsState extends State<BlockedAccounts>
 
   void _filterBlockedAccounts(String query) {
     setState(() {
-      filteredBlockedAccounts = blockedAccounts
+      filteredBlockedAccounts = filteredBlockedAccounts
           .where((account) =>
-              account['name']!.toLowerCase().contains(query.toLowerCase()))
+              account['username']!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -125,9 +135,10 @@ class _BlockedAccountsState extends State<BlockedAccounts>
               itemCount: filteredBlockedAccounts.length,
               itemBuilder: (context, index) {
                 return FollowersBlockedCard(
-                  id: filteredBlockedAccounts[index]["id"]!,
-                  name: filteredBlockedAccounts[index]["name"]!,
-                  url: filteredBlockedAccounts[index]["url"],
+                  // id: filteredBlockedAccounts[index]["id"]!,
+                  
+                  name: filteredBlockedAccounts[index]["username"]!,
+                  url: filteredBlockedAccounts[index]["avatar"],
                 );
               },
             ),
@@ -138,105 +149,12 @@ class _BlockedAccountsState extends State<BlockedAccounts>
   }
 }
 
-// // class BlockedAccounts extends StatefulWidget {
-// //   const BlockedAccounts({super.key});
-
-// //   @override
-// //   State<BlockedAccounts> createState() => const BlockedAccounts();
-// // }
-
-// // class _MyWidgetState extends State<MyWidget>
-// //     with SingleTickerProviderStateMixin {
-// //   late AnimationController _controller;
-
-// //   @override
-// //   void initState() {
-// //     super.initState();
-// //     _controller = AnimationController(vsync: this);
-// //   }
-
-// //   @override
-// //   void dispose() {
-// //     _controller.dispose();
-// //     super.dispose();
-// //   }
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return const SingleChildScrollView();
-// //   }
-// // }
-
-// class BlockedAccounts extends StatefulWidget {
-//   const BlockedAccounts({super.key});
-
-//   @override
-//   State<BlockedAccounts> createState() => _BlockedAccountsState();
-// }
-
-// class _BlockedAccountsState extends State<BlockedAccounts>
-//     with SingleTickerProviderStateMixin {
-//   late AnimationController _controller;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _controller = AnimationController(vsync: this);
-//   }
-
-//   @override
-//   void dispose() {
-//     _controller.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Blocked Accounts'),
-//       ),
-//       body: ListView.builder(
-//         itemCount: blockedAccounts.length,
-//         itemBuilder: (context, index) {
-//           return FollowersBlockedCard(
-//             id: blockedAccounts[index]["id"]!,
-//             name: blockedAccounts[index]["name"]!,
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-// // class BlockedAccounts extends StatelessWidget {
-// //   const BlockedAccounts({super.key});
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Scaffold(
-// //       appBar: AppBar(
-// //         title: const Text('Blocked Accounts'),
-// //       ),
-// //       body: ListView.builder(
-// //         itemCount: blockedAccounts.length,
-// //         itemBuilder: (context, index) {
-// //           return FollowersBlockedCard(
-// //             id: blockedAccounts[index]["id"]!,
-// //             name: blockedAccounts[index]["name"]!,
-// //           );
-// //         },
-// //       ),
-// //     );
-// //   }
-// // }
-
 class FollowersBlockedCard extends StatelessWidget {
   FollowersBlockedCard(
-      {super.key, required this.name, required this.id, required, this.url});
+      {super.key, required this.name, this.id, required, this.url});
 
   String name;
-  String id;
+  String? id;
   String? url;
 
   @override
@@ -246,12 +164,14 @@ class FollowersBlockedCard extends StatelessWidget {
         name,
         style: const TextStyle(fontSize: 18),
       ),
-      leading: url != null
-          ? CircleAvatar(
-              radius: 25, // Adjust the radius according to your requirements
-              backgroundImage: NetworkImage(url!),
-            )
-          : const CircleAvatar(
+      leading:
+      //  url != null
+      //     ? CircleAvatar(
+      //         radius: 25, // Adjust the radius according to your requirements
+      //         backgroundImage: NetworkImage(url!),
+      //       )
+      //     : 
+          const CircleAvatar(
               radius: 25, // Adjust the radius according to your requirements
               backgroundImage: AssetImage('assets/images/defaultAvatar.png'),
             ),
