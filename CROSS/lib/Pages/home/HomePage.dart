@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
@@ -57,11 +59,11 @@ class _HomePageState extends State<HomePage> {
       headers: {'Authorization': 'Bearer $accessToken'},
     );
     if (response.statusCode == 200) {
-     Map<String, dynamic> responseData = json.decode(response.body);
+      Map<String, dynamic> responseData = json.decode(response.body);
       if (responseData.containsKey('user')) {
         Map<String, dynamic> user = responseData['user'];
         profilePic = user['avatar'];
-        if(profilePic == 'default.jpg'){
+        if (profilePic == 'default.jpg') {
           profilePic = null;
         }
         return profilePic!;
@@ -265,29 +267,56 @@ class _HomePageState extends State<HomePage> {
                                 post['title'],
                                 style: const TextStyle(fontSize: 16),
                               ),
-                              trailing: post['picture'] != null
-                                  ? Image.network(
-                                      post['picture'],
-                                      width: 100,
-                                      height: 250,
-                                      fit: BoxFit.cover,
+                              trailing: post['picture'] != null && post['nsfw']
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Container(
+                                        width: 100,
+                                        height: 250,
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: 10,
+                                              sigmaY:
+                                                  10), // Adjust blur intensity as needed
+                                          child: Container(
+                                            color: Color.fromARGB(0, 0, 0, 0)
+                                                .withOpacity(
+                                                    0), // Adjust opacity for blur effect
+                                            child: Image.network(
+                                              post['picture'],
+                                              width: 100,
+                                              height: 250,
+                                              fit: BoxFit.cover,
+                                              colorBlendMode:
+                                                  BlendMode.saturation,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     )
-                                  : null,
+                                  : post['picture'] != null
+                                      ? Image.network(
+                                          post['picture'],
+                                          width: 100,
+                                          height: 250,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => PostDetails(
-                                        redditName: post['redditName'],
-                                        title: post['title'],
-                                        picture: post['picture'],
-                                        votes: post['votes'],
-                                        commentsNo: post['commentsNo'],
-                                        creatorId: post['creatorId'],
-                                        postId: post['id'],
-                                        nsfw: post['nsfw'],
-                                        description: post['description'],
-                                        ),
+                                      redditName: post['redditName'],
+                                      title: post['title'],
+                                      picture: post['picture'],
+                                      votes: post['votes'],
+                                      commentsNo: post['commentsNo'],
+                                      creatorId: post['creatorId'],
+                                      postId: post['id'],
+                                      nsfw: post['nsfw'],
+                                      description: post['description'],
+                                    ),
                                   ),
                                 );
                               },

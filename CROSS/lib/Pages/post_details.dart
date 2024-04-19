@@ -36,13 +36,24 @@ class PostDetails extends StatefulWidget {
 }
 
 class _PostDetailsState extends State<PostDetails> {
-  bool isBlurred = true;
+  bool isBlurred = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.nsfw) {
+      isBlurred = true; // Apply blur if the post is NSFW
+    }
+  }
 
   void toggleBlur() {
-    setState(() {
-      isBlurred = !isBlurred;
-    });
+    if (widget.nsfw) { // Check if the post is NSFW
+      setState(() {
+        isBlurred = !isBlurred; // Toggle blur if the post is NSFW
+      });
+    }
   }
+
 
   Future<void> _downloadImage(BuildContext context) async {
     // Check if permission is granted

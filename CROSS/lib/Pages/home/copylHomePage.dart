@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
@@ -167,14 +169,41 @@ class _HomePageState extends State<HomePage> {
                         style:
                             const TextStyle(fontSize: 16), // Increase font size
                       ),
-                      trailing: post['picture'] != null
-                          ? Image.network(
-                              post['picture'],
-                              width: 100,
-                              height: 250,
-                              fit: BoxFit.cover,
-                            ) // Adjust width and height of the image
-                          : null, // Leave trailing blank if post['picture'] is null
+                                                 trailing: post['picture'] != null && post['nsfw']
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Container(
+                                        width: 100,
+                                        height: 250,
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: 10,
+                                              sigmaY:
+                                                  10), // Adjust blur intensity as needed
+                                          child: Container(
+                                            color: Color.fromARGB(0, 0, 0, 0)
+                                                .withOpacity(
+                                                    0), // Adjust opacity for blur effect
+                                            child: Image.network(
+                                              post['picture'],
+                                              width: 100,
+                                              height: 250,
+                                              fit: BoxFit.cover,
+                                              colorBlendMode:
+                                                  BlendMode.saturation,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : post['picture'] != null
+                                      ? Image.network(
+                                          post['picture'],
+                                          width: 100,
+                                          height: 250,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
                       onTap: () {
                         // Navigate to post details page
                         Navigator.push(

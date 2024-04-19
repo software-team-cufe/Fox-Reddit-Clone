@@ -47,7 +47,7 @@ void main() {
         home: Scaffold(
           body: MyTextInputWidget(
             inputTitle: 'Test',
-            onChanged: (value) {
+            onTextChanged: (value) {
               changedValue = value;
             },
           ),

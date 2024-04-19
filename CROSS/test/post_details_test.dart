@@ -14,6 +14,7 @@ void main() {
         creatorId: 123,
         postId: 2,
         nsfw: false,
+        description: 'blah blah blah',
       ),
     ));
 
