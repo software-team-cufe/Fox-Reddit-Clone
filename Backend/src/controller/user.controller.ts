@@ -44,6 +44,14 @@ import { Types } from 'mongoose';
  * @param res - The response object to send the result.
  * @returns A response indicating the success or failure of the user creation.
  */
+/**
+ * Handles the creation of a new user account and sends a verification email.
+ *
+ * @param {Request<{}, {}, CreateUserInput>} req - The request object containing the user data.
+ * @param {Response} res - The response object to send the verification status.
+ * @returns {Promise<void>} - A promise that resolves once the user creation and verification email sending process is complete.
+ * @throws {Error} - If there is an error creating the user or sending the verification email.
+ */
 export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, res: Response) {
   const body = req.body;
 
@@ -78,6 +86,14 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
   }
 }
 
+/**
+ * Handles the deletion of a user account.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves once the user deletion process is complete.
+ * @throws {Error} - If there is an error deleting the user.
+ */
 export async function deleteUserHandler(req: Request, res: Response) {
   const user = await findUserByUsername(res.locals.user.username);
 
@@ -290,7 +306,13 @@ export async function getCurrentUserPrefs(req: Request, res: Response) {
     });
   }
 }
-
+/**
+ * Edit the current user's preferences.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Response} The updated user preferences.
+ */
 export async function editCurrentUserPrefs(req: Request, res: Response) {
   let user = res.locals.user;
 
@@ -496,10 +518,15 @@ export async function getUserSubmittedHandler(req: Request, res: Response, next:
     return next(err);
   }
 }
+
 /**
- * Get user posts
- * @param {function} (req, res)
- * @returns {object} res
+ * Retrieves an overview of a user's comments.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @param {NextFunction} next - The next middleware function.
+ * @returns {Promise<void>} A promise that resolves when the user's comments are sent in the response.
+ * @throws {Error} If the user is not found or if there is an internal server error.
  */
 export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
   try {
@@ -528,9 +555,13 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
 }
 
 /**
- * Get user overview
- * @param {function} (req, res)
- * @returns {object} res
+ * Retrieves an overview of a user's posts, comments, and replies.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @param {NextFunction} next - The next middleware function.
+ * @returns {Promise<void>} A promise that resolves when the user overview is sent in the response.
+ * @throws {Error} If the user is not found or if there is an internal server error.
  */
 export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
   try {
@@ -578,6 +609,14 @@ export async function getUserOverviewHandler(req: Request, res: Response, next: 
 
 /****************************** BOUDY ***********************************/
 
+/**
+ * Retrieves the details of a user by their username.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @returns {Promise<void>} A promise that resolves when the user details are sent in the response.
+ * @throws {Error} If the access token is missing or invalid, or if the user is not found.
+ */
 export async function getUserHandler(req: Request, res: Response) {
   try {
     // Extract username from request parameters
@@ -620,6 +659,14 @@ export async function getUserHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Blocks or unblocks a user by updating the blocker's and blocked user's block lists.
+ *
+ * @param {Request<blockUserInput['body']>} req - The request object containing the username of the user to block/unblock and the operation type ('block' or 'unblock').
+ * @param {Response} res - The response object to send the result of the block/unblock operation.
+ * @returns {Promise<void>} A promise that resolves when the block/unblock operation is complete.
+ * @throws {Error} If the access token is missing or invalid, the account is not found, or the operation type is invalid.
+ */
 export async function blockUserHandler(req: Request<blockUserInput['body']>, res: Response) {
   try {
     const { username, type } = req.body;
@@ -674,6 +721,14 @@ export async function blockUserHandler(req: Request<blockUserInput['body']>, res
   }
 }
 
+/**
+ * Retrieves a list of all users that the current user has blocked.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} A promise that resolves when the list of blocked users is sent in the response.
+ * @throws {Error} If the access token is missing or invalid, or if the user does not have any blocked users.
+ */
 export async function getALLBlockedHandler(req: Request, res: Response) {
   const user = await findUserByUsername(res.locals.user.username);
 
@@ -709,6 +764,14 @@ export async function getALLBlockedHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Follows a user by adding the current user to the followed user's followers list and adding the followed user to the current user's userFollows list.
+ *
+ * @param {Request<followUserInput['body']>} req - The request object containing the username of the user to follow.
+ * @param {Response} res - The response object to send the result of the follow operation.
+ * @returns {Promise<void>} A promise that resolves when the follow operation is completed.
+ * @throws {Error} If the account of the user to follow is not found, the access token is missing or invalid, or an internal server error occurs.
+ */
 export async function followRequestHandler(req: Request<followUserInput['body']>, res: Response) {
   try {
     const { username } = req.body;
@@ -753,6 +816,14 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
   }
 }
 
+/**
+ * Unfollows a user by removing the current user from the followed user's followers list and removing the followed user from the current user's userFollows list.
+ *
+ * @param {Request<unfollowUserInput['body']>} req - The request object containing the username of the user to unfollow.
+ * @param {Response} res - The response object to send the result of the unfollow operation.
+ * @returns {Promise<void>} A promise that resolves when the unfollow operation is completed.
+ * @throws {Error} If the account of the user to unfollow is not found, the access token is missing or invalid, or an internal server error occurs.
+ */
 export async function unfollowRequestHandler(req: Request<unfollowUserInput['body']>, res: Response) {
   try {
     const { username } = req.body;
@@ -789,6 +860,14 @@ export async function unfollowRequestHandler(req: Request<unfollowUserInput['bod
   }
 }
 
+/**
+ * Retrieves all the users that the current user is following.
+ *
+ * @param {Request} req - The request object containing the access token.
+ * @param {Response} res - The response object to send the list of users the current user is following.
+ * @return {Promise<void>} A promise that resolves when the list of following users is retrieved and sent in the response.
+ * @throws {Error} If the access token is missing or invalid, the user does not have any followings, or an internal server error occurs.
+ */
 export async function getALLFollowersHandler(req: Request, res: Response) {
   const user = await findUserByUsername(res.locals.user.username);
 
@@ -824,6 +903,14 @@ export async function getALLFollowersHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves all the users that the current user is following.
+ *
+ * @param {Request} req - The request object containing the access token.
+ * @param {Response} res - The response object to send the list of users the current user is following.
+ * @return {Promise<void>} A promise that resolves when the list of following users is retrieved and sent in the response.
+ * @throws {Error} If the access token is missing or invalid, the user does not have any followings, or an internal server error occurs.
+ */
 export async function getALLFollowingHandler(req: Request, res: Response) {
   const user = await findUserByUsername(res.locals.user.username);
 

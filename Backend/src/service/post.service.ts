@@ -42,6 +42,16 @@ export function findPostById(id: string) {
 //   }
 // }
 
+/**
+ * Finds the top posts from a specified community.
+ *
+ * @param community - The name of the community to find the top posts for.
+ * @param limit - The maximum number of posts to retrieve (default is 10).
+ * @param page - The page number of the results to retrieve (default is 1).
+ * @param count - The number of posts to skip (default is 0).
+ * @returns A promise that resolves to an array of Post objects representing the top posts from the specified community.
+ * @throws Error if the community is not found or if there is an error finding the top posts.
+ */
 export async function findBestPostsByCommunity(
   community: string,
   limit: number = 10,
@@ -68,6 +78,15 @@ export async function findBestPostsByCommunity(
   }
 }
 
+/**
+ * Finds the best posts by random.
+ *
+ * @param limit - The maximum number of posts to retrieve (default is 10).
+ * @param page - The page number of the results to retrieve (default is 1).
+ * @param count - The total count of posts (default is 0).
+ * @returns A promise that resolves to an array of Post objects representing the best posts.
+ * @throws Error if there is an error finding the posts.
+ */
 export async function findBestPostsByRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   try {
     const queryOptions: QueryOptions = { sort: { bestFactor: -1 } };
@@ -87,6 +106,16 @@ export async function findBestPostsByRandom(limit: number = 10, page: number = 1
   }
 }
 
+/**
+ * Finds the top posts from a specified community.
+ *
+ * @param community - The name of the community to find the top posts for.
+ * @param limit - The maximum number of posts to retrieve (default is 10).
+ * @param page - The page number of the results to retrieve (default is 1).
+ * @param count - The number of posts to skip (default is 0).
+ * @returns A promise that resolves to an array of Post objects representing the top posts from the specified community.
+ * @throws Error if the community is not found or if there is an error finding the top posts.
+ */
 export async function findHotPostsByCommunity(
   community: string,
   limit: number = 10,
@@ -113,6 +142,15 @@ export async function findHotPostsByCommunity(
   }
 }
 
+/**
+ * Finds the hot posts by random.
+ *
+ * @param limit - The maximum number of posts to retrieve (default is 10).
+ * @param page - The page number of the results to retrieve (default is 1).
+ * @param count - The total count of posts (default is 0).
+ * @returns A promise that resolves to an array of Post objects representing the hot posts.
+ * @throws Error if there is an error finding the posts.
+ */
 export async function findHotPostsByRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   try {
     const queryOptions: QueryOptions = { sort: { hotnessFactor: -1 } };
@@ -132,6 +170,16 @@ export async function findHotPostsByRandom(limit: number = 10, page: number = 1,
   }
 }
 
+/**
+ * Finds the top posts from a specified community.
+ *
+ * @param community - The name of the community to find the top posts for.
+ * @param limit - The maximum number of posts to retrieve (default is 10).
+ * @param page - The page number of the results to retrieve (default is 1).
+ * @param count - The number of posts to skip (default is 0).
+ * @returns A promise that resolves to an array of Post objects representing the top posts from the specified community.
+ * @throws Error if the community is not found or if there is an error finding the top posts.
+ */
 export async function findNewPostsByCommunity(
   community: string,
   limit: number = 10,
@@ -158,6 +206,15 @@ export async function findNewPostsByCommunity(
   }
 }
 
+/**
+ * Finds the newest posts by random.
+ *
+ * @param limit The maximum number of posts to retrieve. Default is 10.
+ * @param page The page number of the posts to retrieve. Default is 1.
+ * @param count The total count of posts. Default is 0.
+ * @returns A promise that resolves to an array of Post objects representing the newest posts.
+ * @throws Error if there is an error finding the posts.
+ */
 export async function findNewPostsByRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   try {
     const queryOptions: QueryOptions = { sort: { createdAt: -1 } };
@@ -177,6 +234,16 @@ export async function findNewPostsByRandom(limit: number = 10, page: number = 1,
   }
 }
 
+/**
+ * Finds the top posts from a specified community.
+ *
+ * @param community - The name of the community to find the top posts for.
+ * @param limit - The maximum number of posts to retrieve (default is 10).
+ * @param page - The page number of the results to retrieve (default is 1).
+ * @param count - The number of posts to skip (default is 0).
+ * @returns A promise that resolves to an array of Post objects representing the top posts from the specified community.
+ * @throws Error if the community is not found or if there is an error finding the top posts.
+ */
 export async function findTopPostsByCommunity(
   community: string,
   limit: number = 10,
@@ -203,6 +270,15 @@ export async function findTopPostsByCommunity(
   }
 }
 
+/**
+ * Finds the top posts by random.
+ *
+ * @param limit The maximum number of posts to retrieve. Default is 10.
+ * @param page The page number of the posts to retrieve. Default is 1.
+ * @param count The total count of posts. Default is 0.
+ * @returns A promise that resolves to an array of Post objects representing the top posts.
+ * @throws Error if there is an error finding the posts by community.
+ */
 export async function findTopPostsByRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   try {
     const queryOptions: QueryOptions = { sort: { votesCount: -1 } };
@@ -222,6 +298,16 @@ export async function findTopPostsByRandom(limit: number = 10, page: number = 1,
   }
 }
 
+/**
+ * Finds random posts from a specified community.
+ *
+ * @param community - The name of the community.
+ * @param limit - The maximum number of posts to return (default: 10).
+ * @param page - The page number of the results (default: 1).
+ * @param count - The number of posts to skip (default: 0).
+ * @returns A promise that resolves to an array of Post objects.
+ * @throws Error if the community is not found or if there is an error finding the random posts.
+ */
 export async function findRandomPostsByCommunity(
   community: string,
   limit: number = 10,
@@ -261,6 +347,14 @@ export async function findRandomPostsByCommunity(
   }
 }
 
+/**
+ * Retrieves a list of random posts up to the specified limit, with optional pagination.
+ *
+ * @param limit - The maximum number of posts to retrieve. Defaults to 10.
+ * @param page - The page number to retrieve (for pagination). Defaults to 1.
+ * @param count - The total number of posts (for pagination). Defaults to 0.
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function findRandomPostsByRandom(
   limit: number = 10,
   page: number = 1,
@@ -299,6 +393,13 @@ export async function findRandomPostsByRandom(
   }
 }
 
+/**
+ * Retrieves a list of posts based on the provided post IDs, with an optional limit.
+ *
+ * @param postIDs - An array of post IDs to retrieve.
+ * @param limit - The maximum number of posts to retrieve. If not provided, defaults to 10.
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 async function userPosts(postIDs: string[], limit: number | undefined) {
   // If the request didn't contain a limit in its query, set it to 10 by default
   limit = limit || 10;
@@ -315,26 +416,15 @@ async function userPosts(postIDs: string[], limit: number | undefined) {
 }
 export { userPosts };
 
-//post.service.ts
-// import PostModel, { Post } from '../model/posts.model';
-
-// async function userPosts(postIDs: string[], limit: number) {
-//   // If the request didn't contain a limit in its query, set it to 10 by default
-//   limit = limit || 10;
-
-//   // Fetch posts based on the provided postIDs
-//   const posts = await PostModel.find({ _id: { $in: postIDs } });
-
-//   // Limit the number of fetched posts to the provided limit
-//   const limitedPosts = posts.slice(0, limit);
-
-//   // Return the fetched and limited posts
-//   return limitedPosts;
-// }
-
-// export default userPosts;
-
-//Function to get the best posts from a specific subreddit
+/**
+ * Retrieves a list of best posts from the specified subreddit.
+ *
+ * @param subreddit - The name of the subreddit to retrieve best posts from.
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getBestPostsFromSubreddit(
   subreddit: string,
   limit: number = 10,
@@ -345,11 +435,28 @@ export async function getBestPostsFromSubreddit(
   return bestPosts;
 }
 
+/**
+ * Retrieves a list of best posts from a random subreddit.
+ *
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getBestPostsFromRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   const bestPosts = await findBestPostsByRandom(limit, page, count);
   return bestPosts;
 }
 
+/**
+ * Retrieves a list of hot posts from the specified subreddit.
+ *
+ * @param subreddit - The name of the subreddit to retrieve hot posts from.
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getHotPostsFromSubreddit(
   subreddit: string,
   limit: number = 10,
@@ -360,11 +467,28 @@ export async function getHotPostsFromSubreddit(
   return hotPosts;
 }
 
+/**
+ * Retrieves a list of hot posts from a random subreddit.
+ *
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getHotPostsFromRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   const hotPosts = await findHotPostsByRandom(limit, page, count);
   return hotPosts;
 }
 
+/**
+ * Retrieves a list of new posts from the specified subreddit.
+ *
+ * @param subreddit - The name of the subreddit to retrieve new posts from.
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getNewPostsFromSubreddit(
   subreddit: string,
   limit: number = 10,
@@ -375,11 +499,28 @@ export async function getNewPostsFromSubreddit(
   return newPosts;
 }
 
+/**
+ * Retrieves a list of new posts from a random subreddit.
+ *
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getNewPostsFromRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   const newPosts = await findNewPostsByRandom(limit, page, count);
   return newPosts;
 }
 
+/**
+ * Retrieves a list of top posts from the specified subreddit.
+ *
+ * @param subreddit - The name of the subreddit to retrieve top posts from.
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getTopPostsFromSubreddit(
   subreddit: string,
   limit: number = 10,
@@ -390,11 +531,28 @@ export async function getTopPostsFromSubreddit(
   return topPosts;
 }
 
+/**
+ * Retrieves a list of top posts from a random subreddit.
+ *
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getTopPostsFromRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   const topPosts = await findTopPostsByRandom(limit, page, count);
   return topPosts;
 }
 
+/**
+ * Retrieves a list of random posts from the specified subreddit.
+ *
+ * @param subreddit - The name of the subreddit to retrieve posts from.
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getRandomPostsFromSubreddit(
   subreddit: string,
   limit: number = 10,
@@ -405,6 +563,14 @@ export async function getRandomPostsFromSubreddit(
   return randomPosts;
 }
 
+/**
+ * Retrieves a list of random posts.
+ *
+ * @param limit - The maximum number of posts to retrieve.
+ * @param page - The page number to retrieve (for pagination).
+ * @param count - The total number of posts (for pagination).
+ * @returns A Promise that resolves to an array of `Post` objects.
+ */
 export async function getRandomPostsFromRandom(
   limit: number = 10,
   page: number = 1,

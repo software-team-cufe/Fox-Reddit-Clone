@@ -50,6 +50,15 @@ export function createComment(input: Partial<Comment>) {
   return CommentModel.create(input);
 }
 
+/**
+ * Adds a comment to a post by a user.
+ *
+ * @param {CommentData} data - The data of the comment to be added.
+ * @param {string} userId - The ID of the user creating the comment.
+ * @return {Promise<Comment>} A promise that resolves to the created comment.
+ * @throws {appError} If the user or post does not exist, or if the comment was not created successfully.
+ */
+
 async function add_comment(data: CommentData, userId: string) {
   console.log(data);
   console.log(userId);

@@ -3,6 +3,10 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   coverageDirectory: 'coverage',
+  testMatch: ['**/**/*.test.ts'],
+  verbose: true,
+  forceExit: true,
+  // clearMocks: true,
   collectCoverageFrom: ['src/**/*.{js,ts}'],
   coverageThreshold: {
     global: {

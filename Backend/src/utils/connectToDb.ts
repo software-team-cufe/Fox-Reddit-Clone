@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import config from 'config';
 import log from './logger';
-import { seedCommunity } from '../seeds/seedCommunity';
+//import { seedCommunity } from '../seeds/seedCommunity';
+//import { seedUser } from '../seeds/seedUser';
 
 /**
  * Connects to the MongoDB database using the provided mongoUri.
@@ -17,6 +18,7 @@ async function connectToDb() {
 
     //call seeding function to seed the database
     //await seedCommunity();
+    //await seedUser();
     //log.info('Database seeded');
   } catch (e) {
     //log.error('Error connecting to database or seeding:', e);

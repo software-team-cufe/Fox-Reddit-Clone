@@ -14,7 +14,7 @@
     "test:coverage": "jest --coverage",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "docs": " typedoc --out docs Backend"
+    "docs": "typedoc --out ./src/tsdoc --entryPoints ./src/middleware ./src/utils ./src/service ./src/controller --entryPointStrategy expand"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -26,6 +26,7 @@
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.27",
     "@types/nodemailer": "^6.4.14",
+    "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "7.2.0",
     "eslint": "8.57.0",
@@ -41,11 +42,12 @@
     "pino-pretty": "^10.3.1",
     "plugin": "^0.3.3",
     "prettier": "^3.2.5",
+    "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typedoc": "^0.25.12",
+    "typedoc": "^0.25.13",
     "typescript": "^5.4.3"
   },
   "dependencies": {

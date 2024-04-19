@@ -39,5 +39,3 @@ Fox is a Reddit clone project developed as part of the Cairo University Faculty 
 ### Testing
 - **Team Lead:** Youssef Mohamed Ali
 - Rawan Abdelnasser
-
-
