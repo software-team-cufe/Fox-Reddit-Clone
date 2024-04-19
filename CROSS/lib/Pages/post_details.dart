@@ -18,8 +18,10 @@ class PostDetails extends StatefulWidget {
   final int postId;
   final bool nsfw;
   final String description;
+  final bool spoiler;
+
   const PostDetails({
-    Key? key,
+    super.key,
     required this.redditName,
     required this.title,
     this.picture,
@@ -29,7 +31,8 @@ class PostDetails extends StatefulWidget {
     required this.postId,
     required this.nsfw,
     required this.description,
-  }) : super(key: key);
+    required this.spoiler,
+  });
 
   @override
   _PostDetailsState createState() => _PostDetailsState();
@@ -41,19 +44,19 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   void initState() {
     super.initState();
-    if (widget.nsfw) {
+    if (widget.nsfw || widget.spoiler) {
       isBlurred = true; // Apply blur if the post is NSFW
     }
   }
 
   void toggleBlur() {
-    if (widget.nsfw) { // Check if the post is NSFW
+    if (widget.nsfw || widget.spoiler) {
+      // Check if the post is NSFW or spoiler
       setState(() {
         isBlurred = !isBlurred; // Toggle blur if the post is NSFW
       });
     }
   }
-
 
   Future<void> _downloadImage(BuildContext context) async {
     // Check if permission is granted
@@ -205,75 +208,95 @@ class _PostDetailsState extends State<PostDetails> {
             ),
             const SizedBox(height: 16),
             Text(
-  widget.title,
-  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-),
-if (widget.nsfw)
-  Row(
-    children: [
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        margin: const EdgeInsets.only(top: 4),
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: const Text(
-          'NSFW',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    ],
-  ),
-const SizedBox(height: 8),
+              widget.title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                if (widget.nsfw)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    margin: const EdgeInsets.only(top: 4, right: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'NSFW',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                if (widget.spoiler)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 137, 137, 137),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'Spoiler',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
 
             if (widget.picture != null && widget.picture!.isNotEmpty)
-  // Wrap GestureDetector around ClipRRect
-  GestureDetector(
-    onTap: toggleBlur, // Toggle the blur filter on tap
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(10), // Adjust border radius as needed
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Image without blur effect
-          Image.network(
-            widget.picture!,
-            width: double.infinity,
-            height: 400,
-            fit: BoxFit.cover,
-            color: isBlurred ? Colors.grey : null,
-            colorBlendMode:
-                isBlurred ? BlendMode.saturation : BlendMode.dst,
-          ),
-          if (isBlurred)
-            // Blur effect with BackdropFilter
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                color:
-                    const Color.fromARGB(0, 0, 0, 0).withOpacity(0), // Transparent color
-                width: double.infinity,
-                height: 400,
+              // Wrap GestureDetector around ClipRRect
+              GestureDetector(
+                onTap: toggleBlur, // Toggle the blur filter on tap
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                      10), // Adjust border radius as needed
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Image without blur effect
+                      Image.network(
+                        widget.picture!,
+                        width: double.infinity,
+                        height: 400,
+                        fit: BoxFit.cover,
+                        color: isBlurred ? Colors.grey : null,
+                        colorBlendMode:
+                            isBlurred ? BlendMode.saturation : BlendMode.dst,
+                      ),
+                      if (isBlurred)
+                        // Blur effect with BackdropFilter
+                        BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            color: const Color.fromARGB(0, 0, 0, 0)
+                                .withOpacity(0), // Transparent color
+                            width: double.infinity,
+                            height: 400,
+                          ),
+                        ),
+                      if (isBlurred)
+                        const Icon(Icons.remove_red_eye,
+                            size: 64,
+                            color: Colors.white), // Icon to indicate blur
+                    ],
+                  ),
+                ),
               ),
+            const SizedBox(height: 8), // Space between picture and description
+            Text(
+              widget.description, // Include the post description here
+              style: const TextStyle(fontSize: 16),
             ),
-          if (isBlurred)
-            const Icon(Icons.remove_red_eye,
-                size: 64,
-                color: Colors.white), // Icon to indicate blur
-        ],
-      ),
-    ),
-  ),
-  const SizedBox(height: 8), // Space between picture and description
-    Text(
-      widget.description, // Include the post description here
-      style: const TextStyle(fontSize: 16),
-    ),
-    const SizedBox(height: 8), // Space between description and actions
+            const SizedBox(height: 8), // Space between description and actions
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -307,7 +330,9 @@ const SizedBox(height: 8),
                       IconButton(
                         icon: const Icon(Icons.share),
                         onPressed: () {
-                          String postUrl = 'https://example.com/posts/';
+                          int postId = widget.postId;
+                          String postUrl =
+                              'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
                           Share.share('${widget.title}\n$postUrl');
                         },
                       ),
