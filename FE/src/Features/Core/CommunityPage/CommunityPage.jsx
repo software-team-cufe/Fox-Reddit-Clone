@@ -22,7 +22,7 @@ import { userAxios } from "../../../Utils/UserAxios";
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
-  selected: "Top",
+  selected: "New",
   setselected: (selected) => { },
   period: "All time",
   setperiod: (period) => { },
@@ -30,7 +30,7 @@ export const CommunityContext = createContext({
 
 // Create a provider component that holds the state
 export function CommunityProvider({ children }) {
-  const [selected, setselected] = useState("Top");
+  const [selected, setselected] = useState("New");
   const [period, setperiod] = useState("All time");
 
   return (
@@ -52,7 +52,7 @@ export default function CommunityPage() {
   const loadMoreButtonRef = useRef(null);
   const [callingposts, setCallingPosts] = useState(false);
   const [pagedone, setpagedone] = useState(false);
-  const limitpage = 2;
+  const limitpage = 5;
   const [currentpage,setcurrentpage] = useState(1);
   const [feed, setFeed] = useState(false);
 
@@ -67,11 +67,15 @@ export default function CommunityPage() {
 
   const fetchInitialPosts = () => {
     setFeed(true);
-    userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`)
+    let link = `api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&limit=${limitpage}`;
+    if (selected == 'Top'){
+      link = link +`&t=${period}`;
+    }
+    userAxios.get(link)
       .then((response) => {
         const newPosts = response.data.map(post => ({
           subReddit: {
-            image: "https://qph.cf2.quoracdn.net/main-qimg-d2290767bcbc9eb9748ca82934e6855c-lq",
+            image: comm.icon,
             title: post.communityName,
           },
           images: post.attachments,
@@ -83,7 +87,7 @@ export default function CommunityPage() {
           thumbnail: post.attachments[0],
           video: null
         }));
-        setcurrentpage(1+currentpage);
+        setcurrentpage(2);
         setPosts(newPosts);
         setFeed(false);
       })
@@ -102,7 +106,6 @@ export default function CommunityPage() {
     axios.patch(`http://localhost:3002/communities/${comm.id}`, { joined: !comm.joined })
       .then(() => {
         comm = { ...comm, joined: !comm.joined };
-        console.log('Community joined state changed!');
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -119,29 +122,33 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    userAxios.get(`r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`)
+    let link = `api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`;
+    if (selected == 'Top'){
+      link = link +`&t=${period}`;
+    }
+    userAxios.get(link)
     .then(response => {
         if(response.data.length <limitpage){
             setpagedone(true);
         }
         const newPosts = response.data.map(post => ({
           subReddit: {
-            image: post.attachments.subredditIcon,
+            image: comm.icon,
             title: post.communityName,
           },
-          images: post.attachments.postData,
-          id: post.id,
+          images: post.attachments,
+          id: post._id,
           title: post.title,
-          subTitle: post.postText,
+          subTitle: post.textHTML,
           votes: post.votesCount,
-          comments: post.commentsCount,
-          thumbnail: post.thumbnail,
+          comments: post.postComments.length,
+          thumbnail: post.attachments[0],
           video: null
         }));
 
         setPosts(prevPosts => [...prevPosts, ...newPosts]);
         setCallingPosts(false);
-        setcurrentpage(limitpage+currentpage);
+        setcurrentpage(1+currentpage);
 
       })
       .catch(error => {

@@ -7,9 +7,9 @@ import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import ViewerCard from "@/GeneralComponents/viewercard/viewerCard.jsx";
 import { useState, useEffect, useContext, createContext } from "react";
 import React from "react";
-import axios from 'axios';
-import Spinner from "@/GeneralElements/Spinner/Spinner";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
+import { userAxios } from "@/Utils/UserAxios";
+import { useQuery } from "react-query";
 
 /**
  * @file ViewerProfileRoutes.jsx
@@ -62,23 +62,26 @@ function Layout() {
   const [loading, setLoading] = useState(true); // loading state for fetching user info
   const { viewer } = useParams();  // getting the user from the url
 
-  useEffect(() => {
+  const fetchViewerAbout =() => {
     // Fetch user info
-    axios.get(`https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/t2_AhmedLotfy02/about`) // fetching user info
-      .then(res => {
-        setAvatar(res.data.data[0].avatar);
+    userAxios.get(`user/boudie_test/about`) // fetching user info
+      .then(response => {
+        setAvatar(response.data.avatar);
         setLoading(false);
       })
-      .catch(err => {
+      .catch(error => {
+        console.error('Error:', error);
         setLoading(false);
       })
-  }, []); // empty dependency array means this effect runs once on mount and cleanup on unmount
+  };
+
+  const { isError} = useQuery('ViewerProfileAbout', fetchViewerAbout);
 
   // loading spinner to wait for fetch then load body of apge
   if (loading) {
     return (
-      <div role='poststab' className="w-100 h-100 flex flex-col items-center justify-center">
-        <Spinner className="h-24 w-24" />
+      <div className="w-100 h-100 flex flex-col items-center justify-center">
+            <img src={'/logo.png'} className="h-20 w-20 mt-24 mx-auto animate-ping" alt="Logo" />
       </div>
     )
   }
@@ -135,7 +138,7 @@ export default function ViewerProfilePage() {
           <Route key={'/viewer'} path={`/`} />
           <Route key={'/comments'} path="/comments" element={<ProfileComments context={ViewerContext} using={viewer} />} />
           <Route key={'/posts'} path="posts" element={<ProfilePosts context={ViewerContext} using={viewer} />} />
-          <Route key={'/overview'} path="/overview" element={<ProfileOverview using={viewer} />} />
+          <Route key={'/overview'} path="/overview" element={<ProfileOverview context={ViewerContext} using={viewer} />} />
         </Route>
       </Routes>
     </ViewerProvider>

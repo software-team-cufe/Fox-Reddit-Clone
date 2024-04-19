@@ -2,6 +2,8 @@ import React, {  useState, useContext, useRef } from "react";
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { useQuery } from "react-query";
 import { userAxios } from "../../../../Utils/UserAxios";
+import { toast } from "react-toastify";
+
 /**
  * Renders the profile comments section.
  *
@@ -16,6 +18,7 @@ function ProfileComments({ using, context }) {
     // states for collecting comments from request and loading state
     const { selected, period } = useContext(context);
     const [comments, setComments] = useState([]);
+    const [loading, setload] = useState(false);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
@@ -23,13 +26,15 @@ function ProfileComments({ using, context }) {
     const limitpage = 5;
     //fetch comments on load and put into comments array
     const fetchInitialComments = () => {
+        setcurrentpage(1);
+        setload(true);
         userAxios.get(`/user/boudie_test/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 const newComments = response.data.comments.map(comment => ({
                     user: {
-                        image: comment.user.avatar,
-                        Username: comment.user.username,
-                        id: comment.user.authorID
+                        image: null,
+                        Username: null,
+                        id: comment.authorID
                     },
                     info: {
                         votes: comment.votesCount,
@@ -41,33 +46,37 @@ function ProfileComments({ using, context }) {
                 }));
                 setcurrentpage(currentpage+1);
                 setComments(newComments);
+                setload(false);
             })
             .catch(error => {
                 console.error('Error:', error);
+                toast.error("there was an issue with loading your comments please try again")
+                setload(false);
             });
     };
 
-    const { isLoading:loading, error: postsError } = useQuery(['fetchInitialProfileComments', selected, period],fetchInitialComments, { retry: 0, refetchOnWindowFocus: false });
+    const {error: postsError } = useQuery(['fetchInitialProfileComments', selected, period],fetchInitialComments, { retry: 0, refetchOnWindowFocus: false });
 
     const fetchMoreComments = () => {
         setCallingPosts(true);
-        userAxios.get(`/user/${using}/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/boudie_test/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
         .then(response => {
-                if(response.data.length < limitpage) {
+                if(response.data.comments.length < limitpage) {
                     setpagedone(true);
                 }
-                const newComments = response.data.map(comment => ({
+                console.log(response.data.comments)
+                const newComments = response.data.comments.map(comment => ({
                     user: {
-                        image: comment.user.avatar,
-                        Username: comment.user.username,
-                        id: comment.user.userID
+                        image: null,
+                        Username: null,
+                        id: comment.authorID
                     },
                     info: {
                         votes: comment.votesCount,
                         time: comment.createdAt,
                     },
                     content: {
-                        text: comment.commentText
+                        text: comment.textHTML
                     }
                 }));
 
@@ -78,6 +87,7 @@ function ProfileComments({ using, context }) {
             })
             .catch(error => {
                 console.error('Error:', error);
+                toast.error("there was an issue with loading your comments please try again")
                 setCallingPosts(false);
             });
     };
