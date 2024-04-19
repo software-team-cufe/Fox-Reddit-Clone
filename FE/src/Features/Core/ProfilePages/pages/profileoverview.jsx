@@ -22,9 +22,8 @@ export default function ProfileOverview({ using, context }) {
 
     //fetch posts on load and put into posts array
     const fetchInitialData = () => {
-        setcurrentpage(1);
         setload(true);
-        userAxios.get(`user/boudie_test/overview?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`user/boudie_test/overview?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
@@ -60,7 +59,7 @@ export default function ProfileOverview({ using, context }) {
                 setComments(newComments);
                 const newItems = [...newPosts, ...newComments].sort((a, b) => b.votes - a.votes);
                 setItems(prevItems => [...prevItems, ...newItems]);
-                setcurrentpage(currentpage + 1);
+                setcurrentpage(2);
                 setload(false);
             })
             .catch(error => {
@@ -138,7 +137,7 @@ export default function ProfileOverview({ using, context }) {
                     {items.map((item, index) => (
                         'content' in item ? <CommentComponent key={index} comment={item} /> : <PostComponent key={index} post={item} />
                     ))}
-                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMoreData} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMoreData} className="w-fit mx-auto h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
             ) : (

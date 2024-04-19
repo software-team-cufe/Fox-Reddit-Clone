@@ -55,7 +55,8 @@
       "joined": true,
       "muted": true,
       "favourited": false,
-      "NSFW": false
+      "NSFW": false,
+      "type": "public"
     },
     {
       "id": "2",
@@ -74,7 +75,8 @@
       ],
       "muted": true,
       "favourited": true,
-      "NSFW": true
+      "NSFW": true,
+      "type": "public"
     },
     {
       "id": "3",
@@ -94,7 +96,8 @@
       "joined": true,
       "muted": false,
       "favourited": false,
-      "NSFW": true
+      "NSFW": true,
+      "type": "private"
     },
     {
       "id": "4",
@@ -114,7 +117,8 @@
       "joined": true,
       "muted": false,
       "favourited": true,
-      "NSFW": false
+      "NSFW": false,
+      "type": "restricted"
     }
   ],
   "posts": [

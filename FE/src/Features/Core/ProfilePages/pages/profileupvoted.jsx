@@ -30,7 +30,7 @@ export default function ProfileUpvoted({using}) {
     const fetchInitialPosts = () => {
         setcurrentpage(1);
         setload(true);
-        userAxios.get(`user/boudie_test/upvoted?page=${currentpage}&count=${limitpage}&limit=${limitpage}`)
+        userAxios.get(`user/boudie_test/upvoted?page=1&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
@@ -46,7 +46,7 @@ export default function ProfileUpvoted({using}) {
                     thumbnail: post.thumbnail,
                     video: null
                 }));
-                setcurrentpage(currentpage+1);
+                setcurrentpage(2);
                 setPosts(newPosts);
                 setload(false);
             })
@@ -61,7 +61,7 @@ export default function ProfileUpvoted({using}) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`/user/boudie_test/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/boudie_test/upvoted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 if(response.data.posts.length <limitpage){
                     setpagedone(true);

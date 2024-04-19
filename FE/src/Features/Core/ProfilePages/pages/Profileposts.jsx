@@ -30,7 +30,7 @@ export default function ProfilePosts({ using, context }) {
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
         setload(true);
-        userAxios.get(`user/boudie_test/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`user/boudie_test/submitted?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
@@ -46,7 +46,7 @@ export default function ProfilePosts({ using, context }) {
                     thumbnail: post.thumbnail,
                     video: null
                 }));
-                setcurrentpage(currentpage+1);
+                setcurrentpage(2);
                 setPosts(newPosts);
                 setload(false);
             })

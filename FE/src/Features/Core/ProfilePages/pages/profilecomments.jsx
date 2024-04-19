@@ -26,9 +26,8 @@ function ProfileComments({ using, context }) {
     const limitpage = 5;
     //fetch comments on load and put into comments array
     const fetchInitialComments = () => {
-        setcurrentpage(1);
         setload(true);
-        userAxios.get(`/user/boudie_test/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/boudie_test/comments?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 const newComments = response.data.comments.map(comment => ({
                     user: {
@@ -44,7 +43,7 @@ function ProfileComments({ using, context }) {
                         text: comment.commentText
                     }
                 }));
-                setcurrentpage(currentpage+1);
+                setcurrentpage(2);
                 setComments(newComments);
                 setload(false);
             })
@@ -96,7 +95,7 @@ function ProfileComments({ using, context }) {
     if (loading) {
         return (
             <div role="commentstab" className="w-100 h-100 flex flex-col items-center justify-center">
-                <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
+                <img src={'/logo.png'} className="h-12 w-12 mt-24 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }
