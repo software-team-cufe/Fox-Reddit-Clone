@@ -1,4 +1,3 @@
-
 //accountsettings
 import 'dart:convert';
 
@@ -8,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:reddit_fox/GeneralWidgets/droplist.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
+import 'package:reddit_fox/Pages/settings/Followers.dart';
 import 'package:reddit_fox/Pages/settings/blockedAccounts.dart';
 import 'package:reddit_fox/Pages/settings/chatPermission.dart';
 import 'package:reddit_fox/Pages/settings/email.dart';
@@ -33,7 +33,6 @@ class AccSetting extends StatefulWidget {
 class _AccSettingState extends State<AccSetting> {
   late Map<String, dynamic> userData;
   String? accessToken;
-  
 
   @override
   void initState() {
@@ -540,6 +539,30 @@ class _AccSettingState extends State<AccSetting> {
                       ),
                     ),
                     TextButton(
+                      onPressed: () {
+                        Get.to(const FollowersPage());
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            Icons.person_add_alt_1_sharp,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                          Text(
+                            'View Followers',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Icon(
+                            Icons.arrow_forward,
+                            size: 25,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextButton(
                       onPressed: () {},
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -810,4 +833,3 @@ class _AccSettingState extends State<AccSetting> {
     );
   }
 }
-

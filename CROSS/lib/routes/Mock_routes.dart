@@ -8,14 +8,20 @@ class ApiRoutesBackend {
   static const String signup = '$baseUrl/api/users/signup';
   static const String login = '$baseUrl/api/auth/login';
   static const String forgetPassword = '$baseUrl/api/users/forgotpassword';
+  
+  static const String followersAccs = '$baseUrl/api/v1/me/followings';
+  static const String unFolow = '$baseUrl/api/unfollow';
+  
   static const String blockedAccs = '$baseUrl/api/v1/me/blocked';
+  static const String block_unblock = '$baseUrl/api/block_user';
   static String getUserByToken(String token) => '$baseUrl/api/v1/me';
   static String getUserById(String id) => '$baseUrl/user/$id';
   static String getPostsByCreatorId(String id) =>
       '$baseUrl/posts?creatorId=$id';
   static const String submitPost = '$baseUrl/api/submit';
   static const String delelteUser = '$baseUrl/api/users/delete_user';
-  static String getPosts(String category, int page, int count, int limit) => '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
+  static String getPosts(String category, int page, int count, int limit) =>
+      '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
   // static const String login = '$baseUrl/user';
   // static String getUserById(int id) => '$baseUrl/user/$id';
   // static String getPostsByCreatorId(int id) => '$baseUrl/posts?creatorId=$id';

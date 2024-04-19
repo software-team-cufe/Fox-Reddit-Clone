@@ -16,19 +16,24 @@ import 'package:reddit_fox/Pages/settings/accountSetting.dart';
 
 import 'package:http/http.dart' as http;
 
+// Define a StatefulWidget named 'setting'
 class setting extends StatefulWidget {
-  const setting({super.key});
+  const setting({Key? key}) : super(key: key);
 
   @override
   State<setting> createState() => _settingState();
 }
 
+// Define the State class for 'setting'
 class _settingState extends State<setting> {
+  // Declare variables
   late Map<String, dynamic> userData = {};
   Map<String, dynamic>? userPrefs;
   Map<String, dynamic>? prefData;
 
-  String? access_token;
+  String? backtoken;
+  String? mocktoken;
+
   @override
   void initState() {
     super.initState();
@@ -36,21 +41,23 @@ class _settingState extends State<setting> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        access_token = sharedPrefValue.getString('backtoken');
-        getData(access_token);
+        backtoken = sharedPrefValue.getString('backtoken');
+        mocktoken = sharedPrefValue.getString('mocktoken');
+        getData(mocktoken);
         fetchData();
       });
     });
   }
 
-//
+  // Function to log out
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Get.off(() => const StartingScreen());
 
-    prefs.remove('access_token');
+    prefs.remove('backtoken');
   }
 
+  // Function to delete account
   deleteAcc() async {
     final Uri url = Uri.parse(ApiRoutesBackend.delelteUser);
     dynamic response = await http.get(url);
@@ -58,20 +65,18 @@ class _settingState extends State<setting> {
     try {
       response = await http.delete(
         Uri.parse(ApiRoutesBackend.delelteUser),
-
-        // body: jsonEncode(requestBody),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $access_token'
+          'Authorization': 'Bearer $backtoken'
         },
       );
 
       if (response.statusCode == 200) {
-        // Email update successfullo
+        // Account deletion successful
         print('Deleted successfully!');
         logout();
       } else {
-        // Email update failed
+        // Account deletion failed
         print('Failed to update email. Status code: ${response.statusCode}');
       }
     } catch (e) {
@@ -80,11 +85,10 @@ class _settingState extends State<setting> {
     }
   }
 
-//
+  // Function to get user data
   getData(token) async {
     if (token != null) {
       final url = ApiRoutesMockserver.getUserByToken(token);
-      // final response = await http.get(Uri.parse(url));
       final response = await http.get(Uri.parse(url));
       print(response.statusCode);
       if (response.statusCode == 200) {
@@ -98,13 +102,14 @@ class _settingState extends State<setting> {
     }
   }
 
+  // Function to fetch user preferences
   Future<void> fetchData() async {
     final response = await http.get(
       Uri.parse(
           'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/prefs'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $access_token'
+        'Authorization': 'Bearer $backtoken'
       },
     );
 
@@ -114,13 +119,13 @@ class _settingState extends State<setting> {
       });
       print(userPrefs);
     } else {
-      throw Exception('Failed to load user preferences ${response.statusCode}');
+      throw Exception(
+          'Failed to load user preferences ${response.statusCode}');
     }
   }
 
-  Future<void> userPref(
-    String language,
-  ) async {
+  // Function to update user preferences
+  Future<void> userPref(String language) async {
     Map<String, dynamic> prefData = {
       "language": language,
     };
@@ -130,7 +135,7 @@ class _settingState extends State<setting> {
           'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/prefs'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $access_token'
+        'Authorization': 'Bearer $backtoken'
       },
       body: jsonEncode(prefData),
     );
@@ -142,9 +147,6 @@ class _settingState extends State<setting> {
       print('Error updating preferences: ${response.statusCode}');
     }
   }
-
-  // If unable to fetch data or no matching user found
-  // return 'Invalid username or password';
 
   @override
   Widget build(BuildContext context) {
@@ -158,6 +160,7 @@ class _settingState extends State<setting> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                // Account Settings
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -183,7 +186,6 @@ class _settingState extends State<setting> {
                               ),
                             ),
                             Text(
-                              // user.name,
                               userData["userName"] ?? 'user.name',
                               style: const TextStyle(
                                 color: Colors.white,
@@ -200,6 +202,7 @@ class _settingState extends State<setting> {
                     ],
                   ),
                 ),
+                // Fox Premium and other options
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -281,6 +284,7 @@ class _settingState extends State<setting> {
                     ],
                   ),
                 ),
+                // Feed Options
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -311,6 +315,7 @@ class _settingState extends State<setting> {
                     ],
                   ),
                 ),
+                // Language Setting
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -322,7 +327,7 @@ class _settingState extends State<setting> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(Icons.translate_outlined),
+                              const Icon(Icons.translate_outlined),
                               TextButton(
                                   onPressed: () {
                                     showDialog(
@@ -358,11 +363,11 @@ class _settingState extends State<setting> {
                                           );
                                         });
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Language',
                                     style: TextStyle(color: Colors.white),
                                   )),
-                              Icon(
+                              const Icon(
                                 Icons.arrow_right_alt_sharp,
                                 size: 25,
                               )
@@ -373,6 +378,7 @@ class _settingState extends State<setting> {
                     ],
                   ),
                 ),
+                // View Options
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -465,6 +471,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
+                                          // Reduce Animations
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -486,9 +493,10 @@ class _settingState extends State<setting> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Column(
+                // Dark Mode
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Dark mode'),
@@ -512,12 +520,14 @@ class _settingState extends State<setting> {
                     ],
                   ),
                 ),
+                // Advanced Settings
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('Advanced'),
+                      // Swipe to Collapse Comments
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -535,6 +545,7 @@ class _settingState extends State<setting> {
                           SwitchWidget(),
                         ],
                       ),
+                      // Saved Image Attribution
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -552,6 +563,7 @@ class _settingState extends State<setting> {
                           SwitchWidget(),
                         ],
                       ),
+                      // Mute Videos by Default
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -569,6 +581,7 @@ class _settingState extends State<setting> {
                           SwitchWidget(),
                         ],
                       ),
+                      // Comment Jump Button
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -586,6 +599,7 @@ class _settingState extends State<setting> {
                           SwitchWidget(),
                         ],
                       ),
+                      // Recent Communities
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -603,6 +617,7 @@ class _settingState extends State<setting> {
                           SwitchWidget(),
                         ],
                       ),
+                      // Default Comment Sort
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -625,6 +640,7 @@ class _settingState extends State<setting> {
                           ),
                         ],
                       ),
+                      // Open Links
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -641,6 +657,7 @@ class _settingState extends State<setting> {
                           ),
                         ],
                       ),
+                      // Clear Local History
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -658,6 +675,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
+                      // Retry Pending Purchases
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -678,12 +696,14 @@ class _settingState extends State<setting> {
                     ],
                   ),
                 ),
+                // About Section
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('About'),
+                      // Content Policy
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -702,6 +722,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
+                      // Privacy Policy
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -720,6 +741,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
+                      // User Agreement
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -738,6 +760,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
+                      // Acknowledgements
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -759,12 +782,14 @@ class _settingState extends State<setting> {
                     ],
                   ),
                 ),
+                // Support Section
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('Support'),
+                      // Help Center
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -783,6 +808,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
+                      // Visit r/bugs
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -801,6 +827,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
+                      // Report an Issue
                       TextButton(
                         onPressed: () {},
                         child: const Row(
@@ -819,6 +846,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
+                      // Delete Account
                       TextButton(
                         onPressed: () {
                           showDialog(
@@ -830,7 +858,7 @@ class _settingState extends State<setting> {
                                     style: TextStyle(fontSize: 20),
                                   ),
                                   content:
-                                      const Text("All you data will be lost"),
+                                      const Text("All your data will be lost"),
                                   actions: [
                                     TextButton(
                                         onPressed: () {

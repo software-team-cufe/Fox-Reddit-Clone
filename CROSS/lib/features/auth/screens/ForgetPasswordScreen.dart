@@ -89,12 +89,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   forgetEmail(String email) async {
     final Uri url = Uri.parse(ApiRoutesBackend.forgetPassword);
 
-    Map<String, dynamic> logindata = {
+    Map<String, dynamic> body = {
       "email": email,
     };
     final response = await http.post(
       url,
-      body: jsonEncode(logindata),
+      body: jsonEncode(body),
       headers: {'Content-Type': 'application/json'},
     );
     print(response.body);

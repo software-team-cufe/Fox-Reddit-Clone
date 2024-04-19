@@ -16,7 +16,7 @@ class endDrawer extends StatefulWidget {
   final double user_width;
   final String? token;
 
-  const endDrawer({Key? key, required this.user_width, required this.token}) : super(key: key);
+  const endDrawer({super.key, required this.user_width, required this.token});
 
   @override
   _endDrawerState createState() => _endDrawerState();
@@ -49,7 +49,7 @@ class _endDrawerState extends State<endDrawer> {
       if (responseData.containsKey('user')) {
         Map<String, dynamic> user = responseData['user'];
         profilePic = user['avatar'];
-        if(profilePic == 'default.jpg'){
+        if (profilePic == 'default.jpg') {
           profilePic = null;
         }
         print("profilePic");
@@ -59,10 +59,10 @@ class _endDrawerState extends State<endDrawer> {
         throw Exception('User data is not present in the response');
       }
     } else {
-      throw Exception('Failed to fetch user data, status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to fetch user data, status code: ${response.statusCode}');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +112,11 @@ class _endDrawerState extends State<endDrawer> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProfilePage(user_Id: snapshot.data!, myProfile: true,access_token:accessToken!,)),
+                                builder: (context) => ProfilePage(
+                                      user_Id: snapshot.data!,
+                                      myProfile: true,
+                                      access_token: accessToken!,
+                                    )),
                           );
                         },
                       ),
@@ -142,17 +146,18 @@ class _endDrawerState extends State<endDrawer> {
                         title: const Text('Logout'),
                         onTap: () async {
                           // Delete the saved tokens from SharedPreferences
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
                           await prefs.remove('backtoken');
                           await prefs.remove('mocktoken');
 
-                          // Navigate to the authentication screen
-                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => AuthContainer()),
-                        );
+                          //   // Navigate to the authentication screen
+                          //  Navigator.of(context).push(
+                          //   MaterialPageRoute(builder: (context) => AuthContainer()),
+                          // );
+                          Get.off(() => const StartingScreen());
                         },
                       ),
-
                     ],
                   );
                 }
