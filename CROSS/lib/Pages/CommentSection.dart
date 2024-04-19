@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'CommentCard.dart'; // Import the CommentCard.dart file
+import 'CommentCard.dart';
 
+/// A widget that displays the comment section for a post.
 class CommentSection extends StatelessWidget {
   final String postId;
 
+  /// Creates a [CommentSection] widget.
+  ///
+  /// The [postId] parameter is required and specifies the ID of the post.
   const CommentSection({
     Key? key,
     required this.postId,
@@ -49,6 +53,7 @@ class CommentSection extends StatelessWidget {
     );
   }
 
+  /// Builds the field for entering a new comment.
   Widget _buildNewCommentField() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -76,6 +81,7 @@ class CommentSection extends StatelessWidget {
     );
   }
 
+  /// Shows the menu options for a comment.
   void _showMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,

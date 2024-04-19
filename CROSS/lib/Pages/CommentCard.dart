@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A card widget that represents a comment
 class CommentCard extends StatelessWidget {
   final String username;
   final String commentContent;
@@ -8,6 +9,9 @@ class CommentCard extends StatelessWidget {
   final VoidCallback onReply;
   final List<ReplyData> replies; // List of replies
 
+  /// Creates a new [CommentCard] instance.
+  ///
+  /// The [username], [commentContent], [upvotes], [downvotes], [onReply], and [replies] parameters are required.
   const CommentCard({
     Key? key,
     required this.username,
@@ -164,12 +168,16 @@ class CommentCard extends StatelessWidget {
   }
 }
 
+/// Represents a reply to a comment.
 class ReplyData {
   final String username;
   final String replyContent;
   final int upvotes;
   final int downvotes;
 
+  /// Creates a new [ReplyData] instance.
+  ///
+  /// The [username], [replyContent], [upvotes], and [downvotes] parameters are required.
   ReplyData({
     required this.username,
     required this.replyContent,

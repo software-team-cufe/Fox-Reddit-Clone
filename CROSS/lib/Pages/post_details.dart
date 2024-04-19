@@ -1,3 +1,8 @@
+/// This file contains the implementation of the `PostDetails` widget.
+/// The `PostDetails` widget displays the details of a post, including the post title, creator information, image (if available), and various actions that can be performed on the post.
+/// The widget also allows the user to toggle the blur effect on the image if the post is marked as NSFW (Not Safe for Work) or a spoiler.
+/// Additionally, the widget provides functionality to download the image, view the creator's profile, and perform other actions such as saving, copying text, turning on captions, crossposting, reporting, blocking accounts, and hiding the post.
+/// The widget is used within the Reddit Fox app to display the details of a post in multiple screens.
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';

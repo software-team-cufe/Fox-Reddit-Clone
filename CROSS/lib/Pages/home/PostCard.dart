@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 import 'package:share/share.dart';
 
+/// A widget that represents a post card in the home page.
 class PostCard extends StatelessWidget {
   final Map<String, dynamic> post;
 
+  /// Constructs a [PostCard] widget.
+  ///
+  /// The [post] parameter is required and contains the data for the post.
   const PostCard({Key? key, required this.post}) : super(key: key);
 
   @override
@@ -71,17 +75,19 @@ class PostCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PostDetails(redditName: post['redditName'],
-                              title: post['title'],
-                              picture: post['picture'],
-                              votes: post['votes'],
-                              commentsNo: post['commentsNo'],
-                              creatorId: post['creatorId'],
-                              postId: post['id'],
-                              nsfw: post['nsfw'],
-                              description: post['description'],
-                              spoiler: post['spoiler'],),
-                              ),
+                builder: (context) => PostDetails(
+                  redditName: post['redditName'],
+                  title: post['title'],
+                  picture: post['picture'],
+                  votes: post['votes'],
+                  commentsNo: post['commentsNo'],
+                  creatorId: post['creatorId'],
+                  postId: post['id'],
+                  nsfw: post['nsfw'],
+                  description: post['description'],
+                  spoiler: post['spoiler'],
+                ),
+              ),
             );
           },
         ),
@@ -130,45 +136,44 @@ class PostCard extends StatelessWidget {
           ],
         ),
         Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_upward),
-                          onPressed: () {
-                            // Implement upvote logic here
-                          },
-                        ),
-                        Text(post['votes'].toString()),
-                        IconButton(
-                          icon: const Icon(Icons.arrow_downward),
-                          onPressed: () {
-                            // Implement downvote logic here
-                          },
-                        ),
-                        const SizedBox(width: 2),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 4),
-                            Text(
-                              post['commentsNo'].toString(),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const Icon(Icons.comment),
-                            IconButton(
-                              onPressed: () {
-                                int postId = post['id'];
-                                String postUrl =
-                                    'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                                Share.share('${post['title']}\n$postUrl');
-                              },
-                              icon: const Icon(Icons.share),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_upward),
+              onPressed: () {
+                // Implement upvote logic here
+              },
+            ),
+            Text(post['votes'].toString()),
+            IconButton(
+              icon: const Icon(Icons.arrow_downward),
+              onPressed: () {
+                // Implement downvote logic here
+              },
+            ),
+            const SizedBox(width: 2),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 4),
+                Text(
+                  post['commentsNo'].toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Icon(Icons.comment),
+                IconButton(
+                  onPressed: () {
+                    int postId = post['id'];
+                    String postUrl =
+                        'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
+                    Share.share('${post['title']}\n$postUrl');
+                  },
+                  icon: const Icon(Icons.share),
+                ),
+              ],
+            ),
+          ],
+        ),
         Divider(
           height: 1,
           color: Colors.grey[300],
