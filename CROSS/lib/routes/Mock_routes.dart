@@ -11,9 +11,10 @@ class ApiRoutesBackend {
   static const String blockedAccs = '$baseUrl/api/v1/me/blocked';
   static String getUserByToken(String token) => '$baseUrl/api/v1/me';
   static String getUserById(String id) => '$baseUrl/user/$id';
-  static String getPostsByCreatorId(String id) => '$baseUrl/posts?creatorId=$id';
+  static String getPostsByCreatorId(String id) =>
+      '$baseUrl/posts?creatorId=$id';
   static const String submitPost = '$baseUrl/api/submit';
-
+  static const String delelteUser = '$baseUrl/api/users/delete_user';
 
   // static const String getPosts2 = '$baseUrl/getPosts';
   // static const String hotPosts = '$baseUrl/hotPosts';

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
 import 'package:reddit_fox/GeneralWidgets/droplist.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
+import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
 import 'package:reddit_fox/features/auth/screens/switch_screen.dart';
 import 'package:reddit_fox/models/user_model.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
@@ -24,7 +25,7 @@ class setting extends StatefulWidget {
 
 class _settingState extends State<setting> {
   late Map<String, dynamic> userData = {};
-  String? token;
+  String? access_token;
   @override
   void initState() {
     super.initState();
@@ -32,8 +33,8 @@ class _settingState extends State<setting> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        token = sharedPrefValue.getString('mocktoken');
-        getData(token);
+        access_token = sharedPrefValue.getString('backtoken');
+        getData(access_token);
       });
     });
   }
@@ -41,21 +42,24 @@ class _settingState extends State<setting> {
 //
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    Get.off(() => const StartingScreen());
 
-    prefs.remove('token');
-    Get.off(() => const AuthContainer());
+    prefs.remove('access_token');
   }
 
   deleteAcc() async {
-    final Uri url = Uri.parse(ApiRoutesMockserver.getUserByToken("ahmedtoken"));
+    final Uri url = Uri.parse(ApiRoutesBackend.delelteUser);
     dynamic response = await http.get(url);
 
     try {
       response = await http.delete(
-        Uri.parse(
-            "https://json-server-k6zb.onrender.com/user/${userData["id"]}"),
+        Uri.parse(ApiRoutesBackend.delelteUser),
+
         // body: jsonEncode(requestBody),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $access_token'
+        },
       );
 
       if (response.statusCode == 200) {
