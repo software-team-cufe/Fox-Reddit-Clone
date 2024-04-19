@@ -10,8 +10,6 @@ import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:reddit_fox/Pages/Profile.dart';
 
 /// A StatefulWidget that represents the home page of the Reddit Fox application.
 class HomePage extends StatefulWidget {
@@ -28,7 +26,6 @@ class _HomePageState extends State<HomePage> {
   String? access_token;
   late String? profilePic;
   late int user_Id; // Variable to store the access token
-  String _sortValue = "Top";
 
   @override
   void initState() {
@@ -109,10 +106,9 @@ class _HomePageState extends State<HomePage> {
             ),
             onPressed: () {
               final RenderBox overlay =
-                  Overlay.of(context)!.context.findRenderObject()! as RenderBox;
+                  Overlay.of(context).context.findRenderObject()! as RenderBox;
               final buttonPosition = overlay.localToGlobal(Offset.zero);
-              final buttonWidth = 24.0; // Adjust the width as needed
-              final buttonHeight = 24.0; // Adjust the height as needed
+              const buttonWidth = 24.0; // Adjust the width as needed
 
               final screenSize = MediaQuery.of(context).size;
               final appBarHeight = AppBar().preferredSize.height;
@@ -129,19 +125,19 @@ class _HomePageState extends State<HomePage> {
                     screenSize.width - horizontalOffset + buttonWidth,
                     0),
                 items: [
-                  PopupMenuItem<String>(
+                  const PopupMenuItem<String>(
                     value: 'Best',
                     child: Text('Best'),
                   ),
-                  PopupMenuItem<String>(
+                  const PopupMenuItem<String>(
                     value: 'Hot',
                     child: Text('Hot'),
                   ),
-                  PopupMenuItem<String>(
+                  const PopupMenuItem<String>(
                     value: 'New',
                     child: Text('New'),
                   ),
-                  PopupMenuItem<String>(
+                  const PopupMenuItem<String>(
                     value: 'Top',
                     child: Text('Top'),
                   ),
@@ -150,7 +146,6 @@ class _HomePageState extends State<HomePage> {
               ).then((value) {
                 if (value != null) {
                   setState(() {
-                    _sortValue = value;
                   });
                 }
               });
@@ -230,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                 ),
           initialValue: _selectedItem,
           itemBuilder: (context) => [
-            PopupMenuItem(
+            const PopupMenuItem(
               value: "Home",
               child: ListTile(
                 leading: CircleAvatar(
@@ -241,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text("Home", style: TextStyle(fontSize: 16)),
               ),
             ),
-            PopupMenuItem(
+            const PopupMenuItem(
               value: "Popular",
               child: ListTile(
                 leading: CircleAvatar(
@@ -272,7 +267,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Visibility(
             visible: "Home" == _selectedItem,
-            child: Align(
+            child: const Align(
               alignment: Alignment.topRight,
             ),
           ),
