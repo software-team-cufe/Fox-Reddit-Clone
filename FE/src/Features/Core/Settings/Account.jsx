@@ -5,6 +5,7 @@ import EmailChanged from "./ComponentChange/EmailChanged";
 import ChangeLanguage from "./ComponentChange/ChangeLanguage";
 import PopUp from "./ComponentChange/PopUp";
 import DeleteAccount from "./ComponentChange/DeleteAccount";
+import { userStore } from "@/hooks/UserRedux/UserStore";
 const options=['WOMAN','MAN','NON Binary','perfer Not to say','i prefer..']
 const Acount = () => {
  
@@ -27,8 +28,7 @@ const Acount = () => {
   const disConnect=()=>{
     setConnect(!isdisConnect);
   }
-
-
+  const userEmail=userStore.getState().user.email
   return (
     <div className="w-[75%]" >
     
@@ -44,7 +44,7 @@ const Acount = () => {
             <div className='flex flex-col'>
               <p className=" font-semibold">Email address</p>
               <div className="text-xs text-gray-500">
-                 <input> ay7aghjc77@gmail.com</input>
+                 <input> {userEmail}</input>
               </div>
             </div>
 
