@@ -33,10 +33,10 @@ import { omit } from 'lodash';
 import { get } from 'config';
 import PostModel from '../model/posts.model';
 import { userComments } from '../service/comment.service';
-import { userPosts } from '../service/post.service';
+import { findPostById, userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
-import { Types } from 'mongoose';
+import { Types, ObjectId } from 'mongoose';
 /**
  * Handles the creation of a user.
  *
@@ -333,42 +333,41 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
 
 export async function getUpvotedPostsByUsername(req: Request, res: Response) {
   try {
-    // Extract username, limit, count, and page from req.params
-    const username: string = req.params.username;
-    // Convert limit, count, and page to numbers (defaults: limit = 10, count = 0, page = 1)
-    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
-    const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
-    const page = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
+    let user = res.locals.user;
 
-    // Calculate skip based on page and count
-    const skip = (page - 1) * count;
-
-    // Find the user by username
-    const userId = await findUserIdByUsername(username);
-    let user = null;
-
-    if (userId) user = await findUserById(userId);
-    console.log(user?.hasVote);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(401).send('No user logged in');
     }
+    user = await findUserById(user._id);
 
-    // Retrieve the upvoted post IDs from the user document
-    let upvotedPostIds: string[] = [];
+    let upvotedPostIds: any[] = [];
+
     if (user.hasVote) {
       upvotedPostIds = user.hasVote
-        .filter((vote) => vote.type === 1 && vote.postID) // Filter for upvotes and ensure postID is defined
-        .map((vote) => (vote.postID as Types.ObjectId).toString()); // Convert ObjectId to string
-    } else {
-      upvotedPostIds = [];
+        .filter((vote: Vote) => vote.type === 1 && vote.postID) // Filter for type 1 and postID exists
+        .map((vote: Vote) => vote.postID); // Map to get only the postID
     }
 
-    // Query the Post model to retrieve the upvoted posts with pagination
-    const upvotedPosts = await PostModel.find({ _id: { $in: upvotedPostIds } })
-      .skip(skip)
-      .limit(limit);
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const count = parseInt(req.query.count as string, 10) || 0;
 
-    return res.json(upvotedPosts);
+    const skip = count > 0 ? (page - 1) * count : 0;
+
+    const totalUpvotedPosts = upvotedPostIds.length;
+    const totalPages = Math.ceil(totalUpvotedPosts / limit);
+
+    const paginatedUpvotedPostIds = upvotedPostIds.slice(skip, skip + limit);
+
+    const upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } });
+
+    return res.json({
+      upvotedPosts,
+      page,
+      limit,
+      totalPages,
+      totalUpvotedPosts,
+    });
   } catch (error) {
     console.error('Error fetching upvoted posts:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
@@ -377,39 +376,41 @@ export async function getUpvotedPostsByUsername(req: Request, res: Response) {
 
 export async function getDownvotedPostsByUsername(req: Request, res: Response) {
   try {
-    // Extract username, limit, count, and page from req.params
-    const { username } = req.params;
-    // Convert limit, count, and page to numbers (defaults: limit = 10, count = 0, page = 1)
-    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
-    const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
-    const page = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
-
-    // Calculate skip based on page and count
-    const skip = (page - 1) * count;
-
-    // Find the user by username
-    const user = await UserModel.findOne({ username });
+    let user = res.locals.user;
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(401).send('No user logged in');
     }
+    user = await findUserById(user._id);
 
-    // Retrieve the upvoted post IDs from the user document
-    let downvotedPostIds: string[] = [];
+    let downvotedPostIds: any[] = [];
+
     if (user.hasVote) {
       downvotedPostIds = user.hasVote
-        .filter((vote) => vote.type === -1 && vote.postID) // Filter for upvotes and ensure postID is defined
-        .map((vote) => (vote.postID as Types.ObjectId).toString()); // Convert ObjectId to string
-    } else {
-      downvotedPostIds = [];
+        .filter((vote: Vote) => vote.type === -1 && vote.postID) // Filter for type 1 and postID exists
+        .map((vote: Vote) => vote.postID); // Map to get only the postID
     }
 
-    // Query the Post model to retrieve the upvoted posts with pagination
-    const upvotedPosts = await PostModel.find({ _id: { $in: downvotedPostIds } })
-      .skip(skip)
-      .limit(limit);
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const count = parseInt(req.query.count as string, 10) || 0;
 
-    return res.json(upvotedPosts);
+    const skip = count > 0 ? (page - 1) * count : 0;
+
+    const totalDownvotedPosts = downvotedPostIds.length;
+    const totalPages = Math.ceil(totalDownvotedPosts / limit);
+
+    const paginatedDownvotedPostIds = downvotedPostIds.slice(skip, skip + limit);
+
+    const downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } });
+
+    return res.json({
+      downvotedPosts,
+      page,
+      limit,
+      totalPages,
+      totalDownvotedPosts,
+    });
   } catch (error) {
     console.error('Error fetching upvoted posts:', error);
     return res.status(500).json({ error: 'Internal Server Error' });

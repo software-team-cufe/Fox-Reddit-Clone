@@ -56,13 +56,14 @@ router.get('/user/:username/comments', getUserCommentsHandler);
 router.get('/user/:username/overview', getUserOverviewHandler);
 
 router.post('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
+
 router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 
 router.get('/api/v1/me/prefs', getCurrentUserPrefs);
 
 router.patch('/api/v1/me/prefs', editCurrentUserPrefs);
 
-router.get('/api/user/:username/upvoted', getUpvotedPostsByUsername);
+router.get('/api/user/me/upvoted', getUpvotedPostsByUsername);
 
 router.get('/api/user/:username/downvoted', getDownvotedPostsByUsername);
 

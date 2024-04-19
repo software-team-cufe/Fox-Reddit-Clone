@@ -182,7 +182,7 @@ class Vote {
   @prop({ ref: () => 'Post' })
   postID?: Ref<Post>;
 
-  @prop()
+  @prop({ enum: [1, -1] })
   type?: number;
 }
 
