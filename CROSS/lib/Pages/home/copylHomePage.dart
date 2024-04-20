@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
-import 'package:reddit_fox/Pages/home/PostCardModern.dart';
+import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
-import 'package:reddit_fox/Pages/home/PostCardClassic.dart'; 
+import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardClassic.dart'; 
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

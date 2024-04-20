@@ -45,49 +45,160 @@ class _PostDetailsState extends State<PostDetails> {
     }
   }
 
-  Future<void> _downloadImage(BuildContext context) async {
-    // Check if permission is granted
-    var status = await Permission.storage.status;
+Future<void> _downloadImage(BuildContext context) async {
+  // Check if permission is granted
+  var status = await Permission.storage.status;
+  if (status.isGranted) {
+    _startDownload(context);
+  } else {
+    status = await Permission.storage.request();
     if (status.isGranted) {
       _startDownload(context);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Permission denied for image download"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+}
+void _startDownload(BuildContext context) async {
+  try {
+    PermissionStatus status = await Permission.storage.status;
+    if (!status.isGranted) {
       status = await Permission.storage.request();
-      if (status.isGranted) {
-        _startDownload(context);
-      } else {
+      if (!status.isGranted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Permission denied for image download"),
             duration: Duration(seconds: 2),
           ),
         );
+        return;
       }
     }
-  }
 
-  void _startDownload(BuildContext context) async {
-    try {
-      Directory? downloadsDir = await getDownloadsDirectory();
-      String savePath = "${downloadsDir!.path}/${widget.post['title']}.jpg";
-
-      var response = await http.get(Uri.parse(widget.post['picture']!));
-      File file = File(savePath);
-      await file.writeAsBytes(response.bodyBytes);
-
+    Directory dir = Directory('/storage/emulated/0/Download');
+    if (!dir.existsSync()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Image downloaded successfully"),
+          content: Text("Download directory not found"),
           duration: Duration(seconds: 2),
         ),
       );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error downloading image"),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      return;
     }
+
+    String savePath = "${dir.path}/${widget.post['title']}.jpg";
+
+    var response = await http.get(Uri.parse(widget.post['picture']!));
+    File file = File(savePath);
+    await file.writeAsBytes(response.bodyBytes);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Image downloaded successfully"),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Error downloading image"),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+}
+
+
+// Define a function to show the bottom sheet
+  void _showBottomMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.save),
+              title: const Text("Save"),
+              onTap: () {
+                Navigator.pop(context); // Close the bottom sheet
+                // Handle save action
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.content_copy),
+              title: const Text("Copy Text"),
+              onTap: () {
+                Navigator.pop(context); // Close the bottom sheet
+                // Handle copy text action
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.closed_caption),
+              title: const Text("Turn on Captions"),
+              onTap: () {
+                Navigator.pop(context); // Close the bottom sheet
+                // Handle turn on captions action
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.call_split),
+              title: const Text('Crosspost to community'),
+              onTap: () {
+                Navigator.pop(context); // Close the menu
+                // Handle option 1
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.image),
+              title: const Text('Copy Image'),
+              onTap: () {
+                Navigator.pop(context); // Close the menu
+                // Handle option 1
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.download),
+              title: const Text('Download Image'),
+              onTap: () {
+                Navigator.pop(context); // Close the menu
+                if (widget.post['picture'] != null && widget.post['picture']!.isNotEmpty) {
+      _downloadImage(context); // Call the download image function
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.flag),
+              title: const Text('Report'),
+              onTap: () {
+                Navigator.pop(context); // Close the menu
+                // Handle option 1
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person_off),
+              title: const Text('Block account'),
+              onTap: () {
+                Navigator.pop(context); // Close the menu
+                // Handle option 1
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.visibility_off),
+              title: const Text('Hide'),
+              onTap: () {
+                Navigator.pop(context); // Close the menu
+                // Handle option 1
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -96,67 +207,10 @@ class _PostDetailsState extends State<PostDetails> {
       appBar: AppBar(
         title: const Text("Post Details"),
         actions: [
-          PopupMenuButton(
+          IconButton(
             icon: const Icon(Icons.more_vert),
-            itemBuilder: (BuildContext context) {
-              return [
-                // Other menu items...
-                PopupMenuItem(
-                  child: const Text("Save"),
-                  onTap: () {
-                    // Handle save action
-                  },
-                ),
-                PopupMenuItem(
-                  child: const Text("Copy Text"),
-                  onTap: () {
-                    // Handle copy text action
-                  },
-                ),
-                PopupMenuItem(
-                  child: const Text("Turn on Captions"),
-                  onTap: () {
-                    // Handle turn on captions action
-                  },
-                ),
-                PopupMenuItem(
-                  child: const Text("Crosspost to Community"),
-                  onTap: () {
-                    // Handle crosspost action
-                  },
-                ),
-                PopupMenuItem(
-                  child: const Text("Copy Image"),
-                  onTap: () {
-                    // Handle copy image action
-                  },
-                ),
-                PopupMenuItem(
-                  onTap: widget.post['picture'] != null &&
-                          widget.post['picture']!.isNotEmpty
-                      ? () => _downloadImage(context)
-                      : null,
-                  child: const Text("Download Image"),
-                ),
-                PopupMenuItem(
-                  child: const Text("Report"),
-                  onTap: () {
-                    // Handle report action
-                  },
-                ),
-                PopupMenuItem(
-                  child: const Text("Block Account"),
-                  onTap: () {
-                    // Handle block account action
-                  },
-                ),
-                PopupMenuItem(
-                  child: const Text("Hide"),
-                  onTap: () {
-                    // Handle hide action
-                  },
-                ),
-              ];
+            onPressed: () {
+              _showBottomMenu(context);
             },
           ),
         ],
@@ -257,7 +311,9 @@ class _PostDetailsState extends State<PostDetails> {
                         width: double.infinity,
                         height: 400,
                         fit: BoxFit.cover,
-                        color: isBlurred ? Colors.grey : null,
+                        color: isBlurred
+                            ? const Color.fromARGB(0, 158, 158, 158)
+                            : null,
                         colorBlendMode:
                             isBlurred ? BlendMode.saturation : BlendMode.dst,
                       ),
@@ -275,7 +331,7 @@ class _PostDetailsState extends State<PostDetails> {
                       if (isBlurred)
                         const Column(
                           children: [
-                            const Icon(Icons.remove_red_eye,
+                            Icon(Icons.remove_red_eye,
                                 size: 40,
                                 color: Colors.white), // Icon to indicate blur
                             Text(
@@ -290,10 +346,30 @@ class _PostDetailsState extends State<PostDetails> {
                 ),
               ),
             const SizedBox(height: 8), // Space between picture and description
-            Text(
-              widget.post['description'], // Include the post description here
-              style: const TextStyle(fontSize: 16),
+            GestureDetector(
+              onTap: () {
+                if (widget.post['nsfw'] || widget.post['spoiler']) {
+                  // Check if the post is NSFW or spoiler
+                  setState(() {
+                    isBlurred = !isBlurred; // Toggle blur if the post is NSFW
+                  });
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isBlurred ? Colors.white : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  widget.post['description'],
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isBlurred ? Colors.transparent : Colors.white,
+                  ),
+                ),
+              ),
             ),
+
             const SizedBox(height: 8), // Space between description and actions
 
             Row(
