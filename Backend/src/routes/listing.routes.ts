@@ -17,6 +17,8 @@ import {
   votePostHandler,
   submitPostHandler,
   getSortedPosts,
+  getUserHiddenPostsHandler,
+  getUserSavedPostsHandler,
 } from '../controller/listing.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -43,6 +45,8 @@ router.post('/api/save', validateResource(saveAndUnsaveSchema), saveHandler);
 router.post('/api/unsave', validateResource(saveAndUnsaveSchema), unsaveHandler);
 router.patch('/api/editusertext', validateResource(editUserTextSchema), editUserTextHandler);
 router.get('/api/insights_count/:post', insightsCountsHandler);
+router.get('/api/user/:username/hiddenPosts', getUserHiddenPostsHandler);
+router.get('/api/user/:username/savedPosts', getUserSavedPostsHandler);
 
 router.post('/api/spoiler', validateResource(spoilerPostSchema), spoilerPostHandler);
 router.post('/api/unspoiler', validateResource(spoilerPostSchema), unspoilerPostHandler);
