@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'CommentSection.dart';
 
@@ -45,74 +44,60 @@ class _PostDetailsState extends State<PostDetails> {
     }
   }
 
-Future<void> _downloadImage(BuildContext context) async {
-  // Check if permission is granted
-  var status = await Permission.storage.status;
-  if (status.isGranted) {
-    _startDownload(context);
-  } else {
-    status = await Permission.storage.request();
+  Future<void> _downloadImage(BuildContext context) async {
+    // Check if permission is granted
+    var status = await Permission.storage.status;
     if (status.isGranted) {
       _startDownload(context);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Permission denied for image download"),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-}
-void _startDownload(BuildContext context) async {
-  try {
-    PermissionStatus status = await Permission.storage.status;
-    if (!status.isGranted) {
       status = await Permission.storage.request();
-      if (!status.isGranted) {
+      if (status.isGranted) {
+        _startDownload(context);
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Permission denied for image download"),
             duration: Duration(seconds: 2),
           ),
         );
-        return;
       }
     }
+  }
 
-    Directory dir = Directory('/storage/emulated/0/Download');
-    if (!dir.existsSync()) {
+  void _startDownload(BuildContext context) async {
+    try {
+      Directory dir = Directory('/storage/emulated/0/Download');
+      if (!dir.existsSync()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Download directory not found"),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
+
+      String savePath = "${dir.path}/${widget.post['title']}.jpg";
+
+      var response = await http.get(Uri.parse(widget.post['picture']!));
+      File file = File(savePath);
+      await file.writeAsBytes(response.bodyBytes);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Download directory not found"),
+          content: Text("Image downloaded successfully"),
           duration: Duration(seconds: 2),
         ),
       );
-      return;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error downloading image"),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
-
-    String savePath = "${dir.path}/${widget.post['title']}.jpg";
-
-    var response = await http.get(Uri.parse(widget.post['picture']!));
-    File file = File(savePath);
-    await file.writeAsBytes(response.bodyBytes);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Image downloaded successfully"),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Error downloading image"),
-        duration: Duration(seconds: 2),
-      ),
-    );
   }
-}
-
 
 // Define a function to show the bottom sheet
   void _showBottomMenu(BuildContext context) {
@@ -166,8 +151,9 @@ void _startDownload(BuildContext context) async {
               title: const Text('Download Image'),
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                if (widget.post['picture'] != null && widget.post['picture']!.isNotEmpty) {
-      _downloadImage(context); // Call the download image function
+                if (widget.post['picture'] != null &&
+                    widget.post['picture']!.isNotEmpty) {
+                  _downloadImage(context); // Call the download image function
                 }
               },
             ),

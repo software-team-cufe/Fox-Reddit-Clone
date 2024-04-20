@@ -69,7 +69,6 @@ dependencies:
   google_fonts: ^6.2.1
   http: ^1.2.1
   permission_handler: ^9.0.0
-  path_provider: ^2.0.2
   
 dev_dependencies:
   flutter_test:

@@ -34,7 +34,7 @@ class ClassicCard extends StatelessWidget {
           ),
           subtitle: Text(
             post['title'],
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 20),
           ),
           trailing: post['picture'] != null
               ? ClipRRect(
@@ -73,8 +73,8 @@ class ClassicCard extends StatelessWidget {
           children: [
             if (post['nsfw'])
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                margin: const EdgeInsets.only(top: 4, right: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                margin: const EdgeInsets.only(top: 0, right: 0,left: 16),
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(4),
@@ -89,8 +89,8 @@ class ClassicCard extends StatelessWidget {
               ),
             if (post['spoiler'])
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                margin: const EdgeInsets.only(top: 0, left:16),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 137, 137, 137),
                   borderRadius: BorderRadius.circular(4),
