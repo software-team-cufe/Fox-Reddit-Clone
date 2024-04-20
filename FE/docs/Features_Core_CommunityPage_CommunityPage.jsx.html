@@ -26,7 +26,6 @@
     
     <section>
         <article>
-<<<<<<< HEAD
             <pre class="prettyprint source linenums"><code>
 /**
  * This file represents the CommunityPage component.
@@ -35,11 +34,6 @@
  * It also utilizes React Query for data fetching and state management.
  * The component is wrapped in a CommunityProvider component that provides the selected sorting and period values.
  * @file FILEPATH
-=======
-            <pre class="prettyprint source linenums"><code>/**
- * @file FILEPATH: /d:/Projects/Fox-Reddit-Clone/FE/src/Features/Core/CommunityPage/CommunityPage.jsx
- * @desc This file contains the implementation of the CommunityPage component, which displays a community page with posts, sorting options, and community information.
->>>>>>> origin/newnew-nadine
  */
 import React, { useContext, createContext, useEffect, useState, useRef } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
@@ -50,22 +44,14 @@ import Spinner from '@/GeneralElements/Spinner/Spinner';
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { Plus } from 'lucide-react';
 import bellMenu from "./accessories/bellmenu";
-<<<<<<< HEAD
 import OptionsMenu from "./accessories/optionsmenu";
-=======
-import optionsMenu from "./accessories/optionsmenu";
->>>>>>> origin/newnew-nadine
 import MainFooter from "./footers/mainFooter";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import LoginFirtstModal from "./accessories/loginFirstModal";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
 import { useQuery } from "react-query";
 import { userAxios } from "../../../Utils/UserAxios";
-<<<<<<< HEAD
 import { toast } from 'react-toastify';
-=======
-
->>>>>>> origin/newnew-nadine
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -102,26 +88,16 @@ export default function CommunityPage() {
   const limitpage = 5;
   const [currentpage,setcurrentpage] = useState(1);
   const [feed, setFeed] = useState(false);
-<<<<<<< HEAD
   const [comm, setComm] = useState(null);
-=======
->>>>>>> origin/newnew-nadine
 
     //to fetch the community data from the server and use them
     const fetchCommunity = async () => {
       const response = await axios.get(`http://localhost:3002/communities`);
       const commData = response.data.find((commresponse) => commresponse.name === community);
-<<<<<<< HEAD
       setComm(commData);
   };
   
   let {isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
-=======
-      return commData;
-  };
-  
-  let { data: comm, isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
->>>>>>> origin/newnew-nadine
 
   const fetchInitialPosts = () => {
     setFeed(true);
@@ -163,16 +139,12 @@ export default function CommunityPage() {
     }
     axios.patch(`http://localhost:3002/communities/${comm.id}`, { joined: !comm.joined })
       .then(() => {
-<<<<<<< HEAD
         if(comm.joined) {
         toast.success(`r/${comm.name} ${comm.joined ? 'unjoined' : 'joined'}!`)
         } else {
           toast.success(`r/${comm.name} ${comm.joined ? 'unjoined' : 'joined'}!`)
         }
         setComm({ ...comm, joined: !comm.joined });
-=======
-        comm = { ...comm, joined: !comm.joined };
->>>>>>> origin/newnew-nadine
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -256,7 +228,7 @@ export default function CommunityPage() {
 
           {/* create post, bell and options menu in desktop mode */}
           &lt;div className='hidden mr-6 md:flex md:gap-2 md:justify-between'>
-            &lt;button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
+            &lt;button id="commCreatePost" role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
               &lt;Plus className="w-4 h-4" />
               &lt;span className='inline font-bold text-sm'>Create a post&lt;/span>
             &lt;/button>
@@ -264,17 +236,13 @@ export default function CommunityPage() {
               &lt;span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}&lt;/span>
             &lt;/button>
             {comm.joined ? bellMenu() : &lt;>&lt;/>}
-<<<<<<< HEAD
             {user.user ? &lt;OptionsMenu comm={comm} setComm={setComm}/>: &lt;>&lt;/>}
-=======
-            {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : &lt;>&lt;/>}
->>>>>>> origin/newnew-nadine
           &lt;/div>
         &lt;/div>
 
         {/* create post, bell and options menu in mobile mode */}
         &lt;div className='flex gap-2 md:justify-between ml-3 mr-6 md:hidden mt-[62px]'>
-          &lt;button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
+          &lt;button id="commCreatePost" role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
             &lt;Plus className="w-4 h-4" />
             &lt;span className='inline font-bold text-sm'>Create a post&lt;/span>
           &lt;/button>
@@ -282,11 +250,7 @@ export default function CommunityPage() {
             &lt;span className={`inline font-bold text-xs ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}&lt;/span>
           &lt;/button>
           {comm.joined ? bellMenu() : &lt;>&lt;/>}
-<<<<<<< HEAD
           {user.user ? &lt;OptionsMenu comm={comm} setComm={setComm}/> : &lt;>&lt;/>}
-=======
-          {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : &lt;>&lt;/>}
->>>>>>> origin/newnew-nadine
         &lt;/div>
 
         {/* the feed with its sort elements and the community description and rules and other tools on the right*/}
@@ -299,8 +263,8 @@ export default function CommunityPage() {
 
               {/* page buttons for mobile mode*/}
               &lt;div className='flex gap-2 md:hidden'>
-                &lt;Link to={`/r/${comm.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}` ? "bg-gray-300" : "bg-white"}`} >feed&lt;/Link>
-                &lt;Link to={`/r/${comm.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}/about` ? "bg-gray-300" : "bg-white"}`} >about&lt;/Link>
+                &lt;Link id="toCommFeed" to={`/r/${comm.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}` ? "bg-gray-300" : "bg-white"}`} >feed&lt;/Link>
+                &lt;Link id="toCommAbout" to={`/r/${comm.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}/about` ? "bg-gray-300" : "bg-white"}`} >about&lt;/Link>
               &lt;/div>
 
               {/* sort elements for the feed*/}
@@ -319,14 +283,14 @@ export default function CommunityPage() {
                   {Posts.map((post, index) => (
                     &lt;PostComponent key={index} post={post} />
                   ))}
-                  {!pagedone &amp;&amp; !callingposts &amp;&amp; (&lt;button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more&lt;/button>)}
+                  {!pagedone &amp;&amp; !callingposts &amp;&amp; (&lt;button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more&lt;/button>)}
                   {callingposts &amp;&amp; (&lt;img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 &lt;/>
               ) : (
                 &lt;>{/*no results view*/}
                   &lt;p className="text-xl font-bold text-center mt-2">This community doesn't have any Posts yet&lt;/p>
                   &lt;p className="text-md font-semibold text-center mb-3">Make one and get this feed started.&lt;/p>
-                  &lt;button role="createPostButton" className={`rounded-full text-white flex gap-1 justify-center bg-blue-600 w-fit px-4 h-10 items-center hover:bg-blue-700`} onClick={CreatePostHandle}>
+                  &lt;button id="noDataCreatePost" role="createPostButton" className={`rounded-full text-white flex gap-1 justify-center bg-blue-600 w-fit px-4 h-10 items-center hover:bg-blue-700`} onClick={CreatePostHandle}>
                     &lt;Plus className="w-4 h-4" />
                     &lt;span className='inline font-bold text-sm'>Create a post&lt;/span>
                   &lt;/button>
@@ -356,21 +320,13 @@ export default function CommunityPage() {
 </div>
 
 <nav>
-<<<<<<< HEAD
     <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-CheckButton.html">CheckButton</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#Tab">Tab</a></li><li><a href="global.html#Tabs">Tabs</a></li><li><a href="global.html#ToggleButton">ToggleButton</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
-=======
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
->>>>>>> origin/newnew-nadine
 </nav>
 
 <br class="clear">
 
 <footer>
-<<<<<<< HEAD
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 20 2024 00:52:25 GMT+0200 (Eastern European Standard Time)
-=======
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Apr 19 2024 20:58:58 GMT+0200 (Eastern European Standard Time)
->>>>>>> origin/newnew-nadine
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 20 2024 22:48:20 GMT+0200 (Eastern European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -102,11 +102,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
           {Posts.map((post, index) => (
             <PostComponent key={index} post={post} />
           ))}
-<<<<<<< HEAD
           {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className=" mx-auto w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
-=======
-          {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className=" mx-auto w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
->>>>>>> origin/newnew-nadine
           {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
         </>
       ) : (

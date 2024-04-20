@@ -69,41 +69,25 @@ export default function Sortmenu({context}) {
             {/* Sort option mapped*/}
                 <Menu.Item >
                   {({ active }) => (
-<<<<<<< HEAD
                     <div id="bestOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Best' ? 'bg-gray-200' : '', isValidBest(path) ? '': 'hidden')} onClick={() => handleSwitch("Best")}>
-=======
-                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Best' ? 'bg-gray-200' : '', isValidBest(path) ? '': 'hidden')} onClick={() => handleSwitch("Best")}>
->>>>>>> origin/newnew-nadine
                       Best
                     </div>
                   )}</Menu.Item>
                 <Menu.Item >
                   {({ active }) => (
-<<<<<<< HEAD
                     <div id="hotOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Hot' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Hot")}>
-=======
-                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Hot' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Hot")}>
->>>>>>> origin/newnew-nadine
                       Hot
                     </div>
                   )}</Menu.Item>
                 <Menu.Item >
                   {({ active }) => (
-<<<<<<< HEAD
                     <div id="newOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'New' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("New")}>
-=======
-                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'New' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("New")}>
->>>>>>> origin/newnew-nadine
                       New
                     </div>
                   )}</Menu.Item>
                 <Menu.Item >
                   {({ active }) => (
-<<<<<<< HEAD
                     <div id="topOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Top' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Top")}>
-=======
-                    <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Top' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Top")}>
->>>>>>> origin/newnew-nadine
                       Top
                     </div>
                   )}</Menu.Item>
