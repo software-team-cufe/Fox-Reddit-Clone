@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react'
 import TypingArea from './TypingArea'
 import ChooseCommunity from './ChooseCommunity'
 import "./QuillStyle.css"
+<<<<<<< HEAD
 // import { userStore } from "@/hooks/UserRedux/UserStore";
 import { toast } from 'react-toastify'
 import { userAxios } from "@/Utils/UserAxios";
+=======
+import { Smile } from 'lucide-react'
+>>>>>>> origin/newnew-nadine
 
 function CreatePostPage(props) {
     const [SelectedCom, setSelectedCom] = useState({ name: "Choose Community", id: "-1" }); //
@@ -16,8 +20,13 @@ function CreatePostPage(props) {
     const [Poll3, setPoll3] = useState([]);               //
 
     //Send to API
+<<<<<<< HEAD
 
     // const [UserID, setUserID] = useState(userStore.getState().user.user._id);  //To be changed
+=======
+    const [ComID, setComID] = useState('');
+    const [UserID, setUserID] = useState("DummyUserID");  //To be changed
+>>>>>>> origin/newnew-nadine
     const [TitleValue, setTitleValue] = useState('');                          //
     const [PostText, setPostText] = useState('');                                  //
     const [PostURL, setPostURL] = useState('');                               //
@@ -43,6 +52,7 @@ function CreatePostPage(props) {
         updatePollOptions();
     }, [Poll1, Poll2, Poll3]);
 
+<<<<<<< HEAD
     //let ComId = ;
     //, pollOptions: PollOptions, isNotifications: PostNotifications, { imageOrVideoSrc: VideoOrImageSrc }, ,CommunityID: SelectedCom.id
     //  { url: PostURL }
@@ -73,6 +83,22 @@ function CreatePostPage(props) {
             });
 
     }
+=======
+    let ComId = SelectedCom.id;
+
+    const Post = () => {
+        if (PostNotifications === "on")
+            setPostNotifications(true);
+        const NewPost = {
+            title: { TitleValue },
+            text: { PostText }, attachments: [VideoOrImageSrc], spoiler: { Spoiler },
+            CommunityID: { ComId }, nsfw: { NSFW }, userId: { UserID }, url: { PostURL },
+            isNotifications: { PostNotifications }, voteLength: { VoteLength }, pollOptions: { PollOptions }
+        }
+        console.log(NewPost);
+    }
+
+>>>>>>> origin/newnew-nadine
     useEffect(() => {
         if (SelectedCom.rules)
             setComHasRules(true)
@@ -118,11 +144,19 @@ function CreatePostPage(props) {
                                     {SelectedCom.name} Rules
                                 </div>
                                 {SelectedCom.rules.map((item, index) => (
+<<<<<<< HEAD
                                     <div key={index}>
                                         <p className='my-1 text-lg 
                            '>{index + 1} . {item}</p>
                                         <hr className='w-[90%] mx-4' />
                                     </div>
+=======
+                                    <>
+                                        <p key={index + Math.random()} className='my-1 text-lg 
+                           '>{index + 1} . {item}</p>
+                                        <hr className='w-[90%] mx-4' />
+                                    </>
+>>>>>>> origin/newnew-nadine
                                 ))} </>}
                     </div>
                     <div className='bg-white p-4 h-max rounded '>

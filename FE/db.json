@@ -87,67 +87,7 @@
         "Keep discussions relevant to art.",
         "No hate speech or harassment of any kind.",
         "Follow Reddit's content policy."
-      ],
-      "muted": true,
-      "favourited": true,
-      "NSFW": true,
-      "type": "public"
-    },
-    {
-      "id": "3",
-      "name": "music",
-      "description": "A community for music lovers to share their favorite songs, discuss new releases, and connect with other fans.",
-      "membersCount": 98765,
-      "icon": "https://media.wired.com/photos/5926df59f3e2356fd800ab80/master/w_2560%2Cc_limit/GettyImages-543338600-S2.jpg",
-      "backimage": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "onlineMembers": 543,
-      "rules": [
-        "Be respectful to other members.",
-        "No spamming or self-promotion.",
-        "Keep discussions relevant to music.",
-        "No hate speech or harassment of any kind.",
-        "Follow Reddit's content policy."
-      ],
-      "joined": true,
-      "muted": false,
-      "favourited": false,
-      "NSFW": true,
-      "type": "private"
-    },
-    {
-      "id": "4",
-      "name": "movies",
-      "description": "A community for movie buffs to discuss their favorite films, share recommendations, and connect with other cinephiles.",
-      "membersCount": 87654,
-      "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
-      "backimage": "https://plus.unsplash.com/premium_photo-1676049462062-e8ec9b661675?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "onlineMembers": 654,
-      "rules": [
-        "Be respectful to other members.",
-        "No spamming or self-promotion.",
-        "Keep discussions relevant to movies.",
-        "No hate speech or harassment of any kind.",
-        "Follow Reddit's content policy."
-      ],
-      "joined": true,
-      "muted": false,
-      "favourited": true,
-      "NSFW": false,
-      "type": "restricted"
-    },
-    {
-      "id": 99,
-      "name": "sorady",
-      "muted": false,
-      "joined": true,
-      "favourited": false,
-      "NSFW": true,
-      "description": "",
-      "membersCount": 1,
-      "onlineMembers": 0,
-      "rules": [],
-      "backimage": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q==",
-      "icon": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q=="
+      ]
     }
   ],
   "posts": [
@@ -166,10 +106,7 @@
       "postText": "This is the content of post 1",
       "votesCount": 101,
       "commentsCount": 4,
-      "thumbnail": "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": false,
-      "hidden": true,
-      "blur": true
+      "thumbnail": "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       "attachments": {
@@ -205,144 +142,7 @@
       "postText": "This is the content of post 3",
       "votesCount": 191,
       "commentsCount": 33,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": true,
-      "hidden": false,
-      "blur": true
-    },
-    {
-      "attachments": {
-        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
-        "postData": [
-          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        ]
-      },
-      "communityName": "movies",
-      "communityID": 4,
-      "id": "4",
-      "title": "Post 4",
-      "postText": "This is the content of post 4",
-      "votesCount": 45,
-      "commentsCount": 12,
-      "thumbnail": "https://images.unsplash.com/photo-1712652080461-8a6ef120a66f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": false,
-      "hidden": false
-    },
-    {
-      "attachments": {
-        "subredditIcon": "https://i.pinimg.com/736x/87/ea/4b/87ea4bd1f27494d698bb682b25ac142f.jpg",
-        "postData": [
-          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        ]
-      },
-      "communityName": "art",
-      "communityID": 2,
-      "id": "5",
-      "title": "Post 5",
-      "postText": "This is the content of post 5",
-      "votesCount": 67,
-      "commentsCount": 23,
-      "thumbnail": "https://images.unsplash.com/photo-1712105052316-b929d9fd5395?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": true,
-      "hidden": true,
-      "blur": true
-    },
-    {
-      "attachments": {
-        "subredditIcon": "https://media.wired.com/photos/5926df59f3e2356fd800ab80/master/w_2560%2Cc_limit/GettyImages-543338600-S2.jpg",
-        "postData": [
-          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        ]
-      },
-      "communityName": "music",
-      "communityID": 3,
-      "id": "6",
-      "title": "Post 6",
-      "postText": "This is the content of post 6",
-      "votesCount": 89,
-      "commentsCount": 45,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": false,
-      "hidden": true
-    },
-    {
-      "attachments": {
-        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
-        "postData": [
-          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        ]
-      },
-      "communityName": "movies",
-      "communityID": 4,
-      "id": "7",
-      "title": "Post 7",
-      "postText": "This is the content of post 7",
-      "votesCount": 34,
-      "commentsCount": 15,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": false,
-      "hidden": true
-    },
-    {
-      "attachments": {
-        "subredditIcon": "https://media.wired.com/photos/5926df59f3e2356fd800ab80/master/w_2560%2Cc_limit/GettyImages-543338600-S2.jpg",
-        "postData": [
-          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        ]
-      },
-      "communityName": "music",
-      "communityID": 3,
-      "id": "8",
-      "title": "Post 8",
-      "postText": "This is the content of post 8",
-      "votesCount": 56,
-      "commentsCount": 19,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": true,
-      "hidden": true
-    },
-    {
-      "attachments": {
-        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
-        "postData": [
-          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        ]
-      },
-      "communityName": "movies",
-      "communityID": 4,
-      "id": "9",
-      "title": "Post 9",
-      "postText": "This is the content of post 9",
-      "votesCount": 78,
-      "commentsCount": 27,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": false,
-      "hidden": true
-    },
-    {
-      "attachments": {
-        "subredditIcon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6WZ3_UvOi9Fv3hMBOUdXXvP6omly95AU968P9rq5dyg&s",
-        "postData": [
-          "https://images.unsplash.com/photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        ]
-      },
-      "communityName": "movies",
-      "communityID": 4,
-      "id": "10",
-      "title": "Post 10",
-      "postText": "This is the content of post 10",
-      "votesCount": 89,
-      "commentsCount": 34,
-      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "NSFW": true,
-      "hidden": false
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1711206464486-a5785f5c1d5d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
   ],
   "comments": [
