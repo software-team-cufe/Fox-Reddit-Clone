@@ -107,7 +107,7 @@ function MainRoute() {
   const store = userStore.getState().user.user;
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} IsLogged={store != null} ProfileImageSrc="/Prof.jpg" UserName="jhjfjy" IsOnline={true} />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} IsLogged={store != null} ProfileImageSrc={store.avatar} UserName={store.username} IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
           ![
