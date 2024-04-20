@@ -128,9 +128,6 @@ class ModernCard extends StatelessWidget {
                           height: 400,
                         ),
                       ),
-                    if (isBlurred)
-                      const Icon(Icons.remove_red_eye,
-                          size: 64, color: Colors.white),
                   ],
                 ),
               ),

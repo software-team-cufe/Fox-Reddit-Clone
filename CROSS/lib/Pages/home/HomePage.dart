@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> {
               ? const Text(
                   "FOX",
                   style: (TextStyle(
-                    fontSize: 26,
+                    fontSize: 22,
                     color: Color(0xFFe74c3c),
                     fontWeight: FontWeight.bold,
                   )),
