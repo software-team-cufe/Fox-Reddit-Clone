@@ -200,7 +200,7 @@ export default function CommunityPage() {
 
           {/* create post, bell and options menu in desktop mode */}
           <div className='hidden mr-6 md:flex md:gap-2 md:justify-between'>
-            <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
+            <button id="commCreatePost" role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
               <Plus className="w-4 h-4" />
               <span className='inline font-bold text-sm'>Create a post</span>
             </button>
@@ -214,7 +214,7 @@ export default function CommunityPage() {
 
         {/* create post, bell and options menu in mobile mode */}
         <div className='flex gap-2 md:justify-between ml-3 mr-6 md:hidden mt-[62px]'>
-          <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
+          <button id="commCreatePost" role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
             <Plus className="w-4 h-4" />
             <span className='inline font-bold text-sm'>Create a post</span>
           </button>
@@ -235,8 +235,8 @@ export default function CommunityPage() {
 
               {/* page buttons for mobile mode*/}
               <div className='flex gap-2 md:hidden'>
-                <Link to={`/r/${comm.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
-                <Link to={`/r/${comm.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}/about` ? "bg-gray-300" : "bg-white"}`} >about</Link>
+                <Link id="toCommFeed" to={`/r/${comm.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
+                <Link id="toCommAbout" to={`/r/${comm.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}/about` ? "bg-gray-300" : "bg-white"}`} >about</Link>
               </div>
 
               {/* sort elements for the feed*/}
@@ -255,14 +255,14 @@ export default function CommunityPage() {
                   {Posts.map((post, index) => (
                     <PostComponent key={index} post={post} />
                   ))}
-                  {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                  {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                   {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
               ) : (
                 <>{/*no results view*/}
                   <p className="text-xl font-bold text-center mt-2">This community doesn't have any Posts yet</p>
                   <p className="text-md font-semibold text-center mb-3">Make one and get this feed started.</p>
-                  <button role="createPostButton" className={`rounded-full text-white flex gap-1 justify-center bg-blue-600 w-fit px-4 h-10 items-center hover:bg-blue-700`} onClick={CreatePostHandle}>
+                  <button id="noDataCreatePost" role="createPostButton" className={`rounded-full text-white flex gap-1 justify-center bg-blue-600 w-fit px-4 h-10 items-center hover:bg-blue-700`} onClick={CreatePostHandle}>
                     <Plus className="w-4 h-4" />
                     <span className='inline font-bold text-sm'>Create a post</span>
                   </button>

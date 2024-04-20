@@ -48,7 +48,7 @@ const SearchComponent = () => {
         setSelected(value);
         setSearch("");
         sethideit(true);
-        navigator(`/search/${value}`);
+        navigator(`/search/${value}/posts`);
     };
 
     const handlechange = (comingvalue) => {

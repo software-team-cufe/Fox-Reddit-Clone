@@ -137,7 +137,7 @@ export default function ProfileOverview({ using, context }) {
                     {items.map((item, index) => (
                         'content' in item ? <CommentComponent key={index} comment={item} /> : <PostComponent key={index} post={item} />
                     ))}
-                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMoreData} className="w-fit mx-auto h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMoreData} className="w-fit mx-auto h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
             ) : (

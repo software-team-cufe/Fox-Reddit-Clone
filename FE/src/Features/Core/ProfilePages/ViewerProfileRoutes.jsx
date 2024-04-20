@@ -101,7 +101,7 @@ function Layout() {
         <ul role="sectionsBar" className='flex gap-3 overflow-x-auto mb-3 p-1'>
           {
             buttons.map((btn, index) => <li key={index}>
-              <Link role={`${btn.text}Button`} to={`/viewer/${viewer}/${btn.path}`}>
+              <Link id={`${btn.text}ViewerTab`} role={`${btn.text}Button`} to={`/viewer/${viewer}/${btn.path}`}>
                 <button className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/viewer/${viewer}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
               </Link>
             </li>)
