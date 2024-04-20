@@ -25,9 +25,10 @@ import {
   getTopPostsFromRandom,
   getRandomPostsFromSubreddit,
   getRandomPostsFromRandom,
+  userPosts,
 } from '../service/post.service';
 import { add_comment, findCommentById, createComment } from '../service/comment.service';
-import { findUserByUsername } from '../service/user.service';
+import { findUserByUsername, userHiddenPosts, userSavedPosts, userSubmittedPosts } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
 import { findCommunityByName } from '../service/community.service';
 import UserModel from '../model/user.model';
@@ -982,5 +983,89 @@ export async function getSortedPosts(req: Request, res: Response) {
   } catch (error) {
     console.error('Error getting sorted posts:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+}
+/**
+ * Get user saved posts with pagination support.
+ *
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ * @param {NextFunction} next - the next middleware function
+ * @return {Promise<void>} a Promise that resolves when the operation is complete
+ */
+export async function getUserSavedPostsHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userAuth = res.locals.user;
+    // Check if user is missing or invalid
+    if (!userAuth) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    // Extract params
+    const user = await findUserByUsername(req.params.username as string);
+
+    if (!user) {
+      return res.status(404).send("This user doesn't exist!");
+    }
+    const username: string = req.params.username as string;
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
+    }
+
+    const postIDS = await userSavedPosts(username, page, count);
+    const posts = await userPosts(postIDS, limit);
+
+    res.status(200).json({ posts });
+  } catch (err) {
+    return next(err);
+  }
+}
+/**
+ * Get user hidden posts with pagination support.
+ *
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ * @param {NextFunction} next - the next middleware function
+ * @return {Promise<void>} a Promise that resolves when the operation is complete
+ */
+export async function getUserHiddenPostsHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userAuth = res.locals.user;
+    // Check if user is missing or invalid
+    if (!userAuth) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    // Extract params
+    const user = await findUserByUsername(req.params.username as string);
+
+    if (!user) {
+      return res.status(404).send("This user doesn't exist!");
+    }
+    const username: string = req.params.username as string;
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
+    }
+
+    const postIDS = await userHiddenPosts(username, page, count);
+    const posts = await userPosts(postIDS, limit);
+
+    res.status(200).json({ posts });
+  } catch (err) {
+    return next(err);
   }
 }

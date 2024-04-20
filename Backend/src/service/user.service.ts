@@ -106,7 +106,68 @@ export async function userSubmittedPosts(username: string, page: number, count: 
   // Return the post IDs
   return postIDs;
 }
+/**
+ * Finds user posts by username with pagination support.
+ *
+ * @param {string} username - The username of the user to find posts for.
+ * @param {number} page - The page number for pagination.
+ * @param {number} count - The number of posts per page.
+ * @returns {string[]} post ids of the user by username for the specified page.
+ */
+export async function userSavedPosts(username: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
 
+  // Find the user by username and retrieve their user submitted posts with pagination
+  const user = await UserModel.findOne({ username: username }, 'savedPosts')
+    .lean()
+    .populate({
+      path: 'savedPosts',
+      options: { skip: skip, limit: count },
+    });
+
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+
+  // Extract the post IDs from the user's saved posts if it exists
+  const postIDs = user.savedPosts ? user.savedPosts.map((post) => post._id.toString()) : [];
+
+  // Return the post IDs
+  return postIDs;
+}
+/**
+ * Finds user posts by username with pagination support.
+ *
+ * @param {string} username - The username of the user to find posts for.
+ * @param {number} page - The page number for pagination.
+ * @param {number} count - The number of posts per page.
+ * @returns {string[]} post ids of the user by username for the specified page.
+ */
+export async function userHiddenPosts(username: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
+
+  // Find the user by username and retrieve their user hidden posts with pagination
+  const user = await UserModel.findOne({ username: username }, 'hiddenPosts')
+    .lean()
+    .populate({
+      path: 'hiddenPosts',
+      options: { skip: skip, limit: count },
+    });
+
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+
+  // Extract the post IDs from the user's hidden posts if it exists
+  const postIDs = user.hiddenPosts ? user.hiddenPosts.map((post) => post._id.toString()) : [];
+
+  // Return the post IDs
+  return postIDs;
+}
 /**
  * Finds user comments by username with pagination support.
  *

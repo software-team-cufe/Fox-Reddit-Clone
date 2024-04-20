@@ -347,10 +347,16 @@ export class User {
   @prop({ ref: 'Post' })
   followPost?: Ref<Post>[];
 
-  @prop({ ref: 'Post' })
+  // @prop({ ref: 'Post' })
+  // hiddenPosts?: Ref<Post>[];
+
+  // @prop({ ref: 'Post' })
+  // savedPosts?: Ref<Post>[];
+
+  @prop({ ref: () => 'Post' })
   hiddenPosts?: Ref<Post>[];
 
-  @prop({ ref: 'Post' })
+  @prop({ ref: () => 'Post' })
   savedPosts?: Ref<Post>[];
 
   @prop({ ref: 'Post' })
