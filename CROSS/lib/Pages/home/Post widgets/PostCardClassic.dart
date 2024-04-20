@@ -3,81 +3,46 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 import 'package:share/share.dart';
 
-class ClassicCard extends StatefulWidget {
+/// A widget that represents a post card in the home page.
+class ClassicCard extends StatelessWidget {
   final Map<String, dynamic> post;
 
+  /// Constructs a [ClassicCard] widget.
+  ///
+  /// The [post] parameter is required and contains the data for the post.
   const ClassicCard({Key? key, required this.post}) : super(key: key);
 
   @override
-  _ClassicCardState createState() => _ClassicCardState();
-}
-
-class _ClassicCardState extends State<ClassicCard> {
-  bool isBlurred = false;
-  int voteCount = 0; // State variable for vote count
-  bool hasVoted = false; // Flag to track whether the user has voted
-  VoteDirection voteDirection = VoteDirection.Up; // Default vote direction
-
-  @override
-  void initState() {
-    super.initState();
-    isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
-    voteCount = widget.post['votes'] ?? 0;
-    hasVoted = widget.post['hasVoted'] ?? false;
-  }
-
-  void vote(VoteDirection direction) {
-    setState(() {
-      if (voteDirection == direction && hasVoted) {
-        // User clicks the same button, cancel the vote
-        voteCount -= direction == VoteDirection.Up ? 1 : -1;
-        hasVoted = false;
-        voteDirection = VoteDirection.Up; // Reset vote direction
-      } else {
-        // User clicks a different button or hasn't voted yet
-        if (hasVoted) {
-          // Cancel the previous vote
-          voteCount -= voteDirection == VoteDirection.Up ? 1 : -1;
-        }
-        // Apply the new vote
-        voteCount += direction == VoteDirection.Up ? 1 : -1;
-        hasVoted = true;
-        voteDirection = direction; // Update vote direction
-      }
-      // Update the vote count and user's vote status in the backend
-      // Send user's authentication token or ID along with the vote action
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    bool isBlurred = (post['nsfw'] || post['spoiler']);
+
     return Column(
       children: [
         ListTile(
           contentPadding: const EdgeInsets.all(16),
-          leading: widget.post['redditpic'] != null
+          leading: post['redditpic'] != null
               ? CircleAvatar(
-                  backgroundImage: NetworkImage(widget.post['redditpic']),
+                  backgroundImage: NetworkImage(post['redditpic']),
                 )
               : null,
           title: Text(
-            widget.post['redditName'],
+            post['redditName'],
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
           subtitle: Text(
-            widget.post['title'],
+            post['title'],
             style: const TextStyle(fontSize: 20),
           ),
-          trailing: widget.post['picture'] != null
+          trailing: post['picture'] != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Stack(
                     children: [
                       Image.network(
-                        widget.post['picture'],
+                        post['picture'],
                         width: 100,
                         height: 250,
                         fit: BoxFit.cover,
@@ -99,17 +64,17 @@ class _ClassicCardState extends State<ClassicCard> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PostDetails(post: widget.post),
+                builder: (context) => PostDetails(post: post),
               ),
             );
           },
         ),
         Row(
           children: [
-            if (widget.post['nsfw'])
+            if (post['nsfw'])
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                margin: const EdgeInsets.only(top: 0, right: 0, left: 16),
+                margin: const EdgeInsets.only(top: 0, right: 0,left: 16),
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(4),
@@ -122,10 +87,10 @@ class _ClassicCardState extends State<ClassicCard> {
                   ),
                 ),
               ),
-            if (widget.post['spoiler'])
+            if (post['spoiler'])
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                margin: const EdgeInsets.only(top: 0, left: 16),
+                margin: const EdgeInsets.only(top: 0, left:16),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 137, 137, 137),
                   borderRadius: BorderRadius.circular(4),
@@ -144,22 +109,17 @@ class _ClassicCardState extends State<ClassicCard> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_upward,
-                  color: hasVoted && voteDirection == VoteDirection.Up
-                      ? Colors.green
-                      : null),
-              onPressed: () => vote(VoteDirection.Up), // Upvote
+              icon: const Icon(Icons.arrow_upward),
+              onPressed: () {
+                // Implement upvote logic here
+              },
             ),
-            Text(
-              "${voteCount.abs()}",
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(post['votes'].toString()),
             IconButton(
-              icon: Icon(Icons.arrow_downward,
-                  color: hasVoted && voteDirection == VoteDirection.Down
-                      ? Colors.red
-                      : null),
-              onPressed: () => vote(VoteDirection.Down), // Downvote
+              icon: const Icon(Icons.arrow_downward),
+              onPressed: () {
+                // Implement downvote logic here
+              },
             ),
             const SizedBox(width: 2),
             Row(
@@ -167,16 +127,16 @@ class _ClassicCardState extends State<ClassicCard> {
               children: [
                 const SizedBox(width: 4),
                 Text(
-                  widget.post['commentsNo'].toString(),
+                  post['commentsNo'].toString(),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Icon(Icons.comment),
                 IconButton(
                   onPressed: () {
-                    int postId = widget.post['id'];
+                    int postId = post['id'];
                     String postUrl =
                         'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                    Share.share('${widget.post['title']}\n$postUrl');
+                    Share.share('${post['title']}\n$postUrl');
                   },
                   icon: const Icon(Icons.share),
                 ),
