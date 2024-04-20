@@ -23,7 +23,7 @@ export default function ProfileDownvoted({ using }) {
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage,setcurrentpage] = useState(0);
+    const [currentpage,setcurrentpage] = useState(1);
     const limitpage = 2;
 
     //fetch posts on load and put into posts array
@@ -32,6 +32,7 @@ export default function ProfileDownvoted({ using }) {
         setload(true);
         userAxios.get(`api/user/me/downvoted?page=1&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
+                console.log(response.data)
                 const newPosts = response.data.downvotedPosts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
@@ -61,7 +62,7 @@ export default function ProfileDownvoted({ using }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`api/user/me/downvoted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`api/user/me/downvoted?page=${currentpage}&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
                 if(response.data.posts.length <limitpage){
                     setpagedone(true);
