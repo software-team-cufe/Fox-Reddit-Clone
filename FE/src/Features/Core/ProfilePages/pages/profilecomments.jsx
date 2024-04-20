@@ -3,6 +3,7 @@ import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { useQuery } from "react-query";
 import { userAxios } from "../../../../Utils/UserAxios";
 import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
 /**
  * Renders the profile comments section.
@@ -24,6 +25,8 @@ function ProfileComments({ using, context }) {
     const [pagedone, setpagedone] = useState(false);
     const [currentpage,setcurrentpage] = useState(1);
     const limitpage = 5;
+    const here = useLocation().pathname;
+
     //fetch comments on load and put into comments array
     const fetchInitialComments = () => {
         setload(true);
@@ -120,7 +123,8 @@ function ProfileComments({ using, context }) {
                 <>
                     {/*no results view*/}
                     <img src={'/confusedSnoo.png'} className="w-16 mx-auto h-24 mb-2" alt="Confused Snoo"></img>
-                    <p className="text-lg mx-auto font-bold">looks like you haven't commented on anything</p>
+                    {here === `/user/${using}/comments` ? 
+                    <p className="text-lg mx-auto font-bold">looks like you haven't commented on anything</p> : <p className="text-lg mx-auto font-bold">u/{using} has no comments yet</p>}
                 </>
             )}
         </div>
