@@ -24,15 +24,42 @@ class PostDetails extends StatefulWidget {
   _PostDetailsState createState() => _PostDetailsState();
 }
 
+enum VoteDirection { Up, Down }
+
 class _PostDetailsState extends State<PostDetails> {
   bool isBlurred = false;
+  int voteCount = 0; // State variable for vote count
+  bool hasVoted = false; // Flag to track whether the user has voted
+  VoteDirection voteDirection = VoteDirection.Up; // Default vote direction
 
   @override
   void initState() {
     super.initState();
-    if (widget.post['nsfw'] || widget.post['spoiler']) {
-      isBlurred = true; // Apply blur if the post is NSFW
-    }
+    isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
+    voteCount = widget.post['votes'] ?? 0;
+    hasVoted = widget.post['hasVoted'] ?? false;
+  }
+
+  void vote(VoteDirection direction) {
+    setState(() {
+      if (voteDirection == direction && hasVoted) {
+        // User clicks the same button, cancel the vote
+        voteCount -= direction == VoteDirection.Up ? 1 : -1;
+        hasVoted = false;
+        voteDirection = VoteDirection.Up; // Reset vote direction
+      } else {
+        // User clicks a different button or hasn't voted yet
+        if (hasVoted) {
+          // Cancel the previous vote
+          voteCount -= voteDirection == VoteDirection.Up ? 1 : -1;
+        }
+        // Apply the new vote
+        voteCount += direction == VoteDirection.Up ? 1 : -1;
+        hasVoted = true;
+        voteDirection = direction; // Update vote direction
+      }
+      // Update the vote count and user's vote status in the backend
+    });
   }
 
   void toggleBlur() {
@@ -364,16 +391,22 @@ class _PostDetailsState extends State<PostDetails> {
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_upward),
-                      onPressed: () {},
+                      icon: Icon(Icons.arrow_upward,
+                          color: hasVoted && voteDirection == VoteDirection.Up
+                              ? Colors.green
+                              : null),
+                      onPressed: () => vote(VoteDirection.Up), // Upvote
                     ),
                     Text(
-                      "${widget.post['votes']}",
+                      "${voteCount.abs()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.arrow_downward),
-                      onPressed: () {},
+                      icon: Icon(Icons.arrow_downward,
+                          color: hasVoted && voteDirection == VoteDirection.Down
+                              ? Colors.red
+                              : null),
+                      onPressed: () => vote(VoteDirection.Down), // Downvote
                     ),
                   ],
                 ),

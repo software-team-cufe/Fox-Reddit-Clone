@@ -4,24 +4,66 @@ import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 import 'package:share/share.dart';
 
-class ModernCard extends StatelessWidget {
+/// A stateful widget that represents a post card in the home page.
+class ModernCard extends StatefulWidget {
   final Map<String, dynamic> post;
 
+/// Constructs a [ModernCard] widget.
+  ///
+  /// The [post] parameter is required and contains the data for the post.
   const ModernCard({
-    Key? key,
+    super.key,
     required this.post,
-  }) : super(key: key);
+  });
+
+  @override
+  _ModernCardState createState() => _ModernCardState();
+}
+
+class _ModernCardState extends State<ModernCard> {
+bool isBlurred = false;
+  int voteCount = 0; // State variable for vote count
+  bool hasVoted = false; // Flag to track whether the user has voted
+  VoteDirection voteDirection = VoteDirection.Up; // Default vote direction
+@override
+  void initState() {
+    super.initState();
+    isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
+    voteCount = widget.post['votes'] ?? 0;
+    hasVoted = widget.post['hasVoted'] ?? false;
+  }
+
+  void vote(VoteDirection direction) {
+    setState(() {
+      if (voteDirection == direction && hasVoted) {
+        // User clicks the same button, cancel the vote
+        voteCount -= direction == VoteDirection.Up ? 1 : -1;
+        hasVoted = false;
+        voteDirection = VoteDirection.Up; // Reset vote direction
+      } else {
+        // User clicks a different button or hasn't voted yet
+        if (hasVoted) {
+          // Cancel the previous vote
+          voteCount -= voteDirection == VoteDirection.Up ? 1 : -1;
+        }
+        // Apply the new vote
+        voteCount += direction == VoteDirection.Up ? 1 : -1;
+        hasVoted = true;
+        voteDirection = direction; // Update vote direction
+      }
+      // Update the vote count and user's vote status in the backend
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    bool isBlurred = (post['nsfw'] || post['spoiler']);
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PostDetails(post: post),
+            builder: (context) => PostDetails(post: widget.post),
           ),
         );
       },
@@ -38,7 +80,7 @@ class ModernCard extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ProfilePage(
-                          user_Id: post['creatorId'].toString(),
+                          user_Id: widget.post['creatorId'].toString(),
                         ),
                       ),
                     );
@@ -51,7 +93,7 @@ class ModernCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        post['redditName'],
+                        widget.post['redditName'],
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -129,12 +171,12 @@ class ModernCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              post['title'],
+              widget.post['title'],
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             Row(
               children: [
-                if (post['nsfw'])
+                if (widget.post['nsfw'])
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -151,7 +193,7 @@ class ModernCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (post['spoiler'])
+                if (widget.post['spoiler'])
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -171,14 +213,14 @@ class ModernCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            if (post['picture'] != null && post['picture']!.isNotEmpty)
+            if (widget.post['picture'] != null && widget.post['picture']!.isNotEmpty)
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     Image.network(
-                      post['picture']!,
+                      widget.post['picture']!,
                       width: double.infinity,
                       height: 400,
                       fit: BoxFit.cover,
@@ -208,7 +250,7 @@ class ModernCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                post['description'],
+                widget.post['description'],
                 style: TextStyle(
                   fontSize: 16,
                   color: isBlurred ? Colors.transparent : Colors.white,
@@ -222,16 +264,22 @@ class ModernCard extends StatelessWidget {
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_upward),
-                      onPressed: () {},
+                      icon: Icon(Icons.arrow_upward,
+                          color: hasVoted && voteDirection == VoteDirection.Up
+                              ? Colors.green
+                              : null),
+                      onPressed: () => vote(VoteDirection.Up), // Upvote
                     ),
                     Text(
-                      "${post['votes']}",
+                      "${voteCount.abs()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.arrow_downward),
-                      onPressed: () {},
+                      icon: Icon(Icons.arrow_downward,
+                          color: hasVoted && voteDirection == VoteDirection.Down
+                              ? Colors.red
+                              : null),
+                      onPressed: () => vote(VoteDirection.Down), // Downvote
                     ),
                   ],
                 ),
@@ -242,7 +290,7 @@ class ModernCard extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 40.0, right: 4.0),
                         child: Text(
-                          "${post['commentsNo']}",
+                          "${widget.post['commentsNo']}",
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -251,10 +299,10 @@ class ModernCard extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.share),
                         onPressed: () {
-                          int postId = post['id'];
+                          int postId = widget.post['id'];
                           String postUrl =
                               'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                          Share.share('${post['title']}\n$postUrl');
+                          Share.share('${widget.post['title']}\n$postUrl');
                         },
                       ),
                     ],
