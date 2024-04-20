@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
-import 'package:reddit_fox/features/community/screens/modtools/modmail.dart';
 /// Widget representing a custom drawer.
 ///
 /// The [CustomDrawer] widget displays a drawer that slides in from the left side of the screen.
@@ -51,7 +50,19 @@ class CustomDrawer extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 10), // Add some space between items
+                                const Divider(color: Colors.white), // Add a divider
+
                 // Moderating section
+                const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Moderating',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
                 ListTile(
                   leading: const Icon(Icons.star, color: Colors.white),
                   title: const Text(
@@ -73,18 +84,13 @@ class CustomDrawer extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.mail, color: Colors.white),
+                  leading: const Icon(Icons.circle, color: Colors.white),
                   title: const Text(
-                    "Modmail",
+                    "r/Valorant",
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const ModMailScreen()), 
-                    );
+                    // Navigate to Mod Feed page
                   },
                 ),
 

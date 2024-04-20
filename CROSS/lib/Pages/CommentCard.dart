@@ -27,7 +27,7 @@ class CommentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 2),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -35,20 +35,20 @@ class CommentCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   child: Icon(Icons.account_circle),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     username,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.more_vert),
+                  icon: const Icon(Icons.more_vert),
                   onPressed: () {
                     _showMenu(context);
                   },
@@ -61,21 +61,20 @@ class CommentCard extends StatelessWidget {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_upward),
+                  icon: const Icon(Icons.arrow_upward),
                   onPressed: () {},
                 ),
                 Text('$upvotes'),
                 IconButton(
-                  icon: Icon(Icons.arrow_downward),
+                  icon: const Icon(Icons.arrow_downward),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: Icon(Icons.reply),
+                  icon: const Icon(Icons.reply),
                   onPressed: onReply, // Trigger reply action
                 ),
               ],
             ),
-            const SizedBox(height: 8),
             // Display replies here with indentation
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,24 +98,24 @@ class CommentCard extends StatelessWidget {
         return Wrap(
           children: [
             ListTile(
-              leading: Icon(Icons.share),
-              title: Text('Share'),
+              leading: const Icon(Icons.share),
+              title: const Text('Share'),
               onTap: () {
                 Navigator.pop(context);
                 // Handle share action
               },
             ),
             ListTile(
-              leading: Icon(Icons.save),
-              title: Text('Save'),
+              leading: const Icon(Icons.save),
+              title: const Text('Save'),
               onTap: () {
                 Navigator.pop(context);
                 // Handle save action
               },
             ),
             ListTile(
-              leading: Icon(Icons.notifications),
-              title: Text('Get Reply Notifications'),
+              leading: const Icon(Icons.notifications),
+              title: const Text('Get Reply Notifications'),
               onTap: () {
                 Navigator.pop(context);
                 // Handle reply notifications action
@@ -135,13 +134,13 @@ class CommentCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               child: Icon(Icons.account_circle),
             ),
             const SizedBox(width: 8),
             Text(
               replyData.username,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -153,12 +152,12 @@ class CommentCard extends StatelessWidget {
         Row(
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_upward),
+              icon: const Icon(Icons.arrow_upward),
               onPressed: () {},
             ),
             Text('${replyData.upvotes}'),
             IconButton(
-              icon: Icon(Icons.arrow_downward),
+              icon: const Icon(Icons.arrow_downward),
               onPressed: () {},
             ),
           ],

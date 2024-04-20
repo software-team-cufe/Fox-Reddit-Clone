@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'CommentCard.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// A widget that displays the comment section for a post.
 class CommentSection extends StatelessWidget {
@@ -9,9 +12,9 @@ class CommentSection extends StatelessWidget {
   ///
   /// The [postId] parameter is required and specifies the ID of the post.
   const CommentSection({
-    Key? key,
+    super.key,
     required this.postId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class CommentSection extends StatelessWidget {
         children: [
           // Add a field to enter a new comment
           _buildNewCommentField(),
-          const SizedBox(height: 1),
+          const SizedBox(height: 8),
           // Add the comment section below
           // Wrap ListView.builder with SingleChildScrollView
           SingleChildScrollView(
@@ -54,34 +57,57 @@ class CommentSection extends StatelessWidget {
   }
 
   /// Builds the field for entering a new comment.
-  Widget _buildNewCommentField() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          const Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: 'Write a comment...',
-                border: OutlineInputBorder(),
-              ),
-              // Add your comment logic here
-              // For example, onChanged or onSubmitted callbacks
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () {
-              // Add your send comment logic here
-            },
-          ),
-        ],
-      ),
-    );
+ Widget _buildNewCommentField() {
+  final TextEditingController _textController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  String? _selectedImage;
+
+  void _selectImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      _selectedImage = pickedFile.path;
+      _textController.text = 'Selected Image: ${pickedFile.path}';
+    }
   }
 
-  /// Shows the menu options for a comment.
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _textController,
+            decoration: InputDecoration(
+              isDense: true,
+              hintText: 'Enter a comment...',
+              border: OutlineInputBorder(),
+            ),
+            // Add your comment logic here
+            // For example, onChanged or onSubmitted callbacks
+          ),
+        ),
+        const SizedBox(width: 8),
+        IconButton(
+          icon: const Icon(Icons.photo),
+          onPressed: _selectImage,
+        ),
+        const SizedBox(width: 8),
+        IconButton(
+          icon: const Icon(Icons.send),
+          onPressed: () {
+            // Add your send comment logic here
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+
+  /// Shows the menu options for a comment
   void _showMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -89,30 +115,29 @@ class CommentSection extends StatelessWidget {
         return Wrap(
           children: [
             ListTile(
-              leading: Icon(Icons.share),
-              title: Text('Share'),
+              leading: const Icon(Icons.share),
+              title: const Text('Share'),
               onTap: () {
                 Navigator.pop(context);
                 // Handle share action
               },
             ),
             ListTile(
-              leading: Icon(Icons.save),
-              title: Text('Save'),
+              leading: const Icon(Icons.save),
+              title: const Text('Save'),
               onTap: () {
                 Navigator.pop(context);
                 // Handle save action
               },
             ),
             ListTile(
-              leading: Icon(Icons.notifications),
-              title: Text('Get Reply Notifications'),
+              leading: const Icon(Icons.notifications),
+              title: const Text('Get Reply Notifications'),
               onTap: () {
                 Navigator.pop(context);
                 // Handle reply notifications action
               },
             ),
-            // Add other menu items as needed
           ],
         );
       },

@@ -1,24 +1,9 @@
 import "package:flutter/material.dart";
 import "package:routemaster/routemaster.dart";
 //general
-import 'package:reddit_fox/features/community/screens/modtools/welcome_message_edit.dart';
-import 'package:reddit_fox/features/community/screens/modtools/insights.dart';
-import 'package:reddit_fox/features/community/screens/modtools/mod_log.dart';
 import 'package:reddit_fox/features/community/screens/modtools/community_icon.dart';
 import 'package:reddit_fox/features/community/screens/modtools/description.dart';
 import 'package:reddit_fox/features/community/screens/modtools/post_types.dart';
-import 'package:reddit_fox/features/community/screens/modtools/discovery.dart';
-import 'package:reddit_fox/features/community/screens/modtools/modmail.dart';
-import 'package:reddit_fox/features/community/screens/modtools/mod_notifications.dart';
-import 'package:reddit_fox/features/community/screens/modtools/archive_posts.dart';
-import 'package:reddit_fox/features/community/screens/modtools/media_in_comments.dart';
-
-//content and regulation
-import 'modtools/queues_screen.dart';
-import 'modtools/rules_screen.dart';
-import 'modtools/removal_reasons_screen.dart';
-import 'modtools/post_flair_screen.dart';
-import 'modtools/safety_screen.dart';
 
 class ModToolsScreen extends StatelessWidget {
   final String name;
@@ -57,24 +42,6 @@ class ModToolsScreen extends StatelessWidget {
               onTap: () => navigateToModTools(context),
             ),
             ListTile(
-              leading: const Icon(Icons.info),
-              title: const Text('Insights'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const InsightsScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.history),
-              title: const Text('Mod Log'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ModLogScreen(),
-                ));
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.image),
               title: const Text('Community Icon'),
               onTap: () {
@@ -95,121 +62,11 @@ class ModToolsScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.message),
-              title: const Text('Welcome Message'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const WelcomeMessageEditScreen(),
-                ));
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.article),
               title: const Text('Post Types'),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const PostTypesScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.explore),
-              title: const Text('Discovery'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const DiscoveryScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.mail),
-              title: const Text('Modmail'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ModMailScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Mod Notifications'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ModNotificationsScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.archive),
-              title: const Text('Archive Posts'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ArchivePostsScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo),
-              title: const Text('Media in Comments'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const MediaInCommentsScreen(),
-                ));
-              },
-            ),
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'CONTENT AND REGUALTION',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.queue),
-              title: const Text('Queues'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const QueuesScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.format_list_numbered),
-              title: const Text('Rules'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const RulesScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.close),
-              title: const Text('Removal Reasons'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const RemovalReasonsScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.local_offer),
-              title: const Text('Post Flair'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const PostFlairScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.key),
-              title: const Text('Safety'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const SafetyScreen(),
                 ));
               },
             ),
@@ -232,31 +89,10 @@ class ModToolsScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.check_circle),
-              title: const Text('Approved Users'),
-              onTap: () {
-                // Navigate to Approved Users screen
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.volume_off),
-              title: const Text('Muted Users'),
-              onTap: () {
-                // Navigate to Muted Users screen
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.block),
               title: const Text('Banned Users'),
               onTap: () {
                 // Navigate to Banned Users screen
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.local_offer),
-              title: const Text('User Flair'),
-              onTap: () {
-                // Navigate to User Flair screen
               },
             ),
             const SizedBox(height: 20),

@@ -405,7 +405,7 @@ class _PostDetailsState extends State<PostDetails> {
               ],
             ),
             const SizedBox(height: 1),
-            CommentSection(postId: "${widget.post['postid']}"),
+            CommentSection(postId: "${widget.post['id']}"),
           ],
         ),
       ),
