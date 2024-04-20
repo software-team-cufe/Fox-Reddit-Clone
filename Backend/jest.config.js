@@ -17,6 +17,7 @@ module.exports = {
     },
   },
   moduleNameMapper: {
+    '^@sendgrid/mail$': '<rootDir>/node_modules/@sendgrid/mail/index',
     'src/(.*)': '<rootDir>/src/$1',
   },
   moduleDirectories: ['node_modules', 'src'],
