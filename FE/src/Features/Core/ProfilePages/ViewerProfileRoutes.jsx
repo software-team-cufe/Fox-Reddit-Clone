@@ -1,4 +1,4 @@
-import { Link, Outlet, Route, Routes, useLocation, useParams, } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useLocation, useNavigate, useParams, } from "react-router-dom";
 import ProfileOverview from "./pages/profileoverview";
 import ProfilePosts from "./pages/Profileposts";
 import ProfileComments from "./pages/profilecomments";
@@ -61,16 +61,17 @@ function Layout() {
   const [avatar, setAvatar] = useState("");  // fetching user avatar from redux store
   const [loading, setLoading] = useState(true); // loading state for fetching user info
   const { viewer } = useParams();  // getting the user from the url
-
+ const navigator = useNavigate();
   const fetchViewerAbout =() => {
     // Fetch user info
-    userAxios.get(`user/boudie_test/about`) // fetching user info
+    userAxios.get(`user/${viewer}/about`) // fetching user info
       .then(response => {
         setAvatar(response.data.avatar);
         setLoading(false);
       })
       .catch(error => {
         console.error('Error:', error);
+        navigator('/404');
         setLoading(false);
       })
   };

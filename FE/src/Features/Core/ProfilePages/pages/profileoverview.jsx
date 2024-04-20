@@ -23,11 +23,14 @@ export default function ProfileOverview({ using, context }) {
     //fetch posts on load and put into posts array
     const fetchInitialData = () => {
         setload(true);
-        userAxios.get(`user/boudie_test/overview?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`user/${using}/overview?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
+                if(response.data.posts.length < limitpage && response.data.comments.length < limitpage){
+                    setpagedone(true);
+                }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
-                        image: post.attachments.subredditIcon,
+                        image: post.communityImage,
                         title: post.communityName,
                     },
                     images: post.attachments,
@@ -73,9 +76,9 @@ export default function ProfileOverview({ using, context }) {
 
     const fetchMoreData = () => {
         setCallingPosts(true);
-        userAxios.get(`/user/boudie_test/overview?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/${using}/overview?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                if (response.data.posts.length < limitpage) {
+                if (response.data.posts.length < limitpage && response.data.comments.length < limitpage) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
@@ -122,8 +125,8 @@ export default function ProfileOverview({ using, context }) {
 
     if (loading) {
         return (
-            <div role='overviewtab' className="w-100 h-100 flex flex-col items-center justify-center">
-                <img src={'/logo.png'} className="h-12 w-12 mt-20 mx-auto animate-ping" alt="Logo" />
+            <div role='overviewtab' className="w-100 h-100 p-10 flex flex-col items-center justify-center">
+                <img src={'/logo.png'} className="h-12 w-12 mt-24 z-10 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }

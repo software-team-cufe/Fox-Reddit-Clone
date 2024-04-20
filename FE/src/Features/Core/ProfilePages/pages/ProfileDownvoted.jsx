@@ -24,15 +24,16 @@ export default function ProfileDownvoted({ using }) {
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
     const [currentpage,setcurrentpage] = useState(1);
-    const limitpage = 2;
+    const limitpage = 5;
 
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
-        setcurrentpage(1);
         setload(true);
-        userAxios.get(`api/user/me/downvoted?page=1&count=${limitpage}&limit=${limitpage}`)
+        userAxios.get(`api/user/me/downvoted/${selected.toLowerCase()}?page=1&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
-                console.log(response.data)
+                if(response.data.downvotedPosts.length < limitpage){
+                    setpagedone(true);
+                }
                 const newPosts = response.data.downvotedPosts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
@@ -62,9 +63,9 @@ export default function ProfileDownvoted({ using }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`api/user/me/downvoted?page=${currentpage}&count=${limitpage}&limit=${limitpage}`)
+        userAxios.get(`api/user/me/downvoted/${selected.toLowerCase()}?page=${currentpage}&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
-                if(response.data.posts.length <limitpage){
+                if(response.data.downvotedPosts.length <limitpage){
                     setpagedone(true);
                 }
                 const newPosts = response.data.downvotedPosts.map(post => ({
@@ -96,8 +97,8 @@ export default function ProfileDownvoted({ using }) {
 
     if (loading) {
         return (
-            <div role='downvotedtab' className="w-100 h-100 flex flex-col items-center justify-center">
-                <img src={'/logo.png'} className="h-12 w-12 mt-24 mx-auto animate-ping" alt="Logo" />
+            <div role='downvotedtab' className="w-100 h-100 flex p-10 flex-col items-center justify-center">
+                <img src={'/logo.png'} className="h-12 w-12 mt-24 z-10 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }

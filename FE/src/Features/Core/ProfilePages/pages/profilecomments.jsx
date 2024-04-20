@@ -27,8 +27,11 @@ function ProfileComments({ using, context }) {
     //fetch comments on load and put into comments array
     const fetchInitialComments = () => {
         setload(true);
-        userAxios.get(`/user/boudie_test/comments?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/${using}/comments?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
+                if(response.data.comments.length < limitpage){
+                    setpagedone(true);
+                }
                 const newComments = response.data.comments.map(comment => ({
                     user: {
                         image: null,
@@ -58,7 +61,7 @@ function ProfileComments({ using, context }) {
 
     const fetchMoreComments = () => {
         setCallingPosts(true);
-        userAxios.get(`/user/boudie_test/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/${using}/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
         .then(response => {
                 if(response.data.comments.length < limitpage) {
                     setpagedone(true);
@@ -94,8 +97,8 @@ function ProfileComments({ using, context }) {
     //to handle waiting for fetch or loading state
     if (loading) {
         return (
-            <div role="commentstab" className="w-100 h-100 flex flex-col items-center justify-center">
-                <img src={'/logo.png'} className="h-12 w-12 mt-24 mx-auto animate-ping" alt="Logo" />
+            <div role="commentstab" className="w-100 h-100 p-10 flex flex-col items-center justify-center">
+                <img src={'/logo.png'} className="h-12 w-12 mt-24 z-10 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }
