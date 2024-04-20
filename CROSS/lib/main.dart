@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:reddit_fox/api/firebase_api.dart';
 import 'package:reddit_fox/core/common/error_text.dart';
 import 'package:reddit_fox/core/common/loader.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
@@ -21,7 +22,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
     // DevicePreview(builder: (context) => const ProviderScope( child: MyApp(),),
   );
-
+  await FirebaseApi().initNotifications();
+  
   runApp(
     // DevicePreview(
     //   builder: (context) => const MyApp(),
