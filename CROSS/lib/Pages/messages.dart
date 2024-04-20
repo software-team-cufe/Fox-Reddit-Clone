@@ -158,7 +158,7 @@ class _MessageState extends State<Message> {
           children: [
             TabBar(
               tabs: [
-                Tab(text: 'Activity'),
+                Tab(text: 'Notification'),
                 Tab(text: 'Messages'),
               ],
             ),
