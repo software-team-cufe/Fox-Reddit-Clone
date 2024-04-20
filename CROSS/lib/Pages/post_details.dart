@@ -14,7 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'CommentSection.dart';
 
 class PostDetails extends StatefulWidget {
-  final Map<String, dynamic> post;  
+  final Map<String, dynamic> post;
 
   const PostDetails({
     Key? key,
@@ -132,7 +132,8 @@ class _PostDetailsState extends State<PostDetails> {
                   },
                 ),
                 PopupMenuItem(
-                  onTap: widget.post['picture'] != null && widget.post['picture']!.isNotEmpty
+                  onTap: widget.post['picture'] != null &&
+                          widget.post['picture']!.isNotEmpty
                       ? () => _downloadImage(context)
                       : null,
                   child: const Text("Download Image"),
@@ -170,8 +171,8 @@ class _PostDetailsState extends State<PostDetails> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ProfilePage(user_Id: widget.post['creatorId'].toString()),
+                    builder: (context) => ProfilePage(
+                        user_Id: widget.post['creatorId'].toString()),
                   ),
                 );
               },
@@ -239,7 +240,8 @@ class _PostDetailsState extends State<PostDetails> {
 
             const SizedBox(height: 8),
 
-            if (widget.post['picture'] != null && widget.post['picture']!.isNotEmpty)
+            if (widget.post['picture'] != null &&
+                widget.post['picture']!.isNotEmpty)
               // Wrap GestureDetector around ClipRRect
               GestureDetector(
                 onTap: toggleBlur, // Toggle the blur filter on tap
@@ -271,9 +273,18 @@ class _PostDetailsState extends State<PostDetails> {
                           ),
                         ),
                       if (isBlurred)
-                        const Icon(Icons.remove_red_eye,
-                            size: 64,
-                            color: Colors.white), // Icon to indicate blur
+                        const Column(
+                          children: [
+                            const Icon(Icons.remove_red_eye,
+                                size: 40,
+                                color: Colors.white), // Icon to indicate blur
+                            Text(
+                              'Click to view',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -308,9 +319,12 @@ class _PostDetailsState extends State<PostDetails> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "${widget.post['commentsNo']}",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40.0, right: 4.0),
+                        child: Text(
+                          "${widget.post['commentsNo']}",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                       const Icon(Icons.comment),
                       const Spacer(),

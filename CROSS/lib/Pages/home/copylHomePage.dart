@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
+import 'package:reddit_fox/Pages/home/PostCardModern.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
@@ -152,7 +153,7 @@ class _HomePageState extends State<HomePage> {
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 var post = posts[index];
-                      return ClassicCard(post: post); // Use PostCard widget here
+                      return ModernCard(post: post); // Use PostCard widget here
               },
             );
           }

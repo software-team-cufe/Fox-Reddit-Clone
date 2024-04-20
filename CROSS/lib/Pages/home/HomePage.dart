@@ -103,7 +103,8 @@ class _HomePageState extends State<HomePage> {
                 : const Icon(Icons.view_carousel),
             onPressed: () {
               setState(() {
-                isModernCard = !isModernCard; // Toggle between ModernCard and ClassicCard
+                isModernCard =
+                    !isModernCard; // Toggle between ModernCard and ClassicCard
               });
             },
           ),
@@ -124,7 +125,8 @@ class _HomePageState extends State<HomePage> {
 
               final screenSize = MediaQuery.of(context).size;
               final appBarHeight = AppBar().preferredSize.height;
-              final topOffset = appBarHeight + 22; // Adjust the vertical offset as needed
+              final topOffset =
+                  appBarHeight + 22; // Adjust the vertical offset as needed
               final horizontalOffset = buttonPosition.dx +
                   ((screenSize.width - buttonWidth) /
                       2); // Center horizontally under the button
@@ -232,7 +234,7 @@ class _HomePageState extends State<HomePage> {
               : Text(
                   _selectedItem,
                   style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 10,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
@@ -246,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                   radius: 12,
                   backgroundImage: AssetImage('assets/Icons/home.png'),
                 ),
-                title: Text("Home", style: TextStyle(fontSize: 16)),
+                title: Text("Home", style: TextStyle(fontSize: 12)),
               ),
             ),
             const PopupMenuItem(
@@ -257,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                   radius: 16,
                   backgroundImage: AssetImage('assets/Icons/popular.png'),
                 ),
-                title: Text("Popular", style: TextStyle(fontSize: 16)),
+                title: Text("Popular", style: TextStyle(fontSize: 12)),
               ),
             ),
           ],

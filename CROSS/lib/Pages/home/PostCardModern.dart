@@ -160,9 +160,12 @@ class ModernCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "${post['commentsNo']}",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40.0, right: 4.0),
+                        child: Text(
+                          "${post['commentsNo']}",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                       const Icon(Icons.comment),
                       const Spacer(),
