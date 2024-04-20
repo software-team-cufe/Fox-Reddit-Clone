@@ -42,8 +42,6 @@ class _MessageState extends State<Message> {
     });
   }
 
-
-
   Future<List<dynamic>> fetchMessages() async {
     var url =
         Uri.parse(ApiRoutesMockserver.message); // Endpoint to fetch messages
@@ -56,7 +54,7 @@ class _MessageState extends State<Message> {
     }
   }
 
-    Future<String> fetchUserProfilePic(String accessToken) async {
+  Future<String> fetchUserProfilePic(String accessToken) async {
     var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
     var response = await http.get(
       url,
@@ -79,7 +77,6 @@ class _MessageState extends State<Message> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     double drawerWidth = MediaQuery.of(context).size.width * 0.8;
@@ -96,6 +93,7 @@ class _MessageState extends State<Message> {
           },
         ),
         actions: [
+          WidgetButton(),
           Builder(builder: (context) {
             return IconButton(
               icon: access_token != null

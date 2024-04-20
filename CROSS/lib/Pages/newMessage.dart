@@ -44,7 +44,7 @@ class _NewMessageState extends State<NewMessage> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              _buildTextInputWidget('Sender Username', _usernameController),
+              _buildTextInputWidget('Reciver Username', _usernameController),
               SizedBox(height: 20), // Add some space between input fields
               _buildTextInputWidget('Subject', _subjectController),
               SizedBox(height: 20), // Add some space between input fields
