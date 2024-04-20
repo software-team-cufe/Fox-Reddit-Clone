@@ -113,7 +113,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                     <ul role="typeOptions" className="grid w-full gap-6 md:grid-rows-2">
                                         <li>
                                             {/* Public community option */}
-                                            <input id="publicOption" role="optionPublic" type="radio" id="comm-public" name="comm" value="comm-public" className="hidden peer" onClick={handleRadioChange} required />
+                                            <input id="publicOption" role="optionPublic" type="radio" name="comm" value="comm-public" className="hidden peer" onClick={handleRadioChange} required />
                                             <label htmlFor="comm-public" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Globe className="w-6 h-6 mr-6" />
                                                 <div className="block">
@@ -124,7 +124,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                         </li>
                                         <li>
                                             {/* Restricted community option */}
-                                            <input id="restrictedOption" role="optionRestricted" type="radio" id="comm-restricted" name="comm" value="comm-restricted" className="hidden peer" onClick={handleRadioChange} />
+                                            <input id="restrictedOption" role="optionRestricted" type="radio" name="comm" value="comm-restricted" className="hidden peer" onClick={handleRadioChange} />
                                             <label htmlFor="comm-restricted" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Eye className="w-6 h-6 mr-6" />
                                                 <div className="block">
@@ -135,7 +135,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                         </li>
                                         <li>
                                             {/* Private community option */}
-                                            <input id="privateOption" role="optionPrivate" type="radio" id="comm-private" name="comm" value="comm-private" className="hidden peer" onClick={handleRadioChange} />
+                                            <input id="privateOption" role="optionPrivate" type="radio" name="comm" value="comm-private" className="hidden peer" onClick={handleRadioChange} />
                                             <label htmlFor="comm-private" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Lock className="w-6 h-6 mr-6" />
                                                 <div className="block">
