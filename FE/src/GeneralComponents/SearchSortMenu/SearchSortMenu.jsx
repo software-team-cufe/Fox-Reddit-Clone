@@ -10,7 +10,7 @@ const options = [
   { name: 'Hot', icon: <Flame className='w-5 h-6 absolute top-[10px] left-3' /> },
   { name: 'Top', icon: <ArrowUpNarrowWide className='w-5 h-6 absolute top-[10px] left-3' /> },
   { name: 'New', icon: <Badge className='w-5 h-6 absolute top-[10px] left-3' /> },
-  { name: 'Comments', icon: <TrendingUp className='w-5 h-6 absolute top-[10px] left-3' /> },
+  { name: 'Most Comments', icon: <TrendingUp className='w-5 h-6 absolute top-[10px] left-3' /> },
 ]
 
 function classNames(...classes) {
@@ -39,7 +39,7 @@ export default function SearchSortMenu() {
         return <ArrowUpNarrowWide className='w-5 h-6' />;
       case "New":
         return <Badge className='w-5 h-6' />;
-      case "Comments":
+      case "Most Comments":
         return <TrendingUp className='w-5 h-6' />;
     }
   };
@@ -48,7 +48,7 @@ export default function SearchSortMenu() {
     <Menu as="div" className="relative inline-block text-left">
 
       {/* dropdown menu button  */}
-      <Menu.Button role="menuButton" className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
+      <Menu.Button id="searchSortClickDown" role="menuButton" className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
         {displayicon()}
         <span className='text-xs mt-1'>{current}</span>
         <ChevronDown className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -71,7 +71,7 @@ export default function SearchSortMenu() {
             return (
               <Menu.Item key={index} className="mt-2">
                 {({ active }) => (
-                  <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex relative pr-4 h-12 justify-center py-3 text-sm', current == option.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(option.name)}>
+                  <div id={`${option.name}Option`} className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex relative pr-4 h-12 justify-center py-3 text-sm', current == option.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(option.name)}>
                     {option.icon}
                     <span className='text-xs absolute top-3 left-12'>{option.name}</span>
                   </div>

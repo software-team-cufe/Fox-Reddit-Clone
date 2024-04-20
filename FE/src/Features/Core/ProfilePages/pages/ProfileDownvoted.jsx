@@ -23,15 +23,17 @@ export default function ProfileDownvoted({ using }) {
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage,setcurrentpage] = useState(0);
-    const limitpage = 2;
+    const [currentpage,setcurrentpage] = useState(1);
+    const limitpage = 5;
 
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
-        setcurrentpage(1);
         setload(true);
-        userAxios.get(`api/user/me/downvoted?page=1&count=${limitpage}&limit=${limitpage}`)
+        userAxios.get(`api/user/me/downvoted/${selected.toLowerCase()}?page=1&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
+                if(response.data.downvotedPosts.length < limitpage){
+                    setpagedone(true);
+                }
                 const newPosts = response.data.downvotedPosts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
@@ -61,9 +63,9 @@ export default function ProfileDownvoted({ using }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`api/user/me/downvoted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`api/user/me/downvoted/${selected.toLowerCase()}?page=${currentpage}&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
-                if(response.data.posts.length <limitpage){
+                if(response.data.downvotedPosts.length <limitpage){
                     setpagedone(true);
                 }
                 const newPosts = response.data.downvotedPosts.map(post => ({
@@ -95,8 +97,8 @@ export default function ProfileDownvoted({ using }) {
 
     if (loading) {
         return (
-            <div role='downvotedtab' className="w-100 h-100 flex flex-col items-center justify-center">
-                <img src={'/logo.png'} className="h-12 w-12 mt-24 mx-auto animate-ping" alt="Logo" />
+            <div role='downvotedtab' className="w-100 h-100 flex p-10 flex-col items-center justify-center">
+                <img src={'/logo.png'} className="h-12 w-12 mt-24 z-10 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }
@@ -109,7 +111,7 @@ export default function ProfileDownvoted({ using }) {
                     {Posts.map((post, index) => (
                         <PostComponent key={index} post={post} />
                     ))}
-                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
             ) : (

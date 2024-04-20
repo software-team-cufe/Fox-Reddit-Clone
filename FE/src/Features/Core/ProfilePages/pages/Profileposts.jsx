@@ -30,8 +30,11 @@ export default function ProfilePosts({ using, context }) {
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
         setload(true);
-        userAxios.get(`user/boudie_test/submitted?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`user/${using}/submitted?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
+                if(response.data.posts.length < limitpage){
+                    setpagedone(true);
+                }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
@@ -61,7 +64,7 @@ export default function ProfilePosts({ using, context }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`/user/boudie_test/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/${using}/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
                 if(response.data.posts.length <limitpage){
                     setpagedone(true);
@@ -95,8 +98,8 @@ export default function ProfilePosts({ using, context }) {
 
     if (loading) {
         return (
-            <div role='poststab' className="w-100 h-100 flex flex-col items-center justify-center">
-               <img src={'/logo.png'} className="h-10 w-10 mt-24 mx-auto animate-ping" alt="Logo" />
+            <div role='poststab' className="w-100 h-100 flex p-10 flex-col items-center justify-center">
+               <img role="loadingfox" src={'/logo.png'} className="h-12 w-12 mt-24 z-10 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }
@@ -109,7 +112,7 @@ export default function ProfilePosts({ using, context }) {
                     {Posts.map((post, index) => (
                         <PostComponent key={index} post={post} />
                     ))}
-                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {!pagedone && !callingposts && (<button role="loadmore" id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
             ) : (

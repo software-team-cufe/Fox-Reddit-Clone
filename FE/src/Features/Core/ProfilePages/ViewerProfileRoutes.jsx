@@ -1,4 +1,4 @@
-import { Link, Outlet, Route, Routes, useLocation, useParams, } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useLocation, useNavigate, useParams, } from "react-router-dom";
 import ProfileOverview from "./pages/profileoverview";
 import ProfilePosts from "./pages/Profileposts";
 import ProfileComments from "./pages/profilecomments";
@@ -61,16 +61,17 @@ function Layout() {
   const [avatar, setAvatar] = useState("");  // fetching user avatar from redux store
   const [loading, setLoading] = useState(true); // loading state for fetching user info
   const { viewer } = useParams();  // getting the user from the url
-
+ const navigator = useNavigate();
   const fetchViewerAbout =() => {
     // Fetch user info
-    userAxios.get(`user/boudie_test/about`) // fetching user info
+    userAxios.get(`user/${viewer}/about`) // fetching user info
       .then(response => {
         setAvatar(response.data.avatar);
         setLoading(false);
       })
       .catch(error => {
         console.error('Error:', error);
+        navigator('/404');
         setLoading(false);
       })
   };
@@ -101,7 +102,7 @@ function Layout() {
         <ul role="sectionsBar" className='flex gap-3 overflow-x-auto mb-3 p-1'>
           {
             buttons.map((btn, index) => <li key={index}>
-              <Link role={`${btn.text}Button`} to={`/viewer/${viewer}/${btn.path}`}>
+              <Link id={`${btn.text}ViewerTab`} role={`${btn.text}Button`} to={`/viewer/${viewer}/${btn.path}`}>
                 <button className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/viewer/${viewer}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
               </Link>
             </li>)

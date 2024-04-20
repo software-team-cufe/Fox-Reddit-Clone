@@ -40,7 +40,7 @@ export default function PeriodSelect({appearance, context}) {
     //appearance depends on the selection of the sorting dropdown menu in the parent component
     <Menu as="div" className={`relative inline-block text-left ${(appearance === "Top" || appearance === "Relevance" || appearance === "Comments") ? "" : "hidden"}`}>
       {/**Menu header with current selection*/}
-      <div>
+      <div id="periodClickDown">
         <Menu.Button role="dropDownButton" className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white px-3 py-2 text-sm text-gray-900 hover:bg-gray-200">
             <Calendar className='w-5 h-6'/>
           <span className='text-xs mt-1'>{current}</span>
@@ -65,7 +65,7 @@ export default function PeriodSelect({appearance, context}) {
             {periods.map((period, index) => (
               <Menu.Item key={index}>
                 {({ active }) => (
-                  <div className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex pr-4 h-12 p-3 text-sm', current == period.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(period.name)}>
+                  <div id={`${period.name} Option`}className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex pr-4 h-12 p-3 text-sm', current == period.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(period.name)}>
                     <span className='text-xs font-semibold'>{period.name}</span>
                   </div>
                 )}
