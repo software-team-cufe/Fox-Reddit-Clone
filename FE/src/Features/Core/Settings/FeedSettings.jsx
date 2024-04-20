@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import { getByRole, waitFor } from '@testing-library/react';
 import axios from "axios";
-import Dropdown from "./DropDownlist";
+import Dropdown from "dropDownlist";
 /**
  * Adult content, autoplay media, community themes, community content sort, global content view, open pots in new tab
  */

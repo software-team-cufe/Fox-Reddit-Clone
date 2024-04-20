@@ -15,7 +15,7 @@ export default function Dropdown({secondOrFirst}){
     const [item,setItem] = useState(secondOrFirst == 1 ? "Hot" : "card");
 
     function useOnClickOutside(ref, handler) {
-        React.useEffect(() => {
+        useEffect(() => {
             const listener = event => {
                 if (!ref.current || ref.current.contains(event.target)) {
                     return;
