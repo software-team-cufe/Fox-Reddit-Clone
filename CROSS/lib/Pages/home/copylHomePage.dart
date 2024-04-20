@@ -7,7 +7,7 @@ import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'dart:convert';
-import 'package:reddit_fox/Pages/home/PostCard.dart'; 
+import 'package:reddit_fox/Pages/home/PostCardClassic.dart'; 
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 var post = posts[index];
-                      return PostCard(post: post); // Use PostCard widget here
+                      return ClassicCard(post: post); // Use PostCard widget here
               },
             );
           }

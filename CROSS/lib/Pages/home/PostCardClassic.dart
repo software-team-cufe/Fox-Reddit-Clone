@@ -1,17 +1,16 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 import 'package:share/share.dart';
 
 /// A widget that represents a post card in the home page.
-class PostCard extends StatelessWidget {
+class ClassicCard extends StatelessWidget {
   final Map<String, dynamic> post;
 
-  /// Constructs a [PostCard] widget.
+  /// Constructs a [ClassicCard] widget.
   ///
   /// The [post] parameter is required and contains the data for the post.
-  const PostCard({Key? key, required this.post}) : super(key: key);
+  const ClassicCard({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -75,18 +74,7 @@ class PostCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PostDetails(
-                  redditName: post['redditName'],
-                  title: post['title'],
-                  picture: post['picture'],
-                  votes: post['votes'],
-                  commentsNo: post['commentsNo'],
-                  creatorId: post['creatorId'],
-                  postId: post['id'],
-                  nsfw: post['nsfw'],
-                  description: post['description'],
-                  spoiler: post['spoiler'],
-                ),
+                builder: (context) => PostDetails(post: post),
               ),
             );
           },

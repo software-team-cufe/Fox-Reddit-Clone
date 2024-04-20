@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/Pages/home/Drawer.dart';
-import 'package:reddit_fox/Pages/home/PostCard.dart';
+import 'package:reddit_fox/Pages/home/PostCardClassic.dart';
+import 'package:reddit_fox/Pages/home/PostCardModern.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   String? access_token;
   late String? profilePic;
   late int user_Id; // Variable to store the access token
+  bool isModernCard = true; // Track card type
 
   @override
   void initState() {
@@ -96,6 +98,16 @@ class _HomePageState extends State<HomePage> {
         }),
         actions: [
           IconButton(
+            icon: isModernCard
+                ? const Icon(Icons.view_agenda)
+                : const Icon(Icons.view_carousel),
+            onPressed: () {
+              setState(() {
+                isModernCard = !isModernCard; // Toggle between ModernCard and ClassicCard
+              });
+            },
+          ),
+          IconButton(
             icon: CircleAvatar(
               backgroundColor: Colors.transparent,
               child: Image.asset(
@@ -146,6 +158,7 @@ class _HomePageState extends State<HomePage> {
               ).then((value) {
                 if (value != null) {
                   setState(() {
+                    // Handle menu item selection if needed
                   });
                 }
               });
@@ -289,7 +302,9 @@ class _HomePageState extends State<HomePage> {
                     itemCount: posts.length,
                     itemBuilder: (context, index) {
                       var post = posts[index];
-                      return PostCard(post: post); // Use PostCard widget here
+                      return isModernCard
+                          ? ModernCard(post: post)
+                          : ClassicCard(post: post);
                     },
                   );
                 }

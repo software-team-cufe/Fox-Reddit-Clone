@@ -14,29 +14,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'CommentSection.dart';
 
 class PostDetails extends StatefulWidget {
-  final String redditName;
-  final String title;
-  final String? picture;
-  final int votes;
-  final int commentsNo;
-  final int? creatorId;
-  final int postId;
-  final bool nsfw;
-  final String description;
-  final bool spoiler;
+  final Map<String, dynamic> post;  
 
   const PostDetails({
-    super.key,
-    required this.redditName,
-    required this.title,
-    this.picture,
-    required this.votes,
-    required this.commentsNo,
-    required this.creatorId,
-    required this.postId,
-    required this.nsfw,
-    required this.description,
-    required this.spoiler,
+    Key? key,
+    required this.post,
   });
 
   @override
@@ -49,13 +31,13 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   void initState() {
     super.initState();
-    if (widget.nsfw || widget.spoiler) {
+    if (widget.post['nsfw'] || widget.post['spoiler']) {
       isBlurred = true; // Apply blur if the post is NSFW
     }
   }
 
   void toggleBlur() {
-    if (widget.nsfw || widget.spoiler) {
+    if (widget.post['nsfw'] || widget.post['spoiler']) {
       // Check if the post is NSFW or spoiler
       setState(() {
         isBlurred = !isBlurred; // Toggle blur if the post is NSFW
@@ -86,9 +68,9 @@ class _PostDetailsState extends State<PostDetails> {
   void _startDownload(BuildContext context) async {
     try {
       Directory? downloadsDir = await getDownloadsDirectory();
-      String savePath = "${downloadsDir!.path}/${widget.title}.jpg";
+      String savePath = "${downloadsDir!.path}/${widget.post['title']}.jpg";
 
-      var response = await http.get(Uri.parse(widget.picture!));
+      var response = await http.get(Uri.parse(widget.post['picture']!));
       File file = File(savePath);
       await file.writeAsBytes(response.bodyBytes);
 
@@ -150,7 +132,7 @@ class _PostDetailsState extends State<PostDetails> {
                   },
                 ),
                 PopupMenuItem(
-                  onTap: widget.picture != null && widget.picture!.isNotEmpty
+                  onTap: widget.post['picture'] != null && widget.post['picture']!.isNotEmpty
                       ? () => _downloadImage(context)
                       : null,
                   child: const Text("Download Image"),
@@ -189,7 +171,7 @@ class _PostDetailsState extends State<PostDetails> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ProfilePage(user_Id: widget.creatorId.toString()),
+                        ProfilePage(user_Id: widget.post['creatorId'].toString()),
                   ),
                 );
               },
@@ -201,7 +183,7 @@ class _PostDetailsState extends State<PostDetails> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    widget.redditName,
+                    widget.post['redditName'],
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -213,12 +195,12 @@ class _PostDetailsState extends State<PostDetails> {
             ),
             const SizedBox(height: 16),
             Text(
-              widget.title,
+              widget.post['title'],
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             Row(
               children: [
-                if (widget.nsfw)
+                if (widget.post['nsfw'])
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -235,7 +217,7 @@ class _PostDetailsState extends State<PostDetails> {
                       ),
                     ),
                   ),
-                if (widget.spoiler)
+                if (widget.post['spoiler'])
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -257,7 +239,7 @@ class _PostDetailsState extends State<PostDetails> {
 
             const SizedBox(height: 8),
 
-            if (widget.picture != null && widget.picture!.isNotEmpty)
+            if (widget.post['picture'] != null && widget.post['picture']!.isNotEmpty)
               // Wrap GestureDetector around ClipRRect
               GestureDetector(
                 onTap: toggleBlur, // Toggle the blur filter on tap
@@ -269,7 +251,7 @@ class _PostDetailsState extends State<PostDetails> {
                     children: [
                       // Image without blur effect
                       Image.network(
-                        widget.picture!,
+                        widget.post['picture']!,
                         width: double.infinity,
                         height: 400,
                         fit: BoxFit.cover,
@@ -298,7 +280,7 @@ class _PostDetailsState extends State<PostDetails> {
               ),
             const SizedBox(height: 8), // Space between picture and description
             Text(
-              widget.description, // Include the post description here
+              widget.post['description'], // Include the post description here
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8), // Space between description and actions
@@ -313,7 +295,7 @@ class _PostDetailsState extends State<PostDetails> {
                       onPressed: () {},
                     ),
                     Text(
-                      "${widget.votes}",
+                      "${widget.post['votes']}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     IconButton(
@@ -327,7 +309,7 @@ class _PostDetailsState extends State<PostDetails> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "${widget.commentsNo}",
+                        "${widget.post['commentsNo']}",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const Icon(Icons.comment),
@@ -335,10 +317,10 @@ class _PostDetailsState extends State<PostDetails> {
                       IconButton(
                         icon: const Icon(Icons.share),
                         onPressed: () {
-                          int postId = widget.postId;
+                          int postId = widget.post['id'];
                           String postUrl =
                               'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                          Share.share('${widget.title}\n$postUrl');
+                          Share.share('${widget.post['title']}\n$postUrl');
                         },
                       ),
                     ],
@@ -347,7 +329,7 @@ class _PostDetailsState extends State<PostDetails> {
               ],
             ),
             const SizedBox(height: 1),
-            CommentSection(postId: "${widget.postId}"),
+            CommentSection(postId: "${widget.post['postid']}"),
           ],
         ),
       ),
