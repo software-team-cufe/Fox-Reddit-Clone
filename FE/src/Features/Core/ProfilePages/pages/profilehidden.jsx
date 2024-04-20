@@ -34,7 +34,6 @@ export default function ProfileHidden({ using }) {
                 if (response.data.posts.length < limitpage) {
                     setpagedone(true);
                 }
-                console.log(response.data.posts);
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,

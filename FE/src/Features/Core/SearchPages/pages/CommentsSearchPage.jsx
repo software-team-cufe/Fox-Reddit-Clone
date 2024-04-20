@@ -23,13 +23,16 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
   const loadMoreButtonRef = useRef(null);
   const [pagedone, setpagedone] = useState(false);
   const [currentpage, setcurrentpage] = useState(0);
-  const limitpage = 2;
+  const limitpage = 5;
 
   useEffect(() => {
     setLoading(true);
     axios.get(`http://localhost:3002/comments?_limit=${limitpage}`)
       //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&count=10&limit=50&t=month')
       .then(response => {
+        if (response.data.length < limitpage) {
+          setpagedone(true);
+        }
         const newComments = response.data.map(comment => ({
           user: {
             image: comment.user.avatar,
@@ -91,7 +94,7 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
   if (loading) {
     return (
       <div role="commentstab" className="w-100 h-100 flex flex-col items-center justify-center">
-        <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
+        <img src={'/logo.png'} className="h-12 w-12 mt-10 mx-auto animate-ping" alt="Logo" />
       </div>
     )
   }

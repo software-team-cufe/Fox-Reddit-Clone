@@ -19,11 +19,14 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   const loadMoreButtonRef = useRef(null);
   const [pagedone, setpagedone] = useState(false);
   const [currentpage,setcurrentpage] = useState(0);
-  const limitpage = 2;
+  const limitpage = 5;
 
   useEffect(() => {
     axios.get(`http://localhost:3002/communities?_limit=${limitpage}`) //fetch communities and organize into communities array for mapping
       .then(response => {
+        if (response.data.length < limitpage) {
+          setpagedone(true);
+        }
         const newComms = response.data.map(comm => ({
           id: comm.commID,
           name: comm.name,
@@ -73,7 +76,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   if (loading) {
     return (
       <div role="communitiestab" className="w-100 h-100 flex flex-col items-center justify-center">
-        <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
+        <img src={'/logo.png'} className="h-12 w-12 mt-10 mx-auto animate-ping" alt="Logo" />
       </div>
     )
   }

@@ -21,12 +21,15 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   const loadMoreButtonRef = useRef(null);
   const [pagedone, setpagedone] = useState(false);
   const [currentpage, setcurrentpage] = useState(0);
-  const limitpage = 2;
+  const limitpage = 5;
 
   useEffect(() => {
     setLoading(true);    //set loading to true before fetching
     axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
       .then(response => {
+        if (response.data.length < limitpage) {
+          setpagedone(true);
+        }
         const newPosts = response.data.map(post => ({
           subReddit: {
             image: post.attachments.subredditIcon,
@@ -88,7 +91,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   if (loading) {
     return (
       <div role="poststab" className="w-100 h-100 flex flex-col items-center justify-center">
-        <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
+        <img src={'/logo.png'} className="h-12 w-12 mt-10 mx-auto animate-ping" alt="Logo" />
       </div>
     )
   }
