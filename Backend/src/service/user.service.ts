@@ -1,6 +1,7 @@
 import UserModel, { User } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import appError from '../utils/appError';
+import CommunityModel from '../model/community.model';
 /**
  * Creates a new user.
  *
@@ -227,7 +228,64 @@ export async function userRepliesIds(username: string, page: number, count: numb
   // Return the comment IDs
   return commentsIDS;
 }
+/**
+ * Retrieves the IDs of the communities that a user is a member of.
+ *
+ * @param {string} userID - The ID of the user.
+ * @return {Promise<string[]>} An array of community IDs that the user is a member of.
+ */
+export async function getCommunitiesIdOfUserAsMemeber(username: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
 
+  // Find the user by ID and retrieve their user as member of communities ID
+  const user = await UserModel.findOne({ username: username }, 'member')
+    .lean()
+    .populate({
+      path: 'member',
+      options: { skip: skip, limit: count },
+    });
+
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+
+  // Extract the community IDs from the user's member if it exists
+  const communityIDS = user.member ? user.member.map((comm) => comm._id.toString()) : [];
+
+  // Return the post IDs
+  return communityIDS;
+}
+/**
+ * Retrieves the IDs of the communities that a user is a moderator of.
+ *
+ * @param {string} userID - The ID of the user.
+ * @return {Promise<string[]>} An array of community IDs that the user is a moderator of.
+ */
+export async function getCommunitiesIdOfUserAsModerator(username: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
+
+  // Find the user by ID and retrieve their user as moderator of communities ID
+  const user = await UserModel.findOne({ username: username }, 'moderators')
+    .lean()
+    .populate({
+      path: 'moderators',
+      options: { skip: skip, limit: count },
+    });
+
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+
+  // Extract the community IDs from the user's member if it exists
+  const communityIDS = user.moderators ? user.moderators.map((post) => post._id.toString()) : [];
+
+  // Return the post IDs
+  return communityIDS;
+}
 /*************************Boudy ***************************
 // export async function blockUser1(blocked: User, blocker: User) {
 //   try {

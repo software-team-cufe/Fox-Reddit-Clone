@@ -117,7 +117,7 @@ class Moderator {
   role?: string;
 }
 
-class Community {
+export class Community {
   @prop()
   _id?: string;
 

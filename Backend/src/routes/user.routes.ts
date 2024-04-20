@@ -37,6 +37,10 @@ import {
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
+import {
+  getCommunityOfUserAsMemeberHandler,
+  getCommunityOfUserAsModeratorHandler,
+} from '../controller/community.controller';
 
 const router = express.Router();
 
@@ -92,5 +96,7 @@ router.post('/api/block_user', validateResource(blockUserSchema), deserializeUse
 //router.post('/api/report_user', validateResource(reportUserSchema), deserializeUser, reportUserHandler);
 
 /********************************************************/
+router.get('/subreddits/mine/member', getCommunityOfUserAsMemeberHandler);
+router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
 
 export default router;

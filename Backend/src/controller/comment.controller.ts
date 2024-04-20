@@ -33,6 +33,6 @@
 //     }
 //   } catch (error) {
 //     console.error('Error handling user request:', error);
-//     return res.status(500).send('Internal server error');
+//     return res.status(500).send('Internal server error');
 //   }
 // }
