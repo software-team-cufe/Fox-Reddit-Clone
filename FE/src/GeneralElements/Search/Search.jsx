@@ -1,3 +1,14 @@
+
+/**
+ * SearchComponent is a React component that provides a search input field with a dropdown selector.
+ * It allows users to search for communities and navigate to the search results page.
+ *
+ * @component
+ * @example
+ * return (
+ *   <SearchComponent />
+ * )
+ */
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
@@ -35,8 +46,9 @@ const SearchComponent = () => {
 
     const navToSearch = (value) => {
         setSelected(value);
+        setSearch("");
         sethideit(true);
-        navigator(`/search/${value}`);
+        navigator(`/search/${value}/posts`);
     };
 
     const handlechange = (comingvalue) => {
@@ -61,7 +73,7 @@ const SearchComponent = () => {
             <div className="  rounded-full p-2 flex gap-1 flex-wrap"
                 onClick={() => setShowSelector(false)}>
                 {selected &&
-                    <div className="bg-gray-200 rounded-full flex items-center">
+                    <div className="bg-gray-200 my-auto rounded-full flex items-center">
                         <div className="p-2">{selected}</div>
                         <div onClick={() => setSelected("")} className="p-2 select-none rounded-r-md 
                         cursor-pointer hover:bg-magma-orange-clear">
@@ -69,7 +81,7 @@ const SearchComponent = () => {
                         </div>
                     </div>}
 
-                <div className="flex-1">
+                <div className="flex-1 my-auto">
                     <input type="text" value={search}
                         onChange={e => handlechange(e.target.value)} placeholder="Search"
                         className="w-full border-0 focus:border-0 
@@ -78,7 +90,7 @@ const SearchComponent = () => {
                         onBlur={() => { setFocus(false); }}
                         onKeyDown={(e) => { if (search && e.key === 'Enter') navToSearch(search) }} />
                     {showSelector && (
-                        <div className="absolute left-0 bg-white shadow h-max z-30 w-full rounded-b-md font-medium">
+                        !hideit && <div className="absolute left-0 bg-white shadow h-max z-30 w-full rounded-b-md font-medium">
                             <div className="p-2 space-y-1">
                                 {filteredSearch.map((item, index) => (
                                     (

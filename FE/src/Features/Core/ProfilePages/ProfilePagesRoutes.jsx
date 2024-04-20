@@ -94,7 +94,7 @@ function Layout() {
           <ul role="sectionsBar" className='flex gap-3 overflow-x-auto mb-3 p-1'>
             {
               buttons.map((btn, index) => <li key={index}>
-                <Link role={`${btn.text}Button`} to={`/user/${user}/${btn.path}`}>
+                <Link id={`${btn.text}Tab`} role={`${btn.text}Button`} to={`/user/${user}/${btn.path}`}>
                   <button className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/user/${user}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
                 </Link>
               </li>)
@@ -105,7 +105,7 @@ function Layout() {
           {/* sorting lists and period select components and create post in case of overview*/}
           <div className="flex gap-1">
             {/* create post button in case of overview */}
-            <Link to='/submit' role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black ${path.pathname == `/user/${user}/overview` ? "" : "hidden"}`} >
+            <Link id="profileCreatePost" to='/submit' role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black ${path.pathname == `/user/${user}/overview` ? "" : "hidden"}`} >
               <Plus className="w-4 h-4" />
               <span className='inline font-semibold text-sm'>Create a post</span>
             </Link>
@@ -138,7 +138,7 @@ export default function ProfilePagesLayout() {
           <Route key={'/saved'} path="/saved" element={<ProfileSaved using={user} />} />
           <Route key={'/comments'} path="/comments" element={<ProfileComments context={ProfileContext} using={user} />} />
           <Route key={'/posts'} path="/posts" element={<ProfilePosts context={ProfileContext} using={user} />} />
-          <Route key={'/overview'} path="/overview" element={<ProfileOverview using={user} />} />
+          <Route key={'/overview'} path="/overview" element={<ProfileOverview context={ProfileContext} using={user} />} />
           <Route key={'/upvoted'} path="/upvoted" element={<ProfileUpvoted using={user} />} />
           <Route key={'/downvoted'} path="/downvoted" element={<ProfileDownvoted using={user} />} />
         </Route>

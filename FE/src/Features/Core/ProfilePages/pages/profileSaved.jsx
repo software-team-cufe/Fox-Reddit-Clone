@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { useState, useRef } from "react";
-import axios from 'axios';
 import { ProfileContext } from "../ProfilePagesRoutes";
 import { useQuery } from "react-query";
-import { userAxios } from "../../../../Utils/UserAxios";
+import { userAxios } from "@/Utils/UserAxios";
 
 /**
  * Renders the profile saved page.
@@ -24,18 +23,22 @@ export default function ProfileSaved({ using }) {
     const [pagedone, setpagedone] = useState(false);
     const [currentpage,setcurrentpage] = useState(1);
     const limitpage = 5;
-
+    const [loading, setload] = useState(true);
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
-        userAxios.get(`/user/${using}/saved?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        setload(true);
+        userAxios.get(`api/user/${using}/savedPosts?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
+                if(response.data.posts.length < limitpage){
+                    setpagedone(true);
+                }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
-                    images: post.attachments.postData,
-                    id: post.id,
+                    images: post.attachments,
+                    id: post._id,
                     title: post.title,
                     subTitle: post.postText,
                     votes: post.votesCount,
@@ -43,30 +46,32 @@ export default function ProfileSaved({ using }) {
                     thumbnail: post.thumbnail,
                     video: null
                 }));
-                setcurrentpage(currentpage+1);
+                setcurrentpage(2);
                 setPosts(newPosts);
+                setload(false);
             })
             .catch(error => {
+                setload(false);
                 console.error('Error:', error);
             });
     };
 
-    const { isLoading:loading, error: postsError } = useQuery(['fetchInitialProfileSaved', selected, period],fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
+    const {error: postsError } = useQuery(['fetchInitialProfileSaved', selected, period],fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`/user/${using}/saved?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`api/user/${using}/savedPosts?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                if(response.data.length <limitpage){
+                if(response.data.posts.length <limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.map(post => ({
+                const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
-                    images: post.attachments.postData,
-                    id: post.id,
+                    images: post.attachments,
+                    id: post._id,
                     title: post.title,
                     subTitle: post.postText,
                     votes: post.votesCount,
@@ -89,7 +94,7 @@ export default function ProfileSaved({ using }) {
     if (loading) {
         return (
             <div role='savedtab' className="w-100 h-100 flex flex-col items-center justify-center">
-                <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
+                <img src={'/logo.png'} className="h-12 w-12 mt-24 z-10 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }
@@ -102,7 +107,7 @@ export default function ProfileSaved({ using }) {
                     {Posts.map((post, index) => (
                         <PostComponent key={index} post={post} />
                     ))}
-                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
             ) : (

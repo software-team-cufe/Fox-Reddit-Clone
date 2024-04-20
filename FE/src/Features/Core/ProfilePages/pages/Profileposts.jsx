@@ -4,6 +4,8 @@ import { useState } from "react";
 import axios from 'axios';
 import { userAxios } from "@/Utils/UserAxios";
 import { useQuery } from "react-query";
+import { toast } from "react-toastify";
+
 /**
  * Renders the profile posts component.
  *
@@ -18,6 +20,7 @@ export default function ProfilePosts({ using, context }) {
     // states for collecting posts from request and loading state
     const { selected, period } = useContext(context);
     const [Posts, setPosts] = useState([]);
+    const [loading, setload] = useState(false);
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
@@ -26,15 +29,19 @@ export default function ProfilePosts({ using, context }) {
 
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
-        userAxios.get(`user/boudie_test/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        setload(true);
+        userAxios.get(`user/${using}/submitted?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
+                if(response.data.posts.length < limitpage){
+                    setpagedone(true);
+                }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
-                    images: post.attachments.postData,
-                    id: post.id,
+                    images: post.attachments,
+                    id: post._id,
                     title: post.title,
                     subTitle: post.postText,
                     votes: post.votesCount,
@@ -42,30 +49,33 @@ export default function ProfilePosts({ using, context }) {
                     thumbnail: post.thumbnail,
                     video: null
                 }));
-                setcurrentpage(currentpage+1);
+                setcurrentpage(2);
                 setPosts(newPosts);
+                setload(false);
             })
             .catch(error => {
                 console.error('Error:', error);
+                toast.error("there was an issue with loading your posts please try again")
+                setload(false);
             });
     };
 
-    const { isLoading:loading, error: postsError } = useQuery(['fetchInitialProfilePosts', selected, period],fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
+    const {error: postsError } = useQuery(['fetchInitialProfilePosts', selected, period],fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
         userAxios.get(`/user/${using}/submitted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                if(response.data.length <limitpage){
+                if(response.data.posts.length <limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.map(post => ({
+                const newPosts = response.data.posts.map(post => ({
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
                     },
-                    images: post.attachments.postData,
-                    id: post.id,
+                    images: post.attachments,
+                    id: post._id,
                     title: post.title,
                     subTitle: post.postText,
                     votes: post.votesCount,
@@ -81,14 +91,15 @@ export default function ProfilePosts({ using, context }) {
             })
             .catch(error => {
                 console.error('Error:', error);
-                setCallingPosts(false);
+                toast.error("there was an issue with loading your posts please try again")
+                setload(false);
             });
     };
 
     if (loading) {
         return (
-            <div role='poststab' className="w-100 h-100 flex flex-col items-center justify-center">
-               <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
+            <div role='poststab' className="w-100 h-100 flex p-10 flex-col items-center justify-center">
+               <img role="loadingfox" src={'/logo.png'} className="h-12 w-12 mt-24 z-10 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }
@@ -101,7 +112,7 @@ export default function ProfilePosts({ using, context }) {
                     {Posts.map((post, index) => (
                         <PostComponent key={index} post={post} />
                     ))}
-                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                    {!pagedone && !callingposts && (<button role="loadmore" id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
             ) : (

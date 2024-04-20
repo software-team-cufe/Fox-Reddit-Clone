@@ -1,6 +1,11 @@
+
 /**
- * @file FILEPATH: /d:/Projects/Fox-Reddit-Clone/FE/src/Features/Core/CommunityPage/CommunityPage.jsx
- * @desc This file contains the implementation of the CommunityPage component, which displays a community page with posts, sorting options, and community information.
+ * This file represents the CommunityPage component.
+ * It displays a community page with posts, sorting options, and community information.
+ * The component uses React Router for routing and axios for making HTTP requests.
+ * It also utilizes React Query for data fetching and state management.
+ * The component is wrapped in a CommunityProvider component that provides the selected sorting and period values.
+ * @file FILEPATH
  */
 import React, { useContext, createContext, useEffect, useState, useRef } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
@@ -11,18 +16,18 @@ import Spinner from '@/GeneralElements/Spinner/Spinner';
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { Plus } from 'lucide-react';
 import bellMenu from "./accessories/bellmenu";
-import optionsMenu from "./accessories/optionsmenu";
+import OptionsMenu from "./accessories/optionsmenu";
 import MainFooter from "./footers/mainFooter";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 import LoginFirtstModal from "./accessories/loginFirstModal";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
 import { useQuery } from "react-query";
 import { userAxios } from "../../../Utils/UserAxios";
-
+import { toast } from 'react-toastify';
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
-  selected: "Top",
+  selected: "New",
   setselected: (selected) => { },
   period: "All time",
   setperiod: (period) => { },
@@ -30,7 +35,7 @@ export const CommunityContext = createContext({
 
 // Create a provider component that holds the state
 export function CommunityProvider({ children }) {
-  const [selected, setselected] = useState("Top");
+  const [selected, setselected] = useState("New");
   const [period, setperiod] = useState("All time");
 
   return (
@@ -52,26 +57,31 @@ export default function CommunityPage() {
   const loadMoreButtonRef = useRef(null);
   const [callingposts, setCallingPosts] = useState(false);
   const [pagedone, setpagedone] = useState(false);
-  const limitpage = 2;
+  const limitpage = 5;
   const [currentpage,setcurrentpage] = useState(1);
   const [feed, setFeed] = useState(false);
+  const [comm, setComm] = useState(null);
 
     //to fetch the community data from the server and use them
     const fetchCommunity = async () => {
       const response = await axios.get(`http://localhost:3002/communities`);
       const commData = response.data.find((commresponse) => commresponse.name === community);
-      return commData;
+      setComm(commData);
   };
   
-  let { data: comm, isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
+  let {isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
 
   const fetchInitialPosts = () => {
     setFeed(true);
-    userAxios.get(`api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`)
+    let link = `api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&limit=${limitpage}`;
+    if (selected == 'Top'){
+      link = link +`&t=${period}`;
+    }
+    userAxios.get(link)
       .then((response) => {
         const newPosts = response.data.map(post => ({
           subReddit: {
-            image: "https://qph.cf2.quoracdn.net/main-qimg-d2290767bcbc9eb9748ca82934e6855c-lq",
+            image: comm.icon,
             title: post.communityName,
           },
           images: post.attachments,
@@ -83,7 +93,7 @@ export default function CommunityPage() {
           thumbnail: post.attachments[0],
           video: null
         }));
-        setcurrentpage(1+currentpage);
+        setcurrentpage(2);
         setPosts(newPosts);
         setFeed(false);
       })
@@ -101,8 +111,12 @@ export default function CommunityPage() {
     }
     axios.patch(`http://localhost:3002/communities/${comm.id}`, { joined: !comm.joined })
       .then(() => {
-        comm = { ...comm, joined: !comm.joined };
-        console.log('Community joined state changed!');
+        if(comm.joined) {
+        toast.success(`r/${comm.name} ${comm.joined ? 'unjoined' : 'joined'}!`)
+        } else {
+          toast.success(`r/${comm.name} ${comm.joined ? 'unjoined' : 'joined'}!`)
+        }
+        setComm({ ...comm, joined: !comm.joined });
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -119,29 +133,33 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    userAxios.get(`r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`)
+    let link = `api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`;
+    if (selected == 'Top'){
+      link = link +`&t=${period}`;
+    }
+    userAxios.get(link)
     .then(response => {
         if(response.data.length <limitpage){
             setpagedone(true);
         }
         const newPosts = response.data.map(post => ({
           subReddit: {
-            image: post.attachments.subredditIcon,
+            image: comm.icon,
             title: post.communityName,
           },
-          images: post.attachments.postData,
-          id: post.id,
+          images: post.attachments,
+          id: post._id,
           title: post.title,
-          subTitle: post.postText,
+          subTitle: post.textHTML,
           votes: post.votesCount,
-          comments: post.commentsCount,
-          thumbnail: post.thumbnail,
+          comments: post.postComments.length,
+          thumbnail: post.attachments[0],
           video: null
         }));
 
         setPosts(prevPosts => [...prevPosts, ...newPosts]);
         setCallingPosts(false);
-        setcurrentpage(limitpage+currentpage);
+        setcurrentpage(1+currentpage);
 
       })
       .catch(error => {
@@ -153,7 +171,7 @@ export default function CommunityPage() {
   //to handle loading until fetch is complete
   if (loading) {
     return (
-      <div className="w-100 h-100 flex flex-col items-center justify-center">
+      <div role="communitypage" className="w-100 h-100 flex flex-col items-center justify-center">
         <img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />
       </div>
     )
@@ -162,11 +180,11 @@ export default function CommunityPage() {
   //main body of the page
 
   return (
-    <div>
+    <div role="communitypage">
       <div className={`flex-1 -mt-4 md:w-3/4 w-full md:mx-auto relative`}>
         {showModal && <LoginFirtstModal onClose={setShowModal} />}
         <BackToTop />
-        {/* backgroyund image of the community */}
+        {/* background image of the community */}
         <img src={comm.backimage} alt='community' className='w-full md:mx-auto h-20 md:h-36 md:rounded-lg object-cover' />
 
         {/* community name and (members count in mobile mode)*/}
@@ -182,7 +200,7 @@ export default function CommunityPage() {
 
           {/* create post, bell and options menu in desktop mode */}
           <div className='hidden mr-6 md:flex md:gap-2 md:justify-between'>
-            <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
+            <button id="commCreatePost" role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
               <Plus className="w-4 h-4" />
               <span className='inline font-bold text-sm'>Create a post</span>
             </button>
@@ -190,13 +208,13 @@ export default function CommunityPage() {
               <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}</span>
             </button>
             {comm.joined ? bellMenu() : <></>}
-            {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : <></>}
+            {user.user ? <OptionsMenu comm={comm} setComm={setComm}/>: <></>}
           </div>
         </div>
 
         {/* create post, bell and options menu in mobile mode */}
         <div className='flex gap-2 md:justify-between ml-3 mr-6 md:hidden mt-[62px]'>
-          <button role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
+          <button id="commCreatePost" role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black`} onClick={CreatePostHandle}>
             <Plus className="w-4 h-4" />
             <span className='inline font-bold text-sm'>Create a post</span>
           </button>
@@ -204,7 +222,7 @@ export default function CommunityPage() {
             <span className={`inline font-bold text-xs ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}</span>
           </button>
           {comm.joined ? bellMenu() : <></>}
-          {user.user ? optionsMenu(comm.muted, comm.favourited, comm.name) : <></>}
+          {user.user ? <OptionsMenu comm={comm} setComm={setComm}/> : <></>}
         </div>
 
         {/* the feed with its sort elements and the community description and rules and other tools on the right*/}
@@ -217,8 +235,8 @@ export default function CommunityPage() {
 
               {/* page buttons for mobile mode*/}
               <div className='flex gap-2 md:hidden'>
-                <Link to={`/r/${comm.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
-                <Link to={`/r/${comm.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}/about` ? "bg-gray-300" : "bg-white"}`} >about</Link>
+                <Link id="toCommFeed" to={`/r/${comm.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
+                <Link id="toCommAbout" to={`/r/${comm.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}/about` ? "bg-gray-300" : "bg-white"}`} >about</Link>
               </div>
 
               {/* sort elements for the feed*/}
@@ -237,14 +255,14 @@ export default function CommunityPage() {
                   {Posts.map((post, index) => (
                     <PostComponent key={index} post={post} />
                   ))}
-                  {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+                  {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                   {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
                 </>
               ) : (
                 <>{/*no results view*/}
                   <p className="text-xl font-bold text-center mt-2">This community doesn't have any Posts yet</p>
                   <p className="text-md font-semibold text-center mb-3">Make one and get this feed started.</p>
-                  <button role="createPostButton" className={`rounded-full text-white flex gap-1 justify-center bg-blue-600 w-fit px-4 h-10 items-center hover:bg-blue-700`} onClick={CreatePostHandle}>
+                  <button id="noDataCreatePost" role="createPostButton" className={`rounded-full text-white flex gap-1 justify-center bg-blue-600 w-fit px-4 h-10 items-center hover:bg-blue-700`} onClick={CreatePostHandle}>
                     <Plus className="w-4 h-4" />
                     <span className='inline font-bold text-sm'>Create a post</span>
                   </button>

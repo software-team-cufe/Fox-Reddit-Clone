@@ -78,7 +78,7 @@ function Layout() {
         <ul role="searchBySelect" className="flex gap-3 overflow-x-auto mb-3">
           {buttons.map((btn, index) => (
             <li key={index}>
-              <Link role={`${btn.text}Button`} to={`/search/${searchkey}/${btn.path}`}>
+              <Link id={`${btn.text}Tab`} role={`${btn.text}Button`} to={`/search/${searchkey}/${btn.path}`}>
                 <button
                   className={`rounded-3xl font-sans text-sm font-semibold w-fit px-4 h-10 ${
                     path.pathname == `/search/${searchkey}/${btn.path}` ? "bg-gray-300" : "bg-white"

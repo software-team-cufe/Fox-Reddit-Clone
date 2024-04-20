@@ -3,7 +3,7 @@
  * @module Sidebar
  */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles, Mail, Table } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
@@ -34,6 +34,11 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
    // const toggleSidebar = () => {
    //    setOpen(!open);
    // };
+   // useEffect(() => {
+   //    axios.get("http://localhost:3002/users").then(response=> {
+         
+   //    })
+   // },[])
 
 /**
  * this function open resources , community , and Recents dropdown list
@@ -186,7 +191,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                      <div id="dropdown1" className="">
                         <ul className="" aria-labelledby="dropdownDefaultButton">
                            <li>
-                              <button
+                              <button id="toCreateCommunity"
                                  onClick={openCreateCommunity}
                                  className="relative rounded-full flex justify-between gap-2 p-3 h-12 w-44 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
