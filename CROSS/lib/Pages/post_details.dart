@@ -107,7 +107,7 @@ class _PostDetailsState extends State<PostDetails> {
         return Wrap(
           children: [
             ListTile(
-              leading: const Icon(Icons.save),
+              leading: const Icon(Icons.bookmark),
               title: const Text("Save"),
               onTap: () {
                 Navigator.pop(context); // Close the bottom sheet
@@ -135,7 +135,7 @@ class _PostDetailsState extends State<PostDetails> {
               title: const Text('Crosspost to community'),
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                // Handle option 1
+                // Handle option
               },
             ),
             ListTile(
@@ -143,7 +143,7 @@ class _PostDetailsState extends State<PostDetails> {
               title: const Text('Copy Image'),
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                // Handle option 1
+                // Handle option
               },
             ),
             ListTile(
@@ -162,7 +162,7 @@ class _PostDetailsState extends State<PostDetails> {
               title: const Text('Report'),
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                // Handle option 1
+                // Handle option
               },
             ),
             ListTile(
@@ -170,7 +170,7 @@ class _PostDetailsState extends State<PostDetails> {
               title: const Text('Block account'),
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                // Handle option 1
+                // Handle option
               },
             ),
             ListTile(
@@ -178,7 +178,7 @@ class _PostDetailsState extends State<PostDetails> {
               title: const Text('Hide'),
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                // Handle option 1
+                // Handle option
               },
             ),
           ],
