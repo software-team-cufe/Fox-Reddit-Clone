@@ -72,8 +72,12 @@ function Poll(props) {
             {props.PollValues.map((value, index) => (
                 <div className='w-full' key={index}>
                     <div
+<<<<<<< HEAD
                         className={`flex border rounded p-1 w-[100%] h-fit my-2 
                         ${focusOptions[index] ? 'border-gray-800' : 'border-gray-300'
+=======
+                        className={`flex border rounded p-1 w-[100%] h-fit my-2 ${focusOptions[index] ? 'border-gray-800' : 'border-gray-300'
+>>>>>>> origin/newnew-nadine
                             }`}
                     >
                         <input

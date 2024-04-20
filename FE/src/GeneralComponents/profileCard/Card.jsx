@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import React from 'react';
-//git
+import { userStore } from '../../hooks/UserRedux/UserStore';
+
 export default function Card (){
+
+    const username =userStore.getState().user.user.username;
     return(
         <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
         
@@ -14,7 +17,7 @@ export default function Card (){
             </button>
         </div>
     
-        <span className='font-bold ml-5'>username</span>
+        <span className='font-bold ml-5'>{username}</span>
         
         <button
               className="flex items-center py-1.5 px-3 ml-5 mt-4 text-xs font-medium text-black focus:outline-none

@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 /**
  * CheckButton component.
  * @module CheckButton
@@ -8,6 +9,8 @@
  * @param {string} props.label - The label for the button.
  * @returns {JSX.Element} The rendered CheckButton component.
  */
+=======
+>>>>>>> origin/newnew-nadine
 import React, { useState } from 'react'
 import { Check, Plus } from 'lucide-react'
 function CheckButton(props) {      //inputs: SetIsChecked, IsChecked

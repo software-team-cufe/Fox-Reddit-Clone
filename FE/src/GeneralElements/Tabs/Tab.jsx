@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+<<<<<<< HEAD
 /**
  * Renders a set of tabs with content.
  * @param {Object} props - The component props.
@@ -15,12 +16,21 @@ const Tabs = ({ children }) => {
      * @param {string} newActiveTab - The label of the new active tab.
      * @param {number} num - The index of the tab.
      */
+=======
+const Tabs = ({ children }) => {
+    const [activeTab, setActiveTab] = useState(children[0].props.label);
+
+>>>>>>> origin/newnew-nadine
     const handleClick = (e, newActiveTab, num) => {
         e.preventDefault();
         setActiveTab(newActiveTab);
         children[num].props.addOnClick();
     };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/newnew-nadine
     return (
         <div className=" mx-auto">
             <div className="flex border-b border-gray-300">
@@ -37,6 +47,10 @@ const Tabs = ({ children }) => {
                         <div className="flex justify-center gap-1">
                             {child.props.icon}
                             {child.props.label}
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/newnew-nadine
                         </div>
                     </button>
                 ))}
@@ -53,6 +67,7 @@ const Tabs = ({ children }) => {
     );
 };
 
+<<<<<<< HEAD
 /**
  * Renders a single tab.
  * @param {Object} props - The component props.
@@ -60,6 +75,8 @@ const Tabs = ({ children }) => {
  * @param {React.ReactNode} props.children - The content of the tab.
  * @returns {JSX.Element} The rendered Tab component.
  */
+=======
+>>>>>>> origin/newnew-nadine
 const Tab = ({ label, children }) => {
     return (
         <div label={label} className="hidden">
@@ -67,5 +84,8 @@ const Tab = ({ label, children }) => {
         </div>
     );
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/newnew-nadine
 export { Tabs, Tab };

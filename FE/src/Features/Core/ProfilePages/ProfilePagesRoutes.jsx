@@ -94,7 +94,11 @@ function Layout() {
           <ul role="sectionsBar" className='flex gap-3 overflow-x-auto mb-3 p-1'>
             {
               buttons.map((btn, index) => <li key={index}>
+<<<<<<< HEAD
                 <Link id={`${btn.text}Tab`} role={`${btn.text}Button`} to={`/user/${user}/${btn.path}`}>
+=======
+                <Link role={`${btn.text}Button`} to={`/user/${user}/${btn.path}`}>
+>>>>>>> origin/newnew-nadine
                   <button className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/user/${user}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}</button>
                 </Link>
               </li>)
@@ -105,7 +109,11 @@ function Layout() {
           {/* sorting lists and period select components and create post in case of overview*/}
           <div className="flex gap-1">
             {/* create post button in case of overview */}
+<<<<<<< HEAD
             <Link id="profileCreatePost" to='/submit' role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black ${path.pathname == `/user/${user}/overview` ? "" : "hidden"}`} >
+=======
+            <Link to='/submit' role="createPostButton" className={`rounded-full flex gap-1 justify-center border border-gray-600 w-fit px-4 h-10 items-center hover:border-black ${path.pathname == `/user/${user}/overview` ? "" : "hidden"}`} >
+>>>>>>> origin/newnew-nadine
               <Plus className="w-4 h-4" />
               <span className='inline font-semibold text-sm'>Create a post</span>
             </Link>
