@@ -1,277 +1,196 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 import 'package:share/share.dart';
 
-class ModernCard extends StatelessWidget {
+class ModernCard extends StatefulWidget {
   final Map<String, dynamic> post;
 
-  const ModernCard({
-    Key? key,
-    required this.post,
-  }) : super(key: key);
+  const ModernCard({Key? key, required this.post}) : super(key: key);
+
+  @override
+  _ModernCardState createState() => _ModernCardState();
+}
+
+class _ModernCardState extends State<ModernCard> {
+  bool isBlurred = false;
+  int voteCount = 0; // State variable for vote count
+  bool hasVoted = false; // Flag to track whether the user has voted
+  VoteDirection voteDirection = VoteDirection.Up; // Default vote direction
+
+  @override
+  void initState() {
+    super.initState();
+    isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
+    voteCount = widget.post['votes'] ?? 0;
+    hasVoted = widget.post['hasVoted'] ?? false;
+  }
+
+void vote(VoteDirection direction) {
+    setState(() {
+      if (voteDirection == direction && hasVoted) {
+        // User clicks the same button, cancel the vote
+        voteCount -= direction == VoteDirection.Up ? 1 : -1;
+        hasVoted = false;
+        voteDirection = VoteDirection.Up; // Reset vote direction
+      } else {
+        // User clicks a different button or hasn't voted yet
+        if (hasVoted) {
+          // Cancel the previous vote
+          voteCount -= voteDirection == VoteDirection.Up ? 1 : -1;
+        }
+        // Apply the new vote
+        voteCount += direction == VoteDirection.Up ? 1 : -1;
+        hasVoted = true;
+        voteDirection = direction; // Update vote direction
+      }
+      // backend    
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool isBlurred = (post['nsfw'] || post['spoiler']);
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PostDetails(post: post),
+    return Column(
+      children: [
+        ListTile(
+          contentPadding: const EdgeInsets.all(16),
+          leading: widget.post['redditpic'] != null
+              ? CircleAvatar(
+                  backgroundImage: NetworkImage(widget.post['redditpic']),
+                )
+              : null,
+          title: Text(
+            widget.post['redditName'],
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          subtitle: Text(
+            widget.post['title'],
+            style: const TextStyle(fontSize: 20),
+          ),
+          trailing: widget.post['picture'] != null
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        widget.post['picture'],
+                        width: 100,
+                        height: 250,
+                        fit: BoxFit.cover,
+                      ),
+                      if (isBlurred)
+                        BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            color: Colors.transparent,
+                            width: 100,
+                            height: 250,
+                          ),
+                        ),
+                    ],
+                  ),
+                )
+              : null,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PostDetails(post: widget.post),
+              ),
+            );
+          },
+        ),
+        Row(
           children: [
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfilePage(
-                          user_Id: post['creatorId'].toString(),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 16,
-                        child: Icon(Icons.account_circle),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        post['redditName'],
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
+            if (widget.post['nsfw'])
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                margin: const EdgeInsets.only(top: 0, right: 0, left: 16),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Text(
+                  'NSFW',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Spacer(), // Added Spacer
-                IconButton(
-                  icon: const Icon(Icons.more_vert), // Menu icon
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: const Icon(Icons.bookmark), 
-                              title: const Text('Save'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.content_copy), 
-                              title: const Text('Copy text'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 2
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.call_split), 
-                              title: const Text('Crosspost to community'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.flag), 
-                              title: const Text('Report'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.person_off), 
-                              title: const Text('Block account'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.visibility_off), 
-                              title: const Text('Hide'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+              ),
+            if (widget.post['spoiler'])
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                margin: const EdgeInsets.only(top: 0, left: 16),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 137, 137, 137),
+                  borderRadius: BorderRadius.circular(4),
                 ),
-              ],
+                child: const Text(
+                  'Spoiler',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_upward,
+                  color: hasVoted && voteDirection == VoteDirection.Up
+                      ? Colors.green
+                      : null),
+              onPressed: () => vote(VoteDirection.Up), // Upvote
             ),
-            const SizedBox(height: 16),
             Text(
-              post['title'],
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              "${voteCount.abs()}",
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
+            IconButton(
+              icon: Icon(Icons.arrow_downward,
+                  color: hasVoted && voteDirection == VoteDirection.Down
+                      ? Colors.red
+                      : null),
+              onPressed: () => vote(VoteDirection.Down), // Downvote
+            ),
+            const SizedBox(width: 2),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (post['nsfw'])
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    margin: const EdgeInsets.only(top: 4, right: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'NSFW',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                if (post['spoiler'])
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 137, 137, 137),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'Spoiler',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            if (post['picture'] != null && post['picture']!.isNotEmpty)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.network(
-                      post['picture']!,
-                      width: double.infinity,
-                      height: 400,
-                      fit: BoxFit.cover,
-                      color: isBlurred
-                          ? const Color.fromARGB(0, 158, 158, 158)
-                          : null,
-                      colorBlendMode:
-                          isBlurred ? BlendMode.saturation : BlendMode.dst,
-                    ),
-                    if (isBlurred)
-                      BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Container(
-                          color:
-                              const Color.fromARGB(0, 0, 0, 0).withOpacity(0),
-                          width: double.infinity,
-                          height: 400,
-                        ),
-                      ),
-                  ],
+                const SizedBox(width: 4),
+                Text(
+                  widget.post['commentsNo'].toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: isBlurred ? Colors.white : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                post['description'],
-                style: TextStyle(
-                  fontSize: 16,
-                  color: isBlurred ? Colors.transparent : Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_upward),
-                      onPressed: () {},
-                    ),
-                    Text(
-                      "${post['votes']}",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.arrow_downward),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0, right: 4.0),
-                        child: Text(
-                          "${post['commentsNo']}",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const Icon(Icons.comment),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.share),
-                        onPressed: () {
-                          int postId = post['id'];
-                          String postUrl =
-                              'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                          Share.share('${post['title']}\n$postUrl');
-                        },
-                      ),
-                    ],
-                  ),
+                const Icon(Icons.comment),
+                IconButton(
+                  onPressed: () {
+                    int postId = widget.post['id'];
+                    String postUrl =
+                        'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
+                    Share.share('${widget.post['title']}\n$postUrl');
+                  },
+                  icon: const Icon(Icons.share),
                 ),
               ],
-            ),
-            Divider(
-              height: 1,
-              color: Colors.grey[300],
-              thickness: 1,
-              indent: 1,
-              endIndent: 1,
             ),
           ],
         ),
-      ),
+        Divider(
+          height: 1,
+          color: Colors.grey[300],
+          thickness: 1,
+          indent: 16,
+          endIndent: 16,
+        ),
+      ],
     );
   }
 }
