@@ -171,7 +171,6 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                                 onChange={setEnabled}
                                                 className={`${NSFW ? 'bg-blue-900' : 'bg-gray-300'}
                                                     relative inline-flex h-8 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
-                                                <span className="sr-only">Use setting</span>
                                                 <span
                                                     aria-hidden="true"
                                                     className={`${NSFW ? 'translate-x-4' : 'translate-x-0'}
