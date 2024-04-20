@@ -28,9 +28,7 @@ const Acount = () => {
   const disConnect=()=>{
     setConnect(!isdisConnect);
   }
-
-  const userEmail = userStore.getState().user.user.email;
-
+  const userEmail=userStore.getState().user.user.email
   return (
     <div className="w-[75%]" >
     
@@ -46,7 +44,7 @@ const Acount = () => {
             <div className='flex flex-col'>
               <p className=" font-semibold">Email address</p>
               <div className="text-xs text-gray-500">
-                <span>{userEmail}</span>
+                 <span> {userEmail}</span>
               </div>
             </div>
 

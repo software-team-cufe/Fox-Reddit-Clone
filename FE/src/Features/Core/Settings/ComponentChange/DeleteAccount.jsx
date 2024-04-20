@@ -1,21 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import { userAxios } from '../../../../Utils/UserAxios';
 const DeleteAccount = ({setDelete}) => {
-
-  const handleDelete=async()=>{
-    try{
-        const serverEndpoint = "/api/users/delete_user";
-   
-        await userAxios.delete(serverEndpoint);
-        console.log('User deleted successfully.');
-       } 
-
-      catch (error) {
-      console.error('Error deleting user:', error);
-    }
   
-  };
+
+  useEffect(()=>{
+    const handleDelete=async()=>{
+      try{
+          const serverEndpoint = "/api/users/delete_user";
+     
+          await userAxios.delete(serverEndpoint);
+          console.log('User deleted successfully.');
+         } 
+  
+        catch (error) {
+        console.error('Error deleting user:', error);
+      }
+    
+    };
+  },[])
+
   return (
       <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center '>
        
