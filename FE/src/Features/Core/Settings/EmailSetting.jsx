@@ -12,7 +12,8 @@ export default function EmailSetting() {
     {button2:"Username mentions"},
     {button2:"New followers"},];
     const Buttons3=[  {button3:"Daily Digest"},]
-    const Button4=[  {button4:"Unsubscribe from all emails"}]
+    const Button4=[  {button4:"Unsubscribe from all emails"}
+    ]
 
     const [disableButtons, setDisableButtons] = useState(false);
     const handleButton4Click = () => {
@@ -77,7 +78,8 @@ export default function EmailSetting() {
    
     ))
 
-    const buttonStle4=Button4.map(({button4},idx)=>(  <div className={`flex flex-row mb-7 justify-between ${disableButtons ? 'opacity-50' : ''}`} key={idx}>  
+    const buttonStle4=Button4.map(({button4},idx)=>( 
+         <div className={`flex flex-row mb-7 justify-between`} key={idx}>  
     <div>
           <p>
               {button4}
