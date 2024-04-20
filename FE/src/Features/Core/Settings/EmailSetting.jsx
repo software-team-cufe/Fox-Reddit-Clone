@@ -77,7 +77,7 @@ export default function EmailSetting() {
    
     ))
 
-    const buttonStle4=Button4.map(({button4},idx)=>(  <div className={`flex flex-row mb-7 justify-between ${disableButtons ? 'opacity-50' : ''}`} key={idx}>  
+    const buttonStle4=Button4.map(({button4},idx)=>(  <div className={`flex flex-row mb-7 justify-between '}`} key={idx}>  
     <div>
           <p>
               {button4}

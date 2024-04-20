@@ -3,31 +3,37 @@ import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, Mess
 import { Link } from "react-router-dom";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ImageGallery from "react-image-gallery";
-export default function PostComponent({role, post, className, viewMode = false }) {
+export default function PostComponent({ role, post, className, viewMode = false }) {
     const images = [post.thumbnail, ...post.images];
 
 
     return (
         <div role={role} className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
+            
             {
-                !viewMode ? <Link to={`/posts/${post.id}`}>
-                    <div>
-                        <div className="mb-4 flex items-center gap-4">
-                            <img src={post.subReddit?.image} alt="image" className="w-9 h-9 rounded-full" />
-                            <h5 className=" text-sm ">{post.subReddit?.title}</h5>
-                        </div>
-                    </div>
-                    <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
-                    <p className=" text-gray-600 text-sm">{post.description} </p>
-                    <div
+                !viewMode ? 
+                    <Link to={`/posts/${post.id}`}>
+                        <div>
+                            <div className="mb-4 flex items-center gap-4">
+                                <img src={post.subReddit?.image} alt="image" className="w-9 h-9 rounded-full" />
+                                <h5 className=" text-sm ">{post.subReddit?.title}</h5>
+                            </div>
 
-                        className=" rounded-lg my-4 w-full bg-gray-600">
-                        <img
-                            className="mx-auto max-h-[600px] lg:max-w-[800px] w-full rounded-lg my-4"
-                            alt=""
-                            src={post.thumbnail} />
-                    </div>
-                </Link> :
+                        </div>
+                        <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
+                        <p className=" text-gray-600 text-sm">{post.description} </p>
+                        <div
+
+                            className=" rounded-lg my-4 w-full bg-gray-600">
+                            <img
+                                style={{ filter: !!post.spoiler ? 'blur(10px)' : "" }}
+                                className="mx-auto max-h-[600px] lg:max-w-[800px] w-full rounded-lg my-4"
+                                alt=""
+                                src={post.thumbnail} />
+                        </div>
+                        
+                    </Link>:
+
                     <div>
 
                         <h2 className="mb-2 text-xl font-bold">{post.title} </h2>
@@ -59,6 +65,7 @@ export default function PostComponent({role, post, className, viewMode = false }
                                 <video src={post.video} controls />
                             </div>
                         }
+                        
                     </div>
             }
 

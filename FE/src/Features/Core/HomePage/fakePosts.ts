@@ -13,6 +13,7 @@ interface Post {
     images: string[],
     thumbnail?: string,
     video?: string,
+    spoiler?: boolean;
 }
 export const fakePosts: Post[] = [
     {
@@ -32,7 +33,7 @@ export const fakePosts: Post[] = [
             'https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg',
             'https://science.nasa.gov/wp-content/uploads/2023/06/webb-flickr-52259221868-30e1c78f0c-4k-jpg.webp',
         ],
-        
+
     },
     {
         id: "2",
@@ -46,6 +47,7 @@ export const fakePosts: Post[] = [
         links: "Links 2",
         comments: 20,
         votes: 20,
+        spoiler: true,
         images: [],
         thumbnail: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
         video: 'https://file-examples.com/storage/fe1b802e1565fe057a1d758/2017/04/file_example_MP4_640_3MG.mp4',
