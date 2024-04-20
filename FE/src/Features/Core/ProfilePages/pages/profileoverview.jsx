@@ -169,8 +169,8 @@ export default function ProfileOverview({ using, context }) {
             ) : (
                 <>
                     {/*no results view*/}
-                    <img src={'/confusedSnoo.png'} className="w-16 h-24 mb-2" alt="Confused Snoo"></img>
-                    <p className="text-lg font-bold">u/{using} has no posts yet</p>
+                    <img src={'/confusedSnoo.png'} className="w-16 h-24 mb-2 mx-auto" alt="Confused Snoo"></img>
+                    <p className="text-lg font-bold mx-auto">u/{using} has no posts yet</p>
                 </>
             )}
         </div>

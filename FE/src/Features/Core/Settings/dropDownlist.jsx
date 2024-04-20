@@ -104,11 +104,11 @@ export default function Dropdown(){
                 bg-transparent dark:bg-transparent mb-2" // Added mb-2 for a small gap
                 type="button">
                     {/** `${changeButtonVal(obj,true)}`*/}
-                    <span>{`${item}`}</span>
+                    {`${item}`}
                     {!open ? <AiOutlineDown/> : <AiOutlineUp/>} 
             </button>
             {open && (
-               <div className="relative mr-2 text-blue-500 z-60 dark:text-blue-500 w-auto font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+               <div className="relative mr-2 text-blue-500 z-60 dark:text-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
                items-center bg-transparent dark:bg-transparent rounded-3xl inline-block">
                    <ul className="">
                         <li onClick={()=>setItem("Hot")} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2"><Flame /><span>Hot</span></li>
