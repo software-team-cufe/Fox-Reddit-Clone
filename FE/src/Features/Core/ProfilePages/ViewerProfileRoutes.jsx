@@ -94,7 +94,7 @@ function Layout() {
         <BackToTop />
         <div role="avatarHeader" className='relative flex mb-8'>
           <img src={avatar} className='p-1 w-20 h-24 rounded-full z-0' alt=""></img>
-          <span className='text-black font-bold text-2xl absolute top-10 left-24'>u/{viewer}</span>
+          <span className='text-black font-bold text-2xl absolute top-10 left-24'>{viewer}</span>
           <span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/{viewer}</span>
         </div>
 
