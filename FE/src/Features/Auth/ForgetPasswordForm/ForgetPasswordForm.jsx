@@ -57,7 +57,7 @@ export default function ForgetPasswordForm() {
 
     setLoading(true);
     try {
-      const res = await userAxios.get(`api/users/resetpassword?token=${token}`, obj);
+      const res = await userAxios.post(`api/users/resetpassword?token=${token}`, obj);
       nav('/login');
       setLoading(false);
     } catch (ex) {
@@ -70,7 +70,7 @@ export default function ForgetPasswordForm() {
       <form onSubmit={resetPassword} id="forgetPassword" className=" max-w-[400px] border shadow p-6 rounded-lg">
         <h2 className="mb-3 text-xl font-bold">Reset your password`</h2>
         <TextBox name={"password"} className="mb-6 mt-4" placeholder="Password" />
-        <TextBox name={"confirmedNewPassword"} className="mb-6 mt-4" placeholder="Confirm Password" />
+        <TextBox name={"passwordConfirmation"} className="mb-6 mt-4" placeholder="Confirm Password" />
         <div className="flex items-center gap-3 my-4 ">
           <Link className="text-blue-700 underline text-sm" to={`/register`}>
             Sign Up
