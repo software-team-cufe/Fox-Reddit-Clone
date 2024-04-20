@@ -23,7 +23,6 @@ export default function ProfileUpvoted({using}) {
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-<<<<<<< HEAD
     const [currentpage,setcurrentpage] = useState(1);
     const limitpage = 5;
     
@@ -36,18 +35,6 @@ export default function ProfileUpvoted({using}) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.upvotedPosts.map(post => ({
-=======
-    const [currentpage,setcurrentpage] = useState(0);
-    const limitpage = 2;
-    
-    //fetch posts on load and put into posts array
-    const fetchInitialPosts = () => {
-        setcurrentpage(1);
-        setload(true);
-        userAxios.get(`user/boudie_test/upvoted?page=1&count=${limitpage}&limit=${limitpage}`)
-            .then(response => {
-                const newPosts = response.data.posts.map(post => ({
->>>>>>> origin/newnew-nadine
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
@@ -76,21 +63,12 @@ export default function ProfileUpvoted({using}) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-<<<<<<< HEAD
         userAxios.get(`api/user/me/upvoted/${selected.toLowerCase()}?page=${currentpage}&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
                 if(response.data. upvotedPosts.length <limitpage){
                     setpagedone(true);
                 }
                 const newPosts = response.data.upvotedPosts.map(post => ({
-=======
-        userAxios.get(`/user/boudie_test/upvoted?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
-            .then(response => {
-                if(response.data.posts.length <limitpage){
-                    setpagedone(true);
-                }
-                const newPosts = response.data.posts.map(post => ({
->>>>>>> origin/newnew-nadine
                     subReddit: {
                         image: post.attachments.subredditIcon,
                         title: post.communityName,
@@ -119,13 +97,8 @@ export default function ProfileUpvoted({using}) {
 
     if (loading) {
         return (
-<<<<<<< HEAD
             <div role='poststab' className="w-100 h-100 flex p-10 flex-col items-center justify-center">
                <img src={'/logo.png'} className="h-12 w-12 z-10 mt-24 mx-auto animate-ping" alt="Logo" />
-=======
-            <div role='poststab' className="w-100 h-100 flex flex-col items-center justify-center">
-               <img src={'/logo.png'} className="h-10 w-10 mt-24 mx-auto animate-ping" alt="Logo" />
->>>>>>> origin/newnew-nadine
             </div>
         )
     }
@@ -146,11 +119,7 @@ export default function ProfileUpvoted({using}) {
                     {Posts.map((post, index) => (
                         <PostComponent key={index} post={post} />
                     ))}
-<<<<<<< HEAD
                     {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
-=======
-                    {!pagedone && !callingposts && (<button ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
->>>>>>> origin/newnew-nadine
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}                </>
             ) : (
                 <>

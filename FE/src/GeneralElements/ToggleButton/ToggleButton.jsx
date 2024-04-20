@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-<<<<<<< HEAD
 /**
  * A toggle button component.
  *
@@ -13,21 +12,11 @@ function ToggleButton({ onToggle }) {
     /**
      * Handles the toggle button click event.
      */
-=======
-function ToggleButton({ onToggle }) {
-    
-    const[trueFalse,setTrueFalse]=useState(true);
->>>>>>> origin/newnew-nadine
     const handleToggle = () => {
         const newState = !trueFalse;
         setTrueFalse(newState);
         onToggle(newState); // Call the callback function with the new state
     };
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> origin/newnew-nadine
     return (
         <div>
             <label className="relative inline-flex cursor-pointer items-center">

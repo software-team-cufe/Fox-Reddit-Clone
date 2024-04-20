@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 /**
  * SearchComponent is a React component that provides a search input field with a dropdown selector.
@@ -10,8 +9,6 @@
  *   <SearchComponent />
  * )
  */
-=======
->>>>>>> origin/newnew-nadine
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
@@ -51,11 +48,7 @@ const SearchComponent = () => {
         setSelected(value);
         setSearch("");
         sethideit(true);
-<<<<<<< HEAD
         navigator(`/search/${value}/posts`);
-=======
-        navigator(`/search/${value}`);
->>>>>>> origin/newnew-nadine
     };
 
     const handlechange = (comingvalue) => {
