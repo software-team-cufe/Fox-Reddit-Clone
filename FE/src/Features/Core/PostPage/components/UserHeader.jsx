@@ -3,7 +3,6 @@ import { ArrowLeft, Edit, EllipsisVertical, EyeOff, Flag, Lock, Pocket, Trash } 
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from '@headlessui/react';
-import { Bell, BellRing, BellOff } from "lucide-react";
 import { Fragment } from "react";
 import { userStore } from "../../../../hooks/UserRedux/UserStore";
 export default function UserHeader({ post }) {

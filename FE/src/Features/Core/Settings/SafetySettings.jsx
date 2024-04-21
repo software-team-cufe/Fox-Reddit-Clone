@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { userAxios } from "@/Utils/UserAxios";
+import { responsiveFontSizes } from "@mui/material";
 
 function SafetySettings() {
     const [FocusBlock, setFocusBlock] = useState(false);
@@ -13,16 +16,44 @@ function SafetySettings() {
     const [Blocked, setBlocked] = useState([]);
     //To do add of both fields
 
-    const handleAddBlock = () => {//To do
+    const handleAddBlock = async () => {
+        const val = idfromname(BlockValue);
+        if (val != null) {
+            try {
+                const res = await axios.get(`http://localhost:3002/users/${val}`);
+                setBlocked(prevBlocked => [...prevBlocked, { avatar: res.data.avatar, name: res.data.name }]);
+
+
+            } catch (ex) {
+                console.error(ex);
+                if (ex.issues != null && ex.issues.length != 0) {
+                    toast.error(ex.issues[0].message);
+                }
+            }
+        }
     }
     const handleAddMute = () => {//To do
     }
 
     useEffect(() => {
-        // fetchMock();
-
+        fetchMock();
+        // fetchBlock();
     }, [])
-
+    const idfromname = (name) => {
+        axios.get(`http://localhost:3002/users`)
+            .then(response => {
+                console.log(name)
+                response.data.map(user => {
+                    console.log(user.name)
+                    if (user.name == name) {
+                        return user.id;
+                    }
+                })
+                console.log("user not found");
+                return null;
+            })
+            .catch(err => console.error(err));
+    }
     // const fetchBlock = async () => {
     //     try {
     //         const res = await userAxios.get('/api/v1/me/blocked');
@@ -36,9 +67,10 @@ function SafetySettings() {
     const fetchMock = async () => {
         try {
             const res = await axios.get('http://localhost:3002/users/1');
-            console.log(res.data);
-
+            setBlocked(res.data.blocked);
+            setMutedCom(res.data.Muted);
         } catch (ex) {
+            console.error(ex);
             if (ex.issues != null && ex.issues.length != 0) {
                 toast.error(ex.issues[0].message);
             }
@@ -64,6 +96,10 @@ function SafetySettings() {
         setMuteValue(event.target.value);
 
     }
+    const addToBlocked = (avatar, name) => {
+        setBlocked(prevBlocked => [...prevBlocked, { avatar, name }]);
+    };
+
     return (
 
 
@@ -99,6 +135,13 @@ function SafetySettings() {
                     </button>
 
                 </div>
+                {Blocked.map((block, index) => (
+                    <div className='w-full flex my-2' key={block.name}>
+                        <img src={block.avatar} alt={block.name} className="w-10 h-10" />
+                        <p className="pt-3 text-sm">{block.name}</p>
+                        <button className="font-bold text-sm  text-gray-500 hover:text-blue-600 pb-1 ml-60">Remove</button>
+                    </div>
+                ))}
 
                 <h2 className=' text-base'>Communities You've Muted</h2>
                 <div className='text-xs  text-gray-500'>Posts from muted communities won't show up in your feeds or recommendations.
@@ -122,6 +165,13 @@ function SafetySettings() {
                         </button>
 
                     </div>
+                    {MutedCom.map((mute, index) => (
+                        <div className='w-full flex my-2' key={mute.name}>
+                            <img src={mute.icon} alt={mute.name} className="w-10 h-10" />
+                            <p className="pt-3 text-black text-sm">{mute.name}</p>
+                            <button className="font-bold text-gray-500 text-sm hover:text-blue-600 pb-1 ml-60">Remove</button>
+                        </div>
+                    ))}
                 </div>
             </div>
 

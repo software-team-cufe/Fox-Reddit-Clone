@@ -47,7 +47,8 @@ export default function ProfileHidden({ using }) {
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
-                    hidden: true
+                    hidden: true,
+                    spoiler: post.spoiler,
                 }));
                 setPosts(newPosts);
                 setLoading(false);
@@ -55,11 +56,11 @@ export default function ProfileHidden({ using }) {
             })
             .catch(error => {
                 console.error('Error:', error);
-                setLoading(false); 
+                setLoading(false);
             });
     };
 
-    const {error: postsError } = useQuery(['fetchInitialProfileHidden', selected, period],fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
+    const { error: postsError } = useQuery(['fetchInitialProfileHidden', selected, period], fetchInitialPosts, { retry: 0, refetchOnWindowFocus: false });
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
@@ -82,7 +83,9 @@ export default function ProfileHidden({ using }) {
                         comments: post.commentsCount,
                         thumbnail: post.thumbnail,
                         video: null,
-                        hidden: true
+                        hidden: true,
+
+                        spoiler: post.spoiler,
                     }));
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
