@@ -1,14 +1,23 @@
 {
   "users": [
     {
-      "name": "user1",
+      "name": "test",
       "id": "1",
-      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
-      "about": "Hi, I'm user1. I love hiking, reading books, and playing the guitar in my free time.",
+      "avatar":  "https://demo.sirv.com/nuphar.jpg?w=400",
+      "about": "Hi, I'm a user. I love hiking, reading books, and playing the guitar in my free time. New from browser",
       "totalKarma": 2424,
       "isModerator": true,
       "blur": true,
-      "autoPlayVideos": true
+      "autoPlayVideos": true,
+      "comV": false,
+      "conV": false,
+      "BannerImage":  "https://demo.sirv.com/nuphar.jpg?w=400",
+       "nsfw": false,
+      "allowFollow": false,
+      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
+      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
     },
     {
       "name": "user2",
@@ -18,7 +27,16 @@
       "totalKarma": 5342,
       "isModerator": false,
       "blur": true,
-      "autoPlayVideos": false
+      "autoPlayVideos": false,
+      "comV": true,
+      "conV": true,
+      "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
+      "nsfw": false,
+      "allowFollow": true,
+      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
+      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
     },
     {
       "name": "user3",
@@ -28,7 +46,16 @@
       "totalKarma": 1234,
       "isModerator": true,
       "blur": true,
-      "autoPlayVideos": true
+      "autoPlayVideos": true,
+      "comV": true,
+      "conV": true,
+      "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
+      "nsfw": false,
+      "allowFollow": true,
+      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
+      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
     },
     {
       "name": "user4",
@@ -38,7 +65,16 @@
       "totalKarma": 2345,
       "isModerator": false,
       "blur": true,
-      "autoPlayVideos": false
+      "autoPlayVideos": false,
+      "comV": true,
+      "conV": true,
+      "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
+      "nsfw": false,
+      "allowFollow": true,
+      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
+      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
     },
     {
       "name": "user5",
@@ -48,7 +84,16 @@
       "totalKarma": 434,
       "isModerator": true,
       "blur": true,
-      "autoPlayVideos": true
+      "autoPlayVideos": true,
+      "comV": true,
+      "conV": true,
+      "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
+      "nsfw": false,
+      "allowFollow": true,
+      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
+      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
+      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
     }
   ],
   "communities": [

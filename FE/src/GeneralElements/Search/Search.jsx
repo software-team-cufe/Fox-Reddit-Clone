@@ -39,7 +39,7 @@ const SearchComponent = () => {
 
     useEffect(() => {
         const timer = setTimeout(goSearch, 200);
-        console.log(showSelector)
+        // console.log(showSelector)
         return () => clearTimeout(timer);
 
     }, [search]);

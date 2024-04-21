@@ -9,6 +9,8 @@ function SafetySettings() {
     const [EnableAddMute, setEnableAddMute] = useState(true);
     const [isFocusedB, setIsFocusedB] = useState("border-gray-400");
     const [isFocusedM, setIsFocusedM] = useState("border-gray-400");
+    const [MutedCom, setMutedCom] = useState([]);
+    const [Blocked, setBlocked] = useState([]);
     //To do add of both fields
 
     const handleAddBlock = () => {//To do
@@ -16,18 +18,42 @@ function SafetySettings() {
     const handleAddMute = () => {//To do
     }
 
+    useEffect(() => {
+        // fetchMock();
 
+    }, [])
 
+    // const fetchBlock = async () => {
+    //     try {
+    //         const res = await userAxios.get('/api/v1/me/blocked');
+    //         console.log(res.data);
+    //     } catch (ex) {
+    //         if (ex.issues != null && ex.issues.length != 0) {
+    //             toast.error(ex.issues[0].message);
+    //         }
+    //     }
+    // }
+    const fetchMock = async () => {
+        try {
+            const res = await axios.get('http://localhost:3002/users/1');
+            console.log(res.data);
+
+        } catch (ex) {
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
+    }
 
     useEffect(() => {
-        if (BlockValue.startsWith("u/") || BlockValue.startsWith("r/"))
-            setEnableAddBlock(false);
-        else setEnableAddBlock(true);
+        if (BlockValue.length === 0)
+            setEnableAddBlock(true);
+        else setEnableAddBlock(false);
     }, [BlockValue])
     useEffect(() => {
-        if (MuteValue.startsWith("u/") || MuteValue.startsWith("r/"))
-            setEnableAddMute(false);
-        else setEnableAddMute(true);
+        if (MuteValue.length === 0)
+            setEnableAddMute(true);
+        else setEnableAddMute(false);
     }, [MuteValue])
 
     const handleBlockInputValue = (event) => {
@@ -44,18 +70,22 @@ function SafetySettings() {
         <div>
             <div className="w-[75%]">
                 <h1 className='font-bold my-4 text-xl'>Safety & Privacy</h1>
-                <div className='text-xs mb-6 text-gray-500'><div className='text-xs  text-gray-500'>Manage how we use data to personalize your Fox experience, and control how other users interact with you.</div></div>
+                <div className='text-xs mb-6 text-gray-500'><div className='text-xs
+                  text-gray-500'>Manage how we use data to personalize your Fox experience,
+                    and control how other users interact with you.</div></div>
                 <div className='text-xs  text-gray-500'>SAFETY</div>
                 <hr className='mb-6' />
 
                 <h2 className=' text-base'>People You’ve Blocked</h2>
-                <div className='text-xs  text-gray-500'>Blocked people can’t send you chat requests or private messages.</div>
+                <div className='text-xs  text-gray-500'>Blocked people can’t send you chat requests
+                    or private messages.</div>
 
                 <div onFocus={() => { setFocusBlock(true); setIsFocusedB("border-blue-500"); }}
                     onBlur={() => { if (BlockValue.length === 0) setFocusBlock(false); setIsFocusedB("border-gray-400"); }}
                     className={`relative h-12 flex  border p-1 my-4  focus:border  rounded-md  ${isFocusedB}`}>
                     <label htmlFor="BlockIn" className="hidden"></label>
-                    <input role="BlockIn"
+                    <input id="BlockIn"
+                        role="BlockIn"
                         value={BlockValue}
                         onChange={handleBlockInputValue}
                         onFocus={() => { setFocusBlock(true); }}
@@ -76,13 +106,15 @@ function SafetySettings() {
                         onBlur={() => { if (MuteValue.length === 0) setFocusMute(false); setIsFocusedM("border-gray-400"); }}
                         className={`relative h-12 flex border  p-1 my-4 rounded-md  ${isFocusedM}`}>
                         <label htmlFor="MuteIn" className="hidden"></label>
-                        <input role="MuteIn"
+                        <input id="MuteIn"
+                            role="MuteIn"
                             value={MuteValue}
                             onChange={handleMuteInputValue}
                             onFocus={() => { setFocusMute(true); }}
                             onBlur={() => { if (MuteValue.length === 0) setFocusMute(false); }}
                             className="w-full text-black text-sm px-2 py-1 focus:outline-none" type="text" />
-                        <label className={`absolute text-gray-400 text-xs left-2 ${FocusMute ? "top-0" : "top-4"} `}>Mute New Community</label>
+                        <label className={`absolute text-gray-400 text-xs left-2 ${FocusMute ?
+                            "top-0" : "top-4"} `}>Mute New Community</label>
                         <button onClick={handleAddMute}
                             disabled={EnableAddMute}
                             className="  disabled:text-gray-400 text-base text-orange-600 font-bold px-4 py-1 rounded-r-md">

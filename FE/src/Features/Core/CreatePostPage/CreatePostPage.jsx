@@ -5,6 +5,7 @@ import "./QuillStyle.css"
 // import { userStore } from "@/hooks/UserRedux/UserStore";
 import { toast } from 'react-toastify'
 import { userAxios } from "@/Utils/UserAxios";
+import 'react-toastify/dist/ReactToastify.css';
 
 function CreatePostPage(props) {
     const [SelectedCom, setSelectedCom] = useState({ name: "Choose Community", id: "-1" }); //
@@ -60,11 +61,13 @@ function CreatePostPage(props) {
         userAxios.post('api/submit', NewPost)
             .then((res) => {
                 //Go to Post page
-                console.log(res.data);
-                // if (res)
+                console.log(res);
+                // if (res.statusText === "Created")
                 //     toast.success("Post created successfully\u{1F60A}", {
-                //         position: toast.POSITION.CENTER
+                //          position: toast.POSITION.BOTTOM_CENTER
                 //     });
+                toast.success("Post created successfully \u{1F60A}");
+
             })
             .catch((ex) => {
                 if (ex.issues != null && ex.issues.length != 0) {
@@ -151,7 +154,7 @@ function CreatePostPage(props) {
                     </div>
                 </div>
             </div >
-        // </div >
+            .</div >
     )
 }
 
