@@ -7,12 +7,11 @@
  * The component is wrapped in a CommunityProvider component that provides the selected sorting and period values.
  * @file FILEPATH
  */
-import React, { useContext, createContext, useEffect, useState, useRef } from "react";
+import React, { useContext, createContext, useState, useRef } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Spinner from '@/GeneralElements/Spinner/Spinner';
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { Plus } from 'lucide-react';
 import bellMenu from "./accessories/bellmenu";
