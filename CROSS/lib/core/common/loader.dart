@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Loader extends StatelessWidget{
+/// A widget displaying a loader with a circular progress indicator in the center.
+class Loader extends StatelessWidget {
+  /// Constructs a [Loader] widget.
   const Loader({super.key});
 
   @override

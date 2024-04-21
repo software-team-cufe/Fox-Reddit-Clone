@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:reddit_fox/Pages/messages.dart';
 import 'package:reddit_fox/api/firebase_api.dart';
 import 'package:reddit_fox/core/common/error_text.dart';
 import 'package:reddit_fox/core/common/loader.dart';
@@ -15,6 +16,8 @@ import 'package:reddit_fox/firebase_options.dart';
 import 'package:reddit_fox/models/user_model.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,6 +85,9 @@ class _MyAppState extends ConsumerState<MyApp> {
             home: (access_token == null)
                 ? const StartingScreen()
                 : const HomePage(),
+            routes: {
+              Message.route: (context) => const Message()
+            },
 //      locale: DevicePreview.locale(context),
             //    builder: DevicePreview.appBuilder,
           ),

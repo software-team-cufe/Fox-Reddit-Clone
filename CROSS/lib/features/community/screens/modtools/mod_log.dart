@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// A screen for displaying moderator logs.
 class ModLogScreen extends StatelessWidget {
+  /// Constructor for the ModLogScreen.
   const ModLogScreen({super.key});
 
   @override

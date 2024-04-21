@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+/// A screen for editing user description.
 class DescriptionScreen extends StatefulWidget {
-  const DescriptionScreen({Key? key}) : super(key: key);
+  /// Constructor for the DescriptionScreen.
+  const DescriptionScreen({super.key});
 
   @override
   _DescriptionScreenState createState() => _DescriptionScreenState();
@@ -12,6 +14,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   TextEditingController _descriptionController = TextEditingController();
   String _description = '';
 
+  /// Updates the user's bio with the provided [newBio].
   Future<void> updateBio(String newBio) async {
     try {
       final response = await http.put(

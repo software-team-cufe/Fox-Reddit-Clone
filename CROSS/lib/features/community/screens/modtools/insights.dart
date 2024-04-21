@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// A screen for displaying insights.
 class InsightsScreen extends StatelessWidget {
+  /// Constructor for the InsightsScreen.
   const InsightsScreen({super.key});
 
   @override

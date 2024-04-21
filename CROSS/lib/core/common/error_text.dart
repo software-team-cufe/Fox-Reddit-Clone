@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 
+/// A widget for displaying error text in a centered position.
 class ErrorText extends StatelessWidget {
-  final String error; 
+  /// Constructs an [ErrorText] widget.
+  ///
+  /// [error] is the error message to be displayed.
   const ErrorText({
-    super.key, required this.error, 
+    super.key,
+    required this.error,
   });
 
-  @override 
-  Widget build(BuildContext  context) {
+  /// The error message to be displayed.
+  final String error;
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
-      child: Text(error), 
+      child: Text(error),
     );
   }
 }

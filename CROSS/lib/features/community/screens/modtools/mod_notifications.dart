@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// A screen for managing moderator notifications.
 class ModNotificationsScreen extends StatefulWidget {
-  const ModNotificationsScreen({super.key});
+  /// Constructor for the ModNotificationsScreen.
+  const ModNotificationsScreen({Key? key}) : super(key: key);
 
   @override
   _ModNotificationsScreenState createState() => _ModNotificationsScreenState();

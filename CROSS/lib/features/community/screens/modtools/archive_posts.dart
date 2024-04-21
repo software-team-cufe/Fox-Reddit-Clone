@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// A screen widget for enabling or disabling archive functionality for posts.
 class ArchivePostsScreen extends StatefulWidget {
-  const ArchivePostsScreen({super.key});
+  /// Constructor for the ArchivePostsScreen.
+  const ArchivePostsScreen({Key? key}) : super(key: key);
 
   @override
   _ArchivePostsScreenState createState() => _ArchivePostsScreenState();

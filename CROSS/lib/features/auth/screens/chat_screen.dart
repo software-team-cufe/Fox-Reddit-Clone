@@ -9,6 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:http/http.dart' as http;
 
+/// The main application widget.
+///
+/// This widget initializes the chat screen.
+/// The main chat screen widget.
+///
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -18,6 +24,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// This widget displays the main chat screen with channels and options for users.
+/// Fetches the user's profile picture from the backend.
+///
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.title});
 
@@ -45,6 +54,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
 
+/// This method sends a request to the backend to fetch the user's profile picture
+/// based on the provided access token.
   Future<String> fetchUserProfilePic(String accessToken) async {
     var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
     var response = await http.get(

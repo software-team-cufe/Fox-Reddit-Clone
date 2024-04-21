@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
 
 class Message extends StatefulWidget {
   const Message({super.key});
+  static const route = '/message-screen';
 
   @override
   _MessageState createState() => _MessageState();
@@ -79,6 +80,7 @@ class _MessageState extends State<Message> {
 
   @override
   Widget build(BuildContext context) {
+        final message = ModalRoute.of(context)!.settings.arguments;
     double drawerWidth = MediaQuery.of(context).size.width * 0.8;
     double userWidth = MediaQuery.of(context).size.width * 0.7;
     return Scaffold(

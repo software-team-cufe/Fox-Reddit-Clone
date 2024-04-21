@@ -1,9 +1,38 @@
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+/// A custom text box widget with various input options and styling.
 class CustomTextBox extends StatelessWidget {
+  /// Constructs a [CustomTextBox] widget.
+  ///
+  /// [hintText] is the text displayed when the input field is empty.
+  /// [controller] is the controller for the text field.
+  /// [isPassword] specifies whether the input is a password field.
+  /// [icon] is the icon displayed as a prefix to the input field.
+  /// [onChanged] is the callback function invoked when the text changes.
+  /// [showEyeIcon] specifies whether to show an eye icon for toggling password visibility.
+  /// [onChangeVisability] is the callback function invoked when toggling password visibility.
+  /// [initialValue] is the initial value of the text field.
+  /// [title] is the title displayed above the text field.
+  /// [errorText] is the error text displayed below the text field.
+  /// [textAlign] is the alignment of the text within the text field.
+  /// [letterSpacing] is the spacing between characters in the text field.
+  /// [isNumber] specifies whether the input should accept only numbers.
+  /// [maxLength] is the maximum length of the input.
+  /// [backgroundColor] is the background color of the text field.
+  /// [validator] is the validation function for the text field.
+  /// [focusNode] is the focus node for controlling the focus of the text field.
+  /// [onFieldSubmitted] is the callback function invoked when submitting the text field.
+  /// [maxLines] is the maximum number of lines for the input.
+  /// [borderRadius] is the border radius of the text field container.
+  /// [isDecimal] specifies whether the input should accept decimal numbers.
+  /// [englishOnly] specifies whether the input should accept only English characters.
+  /// [suffixIcon] is the icon displayed as a suffix to the input field.
+  /// [spaces] specifies whether spaces are allowed in the input.
+  /// [isEmail] specifies whether the input should accept email addresses.
+  /// [isPasswordInput] specifies whether the input should be treated as a password.
+  /// [textDirection] is the text direction of the text field.
   const CustomTextBox({
     super.key,
     this.hintText,
@@ -34,6 +63,7 @@ class CustomTextBox extends StatelessWidget {
     this.isPasswordInput,
     this.textDirection,
   });
+
   final TextDirection? textDirection;
   final FocusNode? focusNode;
   final Function(String)? onFieldSubmitted;
@@ -43,7 +73,6 @@ class CustomTextBox extends StatelessWidget {
   final TextEditingController? controller;
   final bool? isPassword;
   final bool? isDecimal;
-
   final IconData? icon;
   final Function(String)? onChanged;
   final bool? showEyeIcon;
@@ -62,6 +91,7 @@ class CustomTextBox extends StatelessWidget {
   final String? Function(String?)? validator;
   final double? borderRadius;
   final Widget? suffixIcon;
+
   @override
   Widget build(BuildContext context) {
     return Container(

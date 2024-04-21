@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// A screen for configuring discovery settings.
 class DiscoveryScreen extends StatefulWidget {
+  /// Constructor for the DiscoveryScreen.
   const DiscoveryScreen({super.key});
 
   @override

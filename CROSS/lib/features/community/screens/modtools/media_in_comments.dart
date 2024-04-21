@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// A screen for configuring media options in comments.
 class MediaInCommentsScreen extends StatefulWidget {
+  /// Constructor for the MediaInCommentsScreen.
   const MediaInCommentsScreen({super.key});
 
   @override
@@ -8,10 +10,10 @@ class MediaInCommentsScreen extends StatefulWidget {
 }
 
 class _MediaInCommentsScreenState extends State<MediaInCommentsScreen> {
-  bool showGiphy = false;
-  bool showImages = false;
-  bool showGifs = false;
-  bool showCollectibleExpressions = false;
+  bool _showGiphy = false;
+  bool _showImages = false;
+  bool _showGifs = false;
+  bool _showCollectibleExpressions = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +27,10 @@ class _MediaInCommentsScreenState extends State<MediaInCommentsScreen> {
           ListTile(
             title: const Text('Show GIFs from GIPHY'),
             trailing: Switch(
-              value: showGiphy,
+              value: _showGiphy,
               onChanged: (value) {
                 setState(() {
-                  showGiphy = value;
+                  _showGiphy = value;
                 });
               },
             ),
@@ -36,10 +38,10 @@ class _MediaInCommentsScreenState extends State<MediaInCommentsScreen> {
           ListTile(
             title: const Text('Show Images'),
             trailing: Switch(
-              value: showImages,
+              value: _showImages,
               onChanged: (value) {
                 setState(() {
-                  showImages = value;
+                  _showImages = value;
                 });
               },
             ),
@@ -47,10 +49,10 @@ class _MediaInCommentsScreenState extends State<MediaInCommentsScreen> {
           ListTile(
             title: const Text('Show GIFs'),
             trailing: Switch(
-              value: showGifs,
+              value: _showGifs,
               onChanged: (value) {
                 setState(() {
-                  showGifs = value;
+                  _showGifs = value;
                 });
               },
             ),
@@ -58,10 +60,10 @@ class _MediaInCommentsScreenState extends State<MediaInCommentsScreen> {
           ListTile(
             title: const Text('Show Collectible Expressions'),
             trailing: Switch(
-              value: showCollectibleExpressions,
+              value: _showCollectibleExpressions,
               onChanged: (value) {
                 setState(() {
-                  showCollectibleExpressions = value;
+                  _showCollectibleExpressions = value;
                 });
               },
             ),
