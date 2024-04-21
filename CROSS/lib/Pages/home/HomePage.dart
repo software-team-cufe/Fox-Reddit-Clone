@@ -96,131 +96,190 @@ class _HomePageState extends State<HomePage> {
             },
           );
         }),
-        actions: [
-          IconButton(
-            icon: isModernCard
-                ? const Icon(Icons.view_agenda)
-                : const Icon(Icons.view_carousel),
-            onPressed: () {
-              setState(() {
-                isModernCard =
-                    !isModernCard; // Toggle between ModernCard and ClassicCard
-              });
-            },
-          ),
-          IconButton(
-            icon: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              child: Image.asset(
-                'assets/Icons/filter.png',
-                width: 24,
-                height: 24,
-              ),
-            ),
-            onPressed: () {
-              final RenderBox overlay =
-                  Overlay.of(context).context.findRenderObject()! as RenderBox;
-              final buttonPosition = overlay.localToGlobal(Offset.zero);
-              const buttonWidth = 24.0; // Adjust the width as needed
+        actions: _selectedItem == "Home"
+            ? [
+                IconButton(
+                  icon: isModernCard
+                      ? const Icon(Icons.view_agenda)
+                      : const Icon(Icons.view_carousel),
+                  onPressed: () {
+                    setState(() {
+                      isModernCard = !isModernCard;
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: Image.asset(
+                      'assets/Icons/filter.png',
+                      width: 24,
+                      height: 24,
+                    ),
+                  ),
+                  onPressed: () {
+                    final RenderBox overlay =
+                        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+                    final buttonPosition = overlay.localToGlobal(Offset.zero);
+                    const buttonWidth = 24.0;
+                    final screenSize = MediaQuery.of(context).size;
+                    final appBarHeight = AppBar().preferredSize.height;
+                    final topOffset = appBarHeight + 22;
+                    final horizontalOffset = buttonPosition.dx +
+                        ((screenSize.width - buttonWidth) / 2);
 
-              final screenSize = MediaQuery.of(context).size;
-              final appBarHeight = AppBar().preferredSize.height;
-              final topOffset =
-                  appBarHeight + 22; // Adjust the vertical offset as needed
-              final horizontalOffset = buttonPosition.dx +
-                  ((screenSize.width - buttonWidth) /
-                      2); // Center horizontally under the button
-
-              showMenu<String>(
-                context: context,
-                position: RelativeRect.fromLTRB(
-                    horizontalOffset + buttonWidth,
-                    topOffset,
-                    screenSize.width - horizontalOffset + buttonWidth,
-                    0),
-                items: [
-                  const PopupMenuItem<String>(
-                    value: 'Best',
-                    child: Text('Best'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Hot',
-                    child: Text('Hot'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'New',
-                    child: Text('New'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Top',
-                    child: Text('Top'),
-                  ),
-                ],
-                elevation: 8.0,
-              ).then((value) {
-                if (value != null) {
-                  setState(() {
-                    // Handle menu item selection if needed
-                  });
-                }
-              });
-            },
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Search()),
-              );
-            },
-            icon: const Icon(Icons.search),
-          ),
-          Builder(builder: (context) {
-            return IconButton(
-              icon: access_token != null
-                  ? FutureBuilder(
-                      future: fetchUserProfilePic(access_token!),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          // Handle error fetching profile picture
-                          return const CircleAvatar(
-                            backgroundColor: Colors.transparent,
+                    showMenu<String>(
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        horizontalOffset + buttonWidth,
+                        topOffset,
+                        screenSize.width - horizontalOffset + buttonWidth,
+                        0,
+                      ),
+                      items: [
+                        const PopupMenuItem<String>(
+                          value: 'Best',
+                          child: Text('Best'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Hot',
+                          child: Text('Hot'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'New',
+                          child: Text('New'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Top',
+                          child: Text('Top'),
+                        ),
+                      ],
+                      elevation: 8.0,
+                    ).then((value) {
+                      if (value != null) {
+                        setState(() {
+                          // Handle menu item selection if needed
+                        });
+                      }
+                    });
+                  },
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Search()),
+                    );
+                  },
+                  icon: const Icon(Icons.search),
+                ),
+                Builder(builder: (context) {
+                  return IconButton(
+                    icon: access_token != null
+                        ? FutureBuilder(
+                            future: fetchUserProfilePic(access_token!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return const CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage:
+                                      AssetImage('assets/images/avatar.png'),
+                                );
+                              } else {
+                                if (snapshot.data == null ||
+                                    snapshot.data.toString().isEmpty) {
+                                  return const CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        AssetImage('assets/images/avatar.png'),
+                                  );
+                                } else {
+                                  return CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        NetworkImage(snapshot.data.toString()),
+                                  );
+                                }
+                              }
+                            },
+                          )
+                        : const CircleAvatar(
                             backgroundImage:
                                 AssetImage('assets/images/avatar.png'),
-                          );
-                        } else {
-                          // Check if profile picture URL is null or empty
-                          if (snapshot.data == null ||
-                              snapshot.data.toString().isEmpty) {
-                            // Handle case where profile picture URL is empty or null
-                            return const CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              backgroundImage:
-                                  AssetImage('assets/images/avatar.png'),
-                            );
-                          } else {
-                            // Display profile picture
-                            return CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              backgroundImage:
-                                  NetworkImage(snapshot.data.toString()),
-                            );
-                          }
-                        }
-                      },
-                    )
-                  : const CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/avatar.png'),
-                    ),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            );
-          }),
-        ],
+                          ),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
+                }),
+              ]
+            : [
+              IconButton(
+                  icon: isModernCard
+                      ? const Icon(Icons.view_agenda)
+                      : const Icon(Icons.view_carousel),
+                  onPressed: () {
+                    setState(() {
+                      isModernCard = !isModernCard;
+                    });
+                  },
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Search()),
+                    );
+                  },
+                  icon: const Icon(Icons.search),
+                ),
+                Builder(builder: (context) {
+                  return IconButton(
+                    icon: access_token != null
+                        ? FutureBuilder(
+                            future: fetchUserProfilePic(access_token!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return const CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage:
+                                      AssetImage('assets/images/avatar.png'),
+                                );
+                              } else {
+                                if (snapshot.data == null ||
+                                    snapshot.data.toString().isEmpty) {
+                                  return const CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        AssetImage('assets/images/avatar.png'),
+                                  );
+                                } else {
+                                  return CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        NetworkImage(snapshot.data.toString()),
+                                  );
+                                }
+                              }
+                            },
+                          )
+                        : const CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/avatar.png'),
+                          ),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
+                }),
+            ],
+
         title: PopupMenuButton<String>(
           icon: _selectedItem == 'Home'
               ? const Text(
@@ -234,7 +293,7 @@ class _HomePageState extends State<HomePage> {
               : Text(
                   _selectedItem,
                   style: const TextStyle(
-                      fontSize: 10,
+                      fontSize: 22,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
