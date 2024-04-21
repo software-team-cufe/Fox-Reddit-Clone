@@ -221,7 +221,7 @@ export default function Card (){
                </div>
                <div>
                      
-                         <button onClick={handleNavigate} className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300'> 
+                         <button onClick={handleNavigate} className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 hover:underline'> 
                             Edit Profile
                           </button>
                   
@@ -255,7 +255,7 @@ export default function Card (){
                </div>
                <div>
                  <Link to={'/settings/profile'}> 
-                   <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300'> 
+                   <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 hover:underline'> 
                       Style Avatar
                     </button>
                   </Link>
@@ -293,9 +293,12 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold p-2 hover:bg-gray-300'> 
-                  Mod Settings
-                </button>
+                <Link to={'/settings/profile'}>    
+                   <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold p-2 hover:bg-gray-300 hover:underline'> 
+                      Mod Settings
+                   </button> 
+                 </Link>
+            
                </div>
               </div>
 
