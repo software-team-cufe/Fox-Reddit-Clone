@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 
+/// A customizable button widget with various styling options.
 class CustomButton extends StatelessWidget {
+  /// Constructs a [CustomButton] widget.
+  ///
+  /// [text] is the text displayed on the button.
+  /// [onTap] is the callback function invoked when the button is tapped.
+  /// [borderd] specifies whether the button has a border.
+  /// [backgroundColor] is the background color of the button.
+  /// [textColor] is the color of the text on the button.
+  /// [horizontalPadding] is the horizontal padding of the button.
+  /// [verticalPadding] is the vertical padding of the button.
+  /// [fontSize] is the font size of the text on the button.
+  /// [borderWidth] is the width of the button border.
+  /// [icon] is the optional icon displayed alongside the text.
+  /// [filled] specifies whether the button is filled with color.
+  /// [borderColor] is the color of the button border.
+  /// [textStyle] is the style of the text on the button.
+  /// [loading] specifies whether the button is in a loading state.
+  /// [borderRadius] is the border radius of the button.
   const CustomButton({
     super.key,
     required this.text,
@@ -20,6 +38,7 @@ class CustomButton extends StatelessWidget {
     this.loading = false,
     this.borderRadius = 40,
   });
+
   final TextStyle? textStyle;
   final Widget? icon;
   final String text;
@@ -35,6 +54,7 @@ class CustomButton extends StatelessWidget {
   final double? borderWidth;
   final double borderRadius;
   final bool? filled;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

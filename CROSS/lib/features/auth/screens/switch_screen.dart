@@ -1,16 +1,15 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/features/auth/screens/login_screen.dart';
+import 'package:http/http.dart' as http;
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/models/user_model.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'package:reddit_fox/models/user_model.dart';
 
+/// A StatefulWidget that determines the authentication state and navigates accordingly.
 class AuthContainer extends StatefulWidget {
+  /// Constructor for the AuthContainer widget.
   const AuthContainer({
     super.key,
   });
@@ -19,6 +18,7 @@ class AuthContainer extends StatefulWidget {
   State<AuthContainer> createState() => _AuthContainerState();
 }
 
+/// The state for the AuthContainer widget.
 class _AuthContainerState extends State<AuthContainer> {
   String? access_token; // Variable to store the access token
 
@@ -29,21 +29,16 @@ class _AuthContainerState extends State<AuthContainer> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-
-        // saveToken('jessicatoken', "backtoken");
-        // sharedPrefValue.remove('token');
-
         access_token = sharedPrefValue.getString('backtoken');
-
         print(access_token);
       });
     });
   }
 
-  getData() async {
+  /// Retrieves user data from the server.
+  void getData() async {
     if (access_token != null) {
       final url = ApiRoutesMockserver.getUserByToken(access_token!);
-      // final response = await http.get(Uri.parse(url));
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
@@ -51,15 +46,14 @@ class _AuthContainerState extends State<AuthContainer> {
         final user = data[0];
 
         UserModel usermodel = UserModel(
-            email: user['email'],
-            name: user['name'],
-            profilePic: user['profilePic'],
-            uid: user['id'],
-            karma: user['karma'],
-            isAuthenticated: false);
+          email: user['email'],
+          name: user['name'],
+          profilePic: user['profilePic'],
+          uid: user['id'],
+          karma: user['karma'],
+          isAuthenticated: false,
+        );
         CurrentUserData.setUser(usermodel);
-
-        // user.name=response.body.['name'];
       } else {
         print('invalid login');
       }
@@ -76,24 +70,16 @@ class _AuthContainerState extends State<AuthContainer> {
   }
 }
 
+/// A class to store the current user's data.
 class CurrentUserData {
   static UserModel? _user;
-  static String? access_token;
-  // static UserModel? get user => _user;
-  void initState() {
-    // Retrieve token from shared preferences when the widget initializes
 
-    SharedPreferences.getInstance().then((sharedPrefValue) {
-      // Store the token in the access_token variable
-      // access_token = sharedPrefValue.getString('mocktoken');
-      access_token = sharedPrefValue.getString('backtoken');
-    });
-  }
-
+  /// Sets the current user's data.
   static void setUser(UserModel newUser) {
     _user = newUser;
   }
 
+  /// Gets the current user's data.
   static UserModel getUser() {
     return _user!;
   }

@@ -4,14 +4,17 @@ import 'package:reddit_fox/core/constants/constants.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 
+/// A button widget for signing in with Google.
 class SignInWithGoogleButton extends ConsumerWidget {
-  // final bool isFromLogin;
+  /// Constructs a [SignInWithGoogleButton] widget.
   const SignInWithGoogleButton({super.key});
-  // const SignInWithGoogleButton({super.key, this.isFromLogin = true});
 
+  /// Initiates the sign-in process with Google.
+  ///
+  /// This method triggers the sign-in process using the [AuthController]
+  /// and the provided [context].
   void signInWithGoogle(BuildContext context, WidgetRef ref) {
     ref.read(authControllerProvider.notifier).signInWithGoogle(context);
-    // ref.read(authControllerProvider.notifier).signInWithGoogle(context, isFromLogin);
   }
 
   @override

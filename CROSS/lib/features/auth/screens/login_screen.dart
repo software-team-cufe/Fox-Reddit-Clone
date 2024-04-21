@@ -8,6 +8,7 @@ import 'package:reddit_fox/features/auth/screens/ForgetPasswordScreen.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// A StatefulWidget that represents the login screen.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -15,11 +16,13 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+/// The state of the [LoginScreen].
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String? errorMessage;
 
+  /// Logs in the user using the provided [username] and [password].
   static Future<String?> login(String username, String password) async {
     const url = ApiRoutesBackend.login;
     Map<String, dynamic> logindata = {
@@ -122,12 +125,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-Future<void> saveToken(String token, String mockBackend) //mocktoken,backtoken
-async {
+/// Saves the [token] to shared preferences with the given [mockBackend].
+Future<void> saveToken(String token, String mockBackend) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString(mockBackend, token);
 }
 
+/// Retrieves the token from shared preferences for the given [mockBackend].
 Future<String?> getToken(String mockBackend) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString(mockBackend);
