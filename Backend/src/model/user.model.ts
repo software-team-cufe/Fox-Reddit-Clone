@@ -28,7 +28,6 @@ export const privateFields = [
   'contentVisibility',
   'canCreateSubreddit',
   'showActiveCommunities',
-  'hasVerifiedEmail',
   'type',
   'friendRequestToMe',
   'friendRequestFromMe',
@@ -291,9 +290,6 @@ export class User {
 
   @prop({ default: true })
   showActiveCommunities?: boolean;
-
-  @prop({ default: false })
-  hasVerifiedEmail!: boolean;
 
   @prop({ default: () => new UserPrefs() })
   prefs?: UserPrefs;
