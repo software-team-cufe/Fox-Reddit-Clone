@@ -9,7 +9,7 @@ import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import { createContext, useContext } from "react";
 import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
-
+import axios from "axios";
 /**
  * HomePage Component
  * 
@@ -73,12 +73,28 @@ export function HomeProvider({ children }) {
 export default function HomePage() {
   const { selected } = useContext(HomeContext);
   const { isLoading, isError, error, data, } = useQuery(['get-post'],
-    () => userAxios.get(`posts`),
+    () => axios.get(`http://localhost:3002/posts`),
     {
       retry: 0,
       refetchOnWindowFocus: false,
     });
   if (isLoading) return <Spinner />;
+  const newPosts = data?.data.map(post => ({
+    subReddit: {
+      image: post.attachments.subredditIcon,
+      title: post.communityName,
+    },
+    images: post.attachments.postData,
+    id: post.id,
+    title: post.title,
+    subTitle: post.postText,
+    votes: post.votesCount,
+    comments: post.commentsCount,
+    thumbnail: post.thumbnail,
+    video: null,
+
+    spoiler: post.spoiler,
+  })) ?? [];
 
   return (
     <div className="w-full h-full relative flex gap-10">
@@ -90,7 +106,7 @@ export default function HomePage() {
         </div>
         <hr />
         {
-          fakePosts.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
+          newPosts.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
       </div>
       <div className="p-5   max-w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">

@@ -24,7 +24,8 @@ function MainRoute() {
   //store subreddits in array
   const [recentCommunities, setRecentCommunities] = useState(() => {
     const storedCommunities = localStorage.getItem('recentCommunities');
-    return storedCommunities ? JSON.parse(storedCommunities) : [];});
+    return storedCommunities ? JSON.parse(storedCommunities) : [];
+  });
 
 
   const path = window.location.pathname;
@@ -76,7 +77,7 @@ function MainRoute() {
   );
   if (isLoading) {
     return <div className='w-screen h-screen flex justify-center items-center'>
-          <img src={'/logo.png'} className="h-24 w-24 my-atuo mx-auto animate-ping" alt="Logo" />
+      <img src={'/logo.png'} className="h-24 w-24 my-atuo mx-auto animate-ping" alt="Logo" />
     </div>;
   }
 
@@ -107,7 +108,7 @@ function MainRoute() {
   const store = userStore.getState().user.user;
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} IsLogged={store != null} ProfileImageSrc={store != null ? store.avatar: "logo.png" } UserName={store != null ? store.username: "fidjfi"} IsOnline={true} />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} IsLogged={store != null} ProfileImageSrc={store != null ? store.avatar : "logo.png"} UserName={store != null ? store.username : "fidjfi"} IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
           ![

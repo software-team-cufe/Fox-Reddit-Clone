@@ -74,6 +74,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
   };
   //handle click outside profile list
   useEffect(() => {
+
     const handleClickOutside = (event) => {
       if (listProfRef.current && !listProfRef.current.contains(event.target)
         && !UserProfRef.current.contains(event.target)) {

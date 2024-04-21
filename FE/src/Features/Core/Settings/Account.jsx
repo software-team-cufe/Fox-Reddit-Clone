@@ -6,7 +6,8 @@ import ChangeLanguage from "./ComponentChange/ChangeLanguage";
 import PopUp from "./ComponentChange/PopUp";
 import DeleteAccount from "./ComponentChange/DeleteAccount";
 import { userStore } from "@/hooks/UserRedux/UserStore";
-const options=['WOMAN','MAN','NON Binary','perfer Not to say','i prefer..']
+
+
 const Acount = () => {
  
   
@@ -56,7 +57,7 @@ const Acount = () => {
             </div>
           </div>
          {/* second div */}
-          <div className="flex flex-row mb-7 justify-between ">
+          <div className="flex flex-row mb-7 justify-between">
             <div className='flex flex-col'>
               <p className=" font-semibold">Gender</p>
               <div className="text-xs text-gray-500">
@@ -65,10 +66,10 @@ const Acount = () => {
             </div>
 
             <div>
-            <div className='flex flex-col ml-8 mt-5'>
+            <div className='flex flex-col ml-8 mt-5 relative' >
     
-            <button onClick={()=>setOpen(true)} className='flex flex-row w-28' >
-                <div className=' text-sky-600'> 
+            <button onClick={()=>setOpen(true)} className='flex items-center' >
+                <div className=' text-sky-600 text-sm' style={{whiteSpace: 'nowrap'}}> 
                   {selectedOption||'WOMAN'}
                </div>
           
@@ -77,30 +78,48 @@ const Acount = () => {
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                </svg>  
             </button>
-            { isOpen && <div className=' w-32 origin-top-right border border-gray-100 rounded-md shadow-md'> 
-                {options.map((options)=> (
-                  // eslint-disable-next-line react/jsx-key
-                <div>
+            { isOpen && 
+            <div className=' w-40 h-[150px] border border-gray-100 rounded-md shadow-md absolute'> 
+              <div className="bg-white flex flex-col">
+                <hr className='my-1 '/>
                 <button type="button"
-                 onClick={clickedOption(options)} 
-                 key={Math.random()}
-                 className=' block rounded-lg no-underline hover:bg-sky-50 text-sm px-2 '> 
-                 {options}
+                 onClick={clickedOption('WOMAN')} 
+                 className=' block rounded-t-lg no-underline  hover:bg-sky-50 text-left text-sm px-2 '> 
+                  woman
                 </button>
-          
-                </div>
-              )
-
-       
-            )}
-    
-       </div>
+                <hr className='my-1'/>
+                <button type="button"
+                 onClick={clickedOption('MALE')} 
+                 className=' block rounded-none no-underline  hover:bg-sky-50 text-left text-sm px-2'> 
+                  male
+                </button>
+                <hr className='my-1'/>
+                <button type="button"
+                 onClick={clickedOption('NON-BINARY')} 
+                 className=' block rounded-none no-underline  hover:bg-sky-50 text-left text-sm px-2'> 
+                non-binary
+                </button>
+                <hr className='my-1'/>
+                <button type="button"
+                 onClick={clickedOption('PREFER NOT TO SAY')} 
+                 className=' block rounded-none no-underline  hover:bg-sky-50 text-left text-sm px-2'> 
+                 I refer to myself as...
+                </button>
+                <hr className='my-1'/>
+                <button type="button"
+                onClick={clickedOption('PREFER NOT TO SAY')} 
+                className=' block rounded-none no-underline  hover:bg-sky-50 text-left text-sm px-2'> 
+                prefer not to say
+               </button>
+               <hr className='my-1'/>
+              </div>
+              </div>
        }
 
        {/*في نفس ال div هنعمل الdropdown list  */}
        
 
-    </div>
+           </div>
 
 
             </div>

@@ -1,15 +1,21 @@
-import { Link } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
+import ProfileSettings from '../../Features/Core/Settings/PofileSettings';
 import { userStore } from '../../hooks/UserRedux/UserStore';
-
+import { useNavigate } from 'react-router-dom';
 export default function Card (){
 
+    const navigator=useNavigate();
+     const handleNavigate=()=>{
+       navigator('/setting/profile');
+    }
     const username =userStore.getState().user.user.username;
     return(
         <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
         
         <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
-            <button className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
+            <button onClick={handleNavigate} className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
@@ -214,9 +220,11 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300'> 
-                  Edit Profile
-                </button>
+                     
+                         <button onClick={handleNavigate} className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 hover:underline'> 
+                            Edit Profile
+                          </button>
+                  
                </div>
                </div>
            </div>
@@ -246,9 +254,11 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300'> 
-                  Style Avatar
-                </button>
+                 <Link to={'/settings/profile'}> 
+                   <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 hover:underline'> 
+                      Style Avatar
+                    </button>
+                  </Link>
                </div>
                 </div>
            </div>
@@ -283,26 +293,28 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold p-2 hover:bg-gray-300'> 
-                  Mod Settings
-                </button>
+                <Link to={'/settings/profile'}>    
+                   <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold p-2 hover:bg-gray-300 hover:underline'> 
+                      Mod Settings
+                   </button> 
+                 </Link>
+            
                </div>
               </div>
 
           
            </div>
 
-
         </div>
         
         <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700"/>
         <h1 className=" ml-6 mb-4 text-xs text-gray-600 "> LINKS </h1>  
         <Link to={'/settings/profile'} className="w-fit flex items-center py-1 pl-2 pr-3 ml-6 mb-2 text-xs font-semibold focus:outline-none bg-gray-200 rounded-full hover:bg-gray-300 hover:underline"> 
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-1">
-        <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
-        </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-1">
+          <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
+          </svg>
       
-        <span>Add Social Link</span>
+          <span>Add Social Link</span>
         </Link>
      </div>
     )
