@@ -13,6 +13,7 @@ import * as argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 import { Post } from './posts.model';
 import { Comment } from './comments.model';
+import { Community } from './community.model';
 import { Types } from 'mongoose';
 //import { Validator } from 'validator';
 
@@ -168,8 +169,8 @@ class IsBannedOrMuted {
 // }
 
 class Member {
-  // @prop({ ref: () => CommunityModel })
-  // communityId?: Ref<Community>;
+  @prop({ ref: () => 'Community' })
+  communityId?: Ref<Community>;
 
   @prop({ type: IsBannedOrMuted, default: () => new IsBannedOrMuted() })
   isMuted?: IsBannedOrMuted;
@@ -195,8 +196,8 @@ class VoteComment {
 }
 
 class Moderator {
-  // @prop({ ref: () => CommunityModel })
-  // communityId?: Ref<Community>;
+  @prop({ ref: () => 'Community' })
+  communityId?: Ref<Community>;
 
   @prop({ enum: ['creator', 'moderator'] })
   role?: string;
@@ -347,12 +348,6 @@ export class User {
   @prop({ ref: 'Post' })
   followPost?: Ref<Post>[];
 
-  // @prop({ ref: 'Post' })
-  // hiddenPosts?: Ref<Post>[];
-
-  // @prop({ ref: 'Post' })
-  // savedPosts?: Ref<Post>[];
-
   @prop({ ref: () => 'Post' })
   hiddenPosts?: Ref<Post>[];
 
@@ -383,15 +378,17 @@ export class User {
   // @prop({ type: [String], default: [] })
   // downvotedPosts: string[];
 
+  @prop({ ref: () => 'Member' })
+  member?: Ref<Member>[];
+
+  @prop({ ref: () => 'Moderator' })
+  moderators?: Ref<Moderator>[];
+
   //////////////////////////////////////////////
   // @prop({ type: () => [String] })
   // messages?: string[];
   // @prop({ type: () => [String] })
   // follows?: string[];
-  // @prop({ type: () => [Member] })
-  // member?: Member[];
-  // @prop({ type: () => [Moderator] })
-  // moderators?: Moderator[];
   // @prop({ type: () => [String] })
   // categories?: string[];
   //////////////////////////////////////////////////////

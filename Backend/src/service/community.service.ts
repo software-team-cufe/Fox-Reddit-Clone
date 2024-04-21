@@ -4,9 +4,8 @@ import { Post } from '../model/posts.model';
 /**
  * Finds a community by its subreddit name.
  *
- * @param subreddit - The name of the subreddit to search for.
- * @returns A Promise that resolves to the found community, or null if not found.
- * @throws {Error} If an error occurs while searching for the community.
+ * @param {string} subreddit - The subreddit name to search for.
+ * @return {Promise<any>} The community object found based on the subreddit name.
  */
 export async function findCommunityByName(subreddit: string) {
   try {
@@ -16,3 +15,17 @@ export async function findCommunityByName(subreddit: string) {
     throw error; // Re-throw the error to be caught by the caller
   }
 }
+/**
+ * Fetches communities based on the provided array of community IDs.
+ *
+ * @param {string[]} commIDs - An array of community IDs.
+ * @return {Promise<any[]>} A promise that resolves to an array of populated communities.
+ */
+async function getUserCommunities(commIDs: string[]) {
+  // Fetch communities based on the provided commIDs
+  const communities = await CommunityModel.find({ _id: { $in: commIDs } });
+
+  // Return the populated communities
+  return communities;
+}
+export { getUserCommunities };

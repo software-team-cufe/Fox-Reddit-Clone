@@ -394,26 +394,26 @@ export async function findRandomPostsByRandom(
 }
 
 /**
- * Retrieves a list of posts based on the provided post IDs, with an optional limit.
+ * Retrieves user posts based on the provided array of post IDs with pagination support.
  *
- * @param postIDs - An array of post IDs to retrieve.
- * @param limit - The maximum number of posts to retrieve. If not provided, defaults to 10.
- * @returns A Promise that resolves to an array of `Post` objects.
+ * @param {string[]} postIDs - An array of post IDs.
+ * @param {number} [limit=10] - The maximum number of posts to retrieve. Defaults to 10 if not provided.
+ * @returns {Promise<Post[]>} A promise that resolves to an array of populated posts.
  */
-async function userPosts(postIDs: string[], limit: number | undefined) {
-  // If the request didn't contain a limit in its query, set it to 10 by default
+async function userPosts(postIDs: string[], limit: number = 10): Promise<Post[]> {
+  // Fetch comments based on the provided postIDs
   limit = limit || 10;
 
-  // Fetch comments based on the provided postIDs
   const posts = await PostModel.find({ _id: { $in: postIDs } }).limit(limit);
 
-  // Populate user and community information
-  //posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
-  //posts = await PostModel.populate(posts, { path: 'communityID', select: '_id icon' });
+  // // Populate user and community information
+  // posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
+  // posts = await PostModel.populate(posts, { path: 'communityID', select: '_id icon' });
 
   // Return the populated posts
   return posts;
 }
+
 export { userPosts };
 
 /**
