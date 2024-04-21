@@ -44,6 +44,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reddit_fox/Pages/notification_posts.dart';
 
 class NotificationPage extends StatelessWidget {
   final List<Notification> notifications = [
@@ -84,19 +85,41 @@ class NotificationPage extends StatelessWidget {
       return ListView.builder(
         itemCount: notifications.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            leading: const Icon(Icons.notification_important),
-            title: Text('${notifications[index].username} replied to your post in ${notifications[index].subreddit}'),
-            subtitle: Text(notifications[index].content),
-            trailing: Text(notifications[index].time),
+          return GestureDetector(
+            onTap: () {
+              // Navigate to the PostDetails page when a notification is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostDetails(
+                    post: generateRandomPost(), // Pass the random post
+                  ),
+                ),
+              );
+            },
+            child: ListTile(
+              leading: const Icon(Icons.notification_important),
+              title: Text('${notifications[index].username} replied to your post in ${notifications[index].subreddit}'),
+              subtitle: Text(notifications[index].content),
+              trailing: Text(notifications[index].time),
+            ),
           );
         },
       );
     }
   }
+
+  // Function to generate a random post
+  Map<String, dynamic> generateRandomPost() {
+    // Replace this with your logic to generate a random post
+    return {
+      'redditName': 'Random User',
+      'title': 'Random Post Title',
+      'description': 'Random Post Description',
+      // Add other relevant data for the post
+    };
+  }
 }
-
-
 
 class Notification {
   final String username;
