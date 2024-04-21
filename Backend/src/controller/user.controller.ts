@@ -12,6 +12,7 @@ import {
   followUserInput,
   unfollowUserInput,
   reportUser,
+  ChangePasswordInput,
 } from '../schema/user.schema';
 import { NextFunction, Request, Response } from 'express';
 import {
@@ -263,6 +264,13 @@ export async function resetPasswordHandler(
       msg: 'Something went wrong',
     });
   }
+}
+export async function changePasswrodHandler(
+  req: Request<ChangePasswordInput['params'], {}, ChangePasswordInput['body']>,
+  res: Response
+) {
+  const user_token = req.params.user_token;
+  //try and catch block and continue logic...
 }
 /**
  * Handles the request to get the current user.
