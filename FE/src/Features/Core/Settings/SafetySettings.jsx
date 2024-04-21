@@ -17,7 +17,7 @@ function SafetySettings() {
     //To do add of both fields
 
     const handleAddBlock = async () => {
-        const val = idfromname(BlockValue);
+        const val = await idfromname(BlockValue);
         if (val != null) {
             try {
                 const res = await axios.get(`http://localhost:3002/users/${val}`);
@@ -30,6 +30,15 @@ function SafetySettings() {
                     toast.error(ex.issues[0].message);
                 }
             }
+            try {
+                const res = await axios.patch(`http://localhost:3002/users/1`, { blocked: Blocked });
+            } catch (ex) {
+                console.error(ex);
+                if (ex.issues != null && ex.issues.length != 0) {
+                    toast.error(ex.issues[0].message);
+                }
+            }
+
         }
     }
     const handleAddMute = () => {//To do
@@ -39,20 +48,16 @@ function SafetySettings() {
         fetchMock();
         // fetchBlock();
     }, [])
-    const idfromname = (name) => {
-        axios.get(`http://localhost:3002/users`)
-            .then(response => {
-                console.log(name)
-                response.data.map(user => {
-                    console.log(user.name)
-                    if (user.name == name) {
-                        return user.id;
-                    }
-                })
-                console.log("user not found");
-                return null;
-            })
+    const idfromname = async (name) => {
+        const response = await axios.get(`http://localhost:3002/users`)
             .catch(err => console.error(err));
+        for (const user of response.data) {
+            if (user.name === name) {
+                return user.id;
+            }
+        }
+        console.log("user not found");
+        return null;
     }
     // const fetchBlock = async () => {
     //     try {
@@ -96,8 +101,21 @@ function SafetySettings() {
         setMuteValue(event.target.value);
 
     }
-    const addToBlocked = (avatar, name) => {
-        setBlocked(prevBlocked => [...prevBlocked, { avatar, name }]);
+    const handleRemoveBlock = async (indexToRemove) => {
+        console.log(indexToRemove)
+        setBlocked(prevBlocked => {
+            const newBlocked = prevBlocked.filter((_, index) => index !== indexToRemove);
+            console.log(newBlocked); // Log the updated state here
+            return newBlocked;
+        });
+        try {
+            const res = await axios.patch(`http://localhost:3002/users/1`, { blocked: Blocked });
+        } catch (ex) {
+            console.error(ex);
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
     };
 
     return (
@@ -139,7 +157,9 @@ function SafetySettings() {
                     <div className='w-full flex my-2' key={block.name}>
                         <img src={block.avatar} alt={block.name} className="w-10 h-10" />
                         <p className="pt-3 text-sm">{block.name}</p>
-                        <button className="font-bold text-sm  text-gray-500 hover:text-blue-600 pb-1 ml-60">Remove</button>
+                        <button onClick={() => { handleRemoveBlock(index) }}
+                            className="font-bold text-sm 
+                         text-gray-500 hover:text-blue-600 pb-1 ml-60">Remove</button>
                     </div>
                 ))}
 
