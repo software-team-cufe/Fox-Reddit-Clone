@@ -352,7 +352,7 @@ export async function getUpvotedPosts(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
     const count = parseInt(req.query.count as string, 10) || 0;
 
-    const skip = count > 0 ? (page - 1) * count : 0;
+    const skip = (page - 1) * limit + count;
 
     const totalUpvotedPosts = upvotedPostIds.length;
     const totalPages = Math.ceil(totalUpvotedPosts / limit);
@@ -412,7 +412,7 @@ export async function getDownvotedPosts(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
     const count = parseInt(req.query.count as string, 10) || 0;
 
-    const skip = count > 0 ? (page - 1) * count : 0;
+    const skip = (page - 1) * limit + count;
 
     const totalDownvotedPosts = downvotedPostIds.length;
     const totalPages = Math.ceil(totalDownvotedPosts / limit);
