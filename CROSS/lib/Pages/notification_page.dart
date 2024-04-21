@@ -40,3 +40,69 @@
 //     );
 //   }
 // }
+// notification_page.dart
+
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+class NotificationPage extends StatelessWidget {
+  final List<Notification> notifications = [
+    Notification(
+      username: 'u/zsoltjuhos',
+      subreddit: 'r/DBZDokkanBattle',
+      content: 'Wish it could be said about her EZA as well',
+      time: '3h ago',
+    ),
+    Notification(
+      username: 'u/Fun-Detective-6089',
+      subreddit: 'r/DBZDokkanBattle',
+      content: 'I do kinda like the Sticker effect for her Untransformed state...',
+      time: '3h ago',
+    ),
+    // Add more notifications here...
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    if (notifications.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FaIcon(FontAwesomeIcons.wolfPackBattalion,
+                size: 100, color: Colors.white),
+            SizedBox(height: 20),
+            Text(
+              'Wow Such empty',
+              style: TextStyle(
+                  fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return ListView.builder(
+        itemCount: notifications.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: const Icon(Icons.notification_important),
+            title: Text('${notifications[index].username} replied to your post in ${notifications[index].subreddit}'),
+            subtitle: Text(notifications[index].content),
+            trailing: Text(notifications[index].time),
+          );
+        },
+      );
+    }
+  }
+}
+
+
+
+class Notification {
+  final String username;
+  final String subreddit;
+  final String content;
+  final String time;
+
+  Notification({required this.username, required this.subreddit, required this.content, required this.time});
+}
