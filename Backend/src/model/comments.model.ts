@@ -79,8 +79,6 @@ export class Comment {
 //   }
 //   next();
 // })
-class CommentMiddleware {}
-
 const CommentModel = getModelForClass(Comment);
 
 export default CommentModel;
