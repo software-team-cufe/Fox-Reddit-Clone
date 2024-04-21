@@ -9,6 +9,7 @@ import {
   reportUserSchema,
   followUserSchema,
   unfollowUserSchema,
+  changePasswordSchema,
 } from '../schema/user.schema';
 import {
   createUserHandler,
@@ -48,7 +49,8 @@ router.post('/api/users/signup', validateResource(createUserSchema), createUserH
 
 router.get('/api/users/signup/verify/:verify_token', validateResource(verifyUserSchema), verifyUserHandler);
 router.post('/api/users/forgotpassword', validateResource(forgotPasswordSchema), forgotPasswordHandler);
-
+router.post('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
+router.post('/user/changepassword/:user_token', requireUser, validateResource(changePasswordSchema)); //add changepassHandler
 router.get('/api/username_available', username_availableHandler);
 
 router.get('/user/:username/about', aboutHandler);
@@ -58,8 +60,6 @@ router.get('/user/:username/submitted', getUserSubmittedHandler);
 router.get('/user/:username/comments', getUserCommentsHandler);
 
 router.get('/user/:username/overview', getUserOverviewHandler);
-
-router.post('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
 
 router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 
@@ -73,7 +73,7 @@ router.get('/api/user/me/downvoted/:sort', getDownvotedPosts);
 
 router.get('/api/user/userIDfromToken', deserializeUser, getUserIDfromTokenHandler);
 
-/******************** BOUDY **************************/
+/******************** BOUDY **************************/ //remove deserializeUser
 router.delete('/api/users/delete_user', deserializeUser, deleteUserHandler);
 
 router.get('/api/v1/me/followers', deserializeUser, getALLFollowersHandler);

@@ -12,6 +12,7 @@ import {
   followUserInput,
   unfollowUserInput,
   reportUser,
+  ChangePasswordInput,
 } from '../schema/user.schema';
 import { NextFunction, Request, Response } from 'express';
 import {
@@ -264,6 +265,13 @@ export async function resetPasswordHandler(
     });
   }
 }
+export async function changePasswrodHandler(
+  req: Request<ChangePasswordInput['params'], {}, ChangePasswordInput['body']>,
+  res: Response
+) {
+  const user_token = req.params.user_token;
+  //try and catch block and continue logic...
+}
 /**
  * Handles the request to get the current user.
  *
@@ -352,7 +360,7 @@ export async function getUpvotedPosts(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
     const count = parseInt(req.query.count as string, 10) || 0;
 
-    const skip = count > 0 ? (page - 1) * count : 0;
+    const skip = (page - 1) * limit + count;
 
     const totalUpvotedPosts = upvotedPostIds.length;
     const totalPages = Math.ceil(totalUpvotedPosts / limit);
@@ -412,7 +420,7 @@ export async function getDownvotedPosts(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
     const count = parseInt(req.query.count as string, 10) || 0;
 
-    const skip = count > 0 ? (page - 1) * count : 0;
+    const skip = (page - 1) * limit + count;
 
     const totalDownvotedPosts = downvotedPostIds.length;
     const totalPages = Math.ceil(totalDownvotedPosts / limit);

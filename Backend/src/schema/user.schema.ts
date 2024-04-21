@@ -39,6 +39,46 @@ export const forgotPasswordSchema = object({
   }),
 });
 
+export const changeEmailSchema = object({
+  params: object({
+    usertoken: string({
+      required_error: 'Token is required',
+    }),
+  }),
+  body: object({
+    newemail: string({
+      required_error: 'Email is required',
+    }).email('Not a valid email'),
+    currentpassword: string({
+      required_error: 'Password is required',
+    }),
+  }),
+});
+
+export const changePasswordSchema = object({
+  params: object({
+    user_token: string({
+      required_error: 'Token is required',
+    }),
+  }),
+  body: object({
+    currentpassword: string({
+      required_error: 'Password is required',
+    }),
+    newpassword: string({
+      required_error: 'Password is required',
+    })
+      .min(8, 'Password too short - should be 8 chars minimum')
+      .max(200, 'Password too long - should be 200 chars maximum'),
+    newpasswordConfirmation: string({
+      required_error: 'Password confirmation is required',
+    }),
+  }).refine((data) => data.newpassword === data.newpasswordConfirmation, {
+    message: 'Passwords do not match',
+    path: ['newpasswordConfirmation'],
+  }),
+});
+
 export const resetPasswordSchema = object({
   query: object({
     token: string({
@@ -153,6 +193,10 @@ export type VerifyUserInput = TypeOf<typeof verifyUserSchema>['params'];
 export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>['body'];
 
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
+
+export type ChangeEmailInput = TypeOf<typeof changeEmailSchema>;
+
+export type ChangePasswordInput = TypeOf<typeof changePasswordSchema>;
 
 export type friendRequest = TypeOf<typeof friendRequestSchema>;
 export type unFriendRequest = TypeOf<typeof unFriendRequestSchema>;
