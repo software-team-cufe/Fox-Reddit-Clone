@@ -15,6 +15,7 @@ import { Post } from './posts.model';
 import { Comment } from './comments.model';
 import { User } from './user.model';
 import { NextFunction } from 'express';
+import { boolean } from 'zod';
 
 class CommunityRule {
   @prop()
@@ -118,7 +119,7 @@ class Moderator {
 }
 
 export class Community {
-  @prop({ required: true, trim: true, maxLength: 100, minLength: 1 })
+  @prop({ unique: true, required: true, trim: true, maxLength: 100, minLength: 1 })
   name?: string;
 
   @prop()
@@ -187,6 +188,12 @@ export class Community {
   @prop()
   category?: string;
 
+  @prop({ type: String, default: 'public' }) // "public" (anyone can view and submit), "private" (only approved members can view and submit), or "restricted" (anyone can view, but only some are approved to submit links)
+  privacyType?: string;
+
+  // @prop({ type: boolean }) ////////////////////////////
+  // over18?: boolean;
+
   @prop({ type: String })
   categories?: string[];
 
@@ -195,6 +202,7 @@ export class Community {
 
   @prop({ ref: 'Post' })
   communityPosts: Ref<Post>[];
+
   // Post find hook
   static async afterFind(docs: DocumentType<Community>[], next: NextFunction) {
     try {

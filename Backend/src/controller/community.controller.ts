@@ -1,3 +1,4 @@
+import { createComm } from '../schema/community.schema';
 import { getUserCommunities, createSubreddit, creationValidation } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -53,7 +54,7 @@ export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Resp
  * @param {Response} res - The response object.
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
-export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Response) {
+export async function getCommunityOfUserAsModeratorHandler(req: Request<createComm['body']>, res: Response) {
   try {
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
@@ -99,14 +100,6 @@ export async function createSubredditHandler(req: Request, res: Response) {
   if (!user) {
     return res.status(401).json({
       error: 'Access token is missing or invalid',
-    });
-  }
-
-  // Validate incoming parameters
-  const check = await creationValidation(req.body.name, req.body.type, req.body.over18);
-  if (!check) {
-    return res.status(400).json({
-      error: 'Invalid subreddit parameters',
     });
   }
 
