@@ -16,6 +16,7 @@ import { NextFunction, Request, Response } from 'express';
  */
 export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Response) {
   try {
+    console.log('here');
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
     const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
@@ -33,8 +34,7 @@ export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Resp
         message: 'Access token is missing or invalid',
       });
     }
-    const communityIDS = await getCommunitiesIdOfUserAsMemeber(user.username, page, count);
-    const communities = await getUserCommunities(communityIDS);
+    const communities = await getCommunitiesIdOfUserAsMemeber(user.username, page, count);
 
     res.status(200).json({ communities });
   } catch (error) {
@@ -72,8 +72,7 @@ export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Re
         message: 'Access token is missing or invalid',
       });
     }
-    const communityIDS = await getCommunitiesIdOfUserAsModerator(user.username, page, count);
-    const communities = await getUserCommunities(communityIDS);
+    const communities = await getCommunitiesIdOfUserAsModerator(user.username, page, count);
 
     res.status(200).json({ communities });
   } catch (error) {
@@ -117,7 +116,6 @@ export async function createSubredditHandler(req: Request, res: Response) {
 
     // Handle creation failure
     if (!result.status) {
-      console.log('here1');
       return res.status(500).json({
         error: result.error,
       });
@@ -129,11 +127,10 @@ export async function createSubredditHandler(req: Request, res: Response) {
       });
     }
     // Add user to subreddit
-    const updateUser = await addUserToComm(user._id, result.createdCommunity._id.toString());
+    const updateUser = await addUserToComm(user, result.createdCommunity._id.toString());
 
     // Handle user addition failure
     if (updateUser.status === false) {
-      console.log('here2');
       return res.status(500).json({
         error: updateUser.error,
       });
@@ -141,12 +138,9 @@ export async function createSubredditHandler(req: Request, res: Response) {
 
     // Return success response
     return res.status(200).json({
-      success: true,
-      message: 'Subreddit created successfully',
-      result: result,
+      result,
     });
   } catch (error) {
-    console.log('here3');
     // Handle any unexpected errors
     console.error('Error creating subreddit:', error);
     return res.status(500).json({

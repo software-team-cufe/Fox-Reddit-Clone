@@ -374,17 +374,12 @@ export class User {
   // @prop({ type: [String], default: [] })
   // downvotedPosts: string[];
 
-  @prop({ ref: () => 'Member' })
-  member?: Ref<Member>[];
+  @prop()
+  member?: Member[];
 
-  @prop({ ref: () => 'Moderator' })
-  moderators?: Ref<Moderator>[];
+  @prop()
+  moderators?: Moderator[];
 
-  // @prop({ default: () => new Member() })
-  // member?: Member[];
-
-  // @prop({ default: () => new Moderator() })
-  // moderators?: Moderator[];
   //////////////////////////////////////////////
   // @prop({ type: () => [String] })
   // messages?: string[];

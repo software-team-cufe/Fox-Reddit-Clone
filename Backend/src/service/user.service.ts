@@ -252,12 +252,22 @@ export async function getCommunitiesIdOfUserAsMemeber(username: string, page: nu
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
-
+  console.log('inside');
+  console.log(user.member);
+  if (!user.member) {
+    return [];
+  }
   // Extract the community IDs from the user's member if it exists
-  const communityIDS = user.member ? user.member.map((comm) => comm._id.toString()) : [];
+  const communityIDs = user.member.map((member) => member.communityId);
+
+  console.log('outside');
+  console.log(communityIDs);
+  console.log('outside2');
+
+  const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
 
   // Return the post IDs
-  return communityIDS;
+  return communities;
 }
 /**
  * Retrieves the IDs of the communities that a user is a moderator of.
@@ -281,73 +291,31 @@ export async function getCommunitiesIdOfUserAsModerator(username: string, page: 
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
-
+  console.log('inside');
+  console.log(user.member);
+  if (!user.moderators) {
+    return [];
+  }
   // Extract the community IDs from the user's member if it exists
-  const communityIDS = user.moderators ? user.moderators.map((post) => post._id.toString()) : [];
+  const communityIDs = user.moderators.map((member) => member.communityId);
 
-  // Return the post IDs
-  return communityIDS;
+  console.log('outside');
+  console.log(communityIDs);
+  console.log('outside2');
+
+  const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
+
+  return communities;
 }
 
-// /**
-//  * Add user to community
-//  * @param {String} (username)
-//  * @param {String} (communityID)
-//  * @returns {object} mentions
-//  * @function
-//  */
-// export async function addUserToComm(userID: string, communityID: string) {
-//   console.log(userID, communityID);
-//   const user = await UserModel.findById(userID);
-//   if (!user) {
-//     return {
-//       status: false,
-//       error: 'user not found',
-//     };
-//   }
-//   const userModerator = {
-//     communityId: communityID,
-//     role: 'creator',
-//   };
-//   const userMember = {
-//     communityId: communityID,
-//     isMuted: false,
-//     isBanned: false,
-//   };
-//   console.log(userModerator, userMember);
-//   console.log(user.member, user.moderators);
-//   try {
-//     const updatedUser = await UserModel.findByIdAndUpdate(
-//       userID,
-//       { $addToSet: { moderators: userModerator } },
-//       { upsert: true, new: true }
-//     );
-//     console.log('ana hena');
-//     const updatedUser1 = await UserModel.findByIdAndUpdate(
-//       userID,
-//       { $addToSet: { member: userMember } },
-//       { upsert: true, new: true }
-//     );
-//     if (!user.moderators) {
-//       return {
-//         status: false,
-//         error: 'error in adding user',
-//       };
-//     }
-//     console.log(user.member);
-//     console.log(updatedUser1);
-//   } catch (error) {
-//     return {
-//       status: false,
-//       error: error,
-//     };
-//   }
-//   return {
-//     status: true,
-//   };
-// }
+/**
+ * Add user to community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
 export async function addUserToComm(userID: string, communityID: string) {
-  console.log(userID, communityID);
   const user = await UserModel.findById(userID);
   if (!user) {
     return {
@@ -355,35 +323,39 @@ export async function addUserToComm(userID: string, communityID: string) {
       error: 'user not found',
     };
   }
+  const userModerator = {
+    communityId: communityID,
+    role: 'creator',
+  };
+  const userMember = {
+    communityId: communityID,
+    isMuted: false,
+    isBanned: false,
+  };
 
-  // Create an instance of Moderator
-  const userModerator = new Moderator();
-  userModerator.communityId = communityID;
-  userModerator.role = 'creator';
-
-  console.log(userModerator);
-
-  if (!user.moderators) {
-    return {
-      status: false,
-      error: 'error in adding user',
-    };
-  }
   try {
-    // Add userModerator directly to the moderators array
-    user.moderators.push(userModerator);
-
-    // Save the updated user
-    const updatedUser = await user.save();
-
-    console.log(updatedUser.moderators);
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { moderators: userModerator } },
+      { upsert: true, new: true }
+    );
+    const updatedUser1 = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { member: userMember } },
+      { upsert: true, new: true }
+    );
+    if (!user.moderators) {
+      return {
+        status: false,
+        error: 'error in adding user',
+      };
+    }
   } catch (error) {
     return {
       status: false,
       error: error,
     };
   }
-
   return {
     status: true,
   };

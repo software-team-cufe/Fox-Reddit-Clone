@@ -1,7 +1,7 @@
 import express from 'express';
 import {
-  getCommunityOfUserAsModeratorHandler,
   getCommunityOfUserAsMemeberHandler,
+  getCommunityOfUserAsModeratorHandler,
   createSubredditHandler,
 } from '../controller/community.controller';
 
