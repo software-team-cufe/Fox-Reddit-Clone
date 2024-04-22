@@ -118,8 +118,8 @@ class Moderator {
 }
 
 export class Community {
-  @prop()
-  _id?: string;
+  @prop({ required: true, trim: true, maxLength: 100, minLength: 1 })
+  name?: string;
 
   @prop()
   subreddit?: string;

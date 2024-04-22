@@ -1,12 +1,15 @@
 import express from 'express';
 import {
-  getCommunityOfUserAsModeratorHandler,
   getCommunityOfUserAsMemeberHandler,
+  getCommunityOfUserAsModeratorHandler,
+  createSubredditHandler,
 } from '../controller/community.controller';
 
 const router = express.Router();
 
-router.get('/user/:username/members', getCommunityOfUserAsMemeberHandler);
-router.get('/user/:username/moderators', getCommunityOfUserAsModeratorHandler);
+router.get('/subreddits/mine/member', getCommunityOfUserAsMemeberHandler);
+router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
+
+router.post('/create_subreddit', createSubredditHandler);
 
 export default router;

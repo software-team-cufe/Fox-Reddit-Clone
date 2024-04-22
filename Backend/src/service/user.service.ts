@@ -1,7 +1,9 @@
-import UserModel, { User } from '../model/user.model';
+import UserModel, { User, Moderator } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import appError from '../utils/appError';
 import CommunityModel from '../model/community.model';
+import { Types } from 'mongoose';
+
 /**
  * Creates a new user.
  *
@@ -250,12 +252,22 @@ export async function getCommunitiesIdOfUserAsMemeber(username: string, page: nu
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
-
+  console.log('inside');
+  console.log(user.member);
+  if (!user.member) {
+    return [];
+  }
   // Extract the community IDs from the user's member if it exists
-  const communityIDS = user.member ? user.member.map((comm) => comm._id.toString()) : [];
+  const communityIDs = user.member.map((member) => member.communityId);
+
+  console.log('outside');
+  console.log(communityIDs);
+  console.log('outside2');
+
+  const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
 
   // Return the post IDs
-  return communityIDS;
+  return communities;
 }
 /**
  * Retrieves the IDs of the communities that a user is a moderator of.
@@ -279,68 +291,72 @@ export async function getCommunitiesIdOfUserAsModerator(username: string, page: 
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
-
+  console.log('inside');
+  console.log(user.member);
+  if (!user.moderators) {
+    return [];
+  }
   // Extract the community IDs from the user's member if it exists
-  const communityIDS = user.moderators ? user.moderators.map((post) => post._id.toString()) : [];
+  const communityIDs = user.moderators.map((member) => member.communityId);
 
-  // Return the post IDs
-  return communityIDS;
+  console.log('outside');
+  console.log(communityIDs);
+  console.log('outside2');
+
+  const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
+
+  return communities;
 }
-/*************************Boudy ***************************
-// export async function blockUser1(blocked: User, blocker: User) {
-//   try {
-//     if (blocker.blocksFromMe !== undefined) {
-//       blocker.blocksFromMe.push(blocked._id);
-//     }
-//     return blocker;
-//   } catch (error) {
-//     console.error('Error in blocking a user:', error);
-//     throw error;
-//   }
-// }
-// export async function blockUser2(blocked: User, blocker: User) {
-//   try {
-//     if (blocked.blocksToMe !== undefined) {
-//       blocked.blocksToMe.push(blocker._id);
-//     }
-//     return blocked;
-//   } catch (error) {
-//     console.error('Error in blocking a user:', error);
-//     throw error;
-//   }
-// }
 
-// export async function friendUser(reciever: User, sender: User) {
-//   try {
-//     const recieverid = reciever._id;
-//     const senderid = sender._id;
+/**
+ * Add user to community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function addUserToComm(userID: string, communityID: string) {
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+  const userModerator = {
+    communityId: communityID,
+    role: 'creator',
+  };
+  const userMember = {
+    communityId: communityID,
+    isMuted: false,
+    isBanned: false,
+  };
 
-//     if (recieverid && senderid) {
-//       console.log(recieverid);
-//       await UserModel.updateOne(
-//         { _id: recieverid },
-//         {
-//           $addToSet: {
-//             friendRequestToMe: senderid,
-//           },
-//         }
-//       );
-//       await UserModel.updateOne(
-//         { _id: senderid },
-//         {
-//           $addToSet: {
-//             friendRequestFromMe: recieverid,
-//           },
-//         }
-//       );
-//       console.log(sender);
-//     } else {
-//       console.error('User not found.');
-//     }
-//   } catch (error) {
-//     console.error('Error in friending a user:', error);
-//     throw error;
-//   }
-// }
-*/
-/********************************* */
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { moderators: userModerator } },
+      { upsert: true, new: true }
+    );
+    const updatedUser1 = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { member: userMember } },
+      { upsert: true, new: true }
+    );
+    if (!user.moderators) {
+      return {
+        status: false,
+        error: 'error in adding user',
+      };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
