@@ -97,7 +97,5 @@ router.post('/api/block_user', validateResource(blockUserSchema), deserializeUse
 //router.post('/api/report_user', validateResource(reportUserSchema), deserializeUser, reportUserHandler);
 
 /********************************************************/
-router.get('/subreddits/mine/member', getCommunityOfUserAsMemeberHandler);
-router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
 
 export default router;

@@ -194,7 +194,7 @@ class VoteComment {
   type?: number;
 }
 
-class Moderator {
+export class Moderator {
   @prop({ ref: () => 'Community' })
   communityId?: Ref<Community>;
 
@@ -380,6 +380,11 @@ export class User {
   @prop({ ref: () => 'Moderator' })
   moderators?: Ref<Moderator>[];
 
+  // @prop({ default: () => new Member() })
+  // member?: Member[];
+
+  // @prop({ default: () => new Moderator() })
+  // moderators?: Moderator[];
   //////////////////////////////////////////////
   // @prop({ type: () => [String] })
   // messages?: string[];
