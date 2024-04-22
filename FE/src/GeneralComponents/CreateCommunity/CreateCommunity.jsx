@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { X, Globe, Lock, Eye } from 'lucide-react';
 import { toast } from 'react-toastify';
 import React from 'react';
-import axios from 'axios';
 import { Switch } from '@headlessui/react'
-
+import {userAxios} from '@/Utils/UserAxios';
 
 /**
  * Component for creating a community.
@@ -46,21 +45,12 @@ export default function CreateCommunity({ onClose = () => { } }) {
             toast.error('Please select a community type');
         }
         else {
-            axios.post('http://localhost:3002/communities', {
-                id: 99,
+            userAxios.post('/create_subreddit', {
                 name: inputValue,
-                muted:false,
-                joined:true,
-                favourited: false,
-                NSFW: NSFW,
-                description: "",
-                membersCount: 1,
-                onlineMembers: 0,
-                rules: [],
-                backimage: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q==",
-                icon: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q=="
+                type: commType,
+                over18: NSFW
             })
-            .then(response => {
+            .then(() => {
                     toast.success('Community created successfully');
                     handleClose();
             })
