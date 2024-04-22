@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { userAxios } from "@/Utils/UserAxios";
-import { responsiveFontSizes } from "@mui/material";
 
 function SafetySettings() {
     const [FocusBlock, setFocusBlock] = useState(false);
