@@ -1,9 +1,0 @@
-{
-    "version": 1,
-    "waitingBetweenSends": 60,
-    "waitingBetweenEndTrails": 20,
-    "defaultSendTrails": 10,
-    "maxItemsPerPage": 10,
-    "defaultSendMistakes": 5,
-    "maxFileSize": 5000000
-}
