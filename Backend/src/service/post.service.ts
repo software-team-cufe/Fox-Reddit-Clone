@@ -52,59 +52,6 @@ export function findPostById(id: string) {
  * @returns A promise that resolves to an array of Post objects representing the top posts from the specified community.
  * @throws Error if the community is not found or if there is an error finding the top posts.
  */
-export async function findBestPostsByCommunity(
-  community: string,
-  limit: number = 10,
-  page: number = 1,
-  count: number = 0
-): Promise<Post[]> {
-  try {
-    const communityObject = await findCommunityByName(community);
-
-    const queryOptions: QueryOptions = { sort: { bestFactor: -1 } };
-
-    // Calculate skip based on page and limit
-    const skip = (page - 1) * limit;
-
-    // Apply skip and limit
-    queryOptions.skip = skip;
-    queryOptions.limit = limit;
-
-    const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
-
-    return posts;
-  } catch (error) {
-    throw new Error('Error finding posts by community');
-  }
-}
-
-/**
- * Finds the best posts by random.
- *
- * @param limit - The maximum number of posts to retrieve (default is 10).
- * @param page - The page number of the results to retrieve (default is 1).
- * @param count - The total count of posts (default is 0).
- * @returns A promise that resolves to an array of Post objects representing the best posts.
- * @throws Error if there is an error finding the posts.
- */
-export async function findBestPostsByRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
-  try {
-    const queryOptions: QueryOptions = { sort: { bestFactor: -1 } };
-
-    // Calculate skip based on page and limit
-    const skip = (page - 1) * limit;
-
-    // Apply skip and limit
-    queryOptions.skip = skip;
-    queryOptions.limit = limit;
-
-    const posts = await PostModel.find({}, null, queryOptions).exec();
-
-    return posts;
-  } catch (error) {
-    throw new Error('Error finding posts by community');
-  }
-}
 
 /**
  * Finds the top posts from a specified community.
@@ -125,10 +72,10 @@ export async function findHotPostsByCommunity(
   try {
     const communityObject = await findCommunityByName(community);
 
-    const queryOptions: QueryOptions = { sort: { hotnessFactor: -1 } };
+    const queryOptions: QueryOptions = { sort: { insightCnt: -1 } };
 
     // Calculate skip based on page and limit
-    const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit + count;
 
     // Apply skip and limit
     queryOptions.skip = skip;
@@ -153,10 +100,10 @@ export async function findHotPostsByCommunity(
  */
 export async function findHotPostsByRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
   try {
-    const queryOptions: QueryOptions = { sort: { hotnessFactor: -1 } };
+    const queryOptions: QueryOptions = { sort: { insightCnt: -1 } };
 
     // Calculate skip based on page and limit
-    const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit + count;
 
     // Apply skip and limit
     queryOptions.skip = skip;
@@ -192,7 +139,7 @@ export async function findNewPostsByCommunity(
     const queryOptions: QueryOptions = { sort: { createdAt: -1 } };
 
     // Calculate skip based on page and limit
-    const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit + count;
 
     // Apply skip and limit
     queryOptions.skip = skip;
@@ -220,7 +167,7 @@ export async function findNewPostsByRandom(limit: number = 10, page: number = 1,
     const queryOptions: QueryOptions = { sort: { createdAt: -1 } };
 
     // Calculate skip based on page and limit
-    const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit + count;
 
     // Apply skip and limit
     queryOptions.skip = skip;
@@ -244,31 +191,6 @@ export async function findNewPostsByRandom(limit: number = 10, page: number = 1,
  * @returns A promise that resolves to an array of Post objects representing the top posts from the specified community.
  * @throws Error if the community is not found or if there is an error finding the top posts.
  */
-export async function findTopPostsByCommunity(
-  community: string,
-  limit: number = 10,
-  page: number = 1,
-  count: number = 0
-): Promise<Post[]> {
-  try {
-    const communityObject = await findCommunityByName(community);
-
-    const queryOptions: QueryOptions = { sort: { votesCount: -1 } };
-
-    // Calculate skip based on page and limit
-    const skip = (page - 1) * limit;
-
-    // Apply skip and limit
-    queryOptions.skip = skip;
-    queryOptions.limit = limit;
-
-    const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
-
-    return posts;
-  } catch (error) {
-    throw new Error('Error finding posts by community');
-  }
-}
 
 /**
  * Finds the top posts by random.
@@ -279,22 +201,92 @@ export async function findTopPostsByCommunity(
  * @returns A promise that resolves to an array of Post objects representing the top posts.
  * @throws Error if there is an error finding the posts by community.
  */
-export async function findTopPostsByRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
+
+export async function findTopPostsByCommunityWithinTime(
+  community: string,
+  limit: number = 10,
+  page: number = 1,
+  count: number = 0,
+  startDate: Date = new Date('1970-01-01T00:00:00Z'), // Start of Unix epoch
+  endDate: Date = new Date('2099-12-31T23:59:59Z') // Far into the future
+): Promise<Post[]> {
   try {
-    const queryOptions: QueryOptions = { sort: { votesCount: -1 } };
+    const communityObject = await findCommunityByName(community);
+
+    const queryOptions: QueryOptions = {
+      sort: { votesCount: -1 },
+      // Add the time frame condition to the query
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    };
 
     // Calculate skip based on page and limit
-    const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit + count;
 
     // Apply skip and limit
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    const posts = await PostModel.find({}, null, queryOptions).exec();
+    // Adjust the query to include the time frame condition
+    const posts = await PostModel.find(
+      {
+        communities: communityObject?.id,
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      },
+      null,
+      queryOptions
+    ).exec();
 
     return posts;
   } catch (error) {
-    throw new Error('Error finding posts by community');
+    throw new Error('Error finding posts by community within time frame');
+  }
+}
+
+export async function findTopPostsByRandomWithinTime(
+  limit: number = 10,
+  page: number = 1,
+  count: number = 0,
+  startDate: Date,
+  endDate: Date
+): Promise<Post[]> {
+  try {
+    const queryOptions: QueryOptions = {
+      sort: { votesCount: -1 },
+      // Add the time frame condition to the query
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    };
+
+    // Calculate skip based on page and limit
+    const skip = (page - 1) * limit + count;
+
+    // Apply skip and limit
+    queryOptions.skip = skip;
+    queryOptions.limit = limit;
+
+    // Adjust the query to include the time frame condition
+    const posts = await PostModel.find(
+      {
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      },
+      null,
+      queryOptions
+    ).exec();
+
+    return posts;
+  } catch (error) {
+    throw new Error('Error finding posts by community within time frame');
   }
 }
 
@@ -431,7 +423,7 @@ export async function getBestPostsFromSubreddit(
   page: number = 1,
   count: number = 0
 ): Promise<Post[]> {
-  const bestPosts = await findBestPostsByCommunity(subreddit, limit, page, count);
+  const bestPosts = await findRandomPostsByCommunity(subreddit, limit, page, count);
   return bestPosts;
 }
 
@@ -444,7 +436,7 @@ export async function getBestPostsFromSubreddit(
  * @returns A Promise that resolves to an array of `Post` objects.
  */
 export async function getBestPostsFromRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
-  const bestPosts = await findBestPostsByRandom(limit, page, count);
+  const bestPosts = await findRandomPostsByRandom(limit, page, count);
   return bestPosts;
 }
 
@@ -525,9 +517,11 @@ export async function getTopPostsFromSubreddit(
   subreddit: string,
   limit: number = 10,
   page: number = 1,
-  count: number = 0
+  count: number = 0,
+  startDate: Date,
+  endDate: Date
 ): Promise<Post[]> {
-  const topPosts = await findTopPostsByCommunity(subreddit, limit, page, count);
+  const topPosts = await findTopPostsByCommunityWithinTime(subreddit, limit, page, count, startDate, endDate);
   return topPosts;
 }
 
@@ -539,8 +533,14 @@ export async function getTopPostsFromSubreddit(
  * @param count - The total number of posts (for pagination).
  * @returns A Promise that resolves to an array of `Post` objects.
  */
-export async function getTopPostsFromRandom(limit: number = 10, page: number = 1, count: number = 0): Promise<Post[]> {
-  const topPosts = await findTopPostsByRandom(limit, page, count);
+export async function getTopPostsFromRandom(
+  limit: number = 10,
+  page: number = 1,
+  count: number = 0,
+  startDate: Date,
+  endDate: Date
+): Promise<Post[]> {
+  const topPosts = await findTopPostsByRandomWithinTime(limit, page, count, startDate, endDate);
   return topPosts;
 }
 

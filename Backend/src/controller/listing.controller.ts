@@ -961,6 +961,10 @@ export async function getSortedPosts(req: Request, res: Response) {
     const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
     const count = typeof req.query.count === 'string' ? parseInt(req.query.count, 10) : 0;
     const page = typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
+    // Parse startDate and endDate from query parameters, defaulting to all time if not provided
+    const startDate = req.query.startDate ? new Date(req.query.startDate as string) : new Date('1970-01-01T00:00:00Z'); // Start of Unix epoch
+    const endDate = req.query.endDate ? new Date(req.query.endDate as string) : new Date('2099-12-31T23:59:59Z'); // Far into the future
+
     if (isNaN(page) || isNaN(count) || isNaN(limit)) {
       return res.status(400).json({ error: 'Invalid request parameters.' });
     }
@@ -969,7 +973,7 @@ export async function getSortedPosts(req: Request, res: Response) {
       if (sort != ' ') {
         if (sort == 'best') Posts = await getBestPostsFromSubreddit(sub, limit, page, count);
         if (sort == 'hot') Posts = await getHotPostsFromSubreddit(sub, limit, page, count);
-        if (sort == 'top') Posts = await getTopPostsFromSubreddit(sub, limit, page, count);
+        if (sort == 'top') Posts = await getTopPostsFromSubreddit(sub, limit, page, count, startDate, endDate);
         if (sort == 'new') Posts = await getNewPostsFromSubreddit(sub, limit, page, count);
         if (sort == 'random') Posts = await getRandomPostsFromSubreddit(sub, limit, page, count);
         if (sort != 'random' && sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new')
@@ -981,7 +985,7 @@ export async function getSortedPosts(req: Request, res: Response) {
       if (sort != ' ') {
         if (sort == 'best') Posts = await getBestPostsFromRandom(limit, page, count);
         if (sort == 'hot') Posts = await getHotPostsFromRandom(limit, page, count);
-        if (sort == 'top') Posts = await getTopPostsFromRandom(limit, page, count);
+        if (sort == 'top') Posts = await getTopPostsFromRandom(limit, page, count, startDate, endDate);
         if (sort == 'new') Posts = await getNewPostsFromRandom(limit, page, count);
         if (sort == 'random') Posts = await getRandomPostsFromRandom(limit, page, count);
         if (sort != 'random' && sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new')
