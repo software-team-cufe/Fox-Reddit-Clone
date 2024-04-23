@@ -1,2 +1,6 @@
 node_modules
 FE/node_modules
+FE/package-lock.json
+package-lock.json
+Fe/dist
+dist
