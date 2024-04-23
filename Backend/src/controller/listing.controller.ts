@@ -33,6 +33,7 @@ import CommentModel, { Comment } from '../model/comments.model';
 import { findCommunityByName } from '../service/community.service';
 import UserModel from '../model/user.model';
 import PostModel from '../model/posts.model';
+import CommunityModel from '../model/community.model';
 import { date } from 'zod';
 
 /**
@@ -896,14 +897,18 @@ export async function submitPostHandler(req: Request, res: Response) {
     const user = res.locals.user;
     const creatorID = user._id;
 
-    const info = {
-      title: req.body.title,
-      textHTML: req.body.text,
-      attachments: req.body.attachments,
-      nsfw: req.body.nsfw,
-      spoiler: req.body.spoiler,
+    const { title, text, attachments, nsfw, spoiler, CommunityID, poll } = req.body;
+
+    // Create the post info object
+    const postInfo = {
+      title,
+      textHTML: text,
+      attachments,
+      nsfw,
+      spoiler,
       userID: creatorID,
-      CommunityID: req.body.CommunityID,
+      CommunityID,
+      poll: poll.map((option: string) => ({ title: option, votes: 0 })),
     };
 
     // Check if user is missing or invalid
@@ -915,20 +920,28 @@ export async function submitPostHandler(req: Request, res: Response) {
     }
 
     // Create the post
-    const createdPost = await createPost(info);
+    const createdPost = await createPost(postInfo);
 
-    // Save the new comment
     if (!createdPost) {
       return res.status(400).json({ message: 'Failed to create the post' });
     }
 
-    // Update user and post with the new comment
+    // Update user and post with the new post
     const updatedUser = await UserModel.findByIdAndUpdate(
       user._id,
-      { $addToSet: { hasPost: createdPost._id } }, // Using $addToSet to avoid adding duplicate comments
+      { $addToSet: { hasPost: createdPost._id } }, // Using $addToSet to avoid adding duplicate posts
       { new: true, upsert: true }
     );
-    res.status(201).json(createdPost); // 201: Created
+
+    if (CommunityID) {
+      const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+        CommunityID,
+        { $addToSet: { communityPosts: createdPost._id } }, // Using $addToSet to avoid adding duplicate posts
+        { new: true, upsert: true }
+      );
+    }
+
+    res.status(201).json(createdPost);
   } catch (error) {
     console.error('Error in addCommentHandler:', error);
     return res.status(500).json({

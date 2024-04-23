@@ -1,6 +1,7 @@
 import { prop, getModelForClass, Ref, DocumentType, pre, ReturnModelType, post } from '@typegoose/typegoose';
 import { User } from './user.model';
-import Community from './comments.model';
+import { Comment } from './comments.model';
+import { Community } from './community.model';
 class Spam {
   @prop({ ref: () => User })
   spammerID!: Ref<User>;
@@ -20,9 +21,17 @@ class Vote {
   voteType!: number;
 }
 
+class PollOption {
+  @prop()
+  title!: string;
+
+  @prop({ default: 0 })
+  votes!: number;
+}
+
 export class Post {
   @prop({ required: true, ref: () => User })
-  userID!: Ref<User>; ////////////////////////////////////////////////////////////////////////////////
+  userID!: Ref<User>;
 
   @prop({ required: true })
   title!: string;
@@ -41,6 +50,9 @@ export class Post {
 
   @prop({ type: () => [String] })
   attachments!: string[];
+
+  @prop({ type: () => [PollOption] })
+  poll!: PollOption[];
 
   @prop({ default: false })
   spoiler!: boolean;
@@ -84,8 +96,8 @@ export class Post {
   @prop({ type: () => [String] })
   followers!: string[];
 
-  @prop({ ref: () => User })
-  CommunityID!: Ref<User>; //change to community when community model is done
+  @prop({ ref: () => 'Community' })
+  CommunityID?: Ref<Community>;
 
   @prop({ type: () => [Spam] })
   spammers!: Spam[];
