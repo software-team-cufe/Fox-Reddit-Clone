@@ -782,10 +782,7 @@ export async function getALLBlockedHandler(req: Request, res: Response) {
         message: 'Access token is missing or invalid',
       });
     } else if (!user.blocksFromMe || user.blocksFromMe.length === 0) {
-      return res.status(402).json({
-        status: 'failed',
-        message: 'User does not have blocked users',
-      });
+      return res.status(402).json([]);
     } else {
       const blockedIDs = user.blocksFromMe ? user.blocksFromMe.map((blockedID) => blockedID.toString()) : [];
       const blockeds = await UserModel.find({ _id: { $in: blockedIDs } });
