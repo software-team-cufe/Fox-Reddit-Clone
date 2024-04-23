@@ -147,7 +147,7 @@ export async function createSubredditHandler(req: Request, res: Response) {
   }
 }
 
-export async function getCommunityInfoHandler(req: Request, res: Response) {
+export async function getCommunityHandler(req: Request, res: Response) {
   try {
     const userID = res.locals.user._id;
     const user = res.locals.user;
