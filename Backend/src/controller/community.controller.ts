@@ -1,5 +1,10 @@
 import { createComm } from '../schema/community.schema';
-import { getUserCommunities, createSubreddit, creationValidation } from '../service/community.service';
+import {
+  findCommunityByName,
+  getUserCommunities,
+  createSubreddit,
+  creationValidation,
+} from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
   getCommunitiesIdOfUserAsModerator,
@@ -54,7 +59,7 @@ export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Resp
  * @param {Response} res - The response object.
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
-export async function getCommunityOfUserAsModeratorHandler(req: Request<createComm['body']>, res: Response) {
+export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Response) {
   try {
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
@@ -138,6 +143,36 @@ export async function createSubredditHandler(req: Request, res: Response) {
     console.error('Error creating subreddit:', error);
     return res.status(500).json({
       error: 'Internal server error',
+    });
+  }
+}
+
+export async function getCommunityInfoHandler(req: Request, res: Response) {
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    return res.status(200).json({
+      community,
+    });
+  } catch (error) {
+    console.error('Error in getCommunityInfoHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
     });
   }
 }
