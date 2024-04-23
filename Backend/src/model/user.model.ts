@@ -178,7 +178,7 @@ class Member {
   isBanned?: IsBannedOrMuted;
 }
 
-class Vote {
+class VotePost {
   @prop({ ref: () => 'Post' })
   postID?: Ref<Post>;
 
@@ -190,7 +190,7 @@ class VoteComment {
   @prop({ ref: () => 'Comment' })
   commentID?: Ref<Comment>;
 
-  @prop()
+  @prop({ enum: [1, -1] })
   type?: number;
 }
 
@@ -338,8 +338,11 @@ export class User {
   @prop({ ref: () => 'Comment' })
   hasReply?: Ref<Comment>[];
 
-  @prop({ type: () => [Vote] })
-  hasVote?: Vote[];
+  @prop({ type: () => [VotePost] })
+  postVotes?: VotePost[];
+
+  @prop({ type: () => [VoteComment] })
+  commentVotes?: VoteComment[];
 
   @prop({ ref: 'Post' })
   followPost?: Ref<Post>[];
@@ -355,9 +358,6 @@ export class User {
 
   // @prop({ ref: NotificationModel })
   // notifications?: Ref<Notification>[];
-
-  @prop({ type: () => [VoteComment] })
-  votedComments?: VoteComment[];
 
   @prop({ ref: () => 'Comment' })
   mentionedInComments?: Ref<Comment>[];
@@ -405,5 +405,4 @@ export class User {
 }
 
 export const UserModel = getModelForClass(User);
-export { Vote };
 export default UserModel;

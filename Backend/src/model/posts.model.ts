@@ -13,11 +13,11 @@ class Spam {
   spamText!: string;
 }
 
-class Vote {
+class VotePost {
   @prop({ ref: () => User })
   userID!: Ref<User>;
 
-  @prop()
+  @prop({ enum: [1, -1] })
   voteType!: number;
 }
 
@@ -42,8 +42,8 @@ export class Post {
   @prop()
   textJSON!: string;
 
-  @prop({ ref: 'Community' })
-  communities!: Ref<typeof Community>[];
+  // @prop({ ref: 'Community' })
+  // communities!: Ref<typeof Community>[];
 
   @prop({ default: false })
   isDeleted!: boolean;
@@ -72,7 +72,7 @@ export class Post {
   @prop({ default: 0 })
   spamCount!: number;
 
-  @prop({ default: 1 })
+  @prop({ default: 0 })
   votesCount!: number;
 
   @prop()
@@ -102,8 +102,8 @@ export class Post {
   @prop({ type: () => [Spam] })
   spammers!: Spam[];
 
-  @prop({ type: () => [Vote] })
-  voters!: Vote[];
+  @prop({ type: () => [VotePost] })
+  votes!: VotePost[];
 
   @prop({ type: () => [String], ref: () => User })
   mentionedInUsers!: Ref<User>[]; ///////////////////////////////////////////////////////

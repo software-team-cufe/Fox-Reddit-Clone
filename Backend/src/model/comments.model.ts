@@ -14,7 +14,7 @@ class Spam {
   type!: string;
 }
 
-class Vote {
+class VoteComment {
   @prop({ ref: () => User })
   userID!: Ref<User>;
 
@@ -44,11 +44,11 @@ export class Comment {
   @prop()
   textJSON!: string;
 
-  @prop({ default: 1 })
+  @prop({ default: 0 })
   votesCount!: number;
 
-  @prop({ type: () => [Vote] })
-  voters!: Vote[];
+  @prop({ type: () => [VoteComment] })
+  voters!: VoteComment[];
 
   @prop({ default: Date.now })
   createdAt!: Date;

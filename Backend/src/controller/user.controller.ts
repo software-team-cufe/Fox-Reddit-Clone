@@ -29,7 +29,7 @@ import { sendEmail, generateVerificationLinkToken, generatePasswordResetLinkToke
 import { signJwt, verifyJwt } from '../utils/jwt';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
-import { UserModel, Vote } from '../model/user.model';
+import { UserModel } from '../model/user.model';
 import { omit, shuffle } from 'lodash';
 import { get } from 'config';
 import PostModel from '../model/posts.model';
@@ -339,125 +339,125 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
   return res.status(200).send(user.prefs);
 }
 
-export async function getUpvotedPosts(req: Request, res: Response) {
-  try {
-    let user = res.locals.user;
-    const sort = req.params.sort.toLowerCase();
-    if (!user) {
-      return res.status(401).send('No user logged in');
-    }
-    user = await findUserById(user._id);
+// export async function getUpvotedPosts(req: Request, res: Response) {
+//   try {
+//     let user = res.locals.user;
+//     const sort = req.params.sort.toLowerCase();
+//     if (!user) {
+//       return res.status(401).send('No user logged in');
+//     }
+//     user = await findUserById(user._id);
 
-    let upvotedPostIds: any[] = [];
+//     let upvotedPostIds: any[] = [];
 
-    if (user.hasVote) {
-      upvotedPostIds = user.hasVote
-        .filter((vote: Vote) => vote.type === 1 && vote.postID) // Filter for type 1 and postID exists
-        .map((vote: Vote) => vote.postID); // Map to get only the postID
-    }
+//     if (user.hasVote) {
+//       upvotedPostIds = user.hasVote
+//         .filter((vote: Vote) => vote.type === 1 && vote.postID) // Filter for type 1 and postID exists
+//         .map((vote: Vote) => vote.postID); // Map to get only the postID
+//     }
 
-    const limit = parseInt(req.query.limit as string, 10) || 10;
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const count = parseInt(req.query.count as string, 10) || 0;
+//     const limit = parseInt(req.query.limit as string, 10) || 10;
+//     const page = parseInt(req.query.page as string, 10) || 1;
+//     const count = parseInt(req.query.count as string, 10) || 0;
 
-    const skip = (page - 1) * limit + count;
+//     const skip = (page - 1) * limit + count;
 
-    const totalUpvotedPosts = upvotedPostIds.length;
-    const totalPages = Math.ceil(totalUpvotedPosts / limit);
+//     const totalUpvotedPosts = upvotedPostIds.length;
+//     const totalPages = Math.ceil(totalUpvotedPosts / limit);
 
-    const paginatedUpvotedPostIds = upvotedPostIds.slice(skip, skip + limit);
+//     const paginatedUpvotedPostIds = upvotedPostIds.slice(skip, skip + limit);
 
-    let upvotedPosts;
+//     let upvotedPosts;
 
-    if (sort) {
-      if (sort == 'best')
-        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ bestFactor: -1 });
-      if (sort == 'hot')
-        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ hotnessFactor: -1 });
-      if (sort == 'top')
-        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ votesCount: -1 });
-      if (sort == 'new')
-        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ createdAt: -1 });
-      if (sort == 'random') upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
-      if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
-        upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
-    } else {
-      upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
-    }
+//     if (sort) {
+//       if (sort == 'best')
+//         upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ bestFactor: -1 });
+//       if (sort == 'hot')
+//         upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ hotnessFactor: -1 });
+//       if (sort == 'top')
+//         upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ votesCount: -1 });
+//       if (sort == 'new')
+//         upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ createdAt: -1 });
+//       if (sort == 'random') upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+//       if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
+//         upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+//     } else {
+//       upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+//     }
 
-    return res.json({
-      upvotedPosts,
-      page,
-      limit,
-      totalPages,
-      totalUpvotedPosts,
-      sort,
-    });
-  } catch (error) {
-    console.error('Error fetching upvoted posts:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-}
+//     return res.json({
+//       upvotedPosts,
+//       page,
+//       limit,
+//       totalPages,
+//       totalUpvotedPosts,
+//       sort,
+//     });
+//   } catch (error) {
+//     console.error('Error fetching upvoted posts:', error);
+//     return res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// }
 
-export async function getDownvotedPosts(req: Request, res: Response) {
-  try {
-    let user = res.locals.user;
-    const sort = req.params.sort.toLowerCase();
-    if (!user) {
-      return res.status(401).send('No user logged in');
-    }
-    user = await findUserById(user._id);
+// export async function getDownvotedPosts(req: Request, res: Response) {
+//   try {
+//     let user = res.locals.user;
+//     const sort = req.params.sort.toLowerCase();
+//     if (!user) {
+//       return res.status(401).send('No user logged in');
+//     }
+//     user = await findUserById(user._id);
 
-    let downvotedPostIds: any[] = [];
+//     let downvotedPostIds: any[] = [];
 
-    if (user.hasVote) {
-      downvotedPostIds = user.hasVote
-        .filter((vote: Vote) => vote.type === -1 && vote.postID) // Filter for type 1 and postID exists
-        .map((vote: Vote) => vote.postID); // Map to get only the postID
-    }
+//     if (user.hasVote) {
+//       downvotedPostIds = user.hasVote
+//         .filter((vote: Vote) => vote.type === -1 && vote.postID) // Filter for type 1 and postID exists
+//         .map((vote: Vote) => vote.postID); // Map to get only the postID
+//     }
 
-    const limit = parseInt(req.query.limit as string, 10) || 10;
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const count = parseInt(req.query.count as string, 10) || 0;
+//     const limit = parseInt(req.query.limit as string, 10) || 10;
+//     const page = parseInt(req.query.page as string, 10) || 1;
+//     const count = parseInt(req.query.count as string, 10) || 0;
 
-    const skip = (page - 1) * limit + count;
+//     const skip = (page - 1) * limit + count;
 
-    const totalDownvotedPosts = downvotedPostIds.length;
-    const totalPages = Math.ceil(totalDownvotedPosts / limit);
+//     const totalDownvotedPosts = downvotedPostIds.length;
+//     const totalPages = Math.ceil(totalDownvotedPosts / limit);
 
-    const paginatedDownvotedPostIds = downvotedPostIds.slice(skip, skip + limit);
+//     const paginatedDownvotedPostIds = downvotedPostIds.slice(skip, skip + limit);
 
-    let downvotedPosts;
+//     let downvotedPosts;
 
-    if (sort) {
-      if (sort == 'best')
-        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ bestFactor: -1 });
-      if (sort == 'hot')
-        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ hotnessFactor: -1 });
-      if (sort == 'top')
-        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ votesCount: -1 });
-      if (sort == 'new')
-        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ createdAt: -1 });
-      if (sort == 'random') downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
-      if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
-        downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
-    } else {
-      downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
-    }
+//     if (sort) {
+//       if (sort == 'best')
+//         downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ bestFactor: -1 });
+//       if (sort == 'hot')
+//         downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ hotnessFactor: -1 });
+//       if (sort == 'top')
+//         downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ votesCount: -1 });
+//       if (sort == 'new')
+//         downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ createdAt: -1 });
+//       if (sort == 'random') downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+//       if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
+//         downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+//     } else {
+//       downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+//     }
 
-    return res.json({
-      downvotedPosts,
-      page,
-      limit,
-      totalPages,
-      totalDownvotedPosts,
-      sort,
-    });
-  } catch (error) {
-    console.error('Error fetching upvoted posts:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-}
+//     return res.json({
+//       downvotedPosts,
+//       page,
+//       limit,
+//       totalPages,
+//       totalDownvotedPosts,
+//       sort,
+//     });
+//   } catch (error) {
+//     console.error('Error fetching upvoted posts:', error);
+//     return res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// }
 /**
  * Handles username_available request.
  *
