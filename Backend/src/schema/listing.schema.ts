@@ -103,6 +103,7 @@ export const submitPostSchema = object({
       required_error: 'text is required',
     }),
     attachments: array(string()).optional(),
+    poll: array(string()).optional(),
     nsfw: boolean({
       required_error: 'nsfw is required',
     }),

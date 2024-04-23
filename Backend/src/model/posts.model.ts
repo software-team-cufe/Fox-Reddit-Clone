@@ -51,8 +51,8 @@ export class Post {
   @prop({ type: () => [String] })
   attachments!: string[];
 
-  @prop({ type: () => [PollOption] })
-  poll!: PollOption[];
+  @prop({ type: () => [PollOption], required: false })
+  poll?: PollOption[];
 
   @prop({ default: false })
   spoiler!: boolean;
