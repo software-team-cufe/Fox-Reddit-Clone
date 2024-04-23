@@ -10,7 +10,8 @@ class browseRow extends StatefulWidget {
   final Function pickVideo;
   final iconSize;
 
-  const browseRow({super.key, 
+  const browseRow({
+    super.key,
     required this.togglePollVisibility,
     required this.addWidget,
     required this.iconSize,
@@ -25,7 +26,7 @@ class _browseRowState extends State<browseRow> {
   bool isURLVisible = false;
   bool isImageVisible = false;
   bool isVideoVisible = false;
-
+  late TextEditingController urlController;
   late String imagePath;
 
   void pickImage() async {
@@ -38,6 +39,12 @@ class _browseRowState extends State<browseRow> {
       });
       widget.addWidget(ImageDisplay(imagePath: imagePath));
     }
+  }
+
+  @override
+  void dispose() {
+    urlController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,9 +65,11 @@ class _browseRowState extends State<browseRow> {
                 });
                 widget.addWidget(
                   isURLVisible
-                      ? const MyTextInputWidget(
-                          inputTitle: 'URL',
-                          sheight: 50.0,
+                      ? TextField(
+                          controller: urlController,
+                          decoration: InputDecoration(
+                            labelText: '',
+                          ),
                         )
                       : Container(),
                 );
