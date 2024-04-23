@@ -252,22 +252,19 @@ export async function getCommunitiesIdOfUserAsMemeber(username: string, page: nu
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
-  console.log('inside');
-  console.log(user.member);
+
   if (!user.member) {
     return [];
   }
   // Extract the community IDs from the user's member if it exists
   const communityIDs = user.member.map((member) => member.communityId);
 
-  console.log('outside');
-  console.log(communityIDs);
-  console.log('outside2');
-
   const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
 
-  // Return the post IDs
-  return communities;
+  // Extract community names from fetched communities
+  const communityNames = communities.map((community) => community.name);
+
+  return communityNames;
 }
 /**
  * Retrieves the IDs of the communities that a user is a moderator of.
@@ -291,21 +288,18 @@ export async function getCommunitiesIdOfUserAsModerator(username: string, page: 
   if (!user) {
     throw new appError("This user doesn't exist!", 404);
   }
-  console.log('inside');
-  console.log(user.member);
   if (!user.moderators) {
     return [];
   }
-  // Extract the community IDs from the user's member if it exists
+  //Extract the community IDs from the user's member if it exists
   const communityIDs = user.moderators.map((member) => member.communityId);
-
-  console.log('outside');
-  console.log(communityIDs);
-  console.log('outside2');
 
   const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
 
-  return communities;
+  // Extract community names from fetched communities
+  const communityNames = communities.map((community) => community.name);
+
+  return communityNames;
 }
 
 /**

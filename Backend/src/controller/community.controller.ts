@@ -22,7 +22,6 @@ import { NextFunction, Request, Response } from 'express';
  */
 export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Response) {
   try {
-    console.log('here');
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
     const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
