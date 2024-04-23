@@ -35,6 +35,8 @@ import {
   getUserIDfromTokenHandler,
   // getUpvotedPosts,
   // getDownvotedPosts,
+  editCurrentUserNotificationPrefs,
+  getCurrentUserNotificationPrefs,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -66,6 +68,10 @@ router.get('/api/v1/me', requireUser, getCurrentUserHandler);
 router.get('/api/v1/me/prefs', getCurrentUserPrefs);
 
 router.patch('/api/v1/me/prefs', editCurrentUserPrefs);
+
+router.get('/api/v1/me/notification/settings', getCurrentUserNotificationPrefs);
+
+router.patch('/api/v1/me/notification/settings', editCurrentUserNotificationPrefs);
 
 // router.get('/api/user/me/upvoted/:sort', getUpvotedPosts);
 

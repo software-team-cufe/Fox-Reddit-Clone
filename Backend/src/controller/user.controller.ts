@@ -314,6 +314,25 @@ export async function getCurrentUserPrefs(req: Request, res: Response) {
     });
   }
 }
+
+export async function getCurrentUserNotificationPrefs(req: Request, res: Response) {
+  let user = res.locals.user;
+  if (!user) {
+    return res.status(401).json({
+      msg: 'User doesnt exist',
+    });
+  }
+  user = await findUserById(user._id);
+  if (user.notificationPrefs) {
+    return res.status(200).json({
+      userPrefs: user.notificationPrefs,
+    });
+  } else {
+    return res.status(404).json({
+      userPrefs: null,
+    });
+  }
+}
 /**
  * Edit the current user's preferences.
  *
@@ -337,6 +356,23 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
   await user.save();
 
   return res.status(200).send(user.prefs);
+}
+export async function editCurrentUserNotificationPrefs(req: Request, res: Response) {
+  let user = res.locals.user;
+
+  if (!user) {
+    return res.status(401).send('No user logged in');
+  }
+
+  // Get specific prefs to update from request body
+  const prefsToUpdate = req.body;
+  // Update only those prefs on the user document
+  user = await findUserById(user._id);
+  Object.assign(user.notificationPrefs, prefsToUpdate);
+
+  await user.save();
+
+  return res.status(200).send(user.notificationPrefs);
 }
 
 // export async function getUpvotedPosts(req: Request, res: Response) {

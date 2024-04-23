@@ -126,6 +126,73 @@ export class UserPrefs {
   @prop({ default: true })
   prefShowTrending?: boolean;
 }
+export class notificationSettings {
+  @prop({ default: true })
+  messages?: boolean;
+
+  @prop({ default: true })
+  chatMessages?: boolean;
+
+  @prop({ default: true })
+  chatRequests?: boolean;
+
+  @prop({ default: true })
+  mentionOfUsername?: boolean;
+
+  @prop({ default: true })
+  commentsOnYourPosts?: boolean;
+
+  @prop({ default: true })
+  upvotesOnYourPosts?: boolean;
+
+  @prop({ default: true })
+  upvotedOnYourComments?: boolean;
+
+  @prop({ default: true })
+  repliesToYourComments?: boolean;
+
+  @prop({ default: true })
+  activityOnYourComments?: boolean;
+
+  @prop({ default: true })
+  activityOnChatPostsYoureIn?: boolean;
+
+  @prop({ default: true })
+  newFollowers?: boolean;
+
+  @prop({ default: true })
+  awardsYouReceive?: boolean;
+
+  @prop({ default: true })
+  postsYouFollow?: boolean;
+
+  @prop({ default: true })
+  commentsYouFollow?: boolean;
+
+  @prop({ default: true })
+  trendingPosts?: boolean;
+
+  @prop({ default: true })
+  communityRecommendations?: boolean;
+
+  @prop({ default: true })
+  reReddit?: boolean;
+
+  @prop({ default: true })
+  featuredContent?: boolean;
+
+  @prop({ default: true })
+  communityAlerts?: boolean;
+
+  @prop({ default: true })
+  redditAnnouncements?: boolean;
+
+  @prop({ default: true })
+  cakeDay?: boolean;
+
+  @prop({ default: true })
+  modNotifications?: boolean;
+}
 
 class About {
   @prop({ default: false })
@@ -294,6 +361,9 @@ export class User {
   @prop({ default: () => new UserPrefs() })
   prefs?: UserPrefs;
 
+  @prop({ default: () => new notificationSettings() })
+  notificationPrefs?: notificationSettings;
+
   @prop({ default: () => new Me() })
   meReturn?: Me;
 
@@ -361,18 +431,6 @@ export class User {
 
   @prop({ ref: () => 'Comment' })
   mentionedInComments?: Ref<Comment>[];
-
-  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
-  upvotedPosts: Types.ObjectId[];
-
-  @prop({ type: () => [Types.ObjectId] }) // Array of ObjectIds referencing Post documents
-  downvotedPosts: Types.ObjectId[];
-
-  // @prop({ type: [String], default: [] })
-  // upvotedPosts: string[];
-
-  // @prop({ type: [String], default: [] })
-  // downvotedPosts: string[];
 
   @prop()
   member?: Member[];
