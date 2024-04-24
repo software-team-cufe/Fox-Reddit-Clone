@@ -4,10 +4,13 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
+/// A screen for selecting or uploading a community icon.
 class CommunityIconScreen extends StatefulWidget {
+  /// The subreddit associated with the community icon.
   final String subreddit;
 
-  const CommunityIconScreen({Key? key, required this.subreddit}) : super(key: key);
+  /// Constructor for the CommunityIconScreen.
+  const CommunityIconScreen({super.key, required this.subreddit});
 
   @override
   _CommunityIconScreenState createState() => _CommunityIconScreenState();
@@ -17,6 +20,7 @@ class _CommunityIconScreenState extends State<CommunityIconScreen> {
   Color _selectedColor = Colors.blue;
   File? _selectedImage;
 
+  /// Opens a dialog to select a color or upload an image for the community icon.
   void _openColorPicker() {
     showDialog(
       context: context,
@@ -79,6 +83,7 @@ class _CommunityIconScreenState extends State<CommunityIconScreen> {
     );
   }
 
+  /// Uploads the selected community icon.
   Future<void> _uploadCommunityIcon() async {
     try {
       final url = Uri.parse('https://www.reddit.com/r/${widget.subreddit}/api/upload_sr_img');

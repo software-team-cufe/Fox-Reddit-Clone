@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
 import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
+import 'package:reddit_fox/features/community/screens/modtools/modmail.dart';
+import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 /// Widget representing a custom drawer.
 ///
 /// The [CustomDrawer] widget displays a drawer that slides in from the left side of the screen.
@@ -45,7 +47,7 @@ class CustomDrawer extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const BlankPage()),
+                          builder: (context) => const CommunityListDrawer()),
                     );
                   },
                 ),

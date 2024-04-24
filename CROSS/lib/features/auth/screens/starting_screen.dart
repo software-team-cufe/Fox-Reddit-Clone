@@ -7,6 +7,7 @@ import 'package:reddit_fox/core/constants/constants.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/features/auth/screens/signup_screen.dart';
 
+/// A stateless widget representing the starting screen of the application.
 class StartingScreen extends StatelessWidget {
   const StartingScreen({super.key});
 

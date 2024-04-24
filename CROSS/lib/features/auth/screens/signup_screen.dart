@@ -12,6 +12,7 @@ import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+  /// A StatefulWidget representing the sign-up screen.
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -25,7 +26,7 @@ class SignupScreen extends StatefulWidget {
   //   return bytes.fold(0, (result, element) => (result << 8) + element);
   // }
 }
-
+  /// The state of the [SignupScreen].
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -45,6 +46,12 @@ class _SignupScreenState extends State<SignupScreen> {
   bool acceptTerms = false;
   bool showPass = false;
   String? errorMessage;
+
+  /// Validates user inputs and attempts to sign up.
+  ///
+  /// If successful, navigates the user to the login screen.
+  /// Calls the sign-up API with the provided user information.
+
 
   String? signup(final String email, final String password, String? name,
       DateTime? birthDate, bool termsandconditions) {

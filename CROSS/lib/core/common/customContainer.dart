@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 
+/// A custom container widget displaying main and sub text with an icon.
+///
+/// This widget renders a container with main text, subtext, and an accompanying icon.
 class CustomContainer extends StatelessWidget {
-  const CustomContainer(
-      {super.key, required this.mainText, required this.subText});
+  /// Constructs a [CustomContainer] widget.
+  ///
+  /// [mainText] is the main text displayed on the container.
+  /// [subText] is the subtext displayed below the main text.
+  const CustomContainer({
+    super.key,
+    required this.mainText,
+    required this.subText,
+  });
+
   final String mainText;
   final String subText;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,13 +41,16 @@ class CustomContainer extends StatelessWidget {
             ),
             const SizedBox(width: 5),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   mainText,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w400, fontSize: 20),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
                 ),
-                Text(subText)
+                Text(subText),
               ],
             ),
           ],

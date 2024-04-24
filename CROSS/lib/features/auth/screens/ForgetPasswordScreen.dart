@@ -76,6 +76,10 @@ import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:http/http.dart' as http;
 
+/// A screen widget for resetting the user's password.
+///
+/// This widget allows the user to enter their email address and sends a link to reset their password.
+/// If the email exists in the system, reset instructions are sent.
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
 
@@ -86,10 +90,13 @@ class ForgetPasswordScreen extends StatefulWidget {
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   bool _usermessage = false;
 
-  forgetEmail(String email) async {
+  /// Sends a request to the backend to reset the password for the provided email.
+  ///
+  /// The [email] parameter is the email address of the user.
+  Future<void> forgetEmail(String email) async {
     final Uri url = Uri.parse(ApiRoutesBackend.forgetPassword);
 
-    Map<String, dynamic> body = {
+    final Map<String, dynamic> body = {
       "email": email,
     };
     final response = await http.post(
@@ -97,7 +104,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       body: jsonEncode(body),
       headers: {'Content-Type': 'application/json'},
     );
-    print(response.body);
     print(response.body);
     print(response.statusCode);
   }
@@ -153,12 +159,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 onTap: () {
                   setState(() {
                     _usermessage = true;
-
-                    // Set() {
-                    //   String as;
-                    //   // as = emailController as String;
-                    // }
-
                     forgetEmail(emailController.text);
                     Timer(const Duration(seconds: 6), () {
                       Navigator.of(context).pushReplacement(
