@@ -5,10 +5,12 @@ import axios from "axios";
 
 export default function HiddenPost({ post, setpost, posts }) {
     const unhidePost = () => {
-        axios.patch(`http://localhost:3002/posts/${post.id}`, { hidden: false })
+        console.log(post);
+        userAxios.post(`/api/unhide`, { linkID: "t3_" + post.id })
             .then(() => {
                 setpost(posts.map(curr => curr.id === post.id ? { ...curr, hidden: !curr.hidden } : curr));
             })
+            .catch(err => { console.log(err); });
     };
 
     if (post.hidden == true) {

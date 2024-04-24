@@ -25,7 +25,7 @@ export default function ProfileOverview({ using, context }) {
         setload(true);
         userAxios.get(`user/${using}/overview?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                if(response.data.posts.length < limitpage && response.data.comments.length < limitpage){
+                if (response.data.posts.length < limitpage && response.data.comments.length < limitpage) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
@@ -41,7 +41,9 @@ export default function ProfileOverview({ using, context }) {
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
-                    type: "post"
+                    type: "post",
+
+                    spoiler: post.spoiler,
                 }));
                 setPosts(newPosts);
                 const newComments = response.data.comments.map(comment => ({

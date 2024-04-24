@@ -3,7 +3,7 @@
     {
       "name": "test",
       "id": "1",
-      "avatar":  "https://demo.sirv.com/nuphar.jpg?w=400",
+      "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
       "about": "Hi, I'm a user. I love hiking, reading books, and playing the guitar in my free time. New from browser",
       "totalKarma": 2424,
       "isModerator": true,
@@ -11,13 +11,29 @@
       "autoPlayVideos": true,
       "comV": false,
       "conV": false,
-      "BannerImage":  "https://demo.sirv.com/nuphar.jpg?w=400",
-       "nsfw": false,
+      "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
+      "nsfw": false,
       "allowFollow": false,
-      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
-      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
+      "blocked": [
+        {
+          "name": "blocked1",
+          "avatar": "https://i.redd.it/jva2jzpj9fk91.png"
+        },
+        {
+          "name": "blocked2",
+          "avatar": "https://i.redd.it/jva2jzpj9fk91.png"
+        }
+      ],
+      "Muted": [
+        {
+          "name": "muted com 1",
+          "icon": "https://i.redd.it/jva2jzpj9fk91.png"
+        },
+        {
+          "name": "muted com 2",
+          "icon": "https://i.redd.it/jva2jzpj9fk91.png"
+        }
+      ]
     },
     {
       "name": "user2",
@@ -33,10 +49,26 @@
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
       "nsfw": false,
       "allowFollow": true,
-      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
-      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
+      "blocked": [
+        {
+          "name": "blocked1",
+          "avatar": "https://demo.sirv.com/harris.jpg?cw=250&cx=50"
+        },
+        {
+          "name": "blocked2",
+          "avatar": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ],
+      "Muted": [
+        {
+          "name": "muted com 1",
+          "icon": "https://demo.sirv.com/harris.jpg?cw=250&cx=50"
+        },
+        {
+          "name": "muted com 2",
+          "icon": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ]
     },
     {
       "name": "user3",
@@ -52,10 +84,26 @@
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
       "nsfw": false,
       "allowFollow": true,
-      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
-      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
+      "blocked": [
+        {
+          "name": "blocked1",
+          "avatar": "https://demo.sirv.com/harris.jpg?cw=250&cx=50"
+        },
+        {
+          "name": "blocked2",
+          "avatar": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ],
+      "Muted": [
+        {
+          "name": "muted com 1",
+          "icon": "https://demo.sirv.com/harris.jpg?cw=250&cx=50"
+        },
+        {
+          "name": "muted com 2",
+          "icon": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ]
     },
     {
       "name": "user4",
@@ -71,10 +119,26 @@
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
       "nsfw": false,
       "allowFollow": true,
-      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
-      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
+      "blocked": [
+        {
+          "name": "blocked1",
+          "avatar": "https://demo.sirv.com/harris.jpg?cw=250&cx=50"
+        },
+        {
+          "name": "blocked2",
+          "avatar": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ],
+      "Muted": [
+        {
+          "name": "muted com 1",
+          "icon": "https://demo.sirv.com/harris.jpg?cw=250&cx=50"
+        },
+        {
+          "name": "muted com 2",
+          "icon": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ]
     },
     {
       "name": "user5",
@@ -90,10 +154,26 @@
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
       "nsfw": false,
       "allowFollow": true,
-      "blocked":[{"name":"blocked1" ,"avatar":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"blocked2" ,"avatar":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}],
-      "Muted":[{"name":"muted com 1" ,"icon":"https://demo.sirv.com/harris.jpg?cw=250&cx=50"}
-      ,{"name":"muted com 2" ,"icon":"https://demo.sirv.com/boy-snow.jpg?sharpen=30"}]
+      "blocked": [
+        {
+          "name": "blocked1",
+          "avatar": "https://demo.sirv.com/harris.jpg?cw=250&cx=50"
+        },
+        {
+          "name": "blocked2",
+          "avatar": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ],
+      "Muted": [
+        {
+          "name": "muted com 1",
+          "icon": "https://demo.sirv.com/harris.jpg?cw=250&cx=50"
+        },
+        {
+          "name": "muted com 2",
+          "icon": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ]
     }
   ],
   "communities": [
@@ -191,12 +271,13 @@
           "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         ]
       },
+      "spoiler": true,
       "communityName": "league",
       "communityID": 1,
       "id": "1",
       "title": "Post 1",
       "postText": "This is the content of post 1",
-      "votesCount": 101,
+      "votesCount": 20,
       "commentsCount": 4,
       "thumbnail": "https://images.unsplash.com/photo-1711109631427-f90f9d83364b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
@@ -213,7 +294,7 @@
       "id": "2",
       "title": "Post 2",
       "postText": "This is the content of post 2",
-      "votesCount": 23,
+      "votesCount": null,
       "commentsCount": 7,
       "thumbnail": "https://images.unsplash.com/photo-1710880694633-7a79f1c7722e?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "NSFW": false,
