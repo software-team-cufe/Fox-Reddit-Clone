@@ -3,14 +3,16 @@ import {
   findCommunityByName,
   getUserCommunities,
   createSubreddit,
-  creationValidation,
+  addMemberToCom,
+  removeMemberFromCom,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
   getCommunitiesIdOfUserAsModerator,
-  addUserToComm,
-  addCreatorToComm,
-  addModeratorToComm,
+  addMemberToUser,
+  addCreatorToUser,
+  addModeratorToUser,
+  removeMemberFromUser,
 } from '../service/user.service';
 
 import { NextFunction, Request, Response } from 'express';
@@ -113,8 +115,8 @@ export async function createSubredditHandler(req: Request, res: Response) {
       });
     }
     // Add user to subreddit
-    const updateUser = await addUserToComm(user, result.createdCommunity._id.toString());
-    const updateUser1 = await addCreatorToComm(user, result.createdCommunity._id.toString());
+    const updateUser = await addMemberToUser(user, result.createdCommunity._id.toString());
+    const updateUser1 = await addCreatorToUser(user, result.createdCommunity._id.toString());
 
     // Handle user addition failure
     if (updateUser.status === false || updateUser1.status === false) {
@@ -137,7 +139,7 @@ export async function createSubredditHandler(req: Request, res: Response) {
 }
 
 /**
- * Create subreddit handler.
+ * Subscribe subreddit handler.
  *
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
@@ -170,10 +172,61 @@ export async function subscribeCommunityHandler(req: Request, res: Response) {
     });
   }
   try {
-    const updateUser = await addUserToComm(user, subreddit);
+    const updateUser = await addMemberToUser(userID, subreddit);
+    const updateUser1 = await addMemberToCom(userID, subreddit);
 
     // Handle user addition failure
-    if (updateUser.status === false) {
+    if (updateUser.status === false || updateUser1.status === false) {
+      return res.status(500).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error creating subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Subscribe subreddit handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function unsubscribeCommunityHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+  try {
+    const updateUser = await removeMemberFromUser(userID, subreddit);
+    const updateUser1 = await removeMemberFromCom(userID, subreddit);
+
+    // Handle user addition failure
+    if (updateUser.status === false || updateUser1.status === false) {
       return res.status(500).json({
         error: updateUser.error,
       });

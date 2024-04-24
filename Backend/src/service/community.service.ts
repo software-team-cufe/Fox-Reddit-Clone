@@ -135,17 +135,6 @@ export async function availableSubreddit(subreddit: string) {
 }
 
 /**
- * Validation of subreddit's attributes before creation
- * @param {string} body contain rules details
- * @return {Boolean} state
- * @function
- */
-export async function creationValidation(name: string, type: string, over18: boolean) {
-  if (!name || !type || over18 === null) return false;
-  return true;
-}
-
-/**
  * Creates a new community.
  *
  * @param {Partial<Community>} input - The partial community data to create.
@@ -153,4 +142,85 @@ export async function creationValidation(name: string, type: string, over18: boo
  */
 export function createcomm(input: Partial<Community>) {
   return CommunityModel.create(input);
+}
+
+/**
+ * addMemberToCom
+ * @param {string} body contain rules details
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function addMemberToCom(userID: string, subreddit: string) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  const memInComm = {
+    userID: userID,
+    isMuted: {
+      value: false,
+    },
+    isBanned: {
+      value: false,
+    },
+  };
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { members: memInComm } },
+      { upsert: true, new: true }
+    );
+    const updatedCommunity2 = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $inc: { membersCnt: 1 } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function removeMemberFromCom(userID: string, subreddit: string) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $pull: { members: { userID: userID } } },
+      { new: true }
+    );
+    const updatedCommunity2 = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $inc: { membersCnt: -1 } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
 }

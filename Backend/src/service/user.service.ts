@@ -297,7 +297,7 @@ export async function getCommunitiesIdOfUserAsModerator(username: string) {
  * @returns {object} mentions
  * @function
  */
-export async function addUserToComm(userID: string, communityID: string) {
+export async function addMemberToUser(userID: string, communityID: string) {
   const user = await UserModel.findById(userID);
   if (!user) {
     return {
@@ -341,7 +341,7 @@ export async function addUserToComm(userID: string, communityID: string) {
  * @returns {object} mentions
  * @function
  */
-export async function addModeratorToComm(userID: string, communityID: string) {
+export async function addModeratorToUser(userID: string, communityID: string) {
   const user = await UserModel.findById(userID);
   if (!user) {
     return {
@@ -384,7 +384,7 @@ export async function addModeratorToComm(userID: string, communityID: string) {
  * @returns {object} mentions
  * @function
  */
-export async function addCreatorToComm(userID: string, communityID: string) {
+export async function addCreatorToUser(userID: string, communityID: string) {
   const user = await UserModel.findById(userID);
   if (!user) {
     return {
@@ -407,6 +407,45 @@ export async function addCreatorToComm(userID: string, communityID: string) {
       return {
         status: false,
         error: 'error in adding user',
+      };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * remove user from community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function removeMemberFromUser(userID: string, communityID: string) {
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $pull: { member: { communityId: communityID } } },
+      { upsert: true, new: true }
+    );
+    if (!user.member) {
+      return {
+        status: false,
+        error: 'error in removing user',
       };
     }
   } catch (error) {

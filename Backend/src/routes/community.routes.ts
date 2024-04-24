@@ -5,6 +5,7 @@ import {
   createSubredditHandler,
   getCommunityHandler,
   subscribeCommunityHandler,
+  unsubscribeCommunityHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import { createCommunitySchema, subscribeCommunitySchema, getCommunitySchema } from '../schema/community.schema';
@@ -17,5 +18,6 @@ router.get('/:subreddit', validateResource(getCommunitySchema), getCommunityHand
 
 router.post('/create_subreddit', validateResource(createCommunitySchema), createSubredditHandler);
 router.post('/:subreddit/api/subscribe', validateResource(subscribeCommunitySchema), subscribeCommunityHandler);
+router.post('/:subreddit/api/unsubscribe', validateResource(subscribeCommunitySchema), unsubscribeCommunityHandler);
 
 export default router;

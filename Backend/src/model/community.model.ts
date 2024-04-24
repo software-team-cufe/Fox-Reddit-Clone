@@ -179,10 +179,10 @@ export class Community {
   @prop({ type: CommunityOptions, default: {} })
   communityOptions?: CommunityOptions;
 
-  @prop({ type: Member })
+  @prop()
   members?: Member[];
 
-  @prop({ type: Moderator })
+  @prop()
   moderators?: Moderator[];
 
   @prop()
