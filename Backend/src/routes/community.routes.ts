@@ -6,13 +6,13 @@ import {
   getCommunityHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
-import { createCommunitySchema } from '../schema/community.schema';
+import { createCommunitySchema, subscribeCommunitySchema, getCommunitySchema } from '../schema/community.schema';
 
 const router = express.Router();
 
 router.get('/subreddits/mine/member', getCommunityOfUserAsMemeberHandler);
 router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
-router.get('/:subreddit', getCommunityHandler);
+router.get('/:subreddit', validateResource(getCommunitySchema), getCommunityHandler);
 
 router.post('/create_subreddit', validateResource(createCommunitySchema), createSubredditHandler);
 

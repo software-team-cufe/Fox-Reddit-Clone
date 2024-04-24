@@ -137,7 +137,7 @@ export class Community {
   @prop({ default: 'default-icon.jpg' })
   icon?: string;
 
-  @prop({ default: 1 })
+  @prop({ default: 0 })
   membersCnt?: number;
 
   @prop({ type: FAQ })

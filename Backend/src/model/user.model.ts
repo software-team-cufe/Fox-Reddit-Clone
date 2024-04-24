@@ -370,8 +370,8 @@ export class User {
   @prop({ default: () => new About() })
   aboutReturn?: About;
 
-  @prop({ default: () => new Member() })
-  commMember?: Member;
+  // @prop({ default: () => new Member() })
+  // commMember?: Member;
 
   @prop({ enum: ['bare email', 'facebook', 'gmail'], default: 'bare email' })
   type?: string;

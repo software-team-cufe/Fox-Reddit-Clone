@@ -1,4 +1,4 @@
-import { createComm } from '../schema/community.schema';
+import { createCommunity, subscribeCommunity, getCommunity } from '../schema/community.schema';
 import {
   findCommunityByName,
   getUserCommunities,
@@ -9,6 +9,8 @@ import {
   getCommunitiesIdOfUserAsMemeber,
   getCommunitiesIdOfUserAsModerator,
   addUserToComm,
+  addCreatorToComm,
+  addModeratorToComm,
 } from '../service/user.service';
 
 import { NextFunction, Request, Response } from 'express';
@@ -22,15 +24,6 @@ import { NextFunction, Request, Response } from 'express';
  */
 export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Response) {
   try {
-    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
-    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
-    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
-    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
-
-    if (isNaN(page) || isNaN(count) || isNaN(limit)) {
-      return res.status(400).json({ error: 'Invalid request parameters.' });
-    }
-    // Extract params
     const user = res.locals.user;
     // Check if user is missing or invalid
     if (!user) {
@@ -39,7 +32,7 @@ export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Resp
         message: 'Access token is missing or invalid',
       });
     }
-    const communities = await getCommunitiesIdOfUserAsMemeber(user.username, page, count);
+    const communities = await getCommunitiesIdOfUserAsMemeber(user.username);
 
     res.status(200).json({ communities });
   } catch (error) {
@@ -60,15 +53,6 @@ export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Resp
  */
 export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Response) {
   try {
-    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
-    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
-    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
-    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
-
-    if (isNaN(page) || isNaN(count) || isNaN(limit)) {
-      return res.status(400).json({ error: 'Invalid request parameters.' });
-    }
-    // Extract params
     const user = res.locals.user;
     // Check if user is missing or invalid
     if (!user) {
@@ -77,7 +61,7 @@ export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Re
         message: 'Access token is missing or invalid',
       });
     }
-    const communities = await getCommunitiesIdOfUserAsModerator(user.username, page, count);
+    const communities = await getCommunitiesIdOfUserAsModerator(user.username);
 
     res.status(200).json({ communities });
   } catch (error) {
@@ -130,17 +114,18 @@ export async function createSubredditHandler(req: Request, res: Response) {
     }
     // Add user to subreddit
     const updateUser = await addUserToComm(user, result.createdCommunity._id.toString());
+    const updateUser1 = await addCreatorToComm(user, result.createdCommunity._id.toString());
 
     // Handle user addition failure
-    if (updateUser.status === false) {
+    if (updateUser.status === false || updateUser1.status === false) {
       return res.status(500).json({
         error: updateUser.error,
       });
     }
-
+    const community = result.createdCommunity;
     // Return success response
     return res.status(200).json({
-      result,
+      community,
     });
   } catch (error) {
     // Handle any unexpected errors
