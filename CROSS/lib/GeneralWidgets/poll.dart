@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 
 class PollPage extends StatefulWidget {
-  const PollPage({super.key});
+  final List<String> options; // Options list
+  const PollPage({Key? key, required this.options}) : super(key: key);
+
   @override
   _PollPageState createState() => _PollPageState();
 }
 
 class _PollPageState extends State<PollPage> {
   int? _selectedOption; // Updated to allow null values
-  final List<String> _options = []; // Initial options
+  late List<String> _options; // Initial options
 
   final TextEditingController _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _options = List.from(widget.options); // Initialize options list
+  }
 
   void _submitResponse() {
     if (_selectedOption != null) {

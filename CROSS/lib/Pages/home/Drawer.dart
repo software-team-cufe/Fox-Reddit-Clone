@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/Pages/Blanck.dart';
 import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
-import 'package:reddit_fox/features/community/screens/modtools/modmail.dart';
 import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 /// Widget representing a custom drawer.
 ///
