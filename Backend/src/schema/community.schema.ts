@@ -7,7 +7,7 @@ const communityType = string().refine((val) => /^(Public|Private|Restricted)$/.t
 export const createCommunitySchema = object({
   body: object({
     name: string({
-      required_error: 'name is required',
+      required_error: 'Community name name is required',
     }),
     type: communityType,
     over18: boolean({

@@ -106,7 +106,12 @@ export async function createSubredditHandler(req: Request, res: Response) {
       error: 'Access token is missing or invalid',
     });
   }
-
+  const comm = await findCommunityByName(req.body.name);
+  if (comm) {
+    return res.status(403).json({
+      error: 'Community name already taken',
+    });
+  }
   // Create subreddit
   try {
     const result = await createSubreddit(req.body.name, req.body.type, req.body.over18, userID);

@@ -125,31 +125,6 @@ export const reportUserSchema = object({
   }),
 });
 
-// export const blockUserSchema = object({
-//   body: object({
-//     type: string({
-//       required_error: 'type is required',
-//     }),
-//     username: string({
-//       required_error: 'Username is required',
-//     }),
-//   }),
-// });
-// export const followUserSchema = object({
-//   body: object({
-//     username: string({
-//       required_error: 'Username is required',
-//     }),
-//   }),
-// });
-// export const unfollowUserSchema = object({
-//   body: object({
-//     username: string({
-//       required_error: 'Username is required',
-//     }),
-//   }),
-// });
-
 export const blockUserSchema = object({
   body: object({
     type: string({

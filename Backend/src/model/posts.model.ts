@@ -106,9 +106,9 @@ export class Post {
   votes!: VotePost[];
 
   @prop({ type: () => [String], ref: () => User })
-  mentionedInUsers!: Ref<User>[]; ///////////////////////////////////////////////////////
+  mentionedInUsers!: Ref<User>[];
 
-  @prop({ type: () => [String], ref: () => User }) //////////////////////////////////
+  @prop({ type: () => [String], ref: () => User })
   postComments: Ref<Comment>[];
 
   @prop()

@@ -2,20 +2,22 @@ import appError from '../utils/appError';
 import CommunityModel, { Community } from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
+
 /**
  * Finds a community by its subreddit name.
  *
- * @param {string} subreddit - The subreddit name to search for.
+ * @param {string} name - The subreddit name to search for.
  * @return {Promise<any>} The community object found based on the subreddit name.
  */
-export async function findCommunityByName(subreddit: string) {
+export async function findCommunityByName(name: string) {
   try {
-    return await CommunityModel.findOne({ subreddit });
+    return await CommunityModel.findOne({ name });
   } catch (error) {
     console.error('Error in findCommunityByName:', error);
     throw error; // Re-throw the error to be caught by the caller
   }
 }
+
 /**
  * Fetches communities based on the provided array of community IDs.
  *

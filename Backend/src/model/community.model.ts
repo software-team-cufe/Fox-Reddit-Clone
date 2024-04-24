@@ -119,7 +119,7 @@ class Moderator {
 }
 
 export class Community {
-  @prop({ unique: true, required: true, trim: true, maxLength: 100, minLength: 1 })
+  @prop({ required: true, unique: true, validator: (value: string) => value.length >= 3 && value.length <= 20 })
   name?: string;
 
   @prop()
