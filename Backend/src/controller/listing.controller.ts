@@ -905,9 +905,7 @@ export async function submitPostHandler(req: Request, res: Response) {
     }
 
     const { title, text, attachments, nsfw, spoiler, Communityname, poll } = req.body;
-    console.log(Communityname);
     const community = await findCommunityByName(Communityname);
-    console.log(community);
     const postInfo = {
       title,
       textHTML: text,

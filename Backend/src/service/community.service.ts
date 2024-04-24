@@ -11,7 +11,7 @@ import { findUserById } from './user.service';
  */
 export async function findCommunityByName(name: string) {
   try {
-    return await CommunityModel.findOne({ name });
+    return await CommunityModel.findOne({ name: name });
   } catch (error) {
     console.error('Error in findCommunityByName:', error);
     throw error; // Re-throw the error to be caught by the caller
