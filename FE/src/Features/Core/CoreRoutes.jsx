@@ -11,6 +11,7 @@ import { CommunityProvider } from './CommunityPage/CommunityPage';
 import CreatePostPage from './CreatePostPage/CreatePostPage';
 import ChatPage from './ThreadsPage/ChatPage';
 import SideBarRoutes from '../../GeneralComponents/SideBar/SideBarRoutes'
+import About from '../../GeneralComponents/SideBar/About';
 
 export default [
     <Route key={'/'} path='/' element={<HomeProvider><HomePage /></HomeProvider>} />,
@@ -23,6 +24,6 @@ export default [
     <Route key={"/setting"} path="/setting/*" element={<Settingpagelayout />} />,
     <Route key={"/submit"} path="/submit/*" element={< CreatePostPage />} />,
     <Route key={"/threads"} path="/chat/:id" element={<ChatPage />} />,
-
+    <Route key={"/about"} path="/about" element={<About />} />
 
 ]

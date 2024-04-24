@@ -9,7 +9,7 @@ import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, Layo
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
 import Popular from "./Popular";
-import About from "./About";
+
 import { key } from 'localforage';
 
 const icons = [
@@ -229,7 +229,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                         >
                            <li>
                               <a
-                                 href="/About"
+                                 href="https://www.redditinc.com/"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  About Reddit
@@ -237,7 +237,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                            </li>
                            <li>
                               <a
-                                 href="/Advertise"
+                                 href="https://accounts.reddit.com/adsregister?dest=https%3A%2F%2Fads.reddit.com%2F&referrer=https%3A%2F%2Fwww.reddit.com%2F&utm_source=web3x_consumer&utm_name=left_nav_cta"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  Advertise
@@ -245,7 +245,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                            </li>
                            <li>
                               <a
-                                 href="/Help"
+                                 href="https://support.reddithelp.com/hc/en-us"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  Help
