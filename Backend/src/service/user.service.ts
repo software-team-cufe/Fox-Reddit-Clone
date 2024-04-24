@@ -231,10 +231,12 @@ export async function userRepliesIds(username: string, page: number, count: numb
   return commentsIDS;
 }
 /**
- * Retrieves the IDs of the communities that a user is a member of.
+ * Retrieves the names of the communities that a user is a member of.
  *
- * @param {string} userID - The ID of the user.
- * @return {Promise<string[]>} An array of community IDs that the user is a member of.
+ * @param {string} username - The username of the user.
+ * @param {number} page - The page number for pagination.
+ * @param {number} count - The number of items per page.
+ * @return {Promise<string[]>} An array of community names that the user is a member of.
  */
 export async function getCommunitiesIdOfUserAsMemeber(username: string, page: number, count: number) {
   // Calculate skip based on page and count
@@ -256,9 +258,11 @@ export async function getCommunitiesIdOfUserAsMemeber(username: string, page: nu
   if (!user.member) {
     return [];
   }
+
   // Extract the community IDs from the user's member if it exists
   const communityIDs = user.member.map((member) => member.communityId);
 
+  // Fetch the communities from the database using the paginated community IDs
   const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
 
   // Extract community names from fetched communities
