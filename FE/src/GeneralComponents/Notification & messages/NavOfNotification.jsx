@@ -5,7 +5,7 @@ const NavOfNotification = () => {
   
   return (
     <div className='flex gap-7 text-sm font-semibold text-gray-500'>
-      <NavLink to="/notification" className=' underline-offset-8 underline decoration-4 decoration-orange-500'> 
+      <NavLink to="/notification" className=' underline-offset-8 underline decoration-4 decoration-orange-500 text-black'> 
         Notifications 
       </NavLink>
       <NavLink to="/messages"> Messages</NavLink>

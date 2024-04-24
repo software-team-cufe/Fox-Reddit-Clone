@@ -8,7 +8,7 @@ const NotificationPage = () => {
        <NavOfNotification ></NavOfNotification>
         <div className=' mt-4'>
            <p className='flex justify-center items-center'> No Notifications</p>
-        </div>
+         </div>
     </div>
   )
 }
