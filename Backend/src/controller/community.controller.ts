@@ -187,7 +187,7 @@ export async function subscribeCommunityHandler(req: Request, res: Response) {
     });
   } catch (error) {
     // Handle any unexpected errors
-    console.error('Error creating subreddit:', error);
+    console.error('Error adding member to subreddit:', error);
     return res.status(500).json({
       error: 'Internal server error',
     });
@@ -237,7 +237,7 @@ export async function unsubscribeCommunityHandler(req: Request, res: Response) {
     });
   } catch (error) {
     // Handle any unexpected errors
-    console.error('Error creating subreddit:', error);
+    console.error('Error removing member from subreddit:', error);
     return res.status(500).json({
       error: 'Internal server error',
     });

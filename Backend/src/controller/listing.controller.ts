@@ -895,7 +895,6 @@ export async function votePostHandler(req: Request<votePost['body']>, res: Respo
 export async function submitPostHandler(req: Request, res: Response) {
   try {
     const user = res.locals.user;
-    const creatorID = user._id;
 
     // Check if user is missing or invalid
     if (!user) {
@@ -905,41 +904,54 @@ export async function submitPostHandler(req: Request, res: Response) {
       });
     }
 
-    const { title, text, attachments, nsfw, spoiler, CommunityID, poll } = req.body;
-
+    const { title, text, attachments, nsfw, spoiler, Communityname, poll } = req.body;
+    console.log(Communityname);
+    const community = await findCommunityByName(Communityname);
+    console.log(community);
     const postInfo = {
       title,
       textHTML: text,
       attachments,
       nsfw,
       spoiler,
-      userID: creatorID,
-      CommunityID,
+      userID: user._id,
       poll: poll ? poll.map((option: string) => ({ title: option, votes: 0 })) : undefined,
     };
 
-    const createdPost = await createPost(postInfo);
-    if (!createdPost) {
-      return res.status(400).json({ message: 'Failed to create the post' });
-    }
+    // If community exists, add community ID to postInfo
+    if (community) {
+      const postInfoUpdated = {
+        ...postInfo,
+        CommunityID: community._id,
+      };
+      const createdPost = await createPost(postInfoUpdated);
 
-    // Update user with the new post
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      user._id,
-      { $addToSet: { hasPost: createdPost._id } },
-      { new: true, upsert: true }
-    );
-
-    // Update community with the new post if community exists
-    if (CommunityID) {
+      if (!createdPost) {
+        return res.status(400).json({ message: 'Failed to create the post' });
+      }
       await CommunityModel.findByIdAndUpdate(
-        CommunityID,
+        community._id,
         { $addToSet: { communityPosts: createdPost._id } },
         { new: true, upsert: true }
       );
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        user._id,
+        { $addToSet: { hasPost: createdPost._id } },
+        { new: true, upsert: true }
+      );
+      res.status(201).json(createdPost);
+    } else {
+      const createdPost = await createPost(postInfo);
+      if (!createdPost) {
+        return res.status(400).json({ message: 'Failed to create the post' });
+      }
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        user._id,
+        { $addToSet: { hasPost: createdPost._id } },
+        { new: true, upsert: true }
+      );
+      res.status(201).json(createdPost);
     }
-
-    res.status(201).json(createdPost);
   } catch (error) {
     console.error('Error in submitPostHandler:', error);
     return res.status(500).json({
