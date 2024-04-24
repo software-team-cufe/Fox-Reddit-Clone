@@ -238,17 +238,9 @@ export async function userRepliesIds(username: string, page: number, count: numb
  * @param {number} count - The number of items per page.
  * @return {Promise<string[]>} An array of community names that the user is a member of.
  */
-export async function getCommunitiesIdOfUserAsMemeber(username: string, page: number, count: number) {
-  // Calculate skip based on page and count
-  const skip = (page - 1) * count;
-
+export async function getCommunitiesIdOfUserAsMemeber(username: string) {
   // Find the user by ID and retrieve their user as member of communities ID
-  const user = await UserModel.findOne({ username: username }, 'member')
-    .lean()
-    .populate({
-      path: 'member',
-      options: { skip: skip, limit: count },
-    });
+  const user = await findUserByUsername(username);
 
   // If user is not found, throw an error
   if (!user) {
@@ -276,17 +268,9 @@ export async function getCommunitiesIdOfUserAsMemeber(username: string, page: nu
  * @param {string} userID - The ID of the user.
  * @return {Promise<string[]>} An array of community IDs that the user is a moderator of.
  */
-export async function getCommunitiesIdOfUserAsModerator(username: string, page: number, count: number) {
-  // Calculate skip based on page and count
-  const skip = (page - 1) * count;
-
-  // Find the user by ID and retrieve their user as moderator of communities ID
-  const user = await UserModel.findOne({ username: username }, 'moderators')
-    .lean()
-    .populate({
-      path: 'moderators',
-      options: { skip: skip, limit: count },
-    });
+export async function getCommunitiesIdOfUserAsModerator(username: string) {
+  // Find the user by ID and retrieve their user as member of communities ID
+  const user = await findUserByUsername(username);
 
   // If user is not found, throw an error
   if (!user) {
@@ -321,10 +305,6 @@ export async function addUserToComm(userID: string, communityID: string) {
       error: 'user not found',
     };
   }
-  const userModerator = {
-    communityId: communityID,
-    role: 'creator',
-  };
   const userMember = {
     communityId: communityID,
     isMuted: false,
@@ -334,12 +314,93 @@ export async function addUserToComm(userID: string, communityID: string) {
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       user._id,
+      { $addToSet: { member: userMember } },
+      { upsert: true, new: true }
+    );
+    if (!user.member) {
+      return {
+        status: false,
+        error: 'error in adding user',
+      };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * Add Moderator to community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function addModeratorToComm(userID: string, communityID: string) {
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+  const userModerator = {
+    communityId: communityID,
+    role: 'moderator',
+  };
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
       { $addToSet: { moderators: userModerator } },
       { upsert: true, new: true }
     );
-    const updatedUser1 = await UserModel.findByIdAndUpdate(
+    if (!user.moderators) {
+      return {
+        status: false,
+        error: 'error in adding user',
+      };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * Add creater to community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function addCreatorToComm(userID: string, communityID: string) {
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+  const userModerator = {
+    communityId: communityID,
+    role: 'creator',
+  };
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
       user._id,
-      { $addToSet: { member: userMember } },
+      { $addToSet: { moderators: userModerator } },
       { upsert: true, new: true }
     );
     if (!user.moderators) {

@@ -635,8 +635,8 @@ export async function aboutHandler(req: Request, res: Response) {
     const obj = {
       prefShowTrending: user?.prefs?.prefShowTrending,
       isBlocked: user?.aboutReturn?.isBlocked,
-      isBanned: user?.commMember?.isBanned,
-      isMuted: user?.commMember?.isMuted,
+      // isBanned: user?.commMember?.isBanned,
+      // isMuted: user?.commMember?.isMuted,
       canCreateSubreddit: user?.canCreateSubreddit,
       isMod: user?.aboutReturn?.isModerator,
       over18: user?.prefs?.over18,

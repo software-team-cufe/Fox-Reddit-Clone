@@ -16,4 +16,22 @@ export const createCommunitySchema = object({
   }),
 });
 
-export type createComm = TypeOf<typeof createCommunitySchema>;
+export const subscribeCommunitySchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+});
+
+export const getCommunitySchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+});
+
+export type createCommunity = TypeOf<typeof createCommunitySchema>;
+export type subscribeCommunity = TypeOf<typeof subscribeCommunitySchema>;
+export type getCommunity = TypeOf<typeof getCommunitySchema>;
