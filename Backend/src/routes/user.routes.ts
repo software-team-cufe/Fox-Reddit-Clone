@@ -10,12 +10,15 @@ import {
   followUserSchema,
   unfollowUserSchema,
   changePasswordSchema,
+  changeEmailSchema,
 } from '../schema/user.schema';
 import {
   createUserHandler,
   verifyUserHandler,
   forgotPasswordHandler,
   resetPasswordHandler,
+  changePasswrodHandler,
+  changeEmailHandler,
   getCurrentUserHandler,
   getCurrentUserPrefs,
   editCurrentUserPrefs,
@@ -52,7 +55,8 @@ router.post('/api/users/signup', validateResource(createUserSchema), createUserH
 router.get('/api/users/signup/verify/:verify_token', validateResource(verifyUserSchema), verifyUserHandler);
 router.post('/api/users/forgotpassword', validateResource(forgotPasswordSchema), forgotPasswordHandler);
 router.post('/api/users/resetpassword', validateResource(resetPasswordSchema), resetPasswordHandler);
-router.post('/user/changepassword/:user_token', requireUser, validateResource(changePasswordSchema)); //add changepassHandler
+router.post('/user/changepassword', requireUser, validateResource(changePasswordSchema), changePasswrodHandler);
+router.post('/user/changeemail', requireUser, validateResource(changeEmailSchema), changeEmailHandler);
 router.get('/api/username_available', username_availableHandler);
 
 router.get('/user/:username/about', aboutHandler);

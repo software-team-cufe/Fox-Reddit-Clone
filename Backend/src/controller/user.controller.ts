@@ -13,6 +13,7 @@ import {
   unfollowUserInput,
   reportUser,
   ChangePasswordInput,
+  ChangeEmailInput,
 } from '../schema/user.schema';
 import { NextFunction, Request, Response } from 'express';
 import {
@@ -148,7 +149,7 @@ export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Resp
         user.verified = true;
         await user.save();
         return res.status(200).json({
-          msg: 'Email verified successfully',
+          msg: 'Success! Thanks for verifying your email',
         });
       }
     }
@@ -265,12 +266,107 @@ export async function resetPasswordHandler(
     });
   }
 }
-export async function changePasswrodHandler(
-  req: Request<ChangePasswordInput['params'], {}, ChangePasswordInput['body']>,
-  res: Response
-) {
-  const user_token = req.params.user_token;
-  //try and catch block and continue logic...
+/**
+ * Handles the change password functionality.
+ *
+ * @param req - The request object containing the parameters and body.
+ * @param res - The response object.
+ * @returns A JSON response indicating the success or failure of the password change.
+ * @throws {appError} If there is an error during the password change process.
+ */
+export async function changePasswrodHandler(req: Request<{}, {}, ChangePasswordInput['body']>, res: Response) {
+  try {
+    const message = 'change password failed';
+
+    const user = await findUserByUsername(res.locals.user.username);
+    if (!user) {
+      throw new appError(message, 404);
+    }
+    const { currentpassword, newpassword, newpasswordConfirmation } = req.body;
+
+    const isValid = await user.validatePassword(currentpassword);
+    if (!isValid) {
+      throw new appError(message, 401);
+    }
+    if (newpassword !== newpasswordConfirmation) {
+      //already done in schema validation
+      throw new appError(message, 400);
+    }
+    if (currentpassword === newpassword) {
+      throw new appError('New password cannot be the same as the current password', 400);
+    }
+    //user validated
+    //update password
+    user.password = newpassword; //hashing handled in model
+    await user.save();
+    await sendEmail({
+      to: user.email,
+      from: {
+        name: 'Fox ',
+        email: getEnvVariable('FROM_EMAIL'),
+      },
+      subject: 'Your Fox password is updated',
+      text: ` click here to login: ${getEnvVariable('FrontURL')}/login`, //replace with html, update if didnt update pass?
+    });
+    return res.status(200).json({
+      msg: 'Password changed successfully',
+    });
+  } catch (error) {
+    if (error instanceof appError) {
+      return res.status(error.statusCode).json({
+        msg: error.message,
+      });
+    }
+    return res.status(500).json({
+      msg: 'Something went wrong',
+    });
+  }
+}
+export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['body']>, res: Response) {
+  try {
+    const user = await findUserByUsername(res.locals.user.username);
+    if (!user) {
+      throw new appError('not found', 404);
+    }
+
+    const { newemail, currentpassword } = req.body;
+    const isValid = await user.validatePassword(currentpassword);
+    if (!isValid) {
+      throw new appError('Invalid password', 401);
+    }
+    //user validated
+    //update email
+    user.email = newemail;
+    user.verified = false;
+    await user.save();
+    const { verify_link } = generateVerificationLinkToken(String(user._id), user.verificationCode);
+    await sendEmail({
+      to: user.email,
+      from: {
+        name: 'Fox ',
+        email: getEnvVariable('FROM_EMAIL'),
+      },
+      subject: 'Your Fox email is updated',
+      text: ` Click the verify link in the email to secure your Fox account: ${verify_link}`,
+    });
+    return res.status(200).json({
+      msg: ' Email changed successfully, please check your email for verification',
+    });
+  } catch (err: any) {
+    if (err instanceof appError) {
+      return res.status(err.statusCode).json({
+        msg: err.message,
+      });
+    }
+    if (err.code === 11000) {
+      return res.status(409).json({
+        msg: 'Invalid email',
+      });
+    }
+    return res.status(500).json({
+      msg: 'Something went wrong',
+    });
+  }
 }
 /**
  * Handles the request to get the current user.

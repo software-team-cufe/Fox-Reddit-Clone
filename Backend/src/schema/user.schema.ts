@@ -40,11 +40,6 @@ export const forgotPasswordSchema = object({
 });
 
 export const changeEmailSchema = object({
-  params: object({
-    usertoken: string({
-      required_error: 'Token is required',
-    }),
-  }),
   body: object({
     newemail: string({
       required_error: 'Email is required',
@@ -56,11 +51,6 @@ export const changeEmailSchema = object({
 });
 
 export const changePasswordSchema = object({
-  params: object({
-    user_token: string({
-      required_error: 'Token is required',
-    }),
-  }),
   body: object({
     currentpassword: string({
       required_error: 'Password is required',
