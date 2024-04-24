@@ -4,6 +4,7 @@ import {
   getCommunityOfUserAsModeratorHandler,
   createSubredditHandler,
   getCommunityHandler,
+  subscribeCommunityHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import { createCommunitySchema, subscribeCommunitySchema, getCommunitySchema } from '../schema/community.schema';
@@ -15,5 +16,6 @@ router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
 router.get('/:subreddit', validateResource(getCommunitySchema), getCommunityHandler);
 
 router.post('/create_subreddit', validateResource(createCommunitySchema), createSubredditHandler);
+router.post('/:subreddit/api/subscribe', validateResource(subscribeCommunitySchema), subscribeCommunityHandler);
 
 export default router;
