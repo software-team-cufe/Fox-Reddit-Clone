@@ -1,10 +1,12 @@
   import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
   import 'package:http/http.dart' as http;
   import 'dart:convert';
   import 'dart:typed_data';
   import 'package:intl/intl.dart';
   import 'package:reddit_fox/Pages/Search.dart';
   import 'package:reddit_fox/Pages/EditProfile.dart';
+import 'package:reddit_fox/navbar.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
   import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +14,7 @@
 
   class ProfilePage extends StatefulWidget {
     ProfilePage({Key? key, required this.user_Id, this.myProfile = false, this.access_token = null}) : super(key: key);
-    final String user_Id;
+    final int user_Id;
     final bool myProfile;
     final String? access_token;
 
@@ -22,15 +24,17 @@
 
   class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
     late Map<String, dynamic> userData = {};
+    late Map<String, dynamic> postData = {};
     late TabController _tabController;
     late bool _myProfile;
     late List<Map<String, dynamic>> userPosts = [];
     String? access_token;
     late String? userID;
-    late String? profilePic;
-    late String? userName;
+    late String? profilePic = null;
+    late String? userName = '';
     bool _showTitle = true;
     late String? created_at;
+    
 
     @override
     void initState() {
@@ -44,6 +48,7 @@
         fetchUserID(access_token);
       }
       else{
+        getUserData();
         fetchData();
       }
       fetchData();
@@ -101,13 +106,13 @@
         final response = await http.get(Uri.parse(ApiRoutesMockserver.getUserById(1)));
         if (response.statusCode == 200) {
           setState(() {
-            userData = json.decode(response.body);
+            postData = json.decode(response.body);
           });
         } else {
           throw Exception('Failed to load user data');
         }
 
-        final postResponse = await http.get(Uri.parse(ApiRoutesBackend.getPostsByCreatorId(widget.user_Id)));
+        final postResponse = await http.get(Uri.parse(ApiRoutesMockserver.getPostsByCreatorId(widget.user_Id.toString())));
         if (postResponse.statusCode == 200) {
           setState(() {
             userPosts = json.decode(postResponse.body).cast<Map<String, dynamic>>();
@@ -120,6 +125,30 @@
         // Handle error, show error message, retry logic, etc.
       }
     }
+
+    Future<void> getUserData() async {
+      try {
+        final url = ApiRoutesMockserver.getUserById(widget.user_Id);
+        print('URL: $url');
+        final response = await http.get(Uri.parse(url));
+        print('Response Status Code: ${response.statusCode}');
+        print('Response Body: ${response.body}');
+        if (response.statusCode == 200) {
+          setState(() {
+            userData = json.decode(response.body);
+            userName = userData['userName'];
+            profilePic = userData['profilePic']; 
+          });
+        } else {
+          throw Exception('Failed to load user data');
+        }
+      } catch (error) {
+        print('Error fetching user data: $error');
+        // Handle error, show error message, retry logic, etc.
+      }
+    }
+
+
 
     ImageProvider<Object> _getImageProvider(dynamic picture) {
       if (profilePic is String) {
@@ -269,11 +298,150 @@ Widget _buildTitleView() {
 }
 
     Widget _buildAlternateView() {
-      return Center(
-        child: Text(
-          "Alternate View",
-          style: TextStyle(fontSize: 24),
-        ),
+      return CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            backgroundColor: Colors.deepPurple,
+            expandedHeight: 380,
+            flexibleSpace: LayoutBuilder(
+              builder: (context, constraints) {
+                _showTitle = constraints.biggest.height <= 100;
+                return FlexibleSpaceBar(
+                  title: _myProfile && userData['userName']  != null && _showTitle
+                      ? Text(
+                          userName!,
+                          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                        )
+                      : null,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.deepPurple, Colors.black],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                          Padding(
+                          padding: const EdgeInsets.only(top: 80, left: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundImage: _getImageProvider(profilePic ?? ''),
+                                backgroundColor: Colors.black,
+                              ),
+                              
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 240,),
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.transparent,
+                                        radius: 50, // Increase the radius to increase the size of the CircleAvatar
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            shape: CircleBorder(), // Make the ElevatedButton circular
+                                          ),
+                                          child: Image.asset(
+                                            'assets/Icons/Chat.png',
+                                            width: 32, // Set the width of the Image
+                                            height: 32, // Set the height of the Image
+                                          ),
+                                        ),
+                                      ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(),
+                                      child: SizedBox(
+                                        height: 35,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                          },
+                                          child: Text('Follow'),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            '$userName',
+                            style: TextStyle(
+                              fontSize: 26,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            'u/$userName • 1 karma • ${_formatDate(userData['created_at'])}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Search()),
+                  );
+                },
+                icon: const Icon(Icons.search),
+              ),
+              IconButton(
+                onPressed: () {
+                  Share.share('https://www.reddit.com/user/${widget.user_Id}/');
+                  print("it is pressed");
+                },
+                icon: Transform.scale(
+                  scale: 0.55,
+                  child: Image.asset('assets/Icons/share.png'),
+                ),
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: 'Posts'),
+                Tab(text: 'Comments'),
+                Tab(text: 'About'),
+              ],
+            ),
+          ),
+          SliverFillRemaining(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildPostsContainer(),
+                Container(), // Placeholder for Comments
+                Container(), // Placeholder for About
+              ],
+            ),
+          ),
+        ],
       );
     }
 
@@ -308,11 +476,12 @@ Widget _buildTitleView() {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        body: userData.isEmpty
+        body: postData.isEmpty
             ? Center(child: CircularProgressIndicator())
             : _myProfile
                 ? _buildTitleView()
                 : _buildAlternateView(),
+        bottomNavigationBar: const nBar(),
       );
     }
   }
