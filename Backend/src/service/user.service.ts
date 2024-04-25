@@ -298,7 +298,15 @@ export async function getCommunitiesIdOfUserAsModerator(username: string) {
  * @returns {object} mentions
  * @function
  */
-export async function addMemberToUser(userID: string, communityID: string) {
+export async function addMemberToUser(userID: string, communityName: string) {
+  const community = await CommunityModel.findOne({ name: communityName });
+  if (!community) {
+    return {
+      status: false,
+      error: 'community not found',
+    };
+  }
+  const communityID = community._id.toString();
   const user = await UserModel.findById(userID);
   if (!user) {
     return {
@@ -342,7 +350,15 @@ export async function addMemberToUser(userID: string, communityID: string) {
  * @returns {object} mentions
  * @function
  */
-export async function addModeratorToUser(userID: string, communityID: string) {
+export async function addModeratorToUser(userID: string, communityName: string) {
+  const community = await CommunityModel.findOne({ name: communityName });
+  if (!community) {
+    return {
+      status: false,
+      error: 'community not found',
+    };
+  }
+  const communityID = community._id.toString();
   const user = await UserModel.findById(userID);
   if (!user) {
     return {
@@ -572,6 +588,69 @@ export async function addCommentVoteToUser(userID: string, commentID: string, ty
       error: error,
     };
   }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * Checks if a user is banned or not in a community and performs the corresponding operation.
+ *
+ * @param {string} userID - The ID of the user.
+ * @param {string} communityName - The name of the community.
+ * @param {string} operation - The operation to perform. Possible values are 'ban' or 'unban'.
+ * @return {Promise<{status: boolean, error?: string}>} - A promise that resolves to an object with the status of the operation. If the operation fails, an error message is also included.
+ */
+export async function updateMemberBanStatusInUser(userID: string, communityName: string, operation: string) {
+  const community = await CommunityModel.findOne({ name: communityName });
+  if (!community) {
+    return {
+      status: false,
+      error: 'Community not found',
+    };
+  }
+
+  const communityID = community._id.toString();
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'User not found',
+    };
+  }
+
+  const userMember = {
+    communityId: communityID,
+    isMuted: false,
+    isBanned: operation === 'ban',
+  };
+
+  try {
+    let updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $pull: { member: { communityId: communityID } } },
+      { upsert: true, new: true }
+    );
+
+    updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { member: userMember } },
+      { upsert: true, new: true }
+    );
+
+    if (!updatedUser.member) {
+      return {
+        status: false,
+        error: 'Error in updating user member status',
+      };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: 'Error updating user: ' + error,
+    };
+  }
+
   return {
     status: true,
   };
