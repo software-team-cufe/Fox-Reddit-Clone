@@ -172,7 +172,7 @@ class _PostDetailsState extends State<PostDetails> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                        user_Id: widget.post['creatorId'].toString()),
+                        userName: 'omar'),
                   ),
                 );
               },

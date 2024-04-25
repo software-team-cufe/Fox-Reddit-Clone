@@ -13,8 +13,8 @@ import 'package:reddit_fox/navbar.dart';
 
 
   class ProfilePage extends StatefulWidget {
-    ProfilePage({Key? key, required this.user_Id, this.myProfile = false, this.access_token = null}) : super(key: key);
-    final int user_Id;
+    ProfilePage({Key? key, required this.userName, this.myProfile = false, this.access_token = null}) : super(key: key);
+    final String userName;
     final bool myProfile;
     final String? access_token;
 
@@ -31,7 +31,7 @@ import 'package:reddit_fox/navbar.dart';
     String? access_token;
     late String? userID;
     late String? profilePic = null;
-    late String? userName = '';
+    late String? userName = widget.userName;
     bool _showTitle = true;
     late String? created_at;
     
@@ -48,7 +48,6 @@ import 'package:reddit_fox/navbar.dart';
         fetchUserID(access_token);
       }
       else{
-        getUserData();
         fetchData();
       }
       fetchData();
@@ -101,6 +100,39 @@ import 'package:reddit_fox/navbar.dart';
     }
 
 
+    Future<void> fetchUserAbout(String userName) async {
+      var url = Uri.parse(ApiRoutesBackend.getUserAbout(userName));
+
+      try {
+        final response = await http.get(url);
+
+        if (response.statusCode == 200) {
+          Map<String, dynamic> responseData = json.decode(response.body);
+          if (responseData.containsKey('userID')) {
+            setState(() {
+              profilePic = responseData['avatar'];
+              if (profilePic == 'default.jpg') {
+                profilePic = null;
+              }
+              userID = responseData['userID'];
+              created_at = responseData['createdAt'];
+              userName = responseData['email']; // Adjust username extraction here
+              print(
+                  'User ID: $userID, Username: $userName, Profile Pic: $profilePic, Created at: $created_at');
+            });
+          } else {
+            throw Exception('User ID is not present in the response');
+          }
+        } else {
+          throw Exception(
+              'Failed to fetch user data, status code: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error fetching user data: $error');
+        // Handle error, show error message, retry logic, etc.
+      }
+    }
+
     Future<void> fetchData() async {
       try {
         final response = await http.get(Uri.parse(ApiRoutesMockserver.getUserById(1)));
@@ -112,7 +144,7 @@ import 'package:reddit_fox/navbar.dart';
           throw Exception('Failed to load user data');
         }
 
-        final postResponse = await http.get(Uri.parse(ApiRoutesMockserver.getPostsByCreatorId(widget.user_Id.toString())));
+        final postResponse = await http.get(Uri.parse(ApiRoutesMockserver.getPostsByCreatorId(widget.userName.toString())));
         if (postResponse.statusCode == 200) {
           setState(() {
             userPosts = json.decode(postResponse.body).cast<Map<String, dynamic>>();
@@ -126,27 +158,7 @@ import 'package:reddit_fox/navbar.dart';
       }
     }
 
-    Future<void> getUserData() async {
-      try {
-        final url = ApiRoutesMockserver.getUserById(widget.user_Id);
-        print('URL: $url');
-        final response = await http.get(Uri.parse(url));
-        print('Response Status Code: ${response.statusCode}');
-        print('Response Body: ${response.body}');
-        if (response.statusCode == 200) {
-          setState(() {
-            userData = json.decode(response.body);
-            userName = userData['userName'];
-            profilePic = userData['profilePic']; 
-          });
-        } else {
-          throw Exception('Failed to load user data');
-        }
-      } catch (error) {
-        print('Error fetching user data: $error');
-        // Handle error, show error message, retry logic, etc.
-      }
-    }
+    
 
 
 
@@ -174,12 +186,12 @@ Widget _buildTitleView() {
       SliverAppBar(
         pinned: true,
         backgroundColor: Colors.deepPurple,
-        expandedHeight: 280,
+        expandedHeight: 350,
         flexibleSpace: LayoutBuilder(
           builder: (context, constraints) {
              _showTitle = constraints.biggest.height <= 100;
             return FlexibleSpaceBar(
-              title: _myProfile && userName != null && _showTitle
+              title: userName != null  && _showTitle
                   ? Text(
                       userName!,
                       style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
@@ -198,7 +210,7 @@ Widget _buildTitleView() {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 80, left: 10),
+                      padding: const EdgeInsets.only(top: 50, left: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -208,9 +220,9 @@ Widget _buildTitleView() {
                             backgroundColor: Colors.black,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 10),
+                            padding: const EdgeInsets.only(left: 10, top: 15),
                             child: SizedBox(
-                              height: 35,
+                              height: 40,
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(
@@ -226,7 +238,7 @@ Widget _buildTitleView() {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20, top: 15),
                       child: Text(
                         '$userName',
                         style: TextStyle(
@@ -236,7 +248,7 @@ Widget _buildTitleView() {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20, top: 5),
                       child: Text(
                         'u/$userName • 1 karma • ${_formatDate(created_at)}',
                         style: TextStyle(
@@ -263,7 +275,7 @@ Widget _buildTitleView() {
           ),
           IconButton(
             onPressed: () {
-              Share.share('https://www.reddit.com/user/${widget.user_Id}/');
+              Share.share('https://www.reddit.com/user/${widget.userName}/');
               print("it is pressed");
             },
             icon: Transform.scale(
@@ -303,12 +315,12 @@ Widget _buildTitleView() {
           SliverAppBar(
             pinned: true,
             backgroundColor: Colors.deepPurple,
-            expandedHeight: 380,
+            expandedHeight: 250,
             flexibleSpace: LayoutBuilder(
               builder: (context, constraints) {
                 _showTitle = constraints.biggest.height <= 100;
                 return FlexibleSpaceBar(
-                  title: _myProfile && userData['userName']  != null && _showTitle
+                  title: userName  != null && _showTitle
                       ? Text(
                           userName!,
                           style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
@@ -339,8 +351,33 @@ Widget _buildTitleView() {
                               
                               Row(
                                 children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(),
+                                        child: Text(
+                                          '$userName',
+                                          style: TextStyle(
+                                            fontSize: 26,
+                                            color: Colors.grey[400],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(),
+                                        child: Text(
+                                          'u/$userName • 1 karma • ${_formatDate(userData['created_at'])}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[400],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 240,),
+                                    padding: const EdgeInsets.only(left: 100,),
                                       child: CircleAvatar(
                                         backgroundColor: Colors.transparent,
                                         radius: 50, // Increase the radius to increase the size of the CircleAvatar
@@ -373,26 +410,6 @@ Widget _buildTitleView() {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            '$userName',
-                            style: TextStyle(
-                              fontSize: 26,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            'u/$userName • 1 karma • ${_formatDate(userData['created_at'])}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -411,7 +428,7 @@ Widget _buildTitleView() {
               ),
               IconButton(
                 onPressed: () {
-                  Share.share('https://www.reddit.com/user/${widget.user_Id}/');
+                  Share.share('https://www.reddit.com/user//');
                   print("it is pressed");
                 },
                 icon: Transform.scale(

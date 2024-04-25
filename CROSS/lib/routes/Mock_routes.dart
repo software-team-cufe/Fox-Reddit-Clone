@@ -22,7 +22,9 @@ class ApiRoutesBackend {
   static const String delelteUser = '$baseUrl/api/users/delete_user';
   static String getPosts(String category, int page, int count, int limit) =>
       '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
-  // static const String login = '$baseUrl/user';
+  static String getUserAbout(String userName) => '$baseUrl/user/$userName/about';
+  
+    // static const String login = '$baseUrl/user';
   // static String getUserById(int id) => '$baseUrl/user/$id';
   // static String getPostsByCreatorId(int id) => '$baseUrl/posts?creatorId=$id';
   // static String getUserByToken(String token) => '$baseUrl/user?token=$token';

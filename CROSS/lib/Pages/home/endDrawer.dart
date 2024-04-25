@@ -109,11 +109,12 @@ class _endDrawerState extends State<endDrawer> {
                         leading: const Icon(Icons.person_outlined),
                         title: const Text('My profile'),
                         onTap: () {
+                          Navigator.pop(context);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProfilePage(
-                                      user_Id: snapshot.data!,
+                                      userName: '',
                                       myProfile: true,
                                       access_token: accessToken!,
                                     )),
@@ -123,17 +124,22 @@ class _endDrawerState extends State<endDrawer> {
                       ListTile(
                         leading: const Icon(Icons.add_circle_outline_sharp),
                         title: const Text('Create community'),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
                       ),
                       ListTile(
                         leading: const Icon(Icons.access_time),
                         title: const Text('History'),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
                       ),
                       ListTile(
                         leading: const Icon(Icons.settings),
                         title: const Text('Setting'),
                         onTap: () {
+                          Navigator.pop(context);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -151,11 +157,11 @@ class _endDrawerState extends State<endDrawer> {
                           await prefs.remove('backtoken');
                           await prefs.remove('mocktoken');
 
-                          //   // Navigate to the authentication screen
-                          //  Navigator.of(context).push(
-                          //   MaterialPageRoute(builder: (context) => AuthContainer()),
-                          // );
-                          Get.off(() => const StartingScreen());
+                            // Navigate to the authentication screen
+                           Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => AuthContainer()),
+                          );
+                          
                         },
                       ),
                     ],
