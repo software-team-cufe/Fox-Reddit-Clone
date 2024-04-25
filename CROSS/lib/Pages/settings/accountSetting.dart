@@ -116,34 +116,40 @@ class _AccSettingState extends State<AccSetting> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Basic Setting'),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: const Text('Basic Setting'),
+                ),
                 Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CircleAvatar(
-                          child: Image.asset(
-                            "assets/images/avatar.png",
-                            width: 25,
-                            height: 25,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CircleAvatar(
+                            child: Image.asset(
+                              "assets/images/avatar.png",
+                              width: 25,
+                              height: 25,
+                            ),
                           ),
-                        ),
-                        Text(
-                          userData["userName"] ?? "/Username",
-                          style: const TextStyle(
-                            color: Colors.white,
+                          Text(
+                            userData["userName"] ?? "/Username",
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
+                          TextButton(
+                            onPressed: () {},
+                            child: const Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 2,
@@ -469,7 +475,10 @@ class _AccSettingState extends State<AccSetting> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Connected Accounts'),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: const Text('Connected Accounts'),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Row(
@@ -513,7 +522,10 @@ class _AccSettingState extends State<AccSetting> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Safety'),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: const Text('Safety'),
+                    ),
                     TextButton(
                       onPressed: () {
                         Get.to(const BlockedAccounts());
@@ -664,10 +676,16 @@ class _AccSettingState extends State<AccSetting> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('privcy'),
-                    const Text(
-                      'Device take actions over the setting below',
-                      style: TextStyle(fontWeight: FontWeight.w100),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: const Text('privcy'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: const Text(
+                        'Device take actions over the setting below',
+                        style: TextStyle(fontWeight: FontWeight.w100),
+                      ),
                     ),
                     TextButton(
                       onPressed: () {},
@@ -733,10 +751,16 @@ class _AccSettingState extends State<AccSetting> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('sensitive advertising categoris'),
-                    const Text(
-                      'You can limit ads about these topics',
-                      style: TextStyle(fontWeight: FontWeight.w100),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: const Text('sensitive advertising categoris'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: const Text(
+                        'You can limit ads about these topics',
+                        style: TextStyle(fontWeight: FontWeight.w100),
+                      ),
                     ),
                     TextButton(
                       onPressed: () {},

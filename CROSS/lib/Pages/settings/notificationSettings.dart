@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class NotificationSettting extends StatefulWidget {
   const NotificationSettting({super.key});
@@ -10,7 +12,39 @@ class NotificationSettting extends StatefulWidget {
 }
 
 class _NotificationSetttingState extends State<NotificationSettting> {
- 
+  Map<String, dynamic>? userPrefs;
+  String? accessToken;
+  @override
+  void initState() {
+    super.initState();
+
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        accessToken = sharedPrefValue.getString('backtoken')!;
+        fetchData();
+      });
+    });
+  }
+
+  Future<void> fetchData() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/notification/settings'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      setState(() {
+        userPrefs = json.decode(response.body)['userPrefs'];
+      });
+      print(userPrefs);
+    } else {
+      throw Exception('Failed to load user preferences ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
