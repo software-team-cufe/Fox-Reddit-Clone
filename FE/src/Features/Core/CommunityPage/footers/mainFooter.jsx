@@ -76,9 +76,10 @@ export default function MainFooter (){
                      <p className="font-semibold text-sm">456</p>
                    
                      <div className=" flex flex-row"> 
-                      
+                       <svg className="text-green-500 w-2 h-2 fill-current rounded-full mt-1 mr-1"
+                         xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="currentColor" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" /></svg>
                        <p className=" text-xs text-gray-500 font-light">Online</p>
-                     </div>
+                      </div>
                   </div>
                   <div className=" flex flex-col">
                      <p className=" font-semibold text-sm">Top 1%</p>
