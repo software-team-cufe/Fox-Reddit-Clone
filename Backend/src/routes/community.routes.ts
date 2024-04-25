@@ -7,6 +7,7 @@ import {
   subscribeCommunityHandler,
   unsubscribeCommunityHandler,
   banOrUnbanHandler,
+  getUsersIsbannedIncommunityHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -26,5 +27,6 @@ router.post('/create_subreddit', validateResource(createCommunitySchema), create
 router.post('/:subreddit/api/subscribe', validateResource(subscribeCommunitySchema), subscribeCommunityHandler);
 router.post('/:subreddit/api/unsubscribe', validateResource(subscribeCommunitySchema), unsubscribeCommunityHandler);
 router.post('/api/ban_or_unban', validateResource(banOrUnbanSchema), banOrUnbanHandler);
+router.get('/r/:subreddit/about/banned', getUsersIsbannedIncommunityHandler);
 
 export default router;

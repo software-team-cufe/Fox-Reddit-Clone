@@ -2,6 +2,7 @@ import appError from '../utils/appError';
 import CommunityModel, { Community } from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
+import UserModel from '../model/user.model';
 
 /**
  * Finds a community by its subreddit name.
@@ -275,4 +276,35 @@ export async function updateMemberBanStatusInCommunity(userID: string, subreddit
       error: 'Failed to update member ban status',
     };
   }
+}
+/**
+ * Retrieves the users who are banned in a community.
+ *
+ * @param {string} communityName - The name of the community.
+ * @return {Promise<{status: boolean, users?: {avatar: string, username: string, _id: string, about: string, bannedTime: Date}[]}>} - A promise that resolves to an object with the status of the operation and the banned users, if successful.
+ */
+export async function getUsersAsBannedInCommunity(communityName: string) {
+  // Find the community by name
+  const community = await findCommunityByName(communityName);
+
+  // If community is not found, return status false
+  if (!community || !community.members) {
+    return { status: false };
+  }
+
+  // Extract the IDs and bannedTime of banned users
+  const bannedUsers = community.members.filter((member) => member.isBanned?.value === true);
+  const userIDs = bannedUsers.map((member) => member.userID);
+  const bannedTime = bannedUsers.map((member) => member.isBanned?.date);
+
+  // Fetch the banned users from the database, selecting specific attributes
+  const users = await UserModel.find({ _id: { $in: userIDs } }).select('avatar username _id about createdAt');
+
+  // Combine banned users with their bannedTime
+  const usersWithBannedTime = users.map((user, index) => ({
+    ...user.toObject(),
+    bannedTime: bannedTime[index],
+  }));
+
+  return { status: true, users: usersWithBannedTime };
 }
