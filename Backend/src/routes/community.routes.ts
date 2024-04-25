@@ -9,6 +9,7 @@ import {
   banOrUnbanHandler,
   joinModeratorHandler,
   leaveModeratorHandler,
+  getUsersIsbannedIncommunityHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -30,5 +31,6 @@ router.post('/:subreddit/api/unsubscribe', validateResource(subscribeCommunitySc
 router.post('/:subreddit/api/join_moderator', validateResource(subscribeCommunitySchema), joinModeratorHandler);
 router.post('/:subreddit/api/leave_moderator', validateResource(subscribeCommunitySchema), leaveModeratorHandler);
 router.post('/api/ban_or_unban', validateResource(banOrUnbanSchema), banOrUnbanHandler);
+router.get('/r/:subreddit/about/banned', getUsersIsbannedIncommunityHandler);
 
 export default router;

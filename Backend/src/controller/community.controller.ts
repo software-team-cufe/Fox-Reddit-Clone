@@ -8,6 +8,7 @@ import {
   addModeratorToCom,
   removeMemberFromCom,
   removeModeratorFromCom,
+  getUsersAsBannedInCommunity,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -505,6 +506,43 @@ export async function leaveModeratorHandler(req: Request, res: Response) {
     console.error('Error member joining moderation:', error);
     return res.status(500).json({
       error: 'Internal server error',
+    });
+  }
+}
+/**
+ * Retrieves the list of users who are banned in a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A promise that resolves when the function is complete.
+ */
+export async function getUsersIsbannedIncommunityHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    const commName = req.params.subreddit;
+    if (!commName) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const usersResult = await getUsersAsBannedInCommunity(commName);
+
+    return res.status(200).json({ status: 'success', users: usersResult.users });
+  } catch (error) {
+    console.error('Error in getUsersIsbannedIncommunityHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
     });
   }
 }
