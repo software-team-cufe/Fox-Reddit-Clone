@@ -67,19 +67,24 @@ class _ClassicCardState extends State<ClassicCard> {
       child: Column(
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-                vertical: 0, horizontal: 16), // Adjusted padding
-            leading: widget.post['redditpic'] != null
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            title: Row(
+              children: [
+                  widget.post['redditpic'] != null
                 ? CircleAvatar(
                     backgroundImage: NetworkImage(widget.post['redditpic']),
                   )
-                : null,
-            title: Text(
-              widget.post['redditName'],
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+                : Icon(Icons.account_circle, size: 30),
+                Text(
+                  widget.post['redditName'],
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -68,40 +68,33 @@ class _ModernCardState extends State<ModernCard> {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfilePage(
-                          userName: 'omar',
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 18,
+                      child: Icon(Icons.account_circle),
+                    ),
+                    SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'r/Valorant',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color(0xFFFFFFFF),
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 16,
-                        child: Icon(Icons.account_circle),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        widget.post['redditName'],
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
                 const Spacer(), // Added Spacer
                 IconButton(
@@ -169,7 +162,6 @@ class _ModernCardState extends State<ModernCard> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
             Text(
               widget.post['title'],
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -267,7 +259,7 @@ class _ModernCardState extends State<ModernCard> {
                     IconButton(
                       icon: Icon(LucideIcons.arrowUpCircle,
                           color: hasVoted && voteDirection == VoteDirection.Up
-                              ? Color(0xFFE74C3C)
+                              ? const Color(0xFFE74C3C)
                               : null),
                       onPressed: () => vote(VoteDirection.Up), // Upvote
                     ),
@@ -278,7 +270,7 @@ class _ModernCardState extends State<ModernCard> {
                     IconButton(
                       icon: Icon(LucideIcons.arrowDownCircle,
                           color: hasVoted && voteDirection == VoteDirection.Down
-                              ? Color(0xFFE74C3C)
+                              ? const Color(0xFFE74C3C)
                               : null),
                       onPressed: () => vote(VoteDirection.Down), // Downvote
                     ),
@@ -302,7 +294,7 @@ class _ModernCardState extends State<ModernCard> {
                           alignment: Alignment.center,
                           transform: Matrix4.rotationY(
                               3.14), // Flips the icon horizontally
-                          child: Icon(Icons.reply),
+                          child: const Icon(Icons.reply),
                         ),
                         onPressed: () {
                           int postId = widget.post['id'];

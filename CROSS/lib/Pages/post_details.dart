@@ -234,34 +234,49 @@ class _PostDetailsState extends State<PostDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(
-                        userName: 'omar'),
-                  ),
-                );
-              },
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 16,
-                    child: Icon(Icons.account_circle),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.post['redditName'],
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CircleAvatar(
+                  radius: 16,
+                  child: Icon(Icons.account_circle),
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'r/Valorant',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFFFFFFFF),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfilePage(
+                              userName: 'omar',
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        widget.post['redditName'],
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
+
             const SizedBox(height: 16),
             Text(
               widget.post['title'],
@@ -359,7 +374,7 @@ class _PostDetailsState extends State<PostDetails> {
                   ),
                 ),
               ),
-            const SizedBox(height: 8), // Space between picture and description
+            const SizedBox(height: 8),
             GestureDetector(
               onTap: () {
                 if (widget.post['nsfw'] || widget.post['spoiler']) {
@@ -443,8 +458,10 @@ class _PostDetailsState extends State<PostDetails> {
                 ),
               ],
             ),
-            const SizedBox(height: 1),
-            CommentSection(postId: "${widget.post['id']}",),
+            const SizedBox(height: 8),
+            CommentSection(
+              postId: "${widget.post['id']}",
+            ),
           ],
         ),
       ),
