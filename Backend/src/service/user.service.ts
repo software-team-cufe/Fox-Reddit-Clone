@@ -512,3 +512,56 @@ export async function addPostVoteToUser(userID: string, postID: string, type: nu
     status: true,
   };
 }
+
+/**
+ * addMemberToCom
+ * @param {string} body
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function addCommentVoteToUser(userID: string, commentID: string, type: number) {
+  const user = await findUserById(userID);
+
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  const vote = {
+    commentID: commentID,
+    type: type,
+  };
+  const temp = user.commentVotes;
+  try {
+    const updateduser = await UserModel.findByIdAndUpdate(
+      user._id,
+      {
+        $addToSet: { commentVotes: vote },
+      },
+      { upsert: true, new: true }
+    );
+    const temp2 = updateduser.commentVotes;
+    const isSame = _.isEqual(temp, temp2);
+
+    if (isSame) {
+      const updated = await UserModel.findByIdAndUpdate(
+        user._id,
+        {
+          $pull: { commentVotes: vote },
+        },
+        { upsert: true, new: true }
+      );
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}

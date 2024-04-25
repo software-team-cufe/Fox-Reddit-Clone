@@ -27,13 +27,14 @@ import {
   userPosts,
   addVoteToPost,
 } from '../service/post.service';
-import { add_comment, findCommentById, createComment } from '../service/comment.service';
+import { add_comment, findCommentById, createComment, addVoteToComment } from '../service/comment.service';
 import {
   findUserByUsername,
   userHiddenPosts,
   userSavedPosts,
   userSubmittedPosts,
   addPostVoteToUser,
+  addCommentVoteToUser,
 } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
 import { findCommunityByName } from '../service/community.service';
@@ -910,22 +911,22 @@ export async function votePostHandler(req: Request, res: Response) {
 }
 
 /**
- * Handles voting a post.
- * @param {Request<votePost['body']>} req - The request object.
+ * Handles voting a comment.
+ * @param {Request<voteComment['body']>} req - The request object.
  * @param {Response} res - The response object.
  * @param {NextFunction} next - The next function.
  */
 export async function voteCommentHandler(req: Request, res: Response) {
   try {
     const type = req.body.type;
-    const post = await findPostById(req.body.postID);
+    const comment = await findCommentById(req.body.commentID);
     const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
-    if (!post) {
+    if (!comment) {
       return res.status(400).json({
         status: 'failed',
-        message: 'Post not found',
+        message: 'Comment not found',
       });
     }
 
@@ -938,11 +939,21 @@ export async function voteCommentHandler(req: Request, res: Response) {
     }
 
     if (type == 1) {
-      const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), 1);
-      const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), 1);
+      const postResult = await addVoteToComment(user._id.toString(), comment._id.toString(), 1);
+      const userResult = await addCommentVoteToUser(user._id.toString(), comment._id.toString(), 1);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Comment is upvoted successfully',
+      });
     } else if (type == -1) {
-      const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), -1);
-      const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), -1);
+      const postResult = await addVoteToComment(user._id.toString(), comment._id.toString(), -1);
+      const userResult = await addCommentVoteToUser(user._id.toString(), comment._id.toString(), -1);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Comment is downvoted successfully',
+      });
     } else {
       return res.status(402).json({
         status: 'failed',
@@ -950,7 +961,7 @@ export async function voteCommentHandler(req: Request, res: Response) {
       });
     }
   } catch (error) {
-    console.error('Error in votePostHandler:', error);
+    console.error('Error in voteCommentHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',

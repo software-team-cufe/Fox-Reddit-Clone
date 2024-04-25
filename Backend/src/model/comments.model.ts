@@ -47,8 +47,8 @@ export class Comment {
   @prop({ default: 0 })
   votesCount!: number;
 
-  @prop({ type: () => [VoteComment] })
-  voters!: VoteComment[];
+  @prop()
+  votes!: VoteComment[]; // was voters instead of votes
 
   @prop({ default: Date.now })
   createdAt!: Date;
