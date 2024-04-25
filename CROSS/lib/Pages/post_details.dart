@@ -406,54 +406,95 @@ class _PostDetailsState extends State<PostDetails> {
               children: [
                 Row(
                   children: [
-                    IconButton(
-                      icon: Icon(LucideIcons.arrowUpCircle,
-                          color: hasVoted && voteDirection == VoteDirection.Up
-                              ? const Color(0xFFE74C3C)
-                              : null),
-                      onPressed: () => vote(VoteDirection.Up), // Upvote
-                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(width: 42, height: 40), // Set a fixed size
+                      child: IconButton(
+                        icon: AnimatedSwitcher(
+                          duration: Duration(milliseconds: 200),
+                          child: hasVoted && voteDirection == VoteDirection.Up
+                              ? Image.asset(
+                                  'assets/Icons/up vote.png',
+                                  key: UniqueKey(),
+                                  width: 40,
+                                  height: 42,
+                                )
+                              : Image.asset(
+                                  'assets/Icons/arrow-up.png',
+                                  key: UniqueKey(),
+                                  width: 32,
+                                  height: 32,
+                                )  
+                        ),
+                        onPressed: () => vote(VoteDirection.Up),
+                      ),
+                      ),
+
                     Text(
                       "${voteCount.abs()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    IconButton(
-                      icon: Icon(LucideIcons.arrowDownCircle,
-                          color: hasVoted && voteDirection == VoteDirection.Down
-                              ? const Color(0xFFE74C3C)
-                              : null),
-                      onPressed: () => vote(VoteDirection.Down), // Downvote
-                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(width: 40, height: 38), // Set a fixed size
+                      child: IconButton(
+                        icon: AnimatedSwitcher(
+                          duration: Duration(milliseconds: 200),
+                          child: hasVoted && voteDirection == VoteDirection.Down
+                              ? Image.asset(
+                                  'assets/Icons/down vote.png',
+                                  key: UniqueKey(),
+                                  width: 32,
+                                  height: 32,
+                                )
+                              : Image.asset(
+                                  'assets/Icons/arrow-down.png',
+                                  key: UniqueKey(),
+                                  width: 32,
+                                  height: 32,
+                                )  
+                        ),
+                        onPressed: () => vote(VoteDirection.Down),
+                      ),
+                      ),
                   ],
                 ),
+                const SizedBox(width: 50),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0, right: 4.0),
-                        child: Text(
-                          "${widget.post['commentsNo']}",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                      children: [
+                        SizedBox(               
+                              child: Row(
+                                children: [
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints.tightFor(width: 28, height: 28), // Set a fixed size
+                                    child: Image.asset('assets/Icons/comment.png')
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                                    child: Text(
+                                      "${widget.post['commentsNo']} Comments",
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        const SizedBox(width: 50),
+                        IconButton(
+                          icon: Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.rotationY(
+                                3.14), // Flips the icon horizontally
+                            child: const Icon(Icons.reply),
+                          ),
+                          onPressed: () {
+                            int postId = widget.post['id'];
+                            String postUrl =
+                                'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
+                            Share.share('${widget.post['title']}\n$postUrl');
+                          },
                         ),
-                      ),
-                      const Icon(Icons.chat),
-                      const Spacer(),
-                      IconButton(
-                        icon: Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.rotationY(
-                              3.14), // Flips the icon horizontally
-                          child: const Icon(Icons.reply),
-                        ),
-                        onPressed: () {
-                          int postId = widget.post['id'];
-                          String postUrl =
-                              'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                          Share.share('${widget.post['title']}\n$postUrl');
-                        },
-                      ),
-                    ],
+                      ],
                   ),
                 ),
               ],

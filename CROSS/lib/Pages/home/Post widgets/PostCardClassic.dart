@@ -171,34 +171,77 @@ class _ClassicCardState extends State<ClassicCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              IconButton(
-                icon: Icon(LucideIcons.arrowUpCircle,
-                    color: hasVoted && voteDirection == VoteDirection.Up
-                        ? const Color(0xFFE74C3C)
-                        : null),
-                onPressed: () => vote(VoteDirection.Up), // Upvote
-              ),
-              Text(
-                "${voteCount.abs()}",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: Icon(LucideIcons.arrowDownCircle,
-                    color: hasVoted && voteDirection == VoteDirection.Down
-                        ? const Color(0xFFE74C3C)
-                        : null),
-                onPressed: () => vote(VoteDirection.Down), // Downvote
-              ),
+              ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(width: 42, height: 40), // Set a fixed size
+                      child: IconButton(
+                        icon: AnimatedSwitcher(
+                          duration: Duration(milliseconds: 200),
+                          child: hasVoted && voteDirection == VoteDirection.Up
+                              ? Image.asset(
+                                  'assets/Icons/up vote.png',
+                                  key: UniqueKey(),
+                                  width: 40,
+                                  height: 42,
+                                )
+                              : Image.asset(
+                                  'assets/Icons/arrow-up.png',
+                                  key: UniqueKey(),
+                                  width: 32,
+                                  height: 32,
+                                )  
+                        ),
+                        onPressed: () => vote(VoteDirection.Up),
+                      ),
+                      ),
+
+                    Text(
+                      "${voteCount.abs()}",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(width: 40, height: 38), // Set a fixed size
+                      child: IconButton(
+                        icon: AnimatedSwitcher(
+                          duration: Duration(milliseconds: 200),
+                          child: hasVoted && voteDirection == VoteDirection.Down
+                              ? Image.asset(
+                                  'assets/Icons/down vote.png',
+                                  key: UniqueKey(),
+                                  width: 32,
+                                  height: 32,
+                                )
+                              : Image.asset(
+                                  'assets/Icons/arrow-down.png',
+                                  key: UniqueKey(),
+                                  width: 32,
+                                  height: 32,
+                                )  
+                        ),
+                        onPressed: () => vote(VoteDirection.Down),
+                      ),
+                      ),
+
               const SizedBox(width: 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(width: 4),
-                  Text(
-                    widget.post['commentsNo'].toString(),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const Icon(Icons.chat),
+                  SizedBox(               
+                        child: Row(
+                          children: [
+                            ConstrainedBox(
+                              constraints: BoxConstraints.tightFor(width: 28, height: 28), // Set a fixed size
+                              child: Image.asset('assets/Icons/comment.png')
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                              child: Text(
+                                "${widget.post['commentsNo']} Comments",
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                   IconButton(
                     icon: Transform(
                       alignment: Alignment.center,
@@ -219,7 +262,7 @@ class _ClassicCardState extends State<ClassicCard> {
           ),
           Divider(
             height: 1,
-            color: Colors.grey[300],
+            color: Color.fromARGB(255, 44, 43, 43),
             thickness: 1,
             indent: 16,
             endIndent: 16,
