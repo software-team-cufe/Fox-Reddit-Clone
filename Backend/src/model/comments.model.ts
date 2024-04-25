@@ -18,8 +18,8 @@ class VoteComment {
   @prop({ ref: () => User })
   userID!: Ref<User>;
 
-  @prop()
-  voteType!: number;
+  @prop({ enum: [1, -1] })
+  type!: number;
 }
 
 export class Comment {

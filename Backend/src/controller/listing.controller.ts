@@ -9,7 +9,6 @@ import {
   spoilerPost,
   nsfwPost,
   lockPost,
-  votePost,
   submitPost,
 } from '../schema/listing.schema';
 import {
@@ -26,9 +25,16 @@ import {
   getRandomPostsFromSubreddit,
   getRandomPostsFromRandom,
   userPosts,
+  addVoteToPost,
 } from '../service/post.service';
 import { add_comment, findCommentById, createComment } from '../service/comment.service';
-import { findUserByUsername, userHiddenPosts, userSavedPosts, userSubmittedPosts } from '../service/user.service';
+import {
+  findUserByUsername,
+  userHiddenPosts,
+  userSavedPosts,
+  userSubmittedPosts,
+  addPostVoteToUser,
+} from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
 import { findCommunityByName } from '../service/community.service';
 import UserModel from '../model/user.model';
@@ -850,12 +856,10 @@ export async function unlockPostHandler(req: Request<lockPost['body']>, res: Res
  * @param {Response} res - The response object.
  * @param {NextFunction} next - The next function.
  */
-export async function votePostHandler(req: Request<votePost['body']>, res: Response, next: NextFunction) {
+export async function votePostHandler(req: Request, res: Response) {
   try {
-    const id = req.body.linkID;
     const type = req.body.type;
-    const desiredID = id.split('_')[1];
-    const post = await findPostById(desiredID);
+    const post = await findPostById(req.body.postID);
     const user = await findUserByUsername(res.locals.user.username as string);
 
     // Check if post is not found
@@ -868,28 +872,90 @@ export async function votePostHandler(req: Request<votePost['body']>, res: Respo
 
     // Check if user is missing or invalid
     if (!user) {
-      return res.status(400).json({
+      return res.status(401).json({
         status: 'failed',
         message: 'Access token is missing or invalid',
       });
     }
 
-    // Check if the post is already unlocked
-    if (!post.locked) {
+    if (type == 1) {
+      const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), 1);
+      const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), 1);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Post is upvoted successfully',
+      });
+    } else if (type == -1) {
+      const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), -1);
+      const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), -1);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Post is downvoted successfully',
+      });
+    } else {
+      return res.status(402).json({
+        status: 'failed',
+        message: 'Type is missing or invalid',
+      });
+    }
+  } catch (error) {
+    console.error('Error in votePostHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Handles voting a post.
+ * @param {Request<votePost['body']>} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ */
+export async function voteCommentHandler(req: Request, res: Response) {
+  try {
+    const type = req.body.type;
+    const post = await findPostById(req.body.postID);
+    const user = await findUserByUsername(res.locals.user.username as string);
+
+    // Check if post is not found
+    if (!post) {
       return res.status(400).json({
         status: 'failed',
-        message: 'Post is already unlocked',
+        message: 'Post not found',
       });
     }
 
-    await PostModel.findByIdAndUpdate(post._id, { locked: false }, { upsert: true, new: true });
-  } catch (err) {
-    return next(err);
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    if (type == 1) {
+      const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), 1);
+      const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), 1);
+    } else if (type == -1) {
+      const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), -1);
+      const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), -1);
+    } else {
+      return res.status(402).json({
+        status: 'failed',
+        message: 'Type is missing or invalid',
+      });
+    }
+  } catch (error) {
+    console.error('Error in votePostHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
-  res.status(200).json({
-    status: 'success',
-    message: 'Post is unlocked successfully',
-  });
 }
 
 export async function submitPostHandler(req: Request, res: Response) {

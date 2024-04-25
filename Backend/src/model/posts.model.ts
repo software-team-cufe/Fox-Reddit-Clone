@@ -18,7 +18,7 @@ class VotePost {
   userID!: Ref<User>;
 
   @prop({ enum: [1, -1] })
-  voteType!: number;
+  type!: number;
 }
 
 class PollOption {
@@ -102,7 +102,7 @@ export class Post {
   @prop({ type: () => [Spam] })
   spammers!: Spam[];
 
-  @prop({ type: () => [VotePost] })
+  @prop()
   votes!: VotePost[];
 
   @prop({ type: () => [String], ref: () => User })

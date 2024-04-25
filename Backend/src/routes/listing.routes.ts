@@ -15,6 +15,7 @@ import {
   lockPostHandler,
   unlockPostHandler,
   votePostHandler,
+  voteCommentHandler,
   submitPostHandler,
   getSortedPosts,
   getUserHiddenPostsHandler,
@@ -33,6 +34,7 @@ import {
   lockPostSchema,
   votePostSchema,
   submitPostSchema,
+  voteCommentSchema,
 } from '../schema/listing.schema';
 
 const router = express.Router();
@@ -54,7 +56,8 @@ router.post('/api/marknsfw', validateResource(nsfwPostSchema), marknsfwPostHandl
 router.post('/api/unmarknsfw', validateResource(nsfwPostSchema), unmarknsfwPostHandler);
 router.post('/api/lock', validateResource(lockPostSchema), lockPostHandler);
 router.post('/api/unlock', validateResource(lockPostSchema), unlockPostHandler);
-router.post('/api/vote', validateResource(votePostSchema), votePostHandler);
+router.post('/api/postvote', validateResource(votePostSchema) as RequestHandler, votePostHandler);
+router.post('/api/commentvote', validateResource(voteCommentSchema) as RequestHandler, voteCommentHandler);
 router.post('/api/submit', validateResource(submitPostSchema) as RequestHandler, submitPostHandler);
 router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);
 

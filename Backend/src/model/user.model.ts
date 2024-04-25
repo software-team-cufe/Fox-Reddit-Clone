@@ -408,10 +408,10 @@ export class User {
   @prop({ ref: () => 'Comment' })
   hasReply?: Ref<Comment>[];
 
-  @prop({ type: () => [VotePost] })
+  @prop()
   postVotes?: VotePost[];
 
-  @prop({ type: () => [VoteComment] })
+  @prop()
   commentVotes?: VoteComment[];
 
   @prop({ ref: 'Post' })

@@ -3,6 +3,7 @@ import PostModel, { Post } from '../model/posts.model';
 import appError from '../utils/appError';
 import CommunityModel from '../model/community.model';
 import { Types } from 'mongoose';
+import _ from 'lodash';
 
 /**
  * Creates a new user.
@@ -447,6 +448,59 @@ export async function removeMemberFromUser(userID: string, communityID: string) 
         status: false,
         error: 'error in removing user',
       };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * addMemberToCom
+ * @param {string} body
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function addPostVoteToUser(userID: string, postID: string, type: number) {
+  const user = await findUserById(userID);
+
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  const vote = {
+    postID: postID,
+    type: type,
+  };
+  const temp = user.postVotes;
+  try {
+    const updateduser = await UserModel.findByIdAndUpdate(
+      user._id,
+      {
+        $addToSet: { postVotes: vote },
+      },
+      { upsert: true, new: true }
+    );
+    const temp2 = updateduser.postVotes;
+    const isSame = _.isEqual(temp, temp2);
+
+    if (isSame) {
+      const updatedPost = await UserModel.findByIdAndUpdate(
+        user._id,
+        {
+          $pull: { postVotes: vote },
+        },
+        { upsert: true, new: true }
+      );
     }
   } catch (error) {
     return {

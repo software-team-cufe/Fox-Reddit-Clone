@@ -1,5 +1,5 @@
 import path from 'path';
-import { any, object, string, boolean, array, TypeOf } from 'zod';
+import { any, object, string, number, boolean, array, TypeOf } from 'zod';
 
 export const addCommentSchema = object({
   body: object({
@@ -85,10 +85,21 @@ export const lockPostSchema = object({
 
 export const votePostSchema = object({
   body: object({
-    linkID: string({
-      required_error: 'linkID is required',
+    postID: string({
+      required_error: 'postID is required',
     }),
-    type: string({
+    type: number({
+      required_error: 'Vote type is required',
+    }),
+  }),
+});
+
+export const voteCommentSchema = object({
+  body: object({
+    commentID: string({
+      required_error: 'commentID is required',
+    }),
+    type: number({
       required_error: 'Vote type is required',
     }),
   }),
@@ -124,4 +135,5 @@ export type spoilerPost = TypeOf<typeof spoilerPostSchema>;
 export type nsfwPost = TypeOf<typeof nsfwPostSchema>;
 export type lockPost = TypeOf<typeof lockPostSchema>;
 export type votePost = TypeOf<typeof votePostSchema>;
+export type voteComment = TypeOf<typeof voteCommentSchema>;
 export type submitPost = TypeOf<typeof submitPostSchema>;

@@ -5,7 +5,9 @@ import { DocumentType, Ref } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
 import { findCommunityByName } from './community.service';
 import { QueryOptions } from 'mongoose';
-import { shuffle } from 'lodash';
+import _, { shuffle } from 'lodash';
+import { findUserById } from './user.service';
+
 /**
  * Creates a new post.
  *
@@ -578,4 +580,68 @@ export async function getRandomPostsFromRandom(
 ): Promise<Post[]> {
   const randomPosts = await findRandomPostsByRandom(limit, page, count);
   return randomPosts;
+}
+
+/**
+ * addMemberToCom
+ * @param {string} body
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function addVoteToPost(userID: string, postID: string, type: number) {
+  const post = await findPostById(postID);
+  const user = await findUserById(userID);
+
+  if (!post) {
+    return {
+      status: false,
+      error: 'post not found',
+    };
+  }
+
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  const vote = {
+    userID: userID,
+    type: type,
+  };
+  const temp = post.votes;
+  try {
+    const updatedPost = await PostModel.findByIdAndUpdate(
+      post._id,
+      {
+        $addToSet: { votes: vote },
+        $inc: { votesCount: type },
+      },
+      { upsert: true, new: true }
+    );
+    const temp2 = updatedPost.votes;
+    const isSame = _.isEqual(temp, temp2);
+
+    if (isSame) {
+      type = type * -2;
+      const updatedPost = await PostModel.findByIdAndUpdate(
+        post._id,
+        {
+          $pull: { votes: vote },
+          $inc: { votesCount: type },
+        },
+        { upsert: true, new: true }
+      );
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
 }
