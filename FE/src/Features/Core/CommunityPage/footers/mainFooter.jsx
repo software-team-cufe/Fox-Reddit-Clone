@@ -48,7 +48,7 @@ export default function MainFooter (){
       </button>
       {selectedId === id && (
         <div>
-          <p className="text-xs text-gray-500 font-light">
+          <p className="text-xs text-gray-500 font-light mx-5">
           We&apos;re not always in the position that we want to be at. We&apos;re constantly
           growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
           ourselves and actualize our dreams.
@@ -63,8 +63,8 @@ export default function MainFooter (){
         <div className='w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg hidden md:block'>
            <div className=" flex flex-col content-between ">
               <div className=" flex flex-col">
-                <p className=" font-semibold text-sm">programming</p>
-                <p className=" text-sm text-gray-500 font-light">Computer Programming</p>
+                <p className=" font-semibold text-sm"> community name</p>
+                <p className=" text-xs text-gray-500 font-light">community description</p>
               </div>
              
               <div className=" flex flex-row justify-between my-3">
@@ -98,9 +98,43 @@ export default function MainFooter (){
               <p className="text-xs text-gray-500">Rules</p>
               <div>
                 {rule}
-               
               </div>
            </div>
+           <hr className="w-[100%] h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+          
+           <div className=" flex flex-col space-y-2">
+              <p className="text-xs text-gray-500 mb-5">MODERATORS</p>
+             
+              <div className=" flex flex-row space-x-2 mx-2" >
+                <svg className="text-orange-400 w-7 h-7"
+              xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>   
+                <p className=" text-sm font-light"> u/username1</p>
+              </div>
+             
+              <div className=" flex flex-row space-x-2 mx-2">
+                <svg className="text-pink-200 w-7 h-7"
+                xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>
+                <p className=" text-sm font-light"> u/username2</p>
+              </div>
+
+              <div className=" flex flex-row space-x-2 mx-2">    
+                 <svg className="text-green-500 w-7 h-7"
+                 xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>    
+                 <p className=" text-sm font-light"> u/username3</p>
+              </div>
+
+              <div className=" flex flex-row space-x-2 mx-2">
+                <svg className="text-indigo-300 w-7 h-7"
+                 xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>
+                 <p className=" text-sm font-light"> u/username4</p>   
+              </div>
+              <div className=" flex flex-row space-x-2 mx-2">
+                   <svg className="text-red-500 w-7 h-7"
+                    xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg> 
+                    <p className=" text-sm font-light"> u/username5</p>     
+              </div>
+                     
+            </div>
         </div>
     )
 }
