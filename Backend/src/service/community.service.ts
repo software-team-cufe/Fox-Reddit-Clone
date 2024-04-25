@@ -224,3 +224,55 @@ export async function removeMemberFromCom(userID: string, subreddit: string) {
     status: true,
   };
 }
+/**
+ * Checks if a user is banned or not in a community and performs the corresponding operation.
+ *
+ * @param {string} userID - The ID of the user.
+ * @param {string} subreddit - The name of the subreddit.
+ * @param {string} operation - The operation to perform. Possible values are 'ban' or 'unban'.
+ * @return {Promise<{status: boolean, error?: string}>} - A promise that resolves to an object with the status of the operation. If the operation fails, an error message is also included.
+ */
+export async function updateMemberBanStatusInCommunity(userID: string, subreddit: string, operation: string) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'Community not found',
+    };
+  }
+
+  const memInComm = {
+    userID: userID,
+    isMuted: {
+      value: false,
+    },
+    isBanned: {
+      value: operation === 'ban',
+      date: new Date(),
+    },
+  };
+
+  try {
+    let updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $pull: { members: { userID: userID } } },
+      { new: true }
+    );
+    updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { members: memInComm } },
+      { upsert: true, new: true }
+    );
+
+    return {
+      status: true,
+    };
+  } catch (error) {
+    console.error('Error updating member ban status:', error);
+    return {
+      status: false,
+      error: 'Failed to update member ban status',
+    };
+  }
+}
