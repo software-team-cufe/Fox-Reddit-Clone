@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { userAxios } from "@/Utils/UserAxios";
-
+import { toast } from "react-toastify";
 function SafetySettings() {
     const [FocusBlock, setFocusBlock] = useState(false);
     const [BlockValue, setBlockValue] = useState("");
@@ -15,59 +15,21 @@ function SafetySettings() {
     const [Blocked, setBlocked] = useState([]);
     //To do add of both fields
 
-    const handleAddBlock = async () => {
-        const val = await idfromname(BlockValue);
-        if (val != null) {
-            try {
-                const res = await axios.get(`http://localhost:3002/users/${val}`);
-                setBlocked(prevBlocked => [...prevBlocked, { avatar: res.data.avatar, name: res.data.name }]);
-
-
-            } catch (ex) {
-                console.error(ex);
-                if (ex.issues != null && ex.issues.length != 0) {
-                    toast.error(ex.issues[0].message);
-                }
-            }
-            try {
-                const res = await axios.patch(`http://localhost:3002/users/1`, { blocked: Blocked });
-            } catch (ex) {
-                console.error(ex);
-                if (ex.issues != null && ex.issues.length != 0) {
-                    toast.error(ex.issues[0].message);
-                }
-            }
-
-        }
-    }
-    const handleAddMute = () => {//To do
-    }
-
     useEffect(() => {
         fetchMock();
-        // fetchBlock();
+        //fetchBlock();
     }, [])
-    const idfromname = async (name) => {
-        const response = await axios.get(`http://localhost:3002/users`)
-            .catch(err => console.error(err));
-        for (const user of response.data) {
-            if (user.name === name) {
-                return user.id;
-            }
-        }
-        console.log("user not found");
-        return null;
-    }
-    // const fetchBlock = async () => {
-    //     try {
-    //         const res = await userAxios.get('/api/v1/me/blocked');
-    //         console.log(res.data);
-    //     } catch (ex) {
-    //         if (ex.issues != null && ex.issues.length != 0) {
-    //             toast.error(ex.issues[0].message);
-    //         }
-    //     }
-    // }
+    useEffect(() => {
+        if (BlockValue.length === 0)
+            setEnableAddBlock(true);
+        else setEnableAddBlock(false);
+    }, [BlockValue])
+    useEffect(() => {
+        if (MuteValue.length === 0)
+            setEnableAddMute(true);
+        else setEnableAddMute(false);
+    }, [MuteValue])
+
     const fetchMock = async () => {
         try {
             const res = await axios.get('http://localhost:3002/users/1');
@@ -81,16 +43,42 @@ function SafetySettings() {
         }
     }
 
-    useEffect(() => {
-        if (BlockValue.length === 0)
-            setEnableAddBlock(true);
-        else setEnableAddBlock(false);
-    }, [BlockValue])
-    useEffect(() => {
-        if (MuteValue.length === 0)
-            setEnableAddMute(true);
-        else setEnableAddMute(false);
-    }, [MuteValue])
+
+    const fetchBlock = async () => {
+        try {
+            const res = await userAxios.get('/api/v1/me/blocked');
+            console.log(res.data);
+        } catch (ex) {
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
+    }
+
+
+    const idFromName = async (name) => { //check if user is exits and return his/her id
+        const response = await axios.get(`http://localhost:3002/users`)
+            .catch(err => console.error(err));
+        for (const user of response.data) {
+            if (user.name === name) {
+                return user.id;
+            }
+        }
+        toast.error("user not found");
+        return null;
+    }
+
+    const idFromNameCom = async (name) => { //for communities
+        const response = await axios.get(`http://localhost:3002/communities`)
+            .catch(err => console.error(err));
+        for (const com of response.data) {
+            if (com.name === name) {
+                return com.id;
+            }
+        }
+        toast.error("Community is not found");
+        return null;
+    }
 
     const handleBlockInputValue = (event) => {
         setBlockValue(event.target.value);
@@ -100,15 +88,11 @@ function SafetySettings() {
         setMuteValue(event.target.value);
 
     }
-    const handleRemoveBlock = async (indexToRemove) => {
-        console.log(indexToRemove)
-        setBlocked(prevBlocked => {
-            const newBlocked = prevBlocked.filter((_, index) => index !== indexToRemove);
-            console.log(newBlocked); // Log the updated state here
-            return newBlocked;
-        });
+    const handleRemoveBlock = async (nameToRemove) => {
         try {
-            const res = await axios.patch(`http://localhost:3002/users/1`, { blocked: Blocked });
+            const updatedBlocked = Blocked.filter(block => block.name !== nameToRemove);
+            const res = await axios.patch(`http://localhost:3002/users/1`, { blocked: updatedBlocked });
+            setBlocked(updatedBlocked);
         } catch (ex) {
             console.error(ex);
             if (ex.issues != null && ex.issues.length != 0) {
@@ -116,6 +100,70 @@ function SafetySettings() {
             }
         }
     };
+
+    const handleAddBlock = async () => {
+        const val = await idFromName(BlockValue);
+        if (val != null) {
+            //check if user is already blocked
+            for (const user of Blocked) {
+                if (user.name === BlockValue) {
+                    toast.success("user already blocked");
+                    return;
+                }
+            }
+            try {
+                //add user to the block list
+                const res = await axios.get(`http://localhost:3002/users/${val}`);
+                const updatedBlock = [...Blocked, { avatar: res.data.avatar, name: res.data.name }];
+                const ress = await axios.patch(`http://localhost:3002/users/1`, { blocked: updatedBlock });
+                setBlocked(updatedBlock);
+                setBlockValue('');
+            } catch (ex) {
+                console.error(ex);
+                if (ex.issues != null && ex.issues.length != 0) {
+                    toast.error(ex.issues[0].message);
+                }
+            }
+        }
+    }
+
+    const handleRemoveMute = async (nameToRemove) => {
+        try {
+            const updatedMute = MutedCom.filter(mute => mute.name !== nameToRemove);
+            const res = await axios.patch(`http://localhost:3002/users/1`, { Muted: updatedMute });
+            setMutedCom(updatedMute);
+        } catch (ex) {
+            console.error(ex);
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
+    };
+    const handleAddMute = async () => {
+        const val = await idFromNameCom(MuteValue);
+        if (val != null) {
+            for (const com of MutedCom) {
+                if (com.name === MuteValue) {
+                    toast.success("Community is already muted");
+                    return;
+                }
+            }
+            try {
+                const res = await axios.get(`http://localhost:3002/communities/${val}`);
+                const updatedComMuted = [...MutedCom, { icon: res.data.icon, name: res.data.name }];
+                const ress = await axios.patch(`http://localhost:3002/users/1`, { Muted: updatedComMuted });
+                setMutedCom(updatedComMuted);
+                setMuteValue('');
+            } catch (ex) {
+                console.error(ex);
+                if (ex.response && ex.response.data && ex.response.data.message) {
+                    toast.error(ex.response.data.message);
+                } else {
+                    toast.error("An error occurred while muting the community.");
+                }
+            }
+        }
+    }
 
     return (
 
@@ -144,26 +192,30 @@ function SafetySettings() {
                         onFocus={() => { setFocusBlock(true); }}
                         onBlur={() => { if (BlockValue.length === 0) setFocusBlock(false); }}
                         className="w-full px-2 py-1 focus:outline-none" type="text" />
-                    <label className={`absolute text-gray-400 text-xs left-2 ${FocusBlock ? "top-0" : "top-4"} `}>Block New User</label>
+                    <label className={`absolute text-gray-400 text-xs left-2 duration-300
+                     ${FocusBlock ? "top-0" : "top-4"} `}>Block New User</label>
                     <button onClick={handleAddBlock}
                         disabled={EnableAddBlock}
-                        className=" disabled:text-gray-400 text-base font-sans text-orange-600 font-bold px-4 py-1 rounded-r-md">
+                        className=" disabled:text-gray-400 text-base font-sans
+                         text-orange-600 font-bold px-4 py-1 rounded-r-md">
                         Add
                     </button>
 
                 </div>
                 {Blocked.map((block, index) => (
                     <div className='w-full flex my-2' key={block.name}>
-                        <img src={block.avatar} alt={block.name} className="w-10 h-10" />
-                        <p className="pt-3 text-sm">{block.name}</p>
-                        <button onClick={() => { handleRemoveBlock(index) }}
+                        <img src={block.avatar} alt={block.name} className="w-8 h-8  rounded m-1" />
+                        <p className="pt-3 text-sm min-w-max">{block.name}</p>
+                        <div className="w-full" />
+                        <button onClick={() => { handleRemoveBlock(block.name) }}
                             className="font-bold text-sm 
-                         text-gray-500 hover:text-blue-600 pb-1 ml-60">Remove</button>
+                         text-gray-500 hover:text-blue-600 pb-1  ">Remove</button>
                     </div>
                 ))}
 
                 <h2 className=' text-base'>Communities You've Muted</h2>
-                <div className='text-xs  text-gray-500'>Posts from muted communities won't show up in your feeds or recommendations.
+                <div className='text-xs  text-gray-500'>Posts from muted communities won't
+                    show up in your feeds or recommendations.
                     <div onFocus={() => { setFocusMute(true); setIsFocusedM("border-blue-500"); }}
                         onBlur={() => { if (MuteValue.length === 0) setFocusMute(false); setIsFocusedM("border-gray-400"); }}
                         className={`relative h-12 flex border  p-1 my-4 rounded-md  ${isFocusedM}`}>
@@ -175,20 +227,24 @@ function SafetySettings() {
                             onFocus={() => { setFocusMute(true); }}
                             onBlur={() => { if (MuteValue.length === 0) setFocusMute(false); }}
                             className="w-full text-black text-sm px-2 py-1 focus:outline-none" type="text" />
-                        <label className={`absolute text-gray-400 text-xs left-2 ${FocusMute ?
+                        <label className={`absolute text-gray-400 text-xs left-2 duration-300 ${FocusMute ?
                             "top-0" : "top-4"} `}>Mute New Community</label>
                         <button onClick={handleAddMute}
                             disabled={EnableAddMute}
-                            className="  disabled:text-gray-400 text-base text-orange-600 font-bold px-4 py-1 rounded-r-md">
+                            className="  disabled:text-gray-400 text-base
+                             text-orange-600 font-bold px-4 py-1 rounded-r-md">
                             Add
                         </button>
 
                     </div>
                     {MutedCom.map((mute, index) => (
                         <div className='w-full flex my-2' key={mute.name}>
-                            <img src={mute.icon} alt={mute.name} className="w-10 h-10" />
-                            <p className="pt-3 text-black text-sm">{mute.name}</p>
-                            <button className="font-bold text-gray-500 text-sm hover:text-blue-600 pb-1 ml-60">Remove</button>
+                            <img src={mute.icon} alt={mute.name} className="w-8 h-8  rounded m-1" />
+                            <p className="pt-3 text-black text-sm  min-w-max">{mute.name}</p>
+                            <div className="w-full" />
+                            <button onClick={() => { handleRemoveMute(mute.name) }}
+                                className="font-bold text-gray-500 text-sm
+                             hover:text-blue-600 pb-1 ">Remove</button>
                         </div>
                     ))}
                 </div>

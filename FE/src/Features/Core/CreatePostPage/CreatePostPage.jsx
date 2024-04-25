@@ -29,6 +29,36 @@ function CreatePostPage(props) {
     const [PollOptions, setPollOptions] = useState([]);                 //ToDo
     const [VoteLength, setVoteLength] = useState(1);                   //
 
+    const [height, setHeight] = useState(window.innerHeight);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setHeight(window.innerHeight);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const handleScroll = () => {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        const reachedBottom = scrollTop + clientHeight >= scrollHeight;
+        if (reachedBottom) {
+            // Extend the height of the div
+            setHeight(prevHeight => prevHeight + 100); // Increase height by 100px, adjust as needed
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
     const updatePollOptions = () => {
         let newOptions = [];
         if (Poll1) newOptions.push(Poll1);
@@ -90,7 +120,7 @@ function CreatePostPage(props) {
     }, [SelectedCom])
 
     return (
-        <div className='bg-gray-300 ' id="parentElement">
+        <div className='bg-gray-300 ' id="parentElement" style={{ height: `${height}px` }}>
             <div className='flex'>
                 <div className='lg:w-[60%] w-full md:ml-40  '>
                     <div className='h-12'></div>
@@ -154,7 +184,7 @@ function CreatePostPage(props) {
                     </div>
                 </div>
             </div >
-            .</div >
+        </div >
     )
 }
 
