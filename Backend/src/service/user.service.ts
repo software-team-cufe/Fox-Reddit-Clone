@@ -398,13 +398,24 @@ export async function addCreatorToUser(userID: string, communityID: string) {
     role: 'creator',
   };
 
+  const userMember = {
+    communityId: communityID,
+    isMuted: false,
+    isBanned: false,
+  };
+
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       user._id,
       { $addToSet: { moderators: userModerator } },
       { upsert: true, new: true }
     );
-    if (!user.moderators) {
+    const updatedUser1 = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { member: userMember } },
+      { upsert: true, new: true }
+    );
+    if (!user.moderators || !user.member) {
       return {
         status: false,
         error: 'error in adding user',

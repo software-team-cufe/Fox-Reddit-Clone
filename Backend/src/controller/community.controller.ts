@@ -118,11 +118,10 @@ export async function createSubredditHandler(req: Request, res: Response) {
       });
     }
     // Add user to subreddit
-    const updateUser = await addMemberToUser(user, result.createdCommunity._id.toString());
-    const updateUser1 = await addCreatorToUser(user, result.createdCommunity._id.toString());
+    const updateUser = await addCreatorToUser(user, result.createdCommunity._id.toString());
 
     // Handle user addition failure
-    if (updateUser.status === false || updateUser1.status === false) {
+    if (updateUser.status === false) {
       return res.status(500).json({
         error: updateUser.error,
       });
