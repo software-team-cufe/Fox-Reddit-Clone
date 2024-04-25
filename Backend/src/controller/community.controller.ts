@@ -5,8 +5,9 @@ import {
   getUserCommunities,
   createSubreddit,
   addMemberToCom,
+  addModeratorToCom,
   removeMemberFromCom,
-  updateMemberBanStatusInCommunity,
+  removeModeratorFromCom,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -15,9 +16,9 @@ import {
   addCreatorToUser,
   addModeratorToUser,
   removeMemberFromUser,
+  removeModeratorFromUser,
   findUserById,
   findUserByUsername,
-  updateMemberBanStatusInUser,
 } from '../service/user.service';
 
 import { NextFunction, Request, Response } from 'express';
@@ -279,7 +280,7 @@ export async function getCommunityHandler(req: Request, res: Response) {
 }
 
 /**
- * Handles the ban operation for a user in a community.
+ * Bans or mutes a user in a community.
  *
  * @param {Request} req - The request object containing the subreddit ID, user ID, and operation.
  * @param {Response} res - The response object used to send the result of the operation.
@@ -290,13 +291,13 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
   const memberId: string = req.body.userID;
   const commModerator: string = res.locals.user._id.toString();
   const operation: string = req.body.action;
+  console.log(subredditId, memberId, commModerator, operation);
 
   try {
     // Find the community by ID
     const community = await findCommunityByID(subredditId);
-    const commName = community?.name;
 
-    if (!community || !commName) {
+    if (!community) {
       return res.status(404).json({
         status: 'failed',
         message: 'Community not found',
@@ -319,6 +320,8 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
         if (el.userID?.toString() === memberId) toBeAffectedFound = true;
       });
     }
+    console.log(performerFound, toBeAffectedFound);
+    console.log(community.moderators);
     if (!performerFound || toBeAffectedFound) {
       //if (!performerFound || toBeAffectedFound) {
       // If toBeAffectedFound, it means that you are going to ban or mute a moderator, which is not valid behavior
@@ -327,8 +330,115 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
         message: 'You cannot perform this operation on this user in this subreddit!',
       });
     }
-    const updateUser = await updateMemberBanStatusInUser(memberId, commName, operation);
-    const updateUser1 = await updateMemberBanStatusInCommunity(memberId, commName, operation);
+
+    if (!community.members) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community members not found',
+      });
+    }
+
+    // Update the community members based on the operation
+    community.members.forEach((el) => {
+      // Check if el.userID, el.isBanned, and el.isMuted are defined before accessing their properties
+      if (el.userID?.toString() === memberId) {
+        if (!el.isBanned) {
+          // If isBanned is undefined, create a new IsBannedOrMuted object
+          el.isBanned = { value: false }; // Set default value
+        }
+        if (operation === 'ban') {
+          el.isBanned.value = true;
+          el.isBanned.date = new Date();
+        } else if (operation === 'unban') {
+          el.isBanned.value = false;
+          el.isBanned.date = new Date(); // Clear the date if needed
+        }
+      }
+    });
+
+    // Save the updated community
+    await community.save();
+
+    // Find the user to be affected by ID
+    const toBeAffected = await findUserById(memberId);
+    console.log(toBeAffected);
+
+    if (!toBeAffected || !toBeAffected.member) {
+      // Add null check for toBeAffected.member
+      return res.status(404).json({
+        status: 'failed',
+        message: 'User to be affected not found',
+      });
+    }
+
+    // Update the user based on the operation
+    toBeAffected.member.forEach((el) => {
+      if (el.communityId === community._id) {
+        if (!el.isBanned) {
+          // If isBanned is undefined, create a new IsBannedOrMuted object
+          el.isBanned = { value: false }; // Set default value
+        }
+        if (operation === 'ban') {
+          el.isBanned.value = true;
+          el.isBanned.date = new Date();
+        } else if (operation === 'unban') {
+          el.isBanned.value = false;
+          el.isBanned.date = undefined; // Clear the date if needed
+        }
+      }
+    });
+
+    // Save the updated user
+    await toBeAffected.save();
+    await community.save();
+
+    // Return success response
+    res.status(200).json({
+      status: 'success',
+      message: 'Operation is done successfully',
+    });
+  } catch (err) {
+    // Handle errors
+    console.error(err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Join Moderaor handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function joinModeratorHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  try {
+    const updateUser = await addModeratorToUser(userID, subreddit);
+    const updateUser1 = await addModeratorToCom(userID, subreddit);
+
     // Handle user addition failure
     if (updateUser.status === false || updateUser1.status === false) {
       return res.status(500).json({
@@ -341,7 +451,58 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
     });
   } catch (error) {
     // Handle any unexpected errors
-    console.error('Error removing member from subreddit:', error);
+    console.error('Error member joining moderation:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * leave Moderaor handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function leaveModeratorHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  try {
+    const updateUser = await removeModeratorFromUser(userID, subreddit);
+    const updateUser1 = await removeModeratorFromCom(userID, subreddit);
+
+    // Handle user addition failure
+    if (updateUser.status === false || updateUser1.status === false) {
+      return res.status(500).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error member joining moderation:', error);
     return res.status(500).json({
       error: 'Internal server error',
     });

@@ -193,6 +193,72 @@ export async function addMemberToCom(userID: string, subreddit: string) {
   };
 }
 
+/**
+ * addModeratorToCom
+ * @param {string} body contain rules details
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function addModeratorToCom(userID: string, subreddit: string) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  const moderator = {
+    userID: userID,
+    role: 'moderator',
+  };
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { moderators: moderator } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function removeModeratorFromCom(userID: string, subreddit: string) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $pull: { moderators: { userID: userID } } },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
 export async function removeMemberFromCom(userID: string, subreddit: string) {
   const community = await findCommunityByName(subreddit);
 
@@ -224,6 +290,7 @@ export async function removeMemberFromCom(userID: string, subreddit: string) {
     status: true,
   };
 }
+
 /**
  * Checks if a user is banned or not in a community and performs the corresponding operation.
  *

@@ -2,6 +2,7 @@ import UserModel, { User, Moderator } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import appError from '../utils/appError';
 import CommunityModel from '../model/community.model';
+import { findCommunityByName } from '../service/community.service';
 import { Types } from 'mongoose';
 import _ from 'lodash';
 
@@ -455,8 +456,16 @@ export async function addCreatorToUser(userID: string, communityID: string) {
  * @returns {object} mentions
  * @function
  */
-export async function removeMemberFromUser(userID: string, communityID: string) {
+export async function removeMemberFromUser(userID: string, subreddit: string) {
   const user = await UserModel.findById(userID);
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
   if (!user) {
     return {
       status: false,
@@ -467,7 +476,54 @@ export async function removeMemberFromUser(userID: string, communityID: string) 
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       user._id,
-      { $pull: { member: { communityId: communityID } } },
+      { $pull: { member: { communityId: community._id.toHexString() } } },
+      { upsert: true, new: true }
+    );
+    if (!user.member) {
+      return {
+        status: false,
+        error: 'error in removing user',
+      };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * remove moderator from community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function removeModeratorFromUser(userID: string, subreddit: string) {
+  const user = await UserModel.findById(userID);
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $pull: { moderators: { communityId: community._id.toHexString() } } },
       { upsert: true, new: true }
     );
     if (!user.member) {
