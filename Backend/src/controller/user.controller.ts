@@ -914,7 +914,7 @@ export async function getALLBlockedHandler(req: Request, res: Response) {
         message: 'Access token is missing or invalid',
       });
     } else if (!user.blocksFromMe || user.blocksFromMe.length === 0) {
-      return res.status(402).json([]);
+      return res.status(200).json([]);
     } else {
       const blockedIDs = user.blocksFromMe ? user.blocksFromMe.map((blockedID) => blockedID.toString()) : [];
       const blockeds = await UserModel.find({ _id: { $in: blockedIDs } });
@@ -1050,10 +1050,7 @@ export async function getALLFollowersHandler(req: Request, res: Response) {
         message: 'Access token is missing or invalid',
       });
     } else if (!user.followers || user.followers.length === 0) {
-      return res.status(402).json({
-        status: 'failed',
-        message: 'User does not have followers',
-      });
+      return res.status(200).json([]);
     } else {
       const followedIDs = user.followers ? user.followers.map((followedID) => followedID.toString()) : [];
       const followeds = await UserModel.find({ _id: { $in: followedIDs } });
@@ -1093,10 +1090,7 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
         message: 'Access token is missing or invalid',
       });
     } else if (!user.userFollows || user.userFollows.length === 0) {
-      return res.status(402).json({
-        status: 'failed',
-        message: 'User does not have followings',
-      });
+      return res.status(200).json([]);
     } else {
       const followersIDs = user.userFollows ? user.userFollows.map((followerID) => followerID.toString()) : [];
       const followers = await UserModel.find({ _id: { $in: followersIDs } });

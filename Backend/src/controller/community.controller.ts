@@ -321,6 +321,7 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
     console.log(performerFound, toBeAffectedFound);
     console.log(community.moderators);
     if (!performerFound || toBeAffectedFound) {
+      //if (!performerFound || toBeAffectedFound) {
       // If toBeAffectedFound, it means that you are going to ban or mute a moderator, which is not valid behavior
       return res.status(402).json({
         status: 'failed',
