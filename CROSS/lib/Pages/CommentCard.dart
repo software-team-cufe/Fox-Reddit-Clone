@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 /// A card widget that represents a comment
 class CommentCard extends StatelessWidget {
@@ -13,7 +14,7 @@ class CommentCard extends StatelessWidget {
   ///
   /// The [username], [commentContent], [upvotes], [downvotes], [onReply], and [replies] parameters are required.
   const CommentCard({
-    Key? key,
+    super.key,
     required this.username,
     required this.commentContent,
     required this.upvotes,
@@ -21,21 +22,24 @@ class CommentCard extends StatelessWidget {
     required this.onReply,
     required this.replies,
     required Null Function() onViewMenu,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 2),
+      elevation: 0,
+      color: Colors.transparent,
+      margin: const EdgeInsets.symmetric(vertical: 1),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(top: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
+                const SizedBox(width: 8),
                 const CircleAvatar(
+                  radius: 12,
                   child: Icon(Icons.account_circle),
                 ),
                 const SizedBox(width: 8),
@@ -47,41 +51,54 @@ class CommentCard extends StatelessWidget {
                     ),
                   ),
                 ),
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 4),
+              child: Text(
+                commentContent,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
                 IconButton(
-                  icon: const Icon(Icons.more_vert),
+                  icon: const Icon(Icons.arrow_upward, size: 20),
+                  onPressed: () {},
+                ),
+                Text('$upvotes'),
+                IconButton(
+                  icon: const Icon(Icons.arrow_downward, size: 20),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.reply, size: 20),
+                  onPressed: onReply,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.more_vert, size: 20),
                   onPressed: () {
                     _showMenu(context);
                   },
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(commentContent),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_upward),
-                  onPressed: () {},
-                ),
-                Text('$upvotes'),
-                IconButton(
-                  icon: const Icon(Icons.arrow_downward),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.reply),
-                  onPressed: onReply, // Trigger reply action
-                ),
-              ],
-            ),
+
             // Display replies here with indentation
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: replies
-                  .map((reply) => Padding(
-                        padding: const EdgeInsets.only(left: 16), // Indentation
-                        child: _buildReply(reply),
+                  .map((reply) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 16,
+                            ),
+                            child: _buildReply(reply),
+                          ),
+                        ],
                       ))
                   .toList(),
             ),
@@ -147,20 +164,34 @@ class CommentCard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        Text(replyData.replyContent),
-        const SizedBox(height: 4),
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_upward),
-              onPressed: () {},
-            ),
-            Text('${replyData.upvotes}'),
-            IconButton(
-              icon: const Icon(Icons.arrow_downward),
-              onPressed: () {},
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(
+              left: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(replyData.replyContent),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_upward),
+                        onPressed: () {},
+                      ),
+                      Text('${replyData.upvotes}'),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_downward),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );

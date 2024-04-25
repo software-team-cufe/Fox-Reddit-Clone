@@ -71,7 +71,8 @@ dependencies:
   permission_handler: ^9.0.0
   path_provider: ^2.0.2
   firebase_messaging: ^14.8.2
-  
+  lucide_icons: ^0.257.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

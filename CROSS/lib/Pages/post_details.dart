@@ -11,6 +11,7 @@ import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'CommentSection.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class PostDetails extends StatefulWidget {
   final Map<String, dynamic> post;
@@ -391,9 +392,9 @@ class _PostDetailsState extends State<PostDetails> {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_upward,
+                      icon: Icon(LucideIcons.arrowUpCircle,
                           color: hasVoted && voteDirection == VoteDirection.Up
-                              ? Colors.green
+                              ? const Color(0xFFE74C3C)
                               : null),
                       onPressed: () => vote(VoteDirection.Up), // Upvote
                     ),
@@ -402,9 +403,9 @@ class _PostDetailsState extends State<PostDetails> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     IconButton(
-                      icon: Icon(Icons.arrow_downward,
+                      icon: Icon(LucideIcons.arrowDownCircle,
                           color: hasVoted && voteDirection == VoteDirection.Down
-                              ? Colors.red
+                              ? const Color(0xFFE74C3C)
                               : null),
                       onPressed: () => vote(VoteDirection.Down), // Downvote
                     ),
@@ -421,10 +422,15 @@ class _PostDetailsState extends State<PostDetails> {
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const Icon(Icons.comment),
+                      const Icon(Icons.chat),
                       const Spacer(),
                       IconButton(
-                        icon: const Icon(Icons.share),
+                        icon: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.rotationY(
+                              3.14), // Flips the icon horizontally
+                          child: const Icon(Icons.reply),
+                        ),
                         onPressed: () {
                           int postId = widget.post['id'];
                           String postUrl =
@@ -438,7 +444,7 @@ class _PostDetailsState extends State<PostDetails> {
               ],
             ),
             const SizedBox(height: 1),
-            CommentSection(postId: "${widget.post['id']}"),
+            CommentSection(postId: "${widget.post['id']}",),
           ],
         ),
       ),

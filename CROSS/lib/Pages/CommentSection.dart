@@ -2,17 +2,30 @@ import 'package:flutter/material.dart';
 import 'CommentCard.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// A widget that displays the comment section for a post.
+// Sample class for comment data
+class CommentData {
+  final String username;
+  final String content;
+  final int upvotes;
+  final int downvotes;
+  final List<CommentData> replies;
+
+  CommentData({
+    required this.username,
+    required this.content,
+    required this.upvotes,
+    required this.downvotes,
+    required this.replies,
+  });
+}
+
 class CommentSection extends StatelessWidget {
   final String postId;
 
-  /// Creates a [CommentSection] widget.
-  ///
-  /// The [postId] parameter is required and specifies the ID of the post.
   const CommentSection({
-    super.key,
+    Key? key,
     required this.postId,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,125 +33,82 @@ class CommentSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Add a field to enter a new comment
-          _buildNewCommentField(),
-          const SizedBox(height: 8),
-          // Add the comment section below
-          // Wrap ListView.builder with SingleChildScrollView
-          SingleChildScrollView(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 5, // Replace with your actual comment count
-              itemBuilder: (BuildContext context, int index) {
-                // Replace this with your actual comment widget
-                return CommentCard(
-                  username: 'User $index',
-                  commentContent: 'Comment $index content',
-                  upvotes: index * 10,
-                  downvotes: index * 5,
-                  onReply: () {
-                    // Handle reply action
-                  },
-                  onViewMenu: () {
-                    // Handle view menu action
-                    _showMenu(context);
-                  },
-                  replies: [],
-                );
-              },
-            ),
-          ),
+          _buildCommentList(comments: initialComments),
         ],
       ),
     );
   }
 
-  /// Builds the field for entering a new comment.
- Widget _buildNewCommentField() {
-  final TextEditingController _textController = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
-  String? _selectedImage;
-
-  void _selectImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      _selectedImage = pickedFile.path;
-      _textController.text = 'Selected Image: ${pickedFile.path}';
-    }
-  }
-
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _textController,
-            decoration: InputDecoration(
-              isDense: true,
-              hintText: 'Enter a comment...',
-              border: OutlineInputBorder(),
-            ),
-            // Add your comment logic here
-            // For example, onChanged or onSubmitted callbacks
+  Widget _buildCommentList({required List<CommentData> comments, int depth = 0}) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: comments.length,
+      itemBuilder: (BuildContext context, int index) {
+        final comment = comments[index];
+        return Padding(
+          padding: EdgeInsets.only(left: 16.0 * depth),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CommentCard(
+                username: comment.username,
+                commentContent: comment.content,
+                upvotes: comment.upvotes,
+                downvotes: comment.downvotes,
+                onReply: () {},
+                onViewMenu: () {}, replies: [],
+              ),
+              if (comment.replies.isNotEmpty)
+                _buildCommentList(comments: comment.replies, depth: depth + 1),
+            ],
           ),
-        ),
-        const SizedBox(width: 8),
-        IconButton(
-          icon: const Icon(Icons.photo),
-          onPressed: _selectImage,
-        ),
-        const SizedBox(width: 8),
-        IconButton(
-          icon: const Icon(Icons.send),
-          onPressed: () {
-            // Add your send comment logic here
-          },
-        ),
-      ],
-    ),
-  );
-}
-
-
-  /// Shows the menu options for a comment
-  void _showMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.share),
-              title: const Text('Share'),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle share action
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.save),
-              title: const Text('Save'),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle save action
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Get Reply Notifications'),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle reply notifications action
-              },
-            ),
-          ],
         );
       },
     );
   }
+
+  // Dummy data for initial comments, replace this with your actual data
+  List<CommentData> get initialComments => [
+    CommentData(
+      username: 'User 1',
+      content: 'Comment 1 content',
+      upvotes: 10,
+      downvotes: 5,
+      replies: [
+        CommentData(
+          username: 'User 2',
+          content: 'Reply to comment 1',
+          upvotes: 5,
+          downvotes: 2,
+          replies: [
+            // Adding a reply to the reply of comment 1
+            CommentData(
+              username: 'User 3',
+              content: 'Another reply to comment 1',
+              upvotes: 3,
+              downvotes: 1,
+              replies: [],
+            ),
+          ],
+        ),
+      ],
+    ),
+    CommentData(
+      username: 'User 4',
+      content: 'Comment 2 content',
+      upvotes: 8,
+      downvotes: 3,
+      replies: [
+        // Adding a reply to comment 2
+        CommentData(
+          username: 'User 5',
+          content: 'Reply to comment 2',
+          upvotes: 4,
+          downvotes: 0,
+          replies: [],
+        ),
+      ],
+    ),
+  ];
 }

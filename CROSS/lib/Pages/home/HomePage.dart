@@ -286,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                   "FOX",
                   style: (TextStyle(
                     fontSize: 22,
-                    color: Color(0xFFe74c3c),
+                    color: Color(0xFFE74C3C),
                     fontWeight: FontWeight.bold,
                   )),
                 )
