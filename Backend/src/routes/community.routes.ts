@@ -6,9 +6,15 @@ import {
   getCommunityHandler,
   subscribeCommunityHandler,
   unsubscribeCommunityHandler,
+  banOrUnbanHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
-import { createCommunitySchema, subscribeCommunitySchema, getCommunitySchema } from '../schema/community.schema';
+import {
+  createCommunitySchema,
+  subscribeCommunitySchema,
+  getCommunitySchema,
+  banOrUnbanSchema,
+} from '../schema/community.schema';
 
 const router = express.Router();
 
@@ -19,5 +25,6 @@ router.get('/:subreddit', validateResource(getCommunitySchema), getCommunityHand
 router.post('/create_subreddit', validateResource(createCommunitySchema), createSubredditHandler);
 router.post('/:subreddit/api/subscribe', validateResource(subscribeCommunitySchema), subscribeCommunityHandler);
 router.post('/:subreddit/api/unsubscribe', validateResource(subscribeCommunitySchema), unsubscribeCommunityHandler);
+router.post('/api/ban_or_unban', validateResource(banOrUnbanSchema), banOrUnbanHandler);
 
 export default router;

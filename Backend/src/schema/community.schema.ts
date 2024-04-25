@@ -32,6 +32,20 @@ export const getCommunitySchema = object({
   }),
 });
 
+export const banOrUnbanSchema = object({
+  body: object({
+    subreddit: string({
+      required_error: 'Subreddit Id is required',
+    }),
+    userID: string({
+      required_error: 'userID is required',
+    }),
+    action: string({
+      required_error: 'action is required',
+    }),
+  }),
+});
+export type banOrMute = TypeOf<typeof banOrUnbanSchema>;
 export type createCommunity = TypeOf<typeof createCommunitySchema>;
 export type subscribeCommunity = TypeOf<typeof subscribeCommunitySchema>;
 export type getCommunity = TypeOf<typeof getCommunitySchema>;

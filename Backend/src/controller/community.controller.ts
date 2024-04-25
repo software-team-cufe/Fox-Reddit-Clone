@@ -1,6 +1,7 @@
 import { createCommunity, subscribeCommunity, getCommunity } from '../schema/community.schema';
 import {
   findCommunityByName,
+  findCommunityByID,
   getUserCommunities,
   createSubreddit,
   addMemberToCom,
@@ -13,6 +14,8 @@ import {
   addCreatorToUser,
   addModeratorToUser,
   removeMemberFromUser,
+  findUserById,
+  findUserByUsername,
 } from '../service/user.service';
 
 import { NextFunction, Request, Response } from 'express';
@@ -268,6 +271,133 @@ export async function getCommunityHandler(req: Request, res: Response) {
   } catch (error) {
     console.error('Error in getCommunityInfoHandler:', error);
     return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Bans or mutes a user in a community.
+ *
+ * @param {Request} req - The request object containing the subreddit ID, user ID, and operation.
+ * @param {Response} res - The response object used to send the result of the operation.
+ * @return {Promise<void>} - A promise that resolves when the operation is completed.
+ */
+export async function banOrUnbanHandler(req: Request, res: Response) {
+  const subredditId: string = req.body.subreddit;
+  const memberId: string = req.body.userID;
+  const commModerator: string = res.locals.user._id.toString();
+  const operation: string = req.body.action;
+  console.log(subredditId, memberId, commModerator, operation);
+
+  try {
+    // Find the community by ID
+    const community = await findCommunityByID(subredditId);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    if (!commModerator) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    let performerFound = false;
+    let toBeAffectedFound = false;
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator or memberId
+        if (el.userID?.toString() === commModerator) performerFound = true;
+        if (el.userID?.toString() === memberId) toBeAffectedFound = true;
+      });
+    }
+    console.log(performerFound, toBeAffectedFound);
+    console.log(community.moderators);
+    if (!performerFound || toBeAffectedFound) {
+      // If toBeAffectedFound, it means that you are going to ban or mute a moderator, which is not valid behavior
+      return res.status(402).json({
+        status: 'failed',
+        message: 'You cannot perform this operation on this user in this subreddit!',
+      });
+    }
+
+    if (!community.members) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community members not found',
+      });
+    }
+
+    // Update the community members based on the operation
+    community.members.forEach((el) => {
+      // Check if el.userID, el.isBanned, and el.isMuted are defined before accessing their properties
+      if (el.userID?.toString() === memberId) {
+        if (!el.isBanned) {
+          // If isBanned is undefined, create a new IsBannedOrMuted object
+          el.isBanned = { value: false }; // Set default value
+        }
+        if (operation === 'ban') {
+          el.isBanned.value = true;
+          el.isBanned.date = new Date();
+        } else if (operation === 'unban') {
+          el.isBanned.value = false;
+          el.isBanned.date = new Date(); // Clear the date if needed
+        }
+      }
+    });
+
+    // Save the updated community
+    await community.save();
+
+    // Find the user to be affected by ID
+    const toBeAffected = await findUserById(memberId);
+    console.log(toBeAffected);
+
+    if (!toBeAffected || !toBeAffected.member) {
+      // Add null check for toBeAffected.member
+      return res.status(404).json({
+        status: 'failed',
+        message: 'User to be affected not found',
+      });
+    }
+
+    // Update the user based on the operation
+    toBeAffected.member.forEach((el) => {
+      if (el.communityId === community._id) {
+        if (!el.isBanned) {
+          // If isBanned is undefined, create a new IsBannedOrMuted object
+          el.isBanned = { value: false }; // Set default value
+        }
+        if (operation === 'ban') {
+          el.isBanned.value = true;
+          el.isBanned.date = new Date();
+        } else if (operation === 'unban') {
+          el.isBanned.value = false;
+          el.isBanned.date = undefined; // Clear the date if needed
+        }
+      }
+    });
+
+    // Save the updated user
+    await toBeAffected.save();
+    await community.save();
+
+    // Return success response
+    res.status(200).json({
+      status: 'success',
+      message: 'Operation is done successfully',
+    });
+  } catch (err) {
+    // Handle errors
+    console.error(err);
+    res.status(500).json({
       status: 'error',
       message: 'Internal server error',
     });
