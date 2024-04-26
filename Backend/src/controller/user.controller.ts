@@ -1150,3 +1150,35 @@ export async function getUserIDfromTokenHandler(req: Request, res: Response) {
     });
   }
 }
+
+export async function uploadUserPhoto(req: Request, res: Response) {
+  try {
+    if (!req.file || Object.keys(req.file).length === 0) {
+      throw new Error('No file uploaded');
+    }
+    console.log(res.locals.user);
+    console.log(res.locals.image);
+    const user = res.locals.user;
+    console.log(user);
+    const userId = user._id;
+    console.log(userId);
+    const image = res.locals.image;
+    console.log(image);
+
+    //update user avatar by new link from cloudinary
+    await UserModel.findByIdAndUpdate(userId, { avatar: image[0] }, { runValidators: true });
+    res.status(200).json({
+      msg: 'Avatar uploaded successfully',
+      avatar: image,
+    });
+  } catch (error) {
+    if (error instanceof appError) {
+      return res.status(error.statusCode).json({
+        msg: error.message,
+      });
+    }
+    return res.status(500).json({
+      msg: 'Internal server error in image upload',
+    });
+  }
+}
