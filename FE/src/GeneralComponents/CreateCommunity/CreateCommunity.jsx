@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Globe, Lock, Eye } from 'lucide-react';
+import { X, Globe, Lock } from 'lucide-react';
 import { toast } from 'react-toastify';
 import React from 'react';
 import { Switch } from '@headlessui/react'
@@ -47,7 +47,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
         else {
             userAxios.post('/create_subreddit', {
                 name: inputValue,
-                type: commType,
+                type: commType.replace('comm-',''),
                 over18: NSFW
             })
             .then(() => {
@@ -103,7 +103,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                     <ul role="typeOptions" className="grid w-full gap-6 md:grid-rows-2">
                                         <li>
                                             {/* Public community option */}
-                                            <input id="comm-public" role="optionPublic" type="radio" name="comm" value="comm-public" className="hidden peer" onClick={handleRadioChange} required />
+                                            <input id="comm-public" role="optionPublic" type="radio" name="comm" value="comm-Public" className="hidden peer" onClick={handleRadioChange} required />
                                             <label htmlFor="comm-public" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Globe className="w-6 h-6 mr-6" />
                                                 <div className="block">
@@ -113,19 +113,8 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                             </label>
                                         </li>
                                         <li>
-                                            {/* Restricted community option */}
-                                            <input id="comm-restricted" role="optionRestricted" type="radio" name="comm" value="comm-restricted" className="hidden peer" onClick={handleRadioChange} />
-                                            <label htmlFor="comm-restricted" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
-                                                <Eye className="w-6 h-6 mr-6" />
-                                                <div className="block">
-                                                    <div className="text-xs font-semibold">Restricted</div>
-                                                    <div className="w-full text-xs">Anyone can view, but only approved users can contribute</div>
-                                                </div>
-                                            </label>
-                                        </li>
-                                        <li>
                                             {/* Private community option */}
-                                            <input id="comm-private" role="optionPrivate" type="radio" name="comm" value="comm-private" className="hidden peer" onClick={handleRadioChange} />
+                                            <input id="comm-private" role="optionPrivate" type="radio" name="comm" value="comm-Private" className="hidden peer" onClick={handleRadioChange} />
                                             <label htmlFor="comm-private" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Lock className="w-6 h-6 mr-6" />
                                                 <div className="block">
