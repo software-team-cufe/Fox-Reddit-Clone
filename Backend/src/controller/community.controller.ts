@@ -16,13 +16,15 @@ import {
 import {
   getCommunitiesIdOfUserAsMemeber,
   getCommunitiesIdOfUserAsModerator,
+  getFavoriteCommunitiesOfUser,
   addMemberToUser,
   addCreatorToUser,
   addModeratorToUser,
+  addFavoriteToUser,
   removeMemberFromUser,
   removeModeratorFromUser,
+  removeFavoriteFromUser,
   findUserById,
-  findUserByUsername,
 } from '../service/user.service';
 
 import { NextFunction, Request, Response } from 'express';
@@ -106,6 +108,11 @@ export async function createSubredditHandler(req: Request, res: Response) {
   if (comm) {
     return res.status(403).json({
       error: 'Community name already taken',
+    });
+  }
+  if (user.canCreateSubreddit === false) {
+    return res.status(403).json({
+      error: 'User can not create subreddit',
     });
   }
   // Create subreddit
@@ -676,5 +683,133 @@ export async function editCommunityRulesHandler(req: Request, res: Response) {
     }
   } catch (err) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * favorite subreddit handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function favoriteCommunityHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+  try {
+    const updateUser = await addFavoriteToUser(userID, subreddit);
+
+    // Handle user addition failure
+    if (updateUser.status === false) {
+      return res.status(402).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error adding subreddit to favorite:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * unfavorite subreddit handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function unfavoriteCommunityHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+  try {
+    const updateUser = await removeFavoriteFromUser(userID, subreddit);
+
+    // Handle user addition failure
+    if (updateUser.status === false) {
+      return res.status(402).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error adding subreddit to favorite:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Handles the request to get the favorite communities of a user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getFavoriteCommunitiesOfUserHandler(req: Request, res: Response) {
+  try {
+    const userID = res.locals.user._id;
+    const user = await findUserById(userID);
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const communties = await getFavoriteCommunitiesOfUser(user.username);
+
+    res.status(200).json({ communties });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }

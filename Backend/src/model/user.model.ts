@@ -399,6 +399,10 @@ export class User {
   @prop({ ref: User })
   blocksToMe?: User[]; // Array of user references
 
+  /***************************************
+             relations
+   ***************************************/
+
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];
 
@@ -437,6 +441,9 @@ export class User {
 
   @prop()
   moderators?: Moderator[];
+
+  @prop({ ref: () => 'Community' })
+  favorites?: Ref<Community>[];
 
   //////////////////////////////////////////////
   // @prop({ type: () => [String] })
