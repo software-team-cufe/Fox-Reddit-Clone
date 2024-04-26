@@ -9,7 +9,8 @@ import {
   removeMemberFromCom,
   removeModeratorFromCom,
   getUsersAsBannedInCommunity,
-  getModerators,
+  getCommunityModerators,
+  getCommunityMembers,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -574,16 +575,49 @@ export async function getModeratorsHandler(req: Request, res: Response) {
     }
     const commName = req.params.subreddit;
     if (!commName) {
-      return res.status(400).json({
+      return res.status(401).json({
         status: 'failed',
         message: 'Community not found',
       });
     }
-    const Moderators = await getModerators(commName);
+    const Moderators = await getCommunityModerators(commName);
     if (Moderators.status === true) {
       return res.status(200).json({ status: 'success', Moderators });
     } else {
       return res.status(404).json({ status: 'error', message: 'error in get Moderators' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+/**
+ * Handles the request to get the members of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getMembersHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const commName = req.params.subreddit;
+    if (!commName) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+    const members = await getCommunityMembers(commName);
+    if (members.status === true) {
+      return res.status(200).json({ status: 'success', members });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'error in get Members' });
     }
   } catch (err) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });

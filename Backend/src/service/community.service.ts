@@ -381,7 +381,7 @@ export async function getUsersAsBannedInCommunity(communityName: string) {
  * @param {string} communityName - The name of the community.
  * @return {Promise<{status: boolean, users?: {avatar: string, username: string, _id: string, about: string, createdAt: Date, modRole: string}[]}>} - A promise that resolves to an object with the status of the operation and the moderators' IDs and roles, if successful.
  */
-export async function getModerators(communityName: string) {
+export async function getCommunityModerators(communityName: string) {
   // Find the community by name
   const community = await findCommunityByName(communityName);
 
@@ -402,4 +402,28 @@ export async function getModerators(communityName: string) {
   }));
 
   return { status: true, users: usersWithModRole };
+}
+/**
+ * Retrieves the IDs and attributes of the users who are not banned in a community.
+ *
+ * @param {string} communityName - The name of the community.
+ * @return {Promise<{status: boolean, users?: {avatar: string, username: string, _id: string, about: string, createdAt: Date}[]}>} - A promise that resolves to an object with the status of the operation and the not banned users' IDs and attributes, if successful.
+ */
+export async function getCommunityMembers(communityName: string) {
+  // Find the community by name
+  const community = await findCommunityByName(communityName);
+
+  // If community is not found, return status false
+  if (!community || !community.members) {
+    return { status: false };
+  }
+
+  // Extract the IDs of not banned users
+  const notBannedUsers = community.members.filter((member) => member.isBanned?.value !== true);
+  const userIDs = notBannedUsers.map((member) => member.userID);
+
+  // Fetch the not banned users from the database, selecting specific attributes
+  const users = await UserModel.find({ _id: { $in: userIDs } }).select('avatar username _id about createdAt');
+
+  return { status: true, users };
 }
