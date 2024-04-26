@@ -66,6 +66,9 @@ export class Post {
   @prop({ default: false })
   nsfw!: boolean;
 
+  @prop({ default: false })
+  isHidden!: boolean;
+
   @prop({ default: 1 })
   insightCnt!: number;
 

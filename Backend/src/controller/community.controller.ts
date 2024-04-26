@@ -1,4 +1,3 @@
-import { createCommunity, subscribeCommunity, getCommunity } from '../schema/community.schema';
 import {
   findCommunityByName,
   findCommunityByID,
@@ -32,6 +31,10 @@ import {
 } from '../service/user.service';
 
 import { NextFunction, Request, Response } from 'express';
+import { findPostById } from '../service/post.service';
+import { findCommentById } from '../service/comment.service';
+import PostModel from '../model/posts.model';
+import CommentModel from '../model/comments.model';
 
 /**
  * Retrieves the communities that a user is a member of.
@@ -920,6 +923,7 @@ export async function markSpamPostHandler(req: Request, res: Response) {
   const subreddit = req.params.subreddit;
   const community = await findCommunityByName(subreddit);
   const postID = req.body.postID;
+  const post = await findPostById(postID);
   const type = req.body.spamType;
 
   // Check if user is missing or invalid
@@ -936,8 +940,16 @@ export async function markSpamPostHandler(req: Request, res: Response) {
     });
   }
 
+  // Check if post is missing or invalid
+  if (!post) {
+    return res.status(402).json({
+      error: 'post not found',
+    });
+  }
+
   try {
     const result = await markSpamPost(userID, subreddit, postID, type);
+    await PostModel.findByIdAndUpdate(post._id, { isHidden: true }, { upsert: true, new: true });
 
     // Handle user addition failure
     if (result.status === false) {
@@ -972,6 +984,7 @@ export async function markSpamCommentHandler(req: Request, res: Response) {
   const subreddit = req.params.subreddit;
   const community = await findCommunityByName(subreddit);
   const commentID = req.body.commentID;
+  const comment = await findCommentById(commentID);
   const type = req.body.spamType;
 
   // Check if user is missing or invalid
@@ -988,8 +1001,16 @@ export async function markSpamCommentHandler(req: Request, res: Response) {
     });
   }
 
+  // Check if comment is missing or invalid
+  if (!comment) {
+    return res.status(402).json({
+      error: 'Comment not found',
+    });
+  }
+
   try {
     const result = await markSpamComment(userID, subreddit, commentID, type);
+    await CommentModel.findByIdAndUpdate(comment._id, { isHidden: true }, { upsert: true, new: true });
 
     // Handle user addition failure
     if (result.status === false) {
@@ -1024,6 +1045,7 @@ export async function approveSpamPostHandler(req: Request, res: Response) {
   const subreddit = req.params.subreddit;
   const postID = req.body.postID;
   const community = await findCommunityByName(subreddit);
+  const post = await findPostById(postID);
 
   // Check if user is missing or invalid
   if (!user) {
@@ -1040,9 +1062,9 @@ export async function approveSpamPostHandler(req: Request, res: Response) {
   }
 
   // Check if post is missing or invalid
-  if (!postID) {
-    return res.status(402).json({
-      error: 'Community not found',
+  if (!post) {
+    return res.status(403).json({
+      error: 'post not found',
     });
   }
 
@@ -1058,6 +1080,7 @@ export async function approveSpamPostHandler(req: Request, res: Response) {
 
   try {
     const updateUser = await approveSpamPost(postID, subreddit);
+    await PostModel.findByIdAndUpdate(post._id, { isHidden: false }, { upsert: true, new: true });
 
     // Handle user addition failure
     if (updateUser.status === false) {
@@ -1092,6 +1115,7 @@ export async function approveSpamCommentHandler(req: Request, res: Response) {
   const subreddit = req.params.subreddit;
   const commentID = req.body.commentID;
   const community = await findCommunityByName(subreddit);
+  const comment = await findCommentById(commentID);
 
   // Check if user is missing or invalid
   if (!user) {
@@ -1108,9 +1132,9 @@ export async function approveSpamCommentHandler(req: Request, res: Response) {
   }
 
   // Check if post is missing or invalid
-  if (!commentID) {
+  if (!comment) {
     return res.status(402).json({
-      error: 'Community not found',
+      error: 'Comment not found',
     });
   }
 
@@ -1126,6 +1150,7 @@ export async function approveSpamCommentHandler(req: Request, res: Response) {
 
   try {
     const updateUser = await approveSpamComment(commentID, subreddit);
+    await CommentModel.findByIdAndUpdate(comment._id, { isHidden: false }, { upsert: true, new: true });
 
     // Handle user addition failure
     if (updateUser.status === false) {
@@ -1160,6 +1185,7 @@ export async function removeSpamPostHandler(req: Request, res: Response) {
   const subreddit = req.params.subreddit;
   const postID = req.body.postID;
   const community = await findCommunityByName(subreddit);
+  const post = await findPostById(postID);
 
   // Check if user is missing or invalid
   if (!user) {
@@ -1176,7 +1202,7 @@ export async function removeSpamPostHandler(req: Request, res: Response) {
   }
 
   // Check if post is missing or invalid
-  if (!postID) {
+  if (!post) {
     return res.status(402).json({
       error: 'Post not found',
     });
@@ -1194,6 +1220,7 @@ export async function removeSpamPostHandler(req: Request, res: Response) {
 
   try {
     const updateUser = await approveSpamPost(postID, subreddit);
+    await PostModel.findByIdAndUpdate(post._id, { isDeleted: true }, { upsert: true, new: true });
 
     // Handle user addition failure
     if (updateUser.status === false) {
@@ -1228,6 +1255,7 @@ export async function removeSpamCommentHandler(req: Request, res: Response) {
   const subreddit = req.params.subreddit;
   const commentID = req.body.commentID;
   const community = await findCommunityByName(subreddit);
+  const comment = await findCommentById(commentID);
 
   // Check if user is missing or invalid
   if (!user) {
@@ -1244,7 +1272,7 @@ export async function removeSpamCommentHandler(req: Request, res: Response) {
   }
 
   // Check if post is missing or invalid
-  if (!commentID) {
+  if (!comment) {
     return res.status(402).json({
       error: 'Comment not found',
     });
@@ -1262,6 +1290,7 @@ export async function removeSpamCommentHandler(req: Request, res: Response) {
 
   try {
     const updateUser = await approveSpamComment(commentID, subreddit);
+    await CommentModel.findByIdAndUpdate(comment._id, { isDeleted: true }, { upsert: true, new: true });
 
     // Handle user addition failure
     if (updateUser.status === false) {
