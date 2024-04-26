@@ -135,7 +135,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<MainRoute />}>
-              {/* {AuthRoutes} */}
+              {AuthRoutes}
               {CoreRoutes}
             </Route>
             <Route path='*' element={<NotFoundPage />} />
