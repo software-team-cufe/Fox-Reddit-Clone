@@ -14,6 +14,32 @@ class NotificationSettting extends StatefulWidget {
 class _NotificationSetttingState extends State<NotificationSettting> {
   Map<String, dynamic>? userPrefs;
   String? accessToken;
+  late List<bool> preferences;
+  late List<String> preferenceNames;
+  bool messages = true;
+
+  bool chatMessages = true;
+  bool chatRequests = true;
+  bool mentionOfUsername = true;
+  bool commentsOnYourPosts = true;
+  bool upvotesOnYourPosts = true;
+  bool upvotedOnYourComments = true;
+  bool repliesToYourComments = true;
+  bool activityOnYourComments = true;
+  bool activityOnChatPostsYoureIn = true;
+  bool newFollowers = true;
+  bool awardsYouReceive = true;
+  bool postsYouFollow = true;
+  bool commentsYouFollow = true;
+  bool trendingPosts = true;
+  bool communityRecommendations = true;
+  bool reReddit = true;
+  bool featuredContent = true;
+  bool communityAlerts = true;
+  bool redditAnnouncements = true;
+  bool cakeDay = true;
+  bool modNotifications = true;
+
   @override
   void initState() {
     super.initState();
@@ -39,10 +65,128 @@ class _NotificationSetttingState extends State<NotificationSettting> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       setState(() {
         userPrefs = json.decode(response.body)['userPrefs'];
+        preferences = [
+          userPrefs?['messages'],
+          userPrefs?['chatMessages'],
+          userPrefs?['chatRequests'],
+          userPrefs?['mentionOfUsername'],
+          userPrefs?['commentsOnYourPosts'],
+          userPrefs?['upvotesOnYourPosts'],
+          userPrefs?['upvotedOnYourComments'],
+          userPrefs?['repliesToYourComments'],
+          userPrefs?['activityOnYourComments'],
+          userPrefs?['activityOnChatPostsYoureIn'],
+          userPrefs?['newFollowers'],
+          userPrefs?['awardsYouReceive'],
+          userPrefs?['postsYouFollow'],
+          userPrefs?['commentsYouFollow'],
+          userPrefs?['trendingPosts'],
+          userPrefs?['communityRecommendations'],
+          userPrefs?['reReddit'],
+          userPrefs?['featuredContent'],
+          userPrefs?['communityAlerts'],
+          userPrefs?['redditAnnouncements'],
+          userPrefs?['cakeDay'],
+          userPrefs?['modNotifications'],
+        ];
+        preferenceNames = [
+          'messages',
+          'chatMessages',
+          'chatRequests',
+          'mentionOfUsername',
+          'commentsOnYourPosts',
+          'upvotesOnYourPosts',
+          'upvotedOnYourComments',
+          'repliesToYourComments',
+          'activityOnYourComments',
+          'activityOnChatPostsYoureIn',
+          'newFollowers',
+          'awardsYouReceive',
+          'postsYouFollow',
+          'commentsYouFollow',
+          'trendingPosts',
+          'communityRecommendations',
+          'reReddit',
+          'featuredContent',
+          'communityAlerts',
+          'redditAnnouncements',
+          'cakeDay',
+          'modNotifications',
+        ];
+        messages = preferences[0];
+
+        chatMessages = preferences[1];
+        chatRequests = preferences[2];
+        mentionOfUsername = preferences[3];
+        commentsOnYourPosts = preferences[4];
+        upvotesOnYourPosts = preferences[5];
+        upvotedOnYourComments = preferences[6];
+        repliesToYourComments = preferences[7];
+        activityOnYourComments = preferences[8];
+        activityOnChatPostsYoureIn = preferences[9];
+        newFollowers = preferences[10];
+        awardsYouReceive = preferences[11];
+        postsYouFollow = preferences[12];
+        commentsYouFollow = preferences[13];
+        trendingPosts = preferences[14];
+        communityRecommendations = preferences[15];
+        reReddit = preferences[16];
+        featuredContent = preferences[17];
+        communityAlerts = preferences[18];
+        redditAnnouncements = preferences[19];
+        cakeDay = preferences[20];
+        modNotifications = preferences[21];
       });
       print(userPrefs);
     } else {
       throw Exception('Failed to load user preferences ${response.statusCode}');
+    }
+  }
+
+  Future<void> updatePreferences() async {
+    preferences[0] = messages;
+
+    preferences[1] = chatMessages;
+    preferences[2] = chatRequests;
+    preferences[3] = mentionOfUsername;
+    preferences[4] = commentsOnYourPosts;
+    preferences[5] = upvotesOnYourPosts;
+    preferences[6] = upvotedOnYourComments;
+    preferences[7] = repliesToYourComments;
+    preferences[8] = activityOnYourComments;
+    preferences[9] = activityOnChatPostsYoureIn;
+    preferences[10] = newFollowers;
+    preferences[11] = awardsYouReceive;
+    preferences[12] = postsYouFollow;
+    preferences[13] = commentsYouFollow;
+    preferences[14] = trendingPosts;
+    preferences[15] = communityRecommendations;
+    preferences[16] = reReddit;
+    preferences[17] = featuredContent;
+    preferences[18] = communityAlerts;
+    preferences[19] = redditAnnouncements;
+    preferences[20] = cakeDay;
+    preferences[21] = modNotifications;
+    final patchData = {
+      for (int i = 0; i < preferenceNames.length; i++)
+        preferenceNames[i]: preferences[i],
+    };
+    final response = await http.patch(
+      Uri.parse(
+          'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/notification/settings'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode(patchData),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('Preferences updated successfully.');
+      // Handle success if needed
+      print(patchData);
+    } else {
+      throw Exception(
+          'Failed to update user preferences ${response.statusCode}');
     }
   }
 
@@ -53,7 +197,7 @@ class _NotificationSetttingState extends State<NotificationSettting> {
         appBar: AppBar(
           title: const Text('Notification Settting'),
         ),
-        body: const SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
@@ -69,7 +213,17 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.email_outlined),
                             Text('Private messages'),
-                            SwitchWidget()
+                            Switch(
+                              value: messages,
+                              onChanged: (value) {
+                                print('Switch toggled. New value: $value');
+                                setState(() {
+                                  messages = value;
+                                });
+                                print('Updated messages value: $messages');
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -77,7 +231,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.chat_rounded),
                             Text('Chat messages'),
-                            SwitchWidget()
+                            Switch(
+                              value: chatMessages,
+                              onChanged: (value) {
+                                setState(() {
+                                  chatMessages = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -85,7 +247,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.chat_outlined),
                             Text('Chat requests'),
-                            SwitchWidget()
+                            Switch(
+                              value: chatRequests,
+                              onChanged: (value) {
+                                setState(() {
+                                  chatRequests = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                       ],
@@ -106,7 +276,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.man_4),
                             Text('Mention of u/username'),
-                            SwitchWidget()
+                            Switch(
+                              value: mentionOfUsername,
+                              onChanged: (value) {
+                                setState(() {
+                                  mentionOfUsername = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -114,7 +292,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.chat_bubble),
                             Text('Comments on your posts'),
-                            SwitchWidget()
+                            Switch(
+                              value: commentsOnYourPosts,
+                              onChanged: (value) {
+                                setState(() {
+                                  commentsOnYourPosts = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -122,7 +308,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.keyboard_double_arrow_up_rounded),
                             Text('Upvotes on your post'),
-                            SwitchWidget()
+                            Switch(
+                              value: upvotesOnYourPosts,
+                              onChanged: (value) {
+                                setState(() {
+                                  upvotesOnYourPosts = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -130,7 +324,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.keyboard_double_arrow_up_rounded),
                             Text('Upvotes on your comments'),
-                            SwitchWidget()
+                            Switch(
+                              value: upvotedOnYourComments,
+                              onChanged: (value) {
+                                setState(() {
+                                  upvotedOnYourComments = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -138,7 +340,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.subdirectory_arrow_left_sharp),
                             Text('Replies to your comments'),
-                            SwitchWidget()
+                            Switch(
+                              value: repliesToYourComments,
+                              onChanged: (value) {
+                                setState(() {
+                                  repliesToYourComments = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -146,7 +356,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.subdirectory_arrow_left_sharp),
                             Text('Activity on your comments'),
-                            SwitchWidget()
+                            Switch(
+                              value: activityOnYourComments,
+                              onChanged: (value) {
+                                setState(() {
+                                  activityOnYourComments = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -154,7 +372,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.stars_outlined),
                             Text('Activity on chat posts you are in'),
-                            SwitchWidget()
+                            Switch(
+                              value: activityOnChatPostsYoureIn,
+                              onChanged: (value) {
+                                setState(() {
+                                  activityOnChatPostsYoureIn = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -162,7 +388,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.fiber_new_rounded),
                             Text('new followers'),
-                            SwitchWidget()
+                            Switch(
+                              value: newFollowers,
+                              onChanged: (value) {
+                                setState(() {
+                                  newFollowers = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -170,7 +404,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.card_giftcard_outlined),
                             Text('Awards you receive'),
-                            SwitchWidget()
+                            Switch(
+                              value: awardsYouReceive,
+                              onChanged: (value) {
+                                setState(() {
+                                  awardsYouReceive = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -178,7 +420,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.stars_outlined),
                             Text('posts you follow'),
-                            SwitchWidget()
+                            Switch(
+                              value: postsYouFollow,
+                              onChanged: (value) {
+                                setState(() {
+                                  postsYouFollow = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -186,7 +436,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.stars_outlined),
                             Text('comments you follow'),
-                            SwitchWidget()
+                            Switch(
+                              value: commentsYouFollow,
+                              onChanged: (value) {
+                                setState(() {
+                                  commentsYouFollow = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                       ],
@@ -207,7 +465,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.trending_up_outlined),
                             Text('Trending posts'),
-                            SwitchWidget()
+                            Switch(
+                              value: trendingPosts,
+                              onChanged: (value) {
+                                setState(() {
+                                  trendingPosts = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -215,7 +481,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.video_settings_sharp),
                             Text('Community recommendation'),
-                            SwitchWidget()
+                            Switch(
+                              value: communityRecommendations,
+                              onChanged: (value) {
+                                setState(() {
+                                  communityRecommendations = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -223,7 +497,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.bookmark_outline_rounded),
                             Text('ReFox'),
-                            SwitchWidget()
+                            Switch(
+                              value: reReddit,
+                              onChanged: (value) {
+                                setState(() {
+                                  reReddit = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -231,7 +513,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.filter_vintage_sharp),
                             Text('featured content'),
-                            SwitchWidget()
+                            Switch(
+                              value: featuredContent,
+                              onChanged: (value) {
+                                setState(() {
+                                  featuredContent = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                       ],
@@ -252,7 +542,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.filter_vintage_sharp),
                             Text('Community alerts'),
-                            SwitchWidget()
+                            Switch(
+                              value: communityAlerts,
+                              onChanged: (value) {
+                                setState(() {
+                                  communityAlerts = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -260,7 +558,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.filter_vintage_sharp),
                             Text('Fox Announcements'),
-                            SwitchWidget()
+                            Switch(
+                              value: redditAnnouncements,
+                              onChanged: (value) {
+                                setState(() {
+                                  redditAnnouncements = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                         Row(
@@ -268,7 +574,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                           children: [
                             Icon(Icons.cake_outlined),
                             Text('Cake day'),
-                            SwitchWidget()
+                            Switch(
+                              value: cakeDay,
+                              onChanged: (value) {
+                                setState(() {
+                                  cakeDay = value;
+                                });
+                                updatePreferences();
+                              },
+                            )
                           ],
                         ),
                       ],
@@ -287,7 +601,15 @@ class _NotificationSetttingState extends State<NotificationSettting> {
                       children: [
                         Icon(Icons.filter_vintage_sharp),
                         Text('Mod Notification'),
-                        SwitchWidget()
+                        Switch(
+                          value: modNotifications,
+                          onChanged: (value) {
+                            setState(() {
+                              modNotifications = value;
+                            });
+                            updatePreferences();
+                          },
+                        )
                       ],
                     ),
                   ],

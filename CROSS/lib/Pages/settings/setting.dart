@@ -119,8 +119,7 @@ class _settingState extends State<setting> {
       });
       print(userPrefs);
     } else {
-      throw Exception(
-          'Failed to load user preferences ${response.statusCode}');
+      throw Exception('Failed to load user preferences ${response.statusCode}');
     }
   }
 
@@ -152,7 +151,7 @@ class _settingState extends State<setting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Settings')),
+        title: Text('Settings'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -471,7 +470,7 @@ class _settingState extends State<setting> {
                           ],
                         ),
                       ),
-                                          // Reduce Animations
+                      // Reduce Animations
                       TextButton(
                         onPressed: () {},
                         child: const Row(
