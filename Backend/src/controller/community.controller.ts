@@ -9,6 +9,7 @@ import {
   removeMemberFromCom,
   removeModeratorFromCom,
   getUsersAsBannedInCommunity,
+  getModerators,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -536,13 +537,55 @@ export async function getUsersIsbannedIncommunityHandler(req: Request, res: Resp
     }
 
     const usersResult = await getUsersAsBannedInCommunity(commName);
-
-    return res.status(200).json({ status: 'success', users: usersResult.users });
+    if (usersResult.status === true) {
+      return res.status(200).json({ status: 'success', users: usersResult.users });
+    } else {
+      return res.status(404).json({
+        status: 'error',
+        message: 'error in get banned users',
+      });
+    }
   } catch (error) {
     console.error('Error in getUsersIsbannedIncommunityHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
     });
+  }
+}
+/**
+ * Retrieves the list of moderators for a given community.
+ *
+ * @param {Request} req - The request object containing the user's access token.
+ * @param {Response} res - The response object used to send the list of moderators.
+ * @return {Promise<void>} A promise that resolves when the list of moderators is sent.
+ *                         If the access token is missing or invalid, a 400 error is returned.
+ *                         If the community is not found, a 400 error is returned.
+ *                         If there is an error retrieving the moderators, a 500 error is returned.
+ */
+export async function getModeratorsHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const commName = req.params.subreddit;
+    if (!commName) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+    const Moderators = await getModerators(commName);
+    if (Moderators.status === true) {
+      return res.status(200).json({ status: 'success', Moderators });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'error in get Moderators' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 }
