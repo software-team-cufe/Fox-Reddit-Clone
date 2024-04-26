@@ -12,6 +12,8 @@ import {
   getCommunityModerators,
   getCommunityMembers,
   editCommunityRules,
+  markSpamPost,
+  markSpamComment,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -211,7 +213,7 @@ export async function subscribeCommunityHandler(req: Request, res: Response) {
 }
 
 /**
- * Subscribe subreddit handler.
+ * unsubscribe subreddit handler.
  *
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
@@ -810,6 +812,198 @@ export async function getFavoriteCommunitiesOfUserHandler(req: Request, res: Res
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Handles the request to get spam posts of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getSpamPostsHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    if (!community) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not check spam' });
+    }
+
+    const posts = community.spamPosts;
+    return res.status(200).json({ status: 'success', posts });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to get spam comments of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getSpamCommentsHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    if (!community) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not check spam' });
+    }
+
+    const comments = community.spamComments;
+    return res.status(200).json({ status: 'success', comments });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * mark Spam Post Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function markSpamPostHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const postID = req.body.postID;
+  const type = req.body.spamType;
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  try {
+    const result = await markSpamPost(userID, subreddit, postID, type);
+
+    // Handle user addition failure
+    if (result.status === false) {
+      return res.status(500).json({
+        error: result.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error adding spam post to subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * mark Spam Comment Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function markSpamCommentHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const commentID = req.body.commentID;
+  const type = req.body.spamType;
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  try {
+    const result = await markSpamComment(userID, subreddit, commentID, type);
+
+    // Handle user addition failure
+    if (result.status === false) {
+      return res.status(500).json({
+        error: result.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error adding spam comment to subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
     });
   }
 }

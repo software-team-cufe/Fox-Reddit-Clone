@@ -2,6 +2,8 @@ import appError from '../utils/appError';
 import CommunityModel, { Community, CommunityRule } from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
+import { findPostById } from './post.service';
+import { findCommentById } from './comment.service';
 import UserModel from '../model/user.model';
 
 /**
@@ -403,6 +405,7 @@ export async function getCommunityModerators(communityName: string) {
 
   return { status: true, users: usersWithModRole };
 }
+
 /**
  * Retrieves the IDs and attributes of the users who are not banned in a community.
  *
@@ -443,6 +446,105 @@ export async function editCommunityRules(subreddit: string, rules: CommunityRule
       community._id,
       { communityRules: rules },
       { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ *  mark Spam Post
+ * @param {string} body contain rules details
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function markSpamPost(userID: string, subreddit: string, postID: string, type: string) {
+  const community = await findCommunityByName(subreddit);
+  const post = await findPostById(postID);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  if (!post) {
+    return {
+      status: false,
+      error: 'post not found',
+    };
+  }
+
+  const spamPost = {
+    spammerID: post.userID,
+    postID: post._id,
+    spamType: type,
+    spamText: post.textHTML,
+  };
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { spamPosts: spamPost } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ *  mark Spam Post
+ * @param {string} body contain rules details
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function markSpamComment(userID: string, subreddit: string, commentID: string, type: string) {
+  const community = await findCommunityByName(subreddit);
+  const comment = await findCommentById(commentID);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  if (!comment) {
+    return {
+      status: false,
+      error: 'comment not found',
+    };
+  }
+
+  const spamComment = {
+    spammerID: comment.authorId,
+    postID: comment.postID,
+    commentID: comment._id,
+    spamType: type,
+    spamText: comment.textHTML,
+  };
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { spamComments: spamComment } },
+      { upsert: true, new: true }
     );
   } catch (error) {
     return {

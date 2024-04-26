@@ -119,6 +119,9 @@ class SpamComment {
   @prop({ ref: () => Post })
   postID!: Ref<Post>;
 
+  @prop({ ref: () => Comment })
+  commentID!: Ref<Comment>;
+
   @prop()
   spamType!: string;
 

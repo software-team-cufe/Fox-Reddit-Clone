@@ -16,6 +16,10 @@ import {
   favoriteCommunityHandler,
   unfavoriteCommunityHandler,
   getFavoriteCommunitiesOfUserHandler,
+  getSpamPostsHandler,
+  getSpamCommentsHandler,
+  markSpamPostHandler,
+  markSpamCommentHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -24,6 +28,8 @@ import {
   getCommunitySchema,
   banOrUnbanSchema,
   editCommunityRulesSchema,
+  spamPostSchema,
+  spamCommentSchema,
 } from '../schema/community.schema';
 
 const router = express.Router();
@@ -40,9 +46,12 @@ router.post('/:subreddit/api/unfavorite', validateResource(subscribeCommunitySch
 router.post('/:subreddit/api/join_moderator', validateResource(subscribeCommunitySchema), joinModeratorHandler);
 router.post('/:subreddit/api/leave_moderator', validateResource(subscribeCommunitySchema), leaveModeratorHandler);
 router.post('/api/ban_or_unban', validateResource(banOrUnbanSchema), banOrUnbanHandler);
-router.get('/:subreddit/about/banned', getUsersIsbannedIncommunityHandler);
-router.get('/:subreddit/about/moderators', getModeratorsHandler);
-router.get('/:subreddit/about/members', getMembersHandler);
+router.get('/:subreddit/about/banned', validateResource(subscribeCommunitySchema), getUsersIsbannedIncommunityHandler);
+router.get('/:subreddit/about/moderators', validateResource(subscribeCommunitySchema), getModeratorsHandler);
+router.get('/:subreddit/about/members', validateResource(subscribeCommunitySchema), getMembersHandler);
+router.get('/:subreddit/about/spam_posts', validateResource(subscribeCommunitySchema), getSpamPostsHandler);
+router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunitySchema), getSpamCommentsHandler);
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
-
+router.post('/:subreddit/api/mark_spam_post', validateResource(spamPostSchema), markSpamPostHandler);
+router.post('/:subreddit/api/mark_spam_comment', validateResource(spamCommentSchema), markSpamCommentHandler);
 export default router;
