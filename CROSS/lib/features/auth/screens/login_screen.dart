@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:reddit_fox/Pages/Spalsh_Screen.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/features/auth/screens/ForgetPasswordScreen.dart';
@@ -42,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
       saveToken(user["accessToken"], 'backtoken');
       saveToken('jessicatoken', 'mocktoken');
 
-      Get.to(const HomePage());
+      Get.to(const SplashScreen());
     } else {
       return 'Invalid username or password';
     }

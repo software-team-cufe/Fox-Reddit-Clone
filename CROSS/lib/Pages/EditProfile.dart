@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
+
 class EditProfilePage extends StatefulWidget {
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -12,15 +13,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool showActiveCommunities = true;
   final double coverHight = 200.0;
   final double profileHight = 104;
+  bool isVisible = false;
+  bool isActive = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text('Edit Profile'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.save),
+          ElevatedButton(
+            child: Text("Save", style: TextStyle(
+              color: Colors.white,
+            ),),
             onPressed: () {
               // Save button action
             },
@@ -43,23 +49,77 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Personal Information',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
+          SizedBox(height: 30.0),
+          // Add your form fields here
+          Text("Display Name (optional)"),
+          SizedBox(height: 10.0),
+          TextFormField(
+            decoration: InputDecoration(
+              hintText: 'Show on your profile page',
+              hintStyle: TextStyle(color: Color(0xFF787878)),
+              border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
+              filled: true, // Fill the background
+              fillColor: Color(0xFF2c2b2b),
+          ),
           ),
           SizedBox(height: 10.0),
-          // Add your form fields here
+          Text("This will be displayed to viewers of your profile page and does not change your username", style: TextStyle(color: Color(0xFF787878)),),
+          SizedBox(height: 30.0),
+          Text("About (optional)"),
+          SizedBox(height: 10.0),
           TextFormField(
-            decoration: InputDecoration(labelText: 'Name'),
+            maxLines: null, // Allow multiple lines
+            minLines: 5, // Set a minimum of 3 lines
+            decoration: InputDecoration(
+              hintText: 'A little description of yourself',
+              hintStyle: TextStyle(color: Color(0xFF787878)),
+              border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+              filled: true, // Fill the background
+              fillColor: Color(0xFF2c2b2b),
           ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Email'),
           ),
-          // Add more form fields as needed
-        ],
+          SizedBox(height: 30.0),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                Text('Content visibility',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  'All posts to this profile will appear in r/all and your ',
+                  style: TextStyle(color: Color(0xFF787878)),
+                ),
+                Text(
+                  'profile can be discovered in /user be discovered in ',
+                  style: TextStyle(color: Color(0xFF787878)),
+                  ),
+                Text(
+                  '/user your profile can be discovered in /user',
+                  style: TextStyle(color: Color(0xFF787878)),
+                  ),
+              ],),
+              Switch(
+                value: isVisible,
+                onChanged: (value){
+                  setState(() {
+                    isVisible = value;
+                  });
+                },
+              )
+            ],
+          )
+          ],
       ),
     );
   }

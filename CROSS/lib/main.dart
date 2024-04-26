@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:reddit_fox/Pages/Spalsh_Screen.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/Pages/messages.dart';
 import 'package:reddit_fox/api/firebase_api.dart';
@@ -84,7 +85,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             theme: Pallete.darkModeAppTheme,
             home: (access_token == null)
                 ? const StartingScreen()
-                : const HomePage(),
+                : const SplashScreen(),
             routes: {
               Message.route: (context) => const Message()
             },
