@@ -14,6 +14,8 @@ import {
   editCommunityRules,
   markSpamPost,
   markSpamComment,
+  approveSpamPost,
+  approveSpamComment,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -1002,6 +1004,278 @@ export async function markSpamCommentHandler(req: Request, res: Response) {
   } catch (error) {
     // Handle any unexpected errors
     console.error('Error adding spam comment to subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ *  approve Spam Post Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function approveSpamPostHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const postID = req.body.postID;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if post is missing or invalid
+  if (!postID) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  let isMod = false;
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not approve spam posts' });
+  }
+
+  try {
+    const updateUser = await approveSpamPost(postID, subreddit);
+
+    // Handle user addition failure
+    if (updateUser.status === false) {
+      return res.status(500).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error approving spam post:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ *  approve Spam Comment Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function approveSpamCommentHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const commentID = req.body.commentID;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if post is missing or invalid
+  if (!commentID) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  let isMod = false;
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not approve spam posts' });
+  }
+
+  try {
+    const updateUser = await approveSpamComment(commentID, subreddit);
+
+    // Handle user addition failure
+    if (updateUser.status === false) {
+      return res.status(500).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error approving spam comment:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ *  remove Spam Post Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function removeSpamPostHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const postID = req.body.postID;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if post is missing or invalid
+  if (!postID) {
+    return res.status(402).json({
+      error: 'Post not found',
+    });
+  }
+
+  let isMod = false;
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not remove spam posts' });
+  }
+
+  try {
+    const updateUser = await approveSpamPost(postID, subreddit);
+
+    // Handle user addition failure
+    if (updateUser.status === false) {
+      return res.status(500).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error removing spam post:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ *  approve Spam Comment Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function removeSpamCommentHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const commentID = req.body.commentID;
+  const community = await findCommunityByName(subreddit);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if post is missing or invalid
+  if (!commentID) {
+    return res.status(402).json({
+      error: 'Comment not found',
+    });
+  }
+
+  let isMod = false;
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not remove spam posts' });
+  }
+
+  try {
+    const updateUser = await approveSpamComment(commentID, subreddit);
+
+    // Handle user addition failure
+    if (updateUser.status === false) {
+      return res.status(500).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error removing spam comment:', error);
     return res.status(500).json({
       error: 'Internal server error',
     });

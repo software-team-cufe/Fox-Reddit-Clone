@@ -508,7 +508,7 @@ export async function markSpamPost(userID: string, subreddit: string, postID: st
 }
 
 /**
- *  mark Spam Post
+ *  mark Spam Comment
  * @param {string} body contain rules details
  * @param {string} user user information
  * @return {Object} state
@@ -545,6 +545,76 @@ export async function markSpamComment(userID: string, subreddit: string, comment
       community._id,
       { $addToSet: { spamComments: spamComment } },
       { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function approveSpamPost(postID: string, subreddit: string) {
+  const community = await findCommunityByName(subreddit);
+  const post = await findPostById(postID);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'community not found',
+    };
+  }
+
+  if (!post) {
+    return {
+      status: false,
+      error: 'post not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $pull: { spamPosts: { postID: post._id } } },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function approveSpamComment(commentID: string, subreddit: string) {
+  const community = await findCommunityByName(subreddit);
+  const comment = await findCommentById(commentID);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'community not found',
+    };
+  }
+
+  if (!comment) {
+    return {
+      status: false,
+      error: 'comment not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $pull: { spamComments: { commentID: comment._id } } },
+      { new: true }
     );
   } catch (error) {
     return {

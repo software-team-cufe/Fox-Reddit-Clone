@@ -97,6 +97,32 @@ export const spamCommentSchema = object({
   }),
 });
 
+export const approveSpamCommentSchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+  body: object({
+    commentID: string({
+      required_error: 'comment Id is required',
+    }),
+  }),
+});
+
+export const approveSpamPostSchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+  body: object({
+    postID: string({
+      required_error: 'Post Id is required',
+    }),
+  }),
+});
+
 export type banOrMute = TypeOf<typeof banOrUnbanSchema>;
 export type createCommunity = TypeOf<typeof createCommunitySchema>;
 export type subscribeCommunity = TypeOf<typeof subscribeCommunitySchema>;

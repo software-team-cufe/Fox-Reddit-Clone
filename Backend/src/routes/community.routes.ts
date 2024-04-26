@@ -20,6 +20,10 @@ import {
   getSpamCommentsHandler,
   markSpamPostHandler,
   markSpamCommentHandler,
+  approveSpamPostHandler,
+  approveSpamCommentHandler,
+  removeSpamPostHandler,
+  removeSpamCommentHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -30,6 +34,8 @@ import {
   editCommunityRulesSchema,
   spamPostSchema,
   spamCommentSchema,
+  approveSpamPostSchema,
+  approveSpamCommentSchema,
 } from '../schema/community.schema';
 
 const router = express.Router();
@@ -54,4 +60,16 @@ router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunit
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
 router.post('/:subreddit/api/mark_spam_post', validateResource(spamPostSchema), markSpamPostHandler);
 router.post('/:subreddit/api/mark_spam_comment', validateResource(spamCommentSchema), markSpamCommentHandler);
+router.post('/:subreddit/api/approve_spam_post', validateResource(approveSpamPostSchema), approveSpamPostHandler);
+router.post(
+  '/:subreddit/api/approve_spam_comment',
+  validateResource(approveSpamCommentSchema),
+  approveSpamCommentHandler
+);
+router.post('/:subreddit/api/remove_spam_post', validateResource(approveSpamPostSchema), removeSpamPostHandler);
+router.post(
+  '/:subreddit/api/remove_spam_comment',
+  validateResource(approveSpamCommentSchema),
+  removeSpamCommentHandler
+);
 export default router;
