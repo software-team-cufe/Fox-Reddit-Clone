@@ -11,6 +11,7 @@ import {
   getUsersAsBannedInCommunity,
   getCommunityModerators,
   getCommunityMembers,
+  editCommunityRules,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -283,7 +284,7 @@ export async function getCommunityHandler(req: Request, res: Response) {
 }
 
 /**
- * Bans or mutes a user in a community.
+ * Bans or unban a user in a community.
  *
  * @param {Request} req - The request object containing the subreddit ID, user ID, and operation.
  * @param {Response} res - The response object used to send the result of the operation.
@@ -294,7 +295,6 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
   const memberId: string = req.body.userID;
   const commModerator: string = res.locals.user._id.toString();
   const operation: string = req.body.action;
-  console.log(subredditId, memberId, commModerator, operation);
 
   try {
     // Find the community by ID
@@ -323,8 +323,7 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
         if (el.userID?.toString() === memberId) toBeAffectedFound = true;
       });
     }
-    console.log(performerFound, toBeAffectedFound);
-    console.log(community.moderators);
+
     if (!performerFound || toBeAffectedFound) {
       //if (!performerFound || toBeAffectedFound) {
       // If toBeAffectedFound, it means that you are going to ban or mute a moderator, which is not valid behavior
@@ -511,6 +510,7 @@ export async function leaveModeratorHandler(req: Request, res: Response) {
     });
   }
 }
+
 /**
  * Retrieves the list of users who are banned in a community.
  *
@@ -554,6 +554,7 @@ export async function getUsersIsbannedIncommunityHandler(req: Request, res: Resp
     });
   }
 }
+
 /**
  * Retrieves the list of moderators for a given community.
  *
@@ -590,6 +591,7 @@ export async function getModeratorsHandler(req: Request, res: Response) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 }
+
 /**
  * Handles the request to get the members of a community.
  *
@@ -618,6 +620,59 @@ export async function getMembersHandler(req: Request, res: Response) {
       return res.status(200).json({ status: 'success', members });
     } else {
       return res.status(404).json({ status: 'error', message: 'error in get Members' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to edit the rules of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editCommunityRulesHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    const rules = req.body.rules;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change rules' });
+    }
+
+    const result = await editCommunityRules(commName, rules);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing rules' });
     }
   } catch (err) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });

@@ -1,5 +1,5 @@
 import appError from '../utils/appError';
-import CommunityModel, { Community } from '../model/community.model';
+import CommunityModel, { Community, CommunityRule } from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
 import UserModel from '../model/user.model';
@@ -426,4 +426,31 @@ export async function getCommunityMembers(communityName: string) {
   const users = await UserModel.find({ _id: { $in: userIDs } }).select('avatar username _id about createdAt');
 
   return { status: true, users };
+}
+
+export async function editCommunityRules(subreddit: string, rules: CommunityRule[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { communityRules: rules },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
 }

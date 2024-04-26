@@ -12,6 +12,7 @@ import {
   getUsersIsbannedIncommunityHandler,
   getModeratorsHandler,
   getMembersHandler,
+  editCommunityRulesHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -19,6 +20,7 @@ import {
   subscribeCommunitySchema,
   getCommunitySchema,
   banOrUnbanSchema,
+  editCommunityRulesSchema,
 } from '../schema/community.schema';
 
 const router = express.Router();
@@ -32,8 +34,8 @@ router.post('/:subreddit/api/unsubscribe', validateResource(subscribeCommunitySc
 router.post('/:subreddit/api/join_moderator', validateResource(subscribeCommunitySchema), joinModeratorHandler);
 router.post('/:subreddit/api/leave_moderator', validateResource(subscribeCommunitySchema), leaveModeratorHandler);
 router.post('/api/ban_or_unban', validateResource(banOrUnbanSchema), banOrUnbanHandler);
-router.get('/r/:subreddit/about/banned', getUsersIsbannedIncommunityHandler);
-router.get('/r/:subreddit/about/moderators', getModeratorsHandler);
-router.get('/r/:subreddit/about/members', getMembersHandler);
-
+router.get('/:subreddit/about/banned', getUsersIsbannedIncommunityHandler);
+router.get('/:subreddit/about/moderators', getModeratorsHandler);
+router.get('/:subreddit/about/members', getMembersHandler);
+router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
 export default router;

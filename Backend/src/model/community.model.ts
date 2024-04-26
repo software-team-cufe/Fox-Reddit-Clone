@@ -17,7 +17,7 @@ import { User } from './user.model';
 import { NextFunction } from 'express';
 import { boolean } from 'zod';
 
-class CommunityRule {
+export class CommunityRule {
   @prop()
   title?: string;
 
@@ -125,7 +125,7 @@ export class Community {
   @prop()
   subreddit?: string;
 
-  @prop({ type: CommunityRule })
+  @prop()
   communityRules?: CommunityRule[];
 
   @prop({ required: false, trim: true, maxLength: 100000, minLength: 1 })
