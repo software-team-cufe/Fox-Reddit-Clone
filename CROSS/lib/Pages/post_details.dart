@@ -94,34 +94,34 @@ class _PostDetailsState extends State<PostDetails> {
 
   void _startDownload(BuildContext context) async {
     try {
-      Directory dir = Directory('/storage/emulated/0/Download');
+      Directory dir =
+          Directory('/storage/emulated/0/fox'); // Updated directory path
       if (!dir.existsSync()) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Download directory not found"),
-            duration: Duration(seconds: 2),
-          ),
-        );
-        return;
+        dir.createSync(
+            recursive: true); // Create the directory if it doesn't exist
       }
 
       String savePath = "${dir.path}/${widget.post['title']}.jpg";
 
       var response = await http.get(Uri.parse(widget.post['picture']!));
-      File file = File(savePath);
-      await file.writeAsBytes(response.bodyBytes);
+      if (response.statusCode == 200) {
+        File file = File(savePath);
+        await file.writeAsBytes(response.bodyBytes);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Image downloaded successfully"),
-          duration: Duration(seconds: 2),
-        ),
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Image downloaded successfully"),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      } else {
+        throw Exception("Failed to download image: ${response.statusCode}");
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error downloading image"),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: Text("Error downloading image: $e"),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -245,7 +245,7 @@ class _PostDetailsState extends State<PostDetails> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'r/Valorant',
                       style: TextStyle(
                         fontSize: 16,
@@ -268,7 +268,7 @@ class _PostDetailsState extends State<PostDetails> {
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                          color: Colors.grey,
                         ),
                       ),
                     ),
@@ -407,94 +407,96 @@ class _PostDetailsState extends State<PostDetails> {
                 Row(
                   children: [
                     ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(width: 42, height: 40), // Set a fixed size
+                      constraints:
+                          const BoxConstraints.tightFor(width: 35, height: 38),
                       child: IconButton(
                         icon: AnimatedSwitcher(
-                          duration: Duration(milliseconds: 200),
-                          child: hasVoted && voteDirection == VoteDirection.Up
-                              ? Image.asset(
-                                  'assets/Icons/up vote.png',
-                                  key: UniqueKey(),
-                                  width: 40,
-                                  height: 42,
-                                )
-                              : Image.asset(
-                                  'assets/Icons/arrow-up.png',
-                                  key: UniqueKey(),
-                                  width: 32,
-                                  height: 32,
-                                )  
-                        ),
+                            duration: const Duration(milliseconds: 200),
+                            child: hasVoted && voteDirection == VoteDirection.Up
+                                ? Image.asset(
+                                    'assets/Icons/up vote.png',
+                                    key: UniqueKey(),
+                                    width: 32,
+                                    height: 32,
+                                  )
+                                : Image.asset(
+                                    'assets/Icons/arrow-up.png',
+                                    key: UniqueKey(),
+                                    width: 32,
+                                    height: 32,
+                                  )),
                         onPressed: () => vote(VoteDirection.Up),
                       ),
-                      ),
-
+                    ),
                     Text(
                       "${voteCount.abs()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(width: 40, height: 38), // Set a fixed size
+                      constraints: const BoxConstraints.tightFor(
+                          width: 35, height: 38), // Set a fixed size
                       child: IconButton(
                         icon: AnimatedSwitcher(
-                          duration: Duration(milliseconds: 200),
-                          child: hasVoted && voteDirection == VoteDirection.Down
-                              ? Image.asset(
-                                  'assets/Icons/down vote.png',
-                                  key: UniqueKey(),
-                                  width: 32,
-                                  height: 32,
-                                )
-                              : Image.asset(
-                                  'assets/Icons/arrow-down.png',
-                                  key: UniqueKey(),
-                                  width: 32,
-                                  height: 32,
-                                )  
-                        ),
+                            duration: const Duration(milliseconds: 200),
+                            child:
+                                hasVoted && voteDirection == VoteDirection.Down
+                                    ? Image.asset(
+                                        'assets/Icons/down vote.png',
+                                        key: UniqueKey(),
+                                        width: 32,
+                                        height: 32,
+                                      )
+                                    : Image.asset(
+                                        'assets/Icons/arrow-down.png',
+                                        key: UniqueKey(),
+                                        width: 32,
+                                        height: 32,
+                                      )),
                         onPressed: () => vote(VoteDirection.Down),
                       ),
-                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(width: 50),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(               
-                              child: Row(
-                                children: [
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints.tightFor(width: 28, height: 28), // Set a fixed size
-                                    child: Image.asset('assets/Icons/comment.png')
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                                    child: Text(
-                                      "${widget.post['commentsNo']} Comments",
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
+                    children: [
+                      SizedBox(
+                        child: Row(
+                          children: [
+                            ConstrainedBox(
+                                constraints: const BoxConstraints.tightFor(
+                                    width: 28, height: 28), // Set a fixed size
+                                child: Image.asset('assets/Icons/comment.png')),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 4.0, right: 4.0),
+                              child: Text(
+                                "${widget.post['commentsNo']} Comments",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                        const SizedBox(width: 50),
-                        IconButton(
-                          icon: Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.rotationY(
-                                3.14), // Flips the icon horizontally
-                            child: const Icon(Icons.reply),
-                          ),
-                          onPressed: () {
-                            int postId = widget.post['id'];
-                            String postUrl =
-                                'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                            Share.share('${widget.post['title']}\n$postUrl');
-                          },
+                          ],
                         ),
-                      ],
+                      ),
+                      const SizedBox(width: 50),
+                      IconButton(
+                        icon: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.rotationY(
+                              3.14), // Flips the icon horizontally
+                          child: const Icon(Icons.reply),
+                        ),
+                        onPressed: () {
+                          int postId = widget.post['id'];
+                          String postUrl =
+                              'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
+                          Share.share('${widget.post['title']}\n$postUrl');
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ],
