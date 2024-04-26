@@ -11,6 +11,7 @@ import {
   leaveModeratorHandler,
   getUsersIsbannedIncommunityHandler,
   getModeratorsHandler,
+  getMembersHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -33,5 +34,6 @@ router.post('/:subreddit/api/leave_moderator', validateResource(subscribeCommuni
 router.post('/api/ban_or_unban', validateResource(banOrUnbanSchema), banOrUnbanHandler);
 router.get('/r/:subreddit/about/banned', getUsersIsbannedIncommunityHandler);
 router.get('/r/:subreddit/about/moderators', getModeratorsHandler);
+router.get('/r/:subreddit/about/members', getMembersHandler);
 
 export default router;
