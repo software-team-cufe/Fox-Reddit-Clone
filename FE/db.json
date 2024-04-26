@@ -9,29 +9,46 @@
       "isModerator": true,
       "blur": true,
       "autoPlayVideos": true,
-      "comV": false,
-      "conV": false,
+      "comV": true,
+      "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "nsfw": false,
+      "nsfw": true,
       "allowFollow": false,
       "blocked": [
         {
-          "name": "blocked1",
-          "avatar": "https://i.redd.it/jva2jzpj9fk91.png"
+          "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+          "name": "user4"
         },
         {
-          "name": "blocked2",
-          "avatar": "https://i.redd.it/jva2jzpj9fk91.png"
+          "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
+          "name": "user2"
         }
       ],
-      "Muted": [
+      "Muted": [],
+      "SocialLinks": [
         {
-          "name": "muted com 1",
-          "icon": "https://i.redd.it/jva2jzpj9fk91.png"
+          "icon": "/substack.png",
+          "linkName": "Substack",
+          "userName": "sdcs",
+          "link": "https://substack.com/home"
         },
         {
-          "name": "muted com 2",
-          "icon": "https://i.redd.it/jva2jzpj9fk91.png"
+          "icon": "/logo.png",
+          "linkName": "Fox",
+          "userName": "r/art",
+          "link": "http://devopsagmdmnfront.southafricanorth.cloudapp.azure.com/r/art"
+        },
+        {
+          "icon": "/cameo.png",
+          "linkName": "Cameo",
+          "userName": "testUserName",
+          "link": "https://www.cameo.com/"
+        },
+        {
+          "icon": "/youtube.png",
+          "linkName": "Youtube",
+          "userName": "YouTube ",
+          "link": "https://youtube.com"
         }
       ]
     },
@@ -68,6 +85,14 @@
           "name": "muted com 2",
           "icon": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
         }
+      ],
+      "SocialLinks": [
+        {
+          "icon": "/kofi.png",
+          "linkName": "Kofi",
+          "userName": "my link",
+          "link": "https://ko-fi.com/"
+        }
       ]
     },
     {
@@ -102,6 +127,14 @@
         {
           "name": "muted com 2",
           "icon": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ],
+      "SocialLinks": [
+        {
+          "icon": "/kofi.png",
+          "linkName": "Kofi",
+          "userName": "my link",
+          "link": "https://ko-fi.com/"
         }
       ]
     },
@@ -138,6 +171,14 @@
           "name": "muted com 2",
           "icon": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
         }
+      ],
+      "SocialLinks": [
+        {
+          "icon": "/kofi.png",
+          "linkName": "Kofi",
+          "userName": "my link",
+          "link": "https://ko-fi.com/"
+        }
       ]
     },
     {
@@ -172,6 +213,14 @@
         {
           "name": "muted com 2",
           "icon": "https://demo.sirv.com/boy-snow.jpg?sharpen=30"
+        }
+      ],
+      "SocialLinks": [
+        {
+          "icon": "/kofi.png",
+          "linkName": "Kofi",
+          "userName": "my link",
+          "link": "https://ko-fi.com/"
         }
       ]
     }

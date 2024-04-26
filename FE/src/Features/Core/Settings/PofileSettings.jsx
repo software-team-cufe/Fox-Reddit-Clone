@@ -21,6 +21,8 @@ function ProfileSettings() {
     const [ContentVisiable, setContentVisiable] = useState(true);
     const [ActiveVisiable, setActiveVisiable] = useState(false);
     const [DisableNSFW, setDisableNSFW] = useState(false);
+    const [hide, sethide] = useState(true);
+    const [DisableSL, setDisableSL] = useState(false);
 
     useEffect(() => {
         FetchDataMock();
@@ -221,7 +223,7 @@ function ProfileSettings() {
     }
 
     const handleOpenLinkPop = () => {
-        OpenLikePop ? setOpenLikePop(false) : setOpenLikePop(true)
+        sethide(!hide);
     }
 
     const SaveChagesToast = () => {
@@ -361,15 +363,16 @@ function ProfileSettings() {
                 <h2 className=' text-base'>Social links (5 max)</h2>
                 <div className='text-xs my-4   text-gray-500'>People who visit your profile will see your
                     social links.</div>
-                <button onClick={handleOpenLinkPop} className='rounded-full border p-4 bg-gray-200 flex
-                 hover:bg-gray-300'>
+                <button disabled={DisableSL}
+                    onClick={handleOpenLinkPop} className='rounded-full border p-4 bg-gray-200 flex
+                 hover:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200'>
                     <Plus size={12} />
                     <div className='mx-2 text-xs font-bold'>Add social link </div>
                 </button>
 
-                {OpenLikePop &&
-                    <SocialLinks handleOpenLinkPop={handleOpenLinkPop} />
-                }
+
+                <SocialLinks handleOpenLinkPop={sethide} hide={hide} DisableSL={setDisableSL} />
+
                 <div className='text-xs mt-6  text-gray-500'>IMAGES</div>
                 <hr className='mb-6' />
                 <h2 className=' text-base'>Profile and banner image</h2>
@@ -444,6 +447,7 @@ function ProfileSettings() {
                             or inappropriate content for those under 18)
                         </span>
                     </span>
+                    <div className="w-full" />
                     <Switch
                         checked={NSFW}
                         onChange={handleSaveNSFW}
@@ -460,14 +464,15 @@ function ProfileSettings() {
                 </div>
                 <div className='text-xs mt-6  text-gray-500'>ADVANCED</div>
                 <hr className='mb-6' />
-                <div className='flex gap-28'>
+                <div className='flex  '>
                     <span>
-                        <p className='text-ms  font-sans'>Allow people to follow you</p>
+                        <p className='text-ms w-max font-sans'>Allow people to follow you</p>
 
                         <span className='text-xs font-sans'>
                             Followers will be notified about posts you make to your profile and see them in their home feed.
                         </span>
                     </span>
+                    <div className="w-full" />
                     <Switch
                         checked={Followers}
                         onChange={handleSaveFollow}
@@ -486,12 +491,14 @@ function ProfileSettings() {
                     <span>
                         <p className='text-ms font-sans  '>Content visibility</p>
                         {/* to do: put the real links */}
-                        <span className='text-xs font-sans mr-44'>
+                        <span className='text-xs font-sans '>
                             Posts to this profile can appear in
-                            <a className='text-blue-500 underline' href="url">r/all</a> and your profile can be discovered in
+                            <a className='text-blue-500 underline' href="url">r/all</a>
+                            and your profile can be discovered in
                             <a className='text-blue-500 underline' href="url">/users</a>
                         </span>
                     </span>
+                    <div className="w-full" />
                     <Switch
                         checked={ContentVisiable}
                         onChange={handleSaveConV}
@@ -508,11 +515,12 @@ function ProfileSettings() {
                 </div>
                 <div className='flex   my-4'>
                     <span>
-                        <p className='text-ms font-sans '>Active in communities visibility</p>
-                        <span className='text-xs  mr-80 font-sans'>
+                        <p className='text-ms font-sans w-max '>Active in communities visibility</p>
+                        <span className='text-xs  font-sans'>
                             Show which communities I am active in on my profile.
                         </span>
                     </span>
+                    <div className="w-full" />
                     <Switch
                         checked={ActiveVisiable}
                         onChange={handleSaveComV}
@@ -529,12 +537,14 @@ function ProfileSettings() {
                 </div>
                 <div className='flex  my-4' >
                     <span>
-                        <p className='text-ms font-sans mr-96 '>Clear history</p>
+                        <p className='text-ms font-sans w-max '>Clear history</p>
                         <span className='text-xs font-sans'>
                             Delete your post views history.
                         </span>
                     </span>
-                    <button className='border w-max p-1 text-xs ml-24 text-blue-700 border-blue-700  rounded-3xl font-bold '>
+                    <div className="w-full" />
+                    <button className='border min-w-max p-1 text-xs 
+                     text-blue-700 border-blue-700 h-fit py-4  rounded-3xl font-bold '>
                         Clear history
                     </button>
                 </div>
