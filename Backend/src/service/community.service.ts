@@ -375,3 +375,31 @@ export async function getUsersAsBannedInCommunity(communityName: string) {
 
   return { status: true, users: usersWithBannedTime };
 }
+/**
+ * Retrieves the IDs and roles of the moderators of a community.
+ *
+ * @param {string} communityName - The name of the community.
+ * @return {Promise<{status: boolean, users?: {avatar: string, username: string, _id: string, about: string, createdAt: Date, modRole: string}[]}>} - A promise that resolves to an object with the status of the operation and the moderators' IDs and roles, if successful.
+ */
+export async function getModerators(communityName: string) {
+  // Find the community by name
+  const community = await findCommunityByName(communityName);
+
+  // If community is not found, return status false
+  if (!community || !community.moderators) {
+    return { status: false };
+  }
+  const moderators = community.moderators.filter((member) => member);
+  const moderatorsIDs = moderators.map((mod) => mod.userID);
+  const modRole = moderators.map((mod) => mod.role);
+
+  const users = await UserModel.find({ _id: { $in: moderatorsIDs } }).select('avatar username _id about createdAt');
+
+  // Combine banned users with their modRole
+  const usersWithModRole = users.map((user, index) => ({
+    ...user.toObject(),
+    modRole: modRole[index],
+  }));
+
+  return { status: true, users: usersWithModRole };
+}
