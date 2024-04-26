@@ -74,30 +74,24 @@ function CreatePostPage(props) {
         updatePollOptions();
     }, [Poll1, Poll2, Poll3]);
 
-    //let ComId = ;
-    //, pollOptions: PollOptions, isNotifications: PostNotifications, { imageOrVideoSrc: VideoOrImageSrc }, ,CommunityID: SelectedCom.id
-    //  { url: PostURL }
+
+    //, isNotifications: PostNotifications   
+
     const Post = async () => {
         if (PostNotifications === "on")
             setPostNotifications(true);
         const NewPost = {
             title: TitleValue,
             text: PostText, attachments: [], spoiler: Spoiler,
-            nsfw: NSFW
+            nsfw: NSFW, pollOptions: PollOptions, attachments: [VideoOrImageSrc, PostURL],
+            Communityname: SelectedCom.name,
 
         }
-        // console.log(NewPost);
+
 
         userAxios.post('api/submit', NewPost)
             .then((res) => {
-                //Go to Post page
-                console.log(res);
-                // if (res.statusText === "Created")
-                //     toast.success("Post created successfully\u{1F60A}", {
-                //          position: toast.POSITION.BOTTOM_CENTER
-                //     });
                 toast.success("Post created successfully \u{1F60A}");
-
             })
             .catch((ex) => {
                 if (ex.issues != null && ex.issues.length != 0) {
