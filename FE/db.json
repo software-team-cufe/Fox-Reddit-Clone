@@ -9,10 +9,10 @@
       "isModerator": true,
       "blur": true,
       "autoPlayVideos": true,
-      "comV": false,
-      "conV": false,
+      "comV": true,
+      "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "nsfw": false,
+      "nsfw": true,
       "allowFollow": false,
       "blocked": [
         {

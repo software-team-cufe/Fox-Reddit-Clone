@@ -1,4 +1,4 @@
-
+import axios from "axios";
 /**
  * SearchComponent is a React component that provides a search input field with a dropdown selector.
  * It allows users to search for communities and navigate to the search results page.
@@ -12,6 +12,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
+import { People } from '@mui/icons-material';
 
 const SearchComponent = () => {
     const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
@@ -28,8 +29,9 @@ const SearchComponent = () => {
         ],
     }];
 
-    const [options, setoptions] = useState([{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
-    { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125" }]);
+
+    const [peoplee, setpeople] = useState([]);
+    const [Coms, setComs] = useState([]);
     const [search, setSearch] = useState('');
     const [showSelector, setShowSelector] = useState(false);
     const [selected, setSelected] = useState("");
@@ -38,11 +40,31 @@ const SearchComponent = () => {
     const [hideit, sethideit] = useState(false);
 
     useEffect(() => {
+        fetchData();
+        //TODO: show popular when search is emtpy
+    }, [])
+
+
+    useEffect(() => {
         const timer = setTimeout(goSearch, 200);
         // console.log(showSelector)
         return () => clearTimeout(timer);
 
     }, [search]);
+
+    const fetchData = async () => {
+        try {
+            const res = await axios.get('http://localhost:3002/users');
+            setpeople(res.data);
+            const ress = await axios.get('http://localhost:3002/communities');
+            setComs(ress.data);
+        } catch (ex) {
+            console.error(ex);
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
+    }
 
     const navToSearch = (value) => {
         setSelected(value);
@@ -62,7 +84,11 @@ const SearchComponent = () => {
             setShowSelector(false);
         }
     };
-    const filteredSearch = options.filter(item =>
+
+    const filteredPeople = peoplee.filter(item =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+    );
+    const filteredComs = Coms.filter(item =>
         item.name.toLowerCase().includes(search.toLowerCase())
     );
 
@@ -72,14 +98,14 @@ const SearchComponent = () => {
         `}>
             <div className="  rounded-full p-2 flex gap-1 flex-wrap"
                 onClick={() => setShowSelector(false)}>
-                {selected &&
+                {/* {selected &&
                     <div className="bg-gray-200 my-auto rounded-full flex items-center">
                         <div className="p-2">{selected}</div>
                         <div onClick={() => setSelected("")} className="p-2 select-none rounded-r-md 
                         cursor-pointer hover:bg-magma-orange-clear">
                             <X strokeWidth={1} size={12} className='hover:bg-slate-300 rounded' />
                         </div>
-                    </div>}
+                    </div>} */}
 
                 <div className="flex-1 my-auto">
                     <input type="text" value={search}
@@ -92,18 +118,32 @@ const SearchComponent = () => {
                     {showSelector && (
                         !hideit && <div className="absolute left-0 bg-white shadow h-max z-30 w-full rounded-b-md font-medium">
                             <div className="p-2 space-y-1">
-                                {filteredSearch.map((item, index) => (
-                                    (
-                                        <div key={index} onClick={() => navToSearch(item)}
-                                            className="hover:bg-orange-100 flex cursor-pointer p-2 hover:border-light-blue-1">
-                                            <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
-                                            <div>
-                                                <p className='mx-2 '>{item.name}</p>
-                                                <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p>
+                                {filteredPeople.length !== 0 && <> <hr className='w[80%] mx-4' /> People
+                                    {filteredPeople.map((item, index) => (
+                                        (
+                                            <div key={index} onClick={() => navToSearch(item)}
+                                                className="hover:bg-orange-100 flex cursor-pointer p-2 hover:border-light-blue-1">
+                                                <img src={item.avatar} alt={item.name} className='w-9 h-9 rounded ' />
+                                                <div>
+                                                    <p className='mx-2 '>{item.name}</p>
+                                                    <p className='text-xs   mx-2  text-gray-500'> user</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    )
-                                ))}
+                                        )
+                                    ))}</>}
+                                {filteredComs.length !== 0 && <> <hr className='w[80%] mx-4' /> Communities
+                                    {filteredComs.map((item, index) => (
+                                        (
+                                            <div key={index} onClick={() => navToSearch(item)}
+                                                className="hover:bg-orange-100 flex cursor-pointer p-2 hover:border-light-blue-1">
+                                                <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
+                                                <div>
+                                                    <p className='mx-2 '>{item.name}</p>
+                                                    <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p>
+                                                </div>
+                                            </div>
+                                        )
+                                    ))}</>}
 
 
                                 {!hideit && <div onClick={() => navToSearch(search)}
