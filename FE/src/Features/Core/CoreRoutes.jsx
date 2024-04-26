@@ -12,6 +12,8 @@ import CreatePostPage from './CreatePostPage/CreatePostPage';
 import ChatPage from './ThreadsPage/ChatPage';
 import SideBarRoutes from '../../GeneralComponents/SideBar/SideBarRoutes'
 import NotificationPage from '../../GeneralComponents/Notification & messages/NotificationPage';
+import PrivateMessagelayout from './PrivateMessage/PrivateMessage';
+
 
 export default [
     <Route key={'/'} path='/' element={<HomeProvider><HomePage /></HomeProvider>} />,
@@ -24,5 +26,6 @@ export default [
     <Route key={"/setting"} path="/setting/*" element={<Settingpagelayout />} />,
     <Route key={"/submit"} path="/submit/*" element={< CreatePostPage />} />,
     <Route key={"/threads"} path="/chat/:id" element={<ChatPage />} />,
-    <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />
+    <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
+    <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />
 ]
