@@ -2,16 +2,16 @@ import { prop, getModelForClass, Ref, DocumentType, pre, ReturnModelType, post }
 import { User } from './user.model';
 import { Comment } from './comments.model';
 import { Community } from './community.model';
-class Spam {
-  @prop({ ref: () => User })
-  spammerID!: Ref<User>;
+// class Spam {
+//   @prop({ ref: () => User })
+//   spammerID!: Ref<User>;
 
-  @prop()
-  spamType!: string;
+//   @prop()
+//   spamType!: string;
 
-  @prop()
-  spamText!: string;
-}
+//   @prop()
+//   spamText!: string;
+// }
 
 class VotePost {
   @prop({ ref: () => User })
@@ -75,18 +75,6 @@ export class Post {
   @prop({ default: 0 })
   votesCount!: number;
 
-  @prop()
-  flairID!: string;
-
-  @prop()
-  flairText!: string;
-
-  @prop()
-  flairTextColor!: string;
-
-  @prop()
-  flairBackGround!: string;
-
   @prop({ default: Date.now })
   createdAt!: Date;
 
@@ -99,8 +87,8 @@ export class Post {
   @prop({ ref: () => 'Community' })
   CommunityID?: Ref<Community>;
 
-  @prop({ type: () => [Spam] })
-  spammers!: Spam[];
+  // @prop({ type: () => [Spam] })
+  // spammers!: Spam[];
 
   @prop()
   votes!: VotePost[];

@@ -36,26 +36,6 @@ class FAQ {
   answer?: string;
 }
 
-class Flair {
-  @prop()
-  flairID?: string;
-
-  @prop({ default: 'defaultString' })
-  flairText?: string;
-
-  @prop()
-  flairTextColor?: string;
-
-  @prop()
-  flairBackGround?: string;
-
-  @prop({ default: false })
-  flairModOnly?: boolean;
-
-  @prop({ default: false })
-  flairAllowUserEdits?: boolean;
-}
-
 class CommunityOptions {
   @prop({ default: true })
   enableSpoilerTag?: boolean;
@@ -118,15 +98,38 @@ class Moderator {
   role?: string;
 }
 
+class SpamPost {
+  @prop({ ref: () => User })
+  spammerID!: Ref<User>;
+
+  @prop({ ref: () => Post })
+  postID!: Ref<Post>;
+
+  @prop()
+  spamType!: string;
+
+  @prop()
+  spamText!: string;
+}
+
+class SpamComment {
+  @prop({ ref: () => User })
+  spammerID!: Ref<User>;
+
+  @prop({ ref: () => Post })
+  postID!: Ref<Post>;
+
+  @prop()
+  spamType!: string;
+
+  @prop()
+  spamText!: string;
+}
+
 export class Community {
+  //normal attributes
   @prop({ required: true, unique: true, validator: (value: string) => value.length >= 3 && value.length <= 20 })
   name?: string;
-
-  @prop()
-  subreddit?: string;
-
-  @prop()
-  communityRules?: CommunityRule[];
 
   @prop({ required: false, trim: true, maxLength: 100000, minLength: 1 })
   description?: string;
@@ -140,9 +143,6 @@ export class Community {
   @prop({ default: 0 })
   membersCnt?: number;
 
-  @prop({ type: FAQ })
-  FAQs?: FAQ[];
-
   @prop({ default: false })
   isDeleted?: boolean;
 
@@ -154,6 +154,47 @@ export class Community {
 
   @prop({ default: 0 })
   trendPoints?: number;
+
+  @prop({ type: String, default: 'public' })
+  privacyType?: string;
+
+  //settings attributes
+
+  @prop({ type: FAQ })
+  FAQs?: FAQ[];
+
+  @prop()
+  communityRules?: CommunityRule[];
+
+  @prop({ type: CommunityOptions, default: {} })
+  communityOptions?: CommunityOptions;
+
+  @prop({ type: String })
+  categories?: string[];
+
+  //users attirbutes
+
+  @prop()
+  members?: Member[];
+
+  @prop()
+  moderators?: Moderator[];
+
+  @prop({ type: String, ref: 'User' })
+  invitedModerators?: Ref<User>[];
+
+  //listings attributes
+
+  @prop()
+  spamPosts?: SpamPost[];
+
+  @prop()
+  spamComments?: SpamComment[];
+
+  @prop({ ref: 'Post' })
+  communityPosts: Ref<Post>[];
+
+  //extra attributes
 
   @prop({ type: [Number], default: [0, 0, 0, 0, 0, 0, 0] })
   pageViewsPerDay?: number[];
@@ -172,36 +213,6 @@ export class Community {
 
   @prop({ type: [Number], default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] })
   leftPerMonth?: number[];
-
-  @prop({ type: Flair })
-  flairList?: Flair[];
-
-  @prop({ type: CommunityOptions, default: {} })
-  communityOptions?: CommunityOptions;
-
-  @prop()
-  members?: Member[];
-
-  @prop()
-  moderators?: Moderator[];
-
-  @prop()
-  category?: string;
-
-  @prop({ type: String, default: 'public' }) // "public" (anyone can view and submit), "private" (only approved members can view and submit), or "restricted" (anyone can view, but only some are approved to submit links)
-  privacyType?: string;
-
-  // @prop({ type: boolean }) ////////////////////////////
-  // over18?: boolean;
-
-  @prop({ type: String })
-  categories?: string[];
-
-  @prop({ type: String, ref: 'User' })
-  invitedModerators?: Ref<User>[];
-
-  @prop({ ref: 'Post' })
-  communityPosts: Ref<Post>[];
 
   // Post find hook
   static async afterFind(docs: DocumentType<Community>[], next: NextFunction) {
