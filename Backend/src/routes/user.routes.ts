@@ -1,5 +1,8 @@
 import express from 'express';
 import validateResource from '../middleware/validateResource';
+import uploadSingleMulter from '../middleware/multer/singleImage';
+import uploadMultipleMulter from '../middleware/multer/multipleFiles';
+import { uploadSingleCloudinary, uploadMultipleCloudinary } from '../middleware/uploadmedia/uploadMultiple';
 import {
   createUserSchema,
   verifyUserSchema,
@@ -40,6 +43,7 @@ import {
   // getDownvotedPosts,
   editCurrentUserNotificationPrefs,
   getCurrentUserNotificationPrefs,
+  uploadUserPhoto,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -106,6 +110,13 @@ router.post('/api/block_user', validateResource(blockUserSchema), deserializeUse
 
 //router.post('/api/report_user', validateResource(reportUserSchema), deserializeUser, reportUserHandler);
 
-/********************************************************/
-
+/** Upload icon and banner **/
+router.post(
+  '/me/upload-user-photo',
+  requireUser,
+  uploadSingleMulter.single('image'),
+  uploadSingleCloudinary,
+  uploadUserPhoto
+);
+//** **/
 export default router;
