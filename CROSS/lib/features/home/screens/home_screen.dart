@@ -47,7 +47,7 @@ void displayDrawer(BuildContext context) {
             )
         ],
       ),
-      drawer: const CommunityListDrawer(),
+      drawer: const CommunityListDrawer(drawer_Width: 2,),
     );
   }
 }

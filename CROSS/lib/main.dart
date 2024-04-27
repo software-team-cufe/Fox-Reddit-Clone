@@ -12,8 +12,13 @@ import 'package:reddit_fox/core/common/error_text.dart';
 import 'package:reddit_fox/core/common/loader.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
+import 'package:reddit_fox/features/auth/screens/login_screen_with_google.dart';
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
 import 'package:reddit_fox/features/auth/screens/switch_screen.dart';
+import 'package:reddit_fox/features/community/screens/community_screen.dart';
+import 'package:reddit_fox/features/community/screens/create_community_screen.dart';
+import 'package:reddit_fox/features/community/screens/edit_community_screen.dart';
+import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
 import 'package:reddit_fox/firebase_options.dart';
 import 'package:reddit_fox/models/user_model.dart';
 import 'package:reddit_fox/theme/pallete.dart';
@@ -88,8 +93,34 @@ class _MyAppState extends ConsumerState<MyApp> {
                 ? const StartingScreen()
                 : const SplashScreen(),
             routes: {
-              Message.route: (context) => const Message()
+              Message.route: (context) => const Message(),
+              
+              '/home': (_) => const HomePage(), // HomePage route
+              '/login': (_) => const LoginScreen(), // LoginScreen route
+              '/login-with-google': (_) => const LoginScreenWithGoogle(), // LoginScreenWithGoogle route
+              '/create-community': (_) => const CreateCommunityScreen(), // CreateCommunityScreen route
+              '/edit-community/:name': (context) {
+                // Extract the community name from the route arguments
+                final name = ModalRoute.of(context)?.settings.arguments as String;
+                // Return the EditCommunityScreen widget with the community name
+                return EditCommunityScreen(name: name);
+              },
+              '/mod-tools/:name': (context) {
+                // Extract the community name from the route arguments
+                final name = ModalRoute.of(context)?.settings.arguments as String;
+                // Return the ModToolsScreen widget with the community name
+                return ModToolsScreen(name: name);
+              },
+              // CommunityScreen route with a parameter for the community name
+              '/r/:name': (context) {
+                // Extract the community name from the route arguments
+                final name = ModalRoute.of(context)?.settings.arguments as String;
+                // Return the CommunityScreen widget with the community name
+                return CommunityScreen(name: name);
+              },
+              // Other routes...
             },
+            
 //      locale: DevicePreview.locale(context),
             //    builder: DevicePreview.appBuilder,
           ),

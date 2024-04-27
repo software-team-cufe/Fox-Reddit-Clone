@@ -13,7 +13,7 @@ class ModToolsScreen extends StatelessWidget {
   });
 
   void navigateToModTools(BuildContext context) {
-    Routemaster.of(context).push('/edit-community/$name');
+    Navigator.pushNamed(context, '/edit-community/$name');
   }
 
   @override
