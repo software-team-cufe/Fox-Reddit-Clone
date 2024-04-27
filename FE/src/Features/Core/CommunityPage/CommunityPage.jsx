@@ -280,9 +280,9 @@ export default function CommunityPage() {
             <span className='inline font-bold text-sm'>Create a post</span>
           </button>
           {comm.modded ? (
-              <button id="modTools" role="modToolsButton" className={`rounded-full w-fit px-4 h-10 items-center hover:bg-blue-700 bg-blue-600`}>
+              <Link to={`./about/rules`} id="modTools" role="modToolsButton" className={`rounded-full w-fit px-4 py-2 items-center hover:bg-blue-700 bg-blue-600`}>
               <span className={`inline font-bold text-sm text-white`}>Mod tools</span>
-            </button>
+            </Link>
           ) : (
             <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
               <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}</span>
