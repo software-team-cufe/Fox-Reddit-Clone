@@ -2,7 +2,7 @@ import express from 'express';
 import validateResource from '../middleware/validateResource';
 import uploadSingleMulter from '../middleware/multer/singleImage';
 import uploadMultipleMulter from '../middleware/multer/multipleFiles';
-import { uploadSingleCloudinary, uploadMultipleCloudinary } from '../middleware/uploadmedia/uploadMultiple';
+import { uploadSingleCloudinary, uploadMultipleCloudinary } from '../middleware/cloudinary/uploadMultiple';
 import {
   createUserSchema,
   verifyUserSchema,
@@ -47,6 +47,7 @@ import {
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
+import resizeUserIcon from '../middleware/resizeUserIcon';
 import {
   getCommunityOfUserAsMemeberHandler,
   getCommunityOfUserAsModeratorHandler,
@@ -115,6 +116,7 @@ router.post(
   '/me/upload-user-photo',
   requireUser,
   uploadSingleMulter.single('image'),
+  resizeUserIcon,
   uploadSingleCloudinary,
   uploadUserPhoto
 );

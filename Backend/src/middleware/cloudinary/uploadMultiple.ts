@@ -1,7 +1,9 @@
 import express from 'express';
 import multer, { Multer } from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
+import sharp from 'sharp';
 import asyncHandler from 'express-async-handler';
+
 cloudinary.config({
   cloud_name: process.env.APP_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.APP_CLOUDINARY_API_KEY,
@@ -12,16 +14,14 @@ const uploadSingleCloudinary = asyncHandler(
   async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
       const image = req.file as Express.Multer.File;
-      console.log(image);
       if (!image) {
         throw new Error('No image file provided');
       }
-      console.log('Uploading  image to Cloudinary...');
-      console.log('image path', image.path);
-      const result = await cloudinary.uploader.upload(image.path, {
+      const b64 = Buffer.from(image.buffer).toString('base64');
+      const dataURI = 'data:' + image.mimetype + ';base64,' + b64;
+      const result = await cloudinary.uploader.upload(dataURI, {
         resource_type: 'auto',
       });
-      console.log('Uploaded cloudinary...');
       res.locals.image = result.secure_url;
       next();
     } catch (error) {
@@ -41,12 +41,14 @@ const uploadMultipleCloudinary = asyncHandler(
       console.log(images); //debug
       const imageUrls = [];
 
-      for (const image of images) {
-        const result = await cloudinary.uploader.upload(image.path, {
-          resource_type: 'auto',
-        });
+      if (images) {
+        for (const image of images) {
+          const result = await cloudinary.uploader.upload(image.path, {
+            resource_type: 'auto',
+          });
 
-        imageUrls.push(result.secure_url);
+          imageUrls.push(result.secure_url);
+        }
       }
 
       res.locals.images = imageUrls;
