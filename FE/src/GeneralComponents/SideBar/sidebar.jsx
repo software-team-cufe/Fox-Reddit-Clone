@@ -8,7 +8,7 @@ import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles, Mail, Table } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
-import Popular from "./Popular";
+
 
 import { key } from 'localforage';
 
@@ -253,7 +253,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                            </li>
                            <li>
                               <a
-                                 href="/Blog"
+                                 href="https://www.redditinc.com/blog"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  Blog
@@ -261,7 +261,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                            </li>
                            <li>
                               <a
-                                 href="/Career"
+                                 href="https://www.redditinc.com/careers"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  career
@@ -269,7 +269,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                            </li>
                            <li>
                               <a
-                                 href="/Press"
+                                 href="https://www.redditinc.com/press"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                               >
                                  Press
@@ -301,7 +301,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
 
                            <li>
                               <a
-                                 href="/Topics"
+                                 href="https://www.reddit.com/topics/a-1/"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
                                  <LayoutGrid strokeWidth={1.5} className="w-5 h-5" />
@@ -313,7 +313,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
 
                            <li>
                               <a
-                                 href="/Contentpolicy"
+                                 href="https://www.redditinc.com/policies/content-policy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
                                  <Siren className="w-5 h-5" />
@@ -322,7 +322,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                            </li>
                            <li>
                               <a
-                                 href="/PrivacyPolicy"
+                                 href="https://www.reddit.com/policies/privacy-policy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
                                  <BookLock className="w-5 h-5" />
@@ -332,7 +332,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
 
                            <li>
                               <a
-                                 href="/Useragreement"
+                                 href="https://www.redditinc.com/policies/user-agreement"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
                                  <Handshake className="w-5 h-5" />

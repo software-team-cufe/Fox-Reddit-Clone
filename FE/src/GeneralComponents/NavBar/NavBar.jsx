@@ -10,6 +10,7 @@ import ProfileIcon from "../profileicon/Profileicon";
 import { useLocation } from "react-router-dom";
 import { userStore } from '../../hooks/UserRedux/UserStore';
 import SearchComponent from "../../GeneralElements/Search/Search";
+import NotificationsPopup from "./NotificationsPopup";
 export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOnline, IsLogged }) {
 
 
@@ -25,6 +26,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
   const [IshoverProf, setIshoverProf] = useState(false);
   const [IshoverSide, setIshoverSide] = useState(false);
   const [OpenSmList, setOpenSmList] = useState(false);
+  const [ShowBellPop, setShowBellPop] = useState(false);
   const ThreePoints = useRef(null);
   const OpenSmRef = useRef(null);
   const path = useLocation();
@@ -96,6 +98,26 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
       document.removeEventListener('mousedown', handleClickOutsideSm);
     };
   }, []);
+  useEffect(() => {
+    // Function to handle clicks outside the popup
+    function handleClickOutside(event) {
+      const popup = document.getElementById('notificationsPopup');
+      const bell = document.getElementById("bellButton");
+      if (bell && popup && !popup.contains(event.target) &&
+        bell.contains(event.target)) { }
+      else if (popup && !popup.contains(event.target)) {
+        setShowBellPop(false);
+      }
+    }
+
+    // Add event listener when component mounts
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Clean up event listener when component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
 
   return (
@@ -119,12 +141,6 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
         <Logo role="FoxLogo"
           className=" text-2xl" />
 
-        {/* <input
-            type="text"
-            placeholder=" Search"
-            className="border rounded-3xl w-5/6 mx-9 h-9 my-4 bg-gray-100 p-2 hidden sm:block"
-            onKeyDown={(e) => { if (e.key === 'Enter') { navigator(`/search/${e.target.value}/posts`); } }}
-          ></input> */}
         <SearchComponent />
 
         {IsLogged && <>
@@ -152,15 +168,20 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                 </li>
 
                 <li>
-                  <button onClick={() => { setOpenSmList(false); }}
-                    className="bg-white   mx-4 flex min-w-8 h-10 my-2 rounded-full hover:   "
+                  <button onClick={() => { setOpenSmList(false); setShowBellPop(!ShowBellPop) }}
+                    className="bg-white relative  mx-4 flex min-w-8 h-10 my-2 rounded-full hover:   "
                     onMouseEnter={handleMouseEnterBell}
                     onMouseLeave={handleMouseLeaveBell}
                   >
                     <Bell strokeWidth={1} color=" #e94c00" size={24} />
                     <p className="text-sm mx-2 ">Notifications</p>
                   </button>
+                  {ShowBellPop &&
+                    <div className="absolute top-14 right-0">
+                      <NotificationsPopup setShowBellPop={setShowBellPop} />
+                    </div>}
                 </li>
+
                 <li>
                   <button
                     className="bg-white   mx-4  min-w-8 flex  h-10 my-2 rounded-full   "
@@ -239,8 +260,10 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
               ></Tooltip>
             </button>
             <div className="relative flex">
-              <button role="NotificationsButton"
-                className="bg-white hover:bg-orange-100 sm:block hidden   min-w-8 h-10 my-2 rounded-full hover:   "
+              <button id="bellButton" onClick={() => { setShowBellPop(!ShowBellPop) }}
+                role="NotificationsButton"
+                className="bg-white hover:bg-orange-100 
+                sm:block hidden   min-w-8 h-10 my-2 rounded-full hover:   "
                 onMouseEnter={handleMouseEnterBell}
                 onMouseLeave={handleMouseLeaveBell}
               >
@@ -250,7 +273,12 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                   status={IshoverBell}
                 ></Tooltip>
               </button>
+              {ShowBellPop &&
+                <div className="absolute top-14 right-0">
+                  <NotificationsPopup setShowBellPop={setShowBellPop} />
+                </div>}
             </div>
+
             <div className="relative "
 
             >

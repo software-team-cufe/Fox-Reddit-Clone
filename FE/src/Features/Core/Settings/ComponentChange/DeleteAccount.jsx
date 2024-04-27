@@ -3,7 +3,6 @@ import axios from 'axios'
 import { userAxios } from '../../../../Utils/UserAxios';
 const DeleteAccount = ({setDelete}) => {
   
-
   const handleDelete=async()=>{
     try{
         const serverEndpoint = "/api/users/delete_user";
@@ -53,7 +52,7 @@ const DeleteAccount = ({setDelete}) => {
       <button onClick={()=>setDelete(false)} className=" mr-3 text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-24 h-8 hover:bg-sky-50 ">Cancel</button>
       
        <button  onClick={handleDelete} className=" mr-8 text-white bg-sky-600 border-sky-600 rounded-full font-semibold text-base w-24 h-8 hover:bg-sky-600">
-         Continue
+         Delete
       </button>   
       </div>
 

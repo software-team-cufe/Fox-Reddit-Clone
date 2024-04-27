@@ -10,13 +10,13 @@ import { HomeProvider } from './HomePage/HomePage';
 import { CommunityProvider } from './CommunityPage/CommunityPage';
 import CreatePostPage from './CreatePostPage/CreatePostPage';
 import ChatPage from './ThreadsPage/ChatPage';
-import SideBarRoutes from '../../GeneralComponents/SideBar/SideBarRoutes'
 import NotificationPage from '../../GeneralComponents/Notification & messages/NotificationPage';
+import PrivateMessagelayout from './PrivateMessage/PrivateMessage';
+
 import RulesRemovalPage from './CommunityPage/rulesRemoval/rulesRemovalpage';
 
 export default [
     <Route key={'/'} path='/' element={<HomeProvider><HomePage /></HomeProvider>} />,
-    <Route key={'/sidebarComponent'} path='/sidebarComponent/*' element={<SideBarRoutes />} />,
     <Route key={'/user'} path='/user/:user/*' element={<ProfilePagesLayout />} />,
     <Route key={'/posts'} path='/posts/:id' element={<PostPage />} />,
     <Route key={'/search'} path='/search/:searchkey/*' element={<SearchPagesLayout />} />,
@@ -25,6 +25,8 @@ export default [
     <Route key={"/setting"} path="/setting/*" element={<Settingpagelayout />} />,
     <Route key={"/submit"} path="/submit/*" element={< CreatePostPage />} />,
     <Route key={"/threads"} path="/chat/:id" element={<ChatPage />} />,
+    <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
+    <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={'/'} path='/r/:community/about/*' element={<RulesRemovalPage></RulesRemovalPage>} />
 ]
