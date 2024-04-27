@@ -56,6 +56,20 @@ const Acount = () => {
                {changeEmail && <EmailChanged setChange={setChange}></EmailChanged>}
             </div>
           </div>
+          <div className="flex flex-row mb-7 justify-between ">
+               <div className='flex flex-col'>
+                   <p className=" font-semibold">Change password</p>
+                   <div className="text-xs text-gray-500">
+                     Password must be at least 8 characters long
+                   </div>
+               </div>
+               <div>
+               <button onClick={()=>setChange(true)}  className="  btn-changeEmail text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">
+                   Change
+               </button>
+                  {changeEmail && <EmailChanged setChange={setChange}></EmailChanged>}
+              </div>
+           </div>
          {/* second div */}
           <div className="flex flex-row mb-7 justify-between">
             <div className='flex flex-col'>
