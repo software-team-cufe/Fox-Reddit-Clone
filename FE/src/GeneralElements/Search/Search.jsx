@@ -12,7 +12,7 @@ import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
-import { People } from '@mui/icons-material';
+
 
 const SearchComponent = () => {
     const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]

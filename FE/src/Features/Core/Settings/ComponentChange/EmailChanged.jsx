@@ -3,11 +3,11 @@ import ChechChange from './ChechChange'
 const EmailChanged = ({setChange}) => {
 
   const[check,setCheck]=useState(false);
-
+  const [password,setPassword]=useState('')
   return (
     
      
-    <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center '>
+    <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40 '>
        
       <div className=' bg-white flex-col shadow-md rounded-md w-[420px] h-[380px]'>
         <div className=' flex w-full justify-end '> 
@@ -31,21 +31,32 @@ const EmailChanged = ({setChange}) => {
 
       
 
-        <p className=' mx-9 mt-3'>
+        <p className=' mx-9 my-3'>
            Update your email below. There will be a new verification email sent that you will need to use to verify this new email.
-        </p>
-  
-        <div className='flex justify-end flex-row  mt-2'>
+        </p> 
 
-           
-           <div>   
+        <div className=' flex flex-col space-y-5'>
+
+           <input 
+             type="password"
+              placeholder='password'
+              value={password}
+              className=' text-black border border-gray-200 self-center h-12 w-[350px] mt-2  rounded-md p-2  '>  
+           </input>
+           <input 
+             type="email"
+             placeholder=' New email'
+             className=' text-black border border-gray-200 self-center h-12 w-[350px] mt-2  rounded-md p-2 '>  
+           </input>
+        </div>
+  
+        <div className='flex justify-end flex-row mt-6'>
+   
             <button onClick={()=>setCheck(true)} className=" mr-8 text-white bg-gray-400 border-gray-400 rounded-full font-semibold text-base w-32 h-8 ">
               Save email
            </button>
            {check && <ChechChange setChange={setChange}> </ChechChange>}
            
-           </div>
-        
 
         </div>
        </div>
