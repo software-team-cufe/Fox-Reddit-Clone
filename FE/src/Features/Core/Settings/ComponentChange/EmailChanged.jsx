@@ -1,9 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ChechChange from './ChechChange'
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 const EmailChanged = ({setChange}) => {
-
-  const[check,setCheck]=useState(false);
   const [password,setPassword]=useState('')
+  const[check,setCheck]=useState(false);
+  const [email,setEmail]=useState('')
+  const[isValidemail,setIsValidEmail]=useState(true)
+ 
+   const handleChecked=()=>{
+    setCheck(!check)
+   }
+
+  const handleEmail=(e)=>{
+    const enteredEmail = e.target.value;
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+        setIsValidEmail(emailRegex.test(enteredEmail));
+        setEmail(enteredEmail);
+  }
+
+   useEffect(() =>
+    {
+    const fetchNewEmail=()=>{
+      axios.get('http://localhost:3002/users')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+    fetchNewEmail();
+  }, [])
   return (
     
      
@@ -31,28 +60,43 @@ const EmailChanged = ({setChange}) => {
 
       
 
-        <p className=' mx-9 my-3'>
+        <p className=' mx-9 mt-2 mb-3'>
            Update your email below. There will be a new verification email sent that you will need to use to verify this new email.
         </p> 
+       
+       
 
-        <div className=' flex flex-col space-y-5'>
-
+        <div className=' flex flex-col relative'>
+  
            <input 
-             type="password"
-              placeholder='password'
-              value={password}
-              className=' text-black border border-gray-200 self-center h-12 w-[350px] mt-2  rounded-md p-2  '>  
-           </input>
-           <input 
-             type="email"
-             placeholder=' New email'
-             className=' text-black border border-gray-200 self-center h-12 w-[350px] mt-2  rounded-md p-2 '>  
-           </input>
+              type="password"
+                placeholder='password'
+                value={password}
+                className=' text-black border border-gray-200 self-center h-12 w-[350px] mt-2  rounded-md p-2 '
+               >  
+           </input> 
+           <div className='flex flex-col relative'>
+                 <input 
+                  type="email"
+                  value={email}
+                  onChange={handleEmail}
+                  placeholder=' New email'
+                  className={` text-black border border-gray-200 self-center h-12 w-[350px] mt-2  
+                   rounded-md p-2 
+                   ${!isValidemail ? 'border-red-500' : ''}`}
+                    >  
+                 </input>
+                   {!isValidemail && 
+                 <p className=' absolute text-red-500 text-xs mt-14 ml-9 '>
+                   Please enter a valid email
+                 </p>}
+           </div>
+          
         </div>
   
-        <div className='flex justify-end flex-row mt-6'>
+        <div className='flex justify-end flex-row pt-8 '>
    
-            <button onClick={()=>setCheck(true)} className=" mr-8 text-white bg-gray-400 border-gray-400 rounded-full font-semibold text-base w-32 h-8 ">
+            <button disabled={!isValidemail} className=" mr-8 text-white bg-gray-400 border-gray-400 rounded-full font-semibold text-base w-32 h-8 ">
               Save email
            </button>
            {check && <ChechChange setChange={setChange}> </ChechChange>}
