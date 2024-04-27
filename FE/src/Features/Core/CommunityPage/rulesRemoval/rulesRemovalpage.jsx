@@ -10,7 +10,7 @@ function Layout() {
   return (
       <div className='p-3'>
           <div className="font-bold text-lg">Rules and Removal Reasons</div>
-          <div className="flex mt-5 gap-5">
+          <div className="flex mt-5 mb-4 gap-5">
               <Link to={`/r/${community}/about/rules`} className={`${location.pathname === `/r/${community}/about/rules` ? "bg-gray-200" : ""} p-3 font-semibold text-sm px-5 rounded-full`}>Rules</Link>
               <Link to={`/r/${community}/about/removal`} className={`${location.pathname === `/r/${community}/about/removal` ? "bg-gray-200" : ""} p-3 font-semibold text-sm px-5 rounded-full`}>Removal Reasons</Link>
           </div>
