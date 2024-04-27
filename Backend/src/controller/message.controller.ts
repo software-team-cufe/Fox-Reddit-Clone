@@ -1,7 +1,7 @@
 import { ComposeMessageInput, DeleteMessageInput } from '../schema/message.schema';
 import MessageModel from '../model/message.model';
 import { createMessage, deleteMessage, findMessageById } from '../service/message.service';
-import { findUserById } from '../service/user.service';
+import { findUserById, findUserByUsername } from '../service/user.service';
 import { Request, Response } from 'express';
 /**
  * Handles composing a message, checking user validity, creating the message, and returning the result.
@@ -20,8 +20,7 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
         message: 'Access token is missing or invalid',
       });
     }
-    const checkReceiver = await findUserById(req.body.toID);
-    console.log(checkReceiver);
+    const checkReceiver = await findUserByUsername(req.body.toUsername);
     if (!checkReceiver) {
       return res.status(500).json({
         response: 'invalid receiver username',
@@ -32,7 +31,7 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
       text: req.body.text,
       subject: req.body.subject,
       fromID: user._id,
-      toID: req.body.toID,
+      toID: checkReceiver._id,
     });
     const createdMessage = await createMessage(message);
 
@@ -295,6 +294,13 @@ export async function markReadMessageHandler(req: Request, res: Response) {
     });
   }
 }
+/**
+ * Handles the request to mark a specific message as unread for a user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} - Returns a Promise that resolves to void.
+ */
 export async function markUnreadMessageHandler(req: Request, res: Response) {
   // Check if user is missing or invalid
   if (!res.locals.user) {
@@ -371,6 +377,74 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
     });
   } catch (error) {
     console.error('Error in getUnreadMessagesHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles the request to retrieve chat messages for a user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} - Returns a Promise that resolves to void.
+ */
+/**
+ * Handles the request to retrieve all messages between a sender and receiver.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<Response>} The response object containing the messages or an error message.
+ */
+export async function chatMessagesHandler(req: Request, res: Response): Promise<Response> {
+  // Check if user is missing or invalid
+  if (!res.locals.user) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Access token is missing or invalid',
+    });
+  }
+
+  const receiverId = res.locals.user._id;
+  const senderUsername = req.body.senderUsername;
+
+  // Check if sender username is provided
+  if (!senderUsername) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Sender username is missing',
+    });
+  }
+
+  try {
+    // Find the sender user by username
+    const sender = await findUserByUsername(senderUsername);
+    if (!sender) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Sender not found',
+      });
+    }
+
+    // Retrieve all messages between sender and receiver
+    const messages = await MessageModel.find({
+      $or: [
+        { fromID: sender._id, toID: receiverId },
+        { fromID: receiverId, toID: sender._id },
+      ],
+      isDeleted: false,
+    }).populate({
+      path: 'fromID',
+      select: 'username avatar', // Populate sender's username and avatar
+    });
+
+    return res.status(200).json({
+      response: 'success',
+      messages: messages,
+    });
+  } catch (error) {
+    console.error('Error in chatMessagesHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',

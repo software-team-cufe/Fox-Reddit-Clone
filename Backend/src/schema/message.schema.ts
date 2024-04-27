@@ -9,8 +9,8 @@ export const composeMessageSchema = object({
     subject: string({
       required_error: 'subject is required',
     }),
-    toID: string({
-      required_error: 'toID is required',
+    toUsername: string({
+      required_error: 'toUsername is required',
     }),
   }),
 });
@@ -21,5 +21,13 @@ export const deleteMessageSchema = object({
     }),
   }),
 });
+export const chatMessagesSchema = object({
+  body: object({
+    senderUsername: string({
+      required_error: 'senderUsername is required',
+    }),
+  }),
+});
 export type ComposeMessageInput = TypeOf<typeof composeMessageSchema>;
 export type DeleteMessageInput = TypeOf<typeof deleteMessageSchema>;
+export type ChatMessagesInput = TypeOf<typeof chatMessagesSchema>;
