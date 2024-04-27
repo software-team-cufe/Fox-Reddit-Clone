@@ -21,6 +21,8 @@ function ProfileSettings() {
     const [ContentVisiable, setContentVisiable] = useState(true);
     const [ActiveVisiable, setActiveVisiable] = useState(false);
     const [DisableNSFW, setDisableNSFW] = useState(false);
+    const [hide, sethide] = useState(true);
+    const [DisableSL, setDisableSL] = useState(false);
 
     useEffect(() => {
         FetchDataMock();
@@ -221,7 +223,7 @@ function ProfileSettings() {
     }
 
     const handleOpenLinkPop = () => {
-        OpenLikePop ? setOpenLikePop(false) : setOpenLikePop(true)
+        sethide(!hide);
     }
 
     const SaveChagesToast = () => {
@@ -361,15 +363,16 @@ function ProfileSettings() {
                 <h2 className=' text-base'>Social links (5 max)</h2>
                 <div className='text-xs my-4   text-gray-500'>People who visit your profile will see your
                     social links.</div>
-                <button onClick={handleOpenLinkPop} className='rounded-full border p-4 bg-gray-200 flex
-                 hover:bg-gray-300'>
+                <button disabled={DisableSL}
+                    onClick={handleOpenLinkPop} className='rounded-full border p-4 bg-gray-200 flex
+                 hover:bg-gray-300 disabled:text-gray-400 disabled:hover:bg-gray-200'>
                     <Plus size={12} />
                     <div className='mx-2 text-xs font-bold'>Add social link </div>
                 </button>
 
-                {OpenLikePop &&
-                    <SocialLinks handleOpenLinkPop={handleOpenLinkPop} />
-                }
+
+                <SocialLinks handleOpenLinkPop={sethide} hide={hide} DisableSL={setDisableSL} />
+
                 <div className='text-xs mt-6  text-gray-500'>IMAGES</div>
                 <hr className='mb-6' />
                 <h2 className=' text-base'>Profile and banner image</h2>

@@ -4,6 +4,7 @@ import { GripHorizontal } from "lucide-react";
 import { Fragment } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { userAxios } from "@/Utils/UserAxios";
 
 /**
  * Renders an options menu for a community page.
@@ -16,7 +17,9 @@ import { toast } from 'react-toastify';
 export default function OptionsMenu({comm, setComm}) {
 
     const handleFavouriteChange = () => {
-      axios.patch(`http://localhost:3002/communities/${comm.id}`, { favourited: !comm.favourited })
+      const favStatus = comm.favourited ? "unfavorite" : "favorite";
+
+      userAxios.post(`${comm.name}/api/${favStatus}`,)
       .then(() => {
           if(comm.favourited) {
             toast.success(`r/${comm.name} removed from favourites!`);
