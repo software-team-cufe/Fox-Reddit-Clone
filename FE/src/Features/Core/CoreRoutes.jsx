@@ -26,7 +26,7 @@ export default [
     <Route key={"/submit"} path="/submit/*" element={< CreatePostPage />} />,
     <Route key={"/threads"} path="/chat/:id" element={<ChatPage />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
-    <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />
+    <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={'/'} path='/r/:community/about/*' element={<RulesRemovalPage></RulesRemovalPage>} />
 ]
