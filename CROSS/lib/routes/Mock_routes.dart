@@ -14,6 +14,11 @@ class ApiRoutesBackend {
   
   static const String blockedAccs = '$baseUrl/api/v1/me/blocked';
   static const String block_unblock = '$baseUrl/api/block_user';
+ 
+  static const String changeEmail = '$baseUrl/user/changeemail';
+  static const String changePassword = '$baseUrl/user/changepassword';
+ 
+ 
   static String getUserByToken(String token) => '$baseUrl/api/v1/me';
   static String getUserById(String id) => '$baseUrl/user/$id';
   static String getPostsByCreatorId(String id) =>
