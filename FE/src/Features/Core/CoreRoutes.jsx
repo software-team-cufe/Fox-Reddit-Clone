@@ -10,10 +10,10 @@ import { HomeProvider } from './HomePage/HomePage';
 import { CommunityProvider } from './CommunityPage/CommunityPage';
 import CreatePostPage from './CreatePostPage/CreatePostPage';
 import ChatPage from './ThreadsPage/ChatPage';
-
 import NotificationPage from '../../GeneralComponents/Notification & messages/NotificationPage';
 import PrivateMessagelayout from './PrivateMessage/PrivateMessage';
 
+import RulesRemovalPage from './CommunityPage/rulesRemoval/rulesRemovalpage';
 
 export default [
     <Route key={'/'} path='/' element={<HomeProvider><HomePage /></HomeProvider>} />,
@@ -26,5 +26,7 @@ export default [
     <Route key={"/submit"} path="/submit/*" element={< CreatePostPage />} />,
     <Route key={"/threads"} path="/chat/:id" element={<ChatPage />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
-    <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />
+    <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
+    <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
+    <Route key={'/'} path='/r/:community/about/*' element={<RulesRemovalPage></RulesRemovalPage>} />
 ]

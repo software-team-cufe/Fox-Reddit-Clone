@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { X, ChevronDown, ChevronRight, ChevronLeft, CloudUpload, Trash2 } from "lucide-react";
+import { userAxios } from "@/Utils/UserAxios";
 
 export default function EditModal({ onClose = () => { }, optionheader = "Community appearance" }) {
     const handleClose = () => {
@@ -58,11 +59,11 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
     };
 
     const submitImage = () => {
-        //backend call to upload image
+        console.log("Submitting image");
     };
 
     return (
-        <div className={`z-40 fixed p-4 pb-6 md:w-[382px] w-screen bg-white border border-opacity-10 border-black rounded-xl bottom-0 left-16 shadow-2xl transition duration-500 ease-in-out transform ${isShifted ? (() => { switch(OptionHeader) {case "Avatar": case "Banner": return "translate-y-48"; default: return "translate-y-32"} })() : ''} overflow-hidden max-h-[1000px] h-fit`}>
+        <div className={`z-40 fixed p-4 pb-6 md:w-[382px] w-screen bg-white border border-opacity-10 border-black rounded-xl bottom-0 left-0 md:left-16 shadow-2xl transition duration-500 ease-in-out transform ${isShifted ? (() => { switch(OptionHeader) {case "Avatar": case "Banner": return "translate-y-48"; default: return "translate-y-32"} })() : ''} overflow-hidden max-h-[1000px] h-fit`}>
             <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">
                     {(OptionHeader != "Community appearance" && !isShifted) ? <button onClick={() => { setImageFile(null); setOptionHeader("Community appearance"); }} className="p-2 rounded-full hover:bg-gray-300 bg-gray-200">

@@ -13,7 +13,6 @@ import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 
-
 const SearchComponent = () => {
     const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
     const YourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
