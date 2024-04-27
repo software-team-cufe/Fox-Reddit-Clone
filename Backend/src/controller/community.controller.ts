@@ -1310,3 +1310,215 @@ export async function removeSpamCommentHandler(req: Request, res: Response) {
     });
   }
 }
+
+/**
+ * lock Comment Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function lockCommentHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const commentID = req.body.commentID;
+  const comment = await findCommentById(commentID);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if comment is missing or invalid
+  if (!comment) {
+    return res.status(402).json({
+      error: 'Comment not found',
+    });
+  }
+
+  try {
+    await CommentModel.findByIdAndUpdate(comment._id, { isLocked: true }, { upsert: true, new: true });
+
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error locking a comment in a subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * unlock Comment Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function unlockCommentHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const commentID = req.body.commentID;
+  const comment = await findCommentById(commentID);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if comment is missing or invalid
+  if (!comment) {
+    return res.status(402).json({
+      error: 'Comment not found',
+    });
+  }
+
+  try {
+    await CommentModel.findByIdAndUpdate(comment._id, { isLocked: false }, { upsert: true, new: true });
+
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error unlocking a comment in a subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * lock Post Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function lockPostHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const postID = req.body.postID;
+  const post = await findPostById(postID);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if post is missing or invalid
+  if (!post) {
+    return res.status(402).json({
+      error: 'post not found',
+    });
+  }
+
+  try {
+    await PostModel.findByIdAndUpdate(post._id, { isLocked: true }, { upsert: true, new: true });
+
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error locking a post in a subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * unlock Post Handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function unlockPostHandler(req: Request, res: Response) {
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const postID = req.body.postID;
+  const post = await findPostById(postID);
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if post is missing or invalid
+  if (!post) {
+    return res.status(402).json({
+      error: 'post not found',
+    });
+  }
+
+  try {
+    await PostModel.findByIdAndUpdate(post._id, { isLocked: false }, { upsert: true, new: true });
+
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error unlocking a post in a subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}

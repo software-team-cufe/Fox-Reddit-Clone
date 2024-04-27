@@ -58,7 +58,7 @@ export class Post {
   spoiler!: boolean;
 
   @prop({ default: false })
-  locked!: boolean;
+  isLocked!: boolean;
 
   @prop({ enum: ['link', 'image', 'linkWithImage'], default: 'linkWithImage' })
   type!: string;

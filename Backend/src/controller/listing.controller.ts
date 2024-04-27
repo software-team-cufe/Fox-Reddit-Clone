@@ -787,14 +787,14 @@ export async function lockPostHandler(req: Request<lockPost['body']>, res: Respo
     }
 
     // Check if the post is already locked
-    if (post.locked) {
+    if (post.isLocked) {
       return res.status(400).json({
         status: 'failed',
         message: 'Post is already locked',
       });
     }
 
-    await PostModel.findByIdAndUpdate(post._id, { locked: true }, { upsert: true, new: true });
+    await PostModel.findByIdAndUpdate(post._id, { isLocked: true }, { upsert: true, new: true });
   } catch (err) {
     return next(err);
   }
@@ -834,14 +834,14 @@ export async function unlockPostHandler(req: Request<lockPost['body']>, res: Res
     }
 
     // Check if the post is already unlocked
-    if (!post.locked) {
+    if (!post.isLocked) {
       return res.status(400).json({
         status: 'failed',
         message: 'Post is already unlocked',
       });
     }
 
-    await PostModel.findByIdAndUpdate(post._id, { locked: false }, { upsert: true, new: true });
+    await PostModel.findByIdAndUpdate(post._id, { isLocked: false }, { upsert: true, new: true });
   } catch (err) {
     return next(err);
   }

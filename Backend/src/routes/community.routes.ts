@@ -24,6 +24,10 @@ import {
   approveSpamCommentHandler,
   removeSpamPostHandler,
   removeSpamCommentHandler,
+  lockPostHandler,
+  lockCommentHandler,
+  unlockPostHandler,
+  unlockCommentHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -36,6 +40,8 @@ import {
   spamCommentSchema,
   approveSpamPostSchema,
   approveSpamCommentSchema,
+  lockPostSchema,
+  lockCommentSchema,
 } from '../schema/community.schema';
 
 const router = express.Router();
@@ -72,4 +78,9 @@ router.post(
   validateResource(approveSpamCommentSchema),
   removeSpamCommentHandler
 );
+router.post('/:subreddit/api/lock_post', validateResource(lockPostSchema), lockPostHandler);
+router.post('/:subreddit/api/lock_comment', validateResource(lockCommentSchema), lockCommentHandler);
+router.post('/:subreddit/api/unlock_post', validateResource(lockPostSchema), unlockPostHandler);
+router.post('/:subreddit/api/unlock_comment', validateResource(lockCommentSchema), unlockCommentHandler);
+
 export default router;
