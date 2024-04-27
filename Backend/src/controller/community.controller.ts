@@ -30,11 +30,14 @@ import {
   findUserById,
 } from '../service/user.service';
 
+import { CommunityModel } from '../model/community.model';
+import { Moderator, UserModel } from '../model/user.model';
 import { NextFunction, Request, Response } from 'express';
 import { findPostById } from '../service/post.service';
 import { findCommentById } from '../service/comment.service';
 import PostModel from '../model/posts.model';
 import CommentModel from '../model/comments.model';
+import { Types } from 'mongoose';
 
 /**
  * Retrieves the communities that a user is a member of.
@@ -1517,6 +1520,42 @@ export async function unlockPostHandler(req: Request, res: Response) {
   } catch (error) {
     // Handle any unexpected errors
     console.error('Error unlocking a post in a subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+export async function uploadCommunityPhoto(req: Request, res: Response) {
+  try {
+    if (!req.file || Object.keys(req.file).length === 0) {
+      throw new Error('No file uploaded');
+    }
+
+    const image = res.locals.image;
+    const user = res.locals.user;
+    const userId = user._id;
+    const community = await findCommunityByName(req.params.subreddit);
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const communityId = community._id;
+
+    //check if user is a moderator in this community
+    //get user with id and then check if community id matches any of the community ids the user is a moderator in
+    const isModerator = user.moderators
+      ? user.moderators.some((moderators: Moderator) => moderators.communityId === communityId)
+      : false;
+    if (!isModerator) {
+      return res.status(403).json({
+        error: 'User is not a moderator of this community',
+      });
+    }
+
+    await CommunityModel.findByIdAndUpdate(community._id, { icon: image[0] }, { runValidators: true });
+  } catch (error) {
     return res.status(500).json({
       error: 'Internal server error',
     });
