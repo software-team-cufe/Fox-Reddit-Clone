@@ -10,14 +10,12 @@ import { HomeProvider } from './HomePage/HomePage';
 import { CommunityProvider } from './CommunityPage/CommunityPage';
 import CreatePostPage from './CreatePostPage/CreatePostPage';
 import ChatPage from './ThreadsPage/ChatPage';
-import SideBarRoutes from '../../GeneralComponents/SideBar/SideBarRoutes'
 import NotificationPage from '../../GeneralComponents/Notification & messages/NotificationPage';
 import PrivateMessagelayout from './PrivateMessage/PrivateMessage';
 
 
 export default [
     <Route key={'/'} path='/' element={<HomeProvider><HomePage /></HomeProvider>} />,
-    <Route key={'/sidebarComponent'} path='/sidebarComponent/*' element={<SideBarRoutes />} />,
     <Route key={'/user'} path='/user/:user/*' element={<ProfilePagesLayout />} />,
     <Route key={'/posts'} path='/posts/:id' element={<PostPage />} />,
     <Route key={'/search'} path='/search/:searchkey/*' element={<SearchPagesLayout />} />,

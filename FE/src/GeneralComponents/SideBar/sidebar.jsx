@@ -8,7 +8,7 @@ import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles, Mail, Table } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
-import Popular from "./Popular";
+
 
 import { key } from 'localforage';
 
