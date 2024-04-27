@@ -10,8 +10,9 @@ import {
   markReadAllMessagesHandler,
   markReadMessageHandler,
   markUnreadMessageHandler,
+  chatMessagesHandler,
 } from '../controller/message.controller';
-import { composeMessageSchema, deleteMessageSchema } from '../schema/message.schema';
+import { chatMessagesSchema, composeMessageSchema, deleteMessageSchema } from '../schema/message.schema';
 
 const router = express.Router();
 
@@ -32,5 +33,7 @@ router.post('/message/markReadMessage/', markReadMessageHandler);
 router.get('/message/unreadMessages/', getUnreadMessagesHandler);
 
 router.post('/message/markUnreadMessage/', markUnreadMessageHandler);
+
+router.get('/message/chatMessages/', validateResource(chatMessagesSchema), chatMessagesHandler);
 
 export default router;
