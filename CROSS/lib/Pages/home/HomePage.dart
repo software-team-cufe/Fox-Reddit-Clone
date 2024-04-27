@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   icon: isModernCard
                       ? const Icon(Icons.view_agenda)
-                      : const Icon(Icons.view_carousel),
+                      : const Icon(Icons.reorder),
                   onPressed: () {
                     setState(() {
                       isModernCard = !isModernCard;

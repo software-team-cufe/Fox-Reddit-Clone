@@ -6,15 +6,13 @@ import 'package:image_picker/image_picker.dart';
 class CommentData {
   final String username;
   final String content;
-  final int upvotes;
-  final int downvotes;
+  final int votes;
   final List<CommentData> replies;
 
   CommentData({
     required this.username,
     required this.content,
-    required this.upvotes,
-    required this.downvotes,
+    required this.votes,
     required this.replies,
   });
 }
@@ -54,8 +52,7 @@ class CommentSection extends StatelessWidget {
               CommentCard(
                 username: comment.username,
                 commentContent: comment.content,
-                upvotes: comment.upvotes,
-                downvotes: comment.downvotes,
+                votes: comment.votes,
                 onReply: () {},
                 onViewMenu: () {}, replies: [],
               ),
@@ -73,21 +70,18 @@ class CommentSection extends StatelessWidget {
     CommentData(
       username: 'User 1',
       content: 'Comment 1 content',
-      upvotes: 10,
-      downvotes: 5,
+      votes: 10,
       replies: [
         CommentData(
           username: 'User 2',
           content: 'Reply to comment 1',
-          upvotes: 5,
-          downvotes: 2,
+          votes: 5,
           replies: [
             // Adding a reply to the reply of comment 1
             CommentData(
               username: 'User 3',
               content: 'Another reply to comment 1',
-              upvotes: 3,
-              downvotes: 1,
+              votes: 3,
               replies: [],
             ),
           ],
@@ -97,15 +91,13 @@ class CommentSection extends StatelessWidget {
     CommentData(
       username: 'User 4',
       content: 'Comment 2 content',
-      upvotes: 8,
-      downvotes: 3,
+      votes: 8,
       replies: [
         // Adding a reply to comment 2
         CommentData(
           username: 'User 5',
           content: 'Reply to comment 2',
-          upvotes: 4,
-          downvotes: 0,
+          votes: 4,
           replies: [],
         ),
       ],

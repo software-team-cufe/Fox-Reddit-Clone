@@ -75,7 +75,7 @@ class _ClassicCardState extends State<ClassicCard> {
                 ? CircleAvatar(
                     backgroundImage: NetworkImage(widget.post['redditpic']),
                   )
-                : Icon(Icons.account_circle, size: 30),
+                : const Icon(Icons.account_circle, size: 30),
                 Text(
                   widget.post['redditName'],
                   style: const TextStyle(
@@ -172,10 +172,10 @@ class _ClassicCardState extends State<ClassicCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(width: 42, height: 40), // Set a fixed size
+                      constraints: const BoxConstraints.tightFor(width: 42, height: 40), // Set a fixed size
                       child: IconButton(
                         icon: AnimatedSwitcher(
-                          duration: Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           child: hasVoted && voteDirection == VoteDirection.Up
                               ? Image.asset(
                                   'assets/Icons/up vote.png',
@@ -199,10 +199,10 @@ class _ClassicCardState extends State<ClassicCard> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(width: 40, height: 38), // Set a fixed size
+                      constraints: const BoxConstraints.tightFor(width: 40, height: 38), // Set a fixed size
                       child: IconButton(
                         icon: AnimatedSwitcher(
-                          duration: Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           child: hasVoted && voteDirection == VoteDirection.Down
                               ? Image.asset(
                                   'assets/Icons/down vote.png',
@@ -229,7 +229,7 @@ class _ClassicCardState extends State<ClassicCard> {
                         child: Row(
                           children: [
                             ConstrainedBox(
-                              constraints: BoxConstraints.tightFor(width: 28, height: 28), // Set a fixed size
+                              constraints: const BoxConstraints.tightFor(width: 28, height: 28), // Set a fixed size
                               child: Image.asset('assets/Icons/comment.png')
                             ),
                             Padding(
@@ -260,7 +260,7 @@ class _ClassicCardState extends State<ClassicCard> {
               ),
             ],
           ),
-          Divider(
+          const Divider(
             height: 1,
             color: Color.fromARGB(255, 44, 43, 43),
             thickness: 1,

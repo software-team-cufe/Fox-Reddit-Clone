@@ -1,106 +1,277 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:reddit_fox/Pages/post_details.dart';
 
-/// A card widget that represents a comment
-class CommentCard extends StatelessWidget {
+// Sample class for comment data
+class CommentData {
+  final String username;
+  final String content;
+  final int votes;
+  final List<CommentData> replies;
+
+  CommentData({
+    required this.username,
+    required this.content,
+    required this.votes,
+    required this.replies,
+  });
+}
+
+class CommentCard extends StatefulWidget {
   final String username;
   final String commentContent;
-  final int upvotes;
-  final int downvotes;
+  final int votes;
   final VoidCallback onReply;
-  final List<ReplyData> replies; // List of replies
+  final VoidCallback onViewMenu;
+  final List<CommentData> replies;
 
   /// Creates a new [CommentCard] instance.
   ///
   /// The [username], [commentContent], [upvotes], [downvotes], [onReply], and [replies] parameters are required.
   const CommentCard({
-    super.key,
+    Key? key,
     required this.username,
     required this.commentContent,
-    required this.upvotes,
-    required this.downvotes,
+    required this.votes,
     required this.onReply,
+    required this.onViewMenu,
     required this.replies,
-    required Null Function() onViewMenu,
-  });
+  }) : super(key: key);
+
+  @override
+  _CommentCardState createState() => _CommentCardState();
+}
+
+class _CommentCardState extends State<CommentCard> {
+  bool isReplying = false;
+  int voteCount = 0; // State variable for vote count
+  bool hasVoted = false; // Flag to track whether the user has voted
+  VoteDirection voteDirection = VoteDirection.Up; // Default vote direction
+
+  @override
+  void initState() {
+    super.initState();
+    voteCount = widget.votes;
+    hasVoted = false;
+  }
+
+  void vote(VoteDirection direction) {
+    setState(() {
+      if (voteDirection == direction && hasVoted) {
+        // User clicks the same button, cancel the vote
+        voteCount -= direction == VoteDirection.Up ? 1 : -1;
+        hasVoted = false;
+        voteDirection = VoteDirection.Up; // Reset vote direction
+      } else {
+        // User clicks a different button or hasn't voted yet
+        if (hasVoted) {
+          // Cancel the previous vote
+          voteCount -= voteDirection == VoteDirection.Up ? 1 : -1;
+        }
+        // Apply the new vote
+        voteCount += direction == VoteDirection.Up ? 1 : -1;
+        hasVoted = true;
+        voteDirection = direction; // Update vote direction
+      }
+      // Update the vote count and user's vote status in the backend
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: Colors.transparent,
-      margin: const EdgeInsets.symmetric(vertical: 1),
+    Widget avatarWidget = const CircleAvatar(
+      radius: 12,
+      child: Icon(Icons.account_circle),
+    );
+
+    // Check if avatar image is present
+    /*
+    if (/* Check if avatar image is present */) {
+      // Replace the CircleAvatar widget with your avatar image widget
+      avatarWidget = CircleAvatar(child: Icon(Icons.person, size: 24));
+    }
+*/
+    return Container(
+      margin: const EdgeInsets.only(bottom: 2.0),
+      decoration: const BoxDecoration(
+        border: Border(
+          left: BorderSide(width: 2.0, color: Colors.grey), // Vertical line
+        ),
+      ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 1),
+        padding: const EdgeInsets.only(left: 10.0, right: 8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const SizedBox(width: 8),
-                const CircleAvatar(
-                  radius: 12,
-                  child: Icon(Icons.account_circle),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    username,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                avatarWidget, // Display the avatar
+                const SizedBox(width: 8.0),
+                Text(
+                  widget.username,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 16, top: 4),
-              child: Text(
-                commentContent,
+            const SizedBox(height: 8.0),
+            Container(
+              padding: const EdgeInsets.only(
+                  left:
+                      10.0), // Add padding to create space between the avatar and the comment content
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.commentContent),
+                  if (isReplying)
+                    Container(
+                      margin: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                              width: 2.0,
+                              color:
+                                  Colors.grey), // Vertical line for reply input
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Write a reply...',
+                                border: InputBorder.none,
+                              ),
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.send),
+                            onPressed: () {
+                              setState(() {
+                                isReplying = false; // Close the reply field
+                              });
+                              // Add logic to handle sending the reply
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
             ),
+            if (widget.replies.isNotEmpty)
+              _buildReplyList(replies: widget.replies),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_upward, size: 20),
-                  onPressed: () {},
+                  icon: Icon(LucideIcons.arrowUpCircle,
+                      color: hasVoted && voteDirection == VoteDirection.Up
+                          ? const Color(0xFFE74C3C)
+                          : null),
+                  onPressed: () => vote(VoteDirection.Up), // Upvote
                 ),
-                Text('$upvotes'),
-                IconButton(
-                  icon: const Icon(Icons.arrow_downward, size: 20),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(LucideIcons.reply, size: 20),
-                  onPressed: onReply,
+                Text(
+                  "${voteCount.abs()}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.more_vert, size: 20),
+                  icon: Icon(LucideIcons.arrowDownCircle,
+                      color: hasVoted && voteDirection == VoteDirection.Down
+                          ? const Color.fromARGB(255, 214, 60, 231)
+                          : null),
+                  onPressed: () => vote(VoteDirection.Down), // Downvote
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(LucideIcons.reply),
                   onPressed: () {
-                    _showMenu(context);
+                    setState(() {
+                      isReplying = !isReplying;
+                    });
+                    widget.onReply();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.more_horiz),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: const Icon(LucideIcons.share),
+                              title: const Text('Share'),
+                              onTap: () {
+                                // Handle edit action
+                                Navigator.pop(
+                                    context); // Close the bottom sheet
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(LucideIcons.bookmark),
+                              title: const Text('Save'),
+                              onTap: () {
+                                // Handle delete action
+                                Navigator.pop(
+                                    context); // Close the bottom sheet
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(LucideIcons.bell),
+                              title: const Text('Get Reply notifications'),
+                              onTap: () {
+                                // Handle delete action
+                                Navigator.pop(
+                                    context); // Close the bottom sheet
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(LucideIcons.copy),
+                              title: const Text('Copy text'),
+                              onTap: () {
+                                // Handle delete action
+                                Navigator.pop(
+                                    context); // Close the bottom sheet
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(LucideIcons.minimize2),
+                              title: const Text('Collapse thread'),
+                              onTap: () {
+                                // Handle delete action
+                                Navigator.pop(
+                                    context); // Close the bottom sheet
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.person_off),
+                              title: const Text('Block account'),
+                              onTap: () {
+                                // Handle delete action
+                                Navigator.pop(
+                                    context); // Close the bottom sheet
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.flag),
+                              title: const Text('report'),
+                              onTap: () {
+                                // Handle delete action
+                                Navigator.pop(
+                                    context); // Close the bottom sheet
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
               ],
-            ),
-
-            // Display replies here with indentation
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: replies
-                  .map((reply) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 16,
-                            ),
-                            child: _buildReply(reply),
-                          ),
-                        ],
-                      ))
-                  .toList(),
             ),
           ],
         ),
@@ -108,110 +279,22 @@ class CommentCard extends StatelessWidget {
     );
   }
 
-  void _showMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.share),
-              title: const Text('Share'),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle share action
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.save),
-              title: const Text('Save'),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle save action
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Get Reply Notifications'),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle reply notifications action
-              },
-            ),
-            // Add other menu items as needed
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildReply(ReplyData replyData) {
+  Widget _buildReplyList({required List<CommentData> replies}) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const CircleAvatar(
-              child: Icon(Icons.account_circle),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              replyData.username,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
+      children: replies
+          .map(
+            (reply) => CommentCard(
+                username: reply.username,
+                commentContent: reply.content,
+                votes: reply.votes,
+                onReply:
+                    () {}, // Implement reply functionality for replies if needed
+                onViewMenu:
+                    () {}, // Implement view menu functionality for replies if needed
+                replies: reply.replies,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.only(
-              left: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(replyData.replyContent),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_upward),
-                        onPressed: () {},
-                      ),
-                      Text('${replyData.upvotes}'),
-                      IconButton(
-                        icon: const Icon(Icons.arrow_downward),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
+          )
+          .toList(),
     );
   }
-}
-
-/// Represents a reply to a comment.
-class ReplyData {
-  final String username;
-  final String replyContent;
-  final int upvotes;
-  final int downvotes;
-
-  /// Creates a new [ReplyData] instance.
-  ///
-  /// The [username], [replyContent], [upvotes], and [downvotes] parameters are required.
-  ReplyData({
-    required this.username,
-    required this.replyContent,
-    required this.upvotes,
-    required this.downvotes,
-  });
 }

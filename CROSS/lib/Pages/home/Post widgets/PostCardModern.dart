@@ -257,10 +257,10 @@ class _ModernCardState extends State<ModernCard> {
                 Row(
                   children: [
                     ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(width: 42, height: 40), // Set a fixed size
+                      constraints: const BoxConstraints.tightFor(width: 42, height: 40), // Set a fixed size
                       child: IconButton(
                         icon: AnimatedSwitcher(
-                          duration: Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           child: hasVoted && voteDirection == VoteDirection.Up
                               ? Image.asset(
                                   'assets/Icons/up vote.png',
@@ -284,10 +284,10 @@ class _ModernCardState extends State<ModernCard> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(width: 40, height: 38), // Set a fixed size
+                      constraints: const BoxConstraints.tightFor(width: 40, height: 38), // Set a fixed size
                       child: IconButton(
                         icon: AnimatedSwitcher(
-                          duration: Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           child: hasVoted && voteDirection == VoteDirection.Down
                               ? Image.asset(
                                   'assets/Icons/down vote.png',
@@ -318,7 +318,7 @@ class _ModernCardState extends State<ModernCard> {
                         child: Row(
                           children: [
                             ConstrainedBox(
-                              constraints: BoxConstraints.tightFor(width: 28, height: 28), // Set a fixed size
+                              constraints: const BoxConstraints.tightFor(width: 28, height: 28), // Set a fixed size
                               child: Image.asset('assets/Icons/comment.png')
                             ),
                             Padding(
@@ -351,7 +351,7 @@ class _ModernCardState extends State<ModernCard> {
                 ),
               ],
             ),
-            Divider(
+            const Divider(
               height: 1,
               color: Color.fromARGB(255, 44, 43, 43),
               thickness: 1,
