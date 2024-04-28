@@ -329,7 +329,15 @@ export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['
       throw new appError('not found', 404);
     }
 
+    const oldEmail = user.email;
     const { newemail, currentpassword } = req.body;
+    if (!newemail || !currentpassword) {
+      throw new appError('Email and password are required', 400);
+    }
+
+    if (newemail === oldEmail) {
+      throw new appError('New email cannot be the same as the old email', 400);
+    }
     const isValid = await user.validatePassword(currentpassword);
     if (!isValid) {
       throw new appError('Invalid password', 401);
@@ -348,6 +356,15 @@ export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['
       },
       subject: 'Your Fox email is updated',
       text: ` Click the verify link in the email to secure your Fox account: ${verify_link}`,
+    });
+    await sendEmail({
+      to: oldEmail,
+      from: {
+        name: 'Fox ',
+        email: getEnvVariable('FROM_EMAIL'),
+      },
+      subject: 'Your Fox email is updated',
+      text: ` Your email has been changed `,
     });
     return res.status(200).json({
       msg: ' Email changed successfully, please check your email for verification',
