@@ -1561,3 +1561,34 @@ export async function uploadCommunityPhoto(req: Request, res: Response) {
     });
   }
 }
+
+export async function getCommunityRulesHandler(req: Request, res: Response) {
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const rules = community.communityRules;
+    return res.status(200).json({
+      rules,
+    });
+  } catch (error) {
+    console.error('Error in getCommunityInfoHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}

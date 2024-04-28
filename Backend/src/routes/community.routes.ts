@@ -28,6 +28,7 @@ import {
   lockCommentHandler,
   unlockPostHandler,
   unlockCommentHandler,
+  getCommunityRulesHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -64,6 +65,7 @@ router.get('/:subreddit/about/members', validateResource(subscribeCommunitySchem
 router.get('/:subreddit/about/spam_posts', validateResource(subscribeCommunitySchema), getSpamPostsHandler);
 router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunitySchema), getSpamCommentsHandler);
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
+router.get('/:subreddit/api/rules', validateResource(getCommunitySchema), getCommunityRulesHandler);
 router.post('/:subreddit/api/mark_spam_post', validateResource(spamPostSchema), markSpamPostHandler);
 router.post('/:subreddit/api/mark_spam_comment', validateResource(spamCommentSchema), markSpamCommentHandler);
 router.post('/:subreddit/api/approve_spam_post', validateResource(approveSpamPostSchema), approveSpamPostHandler);
