@@ -30,6 +30,7 @@ const Acount = () => {
     setConnect(!isdisConnect);
   }
   const userEmail=userStore.getState().user.user.email
+  
   return (
     <div className="w-[75%]" >
     

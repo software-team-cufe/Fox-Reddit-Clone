@@ -1,38 +1,51 @@
 import React, { useEffect, useState } from 'react'
+
 import ChechChange from './ChechChange'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { userAxios } from '../../../../Utils/UserAxios';
+import userModel from '../../../../Models/UserModel';
+import { userStore } from "@/hooks/UserRedux/UserStore";
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/hooks/UserRedux/UserModelSlice';
+
 const EmailChanged = ({setChange}) => {
-  const [password,setPassword]=useState('')
-  const[check,setCheck]=useState(false);
-  const [email,setEmail]=useState('')
-  const[isValidemail,setIsValidEmail]=useState(true)
- 
-   const handleChecked=()=>{
-    setCheck(!check)
-   }
+
+  const [currentpassword,setPassword]=useState('')
+  const [newemail,setEmail]=useState('')
+  const [isValidemail,setIsValidEmail]=useState(true)
+  const [isValidepass,setIsValidPass]=useState(true)
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true)
+  const dispatch = useDispatch()
 
   const handleEmail=(e)=>{
     const enteredEmail = e.target.value;
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-        setIsValidEmail(emailRegex.test(enteredEmail));
-        setEmail(enteredEmail);
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    setIsValidEmail(emailRegex.test(enteredEmail));
+    setEmail(enteredEmail);
+    validateForm();
   }
-
-   useEffect(() =>
-    {
-    const fetchNewEmail=()=>{
-      axios.get('http://localhost:3002/users')
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+  const handlePass=(e)=>{
+    const enteredPass = e.target.value;
+    setPassword(enteredPass);
+    validateForm();
+  }
+  const validateForm = () => {
+    setIsButtonDisabled(!isValidemail || !currentpassword.length || !isValidepass);
+  }
+  const handleChange = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await userAxios.post('user/changeemail', { newemail, currentpassword });
+      console.log("Email Changed");
+      setEmail(newemail);
+      console.log(newemail);
+      dispatch(setUser({email: newemail}))
+    } catch (err) {
+      console.log(err);
     }
-    fetchNewEmail();
-  }, [])
+  };
+
   return (
     
      
@@ -57,28 +70,25 @@ const EmailChanged = ({setChange}) => {
         <p className=' font-semibold text-xl ml-3 mt-2'> Update your email</p>
   </div>
 
-
-      
-
         <p className=' mx-9 mt-2 mb-3'>
            Update your email below. There will be a new verification email sent that you will need to use to verify this new email.
         </p> 
-       
-       
-
+      
         <div className=' flex flex-col relative'>
   
            <input 
               type="password"
-                placeholder='password'
-                value={password}
-                className=' text-black border border-gray-200 self-center h-12 w-[350px] mt-2  rounded-md p-2 '
+                placeholder='current password'
+                value={currentpassword}
+                onChange={handlePass}
+                className={` text-black border border-gray-200 self-center h-12 w-[350px] mt-2  rounded-md p-2 
+                ${!isValidepass ? 'border-red-500' : ''}`}
                >  
            </input> 
            <div className='flex flex-col relative'>
                  <input 
                   type="email"
-                  value={email}
+                  value={newemail}
                   onChange={handleEmail}
                   placeholder=' New email'
                   className={` text-black border border-gray-200 self-center h-12 w-[350px] mt-2  
@@ -96,10 +106,10 @@ const EmailChanged = ({setChange}) => {
   
         <div className='flex justify-end flex-row pt-8 '>
    
-            <button disabled={!isValidemail} className=" mr-8 text-white bg-gray-400 border-gray-400 rounded-full font-semibold text-base w-32 h-8 ">
+            <button onClick={handleChange} disabled={isButtonDisabled} className=" mr-8 text-white bg-gray-400 border-gray-400 rounded-full font-semibold text-base w-32 h-8 ">
               Save email
            </button>
-           {check && <ChechChange setChange={setChange}> </ChechChange>}
+
            
 
         </div>
@@ -114,3 +124,4 @@ const EmailChanged = ({setChange}) => {
 }
 
 export default EmailChanged
+
