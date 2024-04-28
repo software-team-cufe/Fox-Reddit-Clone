@@ -40,7 +40,7 @@ const EmailChanged = ({setChange}) => {
       console.log("Email Changed");
       setEmail(newemail);
       console.log(newemail);
-      dispatch(setUser({email: newemail}))
+      dispatch(setUser({...userStore.getState(), email: newemail}))
     } catch (err) {
       console.log(err);
     }
