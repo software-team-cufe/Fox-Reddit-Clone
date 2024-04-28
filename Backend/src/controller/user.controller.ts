@@ -1145,6 +1145,13 @@ export async function getUserIDfromTokenHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Uploads a user's photo, updates the user's avatar with a new link from cloudinary, and returns a success message.
+ *
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @return {Promise<void>} A promise that resolves after uploading the user's photo
+ */
 export async function uploadUserPhoto(req: Request, res: Response) {
   try {
     if (!req.file || Object.keys(req.file).length === 0) {
