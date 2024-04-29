@@ -377,7 +377,7 @@ Widget _buildTitleView() {
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 100,),
+                                    padding: const EdgeInsets.only(left: 50,),
                                       child: CircleAvatar(
                                         backgroundColor: Colors.transparent,
                                         radius: 50, // Increase the radius to increase the size of the CircleAvatar

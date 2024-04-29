@@ -97,18 +97,44 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 SizedBox(height: 10.0),
                 Text(
-                  'All posts to this profile will appear in r/all and your ',
+                  'All posts to this profile will appear in r/all and your profile can be discovered in /user',
                   style: TextStyle(color: Color(0xFF787878)),
                 ),
-                Text(
-                  'profile can be discovered in /user be discovered in ',
-                  style: TextStyle(color: Color(0xFF787878)),
-                  ),
-                Text(
-                  '/user your profile can be discovered in /user',
-                  style: TextStyle(color: Color(0xFF787878)),
-                  ),
               ],),
+              SizedBox(width: 10.0),
+              Switch(
+                value: isVisible,
+                onChanged: (value){
+                  setState(() {
+                    isVisible = value;
+                  });
+                },
+              )
+            ],
+          ),
+          SizedBox(height: 30.0),
+          Row(
+            children: [
+              Container(
+                width: 280.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Text('Show active communites',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  Text(
+                    'Decide whether to show the communites you are active in on your profile',
+                    style: TextStyle(color: Color(0xFF787878)),
+                  ),
+                ],),
+              ),
+              SizedBox(width: 10.0),
               Switch(
                 value: isVisible,
                 onChanged: (value){
