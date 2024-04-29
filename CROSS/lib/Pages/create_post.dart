@@ -153,7 +153,7 @@ class _CreatePostState extends State<CreatePost> {
     };
 
     if (selectedCommunity.isNotEmpty) {
-      postData['community'] = selectedCommunity;
+      postData['Communityname'] = selectedCommunity;
     }
 
     final response = await http.post(
@@ -270,11 +270,6 @@ class _CreatePostState extends State<CreatePost> {
                     ),
                   ],
                 ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
                 DropdownButtonFormField<String>(
                   value:
                       selectedCommunity.isNotEmpty ? selectedCommunity : null,
