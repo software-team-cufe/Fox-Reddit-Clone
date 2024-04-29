@@ -3,6 +3,7 @@ import MessageModel from '../model/message.model';
 import { createMessage, deleteMessage, findMessageById } from '../service/message.service';
 import { findUserById, findUserByUsername } from '../service/user.service';
 import { Request, Response } from 'express';
+import UserModel from '../model/user.model';
 /**
  * Handles composing a message, checking user validity, creating the message, and returning the result.
  *
@@ -188,7 +189,7 @@ export async function allMessagesHandler(req: Request, res: Response) {
         { fromID: userId, toID: { $ne: userId } },
       ],
     }).populate({
-      path: 'toID',
+      path: 'toID ',
       select: 'username avatar', // Select the fields to populate
     });
     return res.status(200).json({
@@ -384,20 +385,13 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
   }
 }
 /**
- * Handles the request to retrieve chat messages for a user.
- *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @return {Promise<void>} - Returns a Promise that resolves to void.
- */
-/**
  * Handles the request to retrieve all messages between a sender and receiver.
  *
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
  * @return {Promise<Response>} The response object containing the messages or an error message.
  */
-export async function chatMessagesHandler(req: Request, res: Response): Promise<Response> {
+export async function chatMessagesHandler(req: Request, res: Response) {
   // Check if user is missing or invalid
   if (!res.locals.user) {
     return res.status(400).json({
@@ -426,7 +420,8 @@ export async function chatMessagesHandler(req: Request, res: Response): Promise<
         message: 'Sender not found',
       });
     }
-
+    console.log(sender._id, receiverId);
+    console.log(await MessageModel.find({ fromID: sender._id, toID: receiverId }));
     // Retrieve all messages between sender and receiver
     const messages = await MessageModel.find({
       $or: [
@@ -434,10 +429,12 @@ export async function chatMessagesHandler(req: Request, res: Response): Promise<
         { fromID: receiverId, toID: sender._id },
       ],
       isDeleted: false,
-    }).populate({
-      path: 'fromID',
-      select: 'username avatar', // Populate sender's username and avatar
-    });
+    })
+      .sort({ createdAt: 1 }) // Order by createdAt
+      .populate({
+        path: 'fromID',
+        select: 'username avatar', // Populate sender's username and avatar
+      });
 
     return res.status(200).json({
       response: 'success',
@@ -445,6 +442,63 @@ export async function chatMessagesHandler(req: Request, res: Response): Promise<
     });
   } catch (error) {
     console.error('Error in chatMessagesHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Retrieves usernames and subjects of all messages sent or received by the logged-in user.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @return {Promise<Response>} A promise that resolves to the HTTP response object.
+ */
+export async function getAllMessagesUsernamesAndSubjectsHandler(req: Request, res: Response): Promise<Response> {
+  // Check if user is missing or invalid
+  if (!res.locals.user) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Access token is missing or invalid',
+    });
+  }
+
+  const userId: string = res.locals.user._id as string; // Assuming _id is a string
+
+  try {
+    // Retrieve messages where the current user is either the sender or the recipient
+    const messages = await MessageModel.find({
+      $or: [{ fromID: userId }, { toID: userId }],
+    });
+
+    // Fetch usernames associated with sender and recipient IDs
+    const userMessages = await Promise.all(
+      messages.map(async (message) => {
+        const sender =
+          message.fromID.toString() === userId
+            ? res.locals.user.username
+            : (await UserModel.findById(message.fromID, 'username'))?.username;
+        const recipient =
+          message.toID.toString() === userId
+            ? res.locals.user.username
+            : (await UserModel.findById(message.toID, 'username'))?.username;
+
+        return {
+          fromUsername: sender,
+          toUsername: recipient,
+          subject: message.subject,
+        };
+      })
+    );
+
+    return res.status(200).json({
+      response: 'success',
+      messages: userMessages,
+    });
+  } catch (error) {
+    console.error('Error in getAllMessagesUsernamesAndSubjectsHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
