@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 import 'package:share/share.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 
 /// A stateful widget that represents a post card in the home page.
 class ModernCard extends StatefulWidget {
@@ -96,7 +95,7 @@ class _ModernCardState extends State<ModernCard> {
                     ),
                   ],
                 ),
-                const Spacer(), // Added Spacer
+                const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.more_vert), // Menu icon
                   onPressed: () {
@@ -131,23 +130,42 @@ class _ModernCardState extends State<ModernCard> {
                               },
                             ),
                             ListTile(
-                              leading: const Icon(Icons.flag),
-                              title: const Text('Report'),
+                              tileColor:
+                                  Colors.transparent, // Transparent background
                               onTap: () {
                                 Navigator.pop(context); // Close the menu
                                 // Handle option 1
                               },
+                              leading: Icon(Icons.flag_outlined,
+                                  color:
+                                      Colors.red.shade400), // Softer red icon
+                              title: Text(
+                                'Report',
+                                style: TextStyle(
+                                    color:
+                                        Colors.red.shade400), // Softer red text
+                              ),
                             ),
                             ListTile(
-                              leading: const Icon(Icons.person_off),
-                              title: const Text('Block account'),
+                              tileColor:
+                                  Colors.transparent, // Transparent background
                               onTap: () {
                                 Navigator.pop(context); // Close the menu
-                                // Handle option 1
+                                // Handle option 2
                               },
+                              leading: Icon(Icons.person_off_outlined,
+                                  color:
+                                      Colors.red.shade400), // Softer red icon
+                              title: Text(
+                                'Block account',
+                                style: TextStyle(
+                                    color:
+                                        Colors.red.shade400), // Softer red text
+                              ),
                             ),
                             ListTile(
-                              leading: const Icon(Icons.visibility_off),
+                              leading:
+                                  const Icon(Icons.visibility_off_outlined),
                               title: const Text('Hide'),
                               onTap: () {
                                 Navigator.pop(context); // Close the menu
@@ -257,56 +275,54 @@ class _ModernCardState extends State<ModernCard> {
                 Row(
                   children: [
                     ConstrainedBox(
-                      constraints: const BoxConstraints.tightFor(width: 42, height: 40), // Set a fixed size
+                      constraints: const BoxConstraints.tightFor(
+                          width: 42, height: 40), // Set a fixed size
                       child: IconButton(
                         icon: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: hasVoted && voteDirection == VoteDirection.Up
-                              ? Image.asset(
-                                  'assets/Icons/up vote.png',
-                                  key: UniqueKey(),
-                                  width: 40,
-                                  height: 42,
-                                )
-                              : Image.asset(
-                                  'assets/Icons/arrow-up.png',
-                                  key: UniqueKey(),
-                                  width: 32,
-                                  height: 32,
-                                )  
-                        ),
+                            duration: const Duration(milliseconds: 200),
+                            child: hasVoted && voteDirection == VoteDirection.Up
+                                ? Image.asset(
+                                    'assets/Icons/up vote.png',
+                                    key: UniqueKey(),
+                                    width: 40,
+                                    height: 42,
+                                  )
+                                : Image.asset(
+                                    'assets/Icons/arrow-up.png',
+                                    key: UniqueKey(),
+                                    width: 32,
+                                    height: 32,
+                                  )),
                         onPressed: () => vote(VoteDirection.Up),
                       ),
-                      ),
-
+                    ),
                     Text(
                       "${voteCount.abs()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     ConstrainedBox(
-                      constraints: const BoxConstraints.tightFor(width: 40, height: 38), // Set a fixed size
+                      constraints: const BoxConstraints.tightFor(
+                          width: 40, height: 38), // Set a fixed size
                       child: IconButton(
                         icon: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: hasVoted && voteDirection == VoteDirection.Down
-                              ? Image.asset(
-                                  'assets/Icons/down vote.png',
-                                  key: UniqueKey(),
-                                  width: 32,
-                                  height: 32,
-                                )
-                              : Image.asset(
-                                  'assets/Icons/arrow-down.png',
-                                  key: UniqueKey(),
-                                  width: 32,
-                                  height: 32,
-                                )  
-                        ),
+                            duration: const Duration(milliseconds: 200),
+                            child:
+                                hasVoted && voteDirection == VoteDirection.Down
+                                    ? Image.asset(
+                                        'assets/Icons/down vote.png',
+                                        key: UniqueKey(),
+                                        width: 32,
+                                        height: 32,
+                                      )
+                                    : Image.asset(
+                                        'assets/Icons/arrow-down.png',
+                                        key: UniqueKey(),
+                                        width: 32,
+                                        height: 32,
+                                      )),
                         onPressed: () => vote(VoteDirection.Down),
                       ),
-                      ),
-
-
+                    ),
                   ],
                 ),
                 Expanded(
@@ -314,18 +330,20 @@ class _ModernCardState extends State<ModernCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Spacer(),
-                      SizedBox(               
+                      SizedBox(
                         child: Row(
                           children: [
                             ConstrainedBox(
-                              constraints: const BoxConstraints.tightFor(width: 28, height: 28), // Set a fixed size
-                              child: Image.asset('assets/Icons/comment.png')
-                            ),
+                                constraints: const BoxConstraints.tightFor(
+                                    width: 28, height: 28), // Set a fixed size
+                                child: Image.asset('assets/Icons/comment.png')),
                             Padding(
-                              padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                              padding:
+                                  const EdgeInsets.only(left: 4.0, right: 4.0),
                               child: Text(
                                 "${widget.post['commentsNo']} Comments",
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],

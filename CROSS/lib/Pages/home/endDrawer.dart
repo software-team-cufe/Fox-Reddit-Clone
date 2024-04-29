@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Profile.dart';
+import 'package:reddit_fox/Pages/home/Post%20widgets/saved.dart';
 import 'package:reddit_fox/Pages/settings/setting.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
@@ -129,6 +130,19 @@ class _endDrawerState extends State<endDrawer> {
                         },
                       ),
                       ListTile(
+                        leading: const Icon(Icons.bookmarks_outlined),
+                        title: const Text('Saved'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SavedPage()), // Replace SavedPage with the actual name of your saved page widget
+                          );
+                        },
+                      ),
+                      ListTile(
                         leading: const Icon(Icons.access_time),
                         title: const Text('History'),
                         onTap: () {
@@ -157,11 +171,11 @@ class _endDrawerState extends State<endDrawer> {
                           await prefs.remove('backtoken');
                           await prefs.remove('mocktoken');
 
-                            // Navigate to the authentication screen
-                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => AuthContainer()),
+                          // Navigate to the authentication screen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => AuthContainer()),
                           );
-                          
                         },
                       ),
                     ],

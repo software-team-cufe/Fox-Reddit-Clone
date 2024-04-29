@@ -2,16 +2,20 @@
 /// The `PostDetails` widget displays the details of a post, including the post title, creator information, image (if available), and various actions that can be performed on the post.
 /// The widget also allows the user to toggle the blur effect on the image if the post is marked as NSFW (Not Safe for Work) or a spoiler.
 /// Additionally, the widget provides functionality to download the image, view the creator's profile, and perform other actions such as saving, copying text, turning on captions, crossposting, reporting, blocking accounts, and hiding the post.
-/// The widget is used within the Reddit Fox app to display the details of a post in multiple screens.
+/// The widget is used within the Fox app to display the details of a post in multiple screens.
 import 'dart:io';
 import 'dart:ui';
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
+import 'package:reddit_fox/Pages/home/endDrawer.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'CommentSection.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PostDetails extends StatefulWidget {
   final Map<String, dynamic> post;
@@ -28,10 +32,12 @@ class PostDetails extends StatefulWidget {
 enum VoteDirection { Up, Down }
 
 class _PostDetailsState extends State<PostDetails> {
+  String? access_token;
   bool isBlurred = false;
   int voteCount = 0; // State variable for vote count
   bool hasVoted = false; // Flag to track whether the user has voted
   VoteDirection voteDirection = VoteDirection.Up; // Default vote direction
+  late String? profilePic; 
 
   @override
   void initState() {
@@ -39,6 +45,35 @@ class _PostDetailsState extends State<PostDetails> {
     isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
     voteCount = widget.post['votes'] ?? 0;
     hasVoted = widget.post['hasVoted'] ?? false;
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        access_token = sharedPrefValue.getString('backtoken');
+      });
+    });
+  }
+
+Future<String> fetchUserProfilePic(String accessToken) async {
+    var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      if (responseData.containsKey('user')) {
+        Map<String, dynamic> user = responseData['user'];
+        profilePic = user['avatar'];
+        if (profilePic == 'default.jpg') {
+          profilePic = null;
+        }
+        return profilePic!;
+      } else {
+        throw Exception('User pic is not present or not a string');
+      }
+    } else {
+      throw Exception('Failed to fetch user pic');
+    }
   }
 
   void vote(VoteDirection direction) {
@@ -59,8 +94,10 @@ class _PostDetailsState extends State<PostDetails> {
         hasVoted = true;
         voteDirection = direction; // Update vote direction
       }
+      
       // Update the vote count and user's vote status in the backend
     });
+    
   }
 
   void toggleBlur() {
@@ -135,7 +172,7 @@ class _PostDetailsState extends State<PostDetails> {
         return Wrap(
           children: [
             ListTile(
-              leading: const Icon(Icons.bookmark),
+              leading: const Icon(Icons.bookmark_outline),
               title: const Text("Save"),
               onTap: () {
                 Navigator.pop(context); // Close the bottom sheet
@@ -186,20 +223,30 @@ class _PostDetailsState extends State<PostDetails> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.flag),
-              title: const Text('Report'),
+              tileColor: Colors.transparent, // Transparent background
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                // Handle option
+                // Handle option 1
               },
+              leading: Icon(Icons.flag_outlined,
+                  color: Colors.red.shade400), // Softer red icon
+              title: Text(
+                'Report',
+                style: TextStyle(color: Colors.red.shade400), // Softer red text
+              ),
             ),
             ListTile(
-              leading: const Icon(Icons.person_off),
-              title: const Text('Block account'),
+              tileColor: Colors.transparent, // Transparent background
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                // Handle option
+                // Handle option 2
               },
+              leading: Icon(Icons.person_off_outlined,
+                  color: Colors.red.shade400), // Softer red icon
+              title: Text(
+                'Block account',
+                style: TextStyle(color: Colors.red.shade400), // Softer red text
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.visibility_off),
@@ -217,17 +264,66 @@ class _PostDetailsState extends State<PostDetails> {
 
   @override
   Widget build(BuildContext context) {
+    double userWidth = MediaQuery.of(context).size.width * 0.7;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Post Details"),
+        leading: const CloseButton(),
+        
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_horiz),
+            
             onPressed: () {
               _showBottomMenu(context);
             },
           ),
+          Builder(builder: (context) {
+                  return IconButton(
+                    icon: access_token != null
+                        ? FutureBuilder(
+                            future: fetchUserProfilePic(access_token!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return const CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage:
+                                      AssetImage('assets/images/avatar.png'),
+                                );
+                              } else {
+                                if (snapshot.data == null ||
+                                    snapshot.data.toString().isEmpty) {
+                                  return const CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        AssetImage('assets/images/avatar.png'),
+                                  );
+                                } else {
+                                  return CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        NetworkImage(snapshot.data.toString()),
+                                  );
+                                }
+                              }
+                            },
+                          )
+                        : const CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/avatar.png'),
+                          ),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
+                }),
         ],
+      ),
+      endDrawer: endDrawer(
+        user_width: userWidth,
+        token: access_token,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -264,7 +360,7 @@ class _PostDetailsState extends State<PostDetails> {
                         );
                       },
                       child: Text(
-                        widget.post['redditName'],
+                        'u/${widget.post['redditName']}',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
