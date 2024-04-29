@@ -24,10 +24,8 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   useEffect(() => {
     axios.get(`http://localhost:3002/communities?_limit=${limitpage}`) //fetch communities and organize into communities array for mapping
       .then(response => {
-        if (response.data.length < limitpage) {
-          setpagedone(true);
-        }
-        const newComms = response.data.map(comm => ({
+
+        let newComms = response.data.map(comm => ({
           id: comm.commID,
           name: comm.name,
           icon: comm.icon,
@@ -36,6 +34,10 @@ export default function PeopleSearchPage({ searched = "filler" }) {
           members: comm.membersCount
         }));
 
+        newComms = newComms.filter(comm => comm.name.toLowerCase().includes(searched));
+        if (newComms.length < limitpage) {
+          setpagedone(true);
+        }
         setCommunities(newComms);
         setLoading(false); //set loading to false after fetching to load body
       })

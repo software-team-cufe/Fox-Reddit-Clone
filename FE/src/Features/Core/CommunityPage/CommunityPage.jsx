@@ -70,7 +70,6 @@ export default function CommunityPage() {
     await userAxios.get(`/subreddits/mine/member`)
       .then((response) => {
         joinedComms = response.data.communities;
-        console.log(joinedComms)
       })
       .catch(error => {
         console.error("cant fetch communitites", error);
