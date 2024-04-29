@@ -194,6 +194,17 @@ export class notificationSettings {
   modNotifications?: boolean;
 }
 
+class userNotifications {
+  @prop({ ref: () => Notification, required: true })
+  notificationId: Ref<Notification>;
+
+  @prop({ required: true, default: false })
+  isRead: boolean;
+
+  @prop({ required: true, default: false })
+  isDeleted: boolean;
+}
+
 class About {
   @prop({ default: false })
   isBlocked?: boolean;
@@ -402,6 +413,8 @@ export class User {
   /***************************************
              relations
    ***************************************/
+  @prop({ type: () => [userNotifications] })
+  notificationsArray: userNotifications[];
 
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];
@@ -429,9 +442,6 @@ export class User {
 
   @prop({ ref: 'Post' })
   mentionedInPosts?: Ref<Post>[];
-
-  // @prop({ ref: NotificationModel })
-  // notifications?: Ref<Notification>[];
 
   @prop({ ref: () => 'Comment' })
   mentionedInComments?: Ref<Comment>[];
