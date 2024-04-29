@@ -329,7 +329,15 @@ export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['
       throw new appError('not found', 404);
     }
 
+    const oldEmail = user.email;
     const { newemail, currentpassword } = req.body;
+    if (!newemail || !currentpassword) {
+      throw new appError('Email and password are required', 400);
+    }
+
+    if (newemail === oldEmail) {
+      throw new appError('New email cannot be the same as the old email', 400);
+    }
     const isValid = await user.validatePassword(currentpassword);
     if (!isValid) {
       throw new appError('Invalid password', 401);
@@ -348,6 +356,15 @@ export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['
       },
       subject: 'Your Fox email is updated',
       text: ` Click the verify link in the email to secure your Fox account: ${verify_link}`,
+    });
+    await sendEmail({
+      to: oldEmail,
+      from: {
+        name: 'Fox ',
+        email: getEnvVariable('FROM_EMAIL'),
+      },
+      subject: 'Your Fox email is updated',
+      text: ` Your email has been changed `,
     });
     return res.status(200).json({
       msg: ' Email changed successfully, please check your email for verification',
@@ -1145,6 +1162,13 @@ export async function getUserIDfromTokenHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Uploads a user's photo, updates the user's avatar with a new link from cloudinary, and returns a success message.
+ *
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @return {Promise<void>} A promise that resolves after uploading the user's photo
+ */
 export async function uploadUserPhoto(req: Request, res: Response) {
   try {
     if (!req.file || Object.keys(req.file).length === 0) {
