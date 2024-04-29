@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/Pages/notification_page.dart';
+import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:reddit_fox/GeneralWidgets/dots.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -145,7 +145,7 @@ class _MessageState extends State<Message> {
         ],
         title: const Text("Inbox"),
       ),
-      drawer: CustomDrawer(
+      drawer: CommunityListDrawer(
         drawer_Width: drawerWidth,
       ),
       endDrawer: endDrawer(

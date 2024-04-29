@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
+import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBarMessages extends StatefulWidget {
@@ -37,7 +37,7 @@ class _AppBarMessagesState extends State<AppBarMessages> {
       children: [
         Row(
           children: [
-            CustomDrawer(drawer_Width: drawerWidth),
+            CommunityListDrawer(drawer_Width: drawerWidth),
             Text("Inbox"),
             endDrawer(user_width: userWidth, token: access_token,),
           ],

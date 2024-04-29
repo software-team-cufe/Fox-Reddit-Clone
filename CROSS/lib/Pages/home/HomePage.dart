@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Search.dart';
-import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/Post widgets/PostCardClassic.dart';
 import 'package:reddit_fox/Pages/home/Post widgets/PostCardModern.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
+import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -329,7 +329,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      drawer: CustomDrawer(
+      drawer: CommunityListDrawer(
         drawer_Width: drawerWidth,
       ),
       endDrawer: endDrawer(

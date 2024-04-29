@@ -4,7 +4,6 @@ import 'package:reddit_fox/core/common/error_text.dart';
 import 'package:reddit_fox/core/common/loader.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
 import 'package:reddit_fox/features/community/controller/community_controller.dart';
-import 'package:routemaster/routemaster.dart';
 
 
 class CommunityScreen extends ConsumerWidget {
@@ -13,7 +12,7 @@ class CommunityScreen extends ConsumerWidget {
 
   // http://localhost:4000/r/flutter
   void navigateToModTools(BuildContext context){
-    Routemaster.of(context).push('/mod-tools/$name');
+    Navigator.pushNamed(context, '/mod-tools/$name');
   }
 
   @override

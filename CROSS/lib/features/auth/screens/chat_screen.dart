@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:reddit_fox/Pages/home/Drawer.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/core/common/customContainer.dart';
+import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
@@ -143,7 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
         title: const Text("Chat"),
       ),
-      drawer: CustomDrawer(
+      drawer: CommunityListDrawer(
         drawer_Width: drawerWidth,
       ),
       endDrawer: endDrawer(user_width: userWidth, token: access_token!),
