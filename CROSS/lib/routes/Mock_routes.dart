@@ -29,6 +29,7 @@ class ApiRoutesBackend {
   static String getUserAbout(String userName) =>
       '$baseUrl/user/$userName/about';
   static const String getCommunities = '$baseUrl/subreddits/mine/member';
+  static const String sendinbox = '$baseUrl/message/compose/';
 }
 
 class ApiRoutesMockserver {
