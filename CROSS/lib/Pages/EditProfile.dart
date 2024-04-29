@@ -97,9 +97,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 SizedBox(height: 10.0),
                 Text(
-                  'All posts to this profile will appear in r/all and your profile can be discovered in /user',
+                  'All posts to this profile will appear in r/all',
                   style: TextStyle(color: Color(0xFF787878)),
                 ),
+                Text(
+                  ' and your profile can be discovered in /user',
+                  style: TextStyle(color: Color(0xFF787878)),
+                )
               ],),
               SizedBox(width: 10.0),
               Switch(

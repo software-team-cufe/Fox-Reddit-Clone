@@ -166,23 +166,47 @@ class _CommentCardState extends State<CommentCard> {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(LucideIcons.arrowUpCircle,
-                      color: hasVoted && voteDirection == VoteDirection.Up
-                          ? const Color(0xFFE74C3C)
-                          : null),
-                  onPressed: () => vote(VoteDirection.Up), // Upvote
-                ),
+                  icon: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child:
+                                hasVoted && voteDirection == VoteDirection.Up
+                                    ? Image.asset(
+                                        'assets/Icons/up vote.png',
+                                        key: UniqueKey(),
+                                        width: 18,
+                                        height: 18,
+                                      )
+                                    : Image.asset(
+                                        'assets/Icons/arrow-up.png',
+                                        key: UniqueKey(),
+                                        width: 18,
+                                        height: 18,
+                                      )),
+                        onPressed: () => vote(VoteDirection.Up),
+                      ),
                 Text(
                   "${voteCount.abs()}",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: Icon(LucideIcons.arrowDownCircle,
-                      color: hasVoted && voteDirection == VoteDirection.Down
-                          ? const Color.fromARGB(255, 214, 60, 231)
-                          : null),
-                  onPressed: () => vote(VoteDirection.Down), // Downvote
-                ),
+                  icon: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child:
+                                hasVoted && voteDirection == VoteDirection.Down
+                                    ? Image.asset(
+                                        'assets/Icons/down vote.png',
+                                        key: UniqueKey(),
+                                        width: 18,
+                                        height: 18,
+                                      )
+                                    : Image.asset(
+                                        'assets/Icons/arrow-down.png',
+                                        key: UniqueKey(),
+                                        width: 18,
+                                        height: 18,
+                                      )),
+                        onPressed: () => vote(VoteDirection.Down),
+                      ),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(LucideIcons.reply),

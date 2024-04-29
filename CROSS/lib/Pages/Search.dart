@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:reddit_fox/Pages/search1.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 
 class Search extends StatefulWidget {
@@ -126,6 +127,12 @@ class _SearchState extends State<Search> {
                     _recentlySearched[index],
                     style: TextStyle(color: Colors.white),
                   ),
+                  onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => search1(searchItem: _recentlySearched[index],)),
+                                  );
+                                },
                 );
               },
             ),
