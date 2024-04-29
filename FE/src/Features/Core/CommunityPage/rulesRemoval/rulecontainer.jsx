@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Pencil, Expand, Minimize } from "lucide-react";
 
-export default function RuleContainer({ index, rule, modal, editing, number }) {
+export default function RuleContainer({ rule, index, modal, editing, trigger}) {
     const [Expanded, setExpanded] = useState(false);
 
     const setModal = () => {
         modal(true);
         editing(true);
-        number(index-1);
+        trigger(index);
     }
 
     return (
@@ -15,7 +15,7 @@ export default function RuleContainer({ index, rule, modal, editing, number }) {
             <div className="w-full border border-opacity-50 border-gray-400">
                 <div className="flex justify-between p-2 border-b border-gray-200">
                     <div className="flex gap-3">
-                        <p className="text-lg">{index}</p>
+                        <p className="text-lg">{index + 1}</p>
                         <p>{rule.title}</p>
                     </div>
                     <div className="flex gap-3">
@@ -27,12 +27,12 @@ export default function RuleContainer({ index, rule, modal, editing, number }) {
             {Expanded && (
                 <div className="p-4 border bg-gray-200 border-opacity-50 border-gray-400">
                     <p className="text-xs font-semibold">REPORT REASON</p>
-                    <p className="text-xs mb-3 text-gray-800">{rule.description}</p>
+                    <p className="text-xs mb-3 text-gray-800">{rule.reason}</p>
                 <div className="grid grid-cols-2 mb-3 grid-rows-2">
                     <p className="text-xs font-semibold">APPLIES TO</p>
                     <p className="text-xs font-semibold">CREATED</p>
-                    <p className="text-xs text-gray-800">{rule.description}</p>
-                    <p className="text-xs text-gray-800">{rule.description}</p>
+                    <p className="text-xs text-gray-800">{rule.appliesTo}</p>
+                    <p className="text-xs text-gray-800">{rule.createdAt}</p>
                 </div>
                 <p className="text-xs font-semibold">FULL DESCRIPTION</p>
                 <p className="text-xs text-gray-800">{rule.description}</p>
