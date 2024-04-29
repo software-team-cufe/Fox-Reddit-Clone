@@ -28,14 +28,16 @@ const Acount = () => {
   const[confirmPass,setConfirmPass]=useState("");
   const[testPass , setTestPass]=useState(false);
   const[passwordMatch,setPasswordMatch]=useState(true);
+  const [atleast , setAtleast]=useState(true);
   const handleOldpassword=(e)=>{
    const oldpassword=e.target.value;
     setOldPass(oldpassword);
-    
+  
   }
   const handleNewpassword=(e)=>{
     const newpassword=e.target.value;
     setNewPass(newpassword);
+    setAtleast(newpassword.length >= 8);
   }
   const handleConfirmpassword=(e)=>{
      const Confirmpassword=e.target.value;
@@ -107,31 +109,39 @@ const Acount = () => {
                         </div>
                         {/* text box */}
                         <div className="  my-2">
-                            <input 
-                                type="password"
-                                value={oldPass}
-                                placeholder='old password'  
-                                onChange={handleOldpassword}
-                                className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
-                                `} >  
-                            </input> 
-                            <input 
+                           <div>  
+                              <input 
+                               type="password"
+                               value={oldPass}
+                               placeholder='old password'  
+                               onChange={handleOldpassword}
+                               className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
+                              `} >  
+                              </input> 
+                            </div>
+                            <div>
+                              <input 
                                type="password"
                                value={newPass}
                                placeholder='new password'  
                                onChange={handleNewpassword}
                                className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
                                `} >  
-                            </input> 
-                            <input 
-                              type="password"
-                              value={confirmPass}
-                              onChange={handleConfirmpassword}
-                              placeholder='confirm new password'  
-                              className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
-                              `} >  
-                         </input> 
-                         { !passwordMatch && <p className=" text-xs text-red-500 ">Password must match</p>}
+                              </input> 
+                              { !atleast && <p className=" text-xs text-red-500 ">Password must be at least 8 characters long</p>}
+                            </div>
+                             <div>
+                               <input 
+                                type="password"
+                                value={confirmPass}
+                                onChange={handleConfirmpassword}
+                                placeholder='confirm new password'  
+                                className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
+                                `} >  
+                              </input> 
+                               { !passwordMatch && <p className=" text-xs text-red-500 ">Password must match</p>}
+                             </div>
+                            
                         </div>
                         <div className=" flex flex-col ">
                            <p className=" font-semibold ">Log me out everywhere</p>
