@@ -11,6 +11,7 @@ import {
   markReadMessageHandler,
   markUnreadMessageHandler,
   chatMessagesHandler,
+  getAllMessagesUsernamesAndSubjectsHandler,
 } from '../controller/message.controller';
 import { chatMessagesSchema, composeMessageSchema, deleteMessageSchema } from '../schema/message.schema';
 
@@ -35,5 +36,7 @@ router.get('/message/unreadMessages/', getUnreadMessagesHandler);
 router.post('/message/markUnreadMessage/', markUnreadMessageHandler);
 
 router.get('/message/chatMessages/', validateResource(chatMessagesSchema), chatMessagesHandler);
+
+router.get('/message/getAllMessagesUsernamesAndSubjects/', getAllMessagesUsernamesAndSubjectsHandler);
 
 export default router;
