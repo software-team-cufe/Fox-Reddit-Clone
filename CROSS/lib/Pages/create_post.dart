@@ -35,7 +35,8 @@ class _CreatePostState extends State<CreatePost> {
   late TextEditingController urlController;
   late String imagePath;
   late List<String> _poll;
-
+  late List<String> communities = [];
+  String selectedCommunity = '';
   late String access_token;
 
   // Variables to hold the states of the switches
@@ -54,7 +55,9 @@ class _CreatePostState extends State<CreatePost> {
         // Store the token in the access_token variable
         access_token = sharedPrefValue.getString('backtoken')!;
       });
+      fetchUserCommunities();
     });
+    selectedCommunity = communities.isNotEmpty ? communities.first : '';
   }
 
   @override
@@ -112,6 +115,30 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
+  void fetchUserCommunities() async {
+    final response = await http.get(
+      Uri.parse(
+          ApiRoutesBackend.getCommunities), // Replace with your API endpoint
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $access_token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> communityData = data['communities'];
+      final List<String> uniqueCommunities =
+          communityData.map((dynamic item) => item.toString()).toSet().toList();
+      setState(() {
+        communities = uniqueCommunities;
+      });
+      print('communities fetched successfully ');
+    } else {
+      print('Failed to fetch user communities: ${response.statusCode}');
+    }
+  }
+
   Future<void> submitPost(String title, String text, bool isNsfw,
       bool isSpoiler, String urlController, List<String> Poll) async {
     Map<String, dynamic> postData = {
@@ -125,11 +152,14 @@ class _CreatePostState extends State<CreatePost> {
       'poll': Poll, // Include value of spoiler switch
     };
 
+    if (selectedCommunity.isNotEmpty) {
+      postData['community'] = selectedCommunity;
+    }
+
     final response = await http.post(
       Uri.parse(ApiRoutesBackend.submitPost),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        // Add any required headers
         'Authorization': 'Bearer $access_token'
       },
       body: jsonEncode(postData),
@@ -174,8 +204,10 @@ class _CreatePostState extends State<CreatePost> {
                         String url = urlController.text;
                         if (title.isEmpty || body.isEmpty) {
                           // Show error message or handle empty fields
+
                           return;
                         }
+
                         // Proceed with submitting post
                         submitPost(title, body, isNsfw, isSpoiler, url, _poll);
                         Navigator.push(
@@ -237,6 +269,27 @@ class _CreatePostState extends State<CreatePost> {
                       },
                     ),
                   ],
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DropdownButtonFormField<String>(
+                  value:
+                      selectedCommunity.isNotEmpty ? selectedCommunity : null,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCommunity = newValue!;
+                    });
+                  },
+                  items: communities.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  hint: Text('Choose a Community'),
                 ),
               ],
             ),
