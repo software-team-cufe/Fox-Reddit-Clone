@@ -7,10 +7,8 @@ import PopUp from "./ComponentChange/PopUp";
 import DeleteAccount from "./ComponentChange/DeleteAccount";
 import { userStore } from "@/hooks/UserRedux/UserStore";
 
-
 const Acount = () => {
  
-  
   const[isOpen, setOpen]=useState(false);
   const[selectedOption,setOption]=useState(null);
 
@@ -24,8 +22,31 @@ const Acount = () => {
   const[handleClicked , setOpt]=useState(false);
   const[deleteccount,setDelete]=useState(false);
   const[isdisConnect,setConnect]=useState(true);
-
-
+  const [changePass , setPassword]=useState(false);
+  const[oldPass,setOldPass]=useState("");
+  const[newPass,setNewPass]=useState("");
+  const[confirmPass,setConfirmPass]=useState("");
+  const[testPass , setTestPass]=useState(false);
+  const[passwordMatch,setPasswordMatch]=useState(true);
+  const handleOldpassword=(e)=>{
+   const oldpassword=e.target.value;
+    setOldPass(oldpassword);
+    
+  }
+  const handleNewpassword=(e)=>{
+    const newpassword=e.target.value;
+    setNewPass(newpassword);
+  }
+  const handleConfirmpassword=(e)=>{
+     const Confirmpassword=e.target.value;
+    setConfirmPass(Confirmpassword);
+    setPasswordMatch(newPass === Confirmpassword);
+  }
+  const testPasswwords=()=>{
+    if(passwordMatch){
+      setTestPass(true);
+    }
+  }
   const disConnect=()=>{
     setConnect(!isdisConnect);
   }
@@ -65,10 +86,77 @@ const Acount = () => {
                    </div>
                </div>
                <div>
-               <button onClick={()=>setChange(true)}  className="  btn-changeEmail text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">
+               <button  onClick={()=>setPassword(true)} className="  btn-changeEmail text-sky-600 bg-white border border-sky-600 rounded-full font-semibold text-base w-20 hover:bg-sky-50">
                    Change
                </button>
-                  {changeEmail && <EmailChanged setChange={setChange}></EmailChanged>}
+                 { changePass && 
+                  <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
+                     <div className=' bg-white flex-col shadow-md rounded-md w-[700px] h-[550px]'>
+                        <div className=' flex w-full justify-end '> 
+                           <button onClick={()=>setPassword(false)} className=' mt-3 mr-4'>
+                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                              </svg>
+                           </button>
+                        </div>
+                        <div className="flex w-[400px] flex-col ml-24 mt-8">
+                        
+                        <div className=" text-lg flex flex-col"> 
+                           <img className="w-[40px] h-[40px]" src="/logo.png" />
+                             Update your password
+                        </div>
+                        {/* text box */}
+                        <div className="  my-2">
+                            <input 
+                                type="password"
+                                value={oldPass}
+                                placeholder='old password'  
+                                onChange={handleOldpassword}
+                                className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
+                                `} >  
+                            </input> 
+                            <input 
+                               type="password"
+                               value={newPass}
+                               placeholder='new password'  
+                               onChange={handleNewpassword}
+                               className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
+                               `} >  
+                            </input> 
+                            <input 
+                              type="password"
+                              value={confirmPass}
+                              onChange={handleConfirmpassword}
+                              placeholder='confirm new password'  
+                              className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
+                              `} >  
+                         </input> 
+                         { !passwordMatch && <p className=" text-xs text-red-500 ">Password must match</p>}
+                        </div>
+                        <div className=" flex flex-col ">
+                           <p className=" font-semibold ">Log me out everywhere</p>
+                           <div className=" flex flex-row mt-2 space-x-10">
+                              <p className=" text-xs text-gray-400"> 
+                               Changing your password logs you out of all browsers on your device(s). Checking this box also logs you out of all apps you have authorized.
+                              </p>
+                              <div>
+                              <label className="relative inline-flex cursor-pointer items-center">
+                                  <input id="switch" type="checkbox" className="peer sr-only" />
+                                  <label htmlFor="switch" className="hidden"></label>
+                                  <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
+                               peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
+                              </label>
+                          </div>
+                           </div>
+                        </div>
+                        <div>
+                          <button className=" border border-blue-700 rounded-3xl w-36 h-8 bg-blue-600 text-white mt-7">Save</button>
+                        </div>
+                        </div>
+                     </div>
+                             
+                  </div>}
+           
               </div>
            </div>
          {/* second div */}
