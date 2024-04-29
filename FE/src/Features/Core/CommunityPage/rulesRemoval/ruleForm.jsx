@@ -1,15 +1,66 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { userAxios } from "@/Utils/UserAxios";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
-export default function RuleForm({onClose, editing, rule}) {
+export default function RuleForm({onClose, editing, rule, list, setlist, index}) {
     const [Rule, setRule] = useState(editing ? rule.title : "");
     const [appliesTo, setAppliesTo] = useState(editing ? rule.appliesTo: "");
-    const [reportReason, setReportReason] = useState(editing ? rule.reportReason : "");
+    const [reportReason, setReportReason] = useState(editing ? rule.reason : "");
     const [description, setDescription] = useState(editing ? rule.description : "");
+    const {community} = useParams();
 
     const handleRadioChange = (e) => {
         setAppliesTo(e.target.value);
     };
+
+    const submitDelete = () => {
+        console.log(index);
+        const updatedList = list.filter((rule, i) => i !== index);
+        const pack = { rules: updatedList };
+
+        console.log(pack);
+        userAxios.patch(`${community}/api/edit_rules`, pack)
+            .then(() => {
+                toast.success("Rule deleted");
+                setlist(updatedList);
+                onClose(false);
+            })
+            .catch(error => {
+                console.log(error);
+                toast.error("Error deleting rule")});
+    };
+
+    const submitRule = () => {
+        const newRule = {
+          title: Rule,
+          reason: reportReason,
+          description: description,
+          appliesTo: appliesTo,
+          createdAt: new Date().toISOString()
+        };
+      
+        let updatedList;
+        if (editing) {
+          updatedList = list.map((rule, i) => (i === index ? newRule : rule));
+        } else {
+          updatedList = [...list, newRule];
+        }
+      
+        const pack = { rules: updatedList };
+      
+        userAxios.patch(`${community}/api/edit_rules`, pack)
+          .then(() =>{
+          if(editing) toast.success("Rule edited");
+          else toast.success("Rule added");
+          setlist(updatedList);
+          onClose(false);
+          })
+          .catch(error => {
+            console.log(error);
+            toast.error("Error adding rule")});
+      };
 
     return (
         <>
@@ -72,10 +123,10 @@ export default function RuleForm({onClose, editing, rule}) {
                                         <label className="text-xs mb-1 text-gray-400 font-semibold">{500 - description.length} Characters remaining</label>
 
                                         <div className="flex justify-between mt-4 p-3 h-16 -mx-3 -mb-4 rounded-b-lg bg-gray-200">
-                                            {editing ? <button className="ml-2 text-red-500 font-semibold hover:text-red-600" onClick={() => onClose(false)}>Delete</button> : <div></div>}
+                                            {editing ? <button className="ml-2 text-red-500 font-semibold hover:text-red-600" onClick={submitDelete}>Delete</button> : <div></div>}
                                             <div className={`flex gap-3`}>
                                                 <button className="p-2 px-4 font-bold text-sm border border-opacity-75 border-gray-600 rounded-full hover:border-black" onClick={() => onClose(false)}>Cancel</button>
-                                                <button className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Rule.length == 0 || reportReason.length == 0 || appliesTo == "" || description.length == 0}>Save</button>
+                                                <button className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Rule.length == 0 || reportReason.length == 0 || appliesTo == "" || description.length == 0} onClick={submitRule}>Save</button>
                                             </div>
                                         </div>
                                     </div>

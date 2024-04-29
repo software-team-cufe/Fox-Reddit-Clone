@@ -1,37 +1,49 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {Newspaper} from "lucide-react";
 import RuleContainer from "./rulecontainer";
 import RuleForm from "./ruleForm";
+import { useParams } from "react-router-dom";
+import { userAxios } from "@/Utils/UserAxios";
 
 export default function RulesPage() {
-    const [Rules, setRules] = useState([
-        {
-          title: "Rule 1",
-          appliesTo: "both",
-          reportReason: "Reason 1",
-          description: "This is rule 1"
-        },
-        {
-          title: "Rule 2",
-          appliesTo: "posts",
-          reportReason: "Reason 2",
-          description: "This is rule 2"
-        },
-        {
-          title: "Rule 3",
-          appliesTo: "comments",
-          reportReason: "Reason 3",
-          description: "This is rule 3"
-        }
-      ]);
 
+  const {community} = useParams();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    userAxios.get(`${community}/api/rules`)
+    .then(response => {
+      const newrules = response.data.rules.map(rule => ({
+        title : rule.title,
+        description : rule.description,
+        reason : rule.reason,
+        appliesTo : 'both',
+        createdAt : rule.createdAt,
+      }));
+      setRules(newrules);
+      setLoading(false);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, []);
+
+    const [Rules, setRules] = useState([]);
     const [ShowForm, setShowForm] = useState(false);
     const [Editing, setEditing] = useState(false);
-    const [Number, setNumber] = useState(0);
+    const [trigger, setTrigger] = useState(0);
+
+    if(loading){
+      return (
+        <div role="communitypage" className="w-100 h-100 flex flex-col items-center justify-center">
+          <img src={'/logo.png'} className="h-20 w-20 mt-48 mx-auto animate-ping" alt="Logo" />
+        </div>
+      )
+    }
 
     return (
         <div>
-            {ShowForm && <RuleForm onClose={setShowForm} editing={Editing} rule={Rules[Number]}/>}
+            {ShowForm && <RuleForm onClose={setShowForm} index={trigger} setlist={setRules} list={Rules} editing={Editing} rule={Rules[trigger]}/>}
             <div className="flex justify-end mb-4 gap-3 mr-2">
                 <button className="p-2 font-semibold text-sm rounded-full hover:bg-gray-200">Reorder rules</button>
                 <button className="p-2 px-4 font-bold text-sm rounded-full hover:bg-blue-500 bg-blue-600 text-white" onClick={()=>{setShowForm(true); setEditing(false);}}>Add rule</button>
@@ -45,7 +57,7 @@ export default function RulesPage() {
                 ):(
                 <>
                 {Rules.map((rule, index) => (
-                    <RuleContainer key={index} index={index + 1} rule={rule} modal={setShowForm} editing={setEditing} number={setNumber}/>
+                    <RuleContainer key={index} rule={rule} index={index} modal={setShowForm} editing={setEditing} trigger={setTrigger}/>
                 ))}
                 </>
             )}
