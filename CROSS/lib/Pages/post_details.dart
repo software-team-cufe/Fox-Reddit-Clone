@@ -372,8 +372,6 @@ Future<String> fetchUserProfilePic(String accessToken) async {
                 ),
               ],
             ),
-
-            const SizedBox(height: 16),
             Text(
               widget.post['title'],
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
