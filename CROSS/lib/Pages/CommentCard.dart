@@ -105,8 +105,11 @@ class _CommentCardState extends State<CommentCard> {
           children: [
             Row(
               children: [
-                avatarWidget, // Display the avatar
-                const SizedBox(width: 8.0),
+                const CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: AssetImage('assets/images/avatar.png'),
+                  radius: 15,
+                ), // Display the avatar
                 Text(
                   widget.username,
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -308,15 +311,15 @@ class _CommentCardState extends State<CommentCard> {
       children: replies
           .map(
             (reply) => CommentCard(
-                username: reply.username,
-                commentContent: reply.content,
-                votes: reply.votes,
-                onReply:
-                    () {}, // Implement reply functionality for replies if needed
-                onViewMenu:
-                    () {}, // Implement view menu functionality for replies if needed
-                replies: reply.replies,
-              ),
+              username: reply.username,
+              commentContent: reply.content,
+              votes: reply.votes,
+              onReply:
+                  () {}, // Implement reply functionality for replies if needed
+              onViewMenu:
+                  () {}, // Implement view menu functionality for replies if needed
+              replies: reply.replies,
+            ),
           )
           .toList(),
     );
