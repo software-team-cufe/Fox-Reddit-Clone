@@ -35,7 +35,7 @@ export default function RuleForm({onClose, editing, rule, list, setlist, index})
     const submitRule = () => {
         const newRule = {
           title: Rule,
-          reason: reportReason,
+          reason: reportReason.length == 0 ? Rule : reportReason,
           description: description,
           appliesTo: appliesTo,
           createdAt: new Date().toISOString()
@@ -126,7 +126,7 @@ export default function RuleForm({onClose, editing, rule, list, setlist, index})
                                             {editing ? <button className="ml-2 text-red-500 font-semibold hover:text-red-600" onClick={submitDelete}>Delete</button> : <div></div>}
                                             <div className={`flex gap-3`}>
                                                 <button className="p-2 px-4 font-bold text-sm border border-opacity-75 border-gray-600 rounded-full hover:border-black" onClick={() => onClose(false)}>Cancel</button>
-                                                <button className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Rule.length == 0 || reportReason.length == 0 || appliesTo == "" || description.length == 0} onClick={submitRule}>Save</button>
+                                                <button className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Rule.length == 0 ||  appliesTo == "" || description.length == 0} onClick={submitRule}>Save</button>
                                             </div>
                                         </div>
                                     </div>
