@@ -244,7 +244,7 @@ class IsBannedOrMuted {
 //   @prop({ default: false })
 //   isDeleted!: boolean;
 // }
-
+//s
 class Member {
   @prop({ ref: () => 'Community' })
   communityId?: Ref<Community>;
