@@ -32,6 +32,7 @@ class _MessageState extends State<Message> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? access_token;
   late String? profilePic;
+  late String username;
   late List<dynamic> messages = [];
 
   @override
@@ -89,6 +90,28 @@ class _MessageState extends State<Message> {
           profilePic = null;
         }
         return profilePic!;
+      } else {
+        throw Exception('User pic is not present or not a string');
+      }
+    } else {
+      throw Exception('Failed to fetch user pic');
+    }
+  }
+
+  Future<String> fetchUser(String accessToken) async {
+    var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      if (responseData.containsKey('user')) {
+        Map<String, dynamic> user = responseData['user'];
+        username = user['username'];
+        print('hi');
+
+        return username;
       } else {
         throw Exception('User pic is not present or not a string');
       }
@@ -218,7 +241,13 @@ class _MessageState extends State<Message> {
                       : ListView.builder(
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
+                            fetchUser(access_token!);
                             var message = messages[index];
+                            String fromUser = message['fromUsername'] ?? '';
+                            String titleText = fromUser;
+                            if (fromUser == username) {
+                              titleText = message['toUsername'] ?? '';
+                            }
                             return ListTile(
                               contentPadding: EdgeInsets.all(5),
                               title: Row(
@@ -226,7 +255,7 @@ class _MessageState extends State<Message> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    message['fromUsername'] ?? '',
+                                    titleText,
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -246,9 +275,8 @@ class _MessageState extends State<Message> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => inboxChat(
-                                            username:
-                                                message['fromUsername'])));
+                                        builder: (context) =>
+                                            inboxChat(username: titleText)));
                               },
                             );
                           },
