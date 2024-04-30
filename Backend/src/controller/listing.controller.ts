@@ -981,8 +981,20 @@ export async function submitPostHandler(req: Request, res: Response) {
       });
     }
 
-    const { title, text, attachments, nsfw, spoiler, Communityname, poll } = req.body;
+    let attachments: Array<string>;
+    if (req.files) {
+      attachments = res.locals.images;
+    } else {
+      attachments = [];
+    }
+    const data = JSON.parse(req.body.request);
+
+    const { title, text, nsfw, spoiler, Communityname, poll } = data;
+
     const community = await findCommunityByName(Communityname);
+
+    const pollOptions = Array.isArray(poll) ? poll.map((option: string) => ({ title: option, votes: 0 })) : undefined;
+
     const postInfo = {
       title,
       textHTML: text,
@@ -990,7 +1002,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       nsfw,
       spoiler,
       userID: user._id,
-      poll: poll ? poll.map((option: string) => ({ title: option, votes: 0 })) : undefined,
+      poll: pollOptions,
     };
 
     // If community exists, add community ID to postInfo
