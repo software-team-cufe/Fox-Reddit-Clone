@@ -186,9 +186,16 @@ export async function subscribeCommunityHandler(req: Request, res: Response) {
   }
 
   // Check if community is public
-  if (community.privacyType === 'private' || community.privacyType === 'restricted') {
-    return res.status(403).json({
-      error: 'Community is private or restricted',
+  if (community.privacyType === 'private') {
+    // const updateUser = await addUserToPending(userID, subreddit);
+    // if (updateUser.status === false) {
+    //   return res.status(500).json({
+    //     error: updateUser.error,
+    //   });
+    // }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
     });
   }
   // Check if user is missing or invalid

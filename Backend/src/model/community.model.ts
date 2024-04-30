@@ -183,8 +183,11 @@ export class Community {
   @prop()
   moderators?: Moderator[];
 
+  // @prop({ type: String, ref: 'User' })
+  // invitedModerators?: Ref<User>[];
+
   @prop({ type: String, ref: 'User' })
-  invitedModerators?: Ref<User>[];
+  pendingMembers?: Ref<User>[];
 
   //listings attributes
 
