@@ -4,7 +4,8 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { Mail, Flag, CircleOff } from 'lucide-react';
 import { useState } from 'react';
-
+import { userStore } from '../../hooks/UserRedux/UserStore';
+import { userAxios } from '../../Utils/UserAxios';
 function CardOptionsMenu() {  //prop takes the display to use it outside the component
 
     return (
@@ -63,6 +64,29 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
 export default function ViewerCard() {
     
     const [isClicked , setCLicked]=useState("false")
+    const username =userStore.getState().user.user.username;
+    const handleFollow = async() => {
+        try{
+           const res= await userAxios.post('api/follow', {username});
+           console.log(res);
+           console.log("followed")
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
+    const handleUnfollow = async() => {
+        try{
+           const response= await userAxios.post('api/unfollow', {username});
+           console.log(response);
+           console.log("unfollowed")
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
     
     return (
         <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl md:block hidden pb-3 w-[340px]">
@@ -75,15 +99,20 @@ export default function ViewerCard() {
              
              <div className=' flex flex-col mx-3 mt-3 space-y-3'>
                 <div className='flex flex-row  space-x-3'>
-                  <button onClick={() => setCLicked(!isClicked)} className={`flex flex-row items-center justify-center space-x-1 border  rounded-3xl px-2  h-[35px] ${isClicked ? 'bg-gray-200 border-black w-[95px]' : 'bg-blue-800  border-blue-700  w-[85px]'}`}>
+                  <button onClick={() => { 
+                    setCLicked(!isClicked); 
+                    if(!isClicked) handleFollow();
+                    if(isClicked) handleUnfollow();
+                  }} 
+                  className={`flex flex-row items-center justify-center space-x-1 border  rounded-3xl px-2  h-[35px] ${isClicked ? 'bg-gray-200 border-black w-[105px]' : 'bg-blue-800  border-blue-700  w-[85px]'}`}>
                     {isClicked ? 
-                        <svg className="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                        <svg className="w-4 h-4 text-black" xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z"/>
                         <circle cx="12" cy="12" r="9"/>
                         <path d="M9 12L15 12"/>
                       </svg>
                     :
-                    <svg className="text-black w-5 h-5 rotate-[180deg]"
+                    <svg className="text-white w-5 h-5 rotate-[180deg]"
                     xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="12" x2="15" y2="12" />  <line x1="12" y1="9" x2="12" y2="15" /></svg>
                     }
                     <p className={`  text-sm text-center ${ isClicked ? 'text-black' : 'text-white'}`}> {isClicked ? 'Unfollow' : 'Follow'}</p>
@@ -96,7 +125,6 @@ export default function ViewerCard() {
              
                        <p className=' text-sm text-center'>chat</p>
                   </button>
- 
                  </div>
                    <div className='text-xs text-gray-500 '>blablablablablablablablablbla
          
