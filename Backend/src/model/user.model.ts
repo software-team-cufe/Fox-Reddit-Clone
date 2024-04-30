@@ -193,7 +193,7 @@ export class notificationSettings {
   @prop({ default: true })
   modNotifications?: boolean;
 }
-
+/*
 class userNotifications {
   @prop({ ref: () => Notification, required: true })
   notificationId: Ref<Notification>;
@@ -202,9 +202,10 @@ class userNotifications {
   isRead: boolean;
 
   @prop({ required: true, default: false })
-  isDeleted: boolean;
+  i
+  sDeleted: boolean;
 }
-
+*/
 class About {
   @prop({ default: false })
   isBlocked?: boolean;
@@ -413,8 +414,8 @@ export class User {
   /***************************************
              relations
    ***************************************/
-  @prop({ type: () => [userNotifications] })
-  notificationsArray: userNotifications[];
+//  @prop({ type: () => [userNotifications] })
+ // notificationsArray: userNotifications[];
 
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];
