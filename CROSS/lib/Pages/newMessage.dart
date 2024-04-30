@@ -84,9 +84,9 @@ class _NewMessageState extends State<NewMessage> {
           child: Column(
             children: [
               _buildTextInputWidget('Reciver Username', _usernameController),
-              // Add some space between input fields
+              
               _buildTextInputWidget('Subject', _subjectController),
-              // Add some space between input fields
+              
               _buildTextInputWidget('Message', _messageController),
             ],
           ),
@@ -102,11 +102,8 @@ class _NewMessageState extends State<NewMessage> {
       decoration: InputDecoration(
         hintText: hintText,
         border: UnderlineInputBorder(
-          // Set the border to bottom only
-          borderSide:
-              BorderSide(color: Colors.grey), // Customize the color if needed
+          borderSide: BorderSide(color: Colors.grey),
         ),
-        // Add a background color for better visibility
         contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
       ),
     );

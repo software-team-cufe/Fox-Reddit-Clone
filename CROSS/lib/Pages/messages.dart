@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
+import 'package:reddit_fox/Pages/inboxChat.dart';
 import 'package:reddit_fox/Pages/notification_page.dart';
 import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit_fox/navbar.dart';
@@ -31,6 +32,7 @@ class _MessageState extends State<Message> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? access_token;
   late String? profilePic;
+  late List<dynamic> messages = [];
 
   @override
   void initState() {
@@ -39,20 +41,36 @@ class _MessageState extends State<Message> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        access_token = sharedPrefValue.getString('mocktoken');
+        access_token = sharedPrefValue.getString('backtoken');
       });
+      fetchMessages();
     });
   }
 
-  Future<List<dynamic>> fetchMessages() async {
-    var url =
-        Uri.parse(ApiRoutesMockserver.message); // Endpoint to fetch messages
-    var response = await http.get(url);
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load messages');
+  void fetchMessages() async {
+    try {
+      final response = await http.get(
+        Uri.parse(ApiRoutesBackend.getinbox),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $access_token'
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = json.decode(response.body);
+
+        setState(() {
+          messages = data['messages'];
+        });
+        print('message fetched correctly ${response.statusCode}');
+      } else {
+        print('Failed to load messages ${response.statusCode}');
+        // Return an empty list if the request fails
+      }
+    } catch (e) {
+      print('Error fetching messages: $e');
+      // Return an empty list if an exception occurs
     }
   }
 
@@ -81,7 +99,7 @@ class _MessageState extends State<Message> {
 
   @override
   Widget build(BuildContext context) {
-        final message = ModalRoute.of(context)!.settings.arguments;
+    final message = ModalRoute.of(context)!.settings.arguments;
     double drawerWidth = MediaQuery.of(context).size.width * 0.8;
     double userWidth = MediaQuery.of(context).size.width * 0.7;
     return Scaffold(
@@ -171,76 +189,71 @@ class _MessageState extends State<Message> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // FaIcon(FontAwesomeIcons.wolfPackBattalion,
-                        //     size: 100, color: Colors.white),
-                        // SizedBox(height: 20),
-                        // Text(
-                        //   'Wow Such empty',
-                        //   style: TextStyle(
-                        //       fontSize: 24, fontWeight: FontWeight.bold),
-                        // ),
-                         Expanded(child: NotificationPage()),
+                        Expanded(child: NotificationPage()),
                       ],
                     ),
                   ),
                   //////////////////////////////////////////////
-                  FutureBuilder<List<dynamic>>(
-                    future: fetchMessages(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child:
-                              CircularProgressIndicator(), // Show a loading indicator
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FaIcon(FontAwesomeIcons.wolfPackBattalion,
-                                size: 100, color: Colors.white),
-                            SizedBox(height: 20),
-                            Text(
-                              'Wow Such empty',
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                            Text('Error: ${snapshot.error}'),
-                          ],
-                          // Show an error message if loading fails
-                        ));
-                      } else {
-                        List<dynamic> messages = snapshot.data!;
-                        return ListView.builder(
+                  messages.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.wolfPackBattalion,
+                                size: 100,
+                                color: Colors.white,
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                'Wow Such empty',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
                             var message = messages[index];
                             return ListTile(
-                              contentPadding: EdgeInsets.all(
-                                  16), // Add padding around the content
-                              title: Text(
-                                message['subject'] ??
-                                    '', // Add null safety check
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight:
-                                        FontWeight.bold), // Increase font size
+                              contentPadding: EdgeInsets.all(5),
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    message['fromUsername'] ?? '',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Icon(Icons.arrow_forward),
+                                  )
+                                ],
                               ),
                               subtitle: Text(
-                                message['content'] ??
-                                    '', // Add null safety check
-                                style: TextStyle(
-                                    fontSize: 16), // Increase font size
+                                message['subject'] ?? '',
+                                style: TextStyle(fontSize: 16),
                               ),
                               onTap: () {
-                                // Navigate to message details or perform other actions
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => inboxChat(
+                                            username:
+                                                message['fromUsername'])));
                               },
                             );
                           },
-                        );
-                      }
-                    },
-                  ),
+                        ),
+
                   // FutureBuilder and ListView.builder for messages
                 ],
               ),
@@ -251,103 +264,3 @@ class _MessageState extends State<Message> {
     );
   }
 }
-
-    // Scaffold(
-  //     backgroundColor: Colors.black,
-  //     appBar: AppBar(
-  //       backgroundColor: Colors.black,
-  //       iconTheme: const IconThemeData(color: Colors.white),
-  //       title: const Text('inbox'),
-  //       actions: [WidgetButton(),],
-  //     ),
-  //     endDrawer: endDrawer(
-  //       user_width: userWidth,
-  //       user_Id: 1,
-  //     ),
-  //     drawer: CustomDrawer(
-  //       drawer_Width: drawerWidth,
-  //     ),
-  //     bottomNavigationBar: nBar(),
-  //     body: DefaultTabController(
-  //       length: 2,
-  //       child: Column(
-  //         children: [
-  //           TabBar(
-  //             tabs: [
-  //               Tab(text: 'Activity'),
-  //               Tab(text: 'Messages'),
-  //             ],
-  //           ),
-  //           Expanded(
-  //             child: TabBarView(
-  //               children: [
-  //                 Center(
-  //                   child: Column(
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: [
-  //                       Icon(Icons.star, size: 100, color: Colors.yellow),
-  //                       SizedBox(height: 20),
-  //                       Text(
-  //                         'This is the second tab',
-  //                         style: TextStyle(
-  //                             fontSize: 24, fontWeight: FontWeight.bold),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-
-  //                 FutureBuilder<List<dynamic>>(
-  //                   future: fetchMessages(),
-  //                   builder: (context, snapshot) {
-  //                     if (snapshot.connectionState == ConnectionState.waiting) {
-  //                       return Center(
-  //                         child:
-  //                             CircularProgressIndicator(), // Show a loading indicator
-  //                       );
-  //                     } else if (snapshot.hasError) {
-  //                       return Center(
-  //                         child: Text(
-  //                             'Error: ${snapshot.error}'), // Show an error message if loading fails
-  //                       );
-  //                     } else {
-  //                       List<dynamic> messages = snapshot.data!;
-  //                       return ListView.builder(
-  //                         itemCount: messages.length,
-  //                         itemBuilder: (context, index) {
-  //                           var message = messages[index];
-  //                           return ListTile(
-  //                             contentPadding: EdgeInsets.all(
-  //                                 16), // Add padding around the content
-  //                             title: Text(
-  //                               message['subject'] ??
-  //                                   '', // Add null safety check
-  //                               style: TextStyle(
-  //                                   fontSize: 18,
-  //                                   fontWeight:
-  //                                       FontWeight.bold), // Increase font size
-  //                             ),
-  //                             subtitle: Text(
-  //                               message['content'] ??
-  //                                   '', // Add null safety check
-  //                               style: TextStyle(
-  //                                   fontSize: 16), // Increase font size
-  //                             ),
-  //                             onTap: () {
-  //                               // Navigate to message details or perform other actions
-  //                             },
-  //                           );
-  //                         },
-  //                       );
-  //                     }
-  //                   },
-  //                 ),
-  //                 // Tab 2: Icon and Text
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-  // }
