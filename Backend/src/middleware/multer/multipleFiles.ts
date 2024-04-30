@@ -1,19 +1,8 @@
 import multer from 'multer';
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/posts/files');
-  },
-  filename: (req, file, cb) => {
-    if (file.mimetype.startsWith('image')) {
-      return cb(null, `${Date.now()}-${file.originalname}.jpg`);
-    }
+const storage = multer.memoryStorage();
+//multiple file uploads
 
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
+const uploadMultiple = multer({ storage: storage, limits: { fileSize: 1024 * 1024 * 5 } }).array('attachments', 10);
 
-const upload = multer({ storage: storage });
-
-export default upload;
-//export default upload.array('attachments', 10);
+export default uploadMultiple;
