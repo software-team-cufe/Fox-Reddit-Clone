@@ -385,7 +385,7 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
   }
 }
 /**
- * Handles the request to retrieve all messages between a sender and receiver.
+ * Handles the request to retrieve all messages between a sender and receiver of certain subject.
  *
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
@@ -401,7 +401,16 @@ export async function chatMessagesHandler(req: Request, res: Response) {
   }
 
   const receiverId = res.locals.user._id;
-  const senderUsername = req.body.senderUsername;
+  const senderUsername = req.query.senderUsername?.toString();
+  const subject = req.query.subject?.toString();
+
+  // Check if subject is provided
+  if (!subject) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Subject is missing',
+    });
+  }
 
   // Check if sender username is provided
   if (!senderUsername) {
@@ -420,21 +429,15 @@ export async function chatMessagesHandler(req: Request, res: Response) {
         message: 'Sender not found',
       });
     }
-    console.log(sender._id, receiverId);
-    console.log(await MessageModel.find({ fromID: sender._id, toID: receiverId }));
-    // Retrieve all messages between sender and receiver
+
+    // Retrieve all messages between sender and receiver with the provided subject
     const messages = await MessageModel.find({
       $or: [
-        { fromID: sender._id, toID: receiverId },
-        { fromID: receiverId, toID: sender._id },
+        { fromID: sender._id, toID: receiverId, subject: subject },
+        { fromID: receiverId, toID: sender._id, subject: subject },
       ],
       isDeleted: false,
-    })
-      .sort({ createdAt: 1 }) // Order by createdAt
-      .populate({
-        path: 'fromID',
-        select: 'username avatar', // Populate sender's username and avatar
-      });
+    }).sort({ createdAt: 1 }); // Order by createdAt
 
     return res.status(200).json({
       response: 'success',

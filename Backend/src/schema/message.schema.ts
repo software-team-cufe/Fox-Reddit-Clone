@@ -1,3 +1,4 @@
+import { query } from 'express';
 import path from 'path';
 import { any, object, string, boolean, array, TypeOf } from 'zod';
 
@@ -22,7 +23,7 @@ export const deleteMessageSchema = object({
   }),
 });
 export const chatMessagesSchema = object({
-  body: object({
+  query: object({
     senderUsername: string({
       required_error: 'senderUsername is required',
     }),
