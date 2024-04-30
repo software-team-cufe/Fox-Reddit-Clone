@@ -29,6 +29,7 @@ import {
   unlockPostHandler,
   unlockCommentHandler,
   getCommunityRulesHandler,
+  getPendingMembersHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -84,5 +85,6 @@ router.post('/:subreddit/api/lock_post', validateResource(lockPostSchema), lockP
 router.post('/:subreddit/api/lock_comment', validateResource(lockCommentSchema), lockCommentHandler);
 router.post('/:subreddit/api/unlock_post', validateResource(lockPostSchema), unlockPostHandler);
 router.post('/:subreddit/api/unlock_comment', validateResource(lockCommentSchema), unlockCommentHandler);
+router.get('/:subreddit/about/pending_members', validateResource(subscribeCommunitySchema), getPendingMembersHandler);
 
 export default router;

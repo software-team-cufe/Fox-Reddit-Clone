@@ -5,6 +5,7 @@ import {
   createSubreddit,
   addMemberToCom,
   addModeratorToCom,
+  addUserToPending,
   removeMemberFromCom,
   removeModeratorFromCom,
   getUsersAsBannedInCommunity,
@@ -185,14 +186,13 @@ export async function subscribeCommunityHandler(req: Request, res: Response) {
     });
   }
 
-  // Check if community is public
-  if (community.privacyType === 'private') {
-    // const updateUser = await addUserToPending(userID, subreddit);
-    // if (updateUser.status === false) {
-    //   return res.status(500).json({
-    //     error: updateUser.error,
-    //   });
-    // }
+  if (community.privacyType === 'Private') {
+    const updateUser = await addUserToPending(userID, subreddit);
+    if (updateUser.status === false) {
+      return res.status(500).json({
+        error: updateUser.error,
+      });
+    }
     // Return success response
     return res.status(200).json({
       status: 'succeeded',
@@ -1597,5 +1597,49 @@ export async function getCommunityRulesHandler(req: Request, res: Response) {
       status: 'error',
       message: 'Internal server error',
     });
+  }
+}
+
+/**
+ * Handles the request to get pending members of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getPendingMembersHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    if (!community) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not check pending members' });
+    }
+
+    const users = community.pendingMembers;
+    return res.status(200).json({ status: 'success', users });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 }

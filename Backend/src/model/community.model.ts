@@ -158,7 +158,7 @@ export class Community {
   @prop({ default: 0 })
   trendPoints?: number;
 
-  @prop({ type: String, default: 'public' })
+  @prop({ type: String, default: 'Public' })
   privacyType?: string;
 
   //settings attributes
@@ -186,7 +186,7 @@ export class Community {
   // @prop({ type: String, ref: 'User' })
   // invitedModerators?: Ref<User>[];
 
-  @prop({ type: String, ref: 'User' })
+  @prop({ ref: 'User' })
   pendingMembers?: Ref<User>[];
 
   //listings attributes

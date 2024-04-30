@@ -626,3 +626,45 @@ export async function approveSpamComment(commentID: string, subreddit: string) {
     status: true,
   };
 }
+
+/**
+ *  mark Spam Post
+ * @param {string} body contain rules details
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function addUserToPending(userID: string, subreddit: string) {
+  const community = await findCommunityByName(subreddit);
+  const user = await UserModel.findById(userID);
+
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { pendingMembers: user._id } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
