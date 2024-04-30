@@ -2,7 +2,7 @@ import { prop, getModelForClass, Ref, DocumentType, pre, ReturnModelType, post }
 import { User } from './user.model';
 import { Community } from './community.model';
 
-export class Notification {
+export class Notifications {
   @prop({ required: true, ref: User })
   userIcon: User['avatar'];
 
