@@ -43,7 +43,9 @@ const uploadMultipleCloudinary = asyncHandler(
 
       if (images) {
         for (const image of images) {
-          const result = await cloudinary.uploader.upload(image.path, {
+          const b64 = Buffer.from(image.buffer).toString('base64');
+          const dataURI = 'data:' + image.mimetype + ';base64,' + b64;
+          const result = await cloudinary.uploader.upload(dataURI, {
             resource_type: 'auto',
           });
 
