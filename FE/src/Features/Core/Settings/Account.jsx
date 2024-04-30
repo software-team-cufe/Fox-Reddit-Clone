@@ -6,6 +6,9 @@ import ChangeLanguage from "./ComponentChange/ChangeLanguage";
 import PopUp from "./ComponentChange/PopUp";
 import DeleteAccount from "./ComponentChange/DeleteAccount";
 import { userStore } from "@/hooks/UserRedux/UserStore";
+import { userAxios } from "../../../Utils/UserAxios";
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/hooks/UserRedux/UserModelSlice';
 
 const Acount = () => {
  
@@ -23,30 +26,44 @@ const Acount = () => {
   const[deleteccount,setDelete]=useState(false);
   const[isdisConnect,setConnect]=useState(true);
   const [changePass , setPassword]=useState(false);
-  const[oldPass,setOldPass]=useState("");
-  const[newPass,setNewPass]=useState("");
-  const[confirmPass,setConfirmPass]=useState("");
+  const[currentpassword,setOldPass]=useState("");
+  const[newpassword,setNewPass]=useState("");
+  const[newpasswordConfirmation,setConfirmPass]=useState("");
   const[testPass , setTestPass]=useState(false);
   const[passwordMatch,setPasswordMatch]=useState(true);
   const [atleast , setAtleast]=useState(true);
+  const dispatch = useDispatch()
   const handleOldpassword=(e)=>{
-   const oldpassword=e.target.value;
-    setOldPass(oldpassword);
+   const oldpass=e.target.value;
+    setOldPass(oldpass);
   
   }
   const handleNewpassword=(e)=>{
-    const newpassword=e.target.value;
-    setNewPass(newpassword);
-    setAtleast(newpassword.length >= 8);
+    const newpass=e.target.value;
+    setNewPass(newpass);
+    setAtleast(newpass.length >= 8);
   }
   const handleConfirmpassword=(e)=>{
      const Confirmpassword=e.target.value;
     setConfirmPass(Confirmpassword);
-    setPasswordMatch(newPass === Confirmpassword);
+    setPasswordMatch(newpassword === Confirmpassword);
   }
   const testPasswwords=()=>{
     if(passwordMatch){
       setTestPass(true);
+    }
+  }
+  const handleChangePassword= async(event)=>{
+    event.preventDefault();
+    try{
+       const response = await userAxios.post('user/changepassword',{currentpassword, newpassword , newpasswordConfirmation});
+      console.log("password changed");
+      setPassword(newpassword);
+      console.log(newpassword);
+      dispatch(setUser({...userStore.getState(), password: newpassword}));
+      
+    } catch(err){
+      console.log(err);
     }
   }
   const disConnect=()=>{
@@ -112,7 +129,7 @@ const Acount = () => {
                            <div>  
                               <input 
                                type="password"
-                               value={oldPass}
+                               value={currentpassword}
                                placeholder='old password'  
                                onChange={handleOldpassword}
                                className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
@@ -122,7 +139,7 @@ const Acount = () => {
                             <div>
                               <input 
                                type="password"
-                               value={newPass}
+                               value={newpassword}
                                placeholder='new password'  
                                onChange={handleNewpassword}
                                className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
@@ -133,7 +150,7 @@ const Acount = () => {
                              <div>
                                <input 
                                 type="password"
-                                value={confirmPass}
+                                value={newpasswordConfirmation}
                                 onChange={handleConfirmpassword}
                                 placeholder='confirm new password'  
                                 className={` text-black border border-gray-200 self-center h-11 w-[400px] mt-2  rounded-md p-2 
@@ -160,7 +177,7 @@ const Acount = () => {
                            </div>
                         </div>
                         <div>
-                          <button className=" border border-blue-700 rounded-3xl w-36 h-8 bg-blue-600 text-white mt-7">Save</button>
+                          <button onClick={handleChangePassword} className=" border border-blue-700 rounded-3xl w-36 h-8 bg-blue-600 text-white mt-7">Save</button>
                         </div>
                         </div>
                      </div>

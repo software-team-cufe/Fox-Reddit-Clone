@@ -1,5 +1,4 @@
-import { CircleEllipsis, Plus, PlusCircle, MessageCircleMore, CornerUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { CircleEllipsis, CornerUpRight } from 'lucide-react';
 import React from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
@@ -62,29 +61,38 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
 
 export default function ViewerCard() {
     return (
-        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl md:block hidden pb-3">
+        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl md:block hidden pb-3 w-[340px]">
 
-            <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'></div>
-
+         
             <div className='flex flex-row justify-between items-center mx-3 mt-3'>
                 <span className='font-bold'>username</span>
                 <CardOptionsMenu />
             </div>
-
-            <div className='flex flex-row mt-3'>
-                <button
-                    className="flex items-center py-1 px-4  m-2 text-xs font-medium text-gray-500 focus:outline-none bg-blue-800 rounded-full border border-gray-200 hover:bg-blue-900">
-                    <PlusCircle className='text-white h-4 w-4 mr-1' />
-                    <span className="text-white text-sm">Follow</span>
-                </button>
-                <button
-                    className="flex items-center py-1 px-4  m-2 text-xs font-medium text-gray-500 focus:outline-none bg-gray-200 rounded-full border border-gray-200 hover:bg-gray-300">
-                    <MessageCircleMore className='h-5 w-5 mr-1' />
-                    <span className="text-sm">Chat</span>
-                </button>
-            </div>
-            <p className='p-2 text-xs text-gray-500'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis nulla qui tenetur numquam explicabo quae recusandae rem, voluptatum, voluptatem tempora minus tempore vero esse nesciunt ut ipsam alias ad reiciendis.</p>
-            <hr className="h-px m-3 mt-1 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
+             
+             <div className=' flex flex-col mx-3 mt-3 space-y-3'>
+                <div className='flex flex-row  space-x-3'>
+                  <button className=' flex flex-row items-center justify-center space-x-1 border border-blue-800 bg-blue-800 rounded-3xl w-[85px] px-2  h-[35px]'>
+                     <svg className="w-4 h-4 text-white"
+                     xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="12" x2="15" y2="12" />  <line x1="12" y1="9" x2="12" y2="15" /></svg>
+                   <p className='text-white  text-sm text-center'> Follow</p>
+                  </button>
+                  <button className=' flex flex-row items-center justify-center space-x-1 border border-gray-200 bg-gray-200 rounded-3xl w-[75px] px-2  h-[35px] '>
+                      <svg className="w-5 h-5 self-center"
+                      xmlns="http://www.w3.org/2000/svg" width="24"  height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                      </svg>
+             
+                       <p className=' text-sm text-center'>chat</p>
+                  </button>
+ 
+                 </div>
+                   <div className='text-xs text-gray-500 '>blablablablablablablablablbla
+         
+                   </div>
+              
+               </div>
+          
+          <hr className="h-px m-3 mt-1 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
 
             <div className='flex flex-row justify-between px-4 mt-2'>
                 <div className='flex flex-col'>
@@ -111,14 +119,52 @@ export default function ViewerCard() {
             <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
 
             <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold"> LINKS </h1>
-            <Link to={'/settings/profile'} className="w-fit flex items-center py-1 pl-2 pr-3 mx-3 mb-2 text-xs font-medium text-gray-700 focus:outline-none bg-gray-200 rounded-full hover:bg-gray-300 hover:underline">
-                <Plus className='h-5 w-5 mr-2' />
-                <span>Add Social Link</span>
-            </Link>
+            <div className='  px-4 flex flex-row space-x-2'> 
+               <button className=' border border-gray-200 rounded-2xl flex flex-row bg-gray-200 space-x-1 w-[80px] h-7 p-1'>
+                 <svg className="w-3 h-4"
+                 xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" /></svg>
+                 <p className=' text-xs font-medium'>LinkedIn</p>
+               </button>
+               <button className=' border border-gray-200 rounded-2xl flex flex-row bg-gray-200 space-x-1 w-[110px] h-7 p-1'>
+                 <svg className="w-3 h-4"
+                 xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" /></svg>
+                 <p className=' text-xs  font-medium'>Career Profile</p>
+               </button>
+            </div>
+         
 
             <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
-
-            <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">MODERATOR OF THESE COMMUNITIES</h1>
+           <div>
+              <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">MODERATOR OF THESE COMMUNITIES</h1>
+              <div  className=' mx-3 flex flex-row justify-between'>
+                 <div>  
+                     <svg className="text-blue-600 w-7 h-7"
+                      xmlns="http://www.w3.org/2000/svg" width="24"  height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                     </svg>
+                 
+                 </div>
+                 <div className=' flex flex-col w-4/5 ml-2'>
+                     <p className=' text-xs'>r/communityname</p>     
+                     <p className=' text-xs text-gray-400'> 10K members</p>                
+                 </div>
+                 <div >
+                   <button className='  border border-blue-800 rounded-2xl flex flex-row bg-blue-800 w-[45px] h-7 py-1 px-2  text-white text-xs font-semibold '> Join</button>
+                 </div>
+               </div>      
+           </div>
+    
+           <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
+         
+           <div className=' mx-3'>
+             <h1 className=" mb-4 text-xs text-gray-500 font-semibold">TROPHY CASE</h1>
+              <div className=" flex flex-row space-x-1"> 
+                <svg className="text-yellow-300 w-7 h-7"
+                 xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <path d="M9.5 15a3.5 3.5 0 0 0 5 0" /></svg>
+                <p  className=' text-sm py-1'>  One-Year Club</p>
+              </div>
+           </div>
+           
 
         </div>
     )
