@@ -14,6 +14,7 @@ import { nanoid } from 'nanoid';
 import { Post } from './posts.model';
 import { Comment } from './comments.model';
 import { Community } from './community.model';
+import { Notifications } from './notification.model';
 import { Types } from 'mongoose';
 //import { Validator } from 'validator';
 
@@ -194,16 +195,16 @@ export class notificationSettings {
   modNotifications?: boolean;
 }
 
-class userNotifications {
-  @prop({ ref: () => Notification, required: true })
-  notificationId: Ref<Notification>;
+// class userNotifications {
+//   @prop({ ref: () => Notification, required: true })
+//   notificationId: Ref<Notification>;
 
-  @prop({ required: true, default: false })
-  isRead: boolean;
+//   @prop({ required: true, default: false })
+//   isRead: boolean;
 
-  @prop({ required: true, default: false })
-  isDeleted: boolean;
-}
+//   @prop({ required: true, default: false })
+//   isDeleted: boolean;
+// }
 
 class About {
   @prop({ default: false })
@@ -234,16 +235,16 @@ class IsBannedOrMuted {
   @prop()
   date?: Date;
 }
-// class Notification {
-//   @prop({ ref: 'Notification' })
-//   notificationID?: Ref<Notification>;
+class notificationInfo {
+  @prop({ ref: 'Notifications' })
+  notificationID?: Ref<Notifications>;
 
-//   @prop({ default: false })
-//   isRead!: boolean;
+  @prop({ default: false })
+  isRead!: boolean;
 
-//   @prop({ default: false })
-//   isDeleted!: boolean;
-// }
+  @prop({ default: false })
+  isDeleted!: boolean;
+}
 
 class Member {
   @prop({ ref: () => 'Community' })
@@ -413,8 +414,13 @@ export class User {
   /***************************************
              relations
    ***************************************/
-  @prop({ type: () => [userNotifications] })
-  notificationsArray: userNotifications[];
+  //youssef Notifications
+  // @prop({ type: () => 'Notification' })
+  // notificationsArray: Ref<Notification>[];
+
+  //sharif suggestion
+  @prop()
+  notifications?: notificationInfo[];
 
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];
