@@ -195,17 +195,6 @@ export class notificationSettings {
   modNotifications?: boolean;
 }
 
-// class userNotifications {
-//   @prop({ ref: () => Notification, required: true })
-//   notificationId: Ref<Notification>;
-
-//   @prop({ required: true, default: false })
-//   isRead: boolean;
-
-//   @prop({ required: true, default: false })
-//   isDeleted: boolean;
-// }
-
 class About {
   @prop({ default: false })
   isBlocked?: boolean;
@@ -236,14 +225,14 @@ class IsBannedOrMuted {
   date?: Date;
 }
 class notificationInfo {
-  @prop({ ref: 'Notifications' })
-  notificationID?: Ref<Notifications>;
+  @prop({ ref: () => 'Notifications' })
+  notificationId?: Ref<Notifications>;
 
   @prop({ default: false })
   isRead!: boolean;
 
   @prop({ default: false })
-  isDeleted!: boolean;
+  isHidden!: boolean;
 }
 
 class Member {
@@ -414,13 +403,10 @@ export class User {
   /***************************************
              relations
    ***************************************/
-  //youssef Notifications
-  // @prop({ type: () => 'Notification' })
-  // notificationsArray: Ref<Notification>[];
 
   //sharif suggestion
   @prop()
-  notifications?: notificationInfo[];
+  notifArray?: notificationInfo[];
 
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];
