@@ -294,6 +294,40 @@ export async function getCommunitiesIdOfUserAsModerator(username: string) {
 }
 
 /**
+ * Retrieves the IDs of the communities that a user is a creator of.
+ *
+ * @param {string} userID - The ID of the user.
+ * @return {Promise<string[]>} An array of community IDs that the user is a creator of.
+ */
+export async function getCommunitiesIdOfUserAsCreator(username: string) {
+  // Find the user by ID and retrieve their user as member of communities ID
+  const user = await findUserByUsername(username);
+
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+
+  // If user has no moderators, return an empty array
+  if (!user.moderators) {
+    return [];
+  }
+
+  // Filter out moderators with role 'creator' and extract the community IDs
+  const communityIDs = user.moderators
+    .filter((moderator) => moderator.role === 'creator')
+    .map((moderator) => moderator.communityId);
+
+  // Find communities based on the extracted community IDs
+  const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
+
+  // Extract community names from fetched communities
+  const communityNames = communities.map((community) => community.name);
+
+  return communityNames;
+}
+
+/**
  * Retrieves the IDs of the communities that a user favaorite.
  *
  * @param {string} userID - The ID of the user.

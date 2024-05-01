@@ -32,6 +32,7 @@ import {
   getPendingMembersHandler,
   editCommunityRemovalResonsHandler,
   getCommunityRemovalResonsHandler,
+  getCommunityOfUserAsCreatorHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -53,6 +54,7 @@ const router = express.Router();
 
 router.get('/subreddits/mine/member', getCommunityOfUserAsMemeberHandler);
 router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
+router.get('/subreddits/mine/creator', getCommunityOfUserAsCreatorHandler);
 router.get('/subreddits/mine/favorite', getFavoriteCommunitiesOfUserHandler);
 router.get('/:subreddit', validateResource(getCommunitySchema), getCommunityHandler);
 router.post('/create_subreddit', validateResource(createCommunitySchema), createSubredditHandler);

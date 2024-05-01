@@ -21,6 +21,7 @@ import {
 import {
   getCommunitiesIdOfUserAsMemeber,
   getCommunitiesIdOfUserAsModerator,
+  getCommunitiesIdOfUserAsCreator,
   getFavoriteCommunitiesOfUser,
   addMemberToUser,
   addCreatorToUser,
@@ -98,6 +99,36 @@ export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Re
     });
   }
 }
+
+/**
+ * Handles the request to get the communities of a user as a creator.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const communities = await getCommunitiesIdOfUserAsCreator(user.username);
+
+    res.status(200).json({ communities });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserAsCreatorHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 /**
  * Create subreddit handler.
  *
