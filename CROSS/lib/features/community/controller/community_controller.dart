@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:routemaster/routemaster.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
 import 'package:reddit_fox/core/providers/storage_repository_provider.dart';
 import 'package:reddit_fox/core/utils.dart';
