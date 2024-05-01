@@ -7,7 +7,17 @@ import { useState } from 'react';
 import { userStore } from '../../hooks/UserRedux/UserStore';
 import { userAxios } from '../../Utils/UserAxios';
 function CardOptionsMenu() {  //prop takes the display to use it outside the component
-
+    const username =userStore.getState().user.user.username;
+     const handleBlock = async () => {
+        try {
+            const response = await userAxios.post('/api/block_user', { username , type: 'unblock' });
+            console.log(response);
+            console.log('blocked');
+           
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <Menu as="div" className="relative inline-block text-left">
             {/* dropdown menu displaying currently selected display*/}
@@ -41,7 +51,7 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
                         </button>
                     </Menu.Item>
                     <Menu.Item className="px-3 border-b-gray-300 border-b">
-                        <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
+                        <button onClick={handleBlock} className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
                         <CircleOff className='h-5 w-5 mr-2' />
                         <span> Block Account</span>
                         </button>
