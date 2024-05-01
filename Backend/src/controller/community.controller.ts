@@ -12,6 +12,7 @@ import {
   getCommunityModerators,
   getCommunityMembers,
   editCommunityRules,
+  editCommunityRemovalReasons,
   markSpamPost,
   markSpamComment,
   approveSpamPost,
@@ -20,6 +21,7 @@ import {
 import {
   getCommunitiesIdOfUserAsMemeber,
   getCommunitiesIdOfUserAsModerator,
+  getCommunitiesIdOfUserAsCreator,
   getFavoriteCommunitiesOfUser,
   addMemberToUser,
   addCreatorToUser,
@@ -97,6 +99,36 @@ export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Re
     });
   }
 }
+
+/**
+ * Handles the request to get the communities of a user as a creator.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const communities = await getCommunitiesIdOfUserAsCreator(user.username);
+
+    res.status(200).json({ communities });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserAsCreatorHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 /**
  * Create subreddit handler.
  *
@@ -697,6 +729,59 @@ export async function editCommunityRulesHandler(req: Request, res: Response) {
       return res.status(200).json({ status: 'succeeded' });
     } else {
       return res.status(404).json({ status: 'error', message: 'Error in changing rules' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to edit the removal rules of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editCommunityRemovalResonsHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    const reasons = req.body.reasons;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change removal reasons' });
+    }
+
+    const result = await editCommunityRemovalReasons(commName, reasons);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing removal reasons' });
     }
   } catch (err) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });
@@ -1592,7 +1677,38 @@ export async function getCommunityRulesHandler(req: Request, res: Response) {
       rules,
     });
   } catch (error) {
-    console.error('Error in getCommunityInfoHandler:', error);
+    console.error('Error in getCommunityRulesHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getCommunityRemovalResonsHandler(req: Request, res: Response) {
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const rules = community.removalReasons;
+    return res.status(200).json({
+      rules,
+    });
+  } catch (error) {
+    console.error('Error in getCommunityRemovalResonsHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',

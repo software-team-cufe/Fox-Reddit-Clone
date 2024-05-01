@@ -884,12 +884,19 @@ export async function blockUserHandler(req: Request<blockUserInput['body']>, res
     if (type === 'block') {
       await UserModel.findByIdAndUpdate(
         blocker._id,
-        { $addToSet: { blocksFromMe: blocked._id } },
+        {
+          $addToSet: { blocksFromMe: blocked._id },
+          $pull: { userFollows: blocked._id, followers: blocked._id },
+        },
         { upsert: true, new: true }
       );
+
       await UserModel.findByIdAndUpdate(
         blocked._id,
-        { $addToSet: { blocksToMe: blocker._id } },
+        {
+          $addToSet: { blocksToMe: blocker._id },
+          $pull: { userFollows: blocker._id, followers: blocker._id },
+        },
         { upsert: true, new: true }
       );
     } else if (type === 'unblock') {
