@@ -28,6 +28,14 @@ export class CommunityRule {
   reason?: string;
 }
 
+export class removalReason {
+  @prop()
+  title?: string;
+
+  @prop()
+  description?: string;
+}
+
 class FAQ {
   @prop()
   question?: string;
@@ -168,6 +176,9 @@ export class Community {
 
   @prop()
   communityRules?: CommunityRule[];
+
+  @prop()
+  removalReasons?: removalReason[];
 
   @prop({ type: CommunityOptions, default: {} })
   communityOptions?: CommunityOptions;

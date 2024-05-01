@@ -1,5 +1,5 @@
 import appError from '../utils/appError';
-import CommunityModel, { Community, CommunityRule } from '../model/community.model';
+import CommunityModel, { Community, CommunityRule, removalReason } from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
 import { findPostById } from './post.service';
@@ -445,6 +445,33 @@ export async function editCommunityRules(subreddit: string, rules: CommunityRule
     const updatedCommunity = await CommunityModel.findByIdAndUpdate(
       community._id,
       { communityRules: rules },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityRemovalReasons(subreddit: string, reasons: removalReason[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { removalReasons: reasons },
       { new: true }
     );
   } catch (error) {

@@ -62,7 +62,7 @@ router.post('/api/postvote', validateResource(votePostSchema) as RequestHandler,
 router.post('/api/commentvote', validateResource(voteCommentSchema) as RequestHandler, voteCommentHandler);
 router.post(
   '/api/submit',
-  // validateResource(submitPostSchema) as RequestHandler,
+  //validateResource(submitPostSchema) as RequestHandler,
   uploadMultipleMulter,
   uploadMultipleCloudinary,
   submitPostHandler

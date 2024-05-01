@@ -972,7 +972,6 @@ export async function voteCommentHandler(req: Request, res: Response) {
 export async function submitPostHandler(req: Request, res: Response) {
   try {
     const user = res.locals.user;
-
     // Check if user is missing or invalid
     if (!user) {
       return res.status(400).json({
