@@ -45,6 +45,7 @@ class _MessageState extends State<Message> {
         access_token = sharedPrefValue.getString('backtoken');
       });
       fetchMessages();
+      fetchUser(access_token!);
     });
   }
 
@@ -276,7 +277,7 @@ class _MessageState extends State<Message> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            inboxChat(username: titleText)));
+                                            inboxChat(username: titleText,subject:message['subject'])));
                               },
                             );
                           },

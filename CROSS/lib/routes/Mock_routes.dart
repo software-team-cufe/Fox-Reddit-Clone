@@ -32,7 +32,8 @@ class ApiRoutesBackend {
   static const String sendinbox = '$baseUrl/message/compose/';
   static const String getinbox =
       '$baseUrl/message/getAllMessagesUsernamesAndSubjects/';
-  static const String getChat = '$baseUrl/message/chatMessages/';
+  static String getChat(String userName, String subject) =>
+      '$baseUrl/message/chatMessages/?senderUsername=${userName}&subject=${subject}';
 }
 
 class ApiRoutesMockserver {
