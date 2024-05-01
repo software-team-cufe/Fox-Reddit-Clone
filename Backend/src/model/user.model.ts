@@ -14,6 +14,7 @@ import { nanoid } from 'nanoid';
 import { Post } from './posts.model';
 import { Comment } from './comments.model';
 import { Community } from './community.model';
+import { Notifications } from './notification.model';
 import { Types } from 'mongoose';
 //import { Validator } from 'validator';
 
@@ -223,16 +224,16 @@ class IsBannedOrMuted {
   @prop()
   date?: Date;
 }
-// class Notification {
-//   @prop({ ref: 'Notification' })
-//   notificationID?: Ref<Notification>;
+class notificationInfo {
+  @prop({ ref: () => 'Notifications' })
+  notificationId?: Ref<Notifications>;
 
-//   @prop({ default: false })
-//   isRead!: boolean;
+  @prop({ default: false })
+  isRead!: boolean;
 
-//   @prop({ default: false })
-//   isDeleted!: boolean;
-// }
+  @prop({ default: false })
+  isHidden!: boolean;
+}
 
 class Member {
   @prop({ ref: () => 'Community' })
@@ -399,6 +400,14 @@ export class User {
   @prop({ ref: User })
   blocksToMe?: User[]; // Array of user references
 
+  /***************************************
+             relations
+   ***************************************/
+
+  //sharif suggestion
+  @prop()
+  notifArray?: notificationInfo[];
+
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];
 
@@ -426,9 +435,6 @@ export class User {
   @prop({ ref: 'Post' })
   mentionedInPosts?: Ref<Post>[];
 
-  // @prop({ ref: NotificationModel })
-  // notifications?: Ref<Notification>[];
-
   @prop({ ref: () => 'Comment' })
   mentionedInComments?: Ref<Comment>[];
 
@@ -437,6 +443,9 @@ export class User {
 
   @prop()
   moderators?: Moderator[];
+
+  @prop({ ref: () => 'Community' })
+  favorites?: Ref<Community>[];
 
   //////////////////////////////////////////////
   // @prop({ type: () => [String] })

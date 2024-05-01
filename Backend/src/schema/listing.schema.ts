@@ -107,21 +107,23 @@ export const voteCommentSchema = object({
 
 export const submitPostSchema = object({
   body: object({
-    title: string({
-      required_error: 'title is required',
+    request: object({
+      title: string({
+        required_error: 'title is required',
+      }),
+      text: string({
+        required_error: 'text is required',
+      }),
+      poll: array(string()).optional(),
+      nsfw: boolean({
+        required_error: 'nsfw is required',
+      }),
+      spoiler: boolean({
+        required_error: 'spoiler is required',
+      }),
+      CommunityID: string().optional(),
     }),
-    text: string({
-      required_error: 'text is required',
-    }),
-    attachments: array(string()).optional(),
-    poll: array(string()).optional(),
-    nsfw: boolean({
-      required_error: 'nsfw is required',
-    }),
-    spoiler: boolean({
-      required_error: 'spoiler is required',
-    }),
-    CommunityID: string().optional(),
+    attachments: array(any()).optional(),
   }),
 });
 

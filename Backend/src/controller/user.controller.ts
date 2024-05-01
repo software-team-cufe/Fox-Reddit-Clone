@@ -329,7 +329,15 @@ export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['
       throw new appError('not found', 404);
     }
 
+    const oldEmail = user.email;
     const { newemail, currentpassword } = req.body;
+    if (!newemail || !currentpassword) {
+      throw new appError('Email and password are required', 400);
+    }
+
+    if (newemail === oldEmail) {
+      throw new appError('New email cannot be the same as the old email', 400);
+    }
     const isValid = await user.validatePassword(currentpassword);
     if (!isValid) {
       throw new appError('Invalid password', 401);
@@ -348,6 +356,15 @@ export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['
       },
       subject: 'Your Fox email is updated',
       text: ` Click the verify link in the email to secure your Fox account: ${verify_link}`,
+    });
+    await sendEmail({
+      to: oldEmail,
+      from: {
+        name: 'Fox ',
+        email: getEnvVariable('FROM_EMAIL'),
+      },
+      subject: 'Your Fox email is updated',
+      text: ` Your email has been changed `,
     });
     return res.status(200).json({
       msg: ' Email changed successfully, please check your email for verification',
@@ -867,12 +884,19 @@ export async function blockUserHandler(req: Request<blockUserInput['body']>, res
     if (type === 'block') {
       await UserModel.findByIdAndUpdate(
         blocker._id,
-        { $addToSet: { blocksFromMe: blocked._id } },
+        {
+          $addToSet: { blocksFromMe: blocked._id },
+          $pull: { userFollows: blocked._id, followers: blocked._id },
+        },
         { upsert: true, new: true }
       );
+
       await UserModel.findByIdAndUpdate(
         blocked._id,
-        { $addToSet: { blocksToMe: blocker._id } },
+        {
+          $addToSet: { blocksToMe: blocker._id },
+          $pull: { userFollows: blocker._id, followers: blocker._id },
+        },
         { upsert: true, new: true }
       );
     } else if (type === 'unblock') {
@@ -1141,6 +1165,40 @@ export async function getUserIDfromTokenHandler(req: Request, res: Response) {
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Uploads a user's photo, updates the user's avatar with a new link from cloudinary, and returns a success message.
+ *
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @return {Promise<void>} A promise that resolves after uploading the user's photo
+ */
+export async function uploadUserPhoto(req: Request, res: Response) {
+  try {
+    if (!req.file || Object.keys(req.file).length === 0) {
+      throw new Error('No file uploaded');
+    }
+    const user = res.locals.user;
+    const userId = user._id;
+    const image = res.locals.image;
+
+    //update user avatar by new link from cloudinary
+    await UserModel.findByIdAndUpdate(userId, { avatar: image[0] }, { runValidators: true });
+    res.status(200).json({
+      msg: 'Avatar uploaded successfully',
+      avatar: image,
+    });
+  } catch (error) {
+    if (error instanceof appError) {
+      return res.status(error.statusCode).json({
+        msg: error.message,
+      });
+    }
+    return res.status(500).json({
+      msg: 'Internal server error in image upload',
     });
   }
 }

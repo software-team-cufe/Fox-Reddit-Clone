@@ -59,6 +59,9 @@ export class Comment {
   @prop({ default: false })
   isLocked!: boolean;
 
+  @prop({ default: false })
+  isHidden!: boolean;
+
   @prop()
   editedAt!: Date;
 

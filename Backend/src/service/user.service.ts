@@ -264,6 +264,7 @@ export async function getCommunitiesIdOfUserAsMemeber(username: string) {
 
   return communityNames;
 }
+
 /**
  * Retrieves the IDs of the communities that a user is a moderator of.
  *
@@ -285,6 +286,66 @@ export async function getCommunitiesIdOfUserAsModerator(username: string) {
   const communityIDs = user.moderators.map((member) => member.communityId);
 
   const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
+
+  // Extract community names from fetched communities
+  const communityNames = communities.map((community) => community.name);
+
+  return communityNames;
+}
+
+/**
+ * Retrieves the IDs of the communities that a user is a creator of.
+ *
+ * @param {string} userID - The ID of the user.
+ * @return {Promise<string[]>} An array of community IDs that the user is a creator of.
+ */
+export async function getCommunitiesIdOfUserAsCreator(username: string) {
+  // Find the user by ID and retrieve their user as member of communities ID
+  const user = await findUserByUsername(username);
+
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+
+  // If user has no moderators, return an empty array
+  if (!user.moderators) {
+    return [];
+  }
+
+  // Filter out moderators with role 'creator' and extract the community IDs
+  const communityIDs = user.moderators
+    .filter((moderator) => moderator.role === 'creator')
+    .map((moderator) => moderator.communityId);
+
+  // Find communities based on the extracted community IDs
+  const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
+
+  // Extract community names from fetched communities
+  const communityNames = communities.map((community) => community.name);
+
+  return communityNames;
+}
+
+/**
+ * Retrieves the IDs of the communities that a user favaorite.
+ *
+ * @param {string} userID - The ID of the user.
+ * @return {Promise<string[]>} An array of community names.
+ */
+export async function getFavoriteCommunitiesOfUser(username: string) {
+  // Find the user by ID and retrieve their user as member of communities ID
+  const user = await findUserByUsername(username);
+
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+  if (!user.favorites) {
+    return [];
+  }
+
+  const communities = await CommunityModel.find({ _id: { $in: user.favorites } });
 
   // Extract community names from fetched communities
   const communityNames = communities.map((community) => community.name);
@@ -707,6 +768,86 @@ export async function updateMemberBanStatusInUser(userID: string, communityName:
     };
   }
 
+  return {
+    status: true,
+  };
+}
+
+/**
+ * Add favorite to user
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function addFavoriteToUser(userID: string, communityName: string) {
+  const community = await CommunityModel.findOne({ name: communityName });
+  if (!community) {
+    return {
+      status: false,
+      error: 'community not found',
+    };
+  }
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { favorites: community._id } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * remove favorite to user
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function removeFavoriteFromUser(userID: string, communityName: string) {
+  const community = await CommunityModel.findOne({ name: communityName });
+  if (!community) {
+    return {
+      status: false,
+      error: 'community not found',
+    };
+  }
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $pull: { favorites: community._id } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
   return {
     status: true,
   };

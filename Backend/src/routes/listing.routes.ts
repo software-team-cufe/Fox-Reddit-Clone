@@ -22,6 +22,8 @@ import {
   getUserSavedPostsHandler,
 } from '../controller/listing.controller';
 import validateResource from '../middleware/validateResource';
+import uploadMultipleMulter from '../middleware/multer/multipleFiles';
+import { uploadMultipleCloudinary } from '../middleware/cloudinary/uploadMultiple';
 import {
   deleteCommentOrPostSchema,
   hideAndUnhidePostSchema,
@@ -58,7 +60,13 @@ router.post('/api/lock', validateResource(lockPostSchema), lockPostHandler);
 router.post('/api/unlock', validateResource(lockPostSchema), unlockPostHandler);
 router.post('/api/postvote', validateResource(votePostSchema) as RequestHandler, votePostHandler);
 router.post('/api/commentvote', validateResource(voteCommentSchema) as RequestHandler, voteCommentHandler);
-router.post('/api/submit', validateResource(submitPostSchema) as RequestHandler, submitPostHandler);
+router.post(
+  '/api/submit',
+  //validateResource(submitPostSchema) as RequestHandler,
+  uploadMultipleMulter,
+  uploadMultipleCloudinary,
+  submitPostHandler
+);
 router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);
 
 export default router;

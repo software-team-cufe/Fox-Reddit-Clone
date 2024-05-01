@@ -787,14 +787,14 @@ export async function lockPostHandler(req: Request<lockPost['body']>, res: Respo
     }
 
     // Check if the post is already locked
-    if (post.locked) {
+    if (post.isLocked) {
       return res.status(400).json({
         status: 'failed',
         message: 'Post is already locked',
       });
     }
 
-    await PostModel.findByIdAndUpdate(post._id, { locked: true }, { upsert: true, new: true });
+    await PostModel.findByIdAndUpdate(post._id, { isLocked: true }, { upsert: true, new: true });
   } catch (err) {
     return next(err);
   }
@@ -834,14 +834,14 @@ export async function unlockPostHandler(req: Request<lockPost['body']>, res: Res
     }
 
     // Check if the post is already unlocked
-    if (!post.locked) {
+    if (!post.isLocked) {
       return res.status(400).json({
         status: 'failed',
         message: 'Post is already unlocked',
       });
     }
 
-    await PostModel.findByIdAndUpdate(post._id, { locked: false }, { upsert: true, new: true });
+    await PostModel.findByIdAndUpdate(post._id, { isLocked: false }, { upsert: true, new: true });
   } catch (err) {
     return next(err);
   }
@@ -972,7 +972,6 @@ export async function voteCommentHandler(req: Request, res: Response) {
 export async function submitPostHandler(req: Request, res: Response) {
   try {
     const user = res.locals.user;
-
     // Check if user is missing or invalid
     if (!user) {
       return res.status(400).json({
@@ -981,8 +980,20 @@ export async function submitPostHandler(req: Request, res: Response) {
       });
     }
 
-    const { title, text, attachments, nsfw, spoiler, Communityname, poll } = req.body;
+    let attachments: Array<string>;
+    if (req.files) {
+      attachments = res.locals.images;
+    } else {
+      attachments = [];
+    }
+    const data = JSON.parse(req.body.request);
+
+    const { title, text, nsfw, spoiler, Communityname, poll } = data;
+
     const community = await findCommunityByName(Communityname);
+
+    const pollOptions = Array.isArray(poll) ? poll.map((option: string) => ({ title: option, votes: 0 })) : undefined;
+
     const postInfo = {
       title,
       textHTML: text,
@@ -990,7 +1001,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       nsfw,
       spoiler,
       userID: user._id,
-      poll: poll ? poll.map((option: string) => ({ title: option, votes: 0 })) : undefined,
+      poll: pollOptions,
     };
 
     // If community exists, add community ID to postInfo
