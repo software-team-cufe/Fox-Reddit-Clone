@@ -6,6 +6,9 @@ const ModCard = () => {
 
     const [widget, setWidget] = useState(false);
     const [editWidget, setEditWidget] = useState(false);
+    const [ handleName, setHandleName] = useState(false);
+    const [ handleView, setHandleView] = useState(false);
+    const [handleDescription, setHandleDescription] = useState(false);
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
@@ -99,7 +102,7 @@ const ModCard = () => {
                                    <hr className="w-[100%] h-px  bg-gray-200 border-0 dark:bg-gray-700 "></hr>
                                     {editWidget &&
                                         <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
-                                             <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[420px] '>
+                                             <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[460px] '>
                                                 <div className=' flex flex-row justify-between m-4'>
                                                        <button onClick={ ()=> setEditWidget(false)} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
                                                          <svg className="w-6 h-5  "
@@ -122,35 +125,45 @@ const ModCard = () => {
                                                  
                                                  {/* text box*/}
                                                  <div className=' mx-4 '>
-                                                    <div className=' my-3'>  
-                                                       <input 
-                                                        type="text"
-                                                        placeholder="Members' nickname "
-                                                     
-                                                       className={` text-black border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200     `} >  
-                                                        </input> 
-                                                    </div>
+                                                 <div className=' my-3'>
+                                                 <input
+                                                   type="text"
+                                                   placeholder="Members' nickname"
+                                                   className="text-black border border-gray-200 self-center h-14 w-full mt-2 rounded-2xl p-2 bg-gray-200"
+                                                   onChange={setHandleName}
+                                                 />
+                                                 <span className={`text-xs text-gray-500 ml-4 ${handleName ? 'text-green-600' : 'text-black'}`}>
+                                                   Give a nickname to your members.
+                                                 </span>
+                                               </div>
                                                     
                                                     <div className=' my-3'>  
                                                        <input 
                                                         type="text"
                                                         placeholder="Currently viewing nickname "
-                                                     
-                                                       className={` text-black border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200     `} >  
+                                                        onChange={setHandleView}
+                                                        className="text-black border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
                                                         </input> 
+                                                        <span className={`text-xs text-gray-500 ml-4 ${handleView ? 'text-green-600' : 'text-black'}`}>
+                                                          Describe members who are currently viewing and contributing to your community.</span> 
+                                                      
                                                     </div>
                                                     
                                                     <div className=' my-3'>  
                                                        <input 
                                                         type="text"
                                                         placeholder=" Community description "
-                                                     
-                                                       className={` text-black border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200     `} >  
+                                                        onChange={setHandleDescription}
+                                                         className=" text-black border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
                                                         </input> 
+                                                        <span className={`text-xs text-gray-500 ml-4 ${handleDescription ? 'text-green-600' : 'text-black'}`}>
+                                                           Describe your community to visitors. 
+                                                        </span>
                                                     </div>
                                                    
                                                  </div>
-                                                 <div className=' flex flex-row justify-end space-x-3 mt-10 mr-4'>
+
+                                                 <div className=' flex flex-row justify-end space-x-3  mr-4'>
                                                    <button onClick={ ()=> setWidget(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
                                                     Cancel
                                                     </button>
