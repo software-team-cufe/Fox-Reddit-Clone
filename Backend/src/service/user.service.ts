@@ -852,3 +852,14 @@ export async function removeFavoriteFromUser(userID: string, communityName: stri
     status: true,
   };
 }
+
+export async function getUserSearchResult(query: string, page: number, limit: number) {
+  const userResults = await UserModel.find({
+    $or: [{ username: { $regex: query, $options: 'i' } }, { about: { $regex: query, $options: 'i' } }],
+  })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .select('avatar username karma about');
+
+  return userResults;
+}

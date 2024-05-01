@@ -314,7 +314,7 @@ export class User {
   @prop({ required: true, default: () => new Date() })
   createdAt!: Date;
 
-  @prop({ default: 'default.jpg' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' })
   avatar?: string;
 
   @prop({ enum: ['male', 'female'] })

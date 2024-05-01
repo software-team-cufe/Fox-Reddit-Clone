@@ -695,3 +695,13 @@ export async function addUserToPending(userID: string, subreddit: string) {
     status: true,
   };
 }
+
+export async function getSrSearchResult(query: string, page: number, limit: number) {
+  const communityResults = await CommunityModel.find({
+    $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
+  })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .select('icon name membersCnt description');
+  return communityResults;
+}
