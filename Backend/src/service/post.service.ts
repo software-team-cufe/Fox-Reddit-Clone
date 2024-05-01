@@ -33,7 +33,7 @@ export function findPostById(id: string) {
 
 //     const posts = await PostModel.aggregate([
 //       // Match documents by the community ID
-//       { $match: { communities: communityObject?.id } },
+//       { $match: { communityId: communityObject?.id } },
 //       // Sample documents randomly
 //       { $sample: { size: 10 } }, // Adjust the size as needed
 //     ]).exec();
@@ -83,7 +83,7 @@ export async function findHotPostsByCommunity(
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
+    const posts = await PostModel.find({ communityId: communityObject?.id }, null, queryOptions).exec();
 
     return posts;
   } catch (error) {
@@ -147,7 +147,7 @@ export async function findNewPostsByCommunity(
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    const posts = await PostModel.find({ communities: communityObject?.id }, null, queryOptions).exec();
+    const posts = await PostModel.find({ communityId: communityObject?.id }, null, queryOptions).exec();
 
     return posts;
   } catch (error) {
@@ -234,7 +234,7 @@ export async function findTopPostsByCommunityWithinTime(
     // Adjust the query to include the time frame condition
     const posts = await PostModel.find(
       {
-        communities: communityObject?.id,
+        communityId: communityObject?.id,
         createdAt: {
           $gte: startDate,
           $lte: endDate,
@@ -316,8 +316,7 @@ export async function findRandomPostsByCommunity(
     }
 
     // Find posts that belong to the specified community
-    const posts = await PostModel.find({ communities: communityObject.id });
-
+    const posts = await PostModel.find({ CommunityID: communityObject.id });
     // Shuffle the array of posts
     let shuffledPosts = shuffle(posts);
 
