@@ -6,7 +6,8 @@ import PostModel from '../model/posts.model';
 import CommunityModel from '../model/community.model';
 import UserModel from '../model/user.model';
 import CommentModel from '../model/comments.model';
-
+import { getSrSearchResult } from '../service/community.service';
+import { getUserSearchResult } from '../service/user.service';
 export async function searchHomeHandler(
   req: Request<{}, {}, {}, SearchNormalInput['query']>,
   res: Response,
@@ -17,29 +18,40 @@ export async function searchHomeHandler(
     const searchkey = query.searchkey as string;
     const type = query.type as 'link' | 'sr' | 'comment' | 'user';
     const sort = query.sort as string;
+    //page and limit
+    // Convert strings to numbers
+    const pageString = req.query.page; // Extract page parameter as string from query
+    const limitString = req.query.limit; // Extract limit parameter as string from query
+    const page = pageString ? parseInt(pageString, 10) : 1; // Convert page string to number, default to 1 if not provided
+    const limit = limitString ? parseInt(limitString, 10) : 10; // Convert limit string to number, default to 10 if not provided
     //search type can be link/posts, sr/subreddits,comments, users
     const searchType =
       type === 'link' ? 'posts' : type === 'sr' ? 'subreddits' : type === 'comment' ? 'comments' : 'users';
     //search logic here
     //switch case
     switch (searchType) {
-      case 'posts': {
-        const posts = await PostModel.find({
-          $or: [{ title: { $regex: searchkey, $options: 'i' } }, { textHTML: { $regex: searchkey, $options: 'i' } }],
-        })
-          .sort({ [sort]: -1 })
-          .exec();
-        return res.status(200).json({ posts });
-      }
+      // case 'posts':
+      //   {
+      //     const posts = await PostModel.find({
+      //       $or: [{ title: { $regex: searchkey, $options: 'i' } }, { textHTML: { $regex: searchkey, $options: 'i' } }],
+      //     });
+      //     return res.status(200).json({ posts });
+      //   }
+      //   break;
 
-      case 'subreddits': {
-        const subreddits = await CommunityModel.find({
-          $or: [{ name: { $regex: searchkey, $options: 'i' } }, { description: { $regex: searchkey, $options: 'i' } }],
-        })
-          .sort({ [sort]: -1 })
-          .exec();
-        return res.status(200).json({ subreddits });
-      }
+      case 'subreddits':
+        {
+          const subreddits = await getSrSearchResult(searchkey, page, limit);
+          return res.status(200).json({ subreddits });
+        }
+        break;
+
+      case 'users':
+        {
+          const users = await getUserSearchResult(searchkey, page, limit);
+          return res.status(200).json({ users });
+        }
+        break;
     }
   } catch (error) {
     return res.status(500).json({
@@ -48,3 +60,5 @@ export async function searchHomeHandler(
     });
   }
 }
+
+// create search sugesstions function so as user enters in the search bar it will show sugesstions

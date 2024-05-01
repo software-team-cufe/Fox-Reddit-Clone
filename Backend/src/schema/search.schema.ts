@@ -21,6 +21,8 @@ export const searchSubredditSchema = object({
   sort: string({
     required_error: 'sort is required',
   }),
+  page: string().optional(), // Make page optional
+  limit: string().optional(), // Make limit optional
 });
 
 export const searchNormalSchema = object({
@@ -36,6 +38,8 @@ export const searchNormalSchema = object({
     sort: string({
       required_error: 'sort is required',
     }),
+    page: string().optional(), // Make page optional
+    limit: string().optional(), // Make limit optional
   }),
 });
 
