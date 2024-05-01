@@ -142,6 +142,8 @@ class _MessageState extends State<Message> {
     }
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     final message = ModalRoute.of(context)!.settings.arguments;

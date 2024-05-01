@@ -78,6 +78,27 @@ class _inboxChatState extends State<inboxChat> {
     }
   }
 
+  Future<void> block() async {
+    Map<String, dynamic> block = {
+      'username': widget.username,
+      'type': 'block',
+    };
+    final response = await http.post(
+      Uri.parse(ApiRoutesBackend.block_unblock),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $access_token'
+      },
+      body: jsonEncode(block),
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('blocked  correctly ${response.statusCode}');
+    } else {
+      print('Failed to  block ${response.statusCode}');
+      // Return an empty list if the request fails
+    }
+  }
+
   @override
   void dispose() {
     _messageController.dispose();
@@ -106,12 +127,14 @@ class _inboxChatState extends State<inboxChat> {
                         size: 25,
                       ),
                     ),
-                    Text(
-                      widget.username,
-                      style: TextStyle(fontSize: 25),
-                    ),
+                    // Text(
+                    //   widget.username,
+                    //   style: TextStyle(fontSize: 25),
+                    // ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        block();
+                      },
                       child: Icon(
                         Icons.flag_outlined,
                         color: Colors.red,
@@ -130,7 +153,7 @@ class _inboxChatState extends State<inboxChat> {
                   final isCurrentUser = message['sender'] == widget.username;
 
                   return Align(
-                    alignment: (index%2==0)
+                    alignment: (index % 2 == 0)
                         ? Alignment.centerLeft
                         : Alignment.centerRight,
                     child: Container(
@@ -138,7 +161,7 @@ class _inboxChatState extends State<inboxChat> {
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                       padding: EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
-                        color: isCurrentUser ? Colors.blue : Colors.grey,
+                        color: isCurrentUser ? Colors.green[400] : Colors.green[400],
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Text(
