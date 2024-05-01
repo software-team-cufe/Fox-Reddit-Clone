@@ -22,6 +22,7 @@ import { useQuery } from "react-query";
 import { userAxios } from "../../../Utils/UserAxios";
 import { toast } from 'react-toastify';
 import EditModal from "./accessories/editBanner";
+import KickOutModal from "./accessories/kickOutModal";
 
 //helping functions for the notifications frequency and options menu
 
@@ -63,6 +64,7 @@ export default function CommunityPage() {
   const [editIcon, setEditIcon] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const[editComponent, setEditComponent] = useState("Banner");
+  const[showKickOut, setShowKickOut] = useState(false);
 
   //to fetch the community data from the server and use them
   const fetchCommunity = async () => {
@@ -106,12 +108,19 @@ export default function CommunityPage() {
           onlineMembers: 0,
           joined: joinedComms.includes(response.data.community.name),
           modded: moddedComms.includes(response.data.community.name),
-          favourited: favComms.includes(response.data.community.name)
+          favourited: favComms.includes(response.data.community.name),
+          type: "private"
         }
         setComm(newcomm);
+        if(newcomm.type == "private" && !joinedComms.includes(newcomm.name))
+        {
+          setShowKickOut(true);
+        }
       })
       .catch(error => {
         console.error('There was an error!', error);
+        toast.error("this community doesn't seem to exist, try again");
+        navigator("/404");
       })
   };
 
@@ -125,7 +134,6 @@ export default function CommunityPage() {
     }
     userAxios.get(link)
       .then((response) => {
-        console.log(response.data)
         const newPosts = response.data.map(post => ({
           subReddit: {
             image: comm.icon,
@@ -237,6 +245,7 @@ export default function CommunityPage() {
       <div className={`flex-1 -mt-4 md:w-3/4 w-full md:mx-auto relative`}>
         {showModal && <LoginFirtstModal onClose={setShowModal} />}
         {showEditModal && <EditModal onClose={setShowEditModal} optionheader={editComponent}/>}
+        {showKickOut && <KickOutModal></KickOutModal>}
         <BackToTop />
         {/* background image of the community */}
         <img src={comm.backimage} alt='community' className={`w-full md:mx-auto h-20 md:h-36 md:rounded-lg object-cover`}/>
