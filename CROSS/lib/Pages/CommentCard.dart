@@ -105,8 +105,11 @@ class _CommentCardState extends State<CommentCard> {
           children: [
             Row(
               children: [
-                avatarWidget, // Display the avatar
-                const SizedBox(width: 8.0),
+                const CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: AssetImage('assets/images/avatar.png'),
+                  radius: 15,
+                ), // Display the avatar
                 Text(
                   widget.username,
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -166,23 +169,47 @@ class _CommentCardState extends State<CommentCard> {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(LucideIcons.arrowUpCircle,
-                      color: hasVoted && voteDirection == VoteDirection.Up
-                          ? const Color(0xFFE74C3C)
-                          : null),
-                  onPressed: () => vote(VoteDirection.Up), // Upvote
-                ),
+                  icon: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child:
+                                hasVoted && voteDirection == VoteDirection.Up
+                                    ? Image.asset(
+                                        'assets/Icons/up vote.png',
+                                        key: UniqueKey(),
+                                        width: 18,
+                                        height: 18,
+                                      )
+                                    : Image.asset(
+                                        'assets/Icons/arrow-up.png',
+                                        key: UniqueKey(),
+                                        width: 18,
+                                        height: 18,
+                                      )),
+                        onPressed: () => vote(VoteDirection.Up),
+                      ),
                 Text(
                   "${voteCount.abs()}",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: Icon(LucideIcons.arrowDownCircle,
-                      color: hasVoted && voteDirection == VoteDirection.Down
-                          ? const Color.fromARGB(255, 214, 60, 231)
-                          : null),
-                  onPressed: () => vote(VoteDirection.Down), // Downvote
-                ),
+                  icon: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child:
+                                hasVoted && voteDirection == VoteDirection.Down
+                                    ? Image.asset(
+                                        'assets/Icons/down vote.png',
+                                        key: UniqueKey(),
+                                        width: 18,
+                                        height: 18,
+                                      )
+                                    : Image.asset(
+                                        'assets/Icons/arrow-down.png',
+                                        key: UniqueKey(),
+                                        width: 18,
+                                        height: 18,
+                                      )),
+                        onPressed: () => vote(VoteDirection.Down),
+                      ),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(LucideIcons.reply),
@@ -284,15 +311,15 @@ class _CommentCardState extends State<CommentCard> {
       children: replies
           .map(
             (reply) => CommentCard(
-                username: reply.username,
-                commentContent: reply.content,
-                votes: reply.votes,
-                onReply:
-                    () {}, // Implement reply functionality for replies if needed
-                onViewMenu:
-                    () {}, // Implement view menu functionality for replies if needed
-                replies: reply.replies,
-              ),
+              username: reply.username,
+              commentContent: reply.content,
+              votes: reply.votes,
+              onReply:
+                  () {}, // Implement reply functionality for replies if needed
+              onViewMenu:
+                  () {}, // Implement view menu functionality for replies if needed
+              replies: reply.replies,
+            ),
           )
           .toList(),
     );
