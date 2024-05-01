@@ -442,6 +442,8 @@ export async function chatMessagesHandler(req: Request, res: Response) {
     return res.status(200).json({
       response: 'success',
       messages: messages,
+      senderUsername: sender.username,
+      receiverUsername: res.locals.user.username,
     });
   } catch (error) {
     console.error('Error in chatMessagesHandler:', error);
