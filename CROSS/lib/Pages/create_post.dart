@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,6 +40,7 @@ class _CreatePostState extends State<CreatePost> {
   late List<String> communities = [];
   String selectedCommunity = '';
   late String access_token;
+  List attachments = [];
 
   // Variables to hold the states of the switches
   bool isSpoiler = false;
@@ -83,11 +86,12 @@ class _CreatePostState extends State<CreatePost> {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
       setState(() {
         isImageVisible = true;
-        imagePath = pickedFile.path;
+        attachments.add(bytes); 
       });
-      addWidget(ImageDisplay(imagePath: imagePath));
+      addWidget(ImageDisplay(imagePath: pickedFile.path));
     }
   }
 
@@ -103,16 +107,23 @@ class _CreatePostState extends State<CreatePost> {
     final pickedFile =
         await ImagePicker().pickVideo(source: ImageSource.gallery);
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      setState(() {
+        isVideoVisible = true;
+        attachments.add(bytes);
+      });
       final videoPath = pickedFile.path;
-      print('Video picked: $videoPath');
+      print('Video picked: $videoPath'); // Debugging print
       addWidget(VideoDisplay(videoPath: videoPath));
     }
   }
 
   void addWidget(Widget widgetToAdd) {
-    setState(() {
-      addedWidget = widgetToAdd;
-    });
+    addedWidget = SizedBox(
+      width: double.infinity,
+      height: 200,
+      child: widgetToAdd,
+    );
   }
 
   void fetchUserCommunities() async {
@@ -141,28 +152,38 @@ class _CreatePostState extends State<CreatePost> {
 
   Future<void> submitPost(String title, String text, bool isNsfw,
       bool isSpoiler, String urlController, List<String> Poll) async {
-    Map<String, dynamic> postData = {
-      'title': title,
-      'text': text,
-      'attachments': [
-        urlController,
-      ], // Add attachments if any
-      'nsfw': isNsfw, // Include value of NSFW switch
-      'spoiler': isSpoiler,
-      'poll': Poll, // Include value of spoiler switch
-    };
+    var formData = FormData();
 
-    if (selectedCommunity.isNotEmpty) {
-      postData['Communityname'] = selectedCommunity;
+    // Add attachments to formData
+    for (var attachment in attachments) {
+      formData.files.add(
+          MapEntry('attachments', await MultipartFile.fromBytes(attachment)));
     }
 
-    final response = await http.post(
-      Uri.parse(ApiRoutesBackend.submitPost),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $access_token'
-      },
-      body: jsonEncode(postData),
+    var fields = {
+      'request': jsonEncode({
+        'title': title,
+        'text': text,
+        'nsfw': isNsfw,
+        'spoiler': isSpoiler,
+        'poll': Poll,
+        if (selectedCommunity.isNotEmpty) 'Communityname': selectedCommunity,
+      }),
+    };
+
+    // Convert fields map to the required type
+    formData.fields.addAll(fields.entries);
+
+    var dio = Dio();
+    var response = await dio.post(
+      ApiRoutesBackend.submitPost,
+      data: formData,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $access_token',
+          'Content-Type': 'multipart/form-data',
+        },
+      ),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -203,8 +224,6 @@ class _CreatePostState extends State<CreatePost> {
                         final body = _bodyController.text;
                         String url = urlController.text;
                         if (title.isEmpty || body.isEmpty) {
-                          // Show error message or handle empty fields
-
                           return;
                         }
 
@@ -288,97 +307,108 @@ class _CreatePostState extends State<CreatePost> {
                 ),
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: addedWidget != null ? [addedWidget!] : [],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: addedWidget != null ? [addedWidget!] : [],
+                ),
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          isURLVisible = !isURLVisible;
-                          if (isURLVisible) {
-                            isImageVisible = false;
-                            isVideoVisible = false;
-                          }
-                        });
-                        addWidget(
-                          isURLVisible
-                              ? TextField(
-                                  controller: urlController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'URL',
-                                  ),
-                                )
-                              : Container(),
-                        );
-                      },
-                      child: FaIcon(
-                        FontAwesomeIcons.link,
-                        size: iconsize,
-                        color: Colors.white,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              isURLVisible = !isURLVisible;
+                              if (isURLVisible) {
+                                isImageVisible = false;
+                                isVideoVisible = false;
+                                if (urlController.text.isNotEmpty) {
+                                  attachments.add(urlController.text);
+                                }
+                              }
+                            });
+                            addWidget(
+                              isURLVisible
+                                  ? TextField(
+                                      controller: urlController,
+                                      decoration: const InputDecoration(
+                                        labelText: 'URL',
+                                      ),
+                                    )
+                                  : Container(),
+                            );
+                          },
+                          child: FaIcon(
+                            FontAwesomeIcons.link,
+                            size: iconsize,
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              isImageVisible = !isImageVisible;
+                              if (isImageVisible) {
+                                isURLVisible = false;
+                                isVideoVisible = false;
+                              }
+                            });
+                            pickImage();
+                          },
+                          child: FaIcon(
+                            FontAwesomeIcons.image,
+                            size: iconsize,
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              isVideoVisible = !isVideoVisible;
+                              if (isVideoVisible) {
+                                isURLVisible = false;
+                                isImageVisible = false;
+                              }
+                            });
+                            pickVideo();
+                          },
+                          child: FaIcon(
+                            FontAwesomeIcons.play,
+                            size: iconsize,
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: togglePollVisibility,
+                          child: FaIcon(
+                            FontAwesomeIcons.listOl,
+                            size: iconsize,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                    TextButton(
-                      onPressed: () async {
-                        setState(() {
-                          isImageVisible = !isImageVisible;
-                          if (isImageVisible) {
-                            isURLVisible = false;
-                            isVideoVisible = false;
-                          }
-                        });
-                        pickImage();
-                      },
-                      child: FaIcon(
-                        FontAwesomeIcons.image,
-                        size: iconsize,
-                        color: Colors.white,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        setState(() {
-                          isVideoVisible = !isVideoVisible;
-                          if (isVideoVisible) {
-                            isURLVisible = false;
-                            isImageVisible = false;
-                          }
-                        });
-                        pickVideo();
-                      },
-                      child: FaIcon(
-                        FontAwesomeIcons.play,
-                        size: iconsize,
-                        color: Colors.white,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: togglePollVisibility,
-                      child: FaIcon(
-                        FontAwesomeIcons.listOl,
-                        size: iconsize,
-                        color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton(
+                        onPressed: doubleIconSizeOnce,
+                        child: FaIcon(
+                          FontAwesomeIcons.arrowUp,
+                          size: arrowsize,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextButton(
-                    onPressed: doubleIconSizeOnce,
-                    child: FaIcon(
-                      FontAwesomeIcons.arrowUp,
-                      size: arrowsize,
-                      color: Colors.white,
-                    ),
-                  ),
                 ),
               ],
             )
