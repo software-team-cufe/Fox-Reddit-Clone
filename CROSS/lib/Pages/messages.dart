@@ -61,9 +61,30 @@ class _MessageState extends State<Message> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
+        final List<dynamic> receivedMessages = data['messages'];
+
+        // Use a Set to keep track of encountered message identifiers
+        Set<String> encounteredMessageIds = Set();
+
+        // Filter out duplicate messages
+        List<dynamic> uniqueMessages = [];
+
+        for (var message in receivedMessages) {
+          String? messageId = message[
+              'subject']; // Assuming 'id' is the unique identifier of a message
+
+          // Check if messageId is not null before proceeding
+          if (messageId != null) {
+            // Check if the message has been encountered before
+            if (!encounteredMessageIds.contains(messageId)) {
+              encounteredMessageIds.add(messageId); // Add message id to set
+              uniqueMessages.add(message); // Add unique message to list
+            }
+          }
+        }
 
         setState(() {
-          messages = data['messages'];
+          messages = uniqueMessages;
         });
         print('message fetched correctly ${response.statusCode}');
       } else {
@@ -126,6 +147,8 @@ class _MessageState extends State<Message> {
     final message = ModalRoute.of(context)!.settings.arguments;
     double drawerWidth = MediaQuery.of(context).size.width * 0.8;
     double userWidth = MediaQuery.of(context).size.width * 0.7;
+    Set<String> uniqueMessages =
+        messages.map((message) => json.encode(message)).toSet();
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.black,
@@ -242,7 +265,6 @@ class _MessageState extends State<Message> {
                       : ListView.builder(
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
-                            fetchUser(access_token!);
                             var message = messages[index];
                             String fromUser = message['fromUsername'] ?? '';
                             String titleText = fromUser;
@@ -274,10 +296,14 @@ class _MessageState extends State<Message> {
                               ),
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            inboxChat(username: titleText,subject:message['subject'])));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => inboxChat(
+                                      username: titleText,
+                                      subject: message['subject'],
+                                    ),
+                                  ),
+                                );
                               },
                             );
                           },
