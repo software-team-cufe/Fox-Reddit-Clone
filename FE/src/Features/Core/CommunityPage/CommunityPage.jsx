@@ -68,6 +68,36 @@ export default function CommunityPage() {
 
   //to fetch the community data from the server and use them
   const fetchCommunity = async () => {
+    if(user == null){
+
+      await userAxios.get(`/${community}`)
+      .then((response) => {
+        const newcomm = {
+          id: response.data.community._id,
+          name: response.data.community.name,
+          icon: response.data.community.icon,
+          backimage: response.data.community.banner,
+          rules: response.data.community.communityRules,
+          membersCount: response.data.community.membersCnt,
+          onlineMembers: 0,
+          joined: false,
+          modded: false,
+          favourited: false,
+          type: "private"
+        }
+        setComm(newcomm);
+        if(newcomm.type == "private")
+        {
+          setShowKickOut(true);
+        }
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+        toast.error("this community doesn't seem to exist, try again");
+        navigator("/404");
+      })
+    }
+    else{
     let joinedComms = 0;
     await userAxios.get(`/subreddits/mine/member`)
       .then((response) => {
@@ -122,6 +152,7 @@ export default function CommunityPage() {
         toast.error("this community doesn't seem to exist, try again");
         navigator("/404");
       })
+    }
   };
 
   let { isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
