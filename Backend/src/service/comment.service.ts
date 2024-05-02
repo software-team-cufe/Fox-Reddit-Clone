@@ -134,3 +134,21 @@ export function findReplies(repliesIds: string[]) {
     _id: { $in: repliesIds },
   });
 }
+/**
+ * Extracts usernames from a given textJSON string that are preceded by "/".
+ *
+ * @param {string} textJSON - The textJSON string to extract usernames from.
+ * @return {string[]} An array of usernames extracted from the textJSON string.
+ */
+export function extractUsernamesFromTextJSON(textJSON: string): string[] {
+  // Example regex to extract usernames from textJSON preceded by "/"
+  const regex = /\/([a-zA-Z0-9_]+)/g;
+  const matches = textJSON.match(regex);
+
+  if (!matches) return [];
+
+  // Extract usernames from the matched strings
+  const usernames = matches.map((match) => match.slice(1));
+
+  return usernames;
+}
