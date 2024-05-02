@@ -43,6 +43,7 @@ import {
   userSubmittedPosts,
   addPostVoteToUser,
   addCommentVoteToUser,
+  findUserById,
 } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
 import { findCommunityByName } from '../service/community.service';
@@ -52,6 +53,7 @@ import CommunityModel from '../model/community.model';
 import { date } from 'zod';
 import { post } from '@typegoose/typegoose';
 import { ObjectId } from 'mongoose';
+import { createNotification } from '../service/notification.service';
 
 /**
  * Delete handler function that handles deletion of comments and posts based on the given id.
@@ -898,7 +900,7 @@ export async function votePostHandler(req: Request, res: Response) {
         message: 'Post not found',
       });
     }
-
+    const author = await findUserById(post.userID.toString());
     // Check if user is missing or invalid
     if (!user) {
       return res.status(401).json({
@@ -910,7 +912,17 @@ export async function votePostHandler(req: Request, res: Response) {
     if (type == 1) {
       const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), 1);
       const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), 1);
-
+      //create upvote notification
+      if (author) {
+        createNotification(
+          author._id,
+          author.avatar ?? 'default_avatar_url',
+          'New Upvote!',
+          'Upvote',
+          `${user.username} upvoted your post!`,
+          post._id
+        );
+      }
       res.status(200).json({
         status: 'success',
         message: 'Post is upvoted successfully',
