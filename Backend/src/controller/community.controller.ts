@@ -1618,7 +1618,7 @@ export async function unlockPostHandler(req: Request, res: Response) {
   }
 }
 
-export async function uploadCommunityPhoto(req: Request, res: Response) {
+export async function uploadCommunityIcon(req: Request, res: Response) {
   try {
     if (!req.file || Object.keys(req.file).length === 0) {
       throw new Error('No file uploaded');
@@ -1647,6 +1647,42 @@ export async function uploadCommunityPhoto(req: Request, res: Response) {
     }
 
     await CommunityModel.findByIdAndUpdate(community._id, { icon: image[0] }, { runValidators: true });
+  } catch (error) {
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+export async function uploadCommunityBanner(req: Request, res: Response) {
+  try {
+    if (!req.file || Object.keys(req.file).length === 0) {
+      throw new Error('No file uploaded');
+    }
+
+    const image = res.locals.image;
+    const user = res.locals.user;
+    const userId = user._id;
+    const community = await findCommunityByName(req.params.subreddit);
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const communityId = community._id;
+
+    //check if user is a moderator in this community
+    //get user with id and then check if community id matches any of the community ids the user is a moderator in
+    const isModerator = user.moderators
+      ? user.moderators.some((moderators: Moderator) => moderators.communityId === communityId)
+      : false;
+    if (!isModerator) {
+      return res.status(403).json({
+        error: 'User is not a moderator of this community',
+      });
+    }
+
+    await CommunityModel.findByIdAndUpdate(community._id, { banner: image[0] }, { runValidators: true });
   } catch (error) {
     return res.status(500).json({
       error: 'Internal server error',
@@ -1757,5 +1793,85 @@ export async function getPendingMembersHandler(req: Request, res: Response) {
     return res.status(200).json({ status: 'success', users });
   } catch (err) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+export async function deleteCommunityIcon(req: Request, res: Response) {
+  try {
+    if (!req.file || Object.keys(req.file).length === 0) {
+      throw new Error('No file uploaded');
+    }
+
+    const image = res.locals.image;
+    const user = res.locals.user;
+    const userId = user._id;
+    const community = await findCommunityByName(req.params.subreddit);
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const communityId = community._id;
+
+    //check if user is a moderator in this community
+    //get user with id and then check if community id matches any of the community ids the user is a moderator in
+    const isModerator = user.moderators
+      ? user.moderators.some((moderators: Moderator) => moderators.communityId === communityId)
+      : false;
+    if (!isModerator) {
+      return res.status(403).json({
+        error: 'User is not a moderator of this community',
+      });
+    }
+
+    await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { icon: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' },
+      { runValidators: true }
+    );
+  } catch (error) {
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+export async function deleteCommunityBanner(req: Request, res: Response) {
+  try {
+    if (!req.file || Object.keys(req.file).length === 0) {
+      throw new Error('No file uploaded');
+    }
+
+    const image = res.locals.image;
+    const user = res.locals.user;
+    const userId = user._id;
+    const community = await findCommunityByName(req.params.subreddit);
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const communityId = community._id;
+
+    //check if user is a moderator in this community
+    //get user with id and then check if community id matches any of the community ids the user is a moderator in
+    const isModerator = user.moderators
+      ? user.moderators.some((moderators: Moderator) => moderators.communityId === communityId)
+      : false;
+    if (!isModerator) {
+      return res.status(403).json({
+        error: 'User is not a moderator of this community',
+      });
+    }
+
+    await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { banner: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714595299/gcnool3ibj3zfyoa1emq.jpg' },
+      { runValidators: true }
+    );
+  } catch (error) {
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
   }
 }

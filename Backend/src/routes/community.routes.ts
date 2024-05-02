@@ -33,6 +33,10 @@ import {
   editCommunityRemovalResonsHandler,
   getCommunityRemovalResonsHandler,
   getCommunityOfUserAsCreatorHandler,
+  uploadCommunityIcon,
+  uploadCommunityBanner,
+  deleteCommunityIcon,
+  deleteCommunityBanner,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -49,6 +53,9 @@ import {
   lockCommentSchema,
   editCommunityRemovalResonsSchema,
 } from '../schema/community.schema';
+import uploadSingleMulter from '../middleware/multer/singleImage';
+import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple';
+import { resizeCommunityIcon, resizeCommunityBanner } from '../middleware/resizeCommunityPhoto';
 
 const router = express.Router();
 
@@ -97,5 +104,23 @@ router.post('/:subreddit/api/lock_comment', validateResource(lockCommentSchema),
 router.post('/:subreddit/api/unlock_post', validateResource(lockPostSchema), unlockPostHandler);
 router.post('/:subreddit/api/unlock_comment', validateResource(lockCommentSchema), unlockCommentHandler);
 router.get('/:subreddit/about/pending_members', validateResource(subscribeCommunitySchema), getPendingMembersHandler);
+
+router.post(
+  '/:subreddit/api/upload_sr_icon',
+  uploadSingleMulter.single('image'),
+  resizeCommunityIcon,
+  uploadSingleCloudinary,
+  uploadCommunityIcon
+);
+
+router.post(
+  '/:subreddit/api/upload_sr_banner',
+  uploadSingleMulter.single('image'),
+  resizeCommunityBanner,
+  uploadSingleCloudinary,
+  uploadCommunityBanner
+);
+router.delete('/:subreddit/api/delete_sr_icon', validateResource(subscribeCommunitySchema), deleteCommunityIcon);
+router.delete('/:subreddit/api/delete_sr_banner', validateResource(subscribeCommunitySchema), deleteCommunityBanner);
 
 export default router;
