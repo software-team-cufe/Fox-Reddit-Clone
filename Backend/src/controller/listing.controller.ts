@@ -27,7 +27,14 @@ import {
   userPosts,
   addVoteToPost,
 } from '../service/post.service';
-import { add_comment, findCommentById, createComment, addVoteToComment } from '../service/comment.service';
+import {
+  findCommentById,
+  createComment,
+  addVoteToComment,
+  createReplay,
+  findRepliesIdByCommentId,
+  findReplies,
+} from '../service/comment.service';
 import {
   findUserByUsername,
   userHiddenPosts,
@@ -42,6 +49,8 @@ import UserModel from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import CommunityModel from '../model/community.model';
 import { date } from 'zod';
+import { post } from '@typegoose/typegoose';
+import { ObjectId } from 'mongoose';
 
 /**
  * Delete handler function that handles deletion of comments and posts based on the given id.
@@ -1181,5 +1190,131 @@ export async function getUserHiddenPostsHandler(req: Request, res: Response, nex
     res.status(200).json({ posts });
   } catch (err) {
     return next(err);
+  }
+}
+/**
+ * Handles the request to add a reply to a comment.
+ *
+ * @param {Request} req - The request object containing the reply data.
+ * @param {Response} res - The response object to send the result.
+ * @return {Promise<void>} A promise that resolves when the reply is added and the response is sent.
+ */
+export async function addReplyHandler(req: Request, res: Response) {
+  try {
+    const { linkID, textHTML, textJSON } = req.body;
+
+    // Extract user and post
+    const user = await findUserByUsername(res.locals.user.username as string);
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const commentID = linkID.toString();
+
+    const comment = await findCommentById(commentID);
+    if (!comment) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Comment not found',
+      });
+    }
+    const post = await findPostById(comment.postID.toString());
+
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Create the new comment
+    const newReply = new CommentModel({
+      textHTML: textHTML,
+      textJSON: textJSON,
+      isRoot: false,
+      authorId: user._id,
+      replyingTo: commentID,
+      postID: comment.postID,
+      communityID: post.CommunityID,
+      voters: [{ userID: user._id, voteType: 1 }],
+    });
+    const createdReply = await createReplay(newReply);
+
+    // Save the new comment
+    if (!createdReply) {
+      return res.status(400).json({ message: 'Failed to create the reply' });
+    }
+
+    // Update user and post with the new comment
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { hasReply: createdReply._id } }, // Using $addToSet to avoid adding duplicate comments
+      { new: true, upsert: true }
+    );
+
+    const updatedComment = await CommentModel.findByIdAndUpdate(
+      comment._id,
+      { $addToSet: { replies: createdReply._id } },
+      { new: true, upsert: true }
+    );
+
+    res.status(201).json(createdReply); // 201: Created
+  } catch (error) {
+    console.error('Error in addReplyHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles the request to get the replies for a specific comment.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @return {Promise<void>} A promise that resolves when the replies are retrieved and sent in the response.
+ */
+export async function getCommentRepliesHandler(req: Request, res: Response) {
+  try {
+    const commentId = req.params.commentId;
+    if (!commentId) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Invalid request parameters',
+      });
+    }
+
+    // Extract user and post
+    const user = await findUserByUsername(res.locals.user.username as string);
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const commentID = commentId.toString();
+
+    const comment = await findCommentById(commentID);
+    if (!comment) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Comment not found',
+      });
+    }
+    const repliesId: string[] = (await findRepliesIdByCommentId(comment._id.toString())).map((reply) =>
+      reply._id.toString()
+    );
+    const replies = await findReplies(repliesId);
+    res.status(200).json(replies);
+  } catch (error) {
+    console.error('Error in getCommentRepliesHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
   }
 }

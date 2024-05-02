@@ -20,6 +20,8 @@ import {
   getSortedPosts,
   getUserHiddenPostsHandler,
   getUserSavedPostsHandler,
+  addReplyHandler,
+  getCommentRepliesHandler,
 } from '../controller/listing.controller';
 import validateResource from '../middleware/validateResource';
 import uploadMultipleMulter from '../middleware/multer/multipleFiles';
@@ -68,5 +70,8 @@ router.post(
   submitPostHandler
 );
 router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);
+
+router.post('/api/addreply', validateResource(addCommentSchema), addReplyHandler);
+router.get('/api/get_comment_replies/:commentId', getCommentRepliesHandler);
 
 export default router;
