@@ -1,9 +1,57 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { userAxios } from "@/Utils/UserAxios";
+import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
-export default function RemovalForm({ onClose, editing, removal }) {
-    const [Rule, setRule] = useState(editing ? removal.title : "");
+export default function RemovalForm({ onClose, editing, removal, index, list, setlist }) {
+    const [Removal, setRemoval] = useState(editing ? removal.title : "");
     const [Message, setMessage] = useState(editing ? removal.Message : "");
+    const {community} = useParams();
+
+    const submitDelete = () => {
+        console.log(index);
+        const updatedList = list.filter((rule, i) => i !== index);
+        const pack = { rules: updatedList };
+
+        console.log(pack);
+        userAxios.patch(`${community}/api/edit_removal_reasons`, pack)
+            .then(() => {
+                toast.success("Removal reason deleted");
+                setlist(updatedList);
+                onClose(false);
+            })
+            .catch(error => {
+                console.log(error);
+                toast.error("Error deleting removal reason")});
+    };
+
+    const submitRemoval = () => {
+        const newRule = {
+          title: Removal,
+          description: Message,
+        };
+      
+        let updatedList;
+        if (editing) {
+          updatedList = list.map((rule, i) => (i === index ? newRule : rule));
+        } else {
+          updatedList = [...list, newRule];
+        }
+      
+        const pack = { rules: updatedList };
+      
+        userAxios.patch(`${community}/api/edit_removal_reasons`, pack)
+          .then(() =>{
+          if(editing) toast.success("Removal reason edited");
+          else toast.success("Removal reason added");
+          setlist(updatedList);
+          onClose(false);
+          })
+          .catch(error => {
+            console.log(error);
+            toast.error("Error adding Removal reason")});
+      };
 
     return (
         <>
@@ -21,20 +69,20 @@ export default function RemovalForm({ onClose, editing, removal }) {
                                         <X className="w-5 h-5 text-gray-500 hover:text-black" onClick={() => onClose(false)} />
                                     </div>
                                     <hr className="my-2 font-light text-gray-900" />
-                                    <input type="text" maxLength={50} placeholder='Rule displayed (e.g. "no photos")' className="w-full p-2 h-12 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={Rule} onChange={(e) => setRule(e.target.value)} />
-                                    <label className="text-xs my-3 mb-1 text-gray-400 font-semibold">{50 - Rule.length} Characters remaining</label>
+                                    <input type="text" maxLength={50} placeholder='Rule displayed (e.g. "no photos")' className="w-full p-2 h-12 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={Removal} onChange={(e) => setRemoval(e.target.value)} />
+                                    <label className="text-xs my-3 mb-1 text-gray-400 font-semibold">{50 - Removal.length} Characters remaining</label>
 
                                     <p className="text-md mt-3 font-semibold">Reason message:</p>
                                     <p className="text-xs mb-2 text-gray-600 font-semibold">Hi u/username,</p>
 
-                                    <textarea maxLength={10000} placeholder='Reason rule is broken (e.g. "this is a photo")' className="w-full p-2 h-24 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={Message} onChange={(e) => setMessage(e.target.value)} />
+                                    <textarea maxLength={10000} placeholder='Write a message that will communitcate to the user why their post was removed.' className="w-full p-2 h-24 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={Message} onChange={(e) => setMessage(e.target.value)} />
                                     <label className="text-xs mb-1 text-gray-400 font-semibold">{10000 - Message.length} Characters remaining</label>
 
                                     <div className="flex justify-between mt-4 p-3 h-16 -mx-3 -mb-4 rounded-b-lg bg-gray-200">
-                                        {editing ? <button className="ml-2 text-red-500 font-semibold hover:text-red-600" onClick={() => onClose(false)}>Delete</button> : <div></div>}
+                                        {editing ? <button className="ml-2 text-red-500 font-semibold hover:text-red-600" onClick={() => submitDelete()}>Delete</button> : <div></div>}
                                         <div className={`flex gap-3`}>
                                             <button className="p-2 px-4 font-bold text-sm border border-opacity-75 border-gray-600 rounded-full hover:border-black" onClick={() => onClose(false)}>Cancel</button>
-                                            <button className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Rule.length == 0 || Message.length == 0}>Save</button>
+                                            <button className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Removal.length == 0 || Message.length == 0} onClick={() => submitRemoval()}>Save</button>
                                         </div>
                                     </div>
                                 </div>

@@ -2,15 +2,16 @@ import { Link, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import ProfileSettings from '../../Features/Core/Settings/PofileSettings';
-import { userStore } from '../../hooks/UserRedux/UserStore';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 export default function Card (){
 
     const navigator=useNavigate();
      const handleNavigate=()=>{
        navigator('/setting/profile');
     }
-    const username =userStore.getState().user.user.username;
+    const username = useSelector(state => state.user.user.username);
     return(
         <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
         

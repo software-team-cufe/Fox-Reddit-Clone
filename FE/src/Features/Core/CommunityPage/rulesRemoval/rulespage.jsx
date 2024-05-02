@@ -9,6 +9,7 @@ export default function RulesPage() {
 
   const {community} = useParams();
   const [loading, setLoading] = useState(true);
+  const [crash, setCrash] = useState(false);
 
   useEffect(() => {
     userAxios.get(`${community}/api/rules`)
@@ -25,6 +26,8 @@ export default function RulesPage() {
     })
     .catch(error => {
       console.log(error);
+      setCrash(true);
+      setLoading(false);
     })
   }, []);
 
@@ -41,12 +44,21 @@ export default function RulesPage() {
       )
     }
 
+    if(crash){
+      return (
+          <div role="communitypage" className="w-100 h-100 flex flex-col items-center justify-center">
+          <img src={'/snooNotFound.jpg'} className="h-96 w-96 mt-20 mx-auto" alt="Logo" />
+          <p className="text-gray-600 mx-auto font-semibold">Failed to load page</p>
+          </div>
+      )
+      }
+
     return (
         <div>
             {ShowForm && <RuleForm onClose={setShowForm} index={trigger} setlist={setRules} list={Rules} editing={Editing} rule={Rules[trigger]}/>}
-            <div className="flex justify-end mb-4 gap-3 mr-2">
-                <button className="p-2 font-semibold text-sm rounded-full hover:bg-gray-200">Reorder rules</button>
-                <button className="p-2 px-4 font-bold text-sm rounded-full hover:bg-blue-500 bg-blue-600 text-white" onClick={()=>{setShowForm(true); setEditing(false);}}>Add rule</button>
+            <div id="rulePageSectionBar" role="rulePageSectionBar" className="flex justify-end mb-4 gap-3 mr-2">
+                <button id="arrangeRulesButton" role="arrangeRulesButton" className="p-2 font-semibold text-sm rounded-full hover:bg-gray-200">Reorder rules</button>
+                <button id="addRuleButton" role="addRuleButton" className="p-2 px-4 font-bold text-sm rounded-full hover:bg-blue-500 bg-blue-600 text-white" onClick={()=>{setShowForm(true); setEditing(false);}}>Add rule</button>
             </div>
             {Rules.length == 0 ?
             (
