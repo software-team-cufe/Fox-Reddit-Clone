@@ -1186,7 +1186,7 @@ export async function uploadUserPhoto(req: Request, res: Response) {
     const image = res.locals.image;
 
     //update user avatar by new link from cloudinary
-    await UserModel.findByIdAndUpdate(userId, { avatar: image[0] }, { runValidators: true });
+    await UserModel.findByIdAndUpdate(userId, { avatar: image }, { runValidators: true });
     res.status(200).json({
       msg: 'Avatar uploaded successfully',
       avatar: image,
