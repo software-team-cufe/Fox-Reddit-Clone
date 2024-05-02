@@ -1,5 +1,5 @@
 import appError from '../utils/appError';
-import CommunityModel, { Community, CommunityRule } from '../model/community.model';
+import CommunityModel, { Community, CommunityRule, removalReason } from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
 import { findPostById } from './post.service';
@@ -458,6 +458,33 @@ export async function editCommunityRules(subreddit: string, rules: CommunityRule
   };
 }
 
+export async function editCommunityRemovalReasons(subreddit: string, reasons: removalReason[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { removalReasons: reasons },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
 /**
  *  mark Spam Post
  * @param {string} body contain rules details
@@ -667,4 +694,14 @@ export async function addUserToPending(userID: string, subreddit: string) {
   return {
     status: true,
   };
+}
+
+export async function getSrSearchResult(query: string, page: number, limit: number) {
+  const communityResults = await CommunityModel.find({
+    $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
+  })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .select('icon name membersCnt description');
+  return communityResults;
 }

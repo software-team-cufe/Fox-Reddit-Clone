@@ -30,6 +30,13 @@ import {
   unlockCommentHandler,
   getCommunityRulesHandler,
   getPendingMembersHandler,
+  editCommunityRemovalResonsHandler,
+  getCommunityRemovalResonsHandler,
+  getCommunityOfUserAsCreatorHandler,
+  uploadCommunityIcon,
+  uploadCommunityBanner,
+  deleteCommunityIcon,
+  deleteCommunityBanner,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -44,12 +51,17 @@ import {
   approveSpamCommentSchema,
   lockPostSchema,
   lockCommentSchema,
+  editCommunityRemovalResonsSchema,
 } from '../schema/community.schema';
+import uploadSingleMulter from '../middleware/multer/singleImage';
+import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple';
+import { resizeCommunityIcon, resizeCommunityBanner } from '../middleware/resizeCommunityPhoto';
 
 const router = express.Router();
 
 router.get('/subreddits/mine/member', getCommunityOfUserAsMemeberHandler);
 router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
+router.get('/subreddits/mine/creator', getCommunityOfUserAsCreatorHandler);
 router.get('/subreddits/mine/favorite', getFavoriteCommunitiesOfUserHandler);
 router.get('/:subreddit', validateResource(getCommunitySchema), getCommunityHandler);
 router.post('/create_subreddit', validateResource(createCommunitySchema), createSubredditHandler);
@@ -67,6 +79,12 @@ router.get('/:subreddit/about/spam_posts', validateResource(subscribeCommunitySc
 router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunitySchema), getSpamCommentsHandler);
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
 router.get('/:subreddit/api/rules', validateResource(getCommunitySchema), getCommunityRulesHandler);
+router.patch(
+  '/:subreddit/api/edit_removal_reasons',
+  validateResource(editCommunityRemovalResonsSchema),
+  editCommunityRemovalResonsHandler
+);
+router.get('/:subreddit/api/removal_reasons', validateResource(getCommunitySchema), getCommunityRemovalResonsHandler);
 router.post('/:subreddit/api/mark_spam_post', validateResource(spamPostSchema), markSpamPostHandler);
 router.post('/:subreddit/api/mark_spam_comment', validateResource(spamCommentSchema), markSpamCommentHandler);
 router.post('/:subreddit/api/approve_spam_post', validateResource(approveSpamPostSchema), approveSpamPostHandler);
@@ -86,5 +104,23 @@ router.post('/:subreddit/api/lock_comment', validateResource(lockCommentSchema),
 router.post('/:subreddit/api/unlock_post', validateResource(lockPostSchema), unlockPostHandler);
 router.post('/:subreddit/api/unlock_comment', validateResource(lockCommentSchema), unlockCommentHandler);
 router.get('/:subreddit/about/pending_members', validateResource(subscribeCommunitySchema), getPendingMembersHandler);
+
+router.post(
+  '/:subreddit/api/upload_sr_icon',
+  uploadSingleMulter.single('image'),
+  resizeCommunityIcon,
+  uploadSingleCloudinary,
+  uploadCommunityIcon
+);
+
+router.post(
+  '/:subreddit/api/upload_sr_banner',
+  uploadSingleMulter.single('image'),
+  resizeCommunityBanner,
+  uploadSingleCloudinary,
+  uploadCommunityBanner
+);
+router.delete('/:subreddit/api/delete_sr_icon', validateResource(subscribeCommunitySchema), deleteCommunityIcon);
+router.delete('/:subreddit/api/delete_sr_banner', validateResource(subscribeCommunitySchema), deleteCommunityBanner);
 
 export default router;

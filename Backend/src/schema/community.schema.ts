@@ -65,6 +65,24 @@ export const editCommunityRulesSchema = object({
   }),
 });
 
+export const editCommunityRemovalResonsSchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+  body: object({
+    reasons: array(
+      object({
+        title: string({
+          required_error: 'title is required',
+        }),
+        description: string().optional(),
+      })
+    ),
+  }),
+});
+
 export const spamPostSchema = object({
   params: object({
     subreddit: string({

@@ -195,17 +195,6 @@ export class notificationSettings {
   modNotifications?: boolean;
 }
 
-// class userNotifications {
-//   @prop({ ref: () => Notification, required: true })
-//   notificationId: Ref<Notification>;
-
-//   @prop({ required: true, default: false })
-//   isRead: boolean;
-
-//   @prop({ required: true, default: false })
-//   isDeleted: boolean;
-// }
-
 class About {
   @prop({ default: false })
   isBlocked?: boolean;
@@ -236,14 +225,14 @@ class IsBannedOrMuted {
   date?: Date;
 }
 class notificationInfo {
-  @prop({ ref: 'Notifications' })
-  notificationID?: Ref<Notifications>;
+  @prop({ ref: () => 'Notifications' })
+  notificationId?: Ref<Notifications>;
 
   @prop({ default: false })
   isRead!: boolean;
 
   @prop({ default: false })
-  isDeleted!: boolean;
+  isHidden!: boolean;
 }
 
 class Member {
@@ -257,7 +246,7 @@ class Member {
   isBanned?: IsBannedOrMuted;
 }
 
-class VotePost {
+export class VotePost {
   @prop({ ref: () => 'Post' })
   postID?: Ref<Post>;
 
@@ -325,7 +314,7 @@ export class User {
   @prop({ required: true, default: () => new Date() })
   createdAt!: Date;
 
-  @prop({ default: 'default.jpg' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' })
   avatar?: string;
 
   @prop({ enum: ['male', 'female'] })
@@ -414,13 +403,10 @@ export class User {
   /***************************************
              relations
    ***************************************/
-  //youssef Notifications
-  // @prop({ type: () => 'Notification' })
-  // notificationsArray: Ref<Notification>[];
 
   //sharif suggestion
   @prop()
-  notifications?: notificationInfo[];
+  notifArray?: notificationInfo[];
 
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];

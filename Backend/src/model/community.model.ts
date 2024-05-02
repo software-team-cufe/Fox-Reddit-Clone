@@ -28,6 +28,14 @@ export class CommunityRule {
   reason?: string;
 }
 
+export class removalReason {
+  @prop()
+  title?: string;
+
+  @prop()
+  description?: string;
+}
+
 class FAQ {
   @prop()
   question?: string;
@@ -137,10 +145,10 @@ export class Community {
   @prop({ required: false, trim: true, maxLength: 100000, minLength: 1 })
   description?: string;
 
-  @prop({ default: 'default-banner.jpg' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714595299/gcnool3ibj3zfyoa1emq.jpg' })
   banner?: string;
 
-  @prop({ default: 'default-icon.jpg' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' })
   icon?: string;
 
   @prop({ default: 0 })
@@ -168,6 +176,9 @@ export class Community {
 
   @prop()
   communityRules?: CommunityRule[];
+
+  @prop()
+  removalReasons?: removalReason[];
 
   @prop({ type: CommunityOptions, default: {} })
   communityOptions?: CommunityOptions;

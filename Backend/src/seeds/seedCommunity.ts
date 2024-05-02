@@ -30,7 +30,7 @@ export async function seedCommunity() {
 
       const communityData = {
         //  _id: new mongoose.Types.ObjectId(), // Generate a valid ObjectId string
-        subreddit: subredditName, // Generate a random subreddit name
+        name: subredditName, // Generate a random subreddit name
         description: 'This is a sample community description.' + faker.lorem.sentence(), // Generate a random description
         icon: faker.image.url(), // Generate a random image URL
         banner: faker.image.url(), // Generate a random image URL

@@ -123,6 +123,7 @@ export const submitPostSchema = object({
       }),
       CommunityID: string().optional(),
     }),
+    attachments: array(any()).optional(),
   }),
 });
 

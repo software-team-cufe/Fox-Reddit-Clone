@@ -28,6 +28,6 @@ export class Notifications {
   createdAt: Date;
 }
 
-const NotificationModel = getModelForClass(Notification);
+const NotificationsModel = getModelForClass(Notifications);
 
-export default NotificationModel;
+export default NotificationsModel;
