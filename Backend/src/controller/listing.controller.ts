@@ -34,6 +34,7 @@ import {
   createReplay,
   findRepliesIdByCommentId,
   findReplies,
+  extractUsernamesFromTextJSON,
 } from '../service/comment.service';
 import {
   findUserByUsername,
@@ -310,6 +311,23 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
       { new: true, upsert: true }
     );
 
+    // Check for mentioned users in textJSON and update mentionedInUsers in post model
+    const mentionedUsernames = await extractUsernamesFromTextJSON(textJSON);
+    if (mentionedUsernames.length > 0) {
+      const mentionedUsers = await UserModel.find({ username: { $in: mentionedUsernames } });
+      await PostModel.findByIdAndUpdate(
+        post._id,
+        { $addToSet: { mentionedInUsers: { $each: mentionedUsers.map((user) => user._id) } } },
+        { new: true, upsert: true }
+      );
+
+      // Update mentionedInPosts in post model
+      await PostModel.findByIdAndUpdate(
+        post._id,
+        { $addToSet: { mentionedInPosts: postID } },
+        { new: true, upsert: true }
+      );
+    }
     res.status(201).json(createdComment); // 201: Created
   } catch (error) {
     console.error('Error in addCommentHandler:', error);
@@ -1317,3 +1335,101 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
     });
   }
 }
+/**
+ * Handle mentioning a user in a post.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A Promise representing the completion of the function.
+ */
+export async function mentionUserHandler(req: Request, res: Response) {
+  try {
+    const commentId = req.body.commentId.toString();
+
+    // Extract user and post
+    const user = await findUserByUsername(res.locals.user.username as string);
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const mentionedUser = await UserModel.findOne({ username: req.body.mentionedUsername });
+    if (!mentionedUser) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Mentioned user not found',
+      });
+    }
+
+    const comment = await findCommentById(commentId);
+    if (!comment) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Comment not found',
+      });
+    }
+
+    const post = await findPostById(comment.postID.toString());
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    // Update mentionedInUsers in post model
+    await PostModel.findByIdAndUpdate(
+      post._id,
+      { $addToSet: { mentionedInUsers: mentionedUser._id } },
+      { new: true, upsert: true }
+    );
+
+    // Update mentionedInPosts in user model
+    await UserModel.findByIdAndUpdate(
+      mentionedUser._id,
+      { $addToSet: { mentionedInPosts: post._id } },
+      { new: true, upsert: true }
+    );
+
+    // Update mentionedInComments in user model
+    await UserModel.findByIdAndUpdate(
+      mentionedUser._id,
+      { $addToSet: { mentionedInComments: comment._id } },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json('Success');
+  } catch (error) {
+    console.error('Error in mentionUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+// export async function getPostAndCommentUserMentionedHandler(req: Request, res: Response) {
+//   try {
+//     const user = await findUserByUsername(req.body.mentionedUsername as string);
+//     if (!user) {
+//       return res.status(400).json({
+//         status: 'failed',
+//         message: 'Access token is missing or invalid',
+//       });
+//     }
+
+//     // Find posts and comments where the user is mentioned
+//     const posts = await PostModel.find({ mentionedInUsers: user._id }).populate('postComments');
+//     const comments = await CommentModel.find({ mentionedInPosts: { $in: posts.map((post) => post._id) } });
+
+//     res.status(200).json({ posts, comments });
+//   } catch (error) {
+//     console.error('Error in getPostAndCommentUserMentionedHandler:', error);
+//     return res.status(500).json({
+//       status: 'error',
+//       message: 'Internal server error',
+//     });
+//   }
+// }
