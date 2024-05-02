@@ -397,7 +397,7 @@ async function userPosts(postIDs: string[], limit: number = 10): Promise<Post[]>
   // Fetch comments based on the provided postIDs
   limit = limit || 10;
 
-  const posts = await PostModel.find({ _id: { $in: postIDs }, isDeleted: false }).limit(limit);
+  const posts = await PostModel.find({ _id: { $in: postIDs } }).limit(limit);
 
   // // Populate user and community information
   // posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });

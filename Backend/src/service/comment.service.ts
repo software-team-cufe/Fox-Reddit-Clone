@@ -26,8 +26,6 @@ export async function userComments(commentsIDS: string[], limit: number) {
   // Fetch comments based on the provided commentIDs
   const comments = await CommentModel.find({
     _id: { $in: commentsIDS },
-    isDeleted: false,
-    //isHidden: false,
   }).limit(limit);
 
   // Return the fetched comments
@@ -134,7 +132,5 @@ export function findRepliesIdByCommentId(commentID: string) {
 export function findReplies(repliesIds: string[]) {
   return CommentModel.find({
     _id: { $in: repliesIds },
-    isDeleted: false,
-    //isHidden: false,
   });
 }
