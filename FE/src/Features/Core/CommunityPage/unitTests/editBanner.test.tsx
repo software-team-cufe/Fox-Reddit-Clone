@@ -4,6 +4,14 @@ import '@testing-library/jest-dom';
 import { BrowserRouter} from "react-router-dom";
 import EditModal from "../accessories/editbanner";
 
+jest.mock('@/Utils/UserAxios', () => ({
+    userAxios: {
+        post: jest.fn(() => Promise.resolve({ data: {} })),
+        get: jest.fn(() => Promise.resolve({ data: { avatar: 'mock-avatar' } })),
+        patch: jest.fn(() => Promise.resolve({ data: {} })),
+    },
+}));
+
 global.URL.createObjectURL = jest.fn(() => 'mocked-object-url');
 
 afterEach(() => {
@@ -153,7 +161,6 @@ describe(("uploading images works correctly"), () => {
           </BrowserRouter>
         );
       
-      
         const avatarUpload = container.querySelector('input[type="file"]');
         fireEvent.change(avatarUpload, { target: { files: [new File(['(⌐□_□)'], 'avatar.png', { type: 'image/png' })] } });
       
@@ -214,15 +221,13 @@ describe(("uploading images works correctly"), () => {
           expect(errorBanner).toBeInTheDocument();
     });
 
-    test(("image upload submit works correctly"), () => {
+    test(("image upload submit works correctly"), async () => {
         const closemodal = jest.fn();
         const { container } = render(
             <BrowserRouter>
               <EditModal onClose={closemodal} optionheader="Avatar"/>
             </BrowserRouter>
           );
-          
-          const consoleSpy = jest.spyOn(console, 'log');
 
           const avatarUpload = container.querySelector('input[type="file"]');
           fireEvent.change(avatarUpload, { target: { files: [new File(['(⌐□_□)'], 'avatar.png', { type: 'image/png' })] } });
@@ -230,8 +235,9 @@ describe(("uploading images works correctly"), () => {
           const submitButton = screen.getByRole('commAppearanceAvatarSubmit');
           fireEvent.click(submitButton);
 
-          expect(consoleSpy).toHaveBeenCalledWith('Submitting image');
-          consoleSpy.mockRestore();
+          await waitFor(() => {
+            expect(closemodal).toHaveBeenCalled();
+          });
     });
 });
 

@@ -1,4 +1,3 @@
-
 /**
  * This file represents the CommunityPage component.
  * It displays a community page with posts, sorting options, and community information.
@@ -15,7 +14,6 @@ import PostComponent from "@/GeneralComponents/Post/Post";
 import { Plus, Pen } from 'lucide-react';
 import OptionsMenu from "./accessories/optionsmenu";
 import MainFooter from "./footers/mainFooter";
-import { userStore } from "@/hooks/UserRedux/UserStore";
 import LoginFirtstModal from "./accessories/loginFirstModal";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
 import { useQuery } from "react-query";
@@ -23,7 +21,7 @@ import { userAxios } from "../../../Utils/UserAxios";
 import { toast } from 'react-toastify';
 import EditModal from "./accessories/editBanner";
 import KickOutModal from "./accessories/kickOutModal";
-
+import { useSelector } from "react-redux";
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -51,7 +49,7 @@ export default function CommunityPage() {
   const path = useLocation();                          // get the current path
   const { period, selected } = useContext(CommunityContext);  // get the selected sorting and period
   const [Posts, setPosts] = useState([]);              // store the Posts data
-  const user = userStore.getState().user;             // get the user data
+  const user = useSelector(state => state.user.user);            // get the user data
   const [showModal, setShowModal] = useState(false);
   const navigator = useNavigate();
   const loadMoreButtonRef = useRef(null);
@@ -311,7 +309,7 @@ export default function CommunityPage() {
               <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${commObj.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
                 <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>
               </button>)}
-            {user.user ? <OptionsMenu comm={commObj} setComm={setComm} /> : <></>}
+            <OptionsMenu comm={commObj} setComm={setComm} /> 
           </div>
         </div>
 
@@ -329,7 +327,7 @@ export default function CommunityPage() {
             <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${commObj.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
               <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>
             </button>)}
-          {user.user ? <OptionsMenu comm={commObj} setComm={setComm} /> : <></>}
+          <OptionsMenu comm={commObj} setComm={setComm} />
         </div>
 
         {/* the feed with its sort elements and the community description and rules and other tools on the right*/}

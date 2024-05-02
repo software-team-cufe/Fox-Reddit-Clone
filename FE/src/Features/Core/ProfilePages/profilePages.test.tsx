@@ -217,6 +217,4 @@ describe('profile sections navigation correctly', () => {
             expect(screen.getByRole('downvotedtab')).toBeInTheDocument();
         });
     });
-
-
 });

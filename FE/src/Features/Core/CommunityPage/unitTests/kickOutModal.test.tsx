@@ -1,7 +1,7 @@
 import React = require("react");
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom';
-import { BrowserRouter, MemoryRouter} from "react-router-dom";
+import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
 import KickOutModal from "../accessories/kickOutModal";
 
 afterEach(() => {
@@ -11,7 +11,7 @@ afterEach(() => {
 test('kick out modal renders correctly', () => {
     render(
         <BrowserRouter>
-            <KickOutModal/>
+            <KickOutModal />
         </BrowserRouter>
     );
 
@@ -21,8 +21,11 @@ test('kick out modal renders correctly', () => {
 
 test(("kick out modal functions successfully"), async () => {
     render(
-        <MemoryRouter initialEntries={['/search/something']}>
-            <KickOutModal/>
+        <MemoryRouter initialEntries={['/search/mock/posts']}>
+            <Routes>
+                <Route path="/search/mock/posts" element={<KickOutModal />} />
+                <Route path="/" element={<div data-testid="home-kick" />} />
+            </Routes>
         </MemoryRouter>
     );
 
@@ -30,9 +33,7 @@ test(("kick out modal functions successfully"), async () => {
     expect(kick).toBeInTheDocument();
     fireEvent.click(kick);
 
-    // Wait for any redirects to happen
-    await waitFor(() => {});
+    await waitFor(() => { });
 
-    // Check if the current location is the homepage
-    expect(window.location.pathname).toBe('/');
+    expect(screen.queryByTestId('home-kick')).toBeInTheDocument();
 });

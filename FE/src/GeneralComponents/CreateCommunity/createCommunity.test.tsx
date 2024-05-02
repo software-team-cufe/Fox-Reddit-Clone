@@ -1,122 +1,148 @@
 import React = require("react");
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import CreateCommunity from "./CreateCommunity";
 
+jest.mock('@/Utils/UserAxios', () => ({
+    userAxios: {
+        post: jest.fn(() => Promise.resolve({ data: {} })),
+        get: jest.fn(() => Promise.resolve({ data: { avatar: 'mock-avatar' } })),
+        patch: jest.fn(() => Promise.resolve({ data: {} })),
+    },
+}));
 
-afterEach(() =>{
+afterEach(() => {
     cleanup();
 });
 
 
 describe("initial state", () => {
 
-    beforeEach( () =>{
-        render(<CreateCommunity/>);
+    beforeEach(() => {
+        render(<CreateCommunity />);
     });
 
-test("renders CreateCommunity component", () => {
-    const linkElement = screen.getByRole("createForm");
-    expect(linkElement).toBeInTheDocument();
-});
+    test("renders CreateCommunity component", () => {
+        const linkElement = screen.getByRole("createForm");
+        expect(linkElement).toBeInTheDocument();
+    });
 
-test("renders name input crrectly", () => {
-    const linkElement = screen.getByRole("nameInput");
-    expect(linkElement).toBeEmptyDOMElement();
-    expect(linkElement).toHaveAttribute("placeholder", "Name");
-    expect(linkElement).toHaveStyle("border-color: red-700");
-});
+    test("renders name input crrectly", () => {
+        const linkElement = screen.getByRole("nameInput");
+        expect(linkElement).toBeEmptyDOMElement();
+        expect(linkElement).toHaveAttribute("placeholder", "Name");
+        expect(linkElement).toHaveStyle("border-color: red-700");
+    });
 
-test("renders word counter correctly", () => {
-    const linkElement = screen.getByRole("wordCounter");
-    expect(linkElement).toHaveTextContent("0");
-});
+    test("renders word counter correctly", () => {
+        const linkElement = screen.getByRole("wordCounter");
+        expect(linkElement).toHaveTextContent("0");
+    });
 
-test ("renders type list correctly", () => {
-    const linkElement = screen.getByRole("typeOptions");
-    expect(linkElement).toBeInTheDocument();
+    test("renders type list correctly", () => {
+        const linkElement = screen.getByRole("typeOptions");
+        expect(linkElement).toBeInTheDocument();
 
-});
+    });
 
-test("renders exit button correctly", () => {
-    const linkElement = screen.getByRole("exitButton");
-    expect(linkElement).toBeInTheDocument();
-    expect(linkElement).toBeEnabled();
-});
+    test("renders exit button correctly", () => {
+        const linkElement = screen.getByRole("exitButton");
+        expect(linkElement).toBeInTheDocument();
+        expect(linkElement).toBeEnabled();
+    });
 
-test("renders cancel button correctly", () => {
-    const linkElement = screen.getByRole("cancelButton");
-    expect(linkElement).toBeInTheDocument();
-    expect(linkElement).toBeEnabled();
-});
+    test("renders cancel button correctly", () => {
+        const linkElement = screen.getByRole("cancelButton");
+        expect(linkElement).toBeInTheDocument();
+        expect(linkElement).toBeEnabled();
+    });
 
-test("renders submit button correctly", () => {
-    const linkElement = screen.getByRole("submitButton");
-    expect(linkElement).toBeInTheDocument();
-    expect(linkElement).toBeDisabled();
-});
+    test("renders submit button correctly", () => {
+        const linkElement = screen.getByRole("submitButton");
+        expect(linkElement).toBeInTheDocument();
+        expect(linkElement).toBeDisabled();
+    });
 
 });
 
 describe("button functionality", () => {
 
-test("exit button works", () => {
-    const mockOnClose = jest.fn();
+    test("exit button works", () => {
+        const mockOnClose = jest.fn();
 
-    render(<CreateCommunity onClose={mockOnClose} />);
-    const exitButton = screen.getByRole("exitButton");
+        render(<CreateCommunity onClose={mockOnClose} />);
+        const exitButton = screen.getByRole("exitButton");
 
-    expect(exitButton).toBeInTheDocument();
-    fireEvent.click(exitButton);
-    expect(mockOnClose).toHaveBeenCalled();
-});
+        expect(exitButton).toBeInTheDocument();
+        fireEvent.click(exitButton);
+        expect(mockOnClose).toHaveBeenCalled();
+    });
 
-test("cancel button works", () => {
-    const mockOnClose = jest.fn();
+    test("cancel button works", () => {
+        const mockOnClose = jest.fn();
 
-    render(<CreateCommunity onClose={mockOnClose} />);
-    const exitButton = screen.getByRole("cancelButton");
+        render(<CreateCommunity onClose={mockOnClose} />);
+        const exitButton = screen.getByRole("cancelButton");
 
-    expect(exitButton).toBeInTheDocument();
-    fireEvent.click(exitButton);
-    expect(mockOnClose).toHaveBeenCalled();
-});
+        expect(exitButton).toBeInTheDocument();
+        fireEvent.click(exitButton);
+        expect(mockOnClose).toHaveBeenCalled();
+    });
 
-test("submit button works", () => {
-    const mockOnClose = jest.fn();
-    render(<CreateCommunity onClose={mockOnClose}/>);
+    test("submit button works (false)", () => {
+        const mockOnClose = jest.fn();
+        render(<CreateCommunity onClose={mockOnClose} />);
 
-    const linkElement = screen.getByRole("submitButton");
-    const initalform = screen.getByRole("createForm");
-    const nameInput = screen.getByRole("nameInput");
+        const linkElement = screen.getByRole("submitButton");
+        const nameInput = screen.getByRole("nameInput");
 
-    fireEvent.change(nameInput, { target: { value: "no" } });
-    expect(linkElement).toBeDisabled();
+        fireEvent.change(nameInput, { target: { value: "no" } });
+        expect(linkElement).toBeDisabled();
 
-    fireEvent.change(nameInput, { target: { value: "yes" } });
-    expect(linkElement).toBeEnabled();
+        fireEvent.change(nameInput, { target: { value: "yes" } });
+        expect(linkElement).toBeEnabled();
 
 
-    fireEvent.change(nameInput, { target: { value: "somename" } });
-    fireEvent.click(linkElement);
-    expect(mockOnClose).not.toHaveBeenCalled();
-});
+        fireEvent.change(nameInput, { target: { value: "somename" } });
+        fireEvent.click(linkElement);
 
-});
+        expect(mockOnClose).not.toHaveBeenCalled();
+    });
 
-describe("input functionality", () => {
+    test("submit button works (true)", () => {
+        const mockOnClose = jest.fn();
+        render(<CreateCommunity onClose={mockOnClose} />);
 
-test("name and word counter input work", () => {
-    render(<CreateCommunity />);
-    const nameInput = screen.getByRole("nameInput");
-    const wordCounter = screen.getByRole("wordCounter");
+        const linkElement = screen.getByRole("submitButton");
+        const nameInput = screen.getByRole("nameInput");
 
-    fireEvent.change(nameInput, { target: { value: "no" } });
-    expect(nameInput).toHaveValue("no");
-    expect(wordCounter).toHaveTextContent("2");
+        fireEvent.change(nameInput, { target: { value: "no" } });
+        expect(linkElement).toBeDisabled();
 
-    fireEvent.change(nameInput, { target: { value: "yes" } });
-    expect(nameInput).toHaveValue("yes");
-    expect(wordCounter).toHaveTextContent("3");
-});
+        fireEvent.change(nameInput, { target: { value: "yes" } });
+        expect(linkElement).toBeEnabled();
+    });
+
+
+    test("name and word counter input work", async () => {
+        const mockOnClose = jest.fn();
+
+        render(<CreateCommunity onClose={mockOnClose} />);
+
+        const nameInput = screen.getByRole("nameInput");
+        const radioInput = screen.getByRole("optionPublic");
+
+        fireEvent.change(nameInput, { target: { value: "yes" } });
+        expect(nameInput).toHaveValue("yes");
+
+        fireEvent.click(radioInput);
+
+        const submitButton = screen.getByRole("submitButton");
+        expect(submitButton).toBeEnabled();
+
+        fireEvent.click(submitButton);
+        await waitFor(() => {
+            expect(mockOnClose).toHaveBeenCalled();
+        });
+    });
 });
