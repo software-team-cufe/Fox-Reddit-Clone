@@ -7,7 +7,7 @@
  * The component is wrapped in a CommunityProvider component that provides the selected sorting and period values.
  * @file FILEPATH
  */
-import React, { useContext, createContext, useState, useRef } from "react";
+import React, { useContext, createContext, useState, useRef, useCallback } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
@@ -59,6 +59,7 @@ export default function CommunityPage() {
   const [pagedone, setpagedone] = useState(false);
   const limitpage = 5;
   const [currentpage, setcurrentpage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [feed, setFeed] = useState(false);
   const [commObj, setComm] = useState(null);
   const [editIcon, setEditIcon] = useState(false);
@@ -67,7 +68,7 @@ export default function CommunityPage() {
   const[showKickOut, setShowKickOut] = useState(false);
 
   //to fetch the community data from the server and use them
-  const fetchCommunity = async () => {
+  const fetchCommunity  = useCallback( async () => {
     if(user == null){
 
       await userAxios.get(`/${community}`)
@@ -153,9 +154,10 @@ export default function CommunityPage() {
         navigator("/404");
       })
     }
-  };
+    setLoading(false);
+  }, []);
 
-  let { isLoading: loading, error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity, retry: 0, refetchOnWindowFocus: false });
+  let { error } = useQuery('fetchCommunity', fetchCommunity, {staleTime: Infinity});
 
   const fetchInitialPosts = () => {
     setFeed(true);
@@ -189,7 +191,7 @@ export default function CommunityPage() {
       })
   };
 
-  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], fetchInitialPosts, { enabled: !loading, retry: 0, refetchOnWindowFocus: false });
+  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], fetchInitialPosts, { enabled: !loading, staleTime: Infinity});
 
   const swtichJoinState = async () => {
     if (user.user == null) {

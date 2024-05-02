@@ -4,11 +4,12 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { Mail, Flag, CircleOff } from 'lucide-react';
 import { useState } from 'react';
-import { userStore } from '../../hooks/UserRedux/UserStore';
 import { userAxios } from '../../Utils/UserAxios';
+import { useSelector } from 'react-redux';
+
 function CardOptionsMenu() {  //prop takes the display to use it outside the component
-    const username =userStore.getState().user.user.username;
-     const handleBlock = async () => {
+    const username = useSelector(state => state.user.user.username);
+    const handleBlock = async () => {
         try {
             const response = await userAxios.post('/api/block_user', { username , type: 'unblock' });
             console.log(response);
@@ -74,7 +75,7 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
 export default function ViewerCard() {
     
     const [isClicked , setCLicked]=useState("false")
-    const username =userStore.getState().user.user.username;
+    const username = useSelector(state => state.user.user.username);
     const handleFollow = async() => {
         try{
            const res= await userAxios.post('api/follow', {username});
