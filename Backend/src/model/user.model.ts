@@ -326,13 +326,13 @@ export class User {
   @prop({ default: true })
   contentVisibility?: boolean;
 
-  @prop()
+  @prop({ default: 0 })
   postKarma?: number;
 
-  @prop()
+  @prop({ default: 0 })
   commentKarma?: number;
 
-  @prop()
+  @prop({ default: 0 })
   karma?: number;
 
   @prop()
