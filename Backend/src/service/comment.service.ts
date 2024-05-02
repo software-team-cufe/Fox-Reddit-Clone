@@ -134,3 +134,5 @@ export function findReplies(repliesIds: string[]) {
     _id: { $in: repliesIds },
   });
 }
+
+export async function getCommentsSearchResults() {}

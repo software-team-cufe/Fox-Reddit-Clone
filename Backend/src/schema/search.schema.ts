@@ -27,7 +27,7 @@ export const searchSubredditSchema = object({
 
 export const searchNormalSchema = object({
   query: object({
-    searchkey: string({
+    q: string({
       required_error: 'searchkey is required',
     }),
     type: string({
@@ -35,9 +35,7 @@ export const searchNormalSchema = object({
     }).refine((data) => validNormalSearchTypes.includes(data as 'link' | 'sr' | 'comment' | 'user'), {
       message: 'Invalid type',
     }),
-    sort: string({
-      required_error: 'sort is required',
-    }),
+    sort: string().optional(), // Make sort optional
     page: string().optional(), // Make page optional
     limit: string().optional(), // Make limit optional
   }),

@@ -696,18 +696,9 @@ export async function addUserToPending(userID: string, subreddit: string) {
   };
 }
 
-export async function getSrSearchResult(query: string, page: number, limit: number, userAuth: boolean) {
-  if (userAuth) {
-    //User logged in, find public communities and private communities the user is in
-    const communityResults = await CommunityModel.find({
-      $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-    })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .select('icon name membersCnt description');
-    return communityResults;
-  } else {
-    //user not logged in
+export async function getSrSearchResultNotAuth(query: string, page: number, limit: number) {
+  //user not logged in
+  try {
     const communityResults = await CommunityModel.find({
       $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
       privacyType: 'public',
@@ -716,6 +707,76 @@ export async function getSrSearchResult(query: string, page: number, limit: numb
       .limit(limit)
       .select('icon name membersCnt description');
     return communityResults;
+  } catch (error) {
+    return error;
   }
 }
-export async function getSrSearchResultAuth(query: string, page: number, limit: number, userID: number) {}
+export async function getSrSearchResultAuth(query: string, page: number, limit: number, userID: number) {
+  //get public communities and private communities that user joined
+  //get user from user id
+  //get user joined communities from Member array field in user model and filter private communities
+  //get the private communities that match the query     $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
+
+  try {
+    const [user, publicCommunities] = await Promise.all([
+      UserModel.findById(userID),
+      CommunityModel.find({
+        $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
+        privacyType: 'public',
+      })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .select('icon name membersCnt description'),
+    ]);
+
+    if (!user) {
+      throw new appError('User not found search auth user', 404);
+    }
+
+    console.log(user.username);
+    console.log(publicCommunities);
+    const privateCommunities = await UserModel.aggregate([
+      {
+        $match: {
+          _id: user._id,
+        },
+      },
+      { $unwind: '$member' },
+      {
+        $lookup: {
+          from: 'communities',
+          localField: 'member.communityId',
+          foreignField: '_id',
+          as: 'joinedCommunities',
+        },
+      },
+      {
+        $unwind: '$joinedCommunities',
+      },
+      {
+        $match: {
+          'joinedCommunities.privacyType': 'private',
+          $or: [
+            { 'community.name': { $regex: query, $options: 'i' } },
+            { 'community.description': { $regex: query, $options: 'i' } },
+          ],
+        },
+      },
+      {
+        $project: {
+          name: '$joinedCommunities.name',
+          description: '$joinedCommunities.description',
+          icon: '$joinedCommunities.icon',
+          membersCnt: '$joinedCommunities.membersCnt',
+        },
+      },
+      // Optionally, add pagination
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+    ]);
+    const authUserCommunities = privateCommunities.concat(publicCommunities);
+    return authUserCommunities;
+  } catch (error) {
+    return error;
+  }
+}

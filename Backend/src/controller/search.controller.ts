@@ -6,7 +6,7 @@ import PostModel from '../model/posts.model';
 import CommunityModel from '../model/community.model';
 import UserModel from '../model/user.model';
 import CommentModel from '../model/comments.model';
-import { getSrSearchResult } from '../service/community.service';
+import { getSrSearchResultNotAuth, getSrSearchResultAuth } from '../service/community.service';
 import { getUserSearchResult } from '../service/user.service';
 export async function searchHomeHandler(
   req: Request<{}, {}, {}, SearchNormalInput['query']>,
@@ -15,7 +15,7 @@ export async function searchHomeHandler(
 ) {
   try {
     const query = req.query;
-    const searchkey = query.searchkey as string;
+    const searchkey = query.q as string;
     const type = query.type as 'link' | 'sr' | 'comment' | 'user';
     const sort = query.sort as string;
     //page and limit
@@ -31,7 +31,6 @@ export async function searchHomeHandler(
     let userAuthenticated;
     if (res.locals.user) {
       userAuthenticated = true;
-      const userId = res.locals.user._id;
     } else {
       userAuthenticated = false;
     }
@@ -50,8 +49,13 @@ export async function searchHomeHandler(
 
       case 'subreddits':
         {
-          const subreddits = await getSrSearchResult(searchkey, page, limit, userAuthenticated);
-          return res.status(200).json({ subreddits });
+          if (!userAuthenticated) {
+            const communitySearchResultNotAuth = await getSrSearchResultNotAuth(searchkey, page, limit);
+            return res.status(200).json({ communitySearchResultNotAuth });
+          } else if (userAuthenticated) {
+            const communitySearchResultAuth = await getSrSearchResultAuth(searchkey, page, limit, res.locals.user._id);
+            return res.status(200).json({ communitySearchResultAuth });
+          }
         }
         break;
 
@@ -61,6 +65,21 @@ export async function searchHomeHandler(
           return res.status(200).json({ users });
         }
         break;
+      case 'comments': {
+        //pass sort option
+        //check if user is authenticated
+        // const sortOption = sort === 'new' ? '-creationDate' : '-upvotesCount';
+        // const authenticated = userAuthenticated ? res.locals.user._id : null;
+        // const comments = await CommentModel.find({
+        //   $or: [{ text: { $regex: searchkey, $options: 'i' } }],
+        // })
+        //   .skip((page - 1) * limit)
+        //   .limit(limit)
+        //   .sort(sortOption)
+        //   .populate('author', 'username about')
+        //   .populate('post', 'title');
+        // return res.status(200).json({ comments });
+      }
     }
   } catch (error) {
     return res.status(500).json({
