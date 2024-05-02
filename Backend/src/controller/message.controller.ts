@@ -4,6 +4,7 @@ import { createMessage, deleteMessage, findMessageById } from '../service/messag
 import { findUserById, findUserByUsername } from '../service/user.service';
 import { Request, Response } from 'express';
 import UserModel from '../model/user.model';
+import { createNotification } from '../service/notification.service';
 /**
  * Handles composing a message, checking user validity, creating the message, and returning the result.
  *
@@ -40,7 +41,14 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
     if (!createdMessage) {
       return res.status(400).json({ message: 'Failed to create the comment' });
     }
-
+    createNotification(
+      checkReceiver._id,
+      user.avatar,
+      `${user.username} sent a message`,
+      'message',
+      req.body.text,
+      user._id
+    );
     res.status(200).json(createdMessage); // 201: Created
   } catch (error) {
     console.error('Error in addCommentHandler:', error);
