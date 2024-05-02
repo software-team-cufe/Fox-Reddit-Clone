@@ -696,12 +696,26 @@ export async function addUserToPending(userID: string, subreddit: string) {
   };
 }
 
-export async function getSrSearchResult(query: string, page: number, limit: number) {
-  const communityResults = await CommunityModel.find({
-    $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-  })
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .select('icon name membersCnt description');
-  return communityResults;
+export async function getSrSearchResult(query: string, page: number, limit: number, userAuth: boolean) {
+  if (userAuth) {
+    //User logged in, find public communities and private communities the user is in
+    const communityResults = await CommunityModel.find({
+      $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
+    })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .select('icon name membersCnt description');
+    return communityResults;
+  } else {
+    //user not logged in
+    const communityResults = await CommunityModel.find({
+      $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
+      privacyType: 'public',
+    })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .select('icon name membersCnt description');
+    return communityResults;
+  }
 }
+export async function getSrSearchResultAuth(query: string, page: number, limit: number, userID: number) {}

@@ -20,13 +20,22 @@ export async function searchHomeHandler(
     const sort = query.sort as string;
     //page and limit
     // Convert strings to numbers
-    const pageString = req.query.page; // Extract page parameter as string from query
-    const limitString = req.query.limit; // Extract limit parameter as string from query
+    const pageString = req.query.page;
+    const limitString = req.query.limit;
     const page = pageString ? parseInt(pageString, 10) : 1; // Convert page string to number, default to 1 if not provided
     const limit = limitString ? parseInt(limitString, 10) : 10; // Convert limit string to number, default to 10 if not provided
     //search type can be link/posts, sr/subreddits,comments, users
     const searchType =
       type === 'link' ? 'posts' : type === 'sr' ? 'subreddits' : type === 'comment' ? 'comments' : 'users';
+    //check if user is authenticated
+    let userAuthenticated;
+    if (res.locals.user) {
+      userAuthenticated = true;
+      const userId = res.locals.user._id;
+    } else {
+      userAuthenticated = false;
+    }
+
     //search logic here
     //switch case
     switch (searchType) {
@@ -41,7 +50,7 @@ export async function searchHomeHandler(
 
       case 'subreddits':
         {
-          const subreddits = await getSrSearchResult(searchkey, page, limit);
+          const subreddits = await getSrSearchResult(searchkey, page, limit, userAuthenticated);
           return res.status(200).json({ subreddits });
         }
         break;
