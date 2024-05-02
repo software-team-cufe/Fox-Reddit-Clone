@@ -522,6 +522,7 @@ export async function editUserTextHandler(req: Request<editUserText['body']>, re
     });
   }
 }
+
 /**
  * Handles the request for insights counts.
  *
