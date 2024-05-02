@@ -44,6 +44,8 @@ import {
   editCurrentUserNotificationPrefs,
   getCurrentUserNotificationPrefs,
   uploadUserPhoto,
+  getNumberPostsCommentsMe,
+  getNumberPostsCommentsUser,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -108,6 +110,10 @@ router.post('/api/follow', validateResource(followUserSchema), deserializeUser, 
 router.post('/api/unfollow', validateResource(unfollowUserSchema), deserializeUser, unfollowRequestHandler);
 
 router.post('/api/block_user', validateResource(blockUserSchema), deserializeUser, blockUserHandler);
+
+router.get('/api/user/me/number_posts_comments', getNumberPostsCommentsMe);
+
+router.get('/api/user/:username/number_posts_comments', getNumberPostsCommentsUser);
 
 //router.post('/api/report_user', validateResource(reportUserSchema), deserializeUser, reportUserHandler);
 

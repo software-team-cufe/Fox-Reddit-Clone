@@ -1202,3 +1202,62 @@ export async function uploadUserPhoto(req: Request, res: Response) {
     });
   }
 }
+
+export async function getNumberPostsCommentsMe(req: Request, res: Response) {
+  const user = await findUserByUsername(res.locals.user.username);
+
+  try {
+    if (!user || !res.locals.user.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const postCount = user.hasPost?.length;
+    const commentCount = user?.hasComment?.length;
+    res.status(200).json({
+      post: postCount,
+      comment: commentCount,
+    });
+  } catch (error) {
+    console.error('Error in getNumberPostsCommentsMe:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getNumberPostsCommentsUser(req: Request, res: Response) {
+  const user = await findUserByUsername(res.locals.user.username);
+  const user2 = await findUserByUsername(req.params.username);
+
+  try {
+    if (!user || !res.locals.user.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    if (!user2 || !req.params.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+
+    const postCount = user2.hasPost?.length;
+    const commentCount = user2?.hasComment?.length;
+    res.status(200).json({
+      post: postCount,
+      comment: commentCount,
+    });
+  } catch (error) {
+    console.error('Error in getNumberPostsCommentsUser:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
