@@ -10,6 +10,7 @@ const ModCard = () => {
     const [ handleView, setHandleView] = useState(false);
     const [handleDescription, setHandleDescription] = useState(false);
     const [isOpened, setIsOpened] = useState(false);
+    const [addWidget, setAddWidget] = useState(false);
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
@@ -246,11 +247,103 @@ const ModCard = () => {
                                </div>
                                 <div className=' flex  mx-4 flex-col'> 
                                 <span className=' text-sm text-gray-500 mt-8'> Widgets: 0/20</span>
-                                <button className="   my-4 text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 ">
-                                    <p className=' text-black text-md'> Add widget</p>
+                            
+                                <div>
+                                <button
+                                  onClick={ ()=>setAddWidget(true)}
+                                  className="  w-full  my-4 text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 ">
+                                   <p className=' text-black text-md'> Add widget</p>
                                     <svg className="w-5 h-5"
-                                    xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 9 12 15 18 9" /></svg>
+                                       xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 9 12 15 18 9" /></svg>
                                 </button>
+                                  {addWidget && 
+                                 <div className=' bg-opacity-0 bg-white fixed top-0 left-0 w-full h-full '>
+                                    <div className=' bg-white fixed  top-80 left-1/2 translate-x-[-50%] translate-y-[-50%] w-[450px] h-[250px] shadow-2xl rounded-xl overflow-y-auto'>
+                                      <div className=' flex flex-col  '>
+                                           <div>
+                                           <button className=' flex flex-col hover:bg-gray-200 w-full h-[70px]'>
+                                           <span className=' mt-4 text-sm ml-3'>
+                                                 Text
+                                           </span>
+                                           <span className=' text-xs text-gray-500 ml-3 '>
+                                              Use for announcements, guidelines, or anything you want to tell visitors.
+                                           </span>
+                                          </button>
+                                           
+                                         </div>
+                                    
+                                             <button className='h-[70px] flex flex-col hover:bg-gray-200 '>
+                                             <span className=' mt-4 text-sm ml-3'>
+                                               Rules
+                                             </span>
+                                             <span className=' text-xs text-gray-500 ml-3'>
+                                               Display some or all of your community's rules.
+                                              </span>
+                                          </button>
+                                 
+                                      
+                                           <button className=' h-[70px] flex flex-col hover:bg-gray-200 '>
+                                               <span className=' mt-4 text-sm ml-3'>
+                                                 Button
+                                               </span>
+                                               <span className=' text-xs text-gray-500 ml-3'>
+                                                 Create up to 10 custom buttons that lick to websites or communities.   </span>
+                                           </button>
+                                   
+                                    
+                                           <button className=' h-[70px] flex flex-col hover:bg-gray-200'>
+                                                <span className=' mt-4 text-sm ml-3'>
+                                                    Images
+                                                 </span>
+                                                <span className=' text-xs text-gray-500 ml-3'>
+                                                  personalize your communitywith up to 10 images.
+                                                </span>
+                                            </button>
+                                    
+                                    
+                                            <button className=' h-[70px] flex flex-col hover:bg-gray-200'>
+                                              <span className='mt-4 text-sm ml-3'>
+                                               Community List
+                                              </span>
+                                              <span className=' text-xs text-gray-500 ml-3'>
+                                                 Recommend other communitiesyour members might enjoy.
+                                             </span>
+                                           </button>
+                                   
+                                          <button className=' h-[70px] flex flex-col hover:bg-gray-200 '>
+                                            <span className=' mt-4 text-sm ml-3'>
+                                               Calender
+                                            </span>
+                                            <span className=' text-xs text-gray-500 ml-3'>
+                                              Share events with members and visitors.
+                                            </span>
+                                           </button>
+                                    
+                                            <button className=' h-[70px] flex flex-col hover:bg-gray-200 '>
+                                              <span className=' mt-4 text-sm ml-3'>
+                                                 Post flair
+                                             </span>
+                                             <span className=' text-xs text-gray-500 ml-3' >
+                                               Highlight your community's post flair.
+                                             </span>
+                                            </button>
+                                     
+                                            <button className=' h-[70px] flex flex-col hover:bg-gray-200 '>
+                                               <span className=' mt-4 text-sm ml-3'>
+                                                 Bookmarks
+                                               </span>
+                                               <span className=' text-xs text-gray-500 ml-3'>
+                                                 Link to your wiki and other important commmunity resources.
+                                              </span>
+                                            </button>
+                                       
+
+                                      </div> 
+                                   </div>
+                                 </div>
+                                }
+                                 </div>
+
                                 <div className=' flex flex-row justify-end space-x-3 mt-2'>
                                   <button onClick={ ()=> setWidget(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
                                    Cancel
