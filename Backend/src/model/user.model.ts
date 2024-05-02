@@ -224,8 +224,8 @@ class IsBannedOrMuted {
   @prop()
   date?: Date;
 }
-class notificationInfo {
-  @prop({ ref: () => 'Notifications' })
+export class notificationInfo {
+  @prop({ required: true, ref: () => 'Notifications' })
   notificationId?: Ref<Notifications>;
 
   @prop({ default: false })

@@ -87,7 +87,7 @@ class IsBannedOrMuted {
   date?: Date;
 }
 
-class Member {
+export class Member {
   @prop({ ref: 'User' })
   userID?: Ref<User>;
 
