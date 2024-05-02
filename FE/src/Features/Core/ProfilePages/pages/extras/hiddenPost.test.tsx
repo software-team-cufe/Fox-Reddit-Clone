@@ -1,5 +1,5 @@
 import React = require("react");
-import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import { MemoryRouter} from "react-router-dom";
 import HiddenPost from "./hiddenPost";
@@ -44,6 +44,10 @@ const mockPPosts=[{
 
 
 const setPost = jest.fn();
+
+afterEach(() => {
+  cleanup();
+});
 
 test('HiddenPost renders successfully', async () => {
     render(

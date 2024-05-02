@@ -1,4 +1,4 @@
-import react from "react";
+import React from "react";
 import { Menu, Transition } from '@headlessui/react';
 import { GripHorizontal } from "lucide-react";
 import { Fragment } from "react";
@@ -41,11 +41,12 @@ export default function OptionsMenu({comm, setComm}) {
         } else {
           toast.success(`r/${comm.name} muted!`);
         }
-        setComm({ ...comm, muted: !comm.muted });
       })
       .catch(error => {
         console.error('There was an error!', error);
-      })};
+      })
+      setComm({ ...comm, muted: !comm.muted });
+    };
 
     return (
       <Menu as="div" className="relative inline-block text-left z-30">
@@ -67,12 +68,8 @@ export default function OptionsMenu({comm, setComm}) {
   
           {/* Sort options list mapped*/}
           <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <Menu.Item>
-              <button id="favouriteOption" onClick={handleFavouriteChange} className=" text-start p-3 text-xs hover:bg-gray-200 w-full">{comm.favourited ? 'Remove from favourites' : 'Add to favourites'}</button>
-            </Menu.Item>
-            <Menu.Item>
-              <button id="MuteOption" onClick={handleMuteChange} className=" text-start p-3 text-xs hover:bg-gray-200 w-full">{comm.muted ? `Unmute r/${comm.name}`: `Mute r/${comm.name}`}</button>
-            </Menu.Item>
+              <button role="commFavourite" id="favouriteOption" onClick={handleFavouriteChange} className=" text-start p-3 text-xs hover:bg-gray-200 w-full">{comm.favourited ? 'Remove from favourites' : 'Add to favourites'}</button>
+              <button role="commMute" id="MuteOption" onClick={handleMuteChange} className=" text-start p-3 text-xs hover:bg-gray-200 w-full">{comm.muted ? `Unmute r/${comm.name}`: `Mute r/${comm.name}`}</button>
           </Menu.Items>
         </Transition>
       </Menu>

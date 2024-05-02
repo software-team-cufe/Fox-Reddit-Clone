@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { X, ChevronDown, ChevronRight, ChevronLeft, CloudUpload, Trash2 } from "lucide-react";
 import { userAxios } from "@/Utils/UserAxios";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 export default function EditModal({ onClose = () => { }, optionheader = "Community appearance" }) {
     const handleClose = () => {
@@ -9,6 +10,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
     };
     const [isShifted, setIsShifted] = useState(false);
     const [OptionHeader, setOptionHeader] = useState(optionheader);
+    const { community } = useParams();
 
     const editOptions = [
         "Avatar",
@@ -64,10 +66,25 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
     };
 
     const submitImage = () => {
-        console.log("Submitting image");
-        toast.info("Uploading image...", { position: 'top-center' });
-        toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
-        window.location.reload();
+        let reqType = "";
+        if (OptionHeader == "Avatar") {
+            reqType = 'upload_sr_icon';
+        }
+        else if (OptionHeader == "Banner") {
+            reqType = 'upload_sr_banner';
+        }
+
+        userAxios.post(`${community}/subreddit/api/${reqType}`, { image: imageFile })
+            .then(() => {
+                toast.info("Uploading image...", { position: 'top-center' });
+                toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
+                onClose(false);
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+                toast.error("Error uploading image", { position: 'top-center' });
+            });
     };
 
     return (
@@ -107,7 +124,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
                                 <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileSelect} style={{ display: 'none' }} />
                             </div>
                         ) : (
-                                <img role={`commAppearance${OptionHeader}Image`}src={imageFile} alt="uploaded" className={`mx-auto object-cover ${OptionHeader == "Avatar" ? "rounded-full w-36 h-36" : "rounded-2xl w-full h-full"}`} />)}
+                            <img role={`commAppearance${OptionHeader}Image`} src={imageFile} alt="uploaded" className={`mx-auto object-cover ${OptionHeader == "Avatar" ? "rounded-full w-36 h-36" : "rounded-2xl w-full h-full"}`} />)}
                     </div>
                     {imageFile ? <div className="flex mx-auto gap-2 justify-between">
                         <button onClick={() => setImageFile(null)} className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" role="commAppearanceBannerRemove" id="commAppearanceBannerRemove"><Trash2 className="w-4 h-4" /></button>
