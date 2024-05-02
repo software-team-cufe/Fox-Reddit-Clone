@@ -11,7 +11,7 @@ export class Notifications {
 
   @prop({
     required: true,
-    enum: ['message', 'comment', 'Upvote', 'reply', 'newFollower', 'newCommunityPost', 'newUserPost'],
+    enum: ['message', 'comment', 'Upvote', 'reply', 'newFollower', 'newPost'],
   })
   type: string;
 

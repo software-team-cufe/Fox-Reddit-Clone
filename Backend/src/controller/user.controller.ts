@@ -38,7 +38,7 @@ import { userComments } from '../service/comment.service';
 import { findPostById, userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
-import { createNotification } from '@src/service/notification.service';
+import { createNotification } from '../service/notification.service';
 
 /**
  * Handles the creation of a user.

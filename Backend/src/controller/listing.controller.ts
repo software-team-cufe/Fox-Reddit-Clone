@@ -54,6 +54,7 @@ import { date } from 'zod';
 import { post } from '@typegoose/typegoose';
 import { ObjectId } from 'mongoose';
 import { createNotification } from '../service/notification.service';
+import { Types } from 'mongoose';
 
 /**
  * Delete handler function that handles deletion of comments and posts based on the given id.
@@ -1075,6 +1076,14 @@ export async function submitPostHandler(req: Request, res: Response) {
         user._id,
         { $addToSet: { hasPost: createdPost._id } },
         { new: true, upsert: true }
+      );
+      createNotification(
+        user._id,
+        user.avatar,
+        'New Post!',
+        'newPost',
+        `${user.username} has posted a new post!`,
+        createdPost.userID._id
       );
       res.status(201).json(createdPost);
     }
