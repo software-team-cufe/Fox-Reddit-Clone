@@ -9,6 +9,7 @@ export default function RulesPage() {
 
   const {community} = useParams();
   const [loading, setLoading] = useState(true);
+  const [crash, setCrash] = useState(false);
 
   useEffect(() => {
     userAxios.get(`${community}/api/rules`)
@@ -25,6 +26,8 @@ export default function RulesPage() {
     })
     .catch(error => {
       console.log(error);
+      setCrash(true);
+      setLoading(false);
     })
   }, []);
 
@@ -40,6 +43,15 @@ export default function RulesPage() {
         </div>
       )
     }
+
+    if(crash){
+      return (
+          <div role="communitypage" className="w-100 h-100 flex flex-col items-center justify-center">
+          <img src={'/snooNotFound.jpg'} className="h-96 w-96 mt-20 mx-auto" alt="Logo" />
+          <p className="text-gray-600 mx-auto font-semibold">Failed to load page</p>
+          </div>
+      )
+      }
 
     return (
         <div>

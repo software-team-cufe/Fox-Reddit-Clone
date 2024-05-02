@@ -80,6 +80,8 @@ export default function ProfileOverview({ using, context }) {
         setCallingPosts(true);
         userAxios.get(`/user/${using}/overview?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
+                console.log(response.data);
+
                 if (response.data.posts.length < limitpage && response.data.comments.length < limitpage) {
                     setpagedone(true);
                 }
