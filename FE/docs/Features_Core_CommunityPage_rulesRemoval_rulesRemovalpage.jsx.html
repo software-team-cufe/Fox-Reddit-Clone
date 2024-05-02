@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: LoginPage</title>
+    <title>JSDoc: Source: Features/Core/CommunityPage/rulesRemoval/rulesRemovalpage.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,159 +17,55 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: LoginPage</h1>
+    <h1 class="page-title">Source: Features/Core/CommunityPage/rulesRemoval/rulesRemovalpage.jsx</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-            
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>LoginPage component for user login.</p></div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Features_Auth_LoginPage_view_LoginPage.jsx.html">Features/Auth/LoginPage/view/LoginPage.jsx</a>, <a href="Features_Auth_LoginPage_view_LoginPage.jsx.html#line2">line 2</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>The LoginPage component.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">JSX.Element</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>return (  &lt;LoginPage />)</code></pre>
-
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import RulesPage from './rulespage';
+import { Route, Routes, useLocation, useNavigate, Link, useParams, Outlet} from "react-router-dom";
+import React from "react";
+import RemovalPage from './removalpage';
+
+/**
+ * Renders the layout for the Rules and Removal Reasons page.
+ *
+ * @returns {JSX.Element} The rendered layout component.
+ */
+function Layout() {
+  const location = useLocation();
+  const  {community}  = useParams();
+
+  return (
+      &lt;div className='p-3'>
+          &lt;div className="font-bold text-lg">Rules and Removal Reasons&lt;/div>
+          &lt;div className="flex mt-5 mb-4 gap-5">
+              &lt;Link to={`/r/${community}/about/rules`} className={`${location.pathname === `/r/${community}/about/rules` ? "bg-gray-200" : ""} p-3 font-semibold text-sm px-5 rounded-full`}>Rules&lt;/Link>
+              &lt;Link to={`/r/${community}/about/removal`} className={`${location.pathname === `/r/${community}/about/removal` ? "bg-gray-200" : ""} p-3 font-semibold text-sm px-5 rounded-full`}>Removal Reasons&lt;/Link>
+          &lt;/div>
+          &lt;Outlet />
+      &lt;/div>
+  )
+}
+
+export default function ProfilePagesLayout() {
+  return (
+    // nested routing for the profile pages renders layout then feed according to route
+      &lt;Routes>
+        &lt;Route element={&lt;Layout />} >
+          &lt;Route key={'/about'} path='/' element={&lt;>&lt;/>} />
+          &lt;Route key={'/rules'} path="/rules" element={&lt;RulesPage />} />
+          &lt;Route key={'/removal'} path="/removal" element={&lt;RemovalPage />} />
+        &lt;/Route>
+      &lt;/Routes>
+  )
+}</code></pre>
+        </article>
+    </section>
 
 
 

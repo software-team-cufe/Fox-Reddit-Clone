@@ -27,12 +27,11 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import { useState } from 'react';
-import { X, Globe, Lock, Eye } from 'lucide-react';
+import { X, Globe, Lock } from 'lucide-react';
 import { toast } from 'react-toastify';
 import React from 'react';
-import axios from 'axios';
 import { Switch } from '@headlessui/react'
-
+import {userAxios} from '@/Utils/UserAxios';
 
 /**
  * Component for creating a community.
@@ -74,21 +73,12 @@ export default function CreateCommunity({ onClose = () => { } }) {
             toast.error('Please select a community type');
         }
         else {
-            axios.post('http://localhost:3002/communities', {
-                id: 99,
+            userAxios.post('/create_subreddit', {
                 name: inputValue,
-                muted:false,
-                joined:true,
-                favourited: false,
-                NSFW: NSFW,
-                description: "",
-                membersCount: 1,
-                onlineMembers: 0,
-                rules: [],
-                backimage: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q==",
-                icon: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDQ8PDw8PDw8PDw8NDw0PFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODM4NygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIH/8QAIRABAQEAAQMEAwAAAAAAAAAAAAER8EFR0QIxkbGBocH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A4gigJCKmAqKgCiAoACKgKlAAFBCiggqYAQUEBQQpQAAAXb3AQFAQWAiiAqKAIYAGCgkVCAqKgAAASgAAEABUAACAmjQAmgAqAAAKgAWAoIAAQAAAAABcQAAAwAAAMBQZGgEAAAAgAKgAAQFSAABAAAAAAABFAABRAChQEGtARUAAAIAAAAFAAgBFSgAAAAAAAAAAAYUChAEABaABEVAUCgBCgaAAAAAAAACggAAAEKUAAAAAEAXBUwAAAEBQAAAAAAAAACgBgqAQAEUKAAAAAAAAAAAACoAAAAAGAAAAAUFQiAoAAAAAAaAmjXyAIAAAAUAAAEUAgABAAAAQBUFAIQAAoAACAANAIAAAAIuAGAAAAIoAAIoAJVAKCAoQAAAgAEABA0BQAAAAABFAIAAACKUAABBQA0AAAoAAIClEBQwAA0AAAAAAAAAAA0gAAAVFoBQAppQAADQAAATRdAAAAAEUARQADQAAAQFRQAAADQAAAAAAAAQUAAAAAEUAEBQAAAAgAAACAoEAIAAAAAEhIAH4VACHP0AJFAEX0gCs0AAAWF9+dgAvTnUACe5QAPAAqAB0+Po7AC+k59gAXyAIs/oAAA//2Q=="
+                type: commType.replace('comm-',''),
+                over18: NSFW
             })
-            .then(response => {
+            .then(() => {
                     toast.success('Community created successfully');
                     handleClose();
             })
@@ -141,7 +131,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                     &lt;ul role="typeOptions" className="grid w-full gap-6 md:grid-rows-2">
                                         &lt;li>
                                             {/* Public community option */}
-                                            &lt;input id="publicOption" role="optionPublic" type="radio" id="comm-public" name="comm" value="comm-public" className="hidden peer" onClick={handleRadioChange} required />
+                                            &lt;input id="comm-public" role="optionPublic" type="radio" name="comm" value="comm-Public" className="hidden peer" onClick={handleRadioChange} required />
                                             &lt;label htmlFor="comm-public" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 &lt;Globe className="w-6 h-6 mr-6" />
                                                 &lt;div className="block">
@@ -151,19 +141,8 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                             &lt;/label>
                                         &lt;/li>
                                         &lt;li>
-                                            {/* Restricted community option */}
-                                            &lt;input id="restrictedOption" role="optionRestricted" type="radio" id="comm-restricted" name="comm" value="comm-restricted" className="hidden peer" onClick={handleRadioChange} />
-                                            &lt;label htmlFor="comm-restricted" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
-                                                &lt;Eye className="w-6 h-6 mr-6" />
-                                                &lt;div className="block">
-                                                    &lt;div className="text-xs font-semibold">Restricted&lt;/div>
-                                                    &lt;div className="w-full text-xs">Anyone can view, but only approved users can contribute&lt;/div>
-                                                &lt;/div>
-                                            &lt;/label>
-                                        &lt;/li>
-                                        &lt;li>
                                             {/* Private community option */}
-                                            &lt;input id="privateOption" role="optionPrivate" type="radio" id="comm-private" name="comm" value="comm-private" className="hidden peer" onClick={handleRadioChange} />
+                                            &lt;input id="comm-private" role="optionPrivate" type="radio" name="comm" value="comm-Private" className="hidden peer" onClick={handleRadioChange} />
                                             &lt;label htmlFor="comm-private" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 &lt;Lock className="w-6 h-6 mr-6" />
                                                 &lt;div className="block">
@@ -199,7 +178,6 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                                 onChange={setEnabled}
                                                 className={`${NSFW ? 'bg-blue-900' : 'bg-gray-300'}
                                                     relative inline-flex h-8 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
-                                                &lt;span className="sr-only">Use setting&lt;/span>
                                                 &lt;span
                                                     aria-hidden="true"
                                                     className={`${NSFW ? 'translate-x-4' : 'translate-x-0'}
@@ -232,13 +210,13 @@ export default function CreateCommunity({ onClose = () => { } }) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-CheckButton.html">CheckButton</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#Tab">Tab</a></li><li><a href="global.html#Tabs">Tabs</a></li><li><a href="global.html#ToggleButton">ToggleButton</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-CheckButton.html">CheckButton</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CommunityContext">CommunityContext</a></li><li><a href="global.html#CommunityProvider">CommunityProvider</a></li><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#Tab">Tab</a></li><li><a href="global.html#Tabs">Tabs</a></li><li><a href="global.html#ToggleButton">ToggleButton</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 20 2024 22:48:20 GMT+0200 (Eastern European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu May 02 2024 19:27:34 GMT+0300 (Eastern European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

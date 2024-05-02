@@ -5,6 +5,11 @@ import RuleForm from "./ruleForm";
 import { useParams } from "react-router-dom";
 import { userAxios } from "@/Utils/UserAxios";
 
+/**
+ * Renders the RulesPage component.
+ *
+ * @returns {JSX.Element} The RulesPage component.
+ */
 export default function RulesPage() {
 
   const {community} = useParams();

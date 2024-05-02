@@ -4,8 +4,10 @@
  * The component uses React Router for routing and axios for making HTTP requests.
  * It also utilizes React Query for data fetching and state management.
  * The component is wrapped in a CommunityProvider component that provides the selected sorting and period values.
+ *
  * @file FILEPATH
  */
+
 import React, { useContext, createContext, useState, useRef, useCallback } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
@@ -22,8 +24,13 @@ import { toast } from 'react-toastify';
 import EditModal from "./accessories/editBanner";
 import KickOutModal from "./accessories/kickOutModal";
 import { useSelector } from "react-redux";
-//helping functions for the notifications frequency and options menu
 
+/**
+ * Context for the CommunityPage component.
+ * Provides the selected sorting and period values.
+ *
+ * @type {React.Context}
+ */
 export const CommunityContext = createContext({
   selected: "New",
   setselected: (selected) => { },
@@ -31,7 +38,12 @@ export const CommunityContext = createContext({
   setperiod: (period) => { },
 });
 
-// Create a provider component that holds the state
+/**
+ * Provider component that holds the state for the CommunityPage component.
+ *
+ * @param {Object} children - The child components.
+ * @returns {JSX.Element} The provider component.
+ */
 export function CommunityProvider({ children }) {
   const [selected, setselected] = useState("New");
   const [period, setperiod] = useState("All time");
@@ -43,7 +55,12 @@ export function CommunityProvider({ children }) {
   );
 }
 
-
+/**
+ * The CommunityPage component.
+ * Displays a community page with posts, sorting options, and community information.
+ *
+ * @returns {JSX.Element} The CommunityPage component.
+ */
 export default function CommunityPage() {
   const { community } = useParams();                  // get the community name from the url
   const path = useLocation();                          // get the current path

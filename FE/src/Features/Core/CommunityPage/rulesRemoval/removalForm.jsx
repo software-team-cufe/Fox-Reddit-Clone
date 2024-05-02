@@ -4,6 +4,19 @@ import { userAxios } from "@/Utils/UserAxios";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
+/**
+ * Renders a form for adding or editing a removal reason.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClose - Callback function to close the form.
+ * @param {boolean} props.editing - Indicates if the form is in editing mode.
+ * @param {Object} props.removal - The removal reason object being edited.
+ * @param {number} props.index - The index of the removal reason in the list.
+ * @param {Array} props.list - The list of removal reasons.
+ * @param {Function} props.setlist - Callback function to update the list of removal reasons.
+ * @returns {JSX.Element} The rendered RemovalForm component.
+ */
 export default function RemovalForm({ onClose, editing, removal, index, list, setlist }) {
     const [Removal, setRemoval] = useState(editing ? removal.title : "");
     const [Message, setMessage] = useState(editing ? removal.Message : "");
@@ -49,8 +62,8 @@ export default function RemovalForm({ onClose, editing, removal, index, list, se
           onClose(false);
           })
           .catch(error => {
-            console.log(error);
-            toast.error("Error adding Removal reason")});
+            toast.error("Error adding Removal reason");
+        });
       };
 
     return (

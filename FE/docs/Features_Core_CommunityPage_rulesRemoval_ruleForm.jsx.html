@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Features/Core/CommunityPage/rulesRemoval/ruleForm.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Features/Core/CommunityPage/rulesRemoval/ruleForm.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import { X } from "lucide-react";
+import { userAxios } from "@/Utils/UserAxios";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+
+/**
+ * Represents a form for adding or editing a rule.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClose - The function to close the form.
+ * @param {boolean} props.editing - Indicates whether the form is in edit mode.
+ * @param {Object} props.rule - The rule object being edited.
+ * @param {Array} props.list - The list of rules.
+ * @param {Function} props.setlist - The function to update the list of rules.
+ * @param {number} props.index - The index of the rule being edited.
+ * @returns {JSX.Element} The RuleForm component.
+ */
+export default function RuleForm({ onClose, editing, rule, list, setlist, index }) {
+    const [Rule, setRule] = useState(editing ? rule.title : "");
+    const [appliesTo, setAppliesTo] = useState(editing ? rule.appliesTo : "");
+    const [reportReason, setReportReason] = useState(editing ? rule.reason : "");
+    const [description, setDescription] = useState(editing ? rule.description : "");
+    const { community } = useParams();
+
+    const handleRadioChange = (e) => {
+        setAppliesTo(e.target.value);
+    };
+
+    const submitDelete = () => {
+        console.log(index);
+        const updatedList = list.filter((rule, i) => i !== index);
+        const pack = { rules: updatedList };
+
+        console.log(pack);
+        userAxios.patch(`${community}/api/edit_rules`, pack)
+            .then(() => {
+                toast.success("Rule deleted");
+                setlist(updatedList);
+                onClose(false);
+            })
+            .catch(error => {
+                console.log(error);
+                toast.error("Error deleting rule")
+            });
+    };
+
+    const submitRule = () => {
+        const newRule = {
+            title: Rule,
+            reason: reportReason.length == 0 ? Rule : reportReason,
+            description: description,
+            appliesTo: appliesTo,
+            createdAt: new Date().toISOString()
+        };
+
+        let updatedList;
+        if (editing) {
+            updatedList = list.map((rule, i) => (i === index ? newRule : rule));
+        } else {
+            updatedList = [...list, newRule];
+        }
+
+        const pack = { rules: updatedList };
+
+        userAxios.patch(`${community}/api/edit_rules`, pack)
+            .then(() => {
+                toast.success("Rules updated successfully");
+                setlist(updatedList);
+                onClose(false);
+            })
+            .catch(error => {
+                console.log(error);
+                toast.error("Error adding rule")
+            });
+    };
+
+    return (
+        &lt;>
+            {(
+                &lt;div className="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    &lt;div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">&lt;/div>
+                    &lt;div className="fixed inset-0 w-screen overflow-y-auto">
+                        &lt;div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0 ">
+                            &lt;div role="createForm" className="relative transform w-80 h-3/4 bg-white rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-[410px] sm:max-w-lg">
+                                &lt;div className="bg-white px-3 pb-4 pt-4 sm:pb-4 rounded-full">
+                                    &lt;div className="flex justify-between">
+                                        &lt;p className="font-medium text-md text-gray-900" id="modal-title">
+                                            {!editing ? "Add Rule" : "Edit Rule"}
+                                        &lt;/p>
+                                        &lt;X className="w-5 h-5 text-gray-500 hover:text-black" onClick={() => onClose(false)} />
+                                    &lt;/div>
+                                    &lt;hr className="my-2 font-light text-gray-900" />
+                                    &lt;p className="text-md my-3 mb-1 font-semibold">Rule&lt;/p>
+                                    &lt;textarea role="ruleTitleInput" maxLength={100} placeholder='Rule displayed (e.g. "no photos")' className="w-full p-2 h-12 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={Rule} onChange={(e) => setRule(e.target.value)} />
+                                    &lt;label className="text-xs my-3 mb-1 text-gray-400 font-semibold">{100 - Rule.length} Characters remaining&lt;/label>
+                                    &lt;p className="text-md my-3 mb-2 font-semibold">Applies to&lt;/p>
+                                    &lt;div data-testid="rueApplyRadioInput" className="flex flex-col gap-2">
+                                        &lt;label className="gap-2 flex text-sm">
+                                            &lt;input
+                                                role="ruleBothRadio"
+                                                type="radio"
+                                                name="appliesTo"
+                                                value="both"
+                                                checked={appliesTo === "both"}
+                                                onChange={handleRadioChange}
+                                            />
+                                            Posts &amp; comments
+                                        &lt;/label>
+                                        &lt;label className="gap-2 flex text-sm">
+                                            &lt;input
+                                                role="rulePostRadio"
+                                                type="radio"
+                                                name="appliesTo"
+                                                value="posts"
+                                                checked={appliesTo === "posts"}
+                                                onChange={handleRadioChange}
+                                            />
+                                            Posts only
+                                        &lt;/label>
+                                        &lt;label className="gap-2 flex text-sm">
+                                            &lt;input
+                                                role="ruleCommentRadio"
+                                                type="radio"
+                                                name="appliesTo"
+                                                value="comments"
+                                                checked={appliesTo === "comments"}
+                                                onChange={handleRadioChange}
+                                            />
+                                            Comments only
+                                        &lt;/label>
+                                        &lt;p className="text-md mt-4 font-semibold">Report reason&lt;/p>
+                                        &lt;p className="text-xs text-gray-800 -mt-1 font-medium">defaults to rule name if blank&lt;/p>
+                                        &lt;textarea role="ruleReasonInput" maxLength={100} placeholder='Reason rule is broken (e.g. "this is a photo")' className="w-full p-2 h-12 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={reportReason} onChange={(e) => setReportReason(e.target.value)} />
+                                        &lt;label className="text-xs mb-1 text-gray-400 font-semibold">{100 - reportReason.length} Characters remaining&lt;/label>
+
+                                        &lt;p className="text-md mt-4 font-semibold">Full description&lt;/p>
+                                        &lt;textarea role="ruleDescriptionInput" maxLength={500} placeholder='Rule displayed (e.g. "no photos")' className="w-full p-2 h-28 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={description} onChange={(e) => setDescription(e.target.value)} />
+                                        &lt;label className="text-xs mb-1 text-gray-400 font-semibold">{500 - description.length} Characters remaining&lt;/label>
+
+                                        &lt;div className="flex justify-between mt-4 p-3 h-16 -mx-3 -mb-4 rounded-b-lg bg-gray-200">
+                                            {editing ? &lt;button id="ruleDeleteButton" role="ruleDeleteButton" className="ml-2 text-red-500 font-semibold hover:text-red-600" onClick={submitDelete}>Delete&lt;/button> : &lt;div>&lt;/div>}
+                                            &lt;div className={`flex gap-3`}>
+                                                &lt;button id="ruleCancelButton" role="ruleCancelButton" className="p-2 px-4 font-bold text-sm border border-opacity-75 border-gray-600 rounded-full hover:border-black" onClick={() => onClose(false)}>Cancel&lt;/button>
+                                                &lt;button id="ruleSubmitButton" role="ruleSubmitButton" className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Rule.length == 0 || appliesTo == "" || description.length == 0} onClick={submitRule}>Save&lt;/button>
+                                            &lt;/div>
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/div>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            )}
+        &lt;/>
+    )
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-CheckButton.html">CheckButton</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CommunityContext">CommunityContext</a></li><li><a href="global.html#CommunityProvider">CommunityProvider</a></li><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#Tab">Tab</a></li><li><a href="global.html#Tabs">Tabs</a></li><li><a href="global.html#ToggleButton">ToggleButton</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu May 02 2024 19:27:34 GMT+0300 (Eastern European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

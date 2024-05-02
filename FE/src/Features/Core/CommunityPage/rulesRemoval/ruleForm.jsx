@@ -4,6 +4,19 @@ import { userAxios } from "@/Utils/UserAxios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+/**
+ * Represents a form for adding or editing a rule.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClose - The function to close the form.
+ * @param {boolean} props.editing - Indicates whether the form is in edit mode.
+ * @param {Object} props.rule - The rule object being edited.
+ * @param {Array} props.list - The list of rules.
+ * @param {Function} props.setlist - The function to update the list of rules.
+ * @param {number} props.index - The index of the rule being edited.
+ * @returns {JSX.Element} The RuleForm component.
+ */
 export default function RuleForm({ onClose, editing, rule, list, setlist, index }) {
     const [Rule, setRule] = useState(editing ? rule.title : "");
     const [appliesTo, setAppliesTo] = useState(editing ? rule.appliesTo : "");

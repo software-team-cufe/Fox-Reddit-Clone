@@ -3,6 +3,11 @@ import { Route, Routes, useLocation, useNavigate, Link, useParams, Outlet} from 
 import React from "react";
 import RemovalPage from './removalpage';
 
+/**
+ * Renders the layout for the Rules and Removal Reasons page.
+ *
+ * @returns {JSX.Element} The rendered layout component.
+ */
 function Layout() {
   const location = useLocation();
   const  {community}  = useParams();

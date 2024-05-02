@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 import { Pencil, Expand, Minimize } from "lucide-react";
 
+/**
+ * Renders a container for a rule.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.rule - The rule object.
+ * @param {number} props.index - The index of the rule.
+ * @param {Function} props.modal - The modal function.
+ * @param {Function} props.editing - The editing function.
+ * @param {Function} props.trigger - The trigger function.
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function RuleContainer({ rule, index, modal, editing, trigger}) {
     const [Expanded, setExpanded] = useState(false);
 

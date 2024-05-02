@@ -4,6 +4,11 @@ import RemovalForm from "./removalForm";
 import {userAxios} from "@/Utils/UserAxios";
 import {useParams} from "react-router-dom";
 
+/**
+ * Renders the Removal Page component.
+ *
+ * @returns {JSX.Element} The Removal Page component.
+ */
 export default function RemovalPage() {
     const [Removal, setRemoval] = useState([]);
     const [ShowForm, setShowForm] = useState(false);
