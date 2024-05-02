@@ -38,6 +38,7 @@ import { userComments } from '../service/comment.service';
 import { findPostById, userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
+import { createNotification } from '@src/service/notification.service';
 
 /**
  * Handles the creation of a user.
@@ -999,6 +1000,14 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
       followed._id,
       { $addToSet: { followers: follows._id } },
       { upsert: true, new: true }
+    );
+    createNotification(
+      followed._id,
+      follows.avatar ?? 'defaultIcon.jpg',
+      'New Follower!',
+      'newFollower',
+      `${follows.username} followed you!`,
+      follows._id
     );
     return res.status(200).json({
       status: 'succeeded',
