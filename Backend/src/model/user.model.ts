@@ -246,7 +246,7 @@ class Member {
   isBanned?: IsBannedOrMuted;
 }
 
-class VotePost {
+export class VotePost {
   @prop({ ref: () => 'Post' })
   postID?: Ref<Post>;
 

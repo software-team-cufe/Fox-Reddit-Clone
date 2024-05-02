@@ -39,8 +39,8 @@ import {
   getALLBlockedHandler,
   deleteUserHandler,
   getUserIDfromTokenHandler,
-  // getUpvotedPosts,
-  // getDownvotedPosts,
+  getUpvotedPosts,
+  getDownvotedPosts,
   editCurrentUserNotificationPrefs,
   getCurrentUserNotificationPrefs,
   uploadUserPhoto,
@@ -84,38 +84,36 @@ router.get('/api/v1/me/notification/settings', getCurrentUserNotificationPrefs);
 
 router.patch('/api/v1/me/notification/settings', editCurrentUserNotificationPrefs);
 
-// router.get('/api/user/me/upvoted/:sort', getUpvotedPosts);
+router.get('/api/user/me/upvoted/:sort', getUpvotedPosts);
 
-// router.get('/api/user/me/downvoted/:sort', getDownvotedPosts);
+router.get('/api/user/me/downvoted/:sort', getDownvotedPosts);
 
-router.get('/api/user/userIDfromToken', deserializeUser, getUserIDfromTokenHandler);
+router.get('/api/user/userIDfromToken', getUserIDfromTokenHandler);
 
-/******************** BOUDY **************************/ //remove deserializeUser
-router.delete('/api/users/delete_user', deserializeUser, deleteUserHandler);
+/******************** BOUDY **************************/
+router.delete('/api/users/delete_user', deleteUserHandler);
 
-router.get('/api/v1/me/followers', deserializeUser, getALLFollowersHandler);
+router.get('/api/v1/me/followers', getALLFollowersHandler);
 
-router.get('/api/v1/me/followings', deserializeUser, getALLFollowingHandler);
+router.get('/api/v1/me/followings', getALLFollowingHandler);
 
-router.get('/api/v1/me/blocked', deserializeUser, getALLBlockedHandler);
+router.get('/api/v1/me/blocked', getALLBlockedHandler);
 
-router.get('/api/v1/me/friends/:username', deserializeUser, getUserHandler);
+router.get('/api/v1/me/friends/:username', getUserHandler);
 
-router.get('/api/v1/me/followers/:username', deserializeUser, getUserHandler);
+router.get('/api/v1/me/followers/:username', getUserHandler);
 
-router.get('/api/v1/me/followings/:username', deserializeUser, getUserHandler);
+router.get('/api/v1/me/followings/:username', getUserHandler);
 
-router.post('/api/follow', validateResource(followUserSchema), deserializeUser, followRequestHandler);
+router.post('/api/follow', validateResource(followUserSchema), followRequestHandler);
 
-router.post('/api/unfollow', validateResource(unfollowUserSchema), deserializeUser, unfollowRequestHandler);
+router.post('/api/unfollow', validateResource(unfollowUserSchema), unfollowRequestHandler);
 
-router.post('/api/block_user', validateResource(blockUserSchema), deserializeUser, blockUserHandler);
+router.post('/api/block_user', validateResource(blockUserSchema), blockUserHandler);
 
 router.get('/api/user/me/number_posts_comments', getNumberPostsCommentsMe);
 
 router.get('/api/user/:username/number_posts_comments', getNumberPostsCommentsUser);
-
-//router.post('/api/report_user', validateResource(reportUserSchema), deserializeUser, reportUserHandler);
 
 /** Upload icon and banner **/
 router.post(
