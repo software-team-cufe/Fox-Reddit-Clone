@@ -6,11 +6,19 @@ const ModCard = () => {
 
     const [widget, setWidget] = useState(false);
     const [editWidget, setEditWidget] = useState(false);
-    const [ handleName, setHandleName] = useState(false);
-    const [ handleView, setHandleView] = useState(false);
+    const [handleName, setHandleName] = useState(false);
+    const [handleView, setHandleView] = useState(false);
     const [handleDescription, setHandleDescription] = useState(false);
     const [isOpened, setIsOpened] = useState(false);
     const [addWidget, setAddWidget] = useState(false);
+    const [handleText, setHandleText] = useState(false);
+    const [handleRules, setHandleRules] = useState(false);
+    const [handleButtons, setHandleButtons] = useState(false);
+    const [handleImage, setHandleImage] = useState(false);
+    const [handleCommunityList, setHandleCommunityList] = useState(false);
+    const [handleCalender, setHandleCalender] = useState(false);
+    const [handlePostFair, setHandlePostFair] = useState(false);
+    const [handleBookMark, setHandleBookMark] = useState(false);
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
@@ -261,7 +269,9 @@ const ModCard = () => {
                                     <div className=' bg-white fixed  top-80 left-1/2 translate-x-[-50%] translate-y-[-50%] w-[450px] h-[250px] shadow-2xl rounded-xl overflow-y-auto'>
                                       <div className=' flex flex-col  '>
                                            <div>
-                                           <button className=' flex flex-col hover:bg-gray-200 w-full h-[70px]'>
+                                           <button 
+                                            onClick={() => { setAddWidget(false), setWidget(false),setHandleText(true) }}
+                                            className=' flex flex-col hover:bg-gray-200 w-full h-[70px]'>
                                            <span className=' mt-4 text-sm ml-3'>
                                                  Text
                                            </span>
@@ -269,10 +279,13 @@ const ModCard = () => {
                                               Use for announcements, guidelines, or anything you want to tell visitors.
                                            </span>
                                           </button>
+                                          
                                            
                                          </div>
                                     
-                                             <button className='h-[70px] flex flex-col hover:bg-gray-200 '>
+                                             <button  
+                                              onClick={() =>{ setAddWidget(false), setWidget(false), setHandleRules(true)}}
+                                              className='h-[70px] flex flex-col hover:bg-gray-200 '>
                                              <span className=' mt-4 text-sm ml-3'>
                                                Rules
                                              </span>
@@ -282,7 +295,9 @@ const ModCard = () => {
                                           </button>
                                  
                                       
-                                           <button className=' h-[70px] flex flex-col hover:bg-gray-200 '>
+                                           <button 
+                                             onClick={() => { setAddWidget(false), setWidget(false), setHandleButtons(true) }}
+                                             className=' h-[70px] flex flex-col hover:bg-gray-200 '>
                                                <span className=' mt-4 text-sm ml-3'>
                                                  Button
                                                </span>
@@ -291,7 +306,9 @@ const ModCard = () => {
                                            </button>
                                    
                                     
-                                           <button className=' h-[70px] flex flex-col hover:bg-gray-200'>
+                                           <button 
+                                           onClick={() => { setAddWidget(false), setWidget(false), setHandleImage(true) }}
+                                           className=' h-[70px] flex flex-col hover:bg-gray-200'>
                                                 <span className=' mt-4 text-sm ml-3'>
                                                     Images
                                                  </span>
@@ -301,7 +318,9 @@ const ModCard = () => {
                                             </button>
                                     
                                     
-                                            <button className=' h-[70px] flex flex-col hover:bg-gray-200'>
+                                            <button 
+                                            onClick={() => { setAddWidget(false), setWidget(false), setHandleCommunityList(true) }}
+                                            className=' h-[70px] flex flex-col hover:bg-gray-200'>
                                               <span className='mt-4 text-sm ml-3'>
                                                Community List
                                               </span>
@@ -310,7 +329,9 @@ const ModCard = () => {
                                              </span>
                                            </button>
                                    
-                                          <button className=' h-[70px] flex flex-col hover:bg-gray-200 '>
+                                          <button 
+                                           onClick={() => { setAddWidget(false), setWidget(false), setHandleCalender(true) }}
+                                           className=' h-[70px] flex flex-col hover:bg-gray-200 '>
                                             <span className=' mt-4 text-sm ml-3'>
                                                Calender
                                             </span>
@@ -319,7 +340,9 @@ const ModCard = () => {
                                             </span>
                                            </button>
                                     
-                                            <button className=' h-[70px] flex flex-col hover:bg-gray-200 '>
+                                            <button
+                                             onClick={() => { setAddWidget(false), setWidget(false), setHandlePostFair(true) }}
+                                             className=' h-[70px] flex flex-col hover:bg-gray-200 '>
                                               <span className=' mt-4 text-sm ml-3'>
                                                  Post flair
                                              </span>
@@ -328,7 +351,9 @@ const ModCard = () => {
                                              </span>
                                             </button>
                                      
-                                            <button className=' h-[70px] flex flex-col hover:bg-gray-200 '>
+                                            <button
+                                             onClick={() => { setAddWidget(false), setWidget(false), setHandleBookMark(true) }}
+                                               className=' h-[70px] flex flex-col hover:bg-gray-200 '>
                                                <span className=' mt-4 text-sm ml-3'>
                                                  Bookmarks
                                                </span>
@@ -341,7 +366,8 @@ const ModCard = () => {
                                       </div> 
                                    </div>
                                  </div>
-                                }
+                                } 
+                               
                                  </div>
 
                                 <div className=' flex flex-row justify-end space-x-3 mt-2'>
@@ -359,6 +385,240 @@ const ModCard = () => {
                        </div>
                     </div>
                 }
+                {handleText && 
+                  
+                       <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
+                                             <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[380px] '>
+                                                <div className=' flex flex-row justify-between m-4'>
+                                                       <button onClick={ ()=> {setHandleText(false),setWidget(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
+                                                         <svg className="w-6 h-5  "
+                                                          xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                                         </svg>
+                                                       </button>
+                                                      
+                                                
+                                                      <span className='text-xl font-semibold mr-80 mt-1'> Add Text Widget </span>
+                                                      <div>
+                                                      <button onClick={ ()=> setHandleText(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
+                                                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                                            </svg>
+                                                      </button>
+                                                     </div>
+                                                </div>
+                                                 <div  className=' text-xs text-gray-500 mx-4'>Displays text. Supports markdown.</div>
+                                                 
+                                                 {/* text box*/}
+                                                 <div className=' mx-4 '>
+                                                 <div className=' my-3'>
+                                                 <input
+                                                   type="text"
+                                                   placeholder="Widget name*"
+                                                   className="text-black border border-gray-200 self-center h-14 w-full mt-2 rounded-2xl p-2 bg-gray-200"
+                                                   
+                                                 />
+                                                
+                                                    </div>
+                                                     
+                                                    <div className=' my-3'>  
+                                                       <input 
+                                                        type="text"
+                                                        placeholder="Text*"
+                                                      
+                                                        className="text-black border border-gray-200 self-center h-24 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
+                                                        </input> 
+                                                       
+                                                    </div>
+                                                    
+                                                   
+                                                 </div>
+
+                                                 <div className=' flex flex-row justify-end space-x-3  mr-4 mt-10'>
+                                                   <button onClick={ ()=> setHandleText(false)} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
+                                                    Cancel
+                                                    </button>
+                                                    <button onClick={ ()=> setHandleText(false)} className=' w-[62px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                                                     Save
+                                                    </button>
+                                               </div>
+                                             </div>
+                                        </div>
+                }
+                { handleRules &&
+                  <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
+                         <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[280px] '>
+                                                <div className=' flex flex-row justify-between m-4'>
+                                                       <button onClick={ ()=> {setHandleRules(false),setWidget(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
+                                                         <svg className="w-6 h-5  "
+                                                          xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                                         </svg>
+                                                       </button>
+                                                      
+                                                
+                                                      <span className='text-xl font-semibold mr-80 mt-1'> Add rules widget </span>
+                                                      <div>
+                                                      <button onClick={ ()=> setHandleRules(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
+                                                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                                            </svg>
+                                                      </button>
+                                                     </div>
+                                                </div>
+                                                 <div  className=' text-xs text-gray-500 mx-4'>Community rules</div>
+                                                 <div  className=' flex flex-col mx-4 mt-5'>
+                                                    <p className='text-md font-semibold '>Community rules</p>
+                                                    <p className='text-xs text-gray-500'>Your community doesn't have any rules yet.</p>
+                                                 </div>
+                                                 <div className=' mx-4 mt-5'>
+                                                    <button className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-8'>
+                                                       Create Commmunity Rules
+                                                    </button>
+                                                 </div>
+                                           
+                                                   
+
+                                                 <div className=' flex flex-row justify-end space-x-3  mr-4 mt-6'>
+                                                   <button onClick={ ()=> setHandleRules(false)} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
+                                                    Cancel
+                                                    </button>
+                                                    <button onClick={ ()=> setHandleRules(false)} className=' w-[62px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                                                     Save
+                                                    </button>
+                                               </div>
+                            </div>
+                     </div>
+                
+                }
+                { handleButtons &&
+                  <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
+                  <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[460px] '>
+                                         <div className=' flex flex-row justify-between m-4'>
+                                                <button onClick={ ()=> {setHandleButtons(false),setWidget(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
+                                                  <svg className="w-6 h-5  "
+                                                   xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                                  </svg>
+                                                </button>
+                                               
+                                         
+                                               <span className='text-xl font-semibold mr-80 mt-1'> Add button widget </span>
+                                               <div>
+                                               <button onClick={ ()=> setHandleButtons(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
+                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                                     </svg>
+                                               </button>
+                                              </div>
+                                         </div>
+                                         
+                                         <div  className=' text-xs text-gray-500 mx-4'>A widget for button</div>
+                                         <div className=' mx-4  mb-6'>
+                                         <div className=' my-3'>
+                                         <input
+                                           type="text"
+                                           placeholder="Widget name*"
+                                           className="text-black border border-gray-200 self-center h-14 w-full mt-2 rounded-2xl p-2 bg-gray-200"
+                                           
+                                         />
+                                        
+                                            </div>
+                                             
+                                            <div className=' my-3'>  
+                                               <input 
+                                                type="text"
+                                                placeholder="Description"
+                                              
+                                                className="text-black border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
+                                                </input> 
+                                               
+                                            </div>
+                                            
+                                           
+                                         </div>
+                                         <hr className="w-[95%] ml-4 h-px my-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+         
+                                         <div  className=' flex flex-col mx-4 mt-5'>
+                                             <p className='text-md font-semibold '>Buttons</p>
+                                             <p className='text-xs text-gray-500'>0/10</p>
+                                          </div>
+                                          <div className=' mx-4 mt-5'>
+                                             <button className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-9'>
+                                                Add Button
+                                             </button>
+                                          </div>
+                                    
+                                            
+
+                                          <div className=' flex flex-row justify-end space-x-3  mr-4 mt-6'>
+                                            <button onClick={ ()=> setHandleButtons(false)} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
+                                             Cancel
+                                             </button>
+                                             <button onClick={ ()=> setHandleButtons(false)} className=' w-[62px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                                              Save
+                                             </button>
+                                        </div>
+                     </div>
+              </div>
+                }
+                { handleImage &&
+                  <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
+                  <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[420px] '>
+                                         <div className=' flex flex-row justify-between m-4'>
+                                                <button onClick={ ()=> {setHandleImage(false),setWidget(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
+                                                  <svg className="w-6 h-5  "
+                                                   xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                                  </svg>
+                                                </button>
+                                               
+                                         
+                                               <span className='text-xl font-semibold mr-72 mt-1'> Add Images widget </span>
+                                               <div>
+                                               <button onClick={ ()=> setHandleImage(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
+                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                                     </svg>
+                                               </button>
+                                              </div>
+                                         </div>
+                                           <div className=' mx-4  mb-6'>
+                                           <div className=' my-3'>
+                                             <input
+                                              type="text"
+                                              placeholder="Widget name*"
+                                              className="text-black border border-gray-200 self-center h-14 w-full mt-2 rounded-2xl p-2 bg-gray-200"
+                                           
+                                              />
+                                            </div>
+                                         </div>
+                                         <hr className="w-[95%] ml-4 h-px my-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+         
+                                        
+                                          <div className=' mx-4 mt-5'>
+                                             <p className='text-md  mb-2'>0/10</p>
+                                             <button className=' border border-gray-200 bg-gray-200 rounded-2xl text-sm w-full h-28 flex flex-col justify-items-center py-7'>
+                                             <svg className="text-gray-400 w-6 h-6 self-center "
+                                             xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M7 18a4.6 4.4 0 0 1 0 -9h0a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />  <polyline points="9 15 12 12 15 15" />  <line x1="12" y1="12" x2="12" y2="21" /></svg>
+                                                <p className='text-xs text-gray-500 self-center'>Drag and drop or browse your device</p>
+                                             </button>
+                                          </div>
+                                    
+                                            
+
+                                          <div className=' flex flex-row justify-end space-x-3  mr-4 mt-6'>
+                                            <button onClick={ ()=> setHandleImage(false)} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
+                                             Cancel
+                                             </button>
+                                             <button onClick={ ()=> setHandleImage(false)} className=' w-[62px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                                              Save
+                                             </button>
+                                        </div>
+                     </div>
+              </div>
+                }
+
          </div>
      
     </div>
