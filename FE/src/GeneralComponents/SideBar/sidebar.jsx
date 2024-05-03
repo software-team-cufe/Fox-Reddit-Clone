@@ -37,16 +37,16 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
    // };
    // useEffect(() => {
    //    axios.get("http://localhost:3002/users").then(response=> {
-         
+
    //    })
    // },[])
 
-/**
- * this function open resources , community , and Recents dropdown list
- * 
- * @param {Event} event - the event of clicking any button
- * @returns {void} - this function does not return anything
- */
+   /**
+    * this function open resources , community , and Recents dropdown list
+    * 
+    * @param {Event} event - the event of clicking any button
+    * @returns {void} - this function does not return anything
+    */
 
    function functionToExecute(event) {
       // Get the dropdown list associated with the clicked button
@@ -84,14 +84,14 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
             id="sidebar-multi-level-sidebar"
             role="sidebarr"
             data-testid="sidebar"
-            className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-50 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
+            className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-50 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') || path.pathname.includes('message') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
             lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
 
 
             <div
-               className={` ${path.pathname.includes('submit') ? "hidden" : ""} h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
+               className={` ${path.pathname.includes('submit') || path.pathname.includes('message') ? "hidden" : ""} h-full px-3 py-15 overflow-y-auto ${!IsOpen && "invisible"
                   }  lg:visible`}
             >
                <ul className="space-y-2 font-light">
@@ -106,8 +106,8 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                         </Link>
                      </li>
                   ))}
-                  
-                  
+
+
 
                   {IsModerator &&
                      <>
@@ -125,11 +125,11 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                         <div>
                            <ul>
                               <li className="flex items-center px-1 py-1 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400">
-                              <Mail className="ml-2 w-4 h-4" />
+                                 <Mail className="ml-2 w-4 h-4" />
                                  <span className=" px-2 py-2 text-gray-800">Mod mail</span>
                               </li>
                               <li className="flex items-center px-1 py-1 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400 ">
-                              <Table className="ml-2 w-4 h-4"/>
+                                 <Table className="ml-2 w-4 h-4" />
                                  <span className=" px-2 py-2 text-gray-800">r/mod</span>
                               </li>
                               {/*
@@ -140,7 +140,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                            </ul>
                         </div>
                      </>
-                 }
+                  }
 
                   <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
@@ -160,14 +160,14 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                         <ul className="" aria-labelledby="dropdownDefaultButton">
                            {/*here is where the ui print the subreddits i just entered */}
                            <li>
-                                 {RecentCommunities.map((subreddit, index) => (
-                                    <a 
+                              {RecentCommunities.map((subreddit, index) => (
+                                 <a
                                     href={`/r/${subreddit}`}
                                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
-                                          {subreddit}
-                                    </a>
-                                 ))}
+                                    {subreddit}
+                                 </a>
+                              ))}
                            </li>
                         </ul>
                      </div>

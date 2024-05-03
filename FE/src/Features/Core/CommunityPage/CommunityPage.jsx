@@ -212,7 +212,7 @@ export default function CommunityPage() {
   }
 
   const CreatePostHandle = () => {
-    if (user.user == null) {
+    if (user == null) {
       setShowModal(true);
       return;
     }

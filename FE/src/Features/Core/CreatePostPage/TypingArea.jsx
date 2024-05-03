@@ -11,11 +11,8 @@ import Poll from "./Poll"
 
 function TypingArea(props) {
     const navigator = useNavigate();
-    const [DisablePoll, setDisablePoll] = useState(false); //ToDo: set by community
-    // const [PostContent, props.SetPostText] = useState('');
-    // const [PostTitle, setPostTitle] = useState("");
+    const [DisablePoll, setDisablePoll] = useState(false);
     const [FocusTitle, setFocusTitle] = useState(false);
-    // const [props.VideoOrImageSrc, props.SetVideoOrImageSrc] = useState("");
     const [OpenImageTab, setOpenImageTab] = useState(false);
     const [ShowRemovePop, setShowRemovePop] = useState(false);
     const [ShowCancelPost, setShowCancelPost] = useState(false);
@@ -86,8 +83,10 @@ function TypingArea(props) {
             // Check the file type
             if (file.type.startsWith('image/')) {
                 setVideoFile(false);
+                props.imageOrVideo('image');
             } else if (file.type.startsWith('video/')) {
                 setVideoFile(true);
+                props.imageOrVideo('video');
             }
         }
         reader.onload = () => {
