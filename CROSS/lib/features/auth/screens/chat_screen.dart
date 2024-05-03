@@ -52,9 +52,8 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-
-/// This method sends a request to the backend to fetch the user's profile picture
-/// based on the provided access token.
+  /// This method sends a request to the backend to fetch the user's profile picture
+  /// based on the provided access token.
   Future<String> fetchUserProfilePic(String accessToken) async {
     var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
     var response = await http.get(

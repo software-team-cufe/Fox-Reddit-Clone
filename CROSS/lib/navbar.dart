@@ -8,6 +8,7 @@ import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/Pages/create_post.dart';
 import 'package:reddit_fox/Pages/messages.dart';
 import 'package:reddit_fox/features/auth/screens/chat_screen.dart';
+import 'package:reddit_fox/features/auth/screens/discover_community_screen .dart';
 
 class nBar extends StatefulWidget {
   const nBar({super.key});
@@ -38,8 +39,10 @@ class _nBarState extends State<nBar> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const BlankPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DiscoverCommunityScreen()));
             },
             child: const Icon(
               Icons.people_outline_rounded,

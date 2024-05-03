@@ -21,7 +21,7 @@
     },
     {
       "name": "animated_splash_screen",
-      "rootUri": "file:///C:/Users/omars/AppData/Local/Pub/Cache/hosted/pub.dev/animated_splash_screen-1.3.0",
+      "rootUri": "file:///C:/Users/Hossam/AppData/Local/Pub/Cache/hosted/pub.dev/animated_splash_screen-1.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -632,6 +632,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "lucide_icons",
+      "rootUri": "file:///C:/Users/Hossam/AppData/Local/Pub/Cache/hosted/pub.dev/lucide_icons-0.257.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "matcher",
       "rootUri": "file:///C:/Users/Hossam/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16+1",
       "packageUri": "lib/",
@@ -678,6 +684,12 @@
       "rootUri": "file:///C:/Users/Hossam/AppData/Local/Pub/Cache/hosted/pub.dev/package_config-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "page_transition",
+      "rootUri": "file:///C:/Users/Hossam/AppData/Local/Pub/Cache/hosted/pub.dev/page_transition-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "path",
@@ -1070,7 +1082,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-04-24T21:02:59.561633Z",
+  "generated": "2024-05-03T12:32:40.775980Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }
