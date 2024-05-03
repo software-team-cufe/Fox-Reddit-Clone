@@ -37,6 +37,7 @@ import {
   uploadCommunityBanner,
   deleteCommunityIcon,
   deleteCommunityBanner,
+  getCommunityNameHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -52,6 +53,7 @@ import {
   lockPostSchema,
   lockCommentSchema,
   editCommunityRemovalResonsSchema,
+  CommunityNameSchema,
 } from '../schema/community.schema';
 import uploadSingleMulter from '../middleware/multer/singleImage';
 import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple';
@@ -59,6 +61,7 @@ import { resizeCommunityIcon, resizeCommunityBanner } from '../middleware/resize
 
 const router = express.Router();
 
+router.get('/api/communityName', validateResource(CommunityNameSchema), getCommunityNameHandler);
 router.get('/subreddits/mine/member', getCommunityOfUserAsMemeberHandler);
 router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
 router.get('/subreddits/mine/creator', getCommunityOfUserAsCreatorHandler);

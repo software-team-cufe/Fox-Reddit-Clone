@@ -126,7 +126,16 @@ export const submitPostSchema = object({
     attachments: array(any()).optional(),
   }),
 });
-
+export const mentionUserSchema = object({
+  body: object({
+    commentId: string({
+      required_error: 'comment id is required',
+    }),
+    mentionedUsername: string({
+      required_error: 'mentioned username is required',
+    }),
+  }),
+});
 export type addComment = TypeOf<typeof addCommentSchema>;
 export type deleteCommentOrPost = TypeOf<typeof deleteCommentOrPostSchema>;
 export type hidePost = TypeOf<typeof hideAndUnhidePostSchema>;
@@ -139,3 +148,4 @@ export type lockPost = TypeOf<typeof lockPostSchema>;
 export type votePost = TypeOf<typeof votePostSchema>;
 export type voteComment = TypeOf<typeof voteCommentSchema>;
 export type submitPost = TypeOf<typeof submitPostSchema>;
+export type mentionUser = TypeOf<typeof mentionUserSchema>;

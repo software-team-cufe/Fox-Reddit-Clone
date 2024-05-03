@@ -20,6 +20,9 @@ import {
   getSortedPosts,
   getUserHiddenPostsHandler,
   getUserSavedPostsHandler,
+  addReplyHandler,
+  getCommentRepliesHandler,
+  mentionUserHandler,
 } from '../controller/listing.controller';
 import validateResource from '../middleware/validateResource';
 import uploadMultipleMulter from '../middleware/multer/multipleFiles';
@@ -37,6 +40,7 @@ import {
   votePostSchema,
   submitPostSchema,
   voteCommentSchema,
+  mentionUserSchema,
 } from '../schema/listing.schema';
 
 const router = express.Router();
@@ -68,5 +72,9 @@ router.post(
   submitPostHandler
 );
 router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);
+
+router.post('/api/addreply', validateResource(addCommentSchema), addReplyHandler);
+router.get('/api/get_comment_replies/:commentId', getCommentRepliesHandler);
+router.post('/api/mention', validateResource(mentionUserSchema), mentionUserHandler);
 
 export default router;

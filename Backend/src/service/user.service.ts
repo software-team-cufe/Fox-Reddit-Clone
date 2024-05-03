@@ -1,4 +1,4 @@
-import UserModel, { User, Moderator } from '../model/user.model';
+import { UserModel, User } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import appError from '../utils/appError';
 import CommunityModel from '../model/community.model';
@@ -862,4 +862,32 @@ export async function getUserSearchResult(query: string, page: number, limit: nu
     .select('avatar username karma about');
 
   return userResults;
+}
+
+export async function findUsersThatFollowUser(userId: string) {
+  try {
+    // Assuming 'userFollows' is an array of user IDs that the current user follows
+    const users = await UserModel.find({ userFollows: userId });
+    return users;
+  } catch (error) {
+    console.error('Error in findUsersThatFollowUser:', error);
+    throw error; // Re-throw the error to be caught by the caller
+  }
+}
+
+export async function findUsersThatFollowCommunity(communityId: string) {
+  try {
+    const users = await UserModel.find({
+      member: {
+        $elemMatch: {
+          communityId: communityId,
+          isMuted: false,
+        },
+      },
+    });
+    return users;
+  } catch (error) {
+    console.error('Error in findUsersThatFollowCommunity:', error);
+    throw error; // Re-throw the error to be caught by the caller
+  }
 }

@@ -24,21 +24,12 @@ export function findCommentById(id: string) {
  */
 export async function userComments(commentsIDS: string[], limit: number) {
   // Fetch comments based on the provided commentIDs
-  const comments = await CommentModel.find({ _id: { $in: commentsIDS } }).limit(limit);
+  const comments = await CommentModel.find({
+    _id: { $in: commentsIDS },
+  }).limit(limit);
 
   // Return the fetched comments
   return comments;
-}
-
-interface CommentData {
-  textHTML: string;
-  textJSON: string;
-  isRoot: boolean;
-  authorId: string;
-  replyingTo: string;
-  postID: string;
-  communityID: string;
-  voters: { userID: string; voteType: number }[];
 }
 
 /**
@@ -50,73 +41,6 @@ interface CommentData {
 export function createComment(input: Partial<Comment>) {
   return CommentModel.create(input);
 }
-
-/**
- * Adds a comment to a post by a user.
- *
- * @param {CommentData} data - The data of the comment to be added.
- * @param {string} userId - The ID of the user creating the comment.
- * @return {Promise<Comment>} A promise that resolves to the created comment.
- * @throws {appError} If the user or post does not exist, or if the comment was not created successfully.
- */
-
-async function add_comment(data: CommentData, userId: string) {
-  console.log(data);
-  console.log(userId);
-  const user = await findUserById(userId);
-  console.log(user);
-  if (!user) {
-    throw new appError("This user doesn't exist!", 404);
-  }
-
-  let post;
-  try {
-    post = await findPostById(data.postID);
-    console.log(post);
-  } catch {
-    throw new appError('Invalid postID!', 400);
-  }
-
-  if (!post) {
-    throw new appError("This post doesn't exist!", 404);
-  }
-  console.log('checking comment');
-  const newComment = new CommentModel({
-    textHTML: data.textHTML,
-    textJSON: data.textJSON,
-    isRoot: true,
-    authorId: data.authorId,
-    replyingTo: data.replyingTo,
-    postID: data.postID,
-    //communityID: data.communityID,
-    //voters: data.voters,
-  });
-  console.log(newComment);
-  const result = await newComment.save();
-  if (!result) {
-    throw new appError("This comment wasn't created!", 400);
-  }
-
-  if (user?.hasComment) {
-    user.hasComment.push(result._id);
-  } else {
-    throw new appError("User's hasComment property is undefined!", 500); // Or handle the error appropriately
-  }
-
-  if (post?.postComments) {
-    console.log('before push');
-    console.log(post.postComments);
-    post.postComments.push(result._id);
-    console.log('after push');
-    console.log(post.postComments);
-  } else {
-    throw new appError("Post's postComments property is undefined!", 500); // Or handle the error appropriately
-  }
-  await Promise.all([user.save(), post.save()]);
-
-  return result;
-}
-export { add_comment };
 
 /**
  * addMemberToCom
@@ -181,3 +105,52 @@ export async function addVoteToComment(userID: string, commentID: string, type: 
     status: true,
   };
 }
+/**
+ * Creates a new comment replay.
+ *
+ * @param {Partial<Comment>} input - The partial comment data to create.
+ * @return {Promise<Comment>} A promise that resolves to the created comment replay.
+ */
+export function createReplay(input: Partial<Comment>) {
+  return CommentModel.create(input);
+}
+/**
+ * Retrieves an array of comments that are replies to the comment with the given ID.
+ *
+ * @param {string} commentID - The ID of the comment to find replies for.
+ * @return {Promise<Comment[]>} A promise that resolves to an array of comments that are replies to the given comment ID.
+ */
+export function findRepliesIdByCommentId(commentID: string) {
+  return CommentModel.find({ replyingTo: commentID });
+}
+/**
+ * Finds replies based on the provided array of reply IDs.
+ *
+ * @param {string[]} repliesIds - An array of reply IDs.
+ * @return {Promise<Comment[]>} A promise that resolves to an array of comments.
+ */
+export function findReplies(repliesIds: string[]) {
+  return CommentModel.find({
+    _id: { $in: repliesIds },
+  });
+}
+/**
+ * Extracts usernames from a given textJSON string that are preceded by "/".
+ *
+ * @param {string} textJSON - The textJSON string to extract usernames from.
+ * @return {string[]} An array of usernames extracted from the textJSON string.
+ */
+export function extractUsernamesFromTextJSON(textJSON: string): string[] {
+  // Example regex to extract usernames from textJSON preceded by "/"
+  const regex = /\/([a-zA-Z0-9_]+)/g;
+  const matches = textJSON.match(regex);
+
+  if (!matches) return [];
+
+  // Extract usernames from the matched strings
+  const usernames = matches.map((match) => match.slice(1));
+
+  return usernames;
+}
+
+export async function getCommentsSearchResults() {}

@@ -224,8 +224,8 @@ class IsBannedOrMuted {
   @prop()
   date?: Date;
 }
-class notificationInfo {
-  @prop({ ref: () => 'Notifications' })
+export class notificationInfo {
+  @prop({ required: true, ref: () => 'Notifications' })
   notificationId?: Ref<Notifications>;
 
   @prop({ default: false })
@@ -326,13 +326,13 @@ export class User {
   @prop({ default: true })
   contentVisibility?: boolean;
 
-  @prop()
+  @prop({ default: 0 })
   postKarma?: number;
 
-  @prop()
+  @prop({ default: 0 })
   commentKarma?: number;
 
-  @prop()
+  @prop({ default: 0 })
   karma?: number;
 
   @prop()
