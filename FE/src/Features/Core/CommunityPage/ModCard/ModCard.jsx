@@ -865,7 +865,7 @@ const ModCard = () => {
                      </div>
               </div>
                 }
-                {setHandleBookMark &&
+                {handleBookMark &&
                   <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
                   <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[280px] '>
                                          <div className=' flex flex-row justify-between m-4'>
