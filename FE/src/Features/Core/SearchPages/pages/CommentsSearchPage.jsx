@@ -28,12 +28,8 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
   useEffect(() => {
     setLoading(true);
     axios.get(`http://localhost:3002/comments?_limit=${limitpage}`)
-      //axios.get('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/user/sharif29/comments?page=4&count=10&limit=50&t=month')
       .then(response => {
-        if (response.data.length < limitpage) {
-          setpagedone(true);
-        }
-        const newComments = response.data.map(comment => ({
+        let newComments = response.data.map(comment => ({
           user: {
             image: comment.user.avatar,
             Username: comment.user.username,
@@ -46,8 +42,13 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
           content: {
             text: comment.commentText
           }
-        }));
+      }));
 
+        newComments = newComments.filter(comment => comment.content.text.toLowerCase().includes(searched));
+        if (newComments.length < limitpage) {
+          setpagedone(true);
+        }
+        console.log(newComments);
         setComments(newComments);
         setLoading(false);
       })

@@ -4,7 +4,7 @@ const ChangeLanguage = ({setLanguage},props) => {
   
   return (
     
-    <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center '>
+    <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40 '>
      
     
       <div className=' flex bg-white flex-col shadow-md rounded-2xl box-border md:box-content w-[420px] h-[600px] mt-7'>

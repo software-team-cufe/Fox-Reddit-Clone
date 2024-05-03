@@ -2,6 +2,7 @@
 { 
     border: solid 1px rgb(227, 226, 226);
     border-radius: 10px;
+    background-color: white;
 }
 
 .quill .ql-toolbar
@@ -16,6 +17,7 @@
    
     border: solid 1px rgb(19, 18, 18);
     border-radius: 5px;
+    
 }
 
 
@@ -36,3 +38,4 @@ width: 100%;
     width: 800px;
     z-index: 1;
 }
+ 

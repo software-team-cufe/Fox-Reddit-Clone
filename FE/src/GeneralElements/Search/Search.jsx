@@ -1,4 +1,4 @@
-import axios from "axios";
+
 /**
  * SearchComponent is a React component that provides a search input field with a dropdown selector.
  * It allows users to search for communities and navigate to the search results page.
@@ -12,6 +12,7 @@ import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const SearchComponent = () => {
     const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]

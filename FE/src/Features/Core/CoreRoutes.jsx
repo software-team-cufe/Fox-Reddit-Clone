@@ -11,7 +11,11 @@ import { CommunityProvider } from './CommunityPage/CommunityPage';
 import CreatePostPage from './CreatePostPage/CreatePostPage';
 import ChatPage from './ThreadsPage/ChatPage';
 import NotificationPage from '../../GeneralComponents/Notification & messages/NotificationPage';
+import ModCard from './CommunityPage/ModCard/ModCard';
 import PrivateMessagelayout from './PrivateMessage/PrivateMessage';
+import TopCommunities from '../../GeneralComponents/SideBar/TopCommunities';
+
+import RulesRemovalPage from './CommunityPage/rulesRemoval/rulesRemovalpage';
 import ModNavbar from '../../GeneralComponents/ModNavbar/ModNavbar';
 import UserManagemntRoutes from './moderation/about/UserManagement/pages/UserManagemntRoutes';
 function CommunityLayout() {
@@ -30,6 +34,7 @@ function CommunityLayout() {
     </div>
 }
 
+
 export default [
     <Route key={'/'} path='/' element={<HomeProvider><HomePage /></HomeProvider>} />,
     <Route key={'/user'} path='/user/:user/*' element={<ProfilePagesLayout />} />,
@@ -41,5 +46,10 @@ export default [
     <Route key={"/submit"} path="/submit/*" element={< CreatePostPage />} />,
     <Route key={"/threads"} path="/chat/:id" element={<ChatPage />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
-    <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />
+    <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
+    <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
+    <Route key={'/'} path='/r/:community/about/*' element={<RulesRemovalPage></RulesRemovalPage>} />,
+    <Route key={'/mod'} path='/r/:community/mod/*' element={<ModCard />} />,
+    <Route key={'/community'} path='/community' element={<TopCommunities />} />,
+  
 ]

@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { ChevronDown } from "lucide-react"
 import CreateCommunity from '../../../GeneralComponents/CreateCommunity/CreateCommunity';
+import { userAxios } from "@/Utils/UserAxios";
+import { userStore } from '../../../hooks/UserRedux/UserStore';
 const Dropdown = (props) => {
+    const store = userStore.getState().user.user;
+    const Profile = [{ name: store.username, icon: store.avatar }]
 
-    const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
-    const YourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12", id: "1254" },
-    { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125", id: "12562" }];
     const OtherCommunities = [{ name: "r / com3", icon: "DumPhoto3.jpg", membersCount: "123", id: "125654" },
     {
         name: "r / com4", icon: "DumPhoto4.jpg", membersCount: "1235", rules: [
@@ -17,12 +18,15 @@ const Dropdown = (props) => {
         ],
         id: "1256254"
     }];
-
+    // { name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12", id: "1254" },
+    // { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125", id: "12562" }
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const dropdownRef = useRef(null);
     const [ShowCreateCom, setShowCreateCom] = useState(false);
+    const [YourCommunities, setYourCommunities] = useState([]);
     useEffect(() => {
+        fetchMyComs();
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false)
@@ -35,6 +39,11 @@ const Dropdown = (props) => {
         }
     }, [])
 
+    const fetchMyComs = async () => {
+        const res = await userAxios.get('subreddits/mine/member')
+        setYourCommunities(res.data.communities);
+    }
+
     const handleCreateNewCom = () => {
         setShowCreateCom(true);
     }
@@ -42,8 +51,11 @@ const Dropdown = (props) => {
     const filteredProfile = Profile.filter(item =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    // const filteredYourCom = YourCommunities.filter(item =>
+    //     item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
     const filteredYourCom = YourCommunities.filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        item.toLowerCase().includes(searchTerm.toLowerCase())
     );
     const filteredOtherCom = OtherCommunities.filter(item =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -72,7 +84,7 @@ const Dropdown = (props) => {
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
                         />
-                        <div className='text-xs mt-1  m-2 font-bold text-gray-500'>YOUR PROFILE</div>
+                        {filteredProfile.length > 0 && <div className='text-xs mt-1  m-2 font-bold text-gray-500'>YOUR PROFILE</div>}
                         {filteredProfile.map((item, id) => (
                             <button key={id} onClick={() => { props.setSelected(item); setIsOpen(false); }}
                                 className=" px-4 py-2 text-gray-700 w-full 
@@ -81,30 +93,35 @@ const Dropdown = (props) => {
                                 <p className='m-2 '>{item.name}</p>
                             </button>
                         ))}
-                        <hr className='m-4 my-6' />
-                        <div className='text-xs mt-1 m-2 font-bold text-gray-500'>YOUR COMMUNITIES</div>
-                        <button
-                            onClick={handleCreateNewCom}
-                            type="submit"
-                            className="bg-white text-orange-600 font-bold text-xs rounded-full  p-1 px-2 m-1 
+
+                        {filteredYourCom.length > 0 && <> <hr className='m-4 my-6' />
+                            <div className='text-xs mt-1 m-2 font-bold text-gray-500'>YOUR COMMUNITIES</div>
+                            <button
+                                onClick={handleCreateNewCom}
+                                type="submit"
+                                className="bg-white text-orange-600 font-bold text-xs rounded-full  p-1 px-2 m-1 
                  hover:bg-orange-100  disabled:text-gray-400 disabled:hover:bg-white"
-                        >
-                            Create New
-                        </button>
+                            >
+                                Create New
+                            </button>
+                        </>}
                         {ShowCreateCom && <CreateCommunity onClose={() => { setShowCreateCom(false); }} />}
                         {filteredYourCom.map((item, id) => (
                             <button key={id} onClick={() => { props.setSelected(item); setIsOpen(false); }}
                                 className=" px-4 py-2 text-gray-700 w-full 
                         hover:bg-gray-100 active:bg-blue-100 cursor-pointer h-12 flex gap-7 rounded-md">
-                                <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
+                                {/* <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' /> */}
                                 <div>
-                                    <p className='mx-2 '>{item.name}</p>
-                                    <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p>
+                                    {/* <p className='mx-2 '>{item.name}</p> */}
+                                    <p className='mx-2 '>{item}</p>
+                                    {/* <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p> */}
                                 </div>
                             </button>
                         ))}
-                        <hr className='m-4 my-6' />
-                        <div className='text-xs mt-1 m-2 font-bold text-gray-500'>OTHERS</div>
+
+                        {filteredOtherCom.length > 0 && <>
+                            <hr className='m-4 my-6' />
+                            <div className='text-xs mt-1 m-2 font-bold text-gray-500'>OTHERS</div> </>}
                         {filteredOtherCom.map((item, index) => (
                             <button key={index} onClick={() => { props.setSelected(item); setIsOpen(false); }}
                                 className=" px-4 py-2 text-gray-700 w-full
@@ -118,7 +135,7 @@ const Dropdown = (props) => {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 

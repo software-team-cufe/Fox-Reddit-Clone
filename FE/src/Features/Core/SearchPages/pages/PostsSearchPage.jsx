@@ -27,10 +27,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
     setLoading(true);    //set loading to true before fetching
     axios.get(`http://localhost:3002/posts?_limit=${limitpage}`)
       .then(response => {
-        if (response.data.length < limitpage) {
-          setpagedone(true);
-        }
-        const newPosts = response.data.map(post => ({
+        let newPosts = response.data.map(post => ({
           subReddit: {
             image: post.attachments.subredditIcon,
             title: post.communityName,
@@ -45,6 +42,10 @@ export default function PeopleSearchPage({ searched = "filler" }) {
           video: null
         }));
 
+        newPosts = newPosts.filter(post => post.title.toLowerCase().includes(searched));
+        if (newPosts.length < limitpage) {
+          setpagedone(true);
+        }
         setPosts(newPosts);
         setLoading(false);   //set loading to false after fetching to load body
       })

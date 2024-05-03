@@ -110,7 +110,8 @@ function MainRoute() {
   const store = userStore.getState().user.user;
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} IsLogged={store != null} ProfileImageSrc={store != null ? store.avatar : "logo.png"} UserName={store != null ? store.username : "fidjfi"} IsOnline={true} />
+      <NavBar SetOpenSiseBar={handleOpenSideBar} IsLogged={store != null} ProfileImageSrc={store != null ? store.avatar : "logo.png"}
+        UserName={store != null ? store.username : "fidjfi"} IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
           !isUrlMatching(window.location.pathname,[
@@ -125,7 +126,7 @@ function MainRoute() {
           ]) && <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
         }
 
-        <div className='h-full w-full overflow-y-auto lg:p-4'>
+        <div className='h-full w-full overflow-y-auto '>
           <Outlet />
         </div>
       </div>
@@ -141,7 +142,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<MainRoute />}>
-              {AuthRoutes}
+              {/* {AuthRoutes} */}
               {CoreRoutes}
             </Route>
             <Route path='*' element={<NotFoundPage />} />

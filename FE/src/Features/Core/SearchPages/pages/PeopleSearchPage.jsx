@@ -25,10 +25,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   useEffect(() => {
     axios.get(`http://localhost:3002/users?_limit=${limitpage}`)  //fetch users and organize into users array for mapping
       .then(response => {
-        if (response.data.length < limitpage) {
-          setpagedone(true);
-        }
-        const newUsers = response.data.map(user => ({
+        let newUsers = response.data.map(user => ({
           id: user.userID,
           name: user.name,
           avatar: user.avatar,
@@ -36,6 +33,10 @@ export default function PeopleSearchPage({ searched = "filler" }) {
           karma: user.totalKarma,
         }));
 
+        newUsers = newUsers.filter(user => user.name.toLowerCase().includes(searched));
+        if (newUsers.length < limitpage) {
+          setpagedone(true);
+        }
         setUsers(newUsers);
         setLoading(false);  //set loading to false after fetching to load body
       })

@@ -1,6 +1,6 @@
 import { Link, Outlet, Route, Routes, useLocation, useParams, } from "react-router-dom";
 import ProfileOverview from "./pages/profileoverview";
-import { Plus, ChevronsUp } from "lucide-react";
+import { Plus } from "lucide-react";
 import ProfileUpvoted from "./pages/profileupvoted";
 import ProfileDownvoted from "./pages/ProfileDownvoted";
 import ProfilePosts from "./pages/Profileposts";
@@ -10,10 +10,11 @@ import ProfileHidden from "./pages/profilehidden";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import Card from "@/GeneralComponents/profileCard/Card.jsx";
-import React, { useState, useEffect, useRef } from "react";
-import { userStore } from "@/hooks/UserRedux/UserStore";
+import React, { useState} from "react";
 import { useContext, createContext } from "react";
 import BackToTop from "@/GeneralComponents/backToTop/backToTop";
+import { useSelector } from 'react-redux';
+
 // for mapping the list of buttons
 /**
  * Array of buttons representing different profile page options.
@@ -75,8 +76,8 @@ function Layout() {
 
   const path = useLocation();
   const { selected } = useContext(ProfileContext);
-  const user = userStore.getState().user.user.username;    // fetching user info from redux store
-  const avatar = userStore.getState().user.user.avatar;  // fetching user avatar from redux store
+  const user = useSelector(state => state.user.user.username);  // fetching user from redux store (username
+  const avatar = useSelector(state => state.user.user.avatar);  // fetching user avatar from redux store
 
   return (
     <div className="relative w-[90%] mx-auto overflow-auto" > {/* attach the ref to your scrollable element */}
