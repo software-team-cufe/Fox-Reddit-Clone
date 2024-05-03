@@ -74,7 +74,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
    }
 
    const [isModalOpen, setIsModalOpen] = useState(false);
-   const [yourCommunities, setYourCommunities] = useState(["hi", "hello", "hell no"]);
+   const [yourCommunities, setYourCommunities] = useState([]);
 
    const openCreateCommunity = () => {
       setIsModalOpen(true); // Open the modal
@@ -218,7 +218,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                  </span>
                               </button>
                               {isModalOpen && (
-                                 <CreateCommunity onClose={closeCreateCommunity} />
+                                 <CreateCommunity commList={yourCommunities} setCommList={setYourCommunities} onClose={closeCreateCommunity} />
                               )}
                            </li>
                            <li>
@@ -226,9 +226,9 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                               yourCommunities.map((yourCommunity, index) => (
                                  <a
                                     href={`/r/${yourCommunity.name}`}
-                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                    className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
-                                    {yourCommunity.icon}{yourCommunity.name}
+                                    <img src={yourCommunity.icon} className="rounded-full w-7 my-auto h-7"/><p className="text-sm mt-1 font-medium">{yourCommunity.name}</p>
                                  </a>
                               ))
                            }

@@ -11,7 +11,7 @@ import {userAxios} from '@/Utils/UserAxios';
  * @param {Function} props.onClose - The function to be called when the component is closed.
  * @returns {JSX.Element} The CreateCommunity component.
  */
-export default function CreateCommunity({ onClose = () => { } }) {
+export default function CreateCommunity({ onClose = () => { }, setCommList = () => {} , commList = [] }) {
 
     const validText = <div className={` text-green-500 text-xs mt-1 ml-5`}>Choose wisely. Once you pick a name, it can't be changed.</div>;
     const invalidText = <div className={` text-red-600 text-xs mt-1 ml-5`}>Please fill out this field.</div>;
@@ -50,7 +50,9 @@ export default function CreateCommunity({ onClose = () => { } }) {
                 type: commType.replace('comm-',''),
                 over18: NSFW
             })
-            .then(() => {
+            .then((response) => {
+                    console.log(response.data);
+                    setCommList([...commList, { icon: response.data.community.icon, name: response.data.community.name}]);
                     toast.success('Community created successfully');
                     handleClose();
             })
