@@ -13,6 +13,7 @@ import ChatPage from './ThreadsPage/ChatPage';
 import NotificationPage from '../../GeneralComponents/Notification & messages/NotificationPage';
 import ModCard from './CommunityPage/ModCard/ModCard';
 import PrivateMessagelayout from './PrivateMessage/PrivateMessage';
+import TopCommunities from '../../GeneralComponents/SideBar/TopCommunities';
 
 import RulesRemovalPage from './CommunityPage/rulesRemoval/rulesRemovalpage';
 
@@ -31,5 +32,6 @@ export default [
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={'/'} path='/r/:community/about/*' element={<RulesRemovalPage></RulesRemovalPage>} />,
     <Route key={'/mod'} path='/r/:community/mod/*' element={<ModCard />} />,
+    <Route key={'/community'} path='/community' element={<TopCommunities />} />,
   
 ]
