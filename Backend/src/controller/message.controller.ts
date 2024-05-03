@@ -47,7 +47,7 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
       `${user.username} sent a message`,
       'message',
       req.body.text,
-      user._id
+      createdMessage._id
     );
     res.status(200).json(createdMessage); // 201: Created
   } catch (error) {
