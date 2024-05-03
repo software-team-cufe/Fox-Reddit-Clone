@@ -12,7 +12,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
-import { People } from '@mui/icons-material';
 import axios from "axios";
 
 const SearchComponent = () => {
