@@ -228,7 +228,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                     href={`/r/${yourCommunity}`}
                                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
-                                    {yourCommunity}
+                                    {yourCommunity.icon}{yourCommunity.name}
                                  </a>
                               ))
                            }
