@@ -89,7 +89,7 @@ function Layout() {
 
   //main body of page
   return (
-    <div role="ViewerPage" className="flex gap-10 w-[80%] mx-auto">
+    <div role="ViewerPage" className="flex gap-10 mt-10 w-[80%] mx-auto">
       <div className="relative flex-grow md:w-[55%]">
         <BackToTop />
         <div role="avatarHeader" className='relative flex mb-8'>
