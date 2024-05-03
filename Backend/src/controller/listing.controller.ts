@@ -332,6 +332,21 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
         { new: true, upsert: true }
       );
     }
+    const postAuthor = await findUserById(updatedPost.userID.toString());
+    if (!postAuthor) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post author not found',
+      });
+    }
+    await createNotification(
+      postAuthor._id,
+      updatedUser.avatar ?? 'deafult.jpg',
+      'New Comment!',
+      'comment',
+      `${updatedUser.username} has commented on your post.`,
+      createdComment._id
+    );
     res.status(201).json(createdComment); // 201: Created
   } catch (error) {
     console.error('Error in addCommentHandler:', error);
@@ -1314,7 +1329,21 @@ export async function addReplyHandler(req: Request, res: Response) {
       { $addToSet: { replies: createdReply._id } },
       { new: true, upsert: true }
     );
-
+    const commentAuthor = await findUserById(updatedComment.authorId.toString());
+    if (!commentAuthor) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post author not found',
+      });
+    }
+    await createNotification(
+      commentAuthor?._id,
+      user.avatar ?? 'default.jpg',
+      'New comment reply!',
+      'reply',
+      `${user.username} replied to your comment.`,
+      updatedComment._id
+    );
     res.status(201).json(createdReply); // 201: Created
   } catch (error) {
     console.error('Error in addReplyHandler:', error);
