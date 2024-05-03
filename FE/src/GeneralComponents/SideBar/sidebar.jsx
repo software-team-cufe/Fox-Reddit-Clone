@@ -225,7 +225,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                            {
                               yourCommunities.map((yourCommunity, index) => (
                                  <a
-                                    href={`/r/${yourCommunity}`}
+                                    href={`/r/${yourCommunity.name}`}
                                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
                                     {yourCommunity.icon}{yourCommunity.name}
