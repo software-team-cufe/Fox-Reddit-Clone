@@ -8,6 +8,7 @@ import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles, Mail, Table } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
+import TopCommunities from "./TopCommunities";
 
 
 import { key } from 'localforage';
@@ -279,19 +280,19 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
 
                               <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
-                              <a
-                                 href="/Communities"
+                              <Link
+                                 to="./community"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
                                  <i className="fa-solid fa-users-between-lines w-5 h-5"></i>
                                  <span className="px-2 py-2 text-gray-800" >Communities</span>
 
-                              </a>
+                              </Link>
                            </li>
 
                            <li>
                               <a
-                                 href="/BestofReddit"
+                                 href="https://www.reddit.com/posts/2024/global/"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                               >
                                  <Sparkles className="w-5 h-5" />
@@ -349,3 +350,4 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
    );
 }
 export default Sidebar;
+
