@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:routemaster/routemaster.dart";
-//general
+
 import 'package:reddit_fox/features/community/screens/modtools/community_icon.dart';
 import 'package:reddit_fox/features/community/screens/modtools/description.dart';
 import 'package:reddit_fox/features/community/screens/modtools/post_types.dart';

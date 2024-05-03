@@ -79,18 +79,6 @@ class _CommentCardState extends State<CommentCard> {
 
   @override
   Widget build(BuildContext context) {
-    Widget avatarWidget = const CircleAvatar(
-      radius: 12,
-      child: Icon(Icons.account_circle),
-    );
-
-    // Check if avatar image is present
-    /*
-    if (/* Check if avatar image is present */) {
-      // Replace the CircleAvatar widget with your avatar image widget
-      avatarWidget = CircleAvatar(child: Icon(Icons.person, size: 24));
-    }
-*/
     return Container(
       margin: const EdgeInsets.only(bottom: 2.0),
       decoration: const BoxDecoration(
@@ -99,7 +87,7 @@ class _CommentCardState extends State<CommentCard> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 8.0),
+        padding: const EdgeInsets.only(left: 1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -110,35 +98,32 @@ class _CommentCardState extends State<CommentCard> {
                   backgroundImage: AssetImage('assets/images/avatar.png'),
                   radius: 15,
                 ), // Display the avatar
+                const Padding(padding: EdgeInsets.only(left: 2.0)),
                 Text(
                   widget.username,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            const SizedBox(height: 8.0),
             Container(
-              padding: const EdgeInsets.only(
-                  left:
-                      10.0), // Add padding to create space between the avatar and the comment content
+              padding: const EdgeInsets.only(left: 10.0), // Add padding to create space between the avatar and the comment content
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.commentContent),
                   if (isReplying)
                     Container(
-                      margin: const EdgeInsets.only(top: 8.0),
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(1.0),
                       decoration: const BoxDecoration(
                         border: Border(
                           left: BorderSide(
                               width: 2.0,
-                              color:
-                                  Colors.grey), // Vertical line for reply input
+                              color:Colors.grey), // Vertical line for reply input
                         ),
                       ),
                       child: Row(
                         children: [
+                                  const SizedBox(width: 10), // Add a small space here
                           const Expanded(
                             child: TextField(
                               decoration: InputDecoration(

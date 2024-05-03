@@ -35,14 +35,7 @@ void main() {
   });
 
   testWidgets('CommentCard Widget Test', (WidgetTester tester) async {
-    // Create a test instance of ReplyData
-    final replyData = ReplyData(
-      username: 'TestUser',
-      replyContent: 'Test Reply Content',
-      upvotes: 15,
-      downvotes: 5,
-    );
-
+   
     // Build the CommentCard widget
     await tester.pumpWidget(
       MaterialApp(
@@ -50,11 +43,9 @@ void main() {
           body: CommentCard(
             username: 'User1',
             commentContent: 'Test Comment Content',
-            upvotes: 20,
-            downvotes: 10,
             onReply: () {},
             onViewMenu: () {},
-            replies: [replyData], // Pass the test replyData
+            replies: [], votes: 25, // Pass the test replyData
           ),
         ),
       ),
