@@ -269,6 +269,16 @@ export class Moderator {
   @prop({ enum: ['creator', 'moderator'] })
   role?: string;
 }
+class Mention {
+  @prop({ ref: () => User })
+  mentionerID!: Ref<User>;
+
+  @prop({ ref: () => 'Post' })
+  postID!: Ref<Post>;
+
+  @prop({ ref: () => 'Comment' })
+  commentID?: Ref<Comment>;
+}
 @pre<User>('save', async function (this: DocumentType<User>) {
   if (!this.isModified('password')) {
     return;
@@ -432,11 +442,8 @@ export class User {
   @prop({ ref: () => 'Post' })
   savedPosts?: Ref<Post>[];
 
-  @prop({ ref: 'Post' })
-  mentionedInPosts?: Ref<Post>[];
-
-  @prop({ ref: () => 'Comment' })
-  mentionedInComments?: Ref<Comment>[];
+  @prop()
+  mentionedIn?: Mention[];
 
   @prop()
   member?: Member[];
