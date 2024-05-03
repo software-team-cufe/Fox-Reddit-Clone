@@ -144,7 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
       drawer: CommunityListDrawer(
         drawer_Width: drawerWidth,
       ),
-      endDrawer: endDrawer(user_width: userWidth, token: access_token!),
+      endDrawer: endDrawer(user_width: userWidth, token: access_token),
       body: Column(
         children: [
           Padding(
