@@ -18,9 +18,8 @@ void main() {
     testWidgets('ProfilePage renders loading indicator when userData is empty', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: ProfilePage(
-          user_Id: 'testUserId',
           myProfile: true,
-          access_token: 'testAccessToken',
+          access_token: 'testAccessToken', userName: '',
         ),
       ));
 

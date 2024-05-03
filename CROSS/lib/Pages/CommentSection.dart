@@ -19,88 +19,175 @@ class CommentData {
 
 class CommentSection extends StatelessWidget {
   final String postId;
+  final TextEditingController commentController = TextEditingController();
 
-  const CommentSection({
+  CommentSection({
     Key? key,
     required this.postId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildCommentList(comments: initialComments),
-        ],
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildNewCommentField(),
+              _buildCommentList(comments: initialComments),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNewCommentField() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        controller: commentController,
+        decoration: InputDecoration(
+          hintText: 'Write a new comment...',
+          suffixIcon: IconButton(
+            icon: Icon(Icons.send),
+            onPressed: () {
+              // Add your logic here to handle sending the comment
+              String newComment = commentController.text;
+              commentController.clear();
+              // Call a function to handle adding the new comment
+            },
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildCommentList({required List<CommentData> comments, int depth = 0}) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: comments.length,
-      itemBuilder: (BuildContext context, int index) {
-        final comment = comments[index];
-        return Padding(
-          padding: EdgeInsets.only(left: 16.0 * depth),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CommentCard(
-                username: comment.username,
-                commentContent: comment.content,
-                votes: comment.votes,
-                onReply: () {},
-                onViewMenu: () {}, replies: [],
-              ),
-              if (comment.replies.isNotEmpty)
-                _buildCommentList(comments: comment.replies, depth: depth + 1),
-            ],
+Widget _buildCommentList({
+  required List<CommentData> comments,
+  int depth = 0,
+}) {
+  return ListView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemCount: comments.length,
+    itemBuilder: (BuildContext context, int index) {
+      final comment = comments[index];
+      final double indent = 16.0 * depth;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: indent),
+            child: CommentCard(
+              username: comment.username,
+              commentContent: comment.content,
+              votes: comment.votes,
+              onReply: () {},
+              onViewMenu: () {},
+              replies: [],
+            ),
           ),
-        );
-      },
-    );
-  }
+          if (comment.replies.isNotEmpty)
+            _buildCommentList(
+              comments: comment.replies,
+              depth: depth + 1,
+            ),
+        ],
+      );
+    },
+  );
+}
+
 
   // Dummy data for initial comments, replace this with your actual data
   List<CommentData> get initialComments => [
-    CommentData(
-      username: 'User 1',
-      content: 'Comment 1 content',
-      votes: 10,
-      replies: [
         CommentData(
-          username: 'User 2',
-          content: 'Reply to comment 1',
-          votes: 5,
+          username: 'User 1',
+          content: 'Comment 1 content',
+          votes: 10,
           replies: [
-            // Adding a reply to the reply of comment 1
             CommentData(
-              username: 'User 3',
-              content: 'Another reply to comment 1',
-              votes: 3,
+              username: 'User 2',
+              content: 'Reply to comment 1',
+              votes: 5,
+              replies: [
+                // Adding a reply to the reply of comment 1
+                CommentData(
+                  username: 'User 3',
+                  content: 'Another reply to comment 1',
+                  votes: 3,
+                  replies: [],
+                ),
+              ],
+            ),
+          ],
+        ),
+        CommentData(
+          username: 'User 4',
+          content: 'Comment 2 content',
+          votes: 8,
+          replies: [
+            // Adding a reply to comment 2
+            CommentData(
+              username: 'User 5',
+              content: 'Reply to comment 2',
+              votes: 4,
+              replies: [
+                CommentData(
+                  username: 'User 2',
+                  content: 'Reply to comment 1',
+                  votes: 5,
+                  replies: [
+                    // Adding a reply to the reply of comment 1
+                    CommentData(
+                      username: 'User 3',
+                      content: 'Another reply to comment 1',
+                      votes: 3,
+                      replies: [],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+        CommentData(
+          username: 'User 1',
+          content: 'Comment 1 content',
+          votes: 10,
+          replies: [
+            CommentData(
+              username: 'User 2',
+              content: 'Reply to comment 1',
+              votes: 5,
+              replies: [
+                // Adding a reply to the reply of comment 1
+                CommentData(
+                  username: 'User 3',
+                  content: 'Another reply to comment 1',
+                  votes: 3,
+                  replies: [],
+                ),
+              ],
+            ),
+          ],
+        ),
+        CommentData(
+          username: 'User 4',
+          content: 'Comment 2 content',
+          votes: 8,
+          replies: [
+            // Adding a reply to comment 2
+            CommentData(
+              username: 'User 5',
+              content: 'Reply to comment 2',
+              votes: 4,
               replies: [],
             ),
           ],
         ),
-      ],
-    ),
-    CommentData(
-      username: 'User 4',
-      content: 'Comment 2 content',
-      votes: 8,
-      replies: [
-        // Adding a reply to comment 2
-        CommentData(
-          username: 'User 5',
-          content: 'Reply to comment 2',
-          votes: 4,
-          replies: [],
-        ),
-      ],
-    ),
-  ];
+      ];
 }
