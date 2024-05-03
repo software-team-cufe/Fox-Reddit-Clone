@@ -309,6 +309,96 @@
       "favourited": true,
       "NSFW": false,
       "type": "public"
+    },
+    {
+      "id": 5,
+      "name": "cooking",
+      "description": "A community for sharing recipes, cooking tips, and discussing all things culinary.",
+      "onlineMembers": 123,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to cooking.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ],
+      "joined": true,
+      "muted": false,
+      "favourited": false,
+      "NSFW": false,
+      "type": "public"
+    },
+    {
+      "id": 6,
+      "name": "movies",
+      "description": "A community for discussing movies, TV shows, and all things entertainment.",
+      "onlineMembers": 456,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to movies and TV shows.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ],
+      "joined": false,
+      "muted": false,
+      "favourited": false,
+      "NSFW": false,
+      "type": "public"
+    },
+    {
+      "id": 7,
+      "name": "music",
+      "description": "A community for sharing music, discussing artists, and discovering new tunes.",
+      "onlineMembers": 789,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to music.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ],
+      "joined": true,
+      "muted": false,
+      "favourited": true,
+      "NSFW": false,
+      "type": "public"
+    },
+    {
+      "id": 8,
+      "name": "technology",
+      "description": "A community for discussing the latest in technology, gadgets, and software.",
+      "onlineMembers": 234,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to technology.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ],
+      "joined": false,
+      "muted": false,
+      "favourited": false,
+      "NSFW": false,
+      "type": "public"
+    },
+    {
+      "id": 9,
+      "name": "sports",
+      "description": "A community for discussing sports, games, and all things athletic.",
+      "onlineMembers": 345,
+      "rules": [
+        "Be respectful to other members.",
+        "No spamming or self-promotion.",
+        "Keep discussions relevant to sports.",
+        "No hate speech or harassment of any kind.",
+        "Follow Reddit's content policy."
+      ],
+      "joined": true,
+      "muted": false,
+      "favourited": false,
+      "NSFW": false,
+      "type": "public"
     }
   ],
   "posts": [
