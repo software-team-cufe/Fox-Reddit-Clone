@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:reddit_fox/Pages/messages.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/models/user_model.dart';
@@ -12,7 +13,7 @@ import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-  /// A StatefulWidget representing the sign-up screen.
+/// A StatefulWidget representing the sign-up screen.
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -26,7 +27,8 @@ class SignupScreen extends StatefulWidget {
   //   return bytes.fold(0, (result, element) => (result << 8) + element);
   // }
 }
-  /// The state of the [SignupScreen].
+
+/// The state of the [SignupScreen].
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -52,25 +54,24 @@ class _SignupScreenState extends State<SignupScreen> {
   /// If successful, navigates the user to the login screen.
   /// Calls the sign-up API with the provided user information.
 
-
-  String? signup(final String email, final String password, String? name,
-      DateTime? birthDate, bool termsandconditions) {
+  Future<String?> signup(final String email, final String password,
+      String? name, DateTime? birthDate, bool termsandconditions) async {
     String? errorMessage;
     if (email.trim().isEmpty) errorMessage = "Please enter email";
     RegExp emailPattern = RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
     if (!emailPattern.hasMatch(email) ||
         password.trim().isEmpty ||
-        password.length < 7 ||
+        password.length < 8 ||
         name == null) {
       return 'Please enter Valid Data and accept termsandconditions';
     }
-    signUpAPI(name, email, password, DateTime.now());
+    String? mess = await signUpAPI(name, email, password, DateTime.now());
 
-    return null;
+    return mess;
   }
 
-  Future<void> signUpAPI(
+  Future<String?> signUpAPI(
       String username, String email, String password, Date) async {
     final Uri url = Uri.parse(
         ApiRoutesBackend.signup); // Replace with your server's endpoint
@@ -99,16 +100,17 @@ class _SignupScreenState extends State<SignupScreen> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Sign-up successful
         print('Sign-up successful!');
-      } else if (response.statusCode == 400) {
+      } else if (response.statusCode == 409) {
         // Error occurred
-        print('Error: ${response.statusCode}');
-        ;
+        print('Error: ${response.body}');
+        return "here is an existing username or email";
       }
     } catch (e) {
       // Exception occurred
       print('Exception: $e');
     }
     print('_________________________________');
+    return null;
   }
 
   @override
@@ -186,15 +188,16 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 40),
               CustomButton(
                 text: "Create account",
-                onTap: () {
+                onTap: () async {
+                  final message = await signup(
+                    emailController.text,
+                    passwordController.text,
+                    nameController.text,
+                    user.birthDate,
+                    acceptTerms,
+                  );
                   setState(() {
-                    errorMessage = signup(
-                      emailController.text,
-                      passwordController.text,
-                      nameController.text,
-                      user.birthDate,
-                      acceptTerms,
-                    );
+                    errorMessage = message;
                   });
                   if (errorMessage == null) {
                     Future.delayed(const Duration(seconds: 5), () {
