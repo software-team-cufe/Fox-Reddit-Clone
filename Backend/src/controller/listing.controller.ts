@@ -43,6 +43,7 @@ import {
   userSubmittedPosts,
   addPostVoteToUser,
   addCommentVoteToUser,
+  findUserById,
 } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
 import { findCommunityByName } from '../service/community.service';
@@ -1399,14 +1400,13 @@ export async function getPostAndCommentUserMentionedHandler(req: Request, res: R
     const mentionedPosts = [];
     if (user.mentionedIn) {
       for (const mention of user.mentionedIn) {
-        const mentionerName = findUserByUsername(mention.mentionerID.toString());
+        const mentionerName = await UserModel.findById(mention.mentionerID).select('username');
         const post = await PostModel.findById(mention.postID);
         const comment = await CommentModel.findById(mention.commentID);
         if (post && comment) {
           mentionedPosts.push({
             postTitle: post.title,
-            fromId: mention.mentionerID,
-            fromName: mentionerName,
+            from: mentionerName,
             toId: user._id,
             data: {
               // postID: post._id,

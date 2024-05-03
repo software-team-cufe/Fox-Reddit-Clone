@@ -77,7 +77,6 @@ router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);
 router.post('/api/addreply', validateResource(addCommentSchema), addReplyHandler);
 router.get('/api/get_comment_replies/:commentId', getCommentRepliesHandler);
 router.post('/api/mention', validateResource(mentionUserSchema), mentionUserHandler);
-
 router.get('/api/get_user_mentions', getPostAndCommentUserMentionedHandler);
 
 export default router;
