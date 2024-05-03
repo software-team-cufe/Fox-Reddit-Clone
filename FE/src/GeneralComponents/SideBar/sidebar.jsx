@@ -95,7 +95,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
             role="sidebarr"
             data-testid="sidebar"
             className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-30 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') || path.pathname.includes('message') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
-            lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
+            lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400 h-screen`}
             aria-label="Sidebar"
          >
 
