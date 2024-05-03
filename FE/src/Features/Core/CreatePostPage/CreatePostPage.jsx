@@ -2,63 +2,34 @@ import React, { useState, useEffect } from 'react'
 import TypingArea from './TypingArea'
 import ChooseCommunity from './ChooseCommunity'
 import "./QuillStyle.css"
-// import { userStore } from "@/hooks/UserRedux/UserStore";
 import { toast } from 'react-toastify'
 import { userAxios } from "@/Utils/UserAxios";
 import 'react-toastify/dist/ReactToastify.css';
+import { userStore } from '../../../hooks/UserRedux/UserStore';
 
 function CreatePostPage(props) {
+    const store = userStore.getState().user.user;
     const [SelectedCom, setSelectedCom] = useState({ name: "Choose Community", id: "-1" }); //
     const [ComHasRules, setComHasRules] = useState(false);
     const [ShowComCard, setShowComCard] = useState(false);
     //poll options to be one array before sent to back 
-    const [Poll1, setPoll1] = useState("");             //
-    const [Poll2, setPoll2] = useState("");               // 
-    const [Poll3, setPoll3] = useState([]);               //
+    const [Poll1, setPoll1] = useState("");
+    const [Poll2, setPoll2] = useState("");
+    const [Poll3, setPoll3] = useState([]);
 
-    //Send to API
-
-    // const [UserID, setUserID] = useState(userStore.getState().user.user._id);  //To be changed
-    const [TitleValue, setTitleValue] = useState('');                          //
-    const [PostText, setPostText] = useState('');                                  //
-    const [PostURL, setPostURL] = useState('');                               //
-    const [NSFW, setNSFW] = useState(false);                                //
-    const [Spoiler, setSpoiler] = useState(false);                          //
-    const [PostNotifications, setPostNotifications] = useState(false);      //
+    const [TitleValue, setTitleValue] = useState('');
+    const [PostText, setPostText] = useState('');
+    const [PostURL, setPostURL] = useState('');
+    const [NSFW, setNSFW] = useState(false);
+    const [Spoiler, setSpoiler] = useState(false);
+    const [PostNotifications, setPostNotifications] = useState(false);
     const [VideoOrImageSrc, setVideoOrImageSrc] = useState(null);
-    const [PollOptions, setPollOptions] = useState([]);                 //ToDo
-    const [VoteLength, setVoteLength] = useState(1);                   //
-
+    const [PollOptions, setPollOptions] = useState([]);
+    const [VoteLength, setVoteLength] = useState(1);
+    const [imageOrVideo, setimageOrVideo] = useState(null);
     const [height, setHeight] = useState(window.innerHeight);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setHeight(window.innerHeight);
-        };
 
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
-    const handleScroll = () => {
-        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-        const reachedBottom = scrollTop + clientHeight >= scrollHeight;
-        if (reachedBottom) {
-            // Extend the height of the div
-            setHeight(prevHeight => prevHeight + 100); // Increase height by 100px, adjust as needed
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
     const updatePollOptions = () => {
         let newOptions = [];
         if (Poll1) newOptions.push(Poll1);
@@ -74,32 +45,6 @@ function CreatePostPage(props) {
         updatePollOptions();
     }, [Poll1, Poll2, Poll3]);
 
-
-    //, isNotifications: PostNotifications   
-
-    const Post = async () => {
-        if (PostNotifications === "on")
-            setPostNotifications(true);
-        const NewPost = {
-            title: TitleValue,
-            text: PostText, attachments: [], spoiler: Spoiler,
-            nsfw: NSFW, pollOptions: PollOptions, attachments: [VideoOrImageSrc, PostURL],
-            Communityname: SelectedCom.name,
-
-        }
-
-
-        userAxios.post('api/submit', NewPost)
-            .then((res) => {
-                toast.success("Post created successfully \u{1F60A}");
-            })
-            .catch((ex) => {
-                if (ex.issues != null && ex.issues.length != 0) {
-                    toast.error(ex.issues[0].message);
-                }
-            });
-
-    }
     useEffect(() => {
         if (SelectedCom.rules)
             setComHasRules(true)
@@ -113,8 +58,63 @@ function CreatePostPage(props) {
 
     }, [SelectedCom])
 
+    const uploadImage = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'postImageOrVideo');
+        if (imageOrVideo) {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/dtl7z245k/${imageOrVideo}/upload`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+            return data.secure_url; // This will be the shorter URL
+        }
+        else
+            return '';
+
+    };
+
+    //, isNotifications: PostNotifications   
+
+    const Post = async () => {
+        if (PostNotifications === "on")
+            setPostNotifications(true);
+
+        const imageUrl = await uploadImage(VideoOrImageSrc);
+        let NewPost;
+        console.log(imageUrl);
+        if (SelectedCom.name === store.username) {
+            NewPost = {
+                title: TitleValue,
+                text: PostText, spoiler: Spoiler,
+                nsfw: NSFW, pollOptions: PollOptions, attachments: [imageUrl, PostURL],
+            }
+        }
+        else {
+            NewPost = {
+                title: TitleValue,
+                text: PostText, spoiler: Spoiler,
+                nsfw: NSFW, pollOptions: PollOptions, attachments: [imageUrl, PostURL],
+                Communityname: SelectedCom.name,
+            }
+        }
+
+        userAxios.post('api/submit', NewPost)
+            .then((res) => {
+                toast.success("Post created successfully \u{1F60A}");
+            })
+            .catch((ex) => {
+                if (ex.issues != null && ex.issues.length != 0) {
+                    toast.error(ex.issues[0].message);
+                }
+            });
+    }
+
+
     return (
-        <div className='bg-gray-300 ' id="parentElement" style={{ height: `${height}px` }}>
+        <div className='bg-gray-300 h-[1100px] ' id="parentElement"  >
             <div className='flex'>
                 <div className='lg:w-[60%] w-full md:ml-40  '>
                     <div className='h-12'></div>
@@ -123,7 +123,7 @@ function CreatePostPage(props) {
                     <ChooseCommunity
                         Selected={SelectedCom} setSelected={setSelectedCom}
                         id="ChooseCom" />
-                    <TypingArea PostFunc={Post}
+                    <TypingArea PostFunc={Post} imageOrVideo={setimageOrVideo}
                         Poll3={Poll3} SetPoll3={setPoll3}
                         VoteLength={VoteLength} SetVoteLength={setVoteLength}
                         Poll1={Poll1} SetPoll1={setPoll1} Poll2={Poll2} SetPoll2={setPoll2}

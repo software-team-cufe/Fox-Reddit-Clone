@@ -10,7 +10,7 @@ function NotificationsPopus({ setShowBellPop }) {
             <div className="flex p-4 ">
                 <button onClick={() => { setShowBellPop(false); }}
                     className="w-full  hover:text-orange-700">Notifications</button>
-                <button onClick={() => { navigator("/message"); setShowBellPop(false); }}
+                <button onClick={() => { navigator("/message/inbox"); setShowBellPop(false); }}
                     className="w-full rounded hover:text-orange-700">Messages</button>
             </div>
             <div className="rounded-full mb-1 bg-orange-700 w-1/2 h-1" />
