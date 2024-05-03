@@ -77,7 +77,6 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
    };
 
    const path = useLocation();
-
    return (
       <>
          <aside
