@@ -82,7 +82,7 @@ export default function CommunityPage() {
             joined: false,
             modded: false,
             favourited: false,
-            type: "private"
+            type: response.data.community.privacyType
           }
           setComm(newcomm);
           if (newcomm.type == "private") {
@@ -137,10 +137,10 @@ export default function CommunityPage() {
             joined: joinedComms.includes(response.data.community.name),
             modded: moddedComms.includes(response.data.community.name),
             favourited: favComms.includes(response.data.community.name),
-            type: "private"
+            type: response.data.community.privacyType
           }
           setComm(newcomm);
-          if (newcomm.type == "private" && !joinedComms.includes(newcomm.name)) {
+          if (newcomm.type == "Private" && !joinedComms.includes(newcomm.name)) {
             setShowKickOut(true);
           }
         })
@@ -190,7 +190,7 @@ export default function CommunityPage() {
   const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], fetchInitialPosts, { enabled: !loading, staleTime: Infinity });
 
   const swtichJoinState = async () => {
-    if (user.user == null) {
+    if (user == null) {
       setShowModal(true);
       return;
     }
