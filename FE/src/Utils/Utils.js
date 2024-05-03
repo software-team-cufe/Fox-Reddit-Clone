@@ -1,6 +1,15 @@
 
 
-
+export function isUrlMatching(url, routes) {
+    for (const pattern of routes) {
+      const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  
+      const regex = new RegExp('^' + escapedPattern.replace(/:[^\s/]+/g, '([^/]+)') + '$');
+      if (regex.test(url))
+        return true;
+    }
+    return false;
+  }
 
 export const extractAxiosError = (ex) => {
 

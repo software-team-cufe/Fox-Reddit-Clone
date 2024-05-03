@@ -67,7 +67,7 @@ export default function TextBox({ role, id, backgroundColor, required, letterSpa
 
                 onChange={onChanged}
                 value={value}
-                className={` ${backgroundColor || ""} border border-gray-300 text-[color:var(--text)] sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  `} /> :
+                className={` ${backgroundColor || ""} border border-gray-300 text-[color:var(--text)] sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  ${className}`} /> :
                 <textarea
                     id={id}
                     style={{

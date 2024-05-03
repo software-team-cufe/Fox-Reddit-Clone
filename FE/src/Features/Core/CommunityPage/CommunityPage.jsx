@@ -62,7 +62,7 @@ export default function CommunityPage() {
   const [comm, setComm] = useState(null);
   const [editIcon, setEditIcon] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const[editComponent, setEditComponent] = useState("Banner");
+  const [editComponent, setEditComponent] = useState("Banner");
 
   //to fetch the community data from the server and use them
   const fetchCommunity = async () => {
@@ -86,13 +86,13 @@ export default function CommunityPage() {
 
     //let favComms = 0;
     //await userAxios.get('/subreddits/mine/favorite')
-      //.then((response) =>{
-        //favComms = response.data.communties;
-        //console.log(favComms);
-      //})
-      //.catch(error =>{
-        //console.error("can't fetch favs", error);
-      //})
+    //.then((response) =>{
+    //favComms = response.data.communties;
+    //console.log(favComms);
+    //})
+    //.catch(error =>{
+    //console.error("can't fetch favs", error);
+    //})
 
     await userAxios.get(`/${community}`)
       .then((response) => {
@@ -120,7 +120,7 @@ export default function CommunityPage() {
 
   const fetchInitialPosts = () => {
     setFeed(true);
-    let link = `api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=1&limit=${limitpage}`;
+    let link = `api/listing/posts/r/${comm?.name}/${selected.toLocaleLowerCase()}?page=1&limit=${limitpage}`;
     if (selected == 'Top') {
       link = link + `&t=${period}`;
     }
@@ -128,7 +128,7 @@ export default function CommunityPage() {
       .then((response) => {
         const newPosts = response.data.map(post => ({
           subReddit: {
-            image: comm.icon,
+            image: comm?.icon,
             title: post.communityName,
           },
           images: post.attachments,
@@ -157,15 +157,15 @@ export default function CommunityPage() {
       setShowModal(true);
       return;
     }
-    const subStatus = comm.joined ? "unsubscribe" : "subscribe";
-    await userAxios.post(`/${comm.name}/api/${subStatus}`)
+    const subStatus = comm?.joined ? "unsubscribe" : "subscribe";
+    await userAxios.post(`/${comm?.name}/api/${subStatus}`)
       .then(() => {
-        if (comm.joined) {
-          toast.success(`r/${comm.name} ${comm.joined ? 'unjoined' : 'joined'}!`)
+        if (comm?.joined) {
+          toast.success(`r/${comm?.name} ${comm?.joined ? 'unjoined' : 'joined'}!`)
         } else {
-          toast.success(`r/${comm.name} ${comm.joined ? 'unjoined' : 'joined'}!`)
+          toast.success(`r/${comm?.name} ${comm?.joined ? 'unjoined' : 'joined'}!`)
         }
-        setComm({ ...comm, joined: !comm.joined });
+        setComm({ ...comm, joined: !comm?.joined });
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -182,7 +182,7 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    let link = `api/listing/posts/r/${comm.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`;
+    let link = `api/listing/posts/r/${comm?.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`;
     if (selected == 'Top') {
       link = link + `&t=${period}`;
     }
@@ -193,7 +193,7 @@ export default function CommunityPage() {
         }
         const newPosts = response.data.map(post => ({
           subReddit: {
-            image: comm.icon,
+            image: comm?.icon,
             title: post.communityName,
           },
           images: post.attachments,
@@ -217,7 +217,7 @@ export default function CommunityPage() {
       });
   };
 
-  const handleEditComponents = (value) =>{
+  const handleEditComponents = (value) => {
     setEditComponent(value);
     setShowEditModal(true);
   };
@@ -226,32 +226,35 @@ export default function CommunityPage() {
   //to handle loading until fetch is complete
   if (loading) {
     return (
-      <div role="communitypage" className="w-100 h-100 flex flex-col items-center justify-center">
+      <div role="communitypage" className="w-full h-full flex flex-col items-center ">
         <img src={'/logo.png'} className="h-20 w-20 mt-48 mx-auto animate-ping" alt="Logo" />
       </div>
     )
+  }
+  if (comm == null) { 
+    return <>Community not found</>
   }
   //main body of the page
   return (
     <div role="communitypage">
       <div className={`flex-1 -mt-4 md:w-3/4 w-full md:mx-auto relative`}>
         {showModal && <LoginFirtstModal onClose={setShowModal} />}
-        {showEditModal && <EditModal onClose={setShowEditModal} optionheader={editComponent}/>}
+        {showEditModal && <EditModal onClose={setShowEditModal} optionheader={editComponent} />}
         <BackToTop />
         {/* background image of the community */}
-        <img src={'/tiktok.png'} alt='community' className={`w-full md:mx-auto h-20 md:h-36 md:rounded-lg object-cover`}/>
+        <img src={'/tiktok.png'} alt='community' className={`w-full md:mx-auto h-20 md:h-36 md:rounded-lg object-cover`} />
         <button className="absolute md:right-6 right-3 hover:bg-gray-700 p-2 rounded-full text-white top-12 md:top-[100px]" onClick={() => handleEditComponents("Banner")}>
-        {comm.modded ? <Pen className={`md:w-5 md:h-5 w-3 h-3`}/> :  <></>}
+          {comm?.modded ? <Pen className={`md:w-5 md:h-5 w-3 h-3`} /> : <></>}
         </button>
         {/* community name and (members count in mobile mode)*/}
         <div className='w-full relative flex justify-between items-center m-3'>
           <div>
-            <img src={'/twitter.png'} alt='community' className={`${comm.modded ? 'hover:brightness-50' : ''} absolute md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`}   onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={() => handleEditComponents("Avatar")}/>
-              {editIcon && comm.modded ? <Pen className={`absolute md:-top-5 md:left-10 text-white left-8 top-5 md:w-4 md:h-4 w-2 h-2`}/> : <></>}
-            <span className='absolute md:top-2 top-0 md:left-28 left-16 md:text-3xl text-lg font-bold'>r/{comm.name}</span>
+            <img src={'/twitter.png'} alt='community' className={`${comm?.modded ? 'hover:brightness-50' : ''} absolute md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`} onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={() => handleEditComponents("Avatar")} />
+            {editIcon && comm?.modded ? <Pen className={`absolute md:-top-5 md:left-10 text-white left-8 top-5 md:w-4 md:h-4 w-2 h-2`} /> : <></>}
+            <span className='absolute md:top-2 top-0 md:left-28 left-16 md:text-3xl text-lg font-bold'>r/{comm?.name}</span>
             <div className='absolute md:top-10 top-[28px] md:left-28 left-16 md:hidden text-xs font-semibold text-gray-500 flex flex-wrap gap-x-3'>
-              <div>{comm.membersCount} members</div>
-              <div>{comm.onlineMembers} online</div>
+              <div>{comm?.membersCount} members</div>
+              <div>{comm?.onlineMembers} online</div>
             </div>
           </div>
 
@@ -261,13 +264,13 @@ export default function CommunityPage() {
               <Plus className="w-4 h-4" />
               <span className='inline font-bold text-sm'>Create a post</span>
             </button>
-            {comm.modded ? (
+            {comm?.modded ? (
               <button id="modTools" role="modToolsButton" className={`rounded-full w-fit px-4 h-10 items-center hover:bg-blue-700 bg-blue-600`}>
                 <span className={`inline font-bold text-sm text-white`}>Mod tools</span>
               </button>
             ) : (
-              <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
-                <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}</span>
+              <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm?.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
+                <span className={`inline font-bold text-sm ${comm?.joined ? 'text-black' : 'text-white'}`}>{comm?.joined ? 'Joined' : 'Join'}</span>
               </button>)}
             {user.user ? <OptionsMenu comm={comm} setComm={setComm} /> : <></>}
           </div>
@@ -279,13 +282,13 @@ export default function CommunityPage() {
             <Plus className="w-4 h-4" />
             <span className='inline font-bold text-sm'>Create a post</span>
           </button>
-          {comm.modded ? (
-              <button id="modTools" role="modToolsButton" className={`rounded-full w-fit px-4 h-10 items-center hover:bg-blue-700 bg-blue-600`}>
+          {comm?.modded ? (
+            <button id="modTools" role="modToolsButton" className={`rounded-full w-fit px-4 h-10 items-center hover:bg-blue-700 bg-blue-600`}>
               <span className={`inline font-bold text-sm text-white`}>Mod tools</span>
             </button>
           ) : (
-            <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
-              <span className={`inline font-bold text-sm ${comm.joined ? 'text-black' : 'text-white'}`}>{comm.joined ? 'Joined' : 'Join'}</span>
+            <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${comm?.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
+              <span className={`inline font-bold text-sm ${comm?.joined ? 'text-black' : 'text-white'}`}>{comm?.joined ? 'Joined' : 'Join'}</span>
             </button>)}
           {user.user ? <OptionsMenu comm={comm} setComm={setComm} /> : <></>}
         </div>
@@ -300,8 +303,8 @@ export default function CommunityPage() {
 
               {/* page buttons for mobile mode*/}
               <div className='flex gap-2 md:hidden'>
-                <Link id="toCommFeed" to={`/r/${comm.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
-                <Link id="toCommAbout" to={`/r/${comm.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm.name}/about` ? "bg-gray-300" : "bg-white"}`} >about</Link>
+                <Link id="toCommFeed" to={`/r/${comm?.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm?.name}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
+                <Link id="toCommAbout" to={`/r/${comm?.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${comm?.name}/about` ? "bg-gray-300" : "bg-white"}`} >about</Link>
               </div>
 
               {/* sort elements for the feed*/}
