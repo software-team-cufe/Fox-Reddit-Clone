@@ -126,6 +126,7 @@ export default function CommunityPage() {
 
       await userAxios.get(`/${community}`)
         .then((response) => {
+          console.log(response.data.community);
           const newcomm = {
             id: response.data.community._id,
             name: response.data.community.name,
