@@ -66,6 +66,12 @@ import { createNotification } from '../service/notification.service';
  * @return {Promise<void>} Promise representing the completion of the delete operation
  */
 export async function deleteHandler(req: Request<deleteCommentOrPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -147,6 +153,12 @@ export async function deleteHandler(req: Request<deleteCommentOrPost['body']>, r
  * @return {Promise<void>} Promise that resolves when the post is successfully hidden
  */
 export async function hidePostHandler(req: Request<hidePost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -205,6 +217,12 @@ export async function hidePostHandler(req: Request<hidePost['body']>, res: Respo
  * @return {Promise<void>} a Promise that resolves when the post is successfully unhidden
  */
 export async function unhidePostHandler(req: Request<hidePost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -260,6 +278,12 @@ export async function unhidePostHandler(req: Request<hidePost['body']>, res: Res
  * @return {Promise<void>} A promise representing the completion of adding the comment.
  */
 export async function addCommentHandler(req: Request<addComment['body']>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { linkID, textHTML, textJSON } = req.body;
 
@@ -366,6 +390,12 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
  * @return {Promise<void>} a Promise that resolves when the operation is complete
  */
 export async function saveHandler(req: Request<savePost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -423,6 +453,12 @@ export async function saveHandler(req: Request<savePost['body']>, res: Response,
  * @return {Promise<void>} Promise that resolves once the post is successfully unsaved
  */
 export async function unsaveHandler(req: Request<savePost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -478,6 +514,12 @@ export async function unsaveHandler(req: Request<savePost['body']>, res: Respons
  * @return {Promise<void>} Promise representing the completion of the function
  */
 export async function editUserTextHandler(req: Request<editUserText['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = await findUserByUsername(res.locals.user.username as string);
     if (!user) {
@@ -578,6 +620,12 @@ export async function editUserTextHandler(req: Request<editUserText['body']>, re
  * @return {Promise<void>} a promise that resolves with the response value
  */
 export async function insightsCountsHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const linkID = req.params.post;
     if (!linkID) {
@@ -623,6 +671,12 @@ export async function insightsCountsHandler(req: Request, res: Response, next: N
  * @param {NextFunction} next - The next function.
  */
 export async function spoilerPostHandler(req: Request<spoilerPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -670,6 +724,12 @@ export async function spoilerPostHandler(req: Request<spoilerPost['body']>, res:
  * @param {NextFunction} next - The next function.
  */
 export async function unspoilerPostHandler(req: Request<spoilerPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -717,6 +777,12 @@ export async function unspoilerPostHandler(req: Request<spoilerPost['body']>, re
  * @param {NextFunction} next - The next function.
  */
 export async function marknsfwPostHandler(req: Request<nsfwPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -764,6 +830,12 @@ export async function marknsfwPostHandler(req: Request<nsfwPost['body']>, res: R
  * @param {NextFunction} next - The next function.
  */
 export async function unmarknsfwPostHandler(req: Request<nsfwPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -811,6 +883,12 @@ export async function unmarknsfwPostHandler(req: Request<nsfwPost['body']>, res:
  * @param {NextFunction} next - The next function.
  */
 export async function lockPostHandler(req: Request<lockPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -858,6 +936,12 @@ export async function lockPostHandler(req: Request<lockPost['body']>, res: Respo
  * @param {NextFunction} next - The next function.
  */
 export async function unlockPostHandler(req: Request<lockPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -905,6 +989,12 @@ export async function unlockPostHandler(req: Request<lockPost['body']>, res: Res
  * @param {NextFunction} next - The next function.
  */
 export async function votePostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const type = req.body.type;
     const post = await findPostById(req.body.postID);
@@ -974,6 +1064,12 @@ export async function votePostHandler(req: Request, res: Response) {
  * @param {NextFunction} next - The next function.
  */
 export async function voteCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const type = req.body.type;
     const comment = await findCommentById(req.body.commentID);
@@ -1027,6 +1123,12 @@ export async function voteCommentHandler(req: Request, res: Response) {
 }
 
 export async function submitPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -1058,6 +1160,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       nsfw,
       spoiler,
       userID: user._id,
+      username: user.username,
       poll: pollOptions,
     };
 
@@ -1066,6 +1169,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       const postInfoUpdated = {
         ...postInfo,
         CommunityID: community._id,
+        coummunityName: community.name,
       };
       const createdPost = await createPost(postInfoUpdated);
 
@@ -1129,6 +1233,12 @@ export async function submitPostHandler(req: Request, res: Response) {
 /*YOUSEF PHASE 3 WORK */
 
 export async function getSortedPosts(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const sub = req.params.subreddit || ' ';
     const subreddit = await findCommunityByName(sub);
@@ -1186,6 +1296,12 @@ export async function getSortedPosts(req: Request, res: Response) {
  * @return {Promise<void>} a Promise that resolves when the operation is complete
  */
 export async function getUserSavedPostsHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userAuth = res.locals.user;
     // Check if user is missing or invalid
@@ -1228,6 +1344,12 @@ export async function getUserSavedPostsHandler(req: Request, res: Response, next
  * @return {Promise<void>} a Promise that resolves when the operation is complete
  */
 export async function getUserHiddenPostsHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userAuth = res.locals.user;
     // Check if user is missing or invalid
@@ -1269,6 +1391,12 @@ export async function getUserHiddenPostsHandler(req: Request, res: Response, nex
  * @return {Promise<void>} A promise that resolves when the reply is added and the response is sent.
  */
 export async function addReplyHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { linkID, textHTML, textJSON } = req.body;
 
@@ -1361,6 +1489,12 @@ export async function addReplyHandler(req: Request, res: Response) {
  * @return {Promise<void>} A promise that resolves when the replies are retrieved and sent in the response.
  */
 export async function getCommentRepliesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const commentId = req.params.commentId;
     if (!commentId) {
@@ -1409,6 +1543,12 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
  * @return {Promise<void>} A Promise representing the completion of the function.
  */
 export async function mentionUserHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const commentId = req.body.commentId.toString();
 
