@@ -74,6 +74,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
    }
 
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [yourCommunities, setYourCommunities] = useState(["hi", "hello", "hell no"]);
 
    const openCreateCommunity = () => {
       setIsModalOpen(true); // Open the modal
@@ -179,7 +180,9 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                     href={`/r/${subreddit}`}
                                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
+
                                     {subreddit}
+                                 
                                  </a>
                               ))}
                            </li>
@@ -218,6 +221,18 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                               {isModalOpen && (
                                  <CreateCommunity onClose={closeCreateCommunity} />
                               )}
+                           </li>
+                           <li>
+                           {
+                              yourCommunities.map((yourCommunity, index) => (
+                                 <a
+                                    href={`/r/${yourCommunity}`}
+                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                    key={index}>
+                                    {yourCommunity}
+                                 </a>
+                              ))
+                           }
                            </li>
                         </ul>
                      </div>
