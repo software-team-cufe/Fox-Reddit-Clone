@@ -1108,7 +1108,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       for (let i = 0; i < followers.length; i++) {
         await createNotification(
           followers[i]._id,
-          user.avatar,
+          user.avatar ?? 'default.jpg',
           'New Post!',
           'newPost',
           `${user.username} has posted a new post!`,

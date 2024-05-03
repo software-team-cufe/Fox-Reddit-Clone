@@ -43,7 +43,7 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
     }
     await createNotification(
       checkReceiver._id,
-      user.avatar,
+      user.avatar ?? 'default.jpg',
       `${user.username} sent a message`,
       'message',
       req.body.text,
