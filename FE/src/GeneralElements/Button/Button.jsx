@@ -37,7 +37,7 @@ export default function Button({
       {!loading ? (
         children
       ) : (
-        <i className={`fa-solid fa-circle-notch  animate-spin`}></i>
+        <i className={`fa-solid text-inherit fa-circle-notch  animate-spin`}></i>
       )}
     </button>
   );

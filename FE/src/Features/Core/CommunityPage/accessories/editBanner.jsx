@@ -74,7 +74,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
             reqType = 'upload_sr_banner';
         }
 
-        userAxios.post(`${community}/subreddit/api/${reqType}`, { image: imageFile })
+        userAxios.post(`${community}/api/${reqType}`, { image: imageFile })
             .then(() => {
                 toast.info("Uploading image...", { position: 'top-center' });
                 toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });

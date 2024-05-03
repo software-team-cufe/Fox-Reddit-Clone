@@ -1,6 +1,6 @@
 import React from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
-import { fakePosts } from "./fakePosts";
+
 import { useQuery } from "react-query";
 import Spinner from "@/GeneralElements/Spinner/Spinner";
 import { userAxios } from "@/Utils/UserAxios";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import { createContext, useContext } from "react";
 import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
-import axios from "axios";
+
 /**
  * HomePage Component
  * 
@@ -73,28 +73,13 @@ export function HomeProvider({ children }) {
 export default function HomePage() {
   const { selected } = useContext(HomeContext);
   const { isLoading, isError, error, data, } = useQuery(['get-post'],
-    () => axios.get(`http://localhost:3002/posts`),
+    () => userAxios.get(`/api/listing/posts/r/example_subreddit/top?page=2&limit=2&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`),
     {
       retry: 0,
       refetchOnWindowFocus: false,
     });
   if (isLoading) return <Spinner />;
-  const newPosts = data?.data.map(post => ({
-    subReddit: {
-      image: post.attachments.subredditIcon,
-      title: post.communityName,
-    },
-    images: post.attachments.postData,
-    id: post.id,
-    title: post.title,
-    subTitle: post.postText,
-    votes: post.votesCount,
-    comments: post.commentsCount,
-    thumbnail: post.thumbnail,
-    video: null,
 
-    spoiler: post.spoiler,
-  })) ?? [];
 
   return (
     <div className="w-full h-full relative flex gap-10">
@@ -106,7 +91,7 @@ export default function HomePage() {
         </div>
         <hr />
         {
-          newPosts.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
+          data.data.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
       </div>
       <div className="p-5   max-w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">

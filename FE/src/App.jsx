@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes, useNavigate, } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes, matchRoutes, useNavigate, } from 'react-router-dom';
 import CoreRoutes from './Features/Core/CoreRoutes';
 import AuthRoutes from './Features/Auth/AuthRoutes';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
@@ -12,6 +12,7 @@ import NavBar from './GeneralComponents/NavBar/NavBar';
 import Sidebar from './GeneralComponents/SideBar/sidebar';
 import { useState, useEffect } from 'react';
 import { userStore } from './hooks/UserRedux/UserStore';
+import { isUrlMatching } from './Utils/Utils';
 
 const unProtectedRoutes = [
   '/',
@@ -105,6 +106,7 @@ function MainRoute() {
     nav(0);
     return;
   }
+  
   const store = userStore.getState().user.user;
   return (
     <div className='w-full h-[calc(100%)]'>
@@ -112,12 +114,16 @@ function MainRoute() {
         UserName={store != null ? store.username : "fidjfi"} IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
-          ![
+          !isUrlMatching(window.location.pathname,[
             "/login",
             "/register",
             "/forget-username",
             "/forget-password",
-          ].includes(window.location.pathname) && <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
+            "/r/:id/about",
+            "/r/:id/about/:idd",
+            "/r/:id/about/:idd/:idd",
+            "/r/:id/about/:idd/:idd/:iddd",
+          ]) && <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
         }
 
         <div className='h-full w-full overflow-y-auto '>
@@ -136,7 +142,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<MainRoute />}>
-              {/* {AuthRoutes} */}
+              {AuthRoutes}
               {CoreRoutes}
             </Route>
             <Route path='*' element={<NotFoundPage />} />

@@ -6,15 +6,13 @@ import { useParams } from "react-router-dom";
 
 export default function RemovalForm({ onClose, editing, removal, index, list, setlist }) {
     const [Removal, setRemoval] = useState(editing ? removal.title : "");
-    const [Message, setMessage] = useState(editing ? removal.Message : "");
+    const [Message, setMessage] = useState(editing ? removal.description : "");
     const {community} = useParams();
 
     const submitDelete = () => {
-        console.log(index);
         const updatedList = list.filter((rule, i) => i !== index);
-        const pack = { rules: updatedList };
+        const pack = { reasons: updatedList };
 
-        console.log(pack);
         userAxios.patch(`${community}/api/edit_removal_reasons`, pack)
             .then(() => {
                 toast.success("Removal reason deleted");
@@ -39,13 +37,13 @@ export default function RemovalForm({ onClose, editing, removal, index, list, se
           updatedList = [...list, newRule];
         }
       
-        const pack = { rules: updatedList };
-      
+        const pack = { reasons: updatedList };
         userAxios.patch(`${community}/api/edit_removal_reasons`, pack)
           .then(() =>{
           if(editing) toast.success("Removal reason edited");
           else toast.success("Removal reason added");
           setlist(updatedList);
+          console.log(updatedList);
           onClose(false);
           })
           .catch(error => {
