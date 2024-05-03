@@ -8,10 +8,8 @@ import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles, Mail, Table } from 'lucide-react';
 import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
-import TopCommunities from "./TopCommunities";
-
-
 import { key } from 'localforage';
+import { userAxios } from "../../Utils/UserAxios";
 
 const icons = [
    {
@@ -31,7 +29,7 @@ const icons = [
    },
 ];
 
-function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
+function Sidebar({ className, IsOpen, RecentCommunities }) {
    // const toggleSidebar = () => {
    //    setOpen(!open);
    // };
@@ -48,22 +46,35 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
     * @returns {void} - this function does not return anything
     */
 
+   let temp = false;
+
    function functionToExecute(event) {
       // Get the dropdown list associated with the clicked button
       const dropdownList = event.target.nextElementSibling;
 
       // Toggle the visibility of the dropdown list
       if (
-         dropdownList.style.display === "none" ||
-         dropdownList.style.display === ""
-      ) {
+         dropdownList.style.display === "none")
+      {
          dropdownList.style.display = "block";
       } else {
          dropdownList.style.display = "none";
       }
    }
 
+   const fetchUserData = async () => {
+      try {
+         const response = await userAxios.get(`/user/${username}/about`);
+         const isModerator = response.data.isMod;
+         temp = isModerator;
+         console.log(isModerator);
+     } catch (error) {
+         console.error('Error fetching user info:', error);
+     }
+   }
+
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [yourCommunities, setYourCommunities] = useState(["hi", "hello", "hell no"]);
 
    const openCreateCommunity = () => {
       setIsModalOpen(true); // Open the modal
@@ -83,7 +94,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
             id="sidebar-multi-level-sidebar"
             role="sidebarr"
             data-testid="sidebar"
-            className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-50 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') || path.pathname.includes('message') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
+            className={`${className} ${IsOpen ? "md:w-80 md:relative w-2/3 md:display-block z-30 absolute" : "w-[0rem]"} ${path.pathname.includes('setting') || path.pathname.includes('message') ? "hidden" : ""} ${path.pathname.includes('submit') ? "hidden" : ""}
             lg:w-80  overflow-y-auto  bg-white transition-width duration-300 ease-in-out bg-white-300 border-r-2 border-gray-400`}
             aria-label="Sidebar"
          >
@@ -108,7 +119,7 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
 
 
 
-                  {IsModerator &&
+                  {temp &&
                      <>
                         <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
                         <button
@@ -123,13 +134,17 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                         </button>
                         <div>
                            <ul>
-                              <li className="flex items-center px-1 py-1 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400">
-                                 <Mail className="ml-2 w-4 h-4" />
-                                 <span className=" px-2 py-2 text-gray-800">Mod mail</span>
+                              <li className="flex items-center px-1 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400">
+                                 <Link to={"/modmail"} className="flex items-center" >
+                                    <Mail className="ml-2 w-4 h-4" />
+                                    <span className=" px-2 py-2 text-gray-800">Mod mail</span>
+                                 </Link>
                               </li>
-                              <li className="flex items-center px-1 py-1 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400 ">
+                              <li className="flex items-center px-1 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400 ">
+                              <Link to={"/r/mod"} className="flex items-center" >   
                                  <Table className="ml-2 w-4 h-4" />
                                  <span className=" px-2 py-2 text-gray-800">r/mod</span>
+                              </Link>
                               </li>
                               {/*
                               <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray ">
@@ -164,7 +179,9 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                                     href={`/r/${subreddit}`}
                                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
+
                                     {subreddit}
+                                 
                                  </a>
                               ))}
                            </li>
@@ -203,6 +220,18 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                               {isModalOpen && (
                                  <CreateCommunity onClose={closeCreateCommunity} />
                               )}
+                           </li>
+                           <li>
+                           {
+                              yourCommunities.map((yourCommunity, index) => (
+                                 <a
+                                    href={`/r/${yourCommunity}`}
+                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                    key={index}>
+                                    {yourCommunity}
+                                 </a>
+                              ))
+                           }
                            </li>
                         </ul>
                      </div>
@@ -339,6 +368,9 @@ function Sidebar({ className, IsOpen, IsModerator, RecentCommunities }) {
                                  <span className=" px-2 py-2 text-gray-800">User agreement</span>
                               </a>
                            </li>
+
+                              <button onClick={fetchUserData} className="flex w-auto items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400">testing</button>
+
                         </ul>
                      </div>
                   </li>
