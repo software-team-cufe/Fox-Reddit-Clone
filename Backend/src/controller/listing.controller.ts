@@ -44,17 +44,18 @@ import {
   addPostVoteToUser,
   addCommentVoteToUser,
   findUserById,
+  findUsersThatFollowUser,
+  findUsersThatFollowCommunity,
 } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
 import { findCommunityByName } from '../service/community.service';
-import UserModel from '../model/user.model';
+import UserModel, { User } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import CommunityModel from '../model/community.model';
 import { date } from 'zod';
 import { post } from '@typegoose/typegoose';
 import { ObjectId } from 'mongoose';
 import { createNotification } from '../service/notification.service';
-import { Types } from 'mongoose';
 
 /**
  * Delete handler function that handles deletion of comments and posts based on the given id.
@@ -1066,6 +1067,17 @@ export async function submitPostHandler(req: Request, res: Response) {
         { $addToSet: { hasPost: createdPost._id } },
         { new: true, upsert: true }
       );
+      const followers = await findUsersThatFollowCommunity(community._id.toString());
+      for (let i = 0; i < followers.length; i++) {
+        await createNotification(
+          followers[i]._id,
+          community.icon ?? 'default.jpg',
+          'New Post!',
+          'newPost',
+          `${community.name} has posted a new post!`,
+          createdPost._id
+        );
+      }
       res.status(201).json(createdPost);
     } else {
       const createdPost = await createPost(postInfo);
@@ -1077,14 +1089,17 @@ export async function submitPostHandler(req: Request, res: Response) {
         { $addToSet: { hasPost: createdPost._id } },
         { new: true, upsert: true }
       );
-      createNotification(
-        user._id,
-        user.avatar,
-        'New Post!',
-        'newPost',
-        `${user.username} has posted a new post!`,
-        createdPost.userID._id
-      );
+      const followers = await findUsersThatFollowUser(user._id);
+      for (let i = 0; i < followers.length; i++) {
+        await createNotification(
+          followers[i]._id,
+          user.avatar,
+          'New Post!',
+          'newPost',
+          `${user.username} has posted a new post!`,
+          createdPost._id
+        );
+      }
       res.status(201).json(createdPost);
     }
   } catch (error) {

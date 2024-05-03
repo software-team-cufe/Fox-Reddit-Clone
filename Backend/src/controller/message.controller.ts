@@ -41,7 +41,7 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
     if (!createdMessage) {
       return res.status(400).json({ message: 'Failed to create the comment' });
     }
-    createNotification(
+    await createNotification(
       checkReceiver._id,
       user.avatar,
       `${user.username} sent a message`,

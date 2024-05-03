@@ -1001,7 +1001,7 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
       { $addToSet: { followers: follows._id } },
       { upsert: true, new: true }
     );
-    createNotification(
+    await createNotification(
       followed._id,
       follows.avatar ?? 'defaultIcon.jpg',
       'New Follower!',
