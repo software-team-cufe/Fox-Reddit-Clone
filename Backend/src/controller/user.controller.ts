@@ -396,7 +396,8 @@ export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['
 export async function getCurrentUserHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
-      msg: 'Unauthorized',
+      status: 'failed',
+      message: 'Access token is missing',
     });
   }
   return res.status(200).json({
@@ -411,6 +412,12 @@ export async function getCurrentUserHandler(req: Request, res: Response) {
  * @return {Response} The user preferences.
  */
 export async function getCurrentUserPrefs(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   let user = res.locals.user;
   if (!user) {
     return res.status(401).json({
@@ -430,6 +437,12 @@ export async function getCurrentUserPrefs(req: Request, res: Response) {
 }
 
 export async function getCurrentUserNotificationPrefs(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   let user = res.locals.user;
   if (!user) {
     return res.status(401).json({
@@ -455,6 +468,12 @@ export async function getCurrentUserNotificationPrefs(req: Request, res: Respons
  * @returns {Response} The updated user preferences.
  */
 export async function editCurrentUserPrefs(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   let user = res.locals.user;
 
   if (!user) {
@@ -472,6 +491,12 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
   return res.status(200).send(user.prefs);
 }
 export async function editCurrentUserNotificationPrefs(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   let user = res.locals.user;
 
   if (!user) {
@@ -490,6 +515,12 @@ export async function editCurrentUserNotificationPrefs(req: Request, res: Respon
 }
 
 export async function getUpvotedPosts(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     let user = res.locals.user;
     const sort = req.params.sort.toLowerCase();
@@ -550,6 +581,12 @@ export async function getUpvotedPosts(req: Request, res: Response) {
 }
 
 export async function getDownvotedPosts(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     let user = res.locals.user;
     const sort = req.params.sort.toLowerCase();
@@ -616,6 +653,12 @@ export async function getDownvotedPosts(req: Request, res: Response) {
  * @returns A response indicating the availability of the username.
  */
 export async function username_availableHandler(req: Request<VerifyUserInput>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const username: string = req.query.username as string;
@@ -641,6 +684,12 @@ export async function username_availableHandler(req: Request<VerifyUserInput>, r
  * @returns A response for user "about" by username.
  */
 export async function aboutHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const username: string = req.params.username as string;
@@ -686,6 +735,12 @@ export async function aboutHandler(req: Request, res: Response) {
  * @returns {object} res
  */
 export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const user = await findUserByUsername(req.params.username as string);
@@ -722,6 +777,12 @@ export async function getUserSubmittedHandler(req: Request, res: Response, next:
  * @throws {Error} If the user is not found or if there is an internal server error.
  */
 export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const user = await findUserByUsername(req.params.username as string);
@@ -757,6 +818,12 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
  * @throws {Error} If the user is not found or if there is an internal server error.
  */
 export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const user = await findUserByUsername(req.params.username as string);
@@ -811,6 +878,12 @@ export async function getUserOverviewHandler(req: Request, res: Response, next: 
  * @throws {Error} If the access token is missing or invalid, or if the user is not found.
  */
 export async function getUserHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract username from request parameters
     const username: string = req.params.username as string;
@@ -861,6 +934,12 @@ export async function getUserHandler(req: Request, res: Response) {
  * @throws {Error} If the access token is missing or invalid, the account is not found, or the operation type is invalid.
  */
 export async function blockUserHandler(req: Request<blockUserInput['body']>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { username, type } = req.body;
     const blocked = await findUserByUsername(username);
@@ -930,6 +1009,12 @@ export async function blockUserHandler(req: Request<blockUserInput['body']>, res
  * @throws {Error} If the access token is missing or invalid, or if the user does not have any blocked users.
  */
 export async function getALLBlockedHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
@@ -970,6 +1055,12 @@ export async function getALLBlockedHandler(req: Request, res: Response) {
  * @throws {Error} If the account of the user to follow is not found, the access token is missing or invalid, or an internal server error occurs.
  */
 export async function followRequestHandler(req: Request<followUserInput['body']>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { username } = req.body;
     const followed = await findUserByUsername(username);
@@ -1030,6 +1121,12 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
  * @throws {Error} If the account of the user to unfollow is not found, the access token is missing or invalid, or an internal server error occurs.
  */
 export async function unfollowRequestHandler(req: Request<unfollowUserInput['body']>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { username } = req.body;
     const followed = await findUserByUsername(username);
@@ -1074,6 +1171,12 @@ export async function unfollowRequestHandler(req: Request<unfollowUserInput['bod
  * @throws {Error} If the access token is missing or invalid, the user does not have any followings, or an internal server error occurs.
  */
 export async function getALLFollowersHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
@@ -1114,6 +1217,12 @@ export async function getALLFollowersHandler(req: Request, res: Response) {
  * @throws {Error} If the access token is missing or invalid, the user does not have any followings, or an internal server error occurs.
  */
 export async function getALLFollowingHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
@@ -1156,6 +1265,12 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
  * @throws {Error} If the access token is missing or invalid, or an internal server error occurs.
  */
 export async function getUserIDfromTokenHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -1186,6 +1301,12 @@ export async function getUserIDfromTokenHandler(req: Request, res: Response) {
  * @return {Promise<void>} A promise that resolves after uploading the user's photo
  */
 export async function uploadUserPhoto(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     if (!req.file || Object.keys(req.file).length === 0) {
       throw new Error('No file uploaded');
@@ -1213,6 +1334,12 @@ export async function uploadUserPhoto(req: Request, res: Response) {
 }
 
 export async function getNumberPostsCommentsMe(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
@@ -1238,14 +1365,21 @@ export async function getNumberPostsCommentsMe(req: Request, res: Response) {
 }
 
 export async function getNumberPostsCommentsUser(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+
   const user = await findUserByUsername(res.locals.user.username);
   const user2 = await findUserByUsername(req.params.username);
 
   try {
-    if (!user || !res.locals.user.username) {
+    if (!user) {
       return res.status(401).json({
         status: 'failed',
-        message: 'Access token is missing or invalid',
+        message: 'Access token is invalid',
       });
     }
 

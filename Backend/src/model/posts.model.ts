@@ -33,6 +33,9 @@ export class Post {
   @prop({ required: true, ref: () => User })
   userID!: Ref<User>;
 
+  @prop()
+  username!: string;
+
   @prop({ required: true })
   title!: string;
 
@@ -90,6 +93,8 @@ export class Post {
   @prop({ ref: () => 'Community' })
   CommunityID?: Ref<Community>;
 
+  @prop()
+  coummunityName!: string;
   // @prop({ type: () => [Spam] })
   // spammers!: Spam[];
 
