@@ -891,3 +891,27 @@ export async function findUsersThatFollowCommunity(communityId: string) {
     throw error; // Re-throw the error to be caught by the caller
   }
 }
+
+export async function userHistoryPosts(username: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
+
+  // Find the user by username and retrieve their user history posts with pagination
+  const user = await UserModel.findOne({ username: username }, 'historyPosts')
+    .lean()
+    .populate({
+      path: 'historyPosts',
+      options: { skip: skip, limit: count },
+    });
+
+  // If user is not found, throw an error
+  if (!user) {
+    throw new appError("This user doesn't exist!", 404);
+  }
+
+  // Extract the post IDs from the user's history posts if it exists
+  const postIDs = user.historyPosts ? user.historyPosts.map((post) => post._id.toString()) : [];
+
+  // Return the post IDs
+  return postIDs;
+}

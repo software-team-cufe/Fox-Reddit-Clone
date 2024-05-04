@@ -37,6 +37,9 @@ import {
   uploadCommunityBanner,
   deleteCommunityIcon,
   deleteCommunityBanner,
+  getCommunityNameHandler,
+  getCommunityCategoriesHandler,
+  editCommunityCategoriesHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -52,6 +55,8 @@ import {
   lockPostSchema,
   lockCommentSchema,
   editCommunityRemovalResonsSchema,
+  CommunityNameSchema,
+  editCommunityCategoriesSchema,
 } from '../schema/community.schema';
 import uploadSingleMulter from '../middleware/multer/singleImage';
 import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple';
@@ -59,6 +64,7 @@ import { resizeCommunityIcon, resizeCommunityBanner } from '../middleware/resize
 
 const router = express.Router();
 
+router.get('/api/communityName', validateResource(CommunityNameSchema), getCommunityNameHandler);
 router.get('/subreddits/mine/member', getCommunityOfUserAsMemeberHandler);
 router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
 router.get('/subreddits/mine/creator', getCommunityOfUserAsCreatorHandler);
@@ -79,6 +85,12 @@ router.get('/:subreddit/about/spam_posts', validateResource(subscribeCommunitySc
 router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunitySchema), getSpamCommentsHandler);
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
 router.get('/:subreddit/api/rules', validateResource(getCommunitySchema), getCommunityRulesHandler);
+router.patch(
+  '/:subreddit/api/edit_categories',
+  validateResource(editCommunityCategoriesSchema),
+  editCommunityCategoriesHandler
+);
+router.get('/:subreddit/api/categories', validateResource(getCommunitySchema), getCommunityCategoriesHandler);
 router.patch(
   '/:subreddit/api/edit_removal_reasons',
   validateResource(editCommunityRemovalResonsSchema),

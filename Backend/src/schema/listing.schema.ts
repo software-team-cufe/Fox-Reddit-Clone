@@ -45,7 +45,10 @@ export const editUserTextSchema = object({
     linkID: string({
       required_error: 'id is required',
     }),
-    text: string({
+    textJSON: string({
+      required_error: 'Text is required',
+    }),
+    textHTML: string({
       required_error: 'Text is required',
     }),
   }),

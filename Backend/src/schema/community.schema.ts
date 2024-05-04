@@ -24,6 +24,14 @@ export const subscribeCommunitySchema = object({
   }),
 });
 
+export const CommunityNameSchema = object({
+  body: object({
+    communityID: string({
+      required_error: 'subreddit id is required',
+    }),
+  }),
+});
+
 export const getCommunitySchema = object({
   params: object({
     subreddit: string({
@@ -80,6 +88,17 @@ export const editCommunityRemovalResonsSchema = object({
         description: string().optional(),
       })
     ),
+  }),
+});
+
+export const editCommunityCategoriesSchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+  body: object({
+    categories: array(string({ required_error: 'categories are required' })),
   }),
 });
 
@@ -170,5 +189,7 @@ export const lockCommentSchema = object({
 export type banOrMute = TypeOf<typeof banOrUnbanSchema>;
 export type createCommunity = TypeOf<typeof createCommunitySchema>;
 export type subscribeCommunity = TypeOf<typeof subscribeCommunitySchema>;
+export type communityName = TypeOf<typeof CommunityNameSchema>;
 export type getCommunity = TypeOf<typeof getCommunitySchema>;
 export type editCommunityRules = TypeOf<typeof editCommunityRulesSchema>;
+export type editCommunityCategories = TypeOf<typeof editCommunityCategoriesSchema>;

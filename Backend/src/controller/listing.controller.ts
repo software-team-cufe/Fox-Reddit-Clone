@@ -66,6 +66,12 @@ import { createNotification } from '../service/notification.service';
  * @return {Promise<void>} Promise representing the completion of the delete operation
  */
 export async function deleteHandler(req: Request<deleteCommentOrPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -147,6 +153,12 @@ export async function deleteHandler(req: Request<deleteCommentOrPost['body']>, r
  * @return {Promise<void>} Promise that resolves when the post is successfully hidden
  */
 export async function hidePostHandler(req: Request<hidePost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -205,6 +217,12 @@ export async function hidePostHandler(req: Request<hidePost['body']>, res: Respo
  * @return {Promise<void>} a Promise that resolves when the post is successfully unhidden
  */
 export async function unhidePostHandler(req: Request<hidePost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -260,6 +278,12 @@ export async function unhidePostHandler(req: Request<hidePost['body']>, res: Res
  * @return {Promise<void>} A promise representing the completion of adding the comment.
  */
 export async function addCommentHandler(req: Request<addComment['body']>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { linkID, textHTML, textJSON } = req.body;
 
@@ -314,24 +338,9 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
       { $addToSet: { postComments: createdComment._id } },
       { new: true, upsert: true }
     );
-
-    // Check for mentioned users in textJSON and update mentionedInUsers in post model
-    const mentionedUsernames = await extractUsernamesFromTextJSON(textJSON);
-    if (mentionedUsernames.length > 0) {
-      const mentionedUsers = await UserModel.find({ username: { $in: mentionedUsernames } });
-      await PostModel.findByIdAndUpdate(
-        post._id,
-        { $addToSet: { mentionedInUsers: { $each: mentionedUsers.map((user) => user._id) } } },
-        { new: true, upsert: true }
-      );
-
-      // Update mentionedInPosts in post model
-      await PostModel.findByIdAndUpdate(
-        post._id,
-        { $addToSet: { mentionedInPosts: postID } },
-        { new: true, upsert: true }
-      );
-    }
+    const commentsNum = post.commentsNum;
+    const updatedPost1 = await PostModel.findByIdAndUpdate(post._id, { $inc: { commentsNum: 1 } });
+    // Send the response
     const postAuthor = await findUserById(updatedPost.userID.toString());
     if (!postAuthor) {
       return res.status(400).json({
@@ -366,6 +375,12 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
  * @return {Promise<void>} a Promise that resolves when the operation is complete
  */
 export async function saveHandler(req: Request<savePost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -423,6 +438,12 @@ export async function saveHandler(req: Request<savePost['body']>, res: Response,
  * @return {Promise<void>} Promise that resolves once the post is successfully unsaved
  */
 export async function unsaveHandler(req: Request<savePost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -478,6 +499,12 @@ export async function unsaveHandler(req: Request<savePost['body']>, res: Respons
  * @return {Promise<void>} Promise representing the completion of the function
  */
 export async function editUserTextHandler(req: Request<editUserText['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = await findUserByUsername(res.locals.user.username as string);
     if (!user) {
@@ -515,7 +542,7 @@ export async function editUserTextHandler(req: Request<editUserText['body']>, re
 
       const results = await PostModel.findByIdAndUpdate(
         post._id,
-        { textJSON: req.body.text },
+        { textJSON: req.body.textJSON, textHTML: req.body.textHTML },
         { upsert: true, new: true }
       );
 
@@ -546,7 +573,7 @@ export async function editUserTextHandler(req: Request<editUserText['body']>, re
 
       const results = await CommentModel.findByIdAndUpdate(
         comment._id,
-        { textJSON: req.body.text },
+        { textJSON: req.body.textJSON, textHTML: req.body.textHTML },
         { upsert: true, new: true }
       );
 
@@ -578,6 +605,12 @@ export async function editUserTextHandler(req: Request<editUserText['body']>, re
  * @return {Promise<void>} a promise that resolves with the response value
  */
 export async function insightsCountsHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const linkID = req.params.post;
     if (!linkID) {
@@ -623,6 +656,12 @@ export async function insightsCountsHandler(req: Request, res: Response, next: N
  * @param {NextFunction} next - The next function.
  */
 export async function spoilerPostHandler(req: Request<spoilerPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -670,6 +709,12 @@ export async function spoilerPostHandler(req: Request<spoilerPost['body']>, res:
  * @param {NextFunction} next - The next function.
  */
 export async function unspoilerPostHandler(req: Request<spoilerPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -717,6 +762,12 @@ export async function unspoilerPostHandler(req: Request<spoilerPost['body']>, re
  * @param {NextFunction} next - The next function.
  */
 export async function marknsfwPostHandler(req: Request<nsfwPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -764,6 +815,12 @@ export async function marknsfwPostHandler(req: Request<nsfwPost['body']>, res: R
  * @param {NextFunction} next - The next function.
  */
 export async function unmarknsfwPostHandler(req: Request<nsfwPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -811,6 +868,12 @@ export async function unmarknsfwPostHandler(req: Request<nsfwPost['body']>, res:
  * @param {NextFunction} next - The next function.
  */
 export async function lockPostHandler(req: Request<lockPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -858,6 +921,12 @@ export async function lockPostHandler(req: Request<lockPost['body']>, res: Respo
  * @param {NextFunction} next - The next function.
  */
 export async function unlockPostHandler(req: Request<lockPost['body']>, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const id = req.body.linkID;
     const desiredID = id.split('_')[1];
@@ -905,6 +974,12 @@ export async function unlockPostHandler(req: Request<lockPost['body']>, res: Res
  * @param {NextFunction} next - The next function.
  */
 export async function votePostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const type = req.body.type;
     const post = await findPostById(req.body.postID);
@@ -974,6 +1049,12 @@ export async function votePostHandler(req: Request, res: Response) {
  * @param {NextFunction} next - The next function.
  */
 export async function voteCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const type = req.body.type;
     const comment = await findCommentById(req.body.commentID);
@@ -1027,6 +1108,12 @@ export async function voteCommentHandler(req: Request, res: Response) {
 }
 
 export async function submitPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -1058,6 +1145,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       nsfw,
       spoiler,
       userID: user._id,
+      username: user.username,
       poll: pollOptions,
     };
 
@@ -1066,6 +1154,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       const postInfoUpdated = {
         ...postInfo,
         CommunityID: community._id,
+        coummunityName: community.name,
       };
       const createdPost = await createPost(postInfoUpdated);
 
@@ -1129,6 +1218,12 @@ export async function submitPostHandler(req: Request, res: Response) {
 /*YOUSEF PHASE 3 WORK */
 
 export async function getSortedPosts(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const sub = req.params.subreddit || ' ';
     const subreddit = await findCommunityByName(sub);
@@ -1186,6 +1281,12 @@ export async function getSortedPosts(req: Request, res: Response) {
  * @return {Promise<void>} a Promise that resolves when the operation is complete
  */
 export async function getUserSavedPostsHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userAuth = res.locals.user;
     // Check if user is missing or invalid
@@ -1228,6 +1329,12 @@ export async function getUserSavedPostsHandler(req: Request, res: Response, next
  * @return {Promise<void>} a Promise that resolves when the operation is complete
  */
 export async function getUserHiddenPostsHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userAuth = res.locals.user;
     // Check if user is missing or invalid
@@ -1269,6 +1376,12 @@ export async function getUserHiddenPostsHandler(req: Request, res: Response, nex
  * @return {Promise<void>} A promise that resolves when the reply is added and the response is sent.
  */
 export async function addReplyHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { linkID, textHTML, textJSON } = req.body;
 
@@ -1361,6 +1474,12 @@ export async function addReplyHandler(req: Request, res: Response) {
  * @return {Promise<void>} A promise that resolves when the replies are retrieved and sent in the response.
  */
 export async function getCommentRepliesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const commentId = req.params.commentId;
     if (!commentId) {
@@ -1401,14 +1520,13 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
     });
   }
 }
-/**
- * Handle mentioning a user in a post.
- *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @return {Promise<void>} A Promise representing the completion of the function.
- */
 export async function mentionUserHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const commentId = req.body.commentId.toString();
 
@@ -1445,28 +1563,27 @@ export async function mentionUserHandler(req: Request, res: Response) {
       });
     }
 
+    const mentionedIn = {
+      mentionerID: user._id,
+      commentID: comment._id,
+      postID: post._id,
+    };
+
     // Update mentionedInUsers in post model
     await PostModel.findByIdAndUpdate(
       post._id,
-      { $addToSet: { mentionedInUsers: mentionedUser._id } },
+      { $addToSet: { mentionedIn: mentionedIn } },
       { new: true, upsert: true }
     );
 
     // Update mentionedInPosts in user model
     await UserModel.findByIdAndUpdate(
       mentionedUser._id,
-      { $addToSet: { mentionedInPosts: post._id } },
+      { $addToSet: { mentionedIn: mentionedIn } },
       { new: true, upsert: true }
     );
 
-    // Update mentionedInComments in user model
-    await UserModel.findByIdAndUpdate(
-      mentionedUser._id,
-      { $addToSet: { mentionedInComments: comment._id } },
-      { new: true, upsert: true }
-    );
-
-    res.status(200).json('Success');
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.error('Error in mentionUserHandler:', error);
     return res.status(500).json({
@@ -1476,26 +1593,44 @@ export async function mentionUserHandler(req: Request, res: Response) {
   }
 }
 
-// export async function getPostAndCommentUserMentionedHandler(req: Request, res: Response) {
-//   try {
-//     const user = await findUserByUsername(req.body.mentionedUsername as string);
-//     if (!user) {
-//       return res.status(400).json({
-//         status: 'failed',
-//         message: 'Access token is missing or invalid',
-//       });
-//     }
-
-//     // Find posts and comments where the user is mentioned
-//     const posts = await PostModel.find({ mentionedInUsers: user._id }).populate('postComments');
-//     const comments = await CommentModel.find({ mentionedInPosts: { $in: posts.map((post) => post._id) } });
-
-//     res.status(200).json({ posts, comments });
-//   } catch (error) {
-//     console.error('Error in getPostAndCommentUserMentionedHandler:', error);
-//     return res.status(500).json({
-//       status: 'error',
-//       message: 'Internal server error',
-//     });
-//   }
-// }
+export async function getPostAndCommentUserMentionedHandler(req: Request, res: Response) {
+  try {
+    const user = await UserModel.findOne({ username: req.body.mentionedUsername });
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+    const mentionedPosts = [];
+    if (user.mentionedIn) {
+      for (const mention of user.mentionedIn) {
+        const mentionerName = await UserModel.findById(mention.mentionerID).select('username');
+        const post = await PostModel.findById(mention.postID);
+        const comment = await CommentModel.findById(mention.commentID);
+        if (post && comment) {
+          mentionedPosts.push({
+            postTitle: post.title,
+            from: mentionerName,
+            toId: user._id,
+            data: {
+              // postID: post._id,
+              // commentID: comment?._id,
+              // postCreatedAt: post.createdAt,
+              // commentsNum: post.commentsNum,
+              post: post,
+              comment: comment,
+            },
+          });
+        }
+      }
+    }
+    res.status(200).json(mentionedPosts);
+  } catch (error) {
+    console.error('Error in getPostAndCommentUserMentionedHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}

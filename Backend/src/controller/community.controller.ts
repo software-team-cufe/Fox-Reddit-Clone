@@ -13,6 +13,7 @@ import {
   getCommunityMembers,
   editCommunityRules,
   editCommunityRemovalReasons,
+  editCommunityCategories,
   markSpamPost,
   markSpamComment,
   approveSpamPost,
@@ -33,7 +34,7 @@ import {
   findUserById,
 } from '../service/user.service';
 
-import { CommunityModel } from '../model/community.model';
+import { Community, CommunityModel } from '../model/community.model';
 import { Moderator, UserModel } from '../model/user.model';
 import { NextFunction, Request, Response } from 'express';
 import { findPostById } from '../service/post.service';
@@ -50,6 +51,12 @@ import appError from '../utils/appError';
  * @return {Promise<void>} A promise that resolves when the communities are retrieved and sent in the response.
  */
 export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -79,6 +86,12 @@ export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Resp
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -108,6 +121,12 @@ export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Re
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -130,6 +149,49 @@ export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Resp
 }
 
 /**
+ * Handles the request to get the community name.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getCommunityNameHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const communityID = req.body.communityID;
+    const community = await findCommunityByID(communityID);
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if subreddit is missing or invalid
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const communityName = community.name;
+    res.status(200).json({ communityName });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserAsCreatorHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
  * Create subreddit handler.
  *
  * @param {Request} req - The request object.
@@ -137,6 +199,12 @@ export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Resp
  * @return {Promise<void>} The promise of a void.
  */
 export async function createSubredditHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -205,6 +273,12 @@ export async function createSubredditHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function subscribeCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -267,6 +341,12 @@ export async function subscribeCommunityHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function unsubscribeCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -310,6 +390,12 @@ export async function unsubscribeCommunityHandler(req: Request, res: Response) {
 }
 
 export async function getCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userID = res.locals.user._id;
     const user = res.locals.user;
@@ -347,6 +433,12 @@ export async function getCommunityHandler(req: Request, res: Response) {
  * @return {Promise<void>} - A promise that resolves when the operation is completed.
  */
 export async function banOrUnbanHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   const subredditId: string = req.body.subreddit;
   const memberId: string = req.body.userID;
   const commModerator: string = res.locals.user._id.toString();
@@ -473,6 +565,12 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function joinModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -524,6 +622,12 @@ export async function joinModeratorHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function leaveModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -575,6 +679,12 @@ export async function leaveModeratorHandler(req: Request, res: Response) {
  * @return {Promise<void>} A promise that resolves when the function is complete.
  */
 export async function getUsersIsbannedIncommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const commName = req.params.subreddit;
@@ -622,6 +732,12 @@ export async function getUsersIsbannedIncommunityHandler(req: Request, res: Resp
  *                         If there is an error retrieving the moderators, a 500 error is returned.
  */
 export async function getModeratorsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     if (!user) {
@@ -656,6 +772,12 @@ export async function getModeratorsHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getMembersHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     if (!user) {
@@ -665,15 +787,19 @@ export async function getMembersHandler(req: Request, res: Response) {
       });
     }
     const commName = req.params.subreddit;
-    if (!commName) {
-      return res.status(401).json({
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
         status: 'failed',
         message: 'Community not found',
       });
     }
-    const members = await getCommunityMembers(commName);
-    if (members.status === true) {
-      return res.status(200).json({ status: 'success', members });
+    const users = await getCommunityMembers(commName);
+    const membersCount = community.membersCnt;
+    if (users.status === true) {
+      const members = users.users;
+      return res.status(200).json({ status: 'success', membersCount: membersCount, members });
     } else {
       return res.status(404).json({ status: 'error', message: 'error in get Members' });
     }
@@ -690,6 +816,12 @@ export async function getMembersHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function editCommunityRulesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const rules = req.body.rules;
@@ -743,6 +875,12 @@ export async function editCommunityRulesHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function editCommunityRemovalResonsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const reasons = req.body.reasons;
@@ -789,6 +927,65 @@ export async function editCommunityRemovalResonsHandler(req: Request, res: Respo
 }
 
 /**
+ * Handles the request to edit the categories of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editCommunityCategoriesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const categories = req.body.categories;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change rules' });
+    }
+
+    const result = await editCommunityCategories(commName, categories);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing categories' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
  * favorite subreddit handler.
  *
  * @param {Request} req - The request object.
@@ -796,6 +993,12 @@ export async function editCommunityRemovalResonsHandler(req: Request, res: Respo
  * @return {Promise<void>} The promise of a void.
  */
 export async function favoriteCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -845,6 +1048,12 @@ export async function favoriteCommunityHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function unfavoriteCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -894,6 +1103,12 @@ export async function unfavoriteCommunityHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getFavoriteCommunitiesOfUserHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userID = res.locals.user._id;
     const user = await findUserById(userID);
@@ -924,6 +1139,12 @@ export async function getFavoriteCommunitiesOfUserHandler(req: Request, res: Res
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getSpamPostsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const subreddit = req.params.subreddit;
@@ -968,6 +1189,12 @@ export async function getSpamPostsHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getSpamCommentsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const subreddit = req.params.subreddit;
@@ -1012,6 +1239,12 @@ export async function getSpamCommentsHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function markSpamPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1073,6 +1306,12 @@ export async function markSpamPostHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function markSpamCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1134,6 +1373,12 @@ export async function markSpamCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function approveSpamPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1204,6 +1449,12 @@ export async function approveSpamPostHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function approveSpamCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1274,6 +1525,12 @@ export async function approveSpamCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function removeSpamPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1344,6 +1601,12 @@ export async function removeSpamPostHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function removeSpamCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1414,6 +1677,12 @@ export async function removeSpamCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function lockCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1467,6 +1736,12 @@ export async function lockCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function unlockCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1520,6 +1795,12 @@ export async function unlockCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function lockPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1573,6 +1854,12 @@ export async function lockPostHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function unlockPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1619,6 +1906,12 @@ export async function unlockPostHandler(req: Request, res: Response) {
 }
 
 export async function uploadCommunityIcon(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     if (!req.file || Object.keys(req.file).length === 0) {
       throw new Error('No file uploaded');
@@ -1672,6 +1965,12 @@ export async function uploadCommunityIcon(req: Request, res: Response) {
 }
 
 export async function uploadCommunityBanner(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     if (!req.file || Object.keys(req.file).length === 0) {
       throw new Error('No file uploaded');
@@ -1714,6 +2013,12 @@ export async function uploadCommunityBanner(req: Request, res: Response) {
 }
 
 export async function getCommunityRulesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userID = res.locals.user._id;
     const user = res.locals.user;
@@ -1745,6 +2050,12 @@ export async function getCommunityRulesHandler(req: Request, res: Response) {
 }
 
 export async function getCommunityRemovalResonsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userID = res.locals.user._id;
     const user = res.locals.user;
@@ -1775,6 +2086,43 @@ export async function getCommunityRemovalResonsHandler(req: Request, res: Respon
   }
 }
 
+export async function getCommunityCategoriesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const categories = community.categories;
+    return res.status(200).json({
+      categories,
+    });
+  } catch (error) {
+    console.error('Error in getCommunityCategoriesHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 /**
  * Handles the request to get pending members of a community.
  *
@@ -1783,6 +2131,12 @@ export async function getCommunityRemovalResonsHandler(req: Request, res: Respon
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getPendingMembersHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const subreddit = req.params.subreddit;
@@ -1820,6 +2174,12 @@ export async function getPendingMembersHandler(req: Request, res: Response) {
 }
 
 export async function deleteCommunityIcon(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const userId = user._id;
@@ -1858,6 +2218,12 @@ export async function deleteCommunityIcon(req: Request, res: Response) {
 }
 
 export async function deleteCommunityBanner(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const userId = user._id;
