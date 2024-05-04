@@ -9,6 +9,10 @@ class ApiRoutesBackend {
   static const String login = '$baseUrl/api/auth/login';
   static const String forgetPassword = '$baseUrl/api/users/forgotpassword';
 
+  //!temprorary
+  static const String tempGetPosts =
+      'https://virtserver.swaggerhub.com/software_eng_fox/FoxAPI/1.0.0/best?page=2&count=2&limit=2';
+
   static const String followersAccs = '$baseUrl/api/v1/me/followings';
   static const String unFolow = '$baseUrl/api/unfollow';
 
@@ -33,7 +37,7 @@ class ApiRoutesBackend {
   static const String getinbox =
       '$baseUrl/message/getAllMessagesUsernamesAndSubjects/';
   static String getChat(String userName, String subject) =>
-      '$baseUrl/message/chatMessages/?senderUsername=${userName}&subject=${subject}';
+      '$baseUrl/message/chatMessages/?senderUsername=$userName&subject=$subject';
 }
 
 class ApiRoutesMockserver {
