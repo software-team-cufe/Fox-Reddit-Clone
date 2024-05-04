@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import EditModal from "./accessories/editBanner";
 import KickOutModal from "./accessories/kickOutModal";
 import { useSelector } from "react-redux";
+import ModCard from "./ModCard/ModCard";
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -126,6 +127,7 @@ export default function CommunityPage() {
 
       await userAxios.get(`/${community}`)
         .then((response) => {
+          console.log(response.data.community);
           const newcomm = {
             id: response.data.community._id,
             name: response.data.community.name,
@@ -379,9 +381,14 @@ export default function CommunityPage() {
             </div>
           )}
         </div>
-
+        {
+          commObj.modded? <ModCard></ModCard>:
+          <MainFooter comm={commObj} />
+          
+        }
         {/* community description and rules and other tools on the right*/}
-        <MainFooter comm={commObj} />
+       
+        
       </div>
     </div>
   )
