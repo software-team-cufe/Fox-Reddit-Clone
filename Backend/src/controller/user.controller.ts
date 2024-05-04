@@ -25,6 +25,7 @@ import {
   userCommentsIds,
   userRepliesIds,
   findUserIdByUsername,
+  userHistoryPosts,
 } from '../service/user.service';
 import { sendEmail, generateVerificationLinkToken, generatePasswordResetLinkToken } from '../utils/mailer';
 import { signJwt, verifyJwt } from '../utils/jwt';
@@ -1402,5 +1403,92 @@ export async function getNumberPostsCommentsUser(req: Request, res: Response) {
       status: 'error',
       message: 'Internal server error',
     });
+  }
+}
+
+/**
+ * Handles the request of viewing a post.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function viewPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const postID = req.body.postID;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const post = await findPostById(req.body.postID);
+
+    // Check if post is not found
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    await UserModel.findByIdAndUpdate(user._id, { $addToSet: { historyPosts: postID } }, { upsert: true, new: true });
+
+    res.status(200).json({
+      msg: 'Post viewed successfully',
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request of getting user's history posts.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getHistoryPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    // Extract params
+    const user = await findUserByUsername(req.params.username as string);
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is invalid',
+      });
+    }
+    const username: string = req.params.username as string;
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
+    }
+
+    const postIDS = await userHistoryPosts(username, page, count);
+    const posts = await userPosts(postIDS, limit);
+
+    res.status(200).json({ posts });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 }

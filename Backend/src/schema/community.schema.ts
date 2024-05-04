@@ -1,4 +1,4 @@
-import { object, string, array, boolean, TypeOf } from 'zod';
+import { object, string, number, array, boolean, TypeOf } from 'zod';
 
 const communityType = string().refine((val) => /^(Public|Private|Restricted)$/.test(val), {
   message: 'Type must be Public, Private, or Restricted',
@@ -40,16 +40,24 @@ export const getCommunitySchema = object({
   }),
 });
 
-export const banOrUnbanSchema = object({
-  body: object({
+export const banSchema = object({
+  params: object({
     subreddit: string({
       required_error: 'Subreddit Id is required',
     }),
-    userID: string({
-      required_error: 'userID is required',
+    username: string({
+      required_error: 'username is required',
     }),
-    action: string({
-      required_error: 'action is required',
+  }),
+  body: object({
+    reason: string({
+      required_error: 'reason is required',
+    }),
+    note: string({
+      required_error: 'note is required',
+    }),
+    period: number({
+      required_error: 'period is required',
     }),
   }),
 });
@@ -88,6 +96,17 @@ export const editCommunityRemovalResonsSchema = object({
         description: string().optional(),
       })
     ),
+  }),
+});
+
+export const editCommunityCategoriesSchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+  body: object({
+    categories: array(string({ required_error: 'categories are required' })),
   }),
 });
 
@@ -175,9 +194,10 @@ export const lockCommentSchema = object({
   }),
 });
 
-export type banOrMute = TypeOf<typeof banOrUnbanSchema>;
+export type banOrMute = TypeOf<typeof banSchema>;
 export type createCommunity = TypeOf<typeof createCommunitySchema>;
 export type subscribeCommunity = TypeOf<typeof subscribeCommunitySchema>;
 export type communityName = TypeOf<typeof CommunityNameSchema>;
 export type getCommunity = TypeOf<typeof getCommunitySchema>;
 export type editCommunityRules = TypeOf<typeof editCommunityRulesSchema>;
+export type editCommunityCategories = TypeOf<typeof editCommunityCategoriesSchema>;

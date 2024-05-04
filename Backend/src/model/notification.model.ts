@@ -3,7 +3,7 @@ import { User } from './user.model';
 import { Community } from './community.model';
 import { Types } from 'mongoose';
 export class Notifications {
-  @prop({ required: true })
+  @prop({ required: false })
   Icon: string;
 
   @prop({ required: true })

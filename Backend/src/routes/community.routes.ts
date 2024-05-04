@@ -6,7 +6,6 @@ import {
   getCommunityHandler,
   subscribeCommunityHandler,
   unsubscribeCommunityHandler,
-  banOrUnbanHandler,
   joinModeratorHandler,
   leaveModeratorHandler,
   getUsersIsbannedIncommunityHandler,
@@ -38,13 +37,17 @@ import {
   deleteCommunityIcon,
   deleteCommunityBanner,
   getCommunityNameHandler,
+  getCommunityCategoriesHandler,
+  editCommunityCategoriesHandler,
+  // getBannedMemberHandler,
+  banHandler,
+  // unbanHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
   createCommunitySchema,
   subscribeCommunitySchema,
   getCommunitySchema,
-  banOrUnbanSchema,
   editCommunityRulesSchema,
   spamPostSchema,
   spamCommentSchema,
@@ -54,6 +57,10 @@ import {
   lockCommentSchema,
   editCommunityRemovalResonsSchema,
   CommunityNameSchema,
+  editCommunityCategoriesSchema,
+  banSchema,
+  // unbanSchema,
+  // getBannedMemberSchema,
 } from '../schema/community.schema';
 import uploadSingleMulter from '../middleware/multer/singleImage';
 import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple';
@@ -74,14 +81,22 @@ router.post('/:subreddit/api/favorite', validateResource(subscribeCommunitySchem
 router.post('/:subreddit/api/unfavorite', validateResource(subscribeCommunitySchema), unfavoriteCommunityHandler);
 router.post('/:subreddit/api/join_moderator', validateResource(subscribeCommunitySchema), joinModeratorHandler);
 router.post('/:subreddit/api/leave_moderator', validateResource(subscribeCommunitySchema), leaveModeratorHandler);
-router.post('/api/ban_or_unban', validateResource(banOrUnbanSchema), banOrUnbanHandler);
+router.post('/:subreddit/api/ban/:username', validateResource(banSchema), banHandler);
+// router.post('/:subreddit/api/unban', validateResource(unbanSchema), unbanHandler);
 router.get('/:subreddit/about/banned', validateResource(subscribeCommunitySchema), getUsersIsbannedIncommunityHandler);
+// router.get('/:subreddit/about/banned/:username', validateResource(getBannedMemberSchema), getBannedMemberHandler);
 router.get('/:subreddit/about/moderators', validateResource(subscribeCommunitySchema), getModeratorsHandler);
 router.get('/:subreddit/about/members', validateResource(subscribeCommunitySchema), getMembersHandler);
 router.get('/:subreddit/about/spam_posts', validateResource(subscribeCommunitySchema), getSpamPostsHandler);
 router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunitySchema), getSpamCommentsHandler);
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
 router.get('/:subreddit/api/rules', validateResource(getCommunitySchema), getCommunityRulesHandler);
+router.patch(
+  '/:subreddit/api/edit_categories',
+  validateResource(editCommunityCategoriesSchema),
+  editCommunityCategoriesHandler
+);
+router.get('/:subreddit/api/categories', validateResource(getCommunitySchema), getCommunityCategoriesHandler);
 router.patch(
   '/:subreddit/api/edit_removal_reasons',
   validateResource(editCommunityRemovalResonsSchema),

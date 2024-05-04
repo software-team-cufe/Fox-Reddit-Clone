@@ -84,9 +84,15 @@ export async function createSubreddit(communityName: string, privacyType: string
     userID: userID,
     isMuted: {
       value: false,
+      date: new Date(),
+      reason: 'member is not muted',
     },
     isBanned: {
-      value: false,
+      value: true,
+      date: new Date(),
+      reason: 'member not banned',
+      note: 'member not banned',
+      period: 'member not banned',
     },
   };
 
@@ -168,9 +174,15 @@ export async function addMemberToCom(userID: string, subreddit: string) {
     userID: userID,
     isMuted: {
       value: false,
+      date: new Date(),
+      reason: 'member is not muted',
     },
     isBanned: {
       value: false,
+      date: new Date(),
+      reason: 'member not banned',
+      note: 'member not banned',
+      period: 'member not banned',
     },
   };
 
@@ -294,58 +306,6 @@ export async function removeMemberFromCom(userID: string, subreddit: string) {
   };
 }
 
-/**
- * Checks if a user is banned or not in a community and performs the corresponding operation.
- *
- * @param {string} userID - The ID of the user.
- * @param {string} subreddit - The name of the subreddit.
- * @param {string} operation - The operation to perform. Possible values are 'ban' or 'unban'.
- * @return {Promise<{status: boolean, error?: string}>} - A promise that resolves to an object with the status of the operation. If the operation fails, an error message is also included.
- */
-export async function updateMemberBanStatusInCommunity(userID: string, subreddit: string, operation: string) {
-  const community = await findCommunityByName(subreddit);
-
-  if (!community) {
-    return {
-      status: false,
-      error: 'Community not found',
-    };
-  }
-
-  const memInComm = {
-    userID: userID,
-    isMuted: {
-      value: false,
-    },
-    isBanned: {
-      value: operation === 'ban',
-      date: new Date(),
-    },
-  };
-
-  try {
-    let updatedCommunity = await CommunityModel.findByIdAndUpdate(
-      community._id,
-      { $pull: { members: { userID: userID } } },
-      { new: true }
-    );
-    updatedCommunity = await CommunityModel.findByIdAndUpdate(
-      community._id,
-      { $addToSet: { members: memInComm } },
-      { upsert: true, new: true }
-    );
-
-    return {
-      status: true,
-    };
-  } catch (error) {
-    console.error('Error updating member ban status:', error);
-    return {
-      status: false,
-      error: 'Failed to update member ban status',
-    };
-  }
-}
 /**
  * Retrieves the users who are banned in a community.
  *
@@ -474,6 +434,29 @@ export async function editCommunityRemovalReasons(subreddit: string, reasons: re
       { removalReasons: reasons },
       { new: true }
     );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityCategories(subreddit: string, cats: CommunityRule[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(community._id, { categories: cats }, { new: true });
   } catch (error) {
     return {
       status: false,
@@ -779,4 +762,65 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
   } catch (error) {
     return error;
   }
+}
+
+/**
+ * banMemberToCom
+ * @param {string} body contain rules details
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function banUserInCommunity(
+  userID: string,
+  subreddit: string,
+  reason: string,
+  note: string,
+  period: number
+) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  const memInComm = {
+    userID: userID,
+    isMuted: {
+      value: false,
+      date: new Date(),
+      reason: 'member is not muted',
+    },
+    isBanned: {
+      value: true,
+      date: new Date(),
+      reason: reason,
+      note: note,
+      period: period,
+    },
+  };
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $pull: { members: { userID: userID } } },
+      { new: true }
+    );
+    const updatedCommunity2 = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { members: memInComm } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
 }
