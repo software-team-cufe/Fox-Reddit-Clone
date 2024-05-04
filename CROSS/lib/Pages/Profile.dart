@@ -121,20 +121,36 @@ import 'package:reddit_fox/Pages/postViewForProfile.dart';
 
 
     Future<void> fetchDataBack() async {
+      // Base URL and endpoint
       String baseUrl = 'http://foxnew.southafricanorth.cloudapp.azure.com';
       String endpoint = '/user/${widget.userName}/overview';
-      String queryString = '?page=1&count=5&limit=10';
 
-      String url = baseUrl + endpoint + queryString;
+      // Query parameters
+      // Map<String, String> queryParams = {
+      //   'page': '1',
+      //   'count': '5',
+      //   'limit': '10',
+      //   't': 'all'
+      //   // Add any additional query parameters here if needed
+      // };
+
+      // Constructing URL with query parameters
+      Uri uri = Uri.parse(baseUrl + endpoint); //.replace(queryParameters: queryParams);
 
       try {
+        // Sending GET request with headers
         http.Response response = await http.get(
-          Uri.parse(url),
+          uri,
           headers: {'Authorization': 'Bearer ${widget.access_token}'},
         );
+
         print("status code for fetchDataBack: ${response.statusCode}");
+
         if (response.statusCode == 200) {
+          // Parsing response data
           Map<String, dynamic> responseData = jsonDecode(response.body);
+          
+          // Updating state with fetched data
           setState(() {
             posts = responseData['posts'];
           });
@@ -145,6 +161,8 @@ import 'package:reddit_fox/Pages/postViewForProfile.dart';
         print('Error fetching data: $e');
       }
     }
+
+
 
   Future<void> getUserComments() async {
     try{
