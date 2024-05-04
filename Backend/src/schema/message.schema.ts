@@ -29,6 +29,29 @@ export const chatMessagesSchema = object({
     }),
   }),
 });
+export const mentionUserSchema = object({
+  body: object({
+    commentId: string({
+      required_error: 'comment id is required',
+    }),
+    mentionedUsername: string({
+      required_error: 'mentioned username is required',
+    }),
+  }),
+});
+export const replyOnpostSchema = object({
+  body: object({
+    replyToUsername: string({
+      required_error: 'replyToUsername is required',
+    }),
+    postID: string({
+      required_error: 'post id is required',
+    }),
+  }),
+});
+
 export type ComposeMessageInput = TypeOf<typeof composeMessageSchema>;
 export type DeleteMessageInput = TypeOf<typeof deleteMessageSchema>;
 export type ChatMessagesInput = TypeOf<typeof chatMessagesSchema>;
+export type mentionUser = TypeOf<typeof mentionUserSchema>;
+export type replyOnpost = TypeOf<typeof replyOnpostSchema>;

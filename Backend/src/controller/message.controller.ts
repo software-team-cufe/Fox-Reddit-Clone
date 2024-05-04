@@ -4,6 +4,12 @@ import { createMessage, deleteMessage, findMessageById } from '../service/messag
 import { findUserById, findUserByUsername } from '../service/user.service';
 import { Request, Response } from 'express';
 import UserModel from '../model/user.model';
+
+import CommunityModel from '../model/community.model';
+import PostModel from '../model/posts.model';
+import { findPostById } from '../service/post.service';
+import CommentModel from '../model/comments.model';
+import { findCommentById } from '../service/comment.service';
 import { createNotification } from '../service/notification.service';
 /**
  * Handles composing a message, checking user validity, creating the message, and returning the result.
@@ -400,15 +406,15 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
  * @return {Promise<Response>} The response object containing the messages or an error message.
  */
 export async function chatMessagesHandler(req: Request, res: Response) {
+  const receiverId = res.locals.user._id;
   // Check if user is missing or invalid
-  if (!res.locals.user) {
+  if (!receiverId) {
     return res.status(400).json({
       status: 'failed',
       message: 'Access token is missing or invalid',
     });
   }
 
-  const receiverId = res.locals.user._id;
   const senderUsername = req.query.senderUsername?.toString();
   const subject = req.query.subject?.toString();
 
@@ -445,13 +451,14 @@ export async function chatMessagesHandler(req: Request, res: Response) {
         { fromID: receiverId, toID: sender._id, subject: subject },
       ],
       isDeleted: false,
-    }).sort({ createdAt: 1 }); // Order by createdAt
+    })
+      .sort({ createdAt: 1 })
+      .populate('fromID', 'username') // Populate sender's username
+      .populate('toID', 'username'); // Populate receiver's username; // Order by createdAt
 
     return res.status(200).json({
       response: 'success',
       messages: messages,
-      senderUsername: sender.username,
-      receiverUsername: res.locals.user.username,
     });
   } catch (error) {
     console.error('Error in chatMessagesHandler:', error);
@@ -512,6 +519,241 @@ export async function getAllMessagesUsernamesAndSubjectsHandler(req: Request, re
     });
   } catch (error) {
     console.error('Error in getAllMessagesUsernamesAndSubjectsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles the request to mention a user in a comment.
+ *
+ * @param {Request} req - The HTTP request object containing the comment ID and the mentioned username in the request body.
+ * @param {Response} res - The HTTP response object.
+ * @return {Promise<void>} - A promise that resolves when the response is sent. The response contains the status of the operation.
+ */
+export async function mentionUserHandler(req: Request, res: Response) {
+  try {
+    const commentId = req.body.commentId.toString();
+
+    // Extract user and post
+    const user = await findUserByUsername(res.locals.user.username as string);
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const mentionedUser = await UserModel.findOne({ username: req.body.mentionedUsername });
+    if (!mentionedUser) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Mentioned user not found',
+      });
+    }
+
+    const comment = await findCommentById(commentId);
+    if (!comment) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Comment not found',
+      });
+    }
+
+    const post = await findPostById(comment.postID.toString());
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    const mentionedIn = {
+      mentionerID: user._id,
+      commentID: comment._id,
+      postID: post._id,
+    };
+
+    // Update mentionedInUsers in post model
+    await PostModel.findByIdAndUpdate(
+      post._id,
+      { $addToSet: { mentionedIn: mentionedIn } },
+      { new: true, upsert: true }
+    );
+
+    // Update mentionedInPosts in user model
+    await UserModel.findByIdAndUpdate(
+      mentionedUser._id,
+      { $addToSet: { mentionedIn: mentionedIn } },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({ status: 'success' });
+  } catch (error) {
+    console.error('Error in mentionUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles the request to get the posts and comments that a user has been mentioned in.
+ *
+ * @param {Request} req - The HTTP request object containing the mentioned username in the request body.
+ * @param {Response} res - The HTTP response object.
+ * @return {Promise<void>} - A promise that resolves when the response is sent. The response contains an array of mentioned posts, each containing the post title, the username of the mentioner, the ID of the mentioned user, and additional data including the creation date, post title, community name, number of comments, the post object, and the comment object.
+ */
+export async function getPostAndCommentUserMentionedHandler(req: Request, res: Response) {
+  try {
+    const user = await UserModel.findOne({ username: req.body.mentionedUsername });
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+    const mentionedPosts = [];
+    if (user.mentionedIn) {
+      for (const mention of user.mentionedIn) {
+        const mentionerName = await UserModel.findById(mention.mentionerID).select('username');
+        const post = await PostModel.findById(mention.postID);
+        const comment = await CommentModel.findById(mention.commentID);
+        const communitName = await CommunityModel.findById(post?.CommunityID).select('name');
+        if (post && comment) {
+          mentionedPosts.push({
+            postTitle: post.title,
+            from: mentionerName,
+            toId: user._id,
+            data: {
+              postID: post._id,
+              commentID: comment._id,
+              createAt: mention.date,
+              communityName: communitName,
+              commentNum: post.commentsNum,
+              post: post,
+              comment: comment,
+            },
+          });
+        }
+      }
+    }
+    res.status(200).json(mentionedPosts);
+  } catch (error) {
+    console.error('Error in getPostAndCommentUserMentionedHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles the request to add a reply to a post.
+ *
+ * @param {Request} req - The request object containing the post ID and username of the user being replied to.
+ * @param {Response} res - The response object to send the result.
+ * @return {Promise<void>} A promise that resolves when the reply is added and the response is sent.
+ */
+export async function addPostReplyHandler(req: Request, res: Response) {
+  try {
+    const { postID, replyToUsername } = req.body;
+
+    // Extract user and post
+    const user = await findUserByUsername(res.locals.user.username as string);
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const post = await findPostById(postID.toString());
+    if (!post) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+    // Extract user and post
+    const replyToUser = await findUserByUsername(replyToUsername as string);
+    if (!replyToUser) {
+      return res.status(402).json({
+        status: 'failed',
+        message: 'User repllied not found',
+      });
+    }
+
+    const mentionedIn = {
+      replierID: user._id,
+      postID: post._id,
+      date: new Date(),
+    };
+
+    // Update mentionedInUsers in post model
+    await PostModel.findByIdAndUpdate(
+      post._id,
+      { $addToSet: { repliedInPost: mentionedIn } },
+      { new: true, upsert: true }
+    );
+
+    // Update mentionedInPosts in user model
+    await UserModel.findByIdAndUpdate(
+      replyToUser._id,
+      { $addToSet: { repliedInPost: mentionedIn } },
+      { new: true, upsert: true }
+    );
+    res.status(200).json({ status: 'success' });
+  } catch (error) {
+    console.error('Error in addReplyHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles the request to get the posts that a user has been mentioned in.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @return {Promise<void>} - A promise that resolves when the response is sent.
+ */
+export async function getuserPostreplisHandler(req: Request, res: Response) {
+  try {
+    const user = await UserModel.findOne({ username: res.locals.user.username });
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+    const mentionedPosts = [];
+    if (user.repliedInPost) {
+      for (const reply of user.repliedInPost) {
+        const replierName = await UserModel.findById(reply.replierID).select('username');
+        const post = await PostModel.findById(reply.postID);
+        const communitName = await CommunityModel.findById(post?.CommunityID).select('name');
+        if (post) {
+          mentionedPosts.push({
+            postTitle: post.title,
+            from: replierName,
+            toId: user._id,
+            data: {
+              postID: post._id,
+              createAt: reply.date,
+              postTitle: post.title,
+              communityName: communitName,
+              commentNum: post.commentsNum,
+              post: post,
+            },
+          });
+        }
+      }
+    }
+    res.status(200).json(mentionedPosts);
+  } catch (error) {
+    console.error('Error in getPostUserMentionedHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',

@@ -37,6 +37,19 @@ class Mention {
 
   @prop({ ref: () => Comment })
   commentID!: Ref<Comment>;
+
+  @prop()
+  date?: Date;
+}
+class PostReply {
+  @prop({ ref: () => User })
+  replierID!: Ref<User>;
+
+  @prop({ ref: () => 'Post' })
+  postID!: Ref<Post>;
+
+  @prop()
+  date?: Date;
 }
 export class Post {
   @prop({ required: true, ref: () => User })
@@ -112,6 +125,9 @@ export class Post {
 
   @prop()
   mentionedIn: Mention[];
+
+  @prop()
+  repliedInPost?: PostReply[];
 
   @prop({ type: () => [String], ref: () => User })
   postComments: Ref<Comment>[];
