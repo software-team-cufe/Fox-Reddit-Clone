@@ -494,7 +494,7 @@ export async function addCreatorToUser(userID: string, communityID: string) {
       reason: 'member is not muted',
     },
     isBanned: {
-      value: true,
+      value: false,
       date: new Date(),
       reason: 'member not banned',
       note: 'member not banned',
@@ -910,6 +910,74 @@ export async function banUserInUser(userID: string, subreddit: string, reason: s
       reason: reason,
       note: note,
       period: period,
+    },
+  };
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $pull: { member: { communityId: community._id.toHexString() } } },
+      { upsert: true, new: true }
+    );
+    const updatedUser2 = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { member: userMember } },
+      { upsert: true, new: true }
+    );
+
+    if (!user.member) {
+      return {
+        status: false,
+        error: 'error in adding user',
+      };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * Add user to community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function unbanUserInUser(userID: string, subreddit: string) {
+  const community = await CommunityModel.findOne({ name: subreddit });
+  if (!community) {
+    return {
+      status: false,
+      error: 'community not found',
+    };
+  }
+  const communityID = community._id.toString();
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  const userMember = {
+    communityId: communityID,
+    isMuted: {
+      value: false,
+      date: new Date(),
+      reason: 'member is not muted',
+    },
+    isBanned: {
+      value: false,
+      date: new Date(),
+      reason: 'member not banned',
+      note: 'member not banned',
+      period: 'member not banned',
     },
   };
   try {
