@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 decoration: const InputDecoration(
                   hintText: "Password",
-                  prefixIcon: Icon(Icons.password),
+                prefixIcon: Icon(Icons.password),
                 ),
                 controller: passwordController,
                 obscureText: true,

@@ -4,8 +4,7 @@ import 'package:share/share.dart';
 enum VoteDirection { Up, Down }
 
 class VoteSection extends StatefulWidget {
-  final Map<String, dynamic> post;
-
+  final Map<dynamic, dynamic> post;
 
   const VoteSection({super.key, required this.post});
 
@@ -40,13 +39,13 @@ class _VoteSectionState extends State<VoteSection> {
     });
   }
 
-@override
+  @override
   void initState() {
     super.initState();
     voteCount = widget.post['votes'] ?? 0;
     hasVoted = widget.post['hasVoted'] ?? false;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -77,7 +76,7 @@ class _VoteSectionState extends State<VoteSection> {
               ),
             ),
             Text(
-                "${voteCount.abs()}",
+              "${voteCount.abs()}",
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             ConstrainedBox(
@@ -120,7 +119,7 @@ class _VoteSectionState extends State<VoteSection> {
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
                       child: Text(
-                            "${widget.post['commentsNo']} Comments",
+                        "${widget.post['commentsNo']} Comments",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -135,11 +134,11 @@ class _VoteSectionState extends State<VoteSection> {
                   child: const Icon(Icons.reply),
                 ),
                 onPressed: () {
-                      int postId = widget.post['id'];
-                      String postUrl =
-                          'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                      Share.share('${widget.post['title']}\n$postUrl');
-                    },
+                  int postId = widget.post['id'];
+                  String postUrl =
+                      'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
+                  Share.share('${widget.post['title']}\n$postUrl');
+                },
               ),
             ],
           ),

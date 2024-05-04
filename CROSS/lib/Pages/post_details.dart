@@ -3,6 +3,8 @@
 /// The widget also allows the user to toggle the blur effect on the image if the post is marked as NSFW (Not Safe for Work) or a spoiler.
 /// Additionally, the widget provides functionality to download the image, view the creator's profile, and perform other actions such as saving, copying text, turning on captions, crossposting, reporting, blocking accounts, and hiding the post.
 /// The widget is used within the Fox app to display the details of a post in multiple screens.
+library;
+
 import 'dart:io';
 import 'dart:ui';
 import 'dart:async';
@@ -19,10 +21,10 @@ import 'CommentSection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PostDetails extends StatefulWidget {
-  final Map<String, dynamic> post;
+  final Map<dynamic, dynamic> post;
 
   const PostDetails({
-    Key? key,
+    super.key,
     required this.post,
   });
 
@@ -74,11 +76,11 @@ class _PostDetailsState extends State<PostDetails> {
     // Check if permission is granted
     var status = await Permission.storage.status;
     if (status.isGranted) {
-      _startDownload(context);
+      // _startDownload(context);
     } else {
       status = await Permission.storage.request();
       if (status.isGranted) {
-        _startDownload(context);
+        // _startDownload(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -90,40 +92,40 @@ class _PostDetailsState extends State<PostDetails> {
     }
   }
 
-  void _startDownload(BuildContext context) async {
-    try {
-      Directory dir =
-          Directory('/storage/emulated/0/fox'); // Updated directory path
-      if (!dir.existsSync()) {
-        dir.createSync(
-            recursive: true); // Create the directory if it doesn't exist
-      }
+  // void _startDownload(BuildContext context) async {
+  //   try {
+  //     Directory dir =
+  //         Directory('/storage/emulated/0/fox'); // Updated directory path
+  //     if (!dir.existsSync()) {
+  //       dir.createSync(
+  //           recursive: true); // Create the directory if it doesn't exist
+  //     }
 
-      String savePath = "${dir.path}/${widget.post['title']}.jpg";
+  //     String savePath = "${dir.path}/${widget.post['title']}.jpg";
 
-      var response = await http.get(Uri.parse(widget.post['picture']!));
-      if (response.statusCode == 200) {
-        File file = File(savePath);
-        await file.writeAsBytes(response.bodyBytes);
+  //     var response = await http.get(Uri.parse(widget.post['picture']!));
+  //     if (response.statusCode == 200) {
+  //       File file = File(savePath);
+  //       await file.writeAsBytes(response.bodyBytes);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Image downloaded successfully"),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      } else {
-        throw Exception("Failed to download image: ${response.statusCode}");
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Error downloading image: $e"),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
-  }
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text("Image downloaded successfully"),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //     } else {
+  //       throw Exception("Failed to download image: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("Error downloading image: $e"),
+  //         duration: const Duration(seconds: 2),
+  //       ),
+  //     );
+  //   }
+  // }
 
 // Define a function to show the bottom sheet
   void _showBottomMenu(BuildContext context) {
@@ -176,11 +178,11 @@ class _PostDetailsState extends State<PostDetails> {
               leading: const Icon(Icons.download),
               title: const Text('Download Image'),
               onTap: () {
-                Navigator.pop(context); // Close the menu
-                if (widget.post['picture'] != null &&
-                    widget.post['picture']!.isNotEmpty) {
-                  _downloadImage(context); // Call the download image function
-                }
+                // Navigator.pop(context); // Close the menu
+                // if (widget.post['picture'] != null &&
+                //     widget.post['picture']!.isNotEmpty) {
+                //   // _downloadImage(context); // Call the download image function
+                // }
               },
             ),
             ListTile(
@@ -318,7 +320,7 @@ class _PostDetailsState extends State<PostDetails> {
                         );
                       },
                       child: Text(
-                        'u/${widget.post['redditName']}',
+                        '${widget.post['userName']}',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -332,7 +334,7 @@ class _PostDetailsState extends State<PostDetails> {
             ),
             cardCoreWidget(post: widget.post, detailsPageOpen: true),
             VoteSection(post: widget.post),
-            CommentSection(postId: "${widget.post['id']}"),
+            CommentSection(postId: "${widget.post['postID']}"),
           ],
         ),
       ),

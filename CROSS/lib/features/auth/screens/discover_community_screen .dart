@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
+import 'package:reddit_fox/navbar.dart';
 
 class DiscoverCommunityScreen extends StatelessWidget {
   const DiscoverCommunityScreen({super.key});
@@ -9,6 +10,7 @@ class DiscoverCommunityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: const nBar(),
         body: SingleChildScrollView(
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -52,6 +54,9 @@ class DiscoverCommunityScreen extends StatelessWidget {
                     SuggestedCommunityCard(),
                   ],
                 )
+
+                //  NavigationBar(destinations: destinations)
+                ,
               ],
             ),
           ),

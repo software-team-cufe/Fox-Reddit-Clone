@@ -4,10 +4,11 @@ import 'package:reddit_fox/Pages/home/Post%20widgets/pollWidget.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
 
 class cardCoreWidget extends StatefulWidget {
-  final Map<String, dynamic> post;
+  final Map<dynamic, dynamic> post;
   final bool detailsPageOpen;
 
-  const cardCoreWidget({super.key, required this.post, required this.detailsPageOpen});
+  const cardCoreWidget(
+      {super.key, required this.post, required this.detailsPageOpen});
 
   @override
   _cardCoreWidgetState createState() => _cardCoreWidgetState();
@@ -22,7 +23,6 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
     super.initState();
     isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
     textIsblurred = (widget.post['nsfw'] || widget.post['spoiler']);
-
   }
 
   @override
@@ -31,7 +31,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.post['title'],
+          widget.post['title'] ?? "title",
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         Row(
@@ -71,74 +71,74 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
           ],
         ),
         const SizedBox(height: 8),
-        if (widget.post['picture'] != null &&
-            widget.post['picture']!.isNotEmpty)
-          // Wrap GestureDetector around ClipRRect
-          GestureDetector(
-            onTap: () {
-              if ((widget.post['nsfw'] || widget.post['spoiler']) &&
-                  widget.detailsPageOpen) {
-                // Check if the post is NSFW or spoiler
-                setState(() {
-                  isBlurred = !isBlurred; // Toggle blur if the post is NSFW
-                });
-              }  else if (widget.detailsPageOpen){
-                //do nothing
-              } else {
-                // Navigate to the details page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PostDetails(post: widget.post),
+        // if (widget.post['picture'] != null &&
+        //     widget.post['picture']!.isNotEmpty)
+        // Wrap GestureDetector around ClipRRect
+        GestureDetector(
+          onTap: () {
+            if ((widget.post['nsfw'] || widget.post['spoiler']) &&
+                widget.detailsPageOpen) {
+              // Check if the post is NSFW or spoiler
+              setState(() {
+                isBlurred = !isBlurred; // Toggle blur if the post is NSFW
+              });
+            } else if (widget.detailsPageOpen) {
+              //do nothing
+            } else {
+              // Navigate to the details page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostDetails(post: widget.post),
+                ),
+              );
+            }
+          },
+          child: ClipRRect(
+            borderRadius:
+                BorderRadius.circular(10), // Adjust border radius as needed
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Image without blur effect
+                Image.network(
+                  'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15',
+                  // widget.post['picture']!,
+                  width: double.infinity,
+                  height: 400,
+                  fit: BoxFit.cover,
+                  color:
+                      isBlurred ? const Color.fromARGB(0, 158, 158, 158) : null,
+                  colorBlendMode:
+                      isBlurred ? BlendMode.saturation : BlendMode.dst,
+                ),
+                if (isBlurred)
+                  // Blur effect with BackdropFilter
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      color: const Color.fromARGB(0, 0, 0, 0)
+                          .withOpacity(0), // Transparent color
+                      width: double.infinity,
+                      height: 400,
+                    ),
                   ),
-                );
-              }
-            },
-            child: ClipRRect(
-              borderRadius:
-                  BorderRadius.circular(10), // Adjust border radius as needed
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Image without blur effect
-                  Image.network(
-                    widget.post['picture']!,
-                    width: double.infinity,
-                    height: 400,
-                    fit: BoxFit.cover,
-                    color: isBlurred
-                        ? const Color.fromARGB(0, 158, 158, 158)
-                        : null,
-                    colorBlendMode:
-                        isBlurred ? BlendMode.saturation : BlendMode.dst,
-                  ),
-                  if (isBlurred)
-                    // Blur effect with BackdropFilter
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        color: const Color.fromARGB(0, 0, 0, 0)
-                            .withOpacity(0), // Transparent color
-                        width: double.infinity,
-                        height: 400,
+                if (isBlurred)
+                  const Column(
+                    children: [
+                      Icon(Icons.remove_red_eye,
+                          size: 40,
+                          color: Colors.white), // Icon to indicate blur
+                      Text(
+                        'Click to view',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
-                    ),
-                  if (isBlurred)
-                    const Column(
-                      children: [
-                        Icon(Icons.remove_red_eye,
-                            size: 40,
-                            color: Colors.white), // Icon to indicate blur
-                        Text(
-                          'Click to view',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
+                    ],
+                  ),
+              ],
             ),
           ),
+        ),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: () {
@@ -146,19 +146,20 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
                 widget.detailsPageOpen) {
               // Check if the post is NSFW or spoiler
               setState(() {
-                textIsblurred = !textIsblurred; // Toggle blur if the post is NSFW
+                textIsblurred =
+                    !textIsblurred; // Toggle blur if the post is NSFW
               });
-            } else if (widget.detailsPageOpen){
-                //do nothing
-              } else {
-                // Navigate to the details page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PostDetails(post: widget.post),
-                  ),
-                );
-              }
+            } else if (widget.detailsPageOpen) {
+              //do nothing
+            } else {
+              // Navigate to the details page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostDetails(post: widget.post),
+                ),
+              );
+            }
           },
           child: Container(
             decoration: BoxDecoration(
@@ -166,7 +167,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              widget.post['description'],
+              widget.post['text'],
               style: TextStyle(
                 fontSize: 16,
                 color: textIsblurred ? Colors.transparent : Colors.white,
@@ -179,7 +180,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
                 widget.post['spoiler'] ==
                     false)) // Check if post has a poll and if it should be shown
           PollWidget(
-              pollOptions: ['Option 1', 'Option 2', 'Option 3'],
+              pollOptions: const ['Option 1', 'Option 2', 'Option 3'],
               onOptionSelected: (String) {}), // Render the poll widget if true
       ],
     );
