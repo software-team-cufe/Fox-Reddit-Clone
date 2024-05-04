@@ -19,6 +19,7 @@ class _inboxChatState extends State<inboxChat> {
   late String access_token;
   late TextEditingController _messageController = TextEditingController();
   late List<dynamic> messages = [];
+  late List<dynamic> senderUser = [];
   @override
   void initState() {
     super.initState();
@@ -67,9 +68,11 @@ class _inboxChatState extends State<inboxChat> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
       final List<dynamic> fetchedMessages = data['messages'] ?? [];
+
       setState(() {
         messages = fetchedMessages;
       });
+      print(messages);
 
       print('chat fetched successfully ');
     } else {
@@ -95,7 +98,6 @@ class _inboxChatState extends State<inboxChat> {
       print('blocked  correctly ${response.statusCode}');
     } else {
       print('Failed to  block ${response.statusCode}');
-      // Return an empty list if the request fails
     }
   }
 
@@ -127,16 +129,16 @@ class _inboxChatState extends State<inboxChat> {
                         size: 25,
                       ),
                     ),
-                    // Text(
-                    //   widget.username,
-                    //   style: TextStyle(fontSize: 25),
-                    // ),
+                    Text(
+                      widget.username,
+                      style: TextStyle(fontSize: 25),
+                    ),
                     TextButton(
                       onPressed: () {
                         block();
                       },
                       child: Icon(
-                        Icons.flag_outlined,
+                        Icons.flag,
                         color: Colors.red,
                         size: 25,
                       ),
@@ -145,15 +147,31 @@ class _inboxChatState extends State<inboxChat> {
                 )
               ],
             ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 20, 8, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      widget.subject,
+                      style: TextStyle(
+                          color: Colors.white, decorationThickness: 15),
+                    ),
+                  )
+                ],
+              ),
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: messages.length,
                 itemBuilder: (context, index) {
                   final message = messages[index];
-                  final isCurrentUser = message['sender'] == widget.username;
+                  final isCurrentUser =
+                      message['fromID']['username'] == widget.username;
 
                   return Align(
-                    alignment: (index % 2 == 0)
+                    alignment: (isCurrentUser)
                         ? Alignment.centerLeft
                         : Alignment.centerRight,
                     child: Container(
@@ -161,7 +179,9 @@ class _inboxChatState extends State<inboxChat> {
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                       padding: EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
-                        color: isCurrentUser ? Colors.green[400] : Colors.green[400],
+                        color: isCurrentUser
+                            ? Colors.green[400]
+                            : Colors.green[400],
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Text(
