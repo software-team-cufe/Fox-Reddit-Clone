@@ -104,6 +104,8 @@ class _SignupScreenState extends State<SignupScreen> {
         // Error occurred
         print('Error: ${response.body}');
         return "here is an existing username or email";
+      } else {
+        return 'Server error';
       }
     } catch (e) {
       // Exception occurred

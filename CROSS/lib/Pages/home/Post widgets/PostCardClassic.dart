@@ -6,7 +6,7 @@ import 'package:reddit_fox/Pages/post_details.dart';
 
 /// A stateful widget that represents a post card in the home page.
 class ClassicCard extends StatefulWidget {
-  final Map<String, dynamic> post;
+  final Map<dynamic, dynamic> post;
 
   /// Constructs a [ClassicCard] widget.
   ///
@@ -66,49 +66,53 @@ class _ClassicCardState extends State<ClassicCard> {
                   widget.post['title'],
                   style: const TextStyle(fontSize: 16),
                 ),
-                if (widget.post['picture'] == null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isBlurred ? Colors.white : Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        widget.post['description'],
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: isBlurred ? Colors.transparent : Colors.white,
-                        ),
+                // if (widget.post['picture'] == null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isBlurred ? Colors.white : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      widget.post['description'],
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isBlurred ? Colors.transparent : Colors.white,
                       ),
                     ),
                   ),
+                ),
               ],
             ),
-            trailing: widget.post['picture'] != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Stack(
-                      children: [
-                        Image.network(
-                          widget.post['picture'],
-                          width: 100,
-                          height: 250,
-                          fit: BoxFit.cover,
-                        ),
-                        if (isBlurred)
-                          BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                            child: Container(
-                              color: Colors.transparent,
+            trailing:
+                'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15' !=
+                        null
+                    // widget.post['picture'] != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Stack(
+                          children: [
+                            Image.network(
+                              'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15',
                               width: 100,
                               height: 250,
+                              fit: BoxFit.cover,
                             ),
-                          ),
-                      ],
-                    ),
-                  )
-                : null,
+                            if (isBlurred)
+                              BackdropFilter(
+                                filter:
+                                    ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                child: Container(
+                                  color: Colors.transparent,
+                                  width: 100,
+                                  height: 250,
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    : null,
           ),
           Row(
             children: [
@@ -155,7 +159,7 @@ class _ClassicCardState extends State<ClassicCard> {
                   widget.post['spoiler'] ==
                       false)) // Check if post has a poll and if it should be shown
             PollWidget(
-              pollOptions: ['Option 1', 'Option 2', 'Option 3'],
+              pollOptions: const ['Option 1', 'Option 2', 'Option 3'],
               onOptionSelected: (String) {},
             ), // Render the poll widget if true
           VoteSection(post: widget.post),

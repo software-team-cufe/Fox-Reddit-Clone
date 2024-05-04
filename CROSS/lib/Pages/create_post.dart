@@ -18,7 +18,7 @@ import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreatePost extends StatefulWidget {
-  const CreatePost({Key? key}) : super(key: key);
+  const CreatePost({super.key});
 
   @override
   State<CreatePost> createState() => _CreatePostState();
@@ -180,7 +180,6 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
-  
   Future<void> submitPost(String title, String text, bool isNsfw,
       bool isSpoiler, String urlController, List<String> poll) async {
     var formData = FormData();
@@ -228,10 +227,10 @@ class _CreatePostState extends State<CreatePost> {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('Post submitted successfully');
-      print('access_token ' + access_token);
+      print('access_token $access_token');
     } else {
       print('Error submitting post: ${response.statusCode}');
-      print('access_token ' + access_token);
+      print('access_token $access_token');
     }
   }
 
@@ -239,232 +238,236 @@ class _CreatePostState extends State<CreatePost> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const FaIcon(
-                        FontAwesomeIcons.times,
-                        size: 25.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        final title = _titleController.text;
-                        final body = _bodyController.text;
-                        String url = urlController.text;
-                        if (title.isEmpty || body.isEmpty) {
-                          return;
-                        }
-
-                        submitPost(title, body, isNsfw, isSpoiler, url, _poll);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePage()),
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                            if (_titleController.text.isEmpty ||
-                                _bodyController.text.isEmpty) {
-                              return Theme.of(context).colorScheme.primary;
-                            }
-
-                            return const Color.fromARGB(255, 76, 168, 243);
-                          },
-                        ),
-                      ),
-                      child: const Text('Next'),
-                    )
-                  ],
-                ),
-                TextField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Title',
-                  ),
-                  onChanged: (text) {
-                    setState(() {
-                      isTitleEmpty = text.isEmpty;
-                    });
-                  },
-                ),
-                TextField(
-                  controller: _bodyController,
-                  decoration: const InputDecoration(
-                    labelText: 'Body Text (optional)',
-                  ),
-                  onChanged: (text) {
-                    setState(() {
-                      isBodyEmpty = text.isEmpty;
-                    });
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Spoiler'),
-                    Switch(
-                      value: isSpoiler,
-                      onChanged: (value) {
-                        setState(() {
-                          isSpoiler = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('NSFW'),
-                    Switch(
-                      value: isNsfw,
-                      onChanged: (value) {
-                        setState(() {
-                          isNsfw = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                DropdownButtonFormField<String>(
-                  value:
-                      selectedCommunity.isNotEmpty ? selectedCommunity : null,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCommunity = newValue!;
-                    });
-                  },
-                  items: communities.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  hint: Text('Choose a Community'),
-                ),
-              ],
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: addedWidget != null ? [addedWidget!] : [],
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              isURLVisible = !isURLVisible;
-                              if (isURLVisible) {
-                                isImageVisible = false;
-                                isVideoVisible = false;
-                                if (urlController.text.isNotEmpty) {
-                                  attachments.add(urlController.text);
-                                }
-                              }
-                            });
-                            addWidget(
-                              isURLVisible
-                                  ? TextField(
-                                      controller: urlController,
-                                      decoration: const InputDecoration(
-                                        labelText: 'URL',
-                                      ),
-                                    )
-                                  : Container(),
-                            );
-                          },
-                          child: FaIcon(
-                            FontAwesomeIcons.link,
-                            size: iconsize,
-                            color: Colors.white,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              isImageVisible = !isImageVisible;
-                              if (isImageVisible) {
-                                isURLVisible = false;
-                                isVideoVisible = false;
-                              }
-                            });
-                            pickImage();
-                          },
-                          child: FaIcon(
-                            FontAwesomeIcons.image,
-                            size: iconsize,
-                            color: Colors.white,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              isVideoVisible = !isVideoVisible;
-                              if (isVideoVisible) {
-                                isURLVisible = false;
-                                isImageVisible = false;
-                              }
-                            });
-                            pickVideo();
-                          },
-                          child: FaIcon(
-                            FontAwesomeIcons.play,
-                            size: iconsize,
-                            color: Colors.white,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: togglePollVisibility,
-                          child: FaIcon(
-                            FontAwesomeIcons.listOl,
-                            size: iconsize,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextButton(
-                        onPressed: doubleIconSizeOnce,
-                        child: FaIcon(
-                          FontAwesomeIcons.arrowUp,
-                          size: arrowsize,
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const FaIcon(
+                          FontAwesomeIcons.times,
+                          size: 25.0,
                           color: Colors.white,
                         ),
                       ),
+                      ElevatedButton(
+                        onPressed: () {
+                          final title = _titleController.text;
+                          final body = _bodyController.text;
+                          String url = urlController.text;
+                          if (title.isEmpty || body.isEmpty) {
+                            return;
+                          }
+
+                          submitPost(
+                              title, body, isNsfw, isSpoiler, url, _poll);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()),
+                          );
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (_titleController.text.isEmpty ||
+                                  _bodyController.text.isEmpty) {
+                                return Theme.of(context).colorScheme.primary;
+                              }
+
+                              return const Color.fromARGB(255, 76, 168, 243);
+                            },
+                          ),
+                        ),
+                        child: const Text('Next'),
+                      )
+                    ],
+                  ),
+                  TextField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
                     ),
-                  ],
+                    onChanged: (text) {
+                      setState(() {
+                        isTitleEmpty = text.isEmpty;
+                      });
+                    },
+                  ),
+                  TextField(
+                    controller: _bodyController,
+                    decoration: const InputDecoration(
+                      labelText: 'Body Text (optional)',
+                    ),
+                    onChanged: (text) {
+                      setState(() {
+                        isBodyEmpty = text.isEmpty;
+                      });
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Spoiler'),
+                      Switch(
+                        value: isSpoiler,
+                        onChanged: (value) {
+                          setState(() {
+                            isSpoiler = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('NSFW'),
+                      Switch(
+                        value: isNsfw,
+                        onChanged: (value) {
+                          setState(() {
+                            isNsfw = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  DropdownButtonFormField<String>(
+                    value:
+                        selectedCommunity.isNotEmpty ? selectedCommunity : null,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedCommunity = newValue!;
+                      });
+                    },
+                    items: communities.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    hint: const Text('Choose a Community'),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: addedWidget != null ? [addedWidget!] : [],
+                  ),
                 ),
-              ],
-            )
-          ],
+              ),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                isURLVisible = !isURLVisible;
+                                if (isURLVisible) {
+                                  isImageVisible = false;
+                                  isVideoVisible = false;
+                                  if (urlController.text.isNotEmpty) {
+                                    attachments.add(urlController.text);
+                                  }
+                                }
+                              });
+                              addWidget(
+                                isURLVisible
+                                    ? TextField(
+                                        controller: urlController,
+                                        decoration: const InputDecoration(
+                                          labelText: 'URL',
+                                        ),
+                                      )
+                                    : Container(),
+                              );
+                            },
+                            child: FaIcon(
+                              FontAwesomeIcons.link,
+                              size: iconsize,
+                              color: Colors.white,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              setState(() {
+                                isImageVisible = !isImageVisible;
+                                if (isImageVisible) {
+                                  isURLVisible = false;
+                                  isVideoVisible = false;
+                                }
+                              });
+                              pickImage();
+                            },
+                            child: FaIcon(
+                              FontAwesomeIcons.image,
+                              size: iconsize,
+                              color: Colors.white,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              setState(() {
+                                isVideoVisible = !isVideoVisible;
+                                if (isVideoVisible) {
+                                  isURLVisible = false;
+                                  isImageVisible = false;
+                                }
+                              });
+                              pickVideo();
+                            },
+                            child: FaIcon(
+                              FontAwesomeIcons.play,
+                              size: iconsize,
+                              color: Colors.white,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: togglePollVisibility,
+                            child: FaIcon(
+                              FontAwesomeIcons.listOl,
+                              size: iconsize,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextButton(
+                          onPressed: doubleIconSizeOnce,
+                          child: FaIcon(
+                            FontAwesomeIcons.arrowUp,
+                            size: arrowsize,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
