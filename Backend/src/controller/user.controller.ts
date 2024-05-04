@@ -25,12 +25,13 @@ import {
   userCommentsIds,
   userRepliesIds,
   findUserIdByUsername,
+  userHistoryPosts,
 } from '../service/user.service';
 import { sendEmail, generateVerificationLinkToken, generatePasswordResetLinkToken } from '../utils/mailer';
 import { signJwt, verifyJwt } from '../utils/jwt';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
-import { UserModel } from '../model/user.model';
+import { UserModel, VotePost } from '../model/user.model';
 import { omit, shuffle } from 'lodash';
 import { get } from 'config';
 import PostModel from '../model/posts.model';
@@ -38,6 +39,7 @@ import { userComments } from '../service/comment.service';
 import { findPostById, userPosts } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
+import { createNotification } from '../service/notification.service';
 
 /**
  * Handles the creation of a user.
@@ -395,7 +397,8 @@ export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['
 export async function getCurrentUserHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
-      msg: 'Unauthorized',
+      status: 'failed',
+      message: 'Access token is missing',
     });
   }
   return res.status(200).json({
@@ -410,6 +413,12 @@ export async function getCurrentUserHandler(req: Request, res: Response) {
  * @return {Response} The user preferences.
  */
 export async function getCurrentUserPrefs(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   let user = res.locals.user;
   if (!user) {
     return res.status(401).json({
@@ -429,6 +438,12 @@ export async function getCurrentUserPrefs(req: Request, res: Response) {
 }
 
 export async function getCurrentUserNotificationPrefs(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   let user = res.locals.user;
   if (!user) {
     return res.status(401).json({
@@ -454,6 +469,12 @@ export async function getCurrentUserNotificationPrefs(req: Request, res: Respons
  * @returns {Response} The updated user preferences.
  */
 export async function editCurrentUserPrefs(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   let user = res.locals.user;
 
   if (!user) {
@@ -471,6 +492,12 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
   return res.status(200).send(user.prefs);
 }
 export async function editCurrentUserNotificationPrefs(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   let user = res.locals.user;
 
   if (!user) {
@@ -488,125 +515,137 @@ export async function editCurrentUserNotificationPrefs(req: Request, res: Respon
   return res.status(200).send(user.notificationPrefs);
 }
 
-// export async function getUpvotedPosts(req: Request, res: Response) {
-//   try {
-//     let user = res.locals.user;
-//     const sort = req.params.sort.toLowerCase();
-//     if (!user) {
-//       return res.status(401).send('No user logged in');
-//     }
-//     user = await findUserById(user._id);
+export async function getUpvotedPosts(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    let user = res.locals.user;
+    const sort = req.params.sort.toLowerCase();
+    if (!user) {
+      return res.status(401).send('No user logged in');
+    }
+    user = await findUserById(user._id);
 
-//     let upvotedPostIds: any[] = [];
+    let upvotedPostIds: any[] = [];
 
-//     if (user.hasVote) {
-//       upvotedPostIds = user.hasVote
-//         .filter((vote: Vote) => vote.type === 1 && vote.postID) // Filter for type 1 and postID exists
-//         .map((vote: Vote) => vote.postID); // Map to get only the postID
-//     }
+    if (user.postVotes) {
+      upvotedPostIds = user.postVotes
+        .filter((vote: VotePost) => vote.type === 1) // Filter for type 1 and postID exists
+        .map((vote: VotePost) => vote.postID); // Map to get only the postID
+    }
 
-//     const limit = parseInt(req.query.limit as string, 10) || 10;
-//     const page = parseInt(req.query.page as string, 10) || 1;
-//     const count = parseInt(req.query.count as string, 10) || 0;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const count = parseInt(req.query.count as string, 10) || 0;
 
-//     const skip = (page - 1) * limit + count;
+    const skip = (page - 1) * limit + count;
 
-//     const totalUpvotedPosts = upvotedPostIds.length;
-//     const totalPages = Math.ceil(totalUpvotedPosts / limit);
+    const totalUpvotedPosts = upvotedPostIds.length;
+    const totalPages = Math.ceil(totalUpvotedPosts / limit);
 
-//     const paginatedUpvotedPostIds = upvotedPostIds.slice(skip, skip + limit);
+    const paginatedUpvotedPostIds = upvotedPostIds.slice(skip, skip + limit);
 
-//     let upvotedPosts;
+    let upvotedPosts;
 
-//     if (sort) {
-//       if (sort == 'best')
-//         upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ bestFactor: -1 });
-//       if (sort == 'hot')
-//         upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ hotnessFactor: -1 });
-//       if (sort == 'top')
-//         upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ votesCount: -1 });
-//       if (sort == 'new')
-//         upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ createdAt: -1 });
-//       if (sort == 'random') upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
-//       if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
-//         upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
-//     } else {
-//       upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
-//     }
+    if (sort) {
+      if (sort == 'best')
+        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ bestFactor: -1 });
+      if (sort == 'hot')
+        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ hotnessFactor: -1 });
+      if (sort == 'top')
+        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ votesCount: -1 });
+      if (sort == 'new')
+        upvotedPosts = await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }).sort({ createdAt: -1 });
+      if (sort == 'random') upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+      if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
+        upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+    } else {
+      upvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedUpvotedPostIds } }));
+    }
 
-//     return res.json({
-//       upvotedPosts,
-//       page,
-//       limit,
-//       totalPages,
-//       totalUpvotedPosts,
-//       sort,
-//     });
-//   } catch (error) {
-//     console.error('Error fetching upvoted posts:', error);
-//     return res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// }
+    return res.json({
+      upvotedPosts,
+      page,
+      limit,
+      totalPages,
+      totalUpvotedPosts,
+      sort,
+    });
+  } catch (error) {
+    console.error('Error fetching upvoted posts:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
 
-// export async function getDownvotedPosts(req: Request, res: Response) {
-//   try {
-//     let user = res.locals.user;
-//     const sort = req.params.sort.toLowerCase();
-//     if (!user) {
-//       return res.status(401).send('No user logged in');
-//     }
-//     user = await findUserById(user._id);
+export async function getDownvotedPosts(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    let user = res.locals.user;
+    const sort = req.params.sort.toLowerCase();
+    if (!user) {
+      return res.status(401).send('No user logged in');
+    }
+    user = await findUserById(user._id);
 
-//     let downvotedPostIds: any[] = [];
+    let downvotedPostIds: any[] = [];
 
-//     if (user.hasVote) {
-//       downvotedPostIds = user.hasVote
-//         .filter((vote: Vote) => vote.type === -1 && vote.postID) // Filter for type 1 and postID exists
-//         .map((vote: Vote) => vote.postID); // Map to get only the postID
-//     }
+    if (user.postVotes) {
+      downvotedPostIds = user.postVotes
+        .filter((vote: VotePost) => vote.type === -1) // Filter for type 1 and postID exists
+        .map((vote: VotePost) => vote.postID); // Map to get only the postID
+    }
 
-//     const limit = parseInt(req.query.limit as string, 10) || 10;
-//     const page = parseInt(req.query.page as string, 10) || 1;
-//     const count = parseInt(req.query.count as string, 10) || 0;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const count = parseInt(req.query.count as string, 10) || 0;
 
-//     const skip = (page - 1) * limit + count;
+    const skip = (page - 1) * limit + count;
 
-//     const totalDownvotedPosts = downvotedPostIds.length;
-//     const totalPages = Math.ceil(totalDownvotedPosts / limit);
+    const totalDownvotedPosts = downvotedPostIds.length;
+    const totalPages = Math.ceil(totalDownvotedPosts / limit);
 
-//     const paginatedDownvotedPostIds = downvotedPostIds.slice(skip, skip + limit);
+    const paginatedDownvotedPostIds = downvotedPostIds.slice(skip, skip + limit);
 
-//     let downvotedPosts;
+    let downvotedPosts;
 
-//     if (sort) {
-//       if (sort == 'best')
-//         downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ bestFactor: -1 });
-//       if (sort == 'hot')
-//         downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ hotnessFactor: -1 });
-//       if (sort == 'top')
-//         downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ votesCount: -1 });
-//       if (sort == 'new')
-//         downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ createdAt: -1 });
-//       if (sort == 'random') downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
-//       if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
-//         downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
-//     } else {
-//       downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
-//     }
+    if (sort) {
+      if (sort == 'best')
+        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ bestFactor: -1 });
+      if (sort == 'hot')
+        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ hotnessFactor: -1 });
+      if (sort == 'top')
+        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ votesCount: -1 });
+      if (sort == 'new')
+        downvotedPosts = await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }).sort({ createdAt: -1 });
+      if (sort == 'random') downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+      if (sort != 'best' && sort != 'hot' && sort != 'top' && sort != 'new' && sort != 'random')
+        downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+    } else {
+      downvotedPosts = shuffle(await PostModel.find({ _id: { $in: paginatedDownvotedPostIds } }));
+    }
 
-//     return res.json({
-//       downvotedPosts,
-//       page,
-//       limit,
-//       totalPages,
-//       totalDownvotedPosts,
-//       sort,
-//     });
-//   } catch (error) {
-//     console.error('Error fetching upvoted posts:', error);
-//     return res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// }
+    return res.json({
+      downvotedPosts,
+      page,
+      limit,
+      totalPages,
+      totalDownvotedPosts,
+      sort,
+    });
+  } catch (error) {
+    console.error('Error fetching upvoted posts:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
 /**
  * Handles username_available request.
  *
@@ -615,6 +654,12 @@ export async function editCurrentUserNotificationPrefs(req: Request, res: Respon
  * @returns A response indicating the availability of the username.
  */
 export async function username_availableHandler(req: Request<VerifyUserInput>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const username: string = req.query.username as string;
@@ -640,6 +685,12 @@ export async function username_availableHandler(req: Request<VerifyUserInput>, r
  * @returns A response for user "about" by username.
  */
 export async function aboutHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const username: string = req.params.username as string;
@@ -685,6 +736,12 @@ export async function aboutHandler(req: Request, res: Response) {
  * @returns {object} res
  */
 export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const user = await findUserByUsername(req.params.username as string);
@@ -721,6 +778,12 @@ export async function getUserSubmittedHandler(req: Request, res: Response, next:
  * @throws {Error} If the user is not found or if there is an internal server error.
  */
 export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const user = await findUserByUsername(req.params.username as string);
@@ -756,6 +819,12 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
  * @throws {Error} If the user is not found or if there is an internal server error.
  */
 export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract params
     const user = await findUserByUsername(req.params.username as string);
@@ -810,6 +879,12 @@ export async function getUserOverviewHandler(req: Request, res: Response, next: 
  * @throws {Error} If the access token is missing or invalid, or if the user is not found.
  */
 export async function getUserHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     // Extract username from request parameters
     const username: string = req.params.username as string;
@@ -860,6 +935,12 @@ export async function getUserHandler(req: Request, res: Response) {
  * @throws {Error} If the access token is missing or invalid, the account is not found, or the operation type is invalid.
  */
 export async function blockUserHandler(req: Request<blockUserInput['body']>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { username, type } = req.body;
     const blocked = await findUserByUsername(username);
@@ -929,6 +1010,12 @@ export async function blockUserHandler(req: Request<blockUserInput['body']>, res
  * @throws {Error} If the access token is missing or invalid, or if the user does not have any blocked users.
  */
 export async function getALLBlockedHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
@@ -969,6 +1056,12 @@ export async function getALLBlockedHandler(req: Request, res: Response) {
  * @throws {Error} If the account of the user to follow is not found, the access token is missing or invalid, or an internal server error occurs.
  */
 export async function followRequestHandler(req: Request<followUserInput['body']>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { username } = req.body;
     const followed = await findUserByUsername(username);
@@ -1000,6 +1093,14 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
       { $addToSet: { followers: follows._id } },
       { upsert: true, new: true }
     );
+    await createNotification(
+      followed._id,
+      follows.avatar ?? 'defaultIcon.jpg',
+      'New Follower!',
+      'newFollower',
+      `${follows.username} followed you!`,
+      follows._id
+    );
     return res.status(200).json({
       status: 'succeeded',
     });
@@ -1021,6 +1122,12 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
  * @throws {Error} If the account of the user to unfollow is not found, the access token is missing or invalid, or an internal server error occurs.
  */
 export async function unfollowRequestHandler(req: Request<unfollowUserInput['body']>, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const { username } = req.body;
     const followed = await findUserByUsername(username);
@@ -1065,6 +1172,12 @@ export async function unfollowRequestHandler(req: Request<unfollowUserInput['bod
  * @throws {Error} If the access token is missing or invalid, the user does not have any followings, or an internal server error occurs.
  */
 export async function getALLFollowersHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
@@ -1105,6 +1218,12 @@ export async function getALLFollowersHandler(req: Request, res: Response) {
  * @throws {Error} If the access token is missing or invalid, the user does not have any followings, or an internal server error occurs.
  */
 export async function getALLFollowingHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   const user = await findUserByUsername(res.locals.user.username);
 
   try {
@@ -1147,6 +1266,12 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
  * @throws {Error} If the access token is missing or invalid, or an internal server error occurs.
  */
 export async function getUserIDfromTokenHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -1177,6 +1302,12 @@ export async function getUserIDfromTokenHandler(req: Request, res: Response) {
  * @return {Promise<void>} A promise that resolves after uploading the user's photo
  */
 export async function uploadUserPhoto(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     if (!req.file || Object.keys(req.file).length === 0) {
       throw new Error('No file uploaded');
@@ -1186,7 +1317,7 @@ export async function uploadUserPhoto(req: Request, res: Response) {
     const image = res.locals.image;
 
     //update user avatar by new link from cloudinary
-    await UserModel.findByIdAndUpdate(userId, { avatar: image[0] }, { runValidators: true });
+    await UserModel.findByIdAndUpdate(userId, { avatar: image }, { runValidators: true });
     res.status(200).json({
       msg: 'Avatar uploaded successfully',
       avatar: image,
@@ -1200,5 +1331,164 @@ export async function uploadUserPhoto(req: Request, res: Response) {
     return res.status(500).json({
       msg: 'Internal server error in image upload',
     });
+  }
+}
+
+export async function getNumberPostsCommentsMe(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  const user = await findUserByUsername(res.locals.user.username);
+
+  try {
+    if (!user || !res.locals.user.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const postCount = user.hasPost?.length;
+    const commentCount = user?.hasComment?.length;
+    res.status(200).json({
+      post: postCount,
+      comment: commentCount,
+    });
+  } catch (error) {
+    console.error('Error in getNumberPostsCommentsMe:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getNumberPostsCommentsUser(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+
+  const user = await findUserByUsername(res.locals.user.username);
+  const user2 = await findUserByUsername(req.params.username);
+
+  try {
+    if (!user) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is invalid',
+      });
+    }
+
+    if (!user2 || !req.params.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+
+    const postCount = user2.hasPost?.length;
+    const commentCount = user2?.hasComment?.length;
+    res.status(200).json({
+      post: postCount,
+      comment: commentCount,
+    });
+  } catch (error) {
+    console.error('Error in getNumberPostsCommentsUser:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Handles the request of viewing a post.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function viewPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const postID = req.body.postID;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const post = await findPostById(req.body.postID);
+
+    // Check if post is not found
+    if (!post) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Post not found',
+      });
+    }
+
+    await UserModel.findByIdAndUpdate(user._id, { $addToSet: { historyPosts: postID } }, { upsert: true, new: true });
+
+    res.status(200).json({
+      msg: 'Post viewed successfully',
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request of getting user's history posts.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getHistoryPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    // Extract params
+    const user = await findUserByUsername(req.params.username as string);
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is invalid',
+      });
+    }
+    const username: string = req.params.username as string;
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+
+    if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
+    }
+
+    const postIDS = await userHistoryPosts(username, page, count);
+    const posts = await userPosts(postIDS, limit);
+
+    res.status(200).json({ posts });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 }

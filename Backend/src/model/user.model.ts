@@ -217,15 +217,36 @@ class Me {
   emailUpVotePost?: boolean;
 }
 
-class IsBannedOrMuted {
+class IsBanned {
   @prop({ default: false })
   value?: boolean;
 
   @prop()
   date?: Date;
+
+  @prop({ default: 'member not banned' })
+  reason?: string;
+
+  @prop({ default: 'member not banned' })
+  note?: string;
+
+  @prop({ default: 0 })
+  period?: string;
 }
-class notificationInfo {
-  @prop({ ref: () => 'Notifications' })
+
+class IsMuted {
+  @prop({ default: false })
+  value?: boolean;
+
+  @prop()
+  date?: Date;
+
+  @prop({ default: 'member not muted' })
+  reason?: string;
+}
+
+export class notificationInfo {
+  @prop({ required: true, ref: () => 'Notifications' })
   notificationId?: Ref<Notifications>;
 
   @prop({ default: false })
@@ -236,17 +257,17 @@ class notificationInfo {
 }
 
 class Member {
-  @prop({ ref: () => 'Community' })
+  @prop({ ref: 'Community' })
   communityId?: Ref<Community>;
 
-  @prop({ type: IsBannedOrMuted, default: () => new IsBannedOrMuted() })
-  isMuted?: IsBannedOrMuted;
+  @prop({ type: IsMuted, default: () => new IsMuted() })
+  isMuted?: IsMuted;
 
-  @prop({ type: IsBannedOrMuted, default: () => new IsBannedOrMuted() })
-  isBanned?: IsBannedOrMuted;
+  @prop({ type: IsBanned, default: () => new IsBanned() })
+  isBanned?: IsBanned;
 }
 
-class VotePost {
+export class VotePost {
   @prop({ ref: () => 'Post' })
   postID?: Ref<Post>;
 
@@ -337,7 +358,7 @@ export class User {
   @prop({ required: true, default: () => new Date() })
   createdAt!: Date;
 
-  @prop({ default: 'default.jpg' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' })
   avatar?: string;
 
   @prop({ enum: ['male', 'female'] })
@@ -349,13 +370,13 @@ export class User {
   @prop({ default: true })
   contentVisibility?: boolean;
 
-  @prop()
+  @prop({ default: 0 })
   postKarma?: number;
 
-  @prop()
+  @prop({ default: 0 })
   commentKarma?: number;
 
-  @prop()
+  @prop({ default: 0 })
   karma?: number;
 
   @prop()
@@ -394,9 +415,6 @@ export class User {
   @prop({ default: () => new About() })
   aboutReturn?: About;
 
-  // @prop({ default: () => new Member() })
-  // commMember?: Member;
-
   @prop({ enum: ['bare email', 'facebook', 'gmail'], default: 'bare email' })
   type?: string;
 
@@ -433,6 +451,9 @@ export class User {
 
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];
+
+  @prop({ ref: () => 'Post' })
+  historyPosts?: Ref<Post>[];
 
   @prop({ ref: () => 'Comment' })
   hasComment?: Ref<Comment>[];

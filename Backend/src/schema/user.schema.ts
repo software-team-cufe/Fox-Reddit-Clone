@@ -152,6 +152,14 @@ export const unfollowUserSchema = object({
   }),
 });
 
+export const viewPostSchema = object({
+  body: object({
+    postID: string({
+      required_error: 'postID is required',
+    }),
+  }),
+});
+
 /****************************************************************************/
 export type VerifyUserInput = TypeOf<typeof verifyUserSchema>['params'];
 

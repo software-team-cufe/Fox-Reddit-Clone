@@ -79,23 +79,43 @@ class CommunityOptions {
   spamsNumBeforeRemove?: number;
 }
 
-class IsBannedOrMuted {
+class IsBanned {
   @prop({ default: false })
   value?: boolean;
 
-  @prop({ default: Date.now })
+  @prop()
   date?: Date;
+
+  @prop({ default: 'member not banned' })
+  reason?: string;
+
+  @prop({ default: 'member not banned' })
+  note?: string;
+
+  @prop({ default: 0 })
+  period?: string;
 }
 
-class Member {
+class IsMuted {
+  @prop({ default: false })
+  value?: boolean;
+
+  @prop()
+  date?: Date;
+
+  @prop({ default: 'member not muted' })
+  reason?: string;
+}
+
+export class Member {
   @prop({ ref: 'User' })
   userID?: Ref<User>;
 
-  @prop({ type: IsBannedOrMuted, default: {} })
-  isMuted?: IsBannedOrMuted;
+  @prop({ type: IsMuted, default: () => new IsMuted() })
+  isMuted?: IsMuted;
 
-  @prop({ type: IsBannedOrMuted, default: {} })
-  isBanned?: IsBannedOrMuted;
+  @prop({ type: IsBanned, default: () => new IsBanned() })
+  isBanned?: IsBanned;
 }
 
 class Moderator {
@@ -145,10 +165,10 @@ export class Community {
   @prop({ required: false, trim: true, maxLength: 100000, minLength: 1 })
   description?: string;
 
-  @prop({ default: 'default-banner.jpg' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714595299/gcnool3ibj3zfyoa1emq.jpg' })
   banner?: string;
 
-  @prop({ default: 'default-icon.jpg' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' })
   icon?: string;
 
   @prop({ default: 0 })

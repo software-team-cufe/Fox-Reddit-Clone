@@ -4,11 +4,13 @@ import { createMessage, deleteMessage, findMessageById } from '../service/messag
 import { findUserById, findUserByUsername } from '../service/user.service';
 import { Request, Response } from 'express';
 import UserModel from '../model/user.model';
+
 import CommunityModel from '../model/community.model';
 import PostModel from '../model/posts.model';
 import { findPostById } from '../service/post.service';
 import CommentModel from '../model/comments.model';
 import { findCommentById } from '../service/comment.service';
+import { createNotification } from '../service/notification.service';
 /**
  * Handles composing a message, checking user validity, creating the message, and returning the result.
  *
@@ -45,7 +47,14 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
     if (!createdMessage) {
       return res.status(400).json({ message: 'Failed to create the comment' });
     }
-
+    await createNotification(
+      checkReceiver._id,
+      user.avatar ?? 'default.jpg',
+      `${user.username} sent a message`,
+      'message',
+      req.body.text,
+      createdMessage._id
+    );
     res.status(200).json(createdMessage); // 201: Created
   } catch (error) {
     console.error('Error in addCommentHandler:', error);

@@ -9,14 +9,22 @@ import {
   removeMemberFromCom,
   removeModeratorFromCom,
   getUsersAsBannedInCommunity,
+  getUsersAsMutedInCommunity,
   getCommunityModerators,
   getCommunityMembers,
   editCommunityRules,
   editCommunityRemovalReasons,
+  editCommunityCategories,
   markSpamPost,
   markSpamComment,
   approveSpamPost,
   approveSpamComment,
+  banUserInCommunity,
+  unbanUserInCommunity,
+  muteUserInCommunity,
+  unmuteUserInCommunity,
+  getBannedUserInCommunity,
+  getMutedUserInCommunity,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -31,16 +39,21 @@ import {
   removeModeratorFromUser,
   removeFavoriteFromUser,
   findUserById,
+  findUserByUsername,
+  banUserInUser,
+  unbanUserInUser,
+  muteUserInUser,
+  unmuteUserInUser,
 } from '../service/user.service';
 
-import { CommunityModel } from '../model/community.model';
+import { Community, CommunityModel } from '../model/community.model';
 import { Moderator, UserModel } from '../model/user.model';
 import { NextFunction, Request, Response } from 'express';
 import { findPostById } from '../service/post.service';
 import { findCommentById } from '../service/comment.service';
 import PostModel from '../model/posts.model';
 import CommentModel from '../model/comments.model';
-import { Types } from 'mongoose';
+import appError from '../utils/appError';
 
 /**
  * Retrieves the communities that a user is a member of.
@@ -50,6 +63,12 @@ import { Types } from 'mongoose';
  * @return {Promise<void>} A promise that resolves when the communities are retrieved and sent in the response.
  */
 export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -79,6 +98,12 @@ export async function getCommunityOfUserAsMemeberHandler(req: Request, res: Resp
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -108,6 +133,12 @@ export async function getCommunityOfUserAsModeratorHandler(req: Request, res: Re
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     // Check if user is missing or invalid
@@ -130,6 +161,49 @@ export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Resp
 }
 
 /**
+ * Handles the request to get the community name.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getCommunityNameHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const communityID = req.body.communityID;
+    const community = await findCommunityByID(communityID);
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if subreddit is missing or invalid
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const communityName = community.name;
+    res.status(200).json({ communityName });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserAsCreatorHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
  * Create subreddit handler.
  *
  * @param {Request} req - The request object.
@@ -137,6 +211,12 @@ export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Resp
  * @return {Promise<void>} The promise of a void.
  */
 export async function createSubredditHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -205,6 +285,12 @@ export async function createSubredditHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function subscribeCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -267,6 +353,12 @@ export async function subscribeCommunityHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function unsubscribeCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -310,6 +402,12 @@ export async function unsubscribeCommunityHandler(req: Request, res: Response) {
 }
 
 export async function getCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userID = res.locals.user._id;
     const user = res.locals.user;
@@ -340,127 +438,313 @@ export async function getCommunityHandler(req: Request, res: Response) {
 }
 
 /**
- * Bans or unban a user in a community.
+ * ban handler.
  *
- * @param {Request} req - The request object containing the subreddit ID, user ID, and operation.
- * @param {Response} res - The response object used to send the result of the operation.
- * @return {Promise<void>} - A promise that resolves when the operation is completed.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
  */
-export async function banOrUnbanHandler(req: Request, res: Response) {
-  const subredditId: string = req.body.subreddit;
-  const memberId: string = req.body.userID;
-  const commModerator: string = res.locals.user._id.toString();
-  const operation: string = req.body.action;
+export async function banHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const username = req.params.username;
+  const banned = await findUserByUsername(username);
+  const reason = req.body.reason;
+  const note = req.body.note;
+  const period = req.body.period;
 
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!banned) {
+    return res.status(401).json({
+      error: 'User not found',
+    });
+  }
+
+  let isMod = false;
+
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      // Check if userID is defined and equal to commModerator
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not ban other members' });
+  }
+  const bannedID = banned._id.toString();
   try {
-    // Find the community by ID
-    const community = await findCommunityByID(subredditId);
-
-    if (!community) {
-      return res.status(404).json({
-        status: 'failed',
-        message: 'Community not found',
+    const updateUser = await banUserInCommunity(bannedID, subreddit, reason, note, period);
+    const updateUser2 = await banUserInUser(bannedID, subreddit, reason, note, period);
+    // Handle user addition failure
+    if (updateUser.status === false || updateUser2.status === false) {
+      return res.status(500).json({
+        error: 'Error in banning user',
       });
     }
-
-    if (!commModerator) {
-      return res.status(401).json({
-        status: 'failed',
-        message: 'Access token is missing or invalid',
-      });
-    }
-
-    let performerFound = false;
-    let toBeAffectedFound = false;
-    if (community.moderators) {
-      community.moderators.forEach((el) => {
-        // Check if userID is defined and equal to commModerator or memberId
-        if (el.userID?.toString() === commModerator) performerFound = true;
-        if (el.userID?.toString() === memberId) toBeAffectedFound = true;
-      });
-    }
-
-    if (!performerFound || toBeAffectedFound) {
-      //if (!performerFound || toBeAffectedFound) {
-      // If toBeAffectedFound, it means that you are going to ban or mute a moderator, which is not valid behavior
-      return res.status(402).json({
-        status: 'failed',
-        message: 'You cannot perform this operation on this user in this subreddit!',
-      });
-    }
-
-    if (!community.members) {
-      return res.status(404).json({
-        status: 'failed',
-        message: 'Community members not found',
-      });
-    }
-
-    // Update the community members based on the operation
-    community.members.forEach((el) => {
-      // Check if el.userID, el.isBanned, and el.isMuted are defined before accessing their properties
-      if (el.userID?.toString() === memberId) {
-        if (!el.isBanned) {
-          // If isBanned is undefined, create a new IsBannedOrMuted object
-          el.isBanned = { value: false }; // Set default value
-        }
-        if (operation === 'ban') {
-          el.isBanned.value = true;
-          el.isBanned.date = new Date();
-        } else if (operation === 'unban') {
-          el.isBanned.value = false;
-          el.isBanned.date = new Date(); // Clear the date if needed
-        }
-      }
-    });
-
-    // Save the updated community
-    await community.save();
-
-    // Find the user to be affected by ID
-    const toBeAffected = await findUserById(memberId);
-    console.log(toBeAffected);
-
-    if (!toBeAffected || !toBeAffected.member) {
-      // Add null check for toBeAffected.member
-      return res.status(404).json({
-        status: 'failed',
-        message: 'User to be affected not found',
-      });
-    }
-
-    // Update the user based on the operation
-    toBeAffected.member.forEach((el) => {
-      if (el.communityId === community._id) {
-        if (!el.isBanned) {
-          // If isBanned is undefined, create a new IsBannedOrMuted object
-          el.isBanned = { value: false }; // Set default value
-        }
-        if (operation === 'ban') {
-          el.isBanned.value = true;
-          el.isBanned.date = new Date();
-        } else if (operation === 'unban') {
-          el.isBanned.value = false;
-          el.isBanned.date = undefined; // Clear the date if needed
-        }
-      }
-    });
-
-    // Save the updated user
-    await toBeAffected.save();
-    await community.save();
-
     // Return success response
-    res.status(200).json({
-      status: 'success',
-      message: 'Operation is done successfully',
+    return res.status(200).json({
+      status: 'succeeded',
     });
-  } catch (err) {
-    // Handle errors
-    console.error(err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error banning member in subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * unban handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function unbanHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const username = req.params.username;
+  const banned = await findUserByUsername(username);
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!banned) {
+    return res.status(401).json({
+      error: 'User not found',
+    });
+  }
+
+  let isMod = false;
+
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      // Check if userID is defined and equal to commModerator
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not ban other members' });
+  }
+  const bannedID = banned._id.toString();
+  try {
+    const updateUser = await unbanUserInCommunity(bannedID, subreddit);
+    const updateUser2 = await unbanUserInUser(bannedID, subreddit);
+    // Handle user addition failure
+    if (updateUser.status === false || updateUser2.status === false) {
+      return res.status(500).json({
+        error: 'Error in banning user',
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error banning member in subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * mute handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function muteHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const username = req.params.username;
+  const banned = await findUserByUsername(username);
+  const reason = req.body.reason;
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!banned) {
+    return res.status(401).json({
+      error: 'User not found',
+    });
+  }
+
+  let isMod = false;
+
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      // Check if userID is defined and equal to commModerator
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not mute other members' });
+  }
+  const bannedID = banned._id.toString();
+  try {
+    const updateUser = await muteUserInCommunity(bannedID, subreddit, reason);
+    const updateUser2 = await muteUserInUser(bannedID, subreddit, reason);
+    // Handle user addition failure
+    if (updateUser.status === false || updateUser2.status === false) {
+      return res.status(500).json({
+        error: 'Error in muting user',
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error muting member in subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * unban handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function unmuteHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const username = req.params.username;
+  const banned = await findUserByUsername(username);
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!banned) {
+    return res.status(401).json({
+      error: 'User not found',
+    });
+  }
+
+  let isMod = false;
+
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      // Check if userID is defined and equal to commModerator
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not mute other members' });
+  }
+  const bannedID = banned._id.toString();
+  try {
+    const updateUser = await unmuteUserInCommunity(bannedID, subreddit);
+    const updateUser2 = await unmuteUserInUser(bannedID, subreddit);
+    // Handle user addition failure
+    if (updateUser.status === false || updateUser2.status === false) {
+      return res.status(500).json({
+        error: 'Error in unmuting user',
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error unmuting member in subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
     });
   }
 }
@@ -473,6 +757,12 @@ export async function banOrUnbanHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function joinModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -524,6 +814,12 @@ export async function joinModeratorHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function leaveModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -575,6 +871,12 @@ export async function leaveModeratorHandler(req: Request, res: Response) {
  * @return {Promise<void>} A promise that resolves when the function is complete.
  */
 export async function getUsersIsbannedIncommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const commName = req.params.subreddit;
@@ -612,6 +914,180 @@ export async function getUsersIsbannedIncommunityHandler(req: Request, res: Resp
 }
 
 /**
+ * Retrieves the list of users who are banned in a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A promise that resolves when the function is complete.
+ */
+export async function getBannedMemberHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const username = req.params.username;
+    const banned = await findUserByUsername(username);
+
+    if (!subreddit) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!banned) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'user not found',
+      });
+    }
+    const bannedID = banned._id.toString();
+    const userResult = await getBannedUserInCommunity(bannedID, subreddit);
+    if (userResult.status === true) {
+      const user = userResult.userr;
+      return res.status(200).json({ user });
+    } else {
+      return res.status(404).json({
+        status: 'error',
+        message: 'error in get banned users',
+      });
+    }
+  } catch (error) {
+    console.error('Error in getBannedUserInCommunity:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Retrieves the list of users who are banned in a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A promise that resolves when the function is complete.
+ */
+export async function getUsersIsmutedIncommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const commName = req.params.subreddit;
+    if (!commName) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const usersResult = await getUsersAsMutedInCommunity(commName);
+    if (usersResult.status === true) {
+      return res.status(200).json({ status: 'success', users: usersResult.users });
+    } else {
+      return res.status(404).json({
+        status: 'error',
+        message: 'error in get muted users',
+      });
+    }
+  } catch (error) {
+    console.error('Error in getUsersIsmutedIncommunityHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Retrieves the list of users who are banned in a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A promise that resolves when the function is complete.
+ */
+export async function getMutedMemberHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const username = req.params.username;
+    const banned = await findUserByUsername(username);
+
+    if (!subreddit) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!banned) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'user not found',
+      });
+    }
+    const bannedID = banned._id.toString();
+    const userResult = await getMutedUserInCommunity(bannedID, subreddit);
+    if (userResult.status === true) {
+      const user = userResult.userr;
+      return res.status(200).json({ user });
+    } else {
+      return res.status(404).json({
+        status: 'error',
+        message: 'error in get Muted user',
+      });
+    }
+  } catch (error) {
+    console.error('Error in getMutedUserInCommunity:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
  * Retrieves the list of moderators for a given community.
  *
  * @param {Request} req - The request object containing the user's access token.
@@ -622,6 +1098,12 @@ export async function getUsersIsbannedIncommunityHandler(req: Request, res: Resp
  *                         If there is an error retrieving the moderators, a 500 error is returned.
  */
 export async function getModeratorsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     if (!user) {
@@ -656,6 +1138,12 @@ export async function getModeratorsHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getMembersHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     if (!user) {
@@ -665,15 +1153,19 @@ export async function getMembersHandler(req: Request, res: Response) {
       });
     }
     const commName = req.params.subreddit;
-    if (!commName) {
-      return res.status(401).json({
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
         status: 'failed',
         message: 'Community not found',
       });
     }
-    const members = await getCommunityMembers(commName);
-    if (members.status === true) {
-      return res.status(200).json({ status: 'success', members });
+    const users = await getCommunityMembers(commName);
+    const membersCount = community.membersCnt;
+    if (users.status === true) {
+      const members = users.users;
+      return res.status(200).json({ status: 'success', membersCount: membersCount, members });
     } else {
       return res.status(404).json({ status: 'error', message: 'error in get Members' });
     }
@@ -690,6 +1182,12 @@ export async function getMembersHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function editCommunityRulesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const rules = req.body.rules;
@@ -743,6 +1241,12 @@ export async function editCommunityRulesHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function editCommunityRemovalResonsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const reasons = req.body.reasons;
@@ -789,6 +1293,65 @@ export async function editCommunityRemovalResonsHandler(req: Request, res: Respo
 }
 
 /**
+ * Handles the request to edit the categories of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editCommunityCategoriesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const categories = req.body.categories;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change rules' });
+    }
+
+    const result = await editCommunityCategories(commName, categories);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing categories' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
  * favorite subreddit handler.
  *
  * @param {Request} req - The request object.
@@ -796,6 +1359,12 @@ export async function editCommunityRemovalResonsHandler(req: Request, res: Respo
  * @return {Promise<void>} The promise of a void.
  */
 export async function favoriteCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -845,6 +1414,12 @@ export async function favoriteCommunityHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function unfavoriteCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -894,6 +1469,12 @@ export async function unfavoriteCommunityHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getFavoriteCommunitiesOfUserHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userID = res.locals.user._id;
     const user = await findUserById(userID);
@@ -924,6 +1505,12 @@ export async function getFavoriteCommunitiesOfUserHandler(req: Request, res: Res
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getSpamPostsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const subreddit = req.params.subreddit;
@@ -968,6 +1555,12 @@ export async function getSpamPostsHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getSpamCommentsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const subreddit = req.params.subreddit;
@@ -1012,6 +1605,12 @@ export async function getSpamCommentsHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function markSpamPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1073,6 +1672,12 @@ export async function markSpamPostHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function markSpamCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1134,6 +1739,12 @@ export async function markSpamCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function approveSpamPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1204,6 +1815,12 @@ export async function approveSpamPostHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function approveSpamCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1274,6 +1891,12 @@ export async function approveSpamCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function removeSpamPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1344,6 +1967,12 @@ export async function removeSpamPostHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function removeSpamCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1414,6 +2043,12 @@ export async function removeSpamCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function lockCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1467,6 +2102,12 @@ export async function lockCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function unlockCommentHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1520,6 +2161,12 @@ export async function unlockCommentHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function lockPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1573,6 +2220,12 @@ export async function lockPostHandler(req: Request, res: Response) {
  * @return {Promise<void>} The promise of a void.
  */
 export async function unlockPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   // Get user ID from request
   const userID = res.locals.user._id;
   const user = res.locals.user;
@@ -1618,7 +2271,72 @@ export async function unlockPostHandler(req: Request, res: Response) {
   }
 }
 
-export async function uploadCommunityPhoto(req: Request, res: Response) {
+export async function uploadCommunityIcon(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    if (!req.file || Object.keys(req.file).length === 0) {
+      throw new Error('No file uploaded');
+    }
+
+    const user = res.locals.user;
+    const image = res.locals.image;
+
+    const community = await findCommunityByName(req.params.subreddit);
+
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+
+    if (!community) {
+      return res.status(404).json({
+        error: 'Community not found',
+      });
+    }
+
+    const communityId = community._id;
+    let isMod = false;
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        if (el.userID?.toString() === user._id?.toString()) {
+          isMod = true;
+        }
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Only moderators can upload community icons' });
+    }
+    await CommunityModel.findByIdAndUpdate(communityId, { icon: image }, { runValidators: true });
+
+    res.status(200).json({
+      msg: 'Icon uploaded successfully',
+      Icon: image,
+    });
+  } catch (error) {
+    if (error instanceof appError) {
+      return res.status(error.statusCode).json({
+        msg: error.message,
+      });
+    }
+    return res.status(500).json({
+      msg: 'Internal server error in image upload',
+    });
+  }
+}
+
+export async function uploadCommunityBanner(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     if (!req.file || Object.keys(req.file).length === 0) {
       throw new Error('No file uploaded');
@@ -1633,20 +2351,26 @@ export async function uploadCommunityPhoto(req: Request, res: Response) {
         error: 'Community not found',
       });
     }
-    const communityId = community._id;
 
-    //check if user is a moderator in this community
-    //get user with id and then check if community id matches any of the community ids the user is a moderator in
-    const isModerator = user.moderators
-      ? user.moderators.some((moderators: Moderator) => moderators.communityId === communityId)
-      : false;
-    if (!isModerator) {
-      return res.status(403).json({
-        error: 'User is not a moderator of this community',
+    const communityId = community._id;
+    let isMod = false;
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        if (el.userID?.toString() === user._id?.toString()) {
+          isMod = true;
+        }
       });
     }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Only moderators can upload community icons' });
+    }
 
-    await CommunityModel.findByIdAndUpdate(community._id, { icon: image[0] }, { runValidators: true });
+    await CommunityModel.findByIdAndUpdate(communityId, { banner: image }, { runValidators: true });
+
+    res.status(200).json({
+      msg: 'Banner uploaded successfully',
+      Icon: image,
+    });
   } catch (error) {
     return res.status(500).json({
       error: 'Internal server error',
@@ -1655,6 +2379,12 @@ export async function uploadCommunityPhoto(req: Request, res: Response) {
 }
 
 export async function getCommunityRulesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userID = res.locals.user._id;
     const user = res.locals.user;
@@ -1686,6 +2416,12 @@ export async function getCommunityRulesHandler(req: Request, res: Response) {
 }
 
 export async function getCommunityRemovalResonsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const userID = res.locals.user._id;
     const user = res.locals.user;
@@ -1716,6 +2452,43 @@ export async function getCommunityRemovalResonsHandler(req: Request, res: Respon
   }
 }
 
+export async function getCommunityCategoriesHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const categories = community.categories;
+    return res.status(200).json({
+      categories,
+    });
+  } catch (error) {
+    console.error('Error in getCommunityCategoriesHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 /**
  * Handles the request to get pending members of a community.
  *
@@ -1724,6 +2497,12 @@ export async function getCommunityRemovalResonsHandler(req: Request, res: Respon
  * @return {Promise<void>} The promise that resolves when the function is complete.
  */
 export async function getPendingMembersHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
   try {
     const user = res.locals.user;
     const subreddit = req.params.subreddit;
@@ -1757,5 +2536,93 @@ export async function getPendingMembersHandler(req: Request, res: Response) {
     return res.status(200).json({ status: 'success', users });
   } catch (err) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+export async function deleteCommunityIcon(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const userId = user._id;
+    const community = await findCommunityByName(req.params.subreddit);
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const communityId = community._id;
+    let isMod = false;
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        if (el.userID?.toString() === user._id?.toString()) {
+          isMod = true;
+        }
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Only moderators can upload community icons' });
+    }
+
+    await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { icon: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' },
+      { runValidators: true }
+    );
+    res.status(200).json({
+      msg: 'Icon deletd  successfully',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+export async function deleteCommunityBanner(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const userId = user._id;
+    const community = await findCommunityByName(req.params.subreddit);
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const communityId = community._id;
+    let isMod = false;
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        if (el.userID?.toString() === user._id?.toString()) {
+          isMod = true;
+        }
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Only moderators can upload community icons' });
+    }
+
+    await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { banner: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714595299/gcnool3ibj3zfyoa1emq.jpg' },
+      { runValidators: true }
+    );
+    res.status(200).json({
+      msg: 'Banner deletd  successfully',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
   }
 }
