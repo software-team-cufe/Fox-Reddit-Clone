@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
-
+import 'dart:io';
 // Sample class for comment data
 class CommentData {
   final String username;
@@ -77,216 +78,228 @@ class _CommentCardState extends State<CommentCard> {
     });
   }
 
+void _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      // Handle the picked image file (e.g., upload it as a comment)
+      File imageFile = File(pickedFile.path);
+      // Call a function to handle adding the image as a comment
+    } else {
+      // Handle if no image was picked
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 2.0),
-      decoration: const BoxDecoration(
-        border: Border(
-          left: BorderSide(width: 2.0, color: Colors.grey), // Vertical line
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 1),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const CircleAvatar(
+                backgroundColor: Colors.transparent,
+                backgroundImage: AssetImage('assets/images/avatar.png'),
+                radius: 15,
+              ), // Display the avatar
+              const Padding(padding: EdgeInsets.only(left: 2.0)),
+              Text(
+                widget.username,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 10.0), // Add padding to create space between the avatar and the comment content
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage('assets/images/avatar.png'),
-                  radius: 15,
-                ), // Display the avatar
-                const Padding(padding: EdgeInsets.only(left: 2.0)),
-                Text(
-                  widget.username,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text(widget.commentContent),
+                if (isReplying)
+                  Container(
+                    padding: const EdgeInsets.all(1.0),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                            width: 2.0,
+                            color:Colors.grey), // Vertical line for reply input
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                                const SizedBox(width: 10), // Add a small space here
+                        const Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Write a reply...',
+                              border: InputBorder.none,
+                            ),
+                            maxLines: null,
+                            keyboardType: TextInputType.multiline,
+                          ),
+                        ),
+                        IconButton(
+            icon: const Icon(Icons.camera_alt),
+            onPressed: () {
+              // Add your logic here to handle adding an image as a comment
+              _pickImage();
+            },
+          ),
+                        IconButton(
+                          icon: const Icon(Icons.send),
+                          onPressed: () {
+                            setState(() {
+                              isReplying = false; // Close the reply field
+                            });
+                            // Add logic to handle sending the reply
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 10.0), // Add padding to create space between the avatar and the comment content
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.commentContent),
-                  if (isReplying)
-                    Container(
-                      padding: const EdgeInsets.all(1.0),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 2.0,
-                              color:Colors.grey), // Vertical line for reply input
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                                  const SizedBox(width: 10), // Add a small space here
-                          const Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Write a reply...',
-                                border: InputBorder.none,
-                              ),
-                              maxLines: null,
-                              keyboardType: TextInputType.multiline,
-                            ),
+          ),
+          if (widget.replies.isNotEmpty)
+            _buildReplyList(replies: widget.replies),
+          Row(
+            children: [
+              IconButton(
+                icon: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child:
+                              hasVoted && voteDirection == VoteDirection.Up
+                                  ? Image.asset(
+                                      'assets/Icons/up vote.png',
+                                      key: UniqueKey(),
+                                      width: 18,
+                                      height: 18,
+                                    )
+                                  : Image.asset(
+                                      'assets/Icons/arrow-up.png',
+                                      key: UniqueKey(),
+                                      width: 18,
+                                      height: 18,
+                                    )),
+                      onPressed: () => vote(VoteDirection.Up),
+                    ),
+              Text(
+                "${voteCount.abs()}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child:
+                              hasVoted && voteDirection == VoteDirection.Down
+                                  ? Image.asset(
+                                      'assets/Icons/down vote.png',
+                                      key: UniqueKey(),
+                                      width: 18,
+                                      height: 18,
+                                    )
+                                  : Image.asset(
+                                      'assets/Icons/arrow-down.png',
+                                      key: UniqueKey(),
+                                      width: 18,
+                                      height: 18,
+                                    )),
+                      onPressed: () => vote(VoteDirection.Down),
+                    ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(LucideIcons.reply),
+                onPressed: () {
+                  setState(() {
+                    isReplying = !isReplying;
+                  });
+                  widget.onReply();
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.more_horiz),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            leading: const Icon(LucideIcons.share),
+                            title: const Text('Share'),
+                            onTap: () {
+                              // Handle edit action
+                              Navigator.pop(
+                                  context); // Close the bottom sheet
+                            },
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.send),
-                            onPressed: () {
-                              setState(() {
-                                isReplying = false; // Close the reply field
-                              });
-                              // Add logic to handle sending the reply
+                          ListTile(
+                            leading: const Icon(LucideIcons.bookmark),
+                            title: const Text('Save'),
+                            onTap: () {
+                              // Handle delete action
+                              Navigator.pop(
+                                  context); // Close the bottom sheet
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(LucideIcons.bell),
+                            title: const Text('Get Reply notifications'),
+                            onTap: () {
+                              // Handle delete action
+                              Navigator.pop(
+                                  context); // Close the bottom sheet
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(LucideIcons.copy),
+                            title: const Text('Copy text'),
+                            onTap: () {
+                              // Handle delete action
+                              Navigator.pop(
+                                  context); // Close the bottom sheet
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(LucideIcons.minimize2),
+                            title: const Text('Collapse thread'),
+                            onTap: () {
+                              // Handle delete action
+                              Navigator.pop(
+                                  context); // Close the bottom sheet
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.person_off),
+                            title: const Text('Block account'),
+                            onTap: () {
+                              // Handle delete action
+                              Navigator.pop(
+                                  context); // Close the bottom sheet
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.flag),
+                            title: const Text('report'),
+                            onTap: () {
+                              // Handle delete action
+                              Navigator.pop(
+                                  context); // Close the bottom sheet
                             },
                           ),
                         ],
-                      ),
-                    ),
-                ],
+                      );
+                    },
+                  );
+                },
               ),
-            ),
-            if (widget.replies.isNotEmpty)
-              _buildReplyList(replies: widget.replies),
-            Row(
-              children: [
-                IconButton(
-                  icon: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            child:
-                                hasVoted && voteDirection == VoteDirection.Up
-                                    ? Image.asset(
-                                        'assets/Icons/up vote.png',
-                                        key: UniqueKey(),
-                                        width: 18,
-                                        height: 18,
-                                      )
-                                    : Image.asset(
-                                        'assets/Icons/arrow-up.png',
-                                        key: UniqueKey(),
-                                        width: 18,
-                                        height: 18,
-                                      )),
-                        onPressed: () => vote(VoteDirection.Up),
-                      ),
-                Text(
-                  "${voteCount.abs()}",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  icon: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            child:
-                                hasVoted && voteDirection == VoteDirection.Down
-                                    ? Image.asset(
-                                        'assets/Icons/down vote.png',
-                                        key: UniqueKey(),
-                                        width: 18,
-                                        height: 18,
-                                      )
-                                    : Image.asset(
-                                        'assets/Icons/arrow-down.png',
-                                        key: UniqueKey(),
-                                        width: 18,
-                                        height: 18,
-                                      )),
-                        onPressed: () => vote(VoteDirection.Down),
-                      ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(LucideIcons.reply),
-                  onPressed: () {
-                    setState(() {
-                      isReplying = !isReplying;
-                    });
-                    widget.onReply();
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.more_horiz),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              leading: const Icon(LucideIcons.share),
-                              title: const Text('Share'),
-                              onTap: () {
-                                // Handle edit action
-                                Navigator.pop(
-                                    context); // Close the bottom sheet
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(LucideIcons.bookmark),
-                              title: const Text('Save'),
-                              onTap: () {
-                                // Handle delete action
-                                Navigator.pop(
-                                    context); // Close the bottom sheet
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(LucideIcons.bell),
-                              title: const Text('Get Reply notifications'),
-                              onTap: () {
-                                // Handle delete action
-                                Navigator.pop(
-                                    context); // Close the bottom sheet
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(LucideIcons.copy),
-                              title: const Text('Copy text'),
-                              onTap: () {
-                                // Handle delete action
-                                Navigator.pop(
-                                    context); // Close the bottom sheet
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(LucideIcons.minimize2),
-                              title: const Text('Collapse thread'),
-                              onTap: () {
-                                // Handle delete action
-                                Navigator.pop(
-                                    context); // Close the bottom sheet
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.person_off),
-                              title: const Text('Block account'),
-                              onTap: () {
-                                // Handle delete action
-                                Navigator.pop(
-                                    context); // Close the bottom sheet
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.flag),
-                              title: const Text('report'),
-                              onTap: () {
-                                // Handle delete action
-                                Navigator.pop(
-                                    context); // Close the bottom sheet
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
