@@ -9,9 +9,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
+import 'package:reddit_fox/Pages/home/Post%20widgets/cardCoreWidget.dart';
+import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
-import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'CommentSection.dart';
@@ -29,22 +30,15 @@ class PostDetails extends StatefulWidget {
   _PostDetailsState createState() => _PostDetailsState();
 }
 
-enum VoteDirection { Up, Down }
-
 class _PostDetailsState extends State<PostDetails> {
   String? access_token;
   bool isBlurred = false;
-  int voteCount = 0; // State variable for vote count
-  bool hasVoted = false; // Flag to track whether the user has voted
-  VoteDirection voteDirection = VoteDirection.Up; // Default vote direction
-  late String? profilePic; 
+  late String? profilePic;
 
   @override
   void initState() {
     super.initState();
     isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
-    voteCount = widget.post['votes'] ?? 0;
-    hasVoted = widget.post['hasVoted'] ?? false;
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
@@ -53,7 +47,7 @@ class _PostDetailsState extends State<PostDetails> {
     });
   }
 
-Future<String> fetchUserProfilePic(String accessToken) async {
+  Future<String> fetchUserProfilePic(String accessToken) async {
     var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
     var response = await http.get(
       url,
@@ -73,39 +67,6 @@ Future<String> fetchUserProfilePic(String accessToken) async {
       }
     } else {
       throw Exception('Failed to fetch user pic');
-    }
-  }
-
-  void vote(VoteDirection direction) {
-    setState(() {
-      if (voteDirection == direction && hasVoted) {
-        // User clicks the same button, cancel the vote
-        voteCount -= direction == VoteDirection.Up ? 1 : -1;
-        hasVoted = false;
-        voteDirection = VoteDirection.Up; // Reset vote direction
-      } else {
-        // User clicks a different button or hasn't voted yet
-        if (hasVoted) {
-          // Cancel the previous vote
-          voteCount -= voteDirection == VoteDirection.Up ? 1 : -1;
-        }
-        // Apply the new vote
-        voteCount += direction == VoteDirection.Up ? 1 : -1;
-        hasVoted = true;
-        voteDirection = direction; // Update vote direction
-      }
-      
-      // Update the vote count and user's vote status in the backend
-    });
-    
-  }
-
-  void toggleBlur() {
-    if (widget.post['nsfw'] || widget.post['spoiler']) {
-      // Check if the post is NSFW or spoiler
-      setState(() {
-        isBlurred = !isBlurred; // Toggle blur if the post is NSFW
-      });
     }
   }
 
@@ -148,7 +109,7 @@ Future<String> fetchUserProfilePic(String accessToken) async {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Image downloaded successfully"),
-            duration: const Duration(seconds: 2),
+            duration: Duration(seconds: 2),
           ),
         );
       } else {
@@ -268,57 +229,54 @@ Future<String> fetchUserProfilePic(String accessToken) async {
     return Scaffold(
       appBar: AppBar(
         leading: const CloseButton(),
-        
         actions: [
           IconButton(
             icon: const Icon(Icons.more_horiz),
-            
             onPressed: () {
               _showBottomMenu(context);
             },
           ),
           Builder(builder: (context) {
-                  return IconButton(
-                    icon: access_token != null
-                        ? FutureBuilder(
-                            future: fetchUserProfilePic(access_token!),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return const CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  backgroundImage:
-                                      AssetImage('assets/images/avatar.png'),
-                                );
-                              } else {
-                                if (snapshot.data == null ||
-                                    snapshot.data.toString().isEmpty) {
-                                  return const CircleAvatar(
-                                    backgroundColor: Colors.transparent,
-                                    backgroundImage:
-                                        AssetImage('assets/images/avatar.png'),
-                                  );
-                                } else {
-                                  return CircleAvatar(
-                                    backgroundColor: Colors.transparent,
-                                    backgroundImage:
-                                        NetworkImage(snapshot.data.toString()),
-                                  );
-                                }
-                              }
-                            },
-                          )
-                        : const CircleAvatar(
+            return IconButton(
+              icon: access_token != null
+                  ? FutureBuilder(
+                      future: fetchUserProfilePic(access_token!),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const CircleAvatar(
+                            backgroundColor: Colors.transparent,
                             backgroundImage:
                                 AssetImage('assets/images/avatar.png'),
-                          ),
-                    onPressed: () {
-                      Scaffold.of(context).openEndDrawer();
-                    },
-                  );
-                }),
+                          );
+                        } else {
+                          if (snapshot.data == null ||
+                              snapshot.data.toString().isEmpty) {
+                            return const CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage:
+                                  AssetImage('assets/images/avatar.png'),
+                            );
+                          } else {
+                            return CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage:
+                                  NetworkImage(snapshot.data.toString()),
+                            );
+                          }
+                        }
+                      },
+                    )
+                  : const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/avatar.png'),
+                    ),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            );
+          }),
         ],
       ),
       endDrawer: endDrawer(
@@ -372,233 +330,9 @@ Future<String> fetchUserProfilePic(String accessToken) async {
                 ),
               ],
             ),
-            Text(
-              widget.post['title'],
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            Row(
-              children: [
-                if (widget.post['nsfw'])
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    margin: const EdgeInsets.only(top: 4, right: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'NSFW',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                if (widget.post['spoiler'])
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 137, 137, 137),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'Spoiler',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            if (widget.post['picture'] != null &&
-                widget.post['picture']!.isNotEmpty)
-              // Wrap GestureDetector around ClipRRect
-              GestureDetector(
-                onTap: toggleBlur, // Toggle the blur filter on tap
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                      10), // Adjust border radius as needed
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Image without blur effect
-                      Image.network(
-                        widget.post['picture']!,
-                        width: double.infinity,
-                        height: 400,
-                        fit: BoxFit.cover,
-                        color: isBlurred
-                            ? const Color.fromARGB(0, 158, 158, 158)
-                            : null,
-                        colorBlendMode:
-                            isBlurred ? BlendMode.saturation : BlendMode.dst,
-                      ),
-                      if (isBlurred)
-                        // Blur effect with BackdropFilter
-                        BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Container(
-                            color: const Color.fromARGB(0, 0, 0, 0)
-                                .withOpacity(0), // Transparent color
-                            width: double.infinity,
-                            height: 400,
-                          ),
-                        ),
-                      if (isBlurred)
-                        const Column(
-                          children: [
-                            Icon(Icons.remove_red_eye,
-                                size: 40,
-                                color: Colors.white), // Icon to indicate blur
-                            Text(
-                              'Click to view',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {
-                if (widget.post['nsfw'] || widget.post['spoiler']) {
-                  // Check if the post is NSFW or spoiler
-                  setState(() {
-                    isBlurred = !isBlurred; // Toggle blur if the post is NSFW
-                  });
-                }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: isBlurred ? Colors.white : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  widget.post['description'],
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: isBlurred ? Colors.transparent : Colors.white,
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 8), // Space between description and actions
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    ConstrainedBox(
-                      constraints:
-                          const BoxConstraints.tightFor(width: 35, height: 38),
-                      child: IconButton(
-                        icon: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            child: hasVoted && voteDirection == VoteDirection.Up
-                                ? Image.asset(
-                                    'assets/Icons/up vote.png',
-                                    key: UniqueKey(),
-                                    width: 32,
-                                    height: 32,
-                                  )
-                                : Image.asset(
-                                    'assets/Icons/arrow-up.png',
-                                    key: UniqueKey(),
-                                    width: 32,
-                                    height: 32,
-                                  )),
-                        onPressed: () => vote(VoteDirection.Up),
-                      ),
-                    ),
-                    Text(
-                      "${voteCount.abs()}",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints.tightFor(
-                          width: 35, height: 38), // Set a fixed size
-                      child: IconButton(
-                        icon: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            child:
-                                hasVoted && voteDirection == VoteDirection.Down
-                                    ? Image.asset(
-                                        'assets/Icons/down vote.png',
-                                        key: UniqueKey(),
-                                        width: 32,
-                                        height: 32,
-                                      )
-                                    : Image.asset(
-                                        'assets/Icons/arrow-down.png',
-                                        key: UniqueKey(),
-                                        width: 32,
-                                        height: 32,
-                                      )),
-                        onPressed: () => vote(VoteDirection.Down),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 50),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        child: Row(
-                          children: [
-                            ConstrainedBox(
-                                constraints: const BoxConstraints.tightFor(
-                                    width: 28, height: 28), // Set a fixed size
-                                child: Image.asset('assets/Icons/comment.png')),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 4.0, right: 4.0),
-                              child: Text(
-                                "${widget.post['commentsNo']} Comments",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 50),
-                      IconButton(
-                        icon: Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.rotationY(
-                              3.14), // Flips the icon horizontally
-                          child: const Icon(Icons.reply),
-                        ),
-                        onPressed: () {
-                          int postId = widget.post['id'];
-                          String postUrl =
-                              'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                          Share.share('${widget.post['title']}\n$postUrl');
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            CommentSection(
-              postId: "${widget.post['id']}",
-            ),
+            cardCoreWidget(post: widget.post, detailsPageOpen: true),
+            VoteSection(post: widget.post),
+            CommentSection(postId: "${widget.post['id']}"),
           ],
         ),
       ),

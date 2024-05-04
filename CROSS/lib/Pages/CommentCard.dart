@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:reddit_fox/Pages/post_details.dart';
+import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
 import 'dart:io';
 // Sample class for comment data
 class CommentData {

@@ -5,7 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Profile.dart';
-import 'package:reddit_fox/Pages/home/Post%20widgets/saved.dart';
+import 'package:reddit_fox/Pages/saved.dart';
 import 'package:reddit_fox/Pages/settings/setting.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
