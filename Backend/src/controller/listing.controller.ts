@@ -338,7 +338,7 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
       { $addToSet: { postComments: createdComment._id } },
       { new: true, upsert: true }
     );
-    const commentsNum = post.commentsNum + 1;
+    const commentsNum = post.commentsNum;
     const updatedPost1 = await PostModel.findByIdAndUpdate(post._id, { $inc: { commentsNum: 1 } });
     // Send the response
     const postAuthor = await findUserById(updatedPost.userID.toString());
