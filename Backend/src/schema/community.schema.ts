@@ -62,6 +62,17 @@ export const banSchema = object({
   }),
 });
 
+export const unbanSchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'Subreddit Id is required',
+    }),
+    username: string({
+      required_error: 'username is required',
+    }),
+  }),
+});
+
 export const editCommunityRulesSchema = object({
   params: object({
     subreddit: string({
@@ -194,7 +205,8 @@ export const lockCommentSchema = object({
   }),
 });
 
-export type banOrMute = TypeOf<typeof banSchema>;
+export type ban = TypeOf<typeof banSchema>;
+export type unban = TypeOf<typeof unbanSchema>;
 export type createCommunity = TypeOf<typeof createCommunitySchema>;
 export type subscribeCommunity = TypeOf<typeof subscribeCommunitySchema>;
 export type communityName = TypeOf<typeof CommunityNameSchema>;
