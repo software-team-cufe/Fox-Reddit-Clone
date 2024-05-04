@@ -217,13 +217,34 @@ class Me {
   emailUpVotePost?: boolean;
 }
 
-class IsBannedOrMuted {
+class IsBanned {
   @prop({ default: false })
   value?: boolean;
 
   @prop()
   date?: Date;
+
+  @prop({ default: 'member not banned' })
+  reason?: string;
+
+  @prop({ default: 'member not banned' })
+  note?: string;
+
+  @prop({ default: 0 })
+  period?: string;
 }
+
+class IsMuted {
+  @prop({ default: false })
+  value?: boolean;
+
+  @prop()
+  date?: Date;
+
+  @prop({ default: 'member not muted' })
+  reason?: string;
+}
+
 export class notificationInfo {
   @prop({ required: true, ref: () => 'Notifications' })
   notificationId?: Ref<Notifications>;
@@ -236,14 +257,14 @@ export class notificationInfo {
 }
 
 class Member {
-  @prop({ ref: () => 'Community' })
+  @prop({ ref: 'Community' })
   communityId?: Ref<Community>;
 
-  @prop({ type: IsBannedOrMuted, default: () => new IsBannedOrMuted() })
-  isMuted?: IsBannedOrMuted;
+  @prop({ type: IsMuted, default: () => new IsMuted() })
+  isMuted?: IsMuted;
 
-  @prop({ type: IsBannedOrMuted, default: () => new IsBannedOrMuted() })
-  isBanned?: IsBannedOrMuted;
+  @prop({ type: IsBanned, default: () => new IsBanned() })
+  isBanned?: IsBanned;
 }
 
 export class VotePost {
@@ -380,9 +401,6 @@ export class User {
 
   @prop({ default: () => new About() })
   aboutReturn?: About;
-
-  // @prop({ default: () => new Member() })
-  // commMember?: Member;
 
   @prop({ enum: ['bare email', 'facebook', 'gmail'], default: 'bare email' })
   type?: string;

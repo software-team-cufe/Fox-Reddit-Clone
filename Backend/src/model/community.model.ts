@@ -79,23 +79,43 @@ class CommunityOptions {
   spamsNumBeforeRemove?: number;
 }
 
-class IsBannedOrMuted {
+class IsBanned {
   @prop({ default: false })
   value?: boolean;
 
-  @prop({ default: Date.now })
+  @prop()
   date?: Date;
+
+  @prop({ default: 'member not banned' })
+  reason?: string;
+
+  @prop({ default: 'member not banned' })
+  note?: string;
+
+  @prop({ default: 0 })
+  period?: string;
+}
+
+class IsMuted {
+  @prop({ default: false })
+  value?: boolean;
+
+  @prop()
+  date?: Date;
+
+  @prop({ default: 'member not muted' })
+  reason?: string;
 }
 
 export class Member {
   @prop({ ref: 'User' })
   userID?: Ref<User>;
 
-  @prop({ type: IsBannedOrMuted, default: {} })
-  isMuted?: IsBannedOrMuted;
+  @prop({ type: IsMuted, default: () => new IsMuted() })
+  isMuted?: IsMuted;
 
-  @prop({ type: IsBannedOrMuted, default: {} })
-  isBanned?: IsBannedOrMuted;
+  @prop({ type: IsBanned, default: () => new IsBanned() })
+  isBanned?: IsBanned;
 }
 
 class Moderator {
