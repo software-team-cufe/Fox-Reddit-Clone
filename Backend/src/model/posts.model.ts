@@ -141,12 +141,7 @@ export class Post {
   @prop()
   bestFactor!: number;
 }
-@pre<Post>('find', function(this: any, next) {
-  const currentDate = new Date();
-  this.where('createdAt').lt(currentDate);
-  next();
-  return; // Add this line to explicitly return void
-});
+
 const PostModel = getModelForClass(Post);
 
 export default PostModel;
