@@ -13,12 +13,16 @@ cloudinary.config({
 const uploadSingleCloudinary = asyncHandler(
   async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
+      console.log('req.file', req.file);
       const image = req.file as Express.Multer.File;
       if (!image) {
         throw new Error('No image file provided');
       }
+      console.log(image);
       const b64 = Buffer.from(image.buffer).toString('base64');
+      console.log(b64);
       const dataURI = 'data:' + image.mimetype + ';base64,' + b64;
+      console.log(dataURI);
       const result = await cloudinary.uploader.upload(dataURI, {
         resource_type: 'auto',
       });
@@ -35,7 +39,6 @@ const uploadSingleCloudinary = asyncHandler(
 const uploadMultipleCloudinary = asyncHandler(
   async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-      console.log('req.file', req.file);
       console.log('req.files', req.files);
       const images = req.files as Express.Multer.File[];
       console.log(images); //debug

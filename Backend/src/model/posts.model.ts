@@ -38,6 +38,9 @@ class Mention {
   @prop({ ref: () => Comment })
   commentID!: Ref<Comment>;
 }
+@pre<Post>('find', async function (this: DocumentType<Post>) {
+  this.updateOne({}, { $inc: { insightCnt: 1 } }).exec(); // Ensure the updateOne method is executed
+})
 export class Post {
   @prop({ required: true, ref: () => User })
   userID!: Ref<User>;

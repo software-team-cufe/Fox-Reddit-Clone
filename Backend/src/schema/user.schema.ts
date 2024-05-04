@@ -160,6 +160,14 @@ export const viewPostSchema = object({
   }),
 });
 
+export const homePagePostsSchema = object({
+  query: object({
+    page: string().optional(), // Make page optional
+    limit: string().optional(), // Make limit optional
+    sort: string().optional(),
+    topBy: string().optional(),
+  }),
+});
 /****************************************************************************/
 export type VerifyUserInput = TypeOf<typeof verifyUserSchema>['params'];
 
@@ -178,3 +186,4 @@ export type blockUserInput = TypeOf<typeof blockUserSchema>;
 export type followUserInput = TypeOf<typeof followUserSchema>;
 export type unfollowUserInput = TypeOf<typeof unfollowUserSchema>;
 export type CreateUserInput = TypeOf<typeof createUserSchema>['body'];
+export type HomePagePostsInput = TypeOf<typeof homePagePostsSchema>;
