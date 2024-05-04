@@ -47,6 +47,9 @@ export const replyOnpostSchema = object({
     postID: string({
       required_error: 'post id is required',
     }),
+    commentID: string({
+      required_error: 'comment id is required',
+    }),
   }),
 });
 

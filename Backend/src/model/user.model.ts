@@ -301,7 +301,7 @@ class Mention {
   commentID?: Ref<Comment>;
 
   @prop()
-  date?: Date;
+  createdAt?: Date;
 }
 class PostReply {
   @prop({ ref: () => User })
@@ -310,8 +310,11 @@ class PostReply {
   @prop({ ref: () => 'Post' })
   postID!: Ref<Post>;
 
+  @prop({ ref: () => 'Comment' })
+  commentID?: Ref<Comment>;
+
   @prop()
-  date?: Date;
+  createdAt?: Date;
 }
 @pre<User>('save', async function (this: DocumentType<User>) {
   if (!this.isModified('password')) {

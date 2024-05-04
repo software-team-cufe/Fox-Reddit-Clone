@@ -203,7 +203,7 @@ export async function allMessagesHandler(req: Request, res: Response) {
         { fromID: userId, toID: { $ne: userId } },
       ],
     }).populate({
-      path: 'toID ',
+      path: 'toID',
       select: 'username avatar', // Select the fields to populate
     });
     return res.status(200).json({
@@ -385,7 +385,10 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
   const userId = res.locals.user._id;
 
   try {
-    const messages = await MessageModel.find({ toID: userId, unread_status: true });
+    const messages = await MessageModel.find({ toID: userId, unread_status: true }).populate({
+      path: 'toID',
+      select: 'username avatar',
+    });
     return res.status(200).json({
       response: 'success',
       messages: messages,
@@ -573,6 +576,7 @@ export async function mentionUserHandler(req: Request, res: Response) {
       mentionerID: user._id,
       commentID: comment._id,
       postID: post._id,
+      createdAt: new Date(),
     };
 
     // Update mentionedInUsers in post model
@@ -618,7 +622,8 @@ export async function getPostAndCommentUserMentionedHandler(req: Request, res: R
     if (user.mentionedIn) {
       for (const mention of user.mentionedIn) {
         const mentionerName = await UserModel.findById(mention.mentionerID).select('username');
-        const post = await PostModel.findById(mention.postID);
+        const post = await PostModel.findById(mention.postID).select('title').select('_id').select('commentsNum');
+
         const comment = await CommentModel.findById(mention.commentID);
         const communitName = await CommunityModel.findById(post?.CommunityID).select('name');
         if (post && comment) {
@@ -626,15 +631,12 @@ export async function getPostAndCommentUserMentionedHandler(req: Request, res: R
             postTitle: post.title,
             from: mentionerName,
             toId: user._id,
-            data: {
-              postID: post._id,
-              commentID: comment._id,
-              createAt: mention.date,
-              communityName: communitName,
-              commentNum: post.commentsNum,
-              post: post,
-              comment: comment,
-            },
+            postID: post._id,
+            commentID: comment._id,
+            createdAt: mention.createdAt,
+            communityName: communitName,
+            commentNum: post.commentsNum,
+            comment: comment,
           });
         }
       }
@@ -657,7 +659,7 @@ export async function getPostAndCommentUserMentionedHandler(req: Request, res: R
  */
 export async function addPostReplyHandler(req: Request, res: Response) {
   try {
-    const { postID, replyToUsername } = req.body;
+    const { postID, replyToUsername, commentID } = req.body;
 
     // Extract user and post
     const user = await findUserByUsername(res.locals.user.username as string);
@@ -675,6 +677,13 @@ export async function addPostReplyHandler(req: Request, res: Response) {
         message: 'Post not found',
       });
     }
+    const comment = await findCommentById(commentID.toString());
+    if (!comment) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Comment not found',
+      });
+    }
     // Extract user and post
     const replyToUser = await findUserByUsername(replyToUsername as string);
     if (!replyToUser) {
@@ -687,7 +696,8 @@ export async function addPostReplyHandler(req: Request, res: Response) {
     const mentionedIn = {
       replierID: user._id,
       postID: post._id,
-      date: new Date(),
+      commentID: comment._id,
+      createdAt: new Date(),
     };
 
     // Update mentionedInUsers in post model
@@ -728,32 +738,125 @@ export async function getuserPostreplisHandler(req: Request, res: Response) {
         message: 'User not found',
       });
     }
-    const mentionedPosts = [];
+    const repliededPosts = [];
     if (user.repliedInPost) {
       for (const reply of user.repliedInPost) {
         const replierName = await UserModel.findById(reply.replierID).select('username');
-        const post = await PostModel.findById(reply.postID);
+        const post = await PostModel.findById(reply.postID).select('title').select('_id').select('commentsNum');
         const communitName = await CommunityModel.findById(post?.CommunityID).select('name');
+        const comment = await CommentModel.findById(reply.commentID);
         if (post) {
-          mentionedPosts.push({
+          repliededPosts.push({
             postTitle: post.title,
             from: replierName,
             toId: user._id,
-            data: {
-              postID: post._id,
-              createAt: reply.date,
-              postTitle: post.title,
-              communityName: communitName,
-              commentNum: post.commentsNum,
-              post: post,
-            },
+            postID: post._id,
+            commentID: reply.commentID,
+            createdAt: reply.createdAt,
+            communityName: communitName,
+            commentNum: post.commentsNum,
+            Comment: comment,
           });
         }
       }
     }
-    res.status(200).json(mentionedPosts);
+
+    res.status(200).json(repliededPosts);
   } catch (error) {
     console.error('Error in getPostUserMentionedHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles the request to get all user-related data including mentioned posts, replied posts, and messages.
+ *
+ * @param {Request} req - The HTTP request object.
+ * @param {Response} res - The HTTP response object.
+ * @return {Promise<void>} - A promise that resolves when the response is sent.
+ */
+export async function getuserAllHandler(req: Request, res: Response) {
+  try {
+    const user = await UserModel.findOne({ username: res.locals.user.username });
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+
+    const mentionedPosts = [];
+    if (user.mentionedIn) {
+      for (const mention of user.mentionedIn) {
+        const mentionerName = await UserModel.findById(mention.mentionerID).select('username');
+        const post = await PostModel.findById(mention.postID).select('title').select('_id').select('commentsNum');
+        const comment = await CommentModel.findById(mention.commentID);
+        const communitName = await CommunityModel.findById(post?.CommunityID).select('name');
+        if (post && comment) {
+          mentionedPosts.push({
+            postTitle: post.title,
+            from: mentionerName,
+            toId: user._id,
+            postID: post._id,
+            commentID: comment._id,
+            createdAt: mention.createdAt,
+            communityName: communitName,
+            commentNum: post.commentsNum,
+            comment: comment,
+          });
+        }
+      }
+    }
+
+    const repliededPosts = [];
+    if (user.repliedInPost) {
+      for (const reply of user.repliedInPost) {
+        const replierName = await UserModel.findById(reply.replierID).select('username');
+        const post = await PostModel.findById(reply.postID).select('title').select('_id').select('commentsNum');
+        const communitName = await CommunityModel.findById(post?.CommunityID).select('name');
+        const comment = await CommentModel.findById(reply.commentID);
+        if (post) {
+          repliededPosts.push({
+            postTitle: post.title,
+            from: replierName,
+            toId: user._id,
+            postID: post._id,
+            commentID: reply.commentID,
+            createdAt: reply.createdAt,
+            communityName: communitName,
+            commentNum: post.commentsNum,
+            Comment: comment,
+          });
+        }
+      }
+    }
+
+    const messages = await MessageModel.find({
+      $or: [
+        { toID: user._id, fromID: { $ne: user._id } },
+        { fromID: user._id, toID: { $ne: user._id } },
+      ],
+    }).populate({
+      path: 'toID',
+      select: 'username avatar',
+    });
+
+    // Merge all arrays into one
+    const allData = [...mentionedPosts, ...repliededPosts, ...messages];
+
+    // Sort the merged array by createdAt field
+    allData.sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateA - dateB;
+    });
+
+    // Send the sorted merged array as the response
+    res.status(200).json(allData);
+  } catch (error) {
+    console.error('Error in getuserAllHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',

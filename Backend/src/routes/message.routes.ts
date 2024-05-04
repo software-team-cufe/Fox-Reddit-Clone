@@ -16,6 +16,7 @@ import {
   getPostAndCommentUserMentionedHandler,
   addPostReplyHandler,
   getuserPostreplisHandler,
+  getuserAllHandler,
 } from '../controller/message.controller';
 import {
   chatMessagesSchema,
@@ -56,5 +57,7 @@ router.get('/api/get_user_mentions', getPostAndCommentUserMentionedHandler);
 router.post('/api/addPosstreply', validateResource(replyOnpostSchema), addPostReplyHandler);
 
 router.get('/api/get_post_replies', getuserPostreplisHandler);
+
+router.get('/api/get_all', getuserAllHandler);
 
 export default router;
