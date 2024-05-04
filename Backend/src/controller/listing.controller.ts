@@ -338,24 +338,9 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
       { $addToSet: { postComments: createdComment._id } },
       { new: true, upsert: true }
     );
-
-    // Check for mentioned users in textJSON and update mentionedInUsers in post model
-    const mentionedUsernames = await extractUsernamesFromTextJSON(textJSON);
-    if (mentionedUsernames.length > 0) {
-      const mentionedUsers = await UserModel.find({ username: { $in: mentionedUsernames } });
-      await PostModel.findByIdAndUpdate(
-        post._id,
-        { $addToSet: { mentionedInUsers: { $each: mentionedUsers.map((user) => user._id) } } },
-        { new: true, upsert: true }
-      );
-
-      // Update mentionedInPosts in post model
-      await PostModel.findByIdAndUpdate(
-        post._id,
-        { $addToSet: { mentionedInPosts: postID } },
-        { new: true, upsert: true }
-      );
-    }
+    const commentsNum = post.commentsNum + 1;
+    const updatedPost1 = await PostModel.findByIdAndUpdate(post._id, { $inc: { commentsNum: 1 } });
+    // Send the response
     const postAuthor = await findUserById(updatedPost.userID.toString());
     if (!postAuthor) {
       return res.status(400).json({
@@ -557,7 +542,7 @@ export async function editUserTextHandler(req: Request<editUserText['body']>, re
 
       const results = await PostModel.findByIdAndUpdate(
         post._id,
-        { textJSON: req.body.text },
+        { textJSON: req.body.textJSON, textHTML: req.body.textHTML },
         { upsert: true, new: true }
       );
 
@@ -588,7 +573,7 @@ export async function editUserTextHandler(req: Request<editUserText['body']>, re
 
       const results = await CommentModel.findByIdAndUpdate(
         comment._id,
-        { textJSON: req.body.text },
+        { textJSON: req.body.textJSON, textHTML: req.body.textHTML },
         { upsert: true, new: true }
       );
 
@@ -1535,13 +1520,6 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
     });
   }
 }
-/**
- * Handle mentioning a user in a post.
- *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @return {Promise<void>} A Promise representing the completion of the function.
- */
 export async function mentionUserHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -1585,28 +1563,27 @@ export async function mentionUserHandler(req: Request, res: Response) {
       });
     }
 
+    const mentionedIn = {
+      mentionerID: user._id,
+      commentID: comment._id,
+      postID: post._id,
+    };
+
     // Update mentionedInUsers in post model
     await PostModel.findByIdAndUpdate(
       post._id,
-      { $addToSet: { mentionedInUsers: mentionedUser._id } },
+      { $addToSet: { mentionedIn: mentionedIn } },
       { new: true, upsert: true }
     );
 
     // Update mentionedInPosts in user model
     await UserModel.findByIdAndUpdate(
       mentionedUser._id,
-      { $addToSet: { mentionedInPosts: post._id } },
+      { $addToSet: { mentionedIn: mentionedIn } },
       { new: true, upsert: true }
     );
 
-    // Update mentionedInComments in user model
-    await UserModel.findByIdAndUpdate(
-      mentionedUser._id,
-      { $addToSet: { mentionedInComments: comment._id } },
-      { new: true, upsert: true }
-    );
-
-    res.status(200).json('Success');
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.error('Error in mentionUserHandler:', error);
     return res.status(500).json({
@@ -1616,26 +1593,44 @@ export async function mentionUserHandler(req: Request, res: Response) {
   }
 }
 
-// export async function getPostAndCommentUserMentionedHandler(req: Request, res: Response) {
-//   try {
-//     const user = await findUserByUsername(req.body.mentionedUsername as string);
-//     if (!user) {
-//       return res.status(400).json({
-//         status: 'failed',
-//         message: 'Access token is missing or invalid',
-//       });
-//     }
-
-//     // Find posts and comments where the user is mentioned
-//     const posts = await PostModel.find({ mentionedInUsers: user._id }).populate('postComments');
-//     const comments = await CommentModel.find({ mentionedInPosts: { $in: posts.map((post) => post._id) } });
-
-//     res.status(200).json({ posts, comments });
-//   } catch (error) {
-//     console.error('Error in getPostAndCommentUserMentionedHandler:', error);
-//     return res.status(500).json({
-//       status: 'error',
-//       message: 'Internal server error',
-//     });
-//   }
-// }
+export async function getPostAndCommentUserMentionedHandler(req: Request, res: Response) {
+  try {
+    const user = await UserModel.findOne({ username: req.body.mentionedUsername });
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+    const mentionedPosts = [];
+    if (user.mentionedIn) {
+      for (const mention of user.mentionedIn) {
+        const mentionerName = await UserModel.findById(mention.mentionerID).select('username');
+        const post = await PostModel.findById(mention.postID);
+        const comment = await CommentModel.findById(mention.commentID);
+        if (post && comment) {
+          mentionedPosts.push({
+            postTitle: post.title,
+            from: mentionerName,
+            toId: user._id,
+            data: {
+              // postID: post._id,
+              // commentID: comment?._id,
+              // postCreatedAt: post.createdAt,
+              // commentsNum: post.commentsNum,
+              post: post,
+              comment: comment,
+            },
+          });
+        }
+      }
+    }
+    res.status(200).json(mentionedPosts);
+  } catch (error) {
+    console.error('Error in getPostAndCommentUserMentionedHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}

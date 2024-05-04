@@ -28,7 +28,16 @@ class PollOption {
   @prop({ default: 0 })
   votes!: number;
 }
+class Mention {
+  @prop({ ref: () => User })
+  mentionerID!: Ref<User>;
 
+  @prop({ ref: () => Post })
+  postID!: Ref<Post>;
+
+  @prop({ ref: () => Comment })
+  commentID!: Ref<Comment>;
+}
 export class Post {
   @prop({ required: true, ref: () => User })
   userID!: Ref<User>;
@@ -101,8 +110,8 @@ export class Post {
   @prop()
   votes!: VotePost[];
 
-  @prop({ type: () => [String], ref: () => User })
-  mentionedInUsers!: Ref<User>[];
+  @prop()
+  mentionedIn: Mention[];
 
   @prop({ type: () => [String], ref: () => User })
   postComments: Ref<Comment>[];
