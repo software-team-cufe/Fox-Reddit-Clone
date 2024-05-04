@@ -14,6 +14,7 @@ import {
   unfollowUserSchema,
   changePasswordSchema,
   changeEmailSchema,
+  viewPostSchema,
 } from '../schema/user.schema';
 import {
   createUserHandler,
@@ -46,6 +47,8 @@ import {
   uploadUserPhoto,
   getNumberPostsCommentsMe,
   getNumberPostsCommentsUser,
+  viewPostHandler,
+  getHistoryPostHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -114,6 +117,10 @@ router.post('/api/block_user', validateResource(blockUserSchema), blockUserHandl
 router.get('/api/user/me/number_posts_comments', getNumberPostsCommentsMe);
 
 router.get('/api/user/:username/number_posts_comments', getNumberPostsCommentsUser);
+
+router.post('/api/view_post', validateResource(viewPostSchema), viewPostHandler);
+
+router.get('/user/:username/history_post', getHistoryPostHandler);
 
 /** Upload icon and banner **/
 router.post(

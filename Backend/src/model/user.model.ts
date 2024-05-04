@@ -421,6 +421,9 @@ export class User {
   @prop({ ref: () => 'Post' })
   hasPost?: Ref<Post>[];
 
+  @prop({ ref: () => 'Post' })
+  historyPosts?: Ref<Post>[];
+
   @prop({ ref: () => 'Comment' })
   hasComment?: Ref<Comment>[];
 

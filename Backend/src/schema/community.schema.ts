@@ -98,7 +98,7 @@ export const editCommunityCategoriesSchema = object({
     }),
   }),
   body: object({
-    categories: array(string({ required_error: 'title is required' })),
+    categories: array(string({ required_error: 'categories are required' })),
   }),
 });
 
