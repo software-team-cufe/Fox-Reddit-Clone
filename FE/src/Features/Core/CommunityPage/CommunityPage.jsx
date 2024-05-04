@@ -270,7 +270,7 @@ export default function CommunityPage() {
       </div>
     )
   }
-  if (comm == null) { 
+  if (commObj == null) { 
     return <>Community not found</>
   }
   //main body of the page
