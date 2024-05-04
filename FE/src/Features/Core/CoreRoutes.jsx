@@ -14,7 +14,6 @@ import NotificationPage from '../../GeneralComponents/Notification & messages/No
 import ModCard from './CommunityPage/ModCard/ModCard';
 import PrivateMessagelayout from './PrivateMessage/PrivateMessage';
 import TopCommunities from '../../GeneralComponents/SideBar/TopCommunities';
-
 import RulesRemovalPage from './CommunityPage/rulesRemoval/rulesRemovalpage';
 import ModNavbar from '../../GeneralComponents/ModNavbar/ModNavbar';
 import UserManagemntRoutes from './moderation/about/UserManagement/pages/UserManagemntRoutes';

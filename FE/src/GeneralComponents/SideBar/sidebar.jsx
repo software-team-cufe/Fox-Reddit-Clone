@@ -61,7 +61,6 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
          dropdownList.style.display = "none";
       }
    }
-/////////////////////////////////////////////////////////////////////////////////////////////////
    const fetchUserData = async () => {
       try {
          const response = await userAxios.get(`/user/${username}/about`);

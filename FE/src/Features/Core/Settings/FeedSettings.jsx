@@ -10,9 +10,6 @@ import { getByRole, waitFor } from '@testing-library/react';
 import axios from "axios";
 import Dropdown from "./dropDownlist";
 /**
-=======
-// import Dropdown from "./DropDownlist";
-/**
  * 
 >>>>>>> origin/newnew-nadine
  * Adult content, autoplay media, community themes, community content sort, global content view, open pots in new tab
