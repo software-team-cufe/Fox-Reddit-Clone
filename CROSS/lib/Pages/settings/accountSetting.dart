@@ -39,6 +39,10 @@ class _AccSettingState extends State<AccSetting> {
   String? mockToken;
   String? backToken;
   bool errorMessage = false;
+  late Map<String, dynamic> user = {};
+  late String? profilePic = null;
+  late String? userName = '';
+  late String? email = '';
 
   @override
   void initState() {
@@ -52,9 +56,49 @@ class _AccSettingState extends State<AccSetting> {
         // Store the token in the accessToken variable
         mockToken = sharedPrefValue.getString('mocktoken');
         backToken = sharedPrefValue.getString('backtoken');
+        fetchUser(backToken);
         print(backToken);
       });
     });
+  }
+
+  Future<void> fetchUser(String? accessToken) async {
+    try {
+      if (accessToken == null) {
+        throw Exception('Access token is null');
+      }
+
+      var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
+      var response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        if (responseData.containsKey('user')) {
+          Map<String, dynamic> user = responseData['user'];
+          setState(() {
+            if (profilePic == 'default.jpg') {
+              profilePic = null;
+            }
+            email = user['email'];
+
+            userName = user['username'];
+            print(' Username: $userName, ');
+            print(user);
+          });
+        } else {
+          throw Exception('User data is not present in the response');
+        }
+      } else {
+        throw Exception(
+            'Failed to fetch user data, status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching user data: $error');
+      // Handle error, show error message, retry logic, etc.
+    }
   }
 
   Future<void> changeEmail(String email, String password) async {
@@ -154,7 +198,7 @@ class _AccSettingState extends State<AccSetting> {
                             ),
                           ),
                           Text(
-                            userData["userName"] ?? "/Username",
+                            userName ?? "/Username",
                             style: const TextStyle(
                               color: Colors.white,
                             ),
@@ -255,7 +299,7 @@ class _AccSettingState extends State<AccSetting> {
                                 ),
                               ),
                               Text(
-                                userData['email'] ?? '1111@fox.com',
+                                email ?? '1111@fox.com',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w100,
