@@ -278,6 +278,19 @@ class Mention {
 
   @prop({ ref: () => 'Comment' })
   commentID?: Ref<Comment>;
+
+  @prop()
+  date?: Date;
+}
+class PostReply {
+  @prop({ ref: () => User })
+  replierID!: Ref<User>;
+
+  @prop({ ref: () => 'Post' })
+  postID!: Ref<Post>;
+
+  @prop()
+  date?: Date;
 }
 @pre<User>('save', async function (this: DocumentType<User>) {
   if (!this.isModified('password')) {
@@ -444,6 +457,9 @@ export class User {
 
   @prop()
   mentionedIn?: Mention[];
+
+  @prop()
+  repliedInPost?: PostReply[];
 
   @prop()
   member?: Member[];
