@@ -1,17 +1,37 @@
 import { Link, Route, Routes } from 'react-router-dom';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProfileSettings from '../../Features/Core/Settings/PofileSettings';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { userAxios } from '../../Utils/UserAxios';
 
 export default function Card (){
-
+    const username = useSelector(state => state.user.user.username);
+    const [numOfPosts, setNumOfPosts] = useState(0);
+    const [numOfComments, setNumOfComments] = useState(0);
+    useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await userAxios.get(`/api/user/${username}/number_posts_comments`);
+        setNumOfPosts(response.data.posts ?? 0);
+        setNumOfComments(response.data.comments ?? 0);
+        console.log("number of posts: ", numOfPosts);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    
+      fetchData();
+    }, [username]);
+  
+  
     const navigator=useNavigate();
-     const handleNavigate=()=>{
+    const handleNavigate=()=>{
        navigator('/setting/profile');
     }
-    const username = useSelector(state => state.user.user.username);
+  
     return(
         <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
         
@@ -38,18 +58,17 @@ export default function Card (){
     
         
         <div className=' flex flex-col mt-6'>
-              <div className='  flex flex-row mb-7'>
-        <div className=' w-1/2 flex-col ml-6'>
-         <p className=' text-xs md:text-sm font-semibold'> 
-           1
-         </p>
-         <p className=' text-xs text-slate-500'> 
-            Post Karma
-         </p>
-        </div>
+              <div className='  flex flex-row mb-7'> <div className=' w-1/2 flex-col ml-6'>
+              <p className=' text-xs md:text-sm font-semibold'> 
+                {numOfPosts}
+              </p>
+              <p className=' text-xs text-slate-500'> 
+                Post Karma
+              </p>
+            </div>
         <div className=' w-1/2 flex-col'>
            <p className=' text-xs md:text-sm font-semibold'> 
-             0
+             {numOfComments}
            </p>
            <p className=' text-xs text-slate-500'> 
              Comment Karma
