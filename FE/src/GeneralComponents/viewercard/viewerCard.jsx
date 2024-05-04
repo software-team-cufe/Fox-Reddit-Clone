@@ -185,24 +185,26 @@ export default function ViewerCard() {
          
 
             <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
-           <div>
+           <div className='flex flex-col'>
               <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">MODERATOR OF THESE COMMUNITIES</h1>
-              <div  className=' mx-3 flex flex-row justify-between'>
-                 <div>  
-                     <svg className="text-blue-600 w-7 h-7"
-                      xmlns="http://www.w3.org/2000/svg" width="24"  height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                     </svg>
-                 
+              <div className=' flex flex-row space-x-2 hover:bg-gray-100 h-12 '>
+              <button  className=' flex flex-row w-full justify-between hover:bg-gray-100 '>
+                 <div className='flex flex-row space-x-3 ml-6 my-3'>  
+                    <svg className="text-blue-600 w-7 h-7"
+                     xmlns="http://www.w3.org/2000/svg" width="24"  height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <div className=' flex flex-col  '>
+                       <span className=' text-xs'>r/communityname</span>     
+                       <span className=' text-xs text-gray-400'> 10K members</span>                
+                    </div>
                  </div>
-                 <div className=' flex flex-col w-4/5 ml-2'>
-                     <p className=' text-xs'>r/communityname</p>     
-                     <p className=' text-xs text-gray-400'> 10K members</p>                
+            
+                 <div>
+                    <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300  w-[55px] h-7  px-2  text-black text-xs font-semibold '> Joined</button>
                  </div>
-                 <div >
-                   <button className='  border border-blue-800 rounded-2xl flex flex-row bg-blue-800 w-[45px] h-7 py-1 px-2  text-white text-xs font-semibold '> Join</button>
-                 </div>
-               </div>      
+             </button>      
+           </div>
            </div>
     
            <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
