@@ -91,6 +91,17 @@ export const editCommunityRemovalResonsSchema = object({
   }),
 });
 
+export const editCommunityCategoriesSchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+  body: object({
+    categories: array(string({ required_error: 'title is required' })),
+  }),
+});
+
 export const spamPostSchema = object({
   params: object({
     subreddit: string({
@@ -181,3 +192,4 @@ export type subscribeCommunity = TypeOf<typeof subscribeCommunitySchema>;
 export type communityName = TypeOf<typeof CommunityNameSchema>;
 export type getCommunity = TypeOf<typeof getCommunitySchema>;
 export type editCommunityRules = TypeOf<typeof editCommunityRulesSchema>;
+export type editCommunityCategories = TypeOf<typeof editCommunityCategoriesSchema>;

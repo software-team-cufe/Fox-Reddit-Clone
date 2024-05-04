@@ -38,6 +38,8 @@ import {
   deleteCommunityIcon,
   deleteCommunityBanner,
   getCommunityNameHandler,
+  getCommunityCategoriesHandler,
+  editCommunityCategoriesHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -54,6 +56,7 @@ import {
   lockCommentSchema,
   editCommunityRemovalResonsSchema,
   CommunityNameSchema,
+  editCommunityCategoriesSchema,
 } from '../schema/community.schema';
 import uploadSingleMulter from '../middleware/multer/singleImage';
 import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple';
@@ -82,6 +85,12 @@ router.get('/:subreddit/about/spam_posts', validateResource(subscribeCommunitySc
 router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunitySchema), getSpamCommentsHandler);
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
 router.get('/:subreddit/api/rules', validateResource(getCommunitySchema), getCommunityRulesHandler);
+router.patch(
+  '/:subreddit/api/edit_categories',
+  validateResource(editCommunityCategoriesSchema),
+  editCommunityCategoriesHandler
+);
+router.get('/:subreddit/api/categories', validateResource(getCommunitySchema), getCommunityCategoriesHandler);
 router.patch(
   '/:subreddit/api/edit_removal_reasons',
   validateResource(editCommunityRemovalResonsSchema),

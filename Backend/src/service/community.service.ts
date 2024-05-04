@@ -485,6 +485,29 @@ export async function editCommunityRemovalReasons(subreddit: string, reasons: re
   };
 }
 
+export async function editCommunityCategories(subreddit: string, cats: CommunityRule[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(community._id, { categories: cats }, { new: true });
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
 /**
  *  mark Spam Post
  * @param {string} body contain rules details
