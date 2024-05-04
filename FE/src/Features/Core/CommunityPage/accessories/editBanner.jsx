@@ -11,7 +11,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
     const [isShifted, setIsShifted] = useState(false);
     const [OptionHeader, setOptionHeader] = useState(optionheader);
     const { community } = useParams();
-
+    
     const editOptions = [
         "Avatar",
         "Banner",
@@ -23,6 +23,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
     const [dragging, setDragging] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = useRef();
+    const [imageDisplay, setImagedisplay] = useState(null);
 
     const handleFileSelect = (event) => {
         const file = event.target.files[0];
@@ -31,7 +32,9 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
             return;
         }
         const objectUrl = URL.createObjectURL(file);
+        setImagedisplay(file);
         setImageFile(objectUrl);
+
     };
 
     const handleClick = () => {
@@ -73,8 +76,15 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
         else if (OptionHeader == "Banner") {
             reqType = 'upload_sr_banner';
         }
+        const formData = new FormData();
+        formData.append('image', imageDisplay);
 
-        userAxios.post(`${community}/subreddit/api/${reqType}`, { image: imageFile })
+        console.log(formData);
+        userAxios.post(`${community}/api/${reqType}`, formData , {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }}
+        )
             .then(() => {
                 toast.info("Uploading image...", { position: 'top-center' });
                 toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
@@ -83,7 +93,6 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
             })
             .catch((err) => {
                 console.log(err);
-                toast.error("Error uploading image", { position: 'top-center' });
             });
     };
 

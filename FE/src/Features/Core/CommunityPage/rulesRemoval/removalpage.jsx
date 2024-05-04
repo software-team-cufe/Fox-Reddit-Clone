@@ -18,7 +18,7 @@ export default function RemovalPage() {
         .then(response => {
           const newrules = response.data.rules.map(rule => ({
             title : rule.title,
-            Message : rule.description,
+            description : rule.description,
           }));
           setRemoval(newrules);
           setLoading(false);
@@ -28,6 +28,8 @@ export default function RemovalPage() {
           setCrash(true);
           setLoading(false);
         })
+
+        console.log(Removal);
       }, []);
 
     if(loading){

@@ -11,10 +11,8 @@ import { CommunityProvider } from './CommunityPage/CommunityPage';
 import CreatePostPage from './CreatePostPage/CreatePostPage';
 import ChatPage from './ThreadsPage/ChatPage';
 import NotificationPage from '../../GeneralComponents/Notification & messages/NotificationPage';
-import ModCard from './CommunityPage/ModCard/ModCard';
 import PrivateMessagelayout from './PrivateMessage/PrivateMessage';
 import TopCommunities from '../../GeneralComponents/SideBar/TopCommunities';
-
 import RulesRemovalPage from './CommunityPage/rulesRemoval/rulesRemovalpage';
 import ModNavbar from '../../GeneralComponents/ModNavbar/ModNavbar';
 import UserManagemntRoutes from './moderation/about/UserManagement/pages/UserManagemntRoutes';
@@ -52,8 +50,7 @@ export default [
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
-  
-    <Route key={'/mod'} path='/r/:community/mod/*' element={<ModCard />} />,
+    <Route key={'/'} path='/r/:community/about/*' element={<RulesRemovalPage></RulesRemovalPage>} />,
     <Route key={'/community'} path='/community' element={<TopCommunities />} />,
   
 ]
