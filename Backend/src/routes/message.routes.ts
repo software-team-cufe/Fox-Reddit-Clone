@@ -12,8 +12,18 @@ import {
   markUnreadMessageHandler,
   chatMessagesHandler,
   getAllMessagesUsernamesAndSubjectsHandler,
+  mentionUserHandler,
+  getPostAndCommentUserMentionedHandler,
+  addPostReplyHandler,
+  getuserPostreplisHandler,
 } from '../controller/message.controller';
-import { chatMessagesSchema, composeMessageSchema, deleteMessageSchema } from '../schema/message.schema';
+import {
+  chatMessagesSchema,
+  composeMessageSchema,
+  deleteMessageSchema,
+  mentionUserSchema,
+  replyOnpostSchema,
+} from '../schema/message.schema';
 
 const router = express.Router();
 
@@ -38,5 +48,13 @@ router.post('/message/markUnreadMessage/', markUnreadMessageHandler);
 router.get('/message/chatMessages/', validateResource(chatMessagesSchema), chatMessagesHandler);
 
 router.get('/message/getAllMessagesUsernamesAndSubjects/', getAllMessagesUsernamesAndSubjectsHandler);
+
+router.post('/api/mention', validateResource(mentionUserSchema), mentionUserHandler);
+
+router.get('/api/get_user_mentions', getPostAndCommentUserMentionedHandler);
+
+router.post('/api/addPosstreply', validateResource(replyOnpostSchema), addPostReplyHandler);
+
+router.get('/api/get_post_replies', getuserPostreplisHandler);
 
 export default router;
