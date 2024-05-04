@@ -29,6 +29,8 @@ const icons = [
    },
 ];
 
+
+
 function Sidebar({ className, IsOpen, RecentCommunities }) {
    // const toggleSidebar = () => {
    //    setOpen(!open);

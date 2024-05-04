@@ -123,6 +123,7 @@ function MainRoute() {
             "/r/:id/about/:idd",
             "/r/:id/about/:idd/:idd",
             "/r/:id/about/:idd/:idd/:iddd",
+            "/community",
           ]) && <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
         }
 
