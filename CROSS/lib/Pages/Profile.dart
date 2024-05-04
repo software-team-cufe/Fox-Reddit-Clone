@@ -6,7 +6,8 @@ import 'package:flutter/widgets.dart';
   import 'package:intl/intl.dart';
   import 'package:reddit_fox/Pages/Search.dart';
   import 'package:reddit_fox/Pages/EditProfile.dart';
-import 'package:reddit_fox/navbar.dart';
+import 'package:reddit_fox/Pages/postViewForProfile.dart';
+  import 'package:reddit_fox/navbar.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
   import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +35,9 @@ import 'package:reddit_fox/navbar.dart';
     late String? userName = widget.userName;
     bool _showTitle = true;
     late String? created_at;
+    List<dynamic> data = [];
+    List<dynamic> posts = [];
+    List<dynamic> userComments = [];
     
 
     @override
@@ -43,14 +47,10 @@ import 'package:reddit_fox/navbar.dart';
       _tabController = TabController(length: 3, vsync: this);
       access_token = widget.access_token;
 
-      if (_myProfile) {
-        print(access_token);
-        fetchUserID(access_token);
-      }
-      else{
-        fetchData();
-      }
+      fetchUserAbout(widget.userName);
       fetchData();
+      fetchDataBack();
+      getUserComments();
     }
 
     @override
@@ -59,55 +59,16 @@ import 'package:reddit_fox/navbar.dart';
       super.dispose();
     }
 
-    Future<void> fetchUserID(String? accessToken) async {
-      try {
-        if (accessToken == null) {
-          throw Exception('Access token is null');
-        }
-
-        var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
-        var response = await http.get(
-          url,
-          headers: {'Authorization': 'Bearer $accessToken'},
-        );
-        
-        if (response.statusCode == 200) {
-          Map<String, dynamic> responseData = json.decode(response.body);
-          if (responseData.containsKey('user')) {
-            Map<String, dynamic> user = responseData['user'];
-            setState(() {
-              profilePic = user['avatar'];
-              if(profilePic == 'default.jpg'){
-                profilePic = null;
-              }
-              userID = user['_id'].toString();
-              created_at = user['createdAt'].toString();
-              userName = user['username'];
-              print(
-                'User ID: $userID, Username: $userName, Profile Pic: $profilePic, Created at: $created_at'
-              );
-            });
-          } else {
-            throw Exception('User data is not present in the response');
-          }
-        } else {
-          throw Exception('Failed to fetch user data, status code: ${response.statusCode}');
-        }
-      } catch (error) {
-        print('Error fetching user data: $error');
-        // Handle error, show error message, retry logic, etc.
-      }
-    }
-
 
     Future<void> fetchUserAbout(String userName) async {
       var url = Uri.parse(ApiRoutesBackend.getUserAbout(userName));
-
+      print("Token : $access_token");
+      final response = await http.get(url);
+      print("response statues code: ${response.statusCode}");
       try {
-        final response = await http.get(url);
-
         if (response.statusCode == 200) {
           Map<String, dynamic> responseData = json.decode(response.body);
+          print("Response Data: $responseData");
           if (responseData.containsKey('userID')) {
             setState(() {
               profilePic = responseData['avatar'];
@@ -115,10 +76,10 @@ import 'package:reddit_fox/navbar.dart';
                 profilePic = null;
               }
               userID = responseData['userID'];
-              created_at = responseData['createdAt'];
-              userName = responseData['email']; // Adjust username extraction here
+              // created_at = responseData['createdAt'];
+              userName = responseData['email']; // Adjust username extraction here , Created at: $created_at
               print(
-                  'User ID: $userID, Username: $userName, Profile Pic: $profilePic, Created at: $created_at');
+                  'User ID: $userID, Username: $userName, Profile Pic: $profilePic');
             });
           } else {
             throw Exception('User ID is not present in the response');
@@ -158,10 +119,52 @@ import 'package:reddit_fox/navbar.dart';
       }
     }
 
-    
 
+    Future<void> fetchDataBack() async {
+      String baseUrl = 'http://foxnew.southafricanorth.cloudapp.azure.com';
+      String endpoint = '/user/${widget.userName}/overview';
+      String queryString = '?page=1&count=5&limit=10';
 
+      String url = baseUrl + endpoint + queryString;
 
+      try {
+        http.Response response = await http.get(
+          Uri.parse(url),
+          headers: {'Authorization': 'Bearer ${widget.access_token}'},
+        );
+        print("status code for fetchDataBack: ${response.statusCode}");
+        if (response.statusCode == 200) {
+          Map<String, dynamic> responseData = jsonDecode(response.body);
+          setState(() {
+            posts = responseData['posts'];
+          });
+        } else {
+          print('Request failed with status: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Error fetching data: $e');
+      }
+    }
+
+  Future<void> getUserComments() async {
+    try{
+      final commentResponse = await http.get(Uri.parse('http://foxnew.southafricanorth.cloudapp.azure.com/user/${widget.userName}/comments?page=1&count=5&limit=10&t=1'), headers: {'Authorization': 'Bearer $access_token'});
+    print("status code for getUserComments: ${commentResponse.statusCode}");
+    if (commentResponse.statusCode == 200) {
+      setState(() {
+        userComments = json.decode(commentResponse.body)['posts'].cast<Map<String, dynamic>>();
+        print("user Comments : $userComments");
+      });
+    } else {
+      throw Exception('Failed to load user comments');
+    }
+  } catch (error) {
+    print('Error fetching data: $error');
+    // Handle error, show error message, retry logic, etc.
+  }
+  }
+
+  @override
     ImageProvider<Object> _getImageProvider(dynamic picture) {
       if (profilePic is String) {
         return NetworkImage(profilePic!);
@@ -250,7 +253,7 @@ Widget _buildTitleView() {
                     Padding(
                       padding: const EdgeInsets.only(left: 20, top: 5),
                       child: Text(
-                        'u/$userName • 1 karma • ${_formatDate(created_at)}',
+                        'u/$userName • 1 karma • ', // ${_formatDate(created_at)}
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey[400],
@@ -299,7 +302,7 @@ Widget _buildTitleView() {
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildPostsContainer(),
+            buildPostsContainer(),
             Container(), // Placeholder for Comments
             Container(), // Placeholder for About
           ],
@@ -364,10 +367,11 @@ Widget _buildTitleView() {
                                           ),
                                         ),
                                       ),
+                                      // ${_formatDate(userData['created_at'])}
                                       Padding(
                                         padding: const EdgeInsets.only(),
                                         child: Text(
-                                          'u/$userName • 1 karma • ${_formatDate(userData['created_at'])}',
+                                          'u/$userName • 1 karma • ',
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.grey[400],
@@ -452,7 +456,7 @@ Widget _buildTitleView() {
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildPostsContainer(),
+                buildPostsContainer(),
                 Container(), // Placeholder for Comments
                 Container(), // Placeholder for About
               ],
@@ -462,31 +466,18 @@ Widget _buildTitleView() {
       );
     }
 
-    Widget _buildPostsContainer() {
-      return ListView.builder(
-        shrinkWrap: true,
-        itemCount: userPosts.length,
-        itemBuilder: (context, index) {
-          final post = userPosts[index];
-          return ListTile(
-            title: Text(
-              post['redditName'] ?? '',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    Widget buildPostsContainer(){
+      return CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return ClassicCard(post: posts[index]);
+              },
+              childCount: posts.length,
             ),
-            subtitle: Text(
-              post['title'] ?? '',
-              style: TextStyle(fontSize: 16),
-            ),
-            trailing: post['picture'] != null
-                ? Image.network(
-                    post['picture'],
-                    width: 100,
-                    height: 250,
-                    fit: BoxFit.cover,
-                  )
-                : null,
-          );
-        },
+          ),
+        ],
       );
     }
 
