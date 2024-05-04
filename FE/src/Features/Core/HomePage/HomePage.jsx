@@ -91,7 +91,7 @@ export default function HomePage() {
         </div>
         <hr />
         {
-          data.data.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
+          data?.data?.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
       </div>
       <div className="p-5   max-w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">
