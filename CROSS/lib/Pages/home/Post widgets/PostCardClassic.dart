@@ -69,9 +69,18 @@ class _ClassicCardState extends State<ClassicCard> {
                 if (widget.post['picture'] == null)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0),
-                    child: Text(
-                      widget.post['description'],
-                      style: const TextStyle(fontSize: 16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isBlurred ? Colors.white : Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        widget.post['description'],
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: isBlurred ? Colors.transparent : Colors.white,
+                        ),
+                      ),
                     ),
                   ),
               ],

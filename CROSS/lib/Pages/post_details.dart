@@ -284,7 +284,7 @@ class _PostDetailsState extends State<PostDetails> {
         token: access_token,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
