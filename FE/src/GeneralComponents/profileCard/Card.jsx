@@ -14,19 +14,20 @@ export default function Card (){
     const fetchData = async () => {
       try {
         const response = await userAxios.get(`/api/user/${username}/number_posts_comments`);
-        setNumOfPosts(response.data.posts ?? 0);
-        setNumOfComments(response.data.comments ?? 0);
-        console.log("number of posts: ", numOfPosts);
+        console.log(response.data.comment);
+        console.log(response.data.post);
+        setNumOfComments(response.data.comment ?? 0);
+        setNumOfPosts(response.data.post ?? 0);
+       
       } catch (error) {
         console.log(error);
       }
     };
   
-    
       fetchData();
-    }, [username]);
+    }, []);
   
-  
+
     const navigator=useNavigate();
     const handleNavigate=()=>{
        navigator('/setting/profile');
