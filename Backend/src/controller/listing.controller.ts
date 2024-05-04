@@ -1132,7 +1132,7 @@ export async function submitPostHandler(req: Request, res: Response) {
     }
     const data = JSON.parse(req.body.request);
 
-    const { title, text, nsfw, spoiler, Communityname, poll } = data;
+    const { title, text, nsfw, spoiler, Communityname, poll, createdAt } = data;
 
     const community = await findCommunityByName(Communityname);
 
@@ -1144,6 +1144,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       attachments,
       nsfw,
       spoiler,
+      createdAt,
       userID: user._id,
       username: user.username,
       poll: pollOptions,

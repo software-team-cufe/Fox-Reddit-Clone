@@ -1,4 +1,4 @@
-import { prop, getModelForClass, Ref, DocumentType, pre, ReturnModelType, post } from '@typegoose/typegoose';
+import { prop, getModelForClass, DocumentType, pre, ReturnModelType, post, Ref } from '@typegoose/typegoose';
 import { User } from './user.model';
 import { Comment } from './comments.model';
 import { Community } from './community.model';
@@ -141,31 +141,12 @@ export class Post {
   @prop()
   bestFactor!: number;
 }
-// Add the function as a static method on the Post class
-// static async incrementInsightCount(doc: DocumentType<Post>) {
-//   await PostModel.updateOne({ _id: doc._id }, { $inc: { insightCnt: 1 } });
-// }
-// static async preFind(next: () => void) {
-//   await PostModel.updateMany({}, { $inc: { insightCnt: 1 } }).exec();
-//   next();
-// }
-
-// @pre<Post>('find', function (next) {
-//   const doc = this as DocumentType<Post>;
-//   Post.incrementInsightCount(doc);
-//   next();
-// })
-
-// @pre<typeof Post>('find', function (next) {
-//   PostModel.updateMany({}, { $inc: { insightCnt: 1 } }).exec(); // Use the model to update
-//   next();
-// })
+@pre<Post>('find', function(this: any, next) {
+  const currentDate = new Date();
+  this.where('createdAt').lt(currentDate);
+  next();
+  return; // Add this line to explicitly return void
+});
 const PostModel = getModelForClass(Post);
-
-// // Define pre-hook directly within the schema definition
-// PostModel.pre('find', async function (this: Post, next: () => void) {
-//   await this.updateMany({}, { $inc: { insightCnt: 1 } });
-//   next();
-// });
 
 export default PostModel;
