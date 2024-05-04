@@ -46,6 +46,7 @@ import {
   getMutedMemberHandler,
   muteHandler,
   unmuteHandler,
+  getAllCommunityHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -72,6 +73,8 @@ import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple'
 import { resizeCommunityIcon, resizeCommunityBanner } from '../middleware/resizeCommunityPhoto';
 
 const router = express.Router();
+
+router.get('/api/all_subreddits', getAllCommunityHandler);
 
 router.get('/api/communityName', validateResource(CommunityNameSchema), getCommunityNameHandler);
 

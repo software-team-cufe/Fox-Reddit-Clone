@@ -437,6 +437,50 @@ export async function getCommunityHandler(req: Request, res: Response) {
   }
 }
 
+export async function getAllCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+
+    const communities = await CommunityModel.aggregate([
+      {
+        $project: {
+          name: 1,
+          categories: 1,
+          count: { $size: '$members' },
+          icon: 1,
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+    ]);
+
+    return res.status(200).json({
+      communities,
+    });
+  } catch (error) {
+    console.error('Error in getCommunityInfoHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 /**
  * ban handler.
  *
