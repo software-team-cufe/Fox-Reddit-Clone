@@ -2,8 +2,6 @@ import React from 'react'
 import { useState } from 'react'
 const ModCard = () => {
 
-
-
     const [widget, setWidget] = useState(false);
     const [editWidget, setEditWidget] = useState(false);
     const [handleName, setHandleName] = useState(false);

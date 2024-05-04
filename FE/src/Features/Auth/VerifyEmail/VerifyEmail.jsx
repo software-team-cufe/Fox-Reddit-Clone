@@ -10,7 +10,8 @@ export default function VerifyEmailPage({ }) {
     const { token } = useParams();
 
    
-    const { isLoading, isError, data } = useQuery("verify email", () => userAxios.get(`api/users/signup/verify/${token}`), {
+    const { isLoading, isError, data } = useQuery("verify email", 
+    () => userAxios.get(`api/users/signup/verify/${token}`), {
         retry: 0,
         refetchOnWindowFocus: false,
         enabled: true,

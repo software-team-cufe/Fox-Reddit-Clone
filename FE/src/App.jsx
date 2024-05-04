@@ -120,6 +120,7 @@ function MainRoute() {
             "/forget-username",
             "/forget-password",
             "/r/:id/about",
+            "/r/:id/about/",
             "/r/:id/about/:idd",
             "/r/:id/about/:idd/:idd",
             "/r/:id/about/:idd/:idd/:iddd",

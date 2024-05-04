@@ -53,7 +53,7 @@ export const modNavbarItems = [
             },
             {
                 name: "Content Controls",
-                link: "",
+                link: "/settings",
                 icon: Settings2 ,
                 newTap: false,
             },
