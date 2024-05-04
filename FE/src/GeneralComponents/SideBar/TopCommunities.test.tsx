@@ -18,13 +18,14 @@ test(("render the TopCommunities"),()=>{
     expect(topCommunitiesElement).toBeInTheDocument();
 });
 
-test(("render the comunities"),()=>{
+test(("render the Communities"),()=>{
 
     render(
         <MemoryRouter>
             <TopCommunities />
         </MemoryRouter>
     );
+    const communities = screen.getByRole("communities");
+    expect(communities).toBeInTheDocument();
+});
 
-
-})

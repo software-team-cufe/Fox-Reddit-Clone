@@ -89,7 +89,7 @@ export default function TopCommunities() {
             <span className='font-bold'>Top communities</span>
             <p className='text-xs text-gray-500 text-xs'>Browse Fox’s largest communities</p>
         </div>
-        <ul className='grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 width-full gap-2 w-full'>
+        <ul role="communities" className='grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 width-full gap-2 w-full'>
             {communities.map((comm,index) => (
                 <li key={index} className={`flex item-center md:border-b-0 sm:border-b-4 border-b-4 text-center w-full h-auto mr-5 text-center grid grid-cols-3 gap-4 flex-wrap justify-center`} >
                     <div className='rounded-full text-center w-full mt-3 ml-8'>{index+1}</div>
