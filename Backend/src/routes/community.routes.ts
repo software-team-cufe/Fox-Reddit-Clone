@@ -39,9 +39,9 @@ import {
   getCommunityNameHandler,
   getCommunityCategoriesHandler,
   editCommunityCategoriesHandler,
-  // getBannedMemberHandler,
+  getBannedMemberHandler,
   banHandler,
-  // unbanHandler,
+  unbanHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -59,7 +59,7 @@ import {
   CommunityNameSchema,
   editCommunityCategoriesSchema,
   banSchema,
-  // unbanSchema,
+  unbanSchema,
   // getBannedMemberSchema,
 } from '../schema/community.schema';
 import uploadSingleMulter from '../middleware/multer/singleImage';
@@ -82,9 +82,9 @@ router.post('/:subreddit/api/unfavorite', validateResource(subscribeCommunitySch
 router.post('/:subreddit/api/join_moderator', validateResource(subscribeCommunitySchema), joinModeratorHandler);
 router.post('/:subreddit/api/leave_moderator', validateResource(subscribeCommunitySchema), leaveModeratorHandler);
 router.post('/:subreddit/api/ban/:username', validateResource(banSchema), banHandler);
-// router.post('/:subreddit/api/unban', validateResource(unbanSchema), unbanHandler);
+router.post('/:subreddit/api/unban/:username', validateResource(unbanSchema), unbanHandler);
 router.get('/:subreddit/about/banned', validateResource(subscribeCommunitySchema), getUsersIsbannedIncommunityHandler);
-// router.get('/:subreddit/about/banned/:username', validateResource(getBannedMemberSchema), getBannedMemberHandler);
+router.get('/:subreddit/about/banned/:username', validateResource(unbanSchema), getBannedMemberHandler);
 router.get('/:subreddit/about/moderators', validateResource(subscribeCommunitySchema), getModeratorsHandler);
 router.get('/:subreddit/about/members', validateResource(subscribeCommunitySchema), getMembersHandler);
 router.get('/:subreddit/about/spam_posts', validateResource(subscribeCommunitySchema), getSpamPostsHandler);

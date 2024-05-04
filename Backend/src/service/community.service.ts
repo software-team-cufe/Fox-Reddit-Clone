@@ -324,7 +324,7 @@ export async function getUsersAsBannedInCommunity(communityName: string) {
   // Extract the IDs and bannedTime of banned users
   const bannedUsers = community.members.filter((member) => member.isBanned?.value === true);
   const userIDs = bannedUsers.map((member) => member.userID);
-  const bannedTime = bannedUsers.map((member) => member.isBanned?.date);
+  const bann = bannedUsers.map((member) => member.isBanned);
 
   // Fetch the banned users from the database, selecting specific attributes
   const users = await UserModel.find({ _id: { $in: userIDs } }).select('avatar username _id about createdAt');
@@ -332,11 +332,44 @@ export async function getUsersAsBannedInCommunity(communityName: string) {
   // Combine banned users with their bannedTime
   const usersWithBannedTime = users.map((user, index) => ({
     ...user.toObject(),
-    bannedTime: bannedTime[index],
+    banInfo: bann[index],
   }));
 
   return { status: true, users: usersWithBannedTime };
 }
+
+/**
+ * Retrieves the users who are banned in a community.
+ *
+ * @param {string} communityName - The name of the community.
+ * @return {Promise<{status: boolean, users?: {avatar: string, username: string, _id: string, about: string, bannedTime: Date}[]}>} - A promise that resolves to an object with the status of the operation and the banned users, if successful.
+ */
+export async function getBannedUserInCommunity(userID: string, communityName: string) {
+  // Find the community by name
+  const community = await findCommunityByName(communityName);
+
+  // If community is not found, return status false
+  if (!community || !community.members) {
+    return { status: false };
+  }
+
+  // Extract the IDs and bannedTime of banned users
+  const bannedUser = community.members.filter(
+    (member) => member.isBanned?.value === true && member.userID?.toString() == userID
+  );
+
+  // Fetch the banned users from the database, selecting specific attributes
+  const user = await UserModel.findOne({ _id: { $in: userID } }).select('avatar username about createdAt');
+
+  // Combine banned users with their bannedTime
+  const userWithBanInfo = {
+    user,
+    banInfo: bannedUser,
+  };
+
+  return { status: true, userr: userWithBanInfo };
+}
+
 /**
  * Retrieves the IDs and roles of the moderators of a community.
  *
@@ -803,6 +836,59 @@ export async function banUserInCommunity(
     },
   };
 
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $pull: { members: { userID: userID } } },
+      { new: true }
+    );
+    const updatedCommunity2 = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { members: memInComm } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * unbanMemberToCom
+ * @param {string} body contain rules details
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function unbanUserInCommunity(userID: string, subreddit: string) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+  const memInComm = {
+    userID: userID,
+    isMuted: {
+      value: false,
+      date: new Date(),
+      reason: 'member is not muted',
+    },
+    isBanned: {
+      value: false,
+      date: new Date(),
+      reason: 'member not banned',
+      note: 'member not banned',
+      period: 'member not banned',
+    },
+  };
   try {
     const updatedCommunity = await CommunityModel.findByIdAndUpdate(
       community._id,

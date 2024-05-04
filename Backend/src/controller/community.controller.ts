@@ -19,6 +19,8 @@ import {
   approveSpamPost,
   approveSpamComment,
   banUserInCommunity,
+  unbanUserInCommunity,
+  getBannedUserInCommunity,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -35,6 +37,7 @@ import {
   findUserById,
   findUserByUsername,
   banUserInUser,
+  unbanUserInUser,
 } from '../service/user.service';
 
 import { Community, CommunityModel } from '../model/community.model';
@@ -509,6 +512,83 @@ export async function banHandler(req: Request, res: Response) {
 }
 
 /**
+ * unban handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function unbanHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const username = req.params.username;
+  const banned = await findUserByUsername(username);
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if user is missing or invalid
+  if (!banned) {
+    return res.status(401).json({
+      error: 'User not found',
+    });
+  }
+
+  let isMod = false;
+
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      // Check if userID is defined and equal to commModerator
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not ban other members' });
+  }
+  const bannedID = banned._id.toString();
+  try {
+    const updateUser = await unbanUserInCommunity(bannedID, subreddit);
+    const updateUser2 = await unbanUserInUser(bannedID, subreddit);
+    // Handle user addition failure
+    if (updateUser.status === false || updateUser2.status === false) {
+      return res.status(500).json({
+        error: 'Error in banning user',
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error banning member in subreddit:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
  * Join Moderaor handler.
  *
  * @param {Request} req - The request object.
@@ -665,6 +745,68 @@ export async function getUsersIsbannedIncommunityHandler(req: Request, res: Resp
     }
   } catch (error) {
     console.error('Error in getUsersIsbannedIncommunityHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Retrieves the list of users who are banned in a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A promise that resolves when the function is complete.
+ */
+export async function getBannedMemberHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const username = req.params.username;
+    const banned = await findUserByUsername(username);
+
+    if (!subreddit) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    // Check if user is missing or invalid
+    if (!banned) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'user not found',
+      });
+    }
+    const bannedID = banned._id.toString();
+    const userResult = await getBannedUserInCommunity(bannedID, subreddit);
+    if (userResult.status === true) {
+      const user = userResult.userr;
+      return res.status(200).json({ user });
+    } else {
+      return res.status(404).json({
+        status: 'error',
+        message: 'error in get banned users',
+      });
+    }
+  } catch (error) {
+    console.error('Error in getBannedUserInCommunity:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
