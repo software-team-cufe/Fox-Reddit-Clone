@@ -30,6 +30,9 @@ class _settingState extends State<setting> {
   late Map<String, dynamic> userData = {};
   Map<String, dynamic>? userPrefs;
   Map<String, dynamic>? prefData;
+  late Map<String, dynamic> user = {};
+  late String? profilePic = null;
+  late String? userName = '';
 
   String? backtoken;
   String? mocktoken;
@@ -43,7 +46,7 @@ class _settingState extends State<setting> {
         // Store the token in the access_token variable
         backtoken = sharedPrefValue.getString('backtoken');
         mocktoken = sharedPrefValue.getString('mocktoken');
-        getData(mocktoken);
+        fetchUser(backtoken);
         fetchData();
       });
     });
@@ -86,19 +89,55 @@ class _settingState extends State<setting> {
   }
 
   // Function to get user data
-  getData(token) async {
-    if (token != null) {
-      final url = ApiRoutesMockserver.getUserByToken(token);
-      final response = await http.get(Uri.parse(url));
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          userData = data[0];
-        });
-      } else {
-        print('invalid login');
+  // getData(token) async {
+  //   if (token != null) {
+  //     final url = ApiRoutesMockserver.getUserByToken(token);
+  //     final response = await http.get(Uri.parse(url));
+  //     print(response.statusCode);
+  //     if (response.statusCode == 200) {
+  //       final List<dynamic> data = jsonDecode(response.body);
+  //       setState(() {
+  //         userData = data[0];
+  //       });
+  //     } else {
+  //       print('invalid login');
+  //     }
+  //   }
+  // }
+  Future<void> fetchUser(String? accessToken) async {
+    try {
+      if (accessToken == null) {
+        throw Exception('Access token is null');
       }
+
+      var url = Uri.parse(ApiRoutesBackend.getUserByToken(accessToken));
+      var response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        if (responseData.containsKey('user')) {
+          Map<String, dynamic> user = responseData['user'];
+          setState(() {
+            if (profilePic == 'default.jpg') {
+              profilePic = null;
+            }
+
+            userName = user['username'];
+            print(' Username: $userName, ');
+          });
+        } else {
+          throw Exception('User data is not present in the response');
+        }
+      } else {
+        throw Exception(
+            'Failed to fetch user data, status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching user data: $error');
+      // Handle error, show error message, retry logic, etc.
     }
   }
 
@@ -172,7 +211,7 @@ class _settingState extends State<setting> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      AccSetting(userData: userData)));
+                                      AccSetting(userData: user)));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,7 +224,7 @@ class _settingState extends State<setting> {
                               ),
                             ),
                             Text(
-                              userData["userName"] ?? 'user.name',
+                              userName ?? 'user.name',
                               style: const TextStyle(
                                 color: Colors.white,
                               ),

@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:core';
+import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:reddit_fox/GeneralWidgets/image_display.dart';
 import 'package:reddit_fox/GeneralWidgets/poll.dart';
 
@@ -86,12 +89,54 @@ class _CreatePostState extends State<CreatePost> {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes();
-      setState(() {
-        isImageVisible = true;
-        attachments.add(bytes); 
-      });
-      addWidget(ImageDisplay(imagePath: pickedFile.path));
+      final imageUrl = await uploadImage(pickedFile, 'image');
+      if (imageUrl.isNotEmpty) {
+        setState(() {
+          isImageVisible = true;
+          attachments.add(imageUrl);
+        });
+        addWidget(ImageDisplay(imagePath: pickedFile.path));
+        print('Image uploaded to Cloudinary: $imageUrl');
+      } else {
+        print('Failed to upload image to Cloudinary');
+      }
+    }
+  }
+
+  void pickVideo() async {
+    final pickedFile =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final videoUrl = await uploadImage(pickedFile, 'video');
+      if (videoUrl.isNotEmpty) {
+        setState(() {
+          isVideoVisible = true;
+          attachments.add(videoUrl);
+        });
+        addWidget(VideoDisplay(videoPath: pickedFile.path));
+        print('Video uploaded to Cloudinary: $videoUrl');
+      } else {
+        print('Failed to upload video to Cloudinary');
+      }
+    }
+  }
+
+  Future<String> uploadImage(XFile file, String imageOrVideo) async {
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(file.path),
+      'upload_preset': 'postImageOrVideo',
+    });
+
+    final response = await Dio().post(
+      'https://api.cloudinary.com/v1_1/dtl7z245k/$imageOrVideo/upload',
+      data: formData,
+    );
+
+    if (response.statusCode == 200) {
+      final data = response.data;
+      return data['secure_url'];
+    } else {
+      throw Exception('Failed to upload file to Cloudinary');
     }
   }
 
@@ -101,21 +146,6 @@ class _CreatePostState extends State<CreatePost> {
       iconsize = isIconSizeDoubled ? 50.0 : 25.0;
       arrowsize = isIconSizeDoubled ? 0.0 : 25.0;
     });
-  }
-
-  void pickVideo() async {
-    final pickedFile =
-        await ImagePicker().pickVideo(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes();
-      setState(() {
-        isVideoVisible = true;
-        attachments.add(bytes);
-      });
-      final videoPath = pickedFile.path;
-      print('Video picked: $videoPath'); // Debugging print
-      addWidget(VideoDisplay(videoPath: videoPath));
-    }
   }
 
   void addWidget(Widget widgetToAdd) {
@@ -150,14 +180,22 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
+  
   Future<void> submitPost(String title, String text, bool isNsfw,
-      bool isSpoiler, String urlController, List<String> Poll) async {
+      bool isSpoiler, String urlController, List<String> poll) async {
     var formData = FormData();
 
     // Add attachments to formData
     for (var attachment in attachments) {
-      formData.files.add(
-          MapEntry('attachments', await MultipartFile.fromBytes(attachment)));
+      // Check if the attachment is a String (URL) or bytes (image)
+      if (attachment is String) {
+        // If it's a URL, add it directly
+        formData.fields.add(MapEntry('url', attachment));
+      } else if (attachment is List<int>) {
+        String base64Image = 'image/png;base64,${base64Encode(attachment)}';
+        formData.fields.add(MapEntry('attachments', base64Image));
+        print(base64Image);
+      }
     }
 
     var fields = {
@@ -166,7 +204,9 @@ class _CreatePostState extends State<CreatePost> {
         'text': text,
         'nsfw': isNsfw,
         'spoiler': isSpoiler,
-        'poll': Poll,
+        'poll': poll,
+        'createdAt':
+            DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(DateTime.now()),
         if (selectedCommunity.isNotEmpty) 'Communityname': selectedCommunity,
       }),
     };
@@ -227,7 +267,6 @@ class _CreatePostState extends State<CreatePost> {
                           return;
                         }
 
-                        // Proceed with submitting post
                         submitPost(title, body, isNsfw, isSpoiler, url, _poll);
                         Navigator.push(
                           context,
@@ -235,6 +274,19 @@ class _CreatePostState extends State<CreatePost> {
                               builder: (context) => const HomePage()),
                         );
                       },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (_titleController.text.isEmpty ||
+                                _bodyController.text.isEmpty) {
+                              return Theme.of(context).colorScheme.primary;
+                            }
+
+                            return const Color.fromARGB(255, 76, 168, 243);
+                          },
+                        ),
+                      ),
                       child: const Text('Next'),
                     )
                   ],
