@@ -1,5 +1,28 @@
 
+import { userAxios } from "../../../Utils/UserAxios";
+import { useQuery } from "react-query";
 export default function NotificationSettings() {
+   
+      const handleNotification = async(btnname,value) => {
+        try{
+            const body = {};
+            body[btnname]=value;
+            const response = await userAxios.patch("api/v1/me/notification/settings",body);
+         
+            console.log(response.data)
+            console.log("notification")
+        }
+        catch(error){
+           console.log(error)
+        }
+      }
+      
+      
+    const {data,isLoading,isError}=useQuery('notification', ()=> userAxios.get("api/v1/me/notification/settings"),{
+        refetchOnWindowFocus: false, refetchOnMount:true, retry: 0})
+    if (isLoading)
+            {return "true"}
+    const notification=data.data.userPrefs
 
 
     return (
@@ -21,13 +44,18 @@ export default function NotificationSettings() {
                             </p>
                         </div>
                         <div>
-                            <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
-                                <label htmlFor="switch" className="hidden"></label>
-                                <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
-                             peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
-                            </label>
-                        </div>
+                        <label
+                         
+                          className="relative inline-flex cursor-pointer items-center"
+                        >
+                          <input 
+                          onChange={(e)=>handleNotification("messages" , e.target.checked)}
+                          id="switch" type="checkbox" className="peer sr-only" defaultChecked={notification.messages}/>
+                          <label htmlFor="switch" className="hidden"></label>
+                          <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
+                        </label>
+
+                      </div>
 
                     </div>
                     <div className="flex flex-row mb-7 justify-between">
@@ -38,7 +66,7 @@ export default function NotificationSettings() {
                         </div>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("chatMessages" , e.target.checked)} defaultChecked={notification.chatMessages} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -52,7 +80,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("chatRequests" , e.target.checked)} defaultChecked={notification.chatRequests} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -82,7 +110,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("mentionOfUsername" , e.target.checked)} defaultChecked={notification.mentionOfUsername} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -96,7 +124,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("commentsOnYourPosts" , e.target.checked)} defaultChecked={notification.commentsOnYourPosts} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -110,7 +138,7 @@ export default function NotificationSettings() {
                         </p>
                         <div>
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("upvotesOnYourPosts" , e.target.checked)} defaultChecked={notification.upvotesOnYourPosts} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -123,7 +151,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("upvotedOnYourComments" , e.target.checked)} defaultChecked={notification.upvotedOnYourComments} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -136,7 +164,7 @@ export default function NotificationSettings() {
                         </p>
                         <div>
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("repliesToYourComments" , e.target.checked)} defaultChecked={notification.repliesToYourComments} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -149,7 +177,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("activityOnYourComments" , e.target.checked)} defaultChecked={notification.activityOnYourComments} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -163,7 +191,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("activityOnChatPostsYoureIn" , e.target.checked)} defaultChecked={notification.activityOnChatPostsYoureIn} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -176,7 +204,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("newFollowers", e.target.checked)} defaultChecked={notification.newFollowers} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -189,7 +217,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("awardsYouReceive", e.target.checked)} defaultChecked={notification.awardsYouReceive} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -202,7 +230,7 @@ export default function NotificationSettings() {
                         </p>
                         <div>
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("postsYouFollow", e.target.checked)} defaultChecked={notification.postsYouFollow} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -215,7 +243,7 @@ export default function NotificationSettings() {
                         </p>
                         <div>
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("commentsYouFollow", e.target.checked)} defaultChecked={notification.commentsYouFollow} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -237,7 +265,7 @@ export default function NotificationSettings() {
                         </p>
                         <div>
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("trendingPosts", e.target.checked)} defaultChecked={notification.trendingPosts} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -251,7 +279,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("communityRecommendations", e.target.checked)} defaultChecked={notification.communityRecommendations} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -265,7 +293,7 @@ export default function NotificationSettings() {
                         </p>
                         <div >
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("reReddit", e.target.checked)} defaultChecked={notification.reReddit} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -278,7 +306,7 @@ export default function NotificationSettings() {
                         </p>
                         <div>
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("featuredContent", e.target.checked)} defaultChecked={notification.featuredContent} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -299,7 +327,7 @@ export default function NotificationSettings() {
                         </p>
                         <div>
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e) => handleNotification("redditAnnouncements", e.target.checked)} defaultChecked={notification.redditAnnouncements} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
@@ -313,7 +341,7 @@ export default function NotificationSettings() {
                         </p>
                         <div>
                             <label className="relative inline-flex cursor-pointer items-center">
-                                <input id="switch" type="checkbox" className="peer sr-only" />
+                                <input onChange={(e)=>handleNotification("cakeDay", e.target.checked)} defaultChecked={notification.cakDay} id="switch" type="checkbox" className="peer sr-only" />
                                 <label htmlFor="switch" className="hidden"></label>
                                 <div className="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
                              peer-checked:bg-blue-700 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300"></div>
