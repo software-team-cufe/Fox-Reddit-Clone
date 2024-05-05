@@ -47,6 +47,16 @@ import {
   muteHandler,
   unmuteHandler,
   getAllCommunityHandler,
+  getImageWidgetsHandler,
+  editImageWidgetsHandler,
+  getTextWidgetsHandler,
+  editTextWidgetsHandler,
+  getButtonWidgetsHandler,
+  editButtonWidgetsHandler,
+  getPostSettingsHandler,
+  editPostSettingsHandler,
+  getContentControlsHandler,
+  editContentControlsHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -67,6 +77,11 @@ import {
   unbanSchema,
   muteSchema,
   unmuteSchema,
+  EditImageWidgetArraySchema,
+  EditTextWidgetArraySchema,
+  EditButtonWidgetArraySchema,
+  EditPostSettingsSchema,
+  EditContentControlsSchema,
 } from '../schema/community.schema';
 import uploadSingleMulter from '../middleware/multer/singleImage';
 import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple';
@@ -114,18 +129,47 @@ router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunit
 
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
 router.get('/:subreddit/api/rules', validateResource(getCommunitySchema), getCommunityRulesHandler);
+
 router.patch(
   '/:subreddit/api/edit_categories',
   validateResource(editCommunityCategoriesSchema),
   editCommunityCategoriesHandler
 );
 router.get('/:subreddit/api/categories', validateResource(getCommunitySchema), getCommunityCategoriesHandler);
+
 router.patch(
   '/:subreddit/api/edit_removal_reasons',
   validateResource(editCommunityRemovalResonsSchema),
   editCommunityRemovalResonsHandler
 );
 router.get('/:subreddit/api/removal_reasons', validateResource(getCommunitySchema), getCommunityRemovalResonsHandler);
+
+router.get('/:subreddit/api/image_widgets', validateResource(getCommunitySchema), getImageWidgetsHandler);
+router.patch(
+  '/:subreddit/api/edit_image_widgets',
+  validateResource(EditImageWidgetArraySchema),
+  editImageWidgetsHandler
+);
+
+router.get('/:subreddit/api/text_widgets', validateResource(getCommunitySchema), getTextWidgetsHandler);
+router.patch('/:subreddit/api/edit_text_widgets', validateResource(EditTextWidgetArraySchema), editTextWidgetsHandler);
+
+router.get('/:subreddit/api/button_widgets', validateResource(getCommunitySchema), getButtonWidgetsHandler);
+router.patch(
+  '/:subreddit/api/edit_button_widgets',
+  validateResource(EditButtonWidgetArraySchema),
+  editButtonWidgetsHandler
+);
+
+router.get('/:subreddit/api/post_settings', validateResource(getCommunitySchema), getPostSettingsHandler);
+router.patch('/:subreddit/api/edit_post_settings', validateResource(EditPostSettingsSchema), editPostSettingsHandler);
+
+router.get('/:subreddit/api/content_controls', validateResource(getCommunitySchema), getContentControlsHandler);
+router.patch(
+  '/:subreddit/api/edit_content_controls',
+  validateResource(EditContentControlsSchema),
+  editContentControlsHandler
+);
 
 router.post('/:subreddit/api/mark_spam_post', validateResource(spamPostSchema), markSpamPostHandler);
 router.post('/:subreddit/api/mark_spam_comment', validateResource(spamCommentSchema), markSpamCommentHandler);

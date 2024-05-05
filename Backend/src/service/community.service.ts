@@ -1,5 +1,14 @@
 import appError from '../utils/appError';
-import CommunityModel, { Community, CommunityRule, removalReason } from '../model/community.model';
+import CommunityModel, {
+  Community,
+  CommunityRule,
+  removalReason,
+  ImageWidget,
+  TextWidget,
+  ButtonWidget,
+  ContentControls,
+  PostSettings,
+} from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
 import { findPostById } from './post.service';
@@ -554,6 +563,141 @@ export async function editCommunityCategories(subreddit: string, cats: Community
 
   try {
     const updatedCommunity = await CommunityModel.findByIdAndUpdate(community._id, { categories: cats }, { new: true });
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityImageWidgets(subreddit: string, widgets: ImageWidget[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { ImageWidget: widgets },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityTextWidgets(subreddit: string, widgets: TextWidget[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { TextWidget: widgets },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityButtonWidgets(subreddit: string, widgets: ButtonWidget[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { ButtonWidget: widgets },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityPostSettings(subreddit: string, settings: PostSettings) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { PostSettings: settings },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityContentControls(subreddit: string, controls: ContentControls) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { ContentControls: controls },
+      { new: true }
+    );
   } catch (error) {
     return {
       status: false,
