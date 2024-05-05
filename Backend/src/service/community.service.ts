@@ -1080,3 +1080,96 @@ export async function unmuteUserInCommunity(userID: string, subreddit: string) {
     status: true,
   };
 }
+
+//get home page posts for logged in and authenticated user
+
+export async function getHomePostsAuth(page: number, limit: number, userID: number, sort: string, topBy: string) {
+  //   What is the difference between the different sort options?
+  // "Hot" posts are sorted by number of views.
+  // "Top" posts are sorted by upvotes but they have an option of sorting by time where you can choose to view within a specific time frame.
+  // "Best" is just a normal feed with random sorting.
+  // "New" should be sorted according to time (by the most recent) not an option like in "Top".
+
+  // let sortCriteria: Record<string, number>;
+  // switch (sort) {
+  //   case 'hot':
+  //     sortCriteria = { 'posts.views': -1 };
+  //     break;
+  // }
+
+  const UserCommunityPosts = await UserModel.aggregate([
+    {
+      $match: {
+        _id: userID,
+      },
+    },
+    { $unwind: '$member' },
+    {
+      $lookup: {
+        from: 'communities',
+        localField: 'member.communityId',
+        foreignField: '_id',
+        as: 'joinedCommunities',
+      },
+    },
+    {
+      $unwind: '$joinedCommunities',
+    },
+  ]);
+}
+
+/**
+ * Retrieves a random set of posts from public communities for the home page of a not authenticated user.
+ *
+ * @param {number} page - The page number of the results.
+ * @param {number} limit - The maximum number of posts to return per page.
+ * @return {Promise<Array<Object>>} A promise that resolves to an array of post objects with properties:
+ *   - communityIcon: The icon of the community where the post was made.
+ *   - postTitle: The title of the post.
+ *   - postTextHTML: The HTML content of the post.
+ *   - votesCount: The number of votes the post has received.
+ *   - commentsNum: The number of comments the post has.
+ *   - attachments: The attachments associated with the post.
+ */
+export async function getHomePostsNotAuth(page: number, limit: number) {
+  const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+  const randomPosts = await CommunityModel.aggregate([
+    {
+      $match: {
+        privacyType: 'public',
+      },
+    },
+    {
+      //left outer join with posts collection
+      $lookup: {
+        from: 'posts', //  posts collection
+        localField: 'communityPosts', //name of the posts field in the community model
+        foreignField: '_id', //name of the _id field in the posts model
+        as: 'posts', //name of the posts field in the result
+      },
+    },
+    { $unwind: '$posts' }, // Unwind the posts array
+    {
+      $match: {
+        'posts.title': { $exists: true }, // Filter out posts without title
+      },
+    },
+    { $sample: { size: limit } }, // Limit the number of posts per community
+    { $skip: skip }, // Skip documents based on page and limit
+    {
+      $project: {
+        communityIcon: '$icon', // Project community icon
+        communityName: '$name', // Project community name
+        communityDescription: '$description', // Project community description
+        memberCount: '$membersCnt', // Project member count
+        postTitle: '$posts.title', // Project post title
+        postTextHTML: '$posts.textHTML', // Project post textHTML
+        votesCount: '$posts.votesCount', // Project post votesCount
+        commentsNum: '$posts.commentsNum', // Project post commentsNum
+        attachments: '$posts.attachments', // Project post attachments
+      },
+    },
+  ]);
+  return randomPosts;
+}
