@@ -685,43 +685,42 @@ export async function username_availableHandler(req: Request<VerifyUserInput>, r
  * @returns A response for user "about" by username.
  */
 export async function aboutHandler(req: Request, res: Response) {
-  if (!res.locals.user) {
-    return res.status(401).json({
-      status: 'failed',
-      message: 'Access token is missing',
-    });
-  }
   try {
-    // Extract params
-    const username: string = req.params.username as string;
+    if (!req.params.username) {
+      return res.status(404).send("This user doesn't exist!");
+    }
+    // Extract username from request params
+    const username = req.params.username as string;
     const user = await findUserByUsername(username);
 
     if (!user) {
       return res.status(404).send("This user doesn't exist!");
     }
 
+    // Extract necessary user data
     const obj = {
-      prefShowTrending: user?.prefs?.prefShowTrending,
-      isBlocked: user?.aboutReturn?.isBlocked,
-      // isBanned: user?.commMember?.isBanned,
-      // isMuted: user?.commMember?.isMuted,
-      canCreateSubreddit: user?.canCreateSubreddit,
-      isMod: user?.aboutReturn?.isModerator,
-      over18: user?.prefs?.over18,
-      hasVerifiedEmail: user?.verified,
-      createdAt: user?.createdAt,
-      inboxCount: user?.inboxCount,
-      totalKarma: user?.karma,
-      linkKarma: user?.postKarma,
-      acceptFollowers: user?.aboutReturn?.acceptFollowers,
-      commentKarma: user?.commentKarma,
-      passwordSet: user?.passwordResetCode,
-      email: user?.email,
-      about: user?.about,
-      gender: user?.gender,
-      avatar: user?.avatar,
-      userID: user?._id,
-      showActiveCommunities: user?.showActiveCommunities,
+      prefShowTrending: user.prefs?.prefShowTrending,
+      isBlocked: user.aboutReturn?.isBlocked,
+      // isBanned: user.member?.some((m) => m.isBanned),
+      // isMuted: user.member?.some((m) => m.isMuted),
+      canCreateSubreddit: user.canCreateSubreddit,
+      isMod: user.aboutReturn?.isModerator,
+      over18: user.prefs?.over18,
+      hasVerifiedEmail: user.verified,
+      createdAt: user.createdAt,
+      inboxCount: user.inboxCount,
+      totalKarma: user.karma,
+      linkKarma: user.postKarma,
+      acceptFollowers: user.aboutReturn?.acceptFollowers,
+      commentKarma: user.commentKarma,
+      passwordSet: user.passwordResetCode,
+      email: user.email,
+      about: user.about,
+      gender: user.gender,
+      avatar: user.avatar,
+      userID: user._id,
+      showActiveCommunities: user.showActiveCommunities,
+      socialLinks: user.type,
     };
 
     return res.status(200).json(obj);
