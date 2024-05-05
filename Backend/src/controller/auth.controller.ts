@@ -115,4 +115,5 @@ export async function getFCMToken(req: Request, res: Response) {
     });
   }
   res.locals.fcmtoken = req.body;
+  return res.status(200).json('Token acquired.');
 }
