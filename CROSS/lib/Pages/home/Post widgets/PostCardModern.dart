@@ -204,7 +204,7 @@ class _ModernCardState extends State<ModernCard> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        if (widget.post['userID'] == sharedPrefValue.getString('userid')) {
+        if (widget.post['_id'] == sharedPrefValue.getString('userid')) {
           widget.currentuserpost = true;
         }
       });
@@ -414,8 +414,8 @@ class _ModernCardState extends State<ModernCard> {
                 ),
               ],
             ),
-            cardCoreWidget(post: widget.post, detailsPageOpen: false),
-            VoteSection(post: widget.post),
+            // cardCoreWidget(post: widget.post, detailsPageOpen: false),
+            // VoteSection(post: widget.post),
             const Divider(
                 height: 1,
                 color: Color.fromARGB(255, 44, 43, 43),

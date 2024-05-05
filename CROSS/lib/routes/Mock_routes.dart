@@ -10,12 +10,16 @@ class ApiRoutesBackend {
   static const String forgetPassword = '$baseUrl/api/users/forgotpassword';
   static String getPosts(String category, int page, int count, int limit) =>
       '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
+  static String homePostssorted(
+          {String category = 'new', int page = 1, int limit = 15}) =>
+      '$baseUrl/user-home?page=$page&$limit=15&sort=$category';
+
   static String getUserAbout(String username) =>
       '$baseUrl/user/$username/about';
 
-  //!temprorary
-  static const String tempGetPosts =
-      'https://virtserver.swaggerhub.com/software_eng_fox/FoxAPI/1.0.0/best?page=2&count=2&limit=2';
+  // //!temprorary
+  // static const String tempGetPosts =
+  //     'https://virtserver.swaggerhub.com/software_eng_fox/FoxAPI/1.0.0/best?page=2&count=2&limit=2';
 
   static const String followersAccs = '$baseUrl/api/v1/me/followings';
   static const String unFolow = '$baseUrl/api/unfollow';

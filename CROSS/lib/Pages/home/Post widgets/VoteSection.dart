@@ -43,7 +43,7 @@ class _VoteSectionState extends State<VoteSection> {
   void initState() {
     super.initState();
     voteCount = widget.post['votesCount'] ?? 0;
-    hasVoted = widget.post['hasVoted'] ?? false;
+    // hasVoted = widget.post['hasVoted'] ?? false;
   }
 
   @override

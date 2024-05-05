@@ -48,7 +48,7 @@ class _HistoryPageState extends State<HistoryPage> {
         : ApiRoutesMockserver.getPosts);
     var response = await http.get(url);
 
-    url = Uri.parse(ApiRoutesBackend.tempGetPosts);
+    // url = Uri.parse(ApiRoutesBackend.tempGetPosts);
     response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $access_token'},
