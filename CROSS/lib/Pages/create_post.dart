@@ -18,7 +18,7 @@ import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreatePost extends StatefulWidget {
-  const CreatePost({super.key});
+  const CreatePost({Key? key}) : super(key: key);
 
   @override
   State<CreatePost> createState() => _CreatePostState();
@@ -43,6 +43,9 @@ class _CreatePostState extends State<CreatePost> {
   late List<String> communities = [];
   String selectedCommunity = '';
   late String access_token;
+  final ImagePicker _imagePicker = ImagePicker();
+  List<Widget> imageWidgets = [];
+
   List attachments = [];
 
   // Variables to hold the states of the switches
@@ -56,6 +59,7 @@ class _CreatePostState extends State<CreatePost> {
     _bodyController = TextEditingController();
     urlController = TextEditingController();
     _poll = [];
+    imageWidgets = [];
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
@@ -81,25 +85,45 @@ class _CreatePostState extends State<CreatePost> {
         addedWidget = null;
       } else {
         addedWidget = PollPage(options: _poll);
+        imageWidgets = [];
       }
     });
   }
 
+  // void pickImage() async {
+  //   final pickedFile =
+  //       await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     final imageUrl = await uploadImage(pickedFile, 'image');
+  //     if (imageUrl.isNotEmpty) {
+  //       setState(() {
+  //         isImageVisible = true;
+  //         attachments.add(imageUrl);
+  //       });
+  //       addWidget(ImageDisplay(imagePath: pickedFile.path));
+  //       print('Image uploaded to Cloudinary: $imageUrl');
+  //     } else {
+  //       print('Failed to upload image to Cloudinary');
+  //     }
+  //   }
+  // }
   void pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      final imageUrl = await uploadImage(pickedFile, 'image');
-      if (imageUrl.isNotEmpty) {
-        setState(() {
-          isImageVisible = true;
+    final List<XFile>? selectedImages = await _imagePicker.pickMultiImage();
+    if (selectedImages != null && selectedImages.isNotEmpty) {
+      for (XFile imageFile in selectedImages) {
+        final imageUrl = await uploadImage(imageFile, 'image');
+        if (imageUrl.isNotEmpty) {
           attachments.add(imageUrl);
-        });
-        addWidget(ImageDisplay(imagePath: pickedFile.path));
-        print('Image uploaded to Cloudinary: $imageUrl');
-      } else {
-        print('Failed to upload image to Cloudinary');
+          print('Image uploaded to Cloudinary: $imageUrl');
+          // Create an ImageDisplay widget for each image and add it to the list
+          imageWidgets.add(ImageDisplay(imagePath: imageFile.path));
+        } else {
+          print('Failed to upload image to Cloudinary');
+        }
       }
+      setState(() {
+        isImageVisible = true;
+      });
     }
   }
 
@@ -227,10 +251,10 @@ class _CreatePostState extends State<CreatePost> {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('Post submitted successfully');
-      print('access_token $access_token');
+      print('access_token ' + access_token);
     } else {
       print('Error submitting post: ${response.statusCode}');
-      print('access_token $access_token');
+      print('access_token ' + access_token);
     }
   }
 
@@ -238,236 +262,279 @@ class _CreatePostState extends State<CreatePost> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const FaIcon(
-                          FontAwesomeIcons.times,
-                          size: 25.0,
-                          color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const FaIcon(
+                        FontAwesomeIcons.times,
+                        size: 25.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        final title = _titleController.text;
+                        final body = _bodyController.text;
+                        String url = urlController.text;
+                        if (title.isEmpty || body.isEmpty) {
+                          return;
+                        }
+
+                        submitPost(title, body, isNsfw, isSpoiler, url, _poll);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage()),
+                        );
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (_titleController.text.isEmpty ||
+                                _bodyController.text.isEmpty) {
+                              return Theme.of(context).colorScheme.primary;
+                            }
+
+                            return const Color.fromARGB(255, 76, 168, 243);
+                          },
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          final title = _titleController.text;
-                          final body = _bodyController.text;
-                          String url = urlController.text;
-                          if (title.isEmpty || body.isEmpty) {
-                            return;
-                          }
-
-                          submitPost(
-                              title, body, isNsfw, isSpoiler, url, _poll);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomePage()),
-                          );
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                              if (_titleController.text.isEmpty ||
-                                  _bodyController.text.isEmpty) {
-                                return Theme.of(context).colorScheme.primary;
-                              }
-
-                              return const Color.fromARGB(255, 76, 168, 243);
-                            },
-                          ),
-                        ),
-                        child: const Text('Next'),
-                      )
-                    ],
-                  ),
-                  TextField(
-                    controller: _titleController,
-                    decoration: const InputDecoration(
-                      labelText: 'Title',
-                    ),
-                    onChanged: (text) {
-                      setState(() {
-                        isTitleEmpty = text.isEmpty;
-                      });
-                    },
-                  ),
-                  TextField(
-                    controller: _bodyController,
-                    decoration: const InputDecoration(
-                      labelText: 'Body Text (optional)',
-                    ),
-                    onChanged: (text) {
-                      setState(() {
-                        isBodyEmpty = text.isEmpty;
-                      });
-                    },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Spoiler'),
-                      Switch(
-                        value: isSpoiler,
-                        onChanged: (value) {
-                          setState(() {
-                            isSpoiler = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('NSFW'),
-                      Switch(
-                        value: isNsfw,
-                        onChanged: (value) {
-                          setState(() {
-                            isNsfw = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  DropdownButtonFormField<String>(
-                    value:
-                        selectedCommunity.isNotEmpty ? selectedCommunity : null,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedCommunity = newValue!;
-                      });
-                    },
-                    items: communities.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    hint: const Text('Choose a Community'),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: addedWidget != null ? [addedWidget!] : [],
-                  ),
+                      child: const Text('Next'),
+                    )
+                  ],
                 ),
-              ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                isURLVisible = !isURLVisible;
-                                if (isURLVisible) {
-                                  isImageVisible = false;
-                                  isVideoVisible = false;
-                                  if (urlController.text.isNotEmpty) {
-                                    attachments.add(urlController.text);
-                                  }
-                                }
-                              });
-                              addWidget(
-                                isURLVisible
-                                    ? TextField(
-                                        controller: urlController,
-                                        decoration: const InputDecoration(
-                                          labelText: 'URL',
-                                        ),
-                                      )
-                                    : Container(),
-                              );
-                            },
-                            child: FaIcon(
-                              FontAwesomeIcons.link,
-                              size: iconsize,
-                              color: Colors.white,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              setState(() {
-                                isImageVisible = !isImageVisible;
-                                if (isImageVisible) {
-                                  isURLVisible = false;
-                                  isVideoVisible = false;
-                                }
-                              });
-                              pickImage();
-                            },
-                            child: FaIcon(
-                              FontAwesomeIcons.image,
-                              size: iconsize,
-                              color: Colors.white,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              setState(() {
-                                isVideoVisible = !isVideoVisible;
-                                if (isVideoVisible) {
-                                  isURLVisible = false;
-                                  isImageVisible = false;
-                                }
-                              });
-                              pickVideo();
-                            },
-                            child: FaIcon(
-                              FontAwesomeIcons.play,
-                              size: iconsize,
-                              color: Colors.white,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: togglePollVisibility,
-                            child: FaIcon(
-                              FontAwesomeIcons.listOl,
-                              size: iconsize,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                  ),
+                  onChanged: (text) {
+                    setState(() {
+                      isTitleEmpty = text.isEmpty;
+                    });
+                  },
+                ),
+                TextField(
+                  controller: _bodyController,
+                  decoration: const InputDecoration(
+                    labelText: 'Body Text (optional)',
+                  ),
+                  onChanged: (text) {
+                    setState(() {
+                      isBodyEmpty = text.isEmpty;
+                    });
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Spoiler'),
+                    Switch(
+                      value: isSpoiler,
+                      onChanged: (value) {
+                        setState(() {
+                          isSpoiler = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('NSFW'),
+                    Switch(
+                      value: isNsfw,
+                      onChanged: (value) {
+                        setState(() {
+                          isNsfw = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                DropdownButtonFormField<String>(
+                  value:
+                      selectedCommunity.isNotEmpty ? selectedCommunity : null,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCommunity = newValue!;
+                    });
+                  },
+                  items: communities.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  hint: Text('Choose a Community'),
+                ),
+              ],
+            ),
+            // Expanded(
+            //   child: SingleChildScrollView(
+            //     scrollDirection: Axis.horizontal,
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.start,
+            //       crossAxisAlignment: CrossAxisAlignment.stretch,
+            //       children: addedWidget != null
+            //           ? [addedWidget!]
+            //           : imageWidgets
+            //               .map(
+            //                 (widget) => Padding(
+            //                   padding: const EdgeInsets.all(8.0),
+            //                   child: SizedBox(
+            //                     width: 200.0,
+            //                     height: 200.0,
+            //                     child: widget,
+            //                   ),
+            //                 ),
+            //               )
+            //               .toList(),
+            //     ),
+            //   ),
+            // ),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (addedWidget != null)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextButton(
-                          onPressed: doubleIconSizeOnce,
+                        child: SizedBox(
+                          width: 500.0,
+                          height: 200.0,
+                          child: addedWidget!,
+                        ),
+                      )
+                    else
+                      ...imageWidgets.map(
+                        (widget) => Padding(
+                          padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 8),
+                          child: SizedBox(
+                            width: 200.0,
+                            height: 200.0,
+                            child: widget,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              isURLVisible = !isURLVisible;
+                              if (isURLVisible) {
+                                isImageVisible = false;
+                                isVideoVisible = false;
+                                imageWidgets = [];
+                                if (urlController.text.isNotEmpty) {
+                                  attachments.add(urlController.text);
+                                }
+                              }
+                            });
+                            addWidget(
+                              isURLVisible
+                                  ? TextField(
+                                      controller: urlController,
+                                      decoration: const InputDecoration(
+                                        labelText: 'URL',
+                                      ),
+                                    )
+                                  : Container(),
+                            );
+                          },
                           child: FaIcon(
-                            FontAwesomeIcons.arrowUp,
-                            size: arrowsize,
+                            FontAwesomeIcons.link,
+                            size: iconsize,
                             color: Colors.white,
                           ),
                         ),
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              isImageVisible = !isImageVisible;
+                              if (isImageVisible) {
+                                isURLVisible = false;
+                                isVideoVisible = false;
+                              }
+                            });
+                            pickImage();
+                          },
+                          child: FaIcon(
+                            FontAwesomeIcons.image,
+                            size: iconsize,
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              isVideoVisible = !isVideoVisible;
+                              if (isVideoVisible) {
+                                isURLVisible = false;
+                                isImageVisible = false;
+                              }
+                            });
+                            pickVideo();
+                          },
+                          child: FaIcon(
+                            FontAwesomeIcons.play,
+                            size: iconsize,
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: togglePollVisibility,
+                          child: FaIcon(
+                            FontAwesomeIcons.listOl,
+                            size: iconsize,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton(
+                        onPressed: doubleIconSizeOnce,
+                        child: FaIcon(
+                          FontAwesomeIcons.arrowUp,
+                          size: arrowsize,
+                          color: Colors.white,
+                        ),
                       ),
-                    ],
-                  ),
-                ],
-              )
-            ],
-          ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );
