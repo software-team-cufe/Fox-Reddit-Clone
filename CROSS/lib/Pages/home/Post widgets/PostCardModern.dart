@@ -183,6 +183,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ModernCard extends StatefulWidget {
   final Map<dynamic, dynamic> post;
   bool currentuserpost = true;
+  TextEditingController editedText = TextEditingController();
 
   /// Constructs a [ModernCard] widget.
   ///
@@ -290,10 +291,12 @@ class _ModernCardState extends State<ModernCard> {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.8,
+                                                  0.7,
                                               child: Column(
                                                 children: [
                                                   TextField(
+                                                    controller:
+                                                        widget.editedText,
                                                     decoration: InputDecoration(
                                                       suffixIconColor:
                                                           Colors.white,
@@ -328,7 +331,7 @@ class _ModernCardState extends State<ModernCard> {
                                                           }),
                                                       const Spacer(),
                                                       Textbuttoncontainer(
-                                                          text: 'Change',
+                                                          text: 'Save',
                                                           color: const Color(
                                                               0xFFB02F00),
                                                           onPressed: () {}),

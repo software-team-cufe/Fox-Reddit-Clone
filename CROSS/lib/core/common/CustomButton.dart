@@ -135,8 +135,8 @@ class Textbuttoncontainer extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         height: 40,
-        width: 65,
-        padding: const EdgeInsets.all(9),
+        width: 70,
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           color: color,
