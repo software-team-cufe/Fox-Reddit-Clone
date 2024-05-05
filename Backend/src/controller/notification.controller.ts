@@ -102,9 +102,7 @@ export async function editUserNotification(req: Request, res: Response) {
     // Save the updated user
     user.markModified('notifArray');
     await user.save();
-    return res.status(200).json({
-      msg: 'Notification updated successfully',
-    });
+    return res.status(200).json(user.notifArray[notificationIndex]);
   } catch (error) {
     console.error('Error fetching user notifications:', error);
     return res.status(500).json({
