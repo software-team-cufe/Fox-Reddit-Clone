@@ -12,11 +12,11 @@ class SplashScreen extends StatelessWidget {
     return AnimatedSplashScreen(
       backgroundColor: Colors.black,
       splash: Center(
-        child: Lottie.network('https://lottie.host/b2f3d81f-e622-4e39-af07-e203bd8967c8/7u8rRzv4Lb.json'),
+        child: Lottie.network('https://lottie.host/99f38e23-9344-47fd-9a24-08e1f67e4542/HJQnQvEmsy.json'),
       ),
       nextScreen: const HomePage(),
       duration: 5000,
-      splashIconSize: 3000,
+      splashIconSize: 10000,
       );
   }
 }

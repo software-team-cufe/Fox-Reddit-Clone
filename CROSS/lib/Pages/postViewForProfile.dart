@@ -56,12 +56,12 @@ class _ClassicCardState extends State<ClassicCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PostDetailsPage(post: widget.post),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => PostDetailsPage(post: widget.post),
+        //   ),
+        // );
       },
       child: Column(
         children: [
@@ -88,114 +88,112 @@ class _ClassicCardState extends State<ClassicCard> {
                     showModalBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: const Icon(Icons.bookmark),
-                              title: const Text('Save'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
+                        return Container(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  leading: const Icon(Icons.bookmark),
+                                  title: const Text('Save'),
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 1
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.content_copy),
+                                  title: const Text('Copy text'),
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 2
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.call_split),
+                                  title: const Text('Edit post'),
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 3
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.call_split),
+                                  title: const Text('Mark spoiler'),
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 4
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.call_split),
+                                  title: const Text('Mark NSFW'),
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 5
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.call_split),
+                                  title: const Text('Delete post'),
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 6
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.call_split),
+                                  title: const Text('Crosspost to a community'),
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 7
+                                  },
+                                ),
+                                ListTile(
+                                  tileColor: Colors.transparent, // Transparent background
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 8
+                                  },
+                                  leading: Icon(Icons.flag_outlined,
+                                      color: Colors.red.shade400), // Softer red icon
+                                  title: Text(
+                                    'Report',
+                                    style: TextStyle(
+                                        color: Colors.red.shade400), // Softer red text
+                                  ),
+                                ),
+                                ListTile(
+                                  tileColor: Colors.transparent, // Transparent background
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 9
+                                  },
+                                  leading: Icon(Icons.person_off_outlined,
+                                      color: Colors.red.shade400), // Softer red icon
+                                  title: Text(
+                                    'Block account',
+                                    style: TextStyle(
+                                        color: Colors.red.shade400), // Softer red text
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.visibility_off_outlined),
+                                  title: const Text('Hide'),
+                                  onTap: () {
+                                    Navigator.pop(context); // Close the menu
+                                    // Handle option 10
+                                  },
+                                ),
+                              ],
                             ),
-                            ListTile(
-                              leading: const Icon(Icons.content_copy),
-                              title: const Text('Copy text'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 2
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.call_split),
-                              title: const Text('Edit post'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.call_split),
-                              title: const Text('Mark spoiler'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.call_split),
-                              title: const Text('Mark NSFW'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.call_split),
-                              title: const Text('Delete post'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.call_split),
-                              title: const Text('Crosspost to a community'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                            ListTile(
-                              tileColor:
-                                  Colors.transparent, // Transparent background
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                              leading: Icon(Icons.flag_outlined,
-                                  color:
-                                      Colors.red.shade400), // Softer red icon
-                              title: Text(
-                                'Report',
-                                style: TextStyle(
-                                    color:
-                                        Colors.red.shade400), // Softer red text
-                              ),
-                            ),
-                            ListTile(
-                              tileColor:
-                                  Colors.transparent, // Transparent background
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 2
-                              },
-                              leading: Icon(Icons.person_off_outlined,
-                                  color:
-                                      Colors.red.shade400), // Softer red icon
-                              title: Text(
-                                'Block account',
-                                style: TextStyle(
-                                    color:
-                                        Colors.red.shade400), // Softer red text
-                              ),
-                            ),
-                            ListTile(
-                              leading:
-                                  const Icon(Icons.visibility_off_outlined),
-                              title: const Text('Hide'),
-                              onTap: () {
-                                Navigator.pop(context); // Close the menu
-                                // Handle option 1
-                              },
-                            ),
-                          ],
+                          ),
                         );
                       },
                     );
                   },
                 ),
+
               ],
             ),
             subtitle: Row(
@@ -267,7 +265,7 @@ class _ClassicCardState extends State<ClassicCard> {
                       ),
                       ),
 
-              const SizedBox(width:125),
+              const SizedBox(width:100),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

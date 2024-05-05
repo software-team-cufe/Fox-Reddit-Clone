@@ -1,12 +1,12 @@
   import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+  import 'package:flutter/widgets.dart';
   import 'package:http/http.dart' as http;
   import 'dart:convert';
   import 'dart:typed_data';
   import 'package:intl/intl.dart';
   import 'package:reddit_fox/Pages/Search.dart';
   import 'package:reddit_fox/Pages/EditProfile.dart';
-import 'package:reddit_fox/Pages/postViewForProfile.dart';
+  import 'package:reddit_fox/Pages/postViewForProfile.dart';
   import 'package:reddit_fox/navbar.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
@@ -63,6 +63,7 @@ import 'package:reddit_fox/Pages/postViewForProfile.dart';
 
 
     Future<void> fetchUserAbout(String userName) async {
+      print("userName: $userName");
       try {
       var url = Uri.parse(ApiRoutesBackend.getUserAbout(userName));
       var response = await http.get(
@@ -149,6 +150,7 @@ import 'package:reddit_fox/Pages/postViewForProfile.dart';
         );
 
         print("status code for fetchDataBack: ${response.statusCode}");
+        print("response body: ${response.body}");
 
         if (response.statusCode == 200) {
           // Parsing response data
@@ -341,7 +343,7 @@ Widget _buildTitleView() {
           SliverAppBar(
             pinned: true,
             backgroundColor: Colors.deepPurple,
-            expandedHeight: 250,
+            expandedHeight: 350,
             flexibleSpace: LayoutBuilder(
               builder: (context, constraints) {
                 _showTitle = constraints.biggest.height <= 100;
@@ -385,7 +387,7 @@ Widget _buildTitleView() {
                                         child: Text(
                                           '$userName',
                                           style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 22,
                                             color: Colors.grey[400],
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -394,47 +396,49 @@ Widget _buildTitleView() {
                                       Padding(
                                         padding: const EdgeInsets.only(),
                                         child: Text(
-                                          'u/$userName • 1 karma • ${_formatDate(userData['createdAt'])}',
+                                          'u/$userName • 1 karma • ${_formatDate(createdAt)}',
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 18,
                                             color: Colors.grey[400],
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(),
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                        radius: 50, // Increase the radius to increase the size of the CircleAvatar
-                                        child: ElevatedButton(
-                                          onPressed: () {},
-                                          style: ElevatedButton.styleFrom(
-                                            shape: CircleBorder(), // Make the ElevatedButton circular
-                                          ),
-                                          child: Image.asset(
-                                            'assets/Icons/Chat.png',
-                                            width: 28, // Set the width of the Image
-                                            height: 28, // Set the height of the Image
-                                          ),
-                                        ),
+                                ],
+                              ),
+                              Row(children: [
+                                Padding(
+                                padding: const EdgeInsets.only(),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    radius: 50, // Increase the radius to increase the size of the CircleAvatar
+                                    child: ElevatedButton(
+                                      onPressed: () {},
+                                      style: ElevatedButton.styleFrom(
+                                        shape: CircleBorder(), // Make the ElevatedButton circular
                                       ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(),
-                                      child: SizedBox(
-                                        width: screenWidth * 0.25, // 50% of screen width
-                                        height: 35,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                          },
-                                          child: Text('Follow'),
-                                        ),
+                                      child: Image.asset(
+                                        'assets/Icons/Chat.png',
+                                        width: 28, // Set the width of the Image
+                                        height: 28, // Set the height of the Image
                                       ),
                                     ),
-                                ],
-                              )
+                                  ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(),
+                                  child: SizedBox(
+                                    width: screenWidth * 0.25, // 50% of screen width
+                                    height: 35,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                      },
+                                      child: Text('Follow'),
+                                    ),
+                                  ),
+                                ),
+                              ],)
                             ],
                           ),
                         ),
