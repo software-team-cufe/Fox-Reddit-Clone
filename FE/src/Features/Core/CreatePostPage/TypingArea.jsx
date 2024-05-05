@@ -68,7 +68,8 @@ function TypingArea(props) {
 
     }, [OpenImageTab, props.VideoOrImageSrc]);
 
-    const handleBannerUpload = (event, UpOrDrop = "up") => {
+    const handleBannerUpload = async (event, UpOrDrop = "up") => {
+
         const reader = new FileReader();
         let file;
         if (!(UpOrDrop === "Drop")) {
@@ -79,6 +80,7 @@ function TypingArea(props) {
         }
 
         if (file) {
+            props.setimageFile(file);
             reader.readAsDataURL(file);
             // Check the file type
             if (file.type.startsWith('image/')) {

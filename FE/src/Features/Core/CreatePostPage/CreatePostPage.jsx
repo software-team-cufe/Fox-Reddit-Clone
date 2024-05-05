@@ -28,7 +28,8 @@ function CreatePostPage(props) {
     const [VoteLength, setVoteLength] = useState(1);
     const [imageOrVideo, setimageOrVideo] = useState(null);
     const [height, setHeight] = useState(window.innerHeight);
-
+    const [imageFile, setimageFile] = useState(null);
+    const [imageShow, setimageShow] = useState(null);
 
     const updatePollOptions = () => {
         let newOptions = [];
@@ -77,6 +78,36 @@ function CreatePostPage(props) {
     };
 
     //, isNotifications: PostNotifications   
+    // function convertBase64(file) {
+
+    //     return new Promise((res, rej) => {
+    //         const fileReader = new FileReader();
+    //         fileReader.onload = () => {
+    //             res(fileReader.result);
+    //         }
+    //         fileReader.readAsDataURL(file);
+    //         fileReader.onerror = (error) => {
+    //             rej(error);
+    //         }
+    //     })
+    // }
+
+    // function fileToBase64(file) {
+    //     return new Promise((resolve, reject) => {
+    //         const reader = new FileReader();
+
+    //         reader.onload = () => {
+    //             const base64String = reader.result.split(',')[1];
+    //             resolve(base64String);
+    //         };
+
+    //         reader.onerror = (error) => {
+    //             reject(error);
+    //         };
+
+    //         reader.readAsDataURL(file);
+    //     });
+    // }
 
     const Post = async () => {
         if (PostNotifications === "on")
@@ -84,12 +115,13 @@ function CreatePostPage(props) {
 
         const imageUrl = await uploadImage(VideoOrImageSrc);
         let NewPost;
-        console.log(imageUrl);
+
         if (SelectedCom.name === store.username) {
             NewPost = {
                 title: TitleValue,
                 text: PostText, spoiler: Spoiler,
-                nsfw: NSFW, pollOptions: PollOptions, attachments: [imageUrl, PostURL],
+                nsfw: NSFW, pollOptions: PollOptions, attachments: [imageUrl],
+                createdAt: new Date()
             }
         }
         else {
@@ -98,11 +130,14 @@ function CreatePostPage(props) {
                 text: PostText, spoiler: Spoiler,
                 nsfw: NSFW, pollOptions: PollOptions, attachments: [imageUrl, PostURL],
                 Communityname: SelectedCom.name,
+                createdAt: new Date()
             }
         }
-
+        console.log(imageUrl);
+        setimageShow(imageUrl);
         userAxios.post('api/submit', NewPost)
             .then((res) => {
+                console.log(res)
                 toast.success("Post created successfully \u{1F60A}");
             })
             .catch((ex) => {
@@ -111,6 +146,93 @@ function CreatePostPage(props) {
                 }
             });
     }
+
+    // const Post = async () => {
+
+    //     let NewPost;
+    //     const formData = new FormData();
+
+    //     // Append attachments
+    //     formData.append('attachments', VideoOrImageSrc);
+    //     // Add more attachments as needed
+    //     // formData.append('attachments', anotherVideoOrImageSrc, 'filename2');
+
+    //     // Create the request body
+    //     NewPost = {
+    //         title: TitleValue,
+    //         text: PostText,
+    //         spoiler: Spoiler,
+    //         nsfw: NSFW,
+    //         pollOptions: PollOptions,
+    //     };
+
+    //     // Append the request body as a stringified JSON object
+    //     formData.append(JSON.stringify(NewPost));
+
+    //     // Send the POST request
+    //     userAxios.post('api/submit', formData)
+    //         .then((res) => {
+    //             console.log(res);
+    //             toast.success("Post created successfully \u{1F60A}");
+    //         })
+    //         .catch((ex) => {
+    //             if (ex.issues != null && ex.issues.length != 0) {
+    //                 toast.error(ex.issues[0].message);
+    //             }
+    //         });
+    // }
+
+
+
+    // const Post = async () => {
+    //     if (PostNotifications === "on")
+    //         setPostNotifications(true);
+    //     // const imageUrl = `https://res.cloudinary.com/dvnf8yvsg/${imageOrVideo}/upload/${VideoOrImageSrc}`
+    //     //const imageUrl = await uploadImage(VideoOrImageSrc);
+    //     // console.log(imageUrl);
+
+    //     // Create a new FormData instance
+    //     let formData = new FormData();
+    //     // Append attachments to formData
+    //     formData.append('attachments', VideoOrImageSrc);
+    //     // formData.append('attachments', PostURL);
+
+    //     // Create request object
+    //     let request = {
+    //         title: TitleValue,
+    //         text: PostText,
+    //         nsfw: NSFW,
+    //         spoiler: Spoiler,
+    //         poll: PollOptions,
+    //         Communityname: "any",
+    //         createdAt: new Date()
+    //     };
+
+    //     if (SelectedCom.name !== store.username) {
+    //         request.Communityname = SelectedCom.name;
+    //     }
+
+    //     // Append request object to formData
+    //     formData.append('request', JSON.stringify(request));
+
+    //     // Make the POST request with formData
+    //     userAxios.post('api/submit', formData, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data'
+    //         }
+    //     })
+    //         .then((res) => {
+    //             console.log(res);
+    //             toast.success("Post created successfully \u{1F60A}");
+    //         })
+    //         .catch((ex) => {
+    //             if (ex.issues != null && ex.issues.length != 0) {
+    //                 toast.error(ex.issues[0].message);
+    //             }
+    //         });
+    // }
+
+
 
 
     return (
@@ -123,7 +245,8 @@ function CreatePostPage(props) {
                     <ChooseCommunity
                         Selected={SelectedCom} setSelected={setSelectedCom}
                         id="ChooseCom" />
-                    <TypingArea PostFunc={Post} imageOrVideo={setimageOrVideo}
+                    <TypingArea setimageFile={setimageFile}
+                        PostFunc={Post} imageOrVideo={setimageOrVideo}
                         Poll3={Poll3} SetPoll3={setPoll3}
                         VoteLength={VoteLength} SetVoteLength={setVoteLength}
                         Poll1={Poll1} SetPoll1={setPoll1} Poll2={Poll2} SetPoll2={setPoll2}

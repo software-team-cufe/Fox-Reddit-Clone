@@ -41,7 +41,7 @@ export default function PrivateMessagelayout() {
     const GetTimeDiff = (PrevT) => {
         var now = new Date();
         // Define another date (you can replace this with any other date you want)
-        var differenceMs = now - PrevT;
+        var differenceMs = now - new Date(PrevT);
         // Convert milliseconds to minutes
         var differenceMinutes = Math.floor(differenceMs / (1000 * 60));
         // Convert minutes to hours

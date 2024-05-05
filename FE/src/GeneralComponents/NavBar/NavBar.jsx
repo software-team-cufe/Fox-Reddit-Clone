@@ -215,7 +215,12 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => { setOpenSmList(false); }}
+                  <button onClick={() => {
+                    setOpenSmList(false);
+                    localStorage.removeItem('authorization');
+                    localStorage.removeItem('refreshToken');
+                    window.location.href = '/'
+                  }}
                     className="bg-white   text-black h-12 py-1 px-1  rounded inline-flex items-center w-full">
                     <LogOut strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                     Log out

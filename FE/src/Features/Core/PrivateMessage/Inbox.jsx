@@ -37,20 +37,6 @@ function InboxFunc() {
 }
 
 export default function Inbox({ DiffT }) {
-    const [PostRep, setPostRep] = useState([{
-        messId: "id",
-        username: 'to this user', subject: "title",
-        text: '<p>mess eeee eeeeeeeeee lllllllllllll eeeeeeeeeeeee</p>',
-        createdAt: new Date('2024-04-20T12:00:00'), postId: "idP",
-        commentId: "idC", UpOrDownV: "up", PostTitle: "title", CommentsNum: "10", unread: false
-    }, {
-        messId: "id2", PostTitle: "title", CommentsNum: "10",
-        username: 'to this user', subject: "title", text: '<p>mess eeee eeeeeeeeee lllllllllllll eeeeeeeeeeeee</p>',
-        createdAt: new Date('2024-04-20T12:00:00'), postId: "idP", commentId: "idC", UpOrDownV: "down", unread: false
-    }]);
-    const [Mentions, setMentions] = useState([]);
-    const [MISend, setMISend] = useState([]);
-    const [MSentToMe, setMSentToMe] = useState([]);
 
     const setUnreadAtIndex = (index, value) => {
         setPostRep(prevPostRep => {
@@ -65,16 +51,51 @@ export default function Inbox({ DiffT }) {
         });
     };
 
+    const setUnreadAtIndexM = (index, value) => {
+        setAllMessages(prevPostRep => {
+            const updatedPostRep = [...prevPostRep];
+            if (index >= 0 && index < updatedPostRep.length) {
+                updatedPostRep[index] = {
+                    ...updatedPostRep[index],
+                    unread: value
+                };
+            }
+            return updatedPostRep;
+        });
+    };
+
+
+    const setUnreadAtIndexAll = (index, value) => {
+        setAllM(prevPostRep => {
+            const updatedPostRep = [...prevPostRep];
+            if (index >= 0 && index < updatedPostRep.length) {
+                updatedPostRep[index] = {
+                    ...updatedPostRep[index],
+                    unread: value
+                };
+            }
+            return updatedPostRep;
+        });
+    };
+
+
+
+
     return (
 
         // nested routing for the setting pages renders navofsetting then feed according to route
         < Routes >
             <Route element={<InboxFunc />} >
-                <Route key={'/inbox'} path='/' element={<All />} />
-                <Route key={"/unread"} path="/unread" element={<Unread />} />
-                <Route key={"/messages"} path="/messages" element={<Messages />} />
+                <Route key={'/inbox'} path='/' element={<All setUnreadAtIndex={setUnreadAtIndexAll}
+                    DiffTime={DiffT} />} />
+                <Route key={"/unread"} path="/unread" element={<Unread
+                    DiffTime={DiffT} />} />
+
+                <Route key={"/messages"} path="/messages" element={<Messages setUnreadAtIndex={setUnreadAtIndexM}
+                    DiffTime={DiffT} />} />
+
                 <Route key={"/selfreply"} path="/selfreply" element={<PostReplies setUnreadAtIndex={setUnreadAtIndex}
-                    Messages={PostRep} DiffTime={DiffT} />} />
+                    DiffTime={DiffT} />} />
                 <Route key={"/mentions"} path="/mentions" element={<UsernameMentions />} />
             </Route>
         </Routes >
