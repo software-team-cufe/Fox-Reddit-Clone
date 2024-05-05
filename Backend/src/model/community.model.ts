@@ -150,6 +150,9 @@ export class Details {
   nickname!: string;
 
   @prop()
+  currentNickname!: string;
+
+  @prop()
   description!: string;
 }
 
