@@ -56,6 +56,37 @@ class _inboxChatState extends State<inboxChat> {
     }
   }
 
+  Future<void> seen(List<dynamic> messages) async {
+    for (var message in messages) {
+      String messageId = message['_id'];
+      String senderUsername =
+          message['fromID'] != null ? message['fromID']['username'] ?? "" : "";
+
+      
+
+      if (senderUsername == widget.username) {
+        Map<String, dynamic> messageIdBody = {
+          'messageId': messageId,
+        };
+
+        final response = await http.post(
+          Uri.parse(ApiRoutesBackend.seen),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $access_token'
+          },
+          body: jsonEncode(messageIdBody),
+        );
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          print('Message $messageId seen successfully');
+        } else {
+          print('Error seeing message $messageId: ${response.statusCode}');
+        }
+      }
+    }
+  }
+
   void fetchChat() async {
     final response = await http.get(
       Uri.parse(ApiRoutesBackend.getChat(widget.username, widget.subject)),
@@ -71,6 +102,7 @@ class _inboxChatState extends State<inboxChat> {
 
       setState(() {
         messages = fetchedMessages;
+        seen(messages);
       });
       print(messages);
 
