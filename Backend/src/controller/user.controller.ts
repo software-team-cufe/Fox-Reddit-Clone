@@ -730,11 +730,14 @@ export async function aboutHandler(req: Request, res: Response) {
   }
 }
 /**
- * Get user posts with pagination support.
- * @param {function} (req, res)
- * @returns {object} res
+ * Retrieves user submitted posts with pagination and sorting.
+ *
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @param {NextFunction} next - The next function to call
+ * @returns {Promise<void>} A Promise that resolves when the function completes
  */
-export async function getUserSubmittedHandler(req: Request, res: Response, next: NextFunction) {
+export async function getUserSubmittedHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
       status: 'failed',
@@ -743,40 +746,63 @@ export async function getUserSubmittedHandler(req: Request, res: Response, next:
   }
   try {
     // Extract params
-    const user = await findUserByUsername(req.params.username as string);
+    const username: string = req.params.username as string;
+    const user = await findUserByUsername(username);
 
     if (!user) {
       return res.status(404).send("This user doesn't exist!");
     }
-    const username: string = req.params.username as string;
+
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
     const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
-    const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+    const sort: string = req.query.sort as string; // Sort parameter
 
+    // Validate parameters
     if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
       return res.status(400).json({ error: 'Invalid request parameters.' });
     }
 
-    const postIDS = await userSubmittedPosts(username, page, count);
-    const posts = await userPosts(postIDS, limit);
+    // Fetch post IDs submitted by the user
+    const postIDs = await userSubmittedPosts(username, page, count);
+
+    // Fetch posts
+    let posts = await userPosts(postIDs, limit);
+
+    // Apply sorting
+    if (sort) {
+      switch (sort) {
+        case 'best':
+          posts = posts.sort((a, b) => b.bestFactor - a.bestFactor);
+          break;
+        case 'hot':
+          posts = posts.sort((a, b) => b.hotnessFactor - a.hotnessFactor);
+          break;
+        case 'top':
+          posts = posts.sort((a, b) => b.votesCount - a.votesCount);
+          break;
+        case 'new':
+          posts = posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          break;
+        case 'random':
+          posts = shuffle(posts);
+          break;
+        default:
+          posts = shuffle(posts);
+          break;
+      }
+    } else {
+      posts = shuffle(posts);
+    }
 
     res.status(200).json({ posts });
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error getUserSubmittedHandler:', error);
+    return res.status(500).send('Internal server error');
   }
 }
 
-/**
- * Retrieves an overview of a user's comments.
- *
- * @param {Request} req - The HTTP request object.
- * @param {Response} res - The HTTP response object.
- * @param {NextFunction} next - The next middleware function.
- * @returns {Promise<void>} A promise that resolves when the user's comments are sent in the response.
- * @throws {Error} If the user is not found or if there is an internal server error.
- */
-export async function getUserCommentsHandler(req: Request, res: Response, next: NextFunction) {
+export async function getUserCommentsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
       status: 'failed',
@@ -803,21 +829,13 @@ export async function getUserCommentsHandler(req: Request, res: Response, next: 
     const comments = await userComments(commmentsIDS, limit);
 
     res.status(200).json({ comments });
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    console.error('Error in getUserCommentsHandler:', error);
+    return res.status(500).send('Internal server error');
   }
 }
 
-/**
- * Retrieves an overview of a user's posts, comments, and replies.
- *
- * @param {Request} req - The HTTP request object.
- * @param {Response} res - The HTTP response object.
- * @param {NextFunction} next - The next middleware function.
- * @returns {Promise<void>} A promise that resolves when the user overview is sent in the response.
- * @throws {Error} If the user is not found or if there is an internal server error.
- */
-export async function getUserOverviewHandler(req: Request, res: Response, next: NextFunction) {
+export async function getUserOverviewHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
       status: 'failed',
@@ -826,44 +844,63 @@ export async function getUserOverviewHandler(req: Request, res: Response, next: 
   }
   try {
     // Extract params
-    const user = await findUserByUsername(req.params.username as string);
-
-    if (!user) {
-      return res.status(404).send("This user doesn't exist!");
-    }
     const username: string = req.params.username as string;
     const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
     const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const sort: string = req.query.sort as string; // Sort parameter
     const t: string = req.query.t as string; // Assuming you're using this parameter for something else
 
     if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
       return res.status(400).json({ error: 'Invalid request parameters.' });
     }
+
     // get user posts by username
-    const postIDS = await userSubmittedPosts(username, page, count);
-    const posts = await userPosts(postIDS, limit);
+    const postIDs = await userSubmittedPosts(username, page, count);
+    let posts = await userPosts(postIDs, limit);
+
+    // Apply sorting
+    if (sort) {
+      switch (sort) {
+        case 'best':
+          posts = posts.sort((a, b) => b.bestFactor - a.bestFactor);
+          break;
+        case 'hot':
+          posts = posts.sort((a, b) => b.hotnessFactor - a.hotnessFactor);
+          break;
+        case 'top':
+          posts = posts.sort((a, b) => b.votesCount - a.votesCount);
+          break;
+        case 'new':
+          posts = posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          break;
+        case 'random':
+          posts = shuffle(posts);
+          break;
+        default:
+          posts = shuffle(posts);
+          break;
+      }
+    } else {
+      posts = shuffle(posts);
+    }
 
     // get user comments by username
-    const commmentsIDS = await userCommentsIds(username, page, count);
-    const comments = await userComments(commmentsIDS, limit);
+    const commentIds = await userCommentsIds(username, page, count);
+    const comments = await userComments(commentIds, limit);
 
     // get user replies by username
     const replyIds = await userRepliesIds(username, page, count);
     const replies = await userComments(replyIds, limit);
 
-    // // Assuming mergeTwo returns an array of Post objects
-    // const merged = await mergeTwo(posts, comments);
-    // const overviewReturn = (await mergeTwo(merged, replies)).reverse();
-
     res.status(200).json({
-      //overview: overviewReturn,
       posts,
       comments,
       replies,
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    console.error('Error in getUserOverviewHandler:', error);
+    return res.status(500).send('Internal server error');
   }
 }
 
