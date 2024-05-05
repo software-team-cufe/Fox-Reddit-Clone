@@ -821,12 +821,38 @@ export async function getUserCommentsHandler(req: Request, res: Response) {
     const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
     const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
     const t: string = req.query.t as string; // Assuming you're using this parameter for something else
+    const sort: string = req.query.sort as string; // Sort parameter
 
     if (!username || isNaN(page) || isNaN(count) || isNaN(limit)) {
       return res.status(400).json({ error: 'Invalid request parameters.' });
     }
     const commmentsIDS = await userCommentsIds(username, page, count);
-    const comments = await userComments(commmentsIDS, limit);
+    let comments = await userComments(commmentsIDS, limit);
+
+    if (sort) {
+      switch (sort) {
+        case 'best':
+          break;
+        case 'hot':
+          // comments = comments.sort((a, b) => b.hotnessFactor - a.hotnessFactor);
+          comments = shuffle(comments);
+          break;
+        case 'top':
+          comments = comments.sort((a, b) => b.votesCount - a.votesCount);
+          break;
+        case 'new':
+          comments = comments.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          break;
+        case 'random':
+          comments = shuffle(comments);
+          break;
+        default:
+          comments = shuffle(comments);
+          break;
+      }
+    } else {
+      comments = shuffle(comments);
+    }
 
     res.status(200).json({ comments });
   } catch (error) {
@@ -859,39 +885,51 @@ export async function getUserOverviewHandler(req: Request, res: Response) {
     const postIDs = await userSubmittedPosts(username, page, count);
     let posts = await userPosts(postIDs, limit);
 
+    // get user comments by username
+    const commentIds = await userCommentsIds(username, page, count);
+    let comments = await userComments(commentIds, limit);
+
+    // get user replies by username
+    const replyIds = await userRepliesIds(username, page, count);
+    let replies = await userComments(replyIds, limit);
     // Apply sorting
     if (sort) {
       switch (sort) {
         case 'best':
-          posts = posts.sort((a, b) => b.bestFactor - a.bestFactor);
           break;
         case 'hot':
           posts = posts.sort((a, b) => b.hotnessFactor - a.hotnessFactor);
+          comments = shuffle(comments);
+          replies = shuffle(replies);
+          // comments = comments.sort((a, b) => b.hotnessFactor - a.hotnessFactor);
+          // replies = replies.sort((a, b) => b.hotnessFactor - a.hotnessFactor);
           break;
         case 'top':
           posts = posts.sort((a, b) => b.votesCount - a.votesCount);
+          comments = comments.sort((a, b) => b.votesCount - a.votesCount);
+          replies = replies.sort((a, b) => b.votesCount - a.votesCount);
           break;
         case 'new':
           posts = posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          comments = comments.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          replies = replies.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
           break;
         case 'random':
           posts = shuffle(posts);
+          comments = shuffle(comments);
+          replies = shuffle(replies);
           break;
         default:
           posts = shuffle(posts);
+          comments = shuffle(comments);
+          replies = shuffle(replies);
           break;
       }
     } else {
       posts = shuffle(posts);
+      comments = shuffle(comments);
+      replies = shuffle(replies);
     }
-
-    // get user comments by username
-    const commentIds = await userCommentsIds(username, page, count);
-    const comments = await userComments(commentIds, limit);
-
-    // get user replies by username
-    const replyIds = await userRepliesIds(username, page, count);
-    const replies = await userComments(replyIds, limit);
 
     res.status(200).json({
       posts,
