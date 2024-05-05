@@ -14,6 +14,7 @@ import {
   reportUser,
   ChangePasswordInput,
   ChangeEmailInput,
+  HomePagePostsInput,
 } from '../schema/user.schema';
 import { NextFunction, Request, Response } from 'express';
 import {
@@ -28,18 +29,17 @@ import {
   userHistoryPosts,
 } from '../service/user.service';
 import { sendEmail, generateVerificationLinkToken, generatePasswordResetLinkToken } from '../utils/mailer';
-import { signJwt, verifyJwt } from '../utils/jwt';
+import { verifyJwt } from '../utils/jwt';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
 import { UserModel, VotePost } from '../model/user.model';
 import { omit, shuffle } from 'lodash';
-import { get } from 'config';
 import PostModel from '../model/posts.model';
 import { userComments } from '../service/comment.service';
 import { findPostById, userPosts } from '../service/post.service';
-import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
 import { createNotification } from '../service/notification.service';
+import { getHomePostsNotAuth } from '../service/community.service';
 
 /**
  * Handles the creation of a user.
@@ -1491,4 +1491,26 @@ export async function getHistoryPostHandler(req: Request, res: Response) {
   } catch (err) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
+}
+
+export async function getUserHomePagePostsHandler(
+  req: Request<{}, {}, {}, HomePagePostsInput['query']>,
+  res: Response
+) {
+  const user = res.locals.user;
+  const sort = req.query.sort;
+  //page and limit
+  // Convert strings to numbers
+  const pageString = req.query.page;
+  const limitString = req.query.limit;
+  const page = pageString ? parseInt(pageString, 10) : 1; // Convert page string to number, default to 1 if not provided
+  const limit = limitString ? parseInt(limitString, 10) : 10; // Convert limit string to number, default to 10 if not provided
+  if (!user) {
+    //user not authenticated
+    const homePagePosts = await getHomePostsNotAuth(page, limit);
+    return res.status(200).json({ homePagePosts });
+  }
+  const userId = user._id;
+  //const homePagePosts = await getHomePagePosts(userId, sort, page, limit);
+  //return res.status(200).json({ homePagePosts });
 }

@@ -813,8 +813,6 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
       throw new appError('User not found search auth user', 404);
     }
 
-    console.log(user.username);
-    console.log(publicCommunities);
     const privateCommunities = await UserModel.aggregate([
       {
         $match: {

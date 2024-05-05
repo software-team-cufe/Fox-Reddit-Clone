@@ -15,6 +15,7 @@ import {
   changePasswordSchema,
   changeEmailSchema,
   viewPostSchema,
+  homePagePostsSchema,
 } from '../schema/user.schema';
 import {
   createUserHandler,
@@ -49,6 +50,7 @@ import {
   getNumberPostsCommentsUser,
   viewPostHandler,
   getHistoryPostHandler,
+  getUserHomePagePostsHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -131,5 +133,6 @@ router.post(
   uploadSingleCloudinary,
   uploadUserPhoto
 );
-//** **/
+//** Homepage **/
+router.get('/user-home', validateResource(homePagePostsSchema), getUserHomePagePostsHandler);
 export default router;
