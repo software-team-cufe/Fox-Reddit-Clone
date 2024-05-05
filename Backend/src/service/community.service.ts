@@ -1029,7 +1029,67 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
     return error;
   }
 }
+export async function getPostsSearchResultsNotAuth(
+  page: number,
+  limit: number,
+  sort: string | undefined,
+  topBy: string | undefined
+) {}
 
+export async function getPostsSearchResultsAuth(
+  page: number,
+  limit: number,
+  userId: string,
+  query: string,
+  sort: string | undefined,
+  topBy: string | undefined
+) {
+  try {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    let sortCriteria: Record<string, 1 | -1>;
+    let additionalCriteria: Record<string, unknown> = {};
+    switch (sort) {
+      case 'hot':
+        sortCriteria = { 'posts.insightCnt': -1 };
+        break;
+      case 'top':
+        sortCriteria = { 'posts.votesCount': -1 };
+        switch (topBy) {
+          case 'hour':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 60 * 60 * 1000) } };
+            break;
+          case 'day':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } };
+            break;
+          case 'week':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } };
+            break;
+          case 'month':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } };
+            break;
+          case 'year':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) } };
+            break;
+          default:
+            additionalCriteria = {};
+            break;
+        }
+        break;
+      case 'new':
+        sortCriteria = { 'posts.createdAt': -1 };
+        break;
+      case 'comments':
+        sortCriteria = { 'posts.commentsNum': -1 };
+        break;
+      default:
+        sortCriteria = { 'posts.randomSort': -1 };
+        break;
+    }
+  } catch (error) {
+    throw new appError('Something went wrong in search posts auth', 500);
+  }
+}
 /**
  * banMemberToCom
  * @param {string} body contain rules details
@@ -1257,7 +1317,7 @@ export async function unmuteUserInCommunity(userID: string, subreddit: string) {
 export async function getHomePostsAuth(
   page: number,
   limit: number,
-  userID: number,
+  userID: string,
   sort: string | undefined,
   topBy: string | undefined
 ) {

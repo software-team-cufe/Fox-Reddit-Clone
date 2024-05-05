@@ -39,13 +39,6 @@ export async function searchHomeHandler(
     //switch case
     switch (searchType) {
       // case 'posts':
-      //   {
-      //     const posts = await PostModel.find({
-      //       $or: [{ title: { $regex: searchkey, $options: 'i' } }, { textHTML: { $regex: searchkey, $options: 'i' } }],
-      //     });
-      //     return res.status(200).json({ posts });
-      //   }
-      //   break;
 
       case 'subreddits':
         {
@@ -68,17 +61,6 @@ export async function searchHomeHandler(
       case 'comments': {
         //pass sort option
         //check if user is authenticated
-        // const sortOption = sort === 'new' ? '-creationDate' : '-upvotesCount';
-        // const authenticated = userAuthenticated ? res.locals.user._id : null;
-        // const comments = await CommentModel.find({
-        //   $or: [{ text: { $regex: searchkey, $options: 'i' } }],
-        // })
-        //   .skip((page - 1) * limit)
-        //   .limit(limit)
-        //   .sort(sortOption)
-        //   .populate('author', 'username about')
-        //   .populate('post', 'title');
-        // return res.status(200).json({ comments });
       }
     }
   } catch (error) {
