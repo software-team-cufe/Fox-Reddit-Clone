@@ -8,8 +8,10 @@ class ApiRoutesBackend {
   static const String signup = '$baseUrl/api/users/signup';
   static const String login = '$baseUrl/api/auth/login';
   static const String forgetPassword = '$baseUrl/api/users/forgotpassword';
-  static String getPosts(String category, int page, int count, int limit) => '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
-  static String getUserAbout(String username) =>'$baseUrl/user/$username/about';
+  static String getPosts(String category, int page, int count, int limit) =>
+      '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
+  static String getUserAbout(String username) =>
+      '$baseUrl/user/$username/about';
 
   //!temprorary
   static const String tempGetPosts =
@@ -29,6 +31,9 @@ class ApiRoutesBackend {
   static String getPostsByCreatorId(String id) =>
       '$baseUrl/posts?creatorId=$id';
   static const String submitPost = '$baseUrl/api/submit';
+
+  static const String viewedPost = '$baseUrl/api/view_post';
+
   static const String delelteUser = '$baseUrl/api/users/delete_user';
   static const String getCommunities = '$baseUrl/subreddits/mine/member';
   static const String sendinbox = '$baseUrl/message/compose/';
