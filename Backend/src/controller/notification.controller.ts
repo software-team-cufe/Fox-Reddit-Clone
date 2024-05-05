@@ -88,6 +88,12 @@ export async function editUserNotification(req: Request, res: Response) {
     } else if (action === 'hide') {
       // Set isHidden to true for the found notification
       user.notifArray[notificationIndex].isHidden = true;
+    } else if (action === 'unhide') {
+      // Set isHidden to true for the found notification
+      user.notifArray[notificationIndex].isHidden = false;
+    } else if (action === 'unread') {
+      // Set isHidden to true for the found notification
+      user.notifArray[notificationIndex].isRead = false;
     } else {
       return res.status(400).json({
         msg: 'Invalid action',
