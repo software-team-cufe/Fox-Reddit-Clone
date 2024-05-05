@@ -48,15 +48,15 @@ class _HomePageState extends State<HomePage> {
         : ApiRoutesMockserver.getPosts);
     var response = await http.get(url);
 
-    url = Uri.parse(ApiRoutesBackend.tempGetPosts);
-    response = await http.get(
-      url,
-      headers: {'Authorization': 'Bearer $access_token'},
-    );
-    // print("asdasdasdasd$access_token");
+    url = Uri.parse(ApiRoutesBackend.homePostssorted());
+    // response = await http.get(
+    //   url,
+    //   headers: {'Authorization': 'Bearer $access_token'},
+    // );
+     print("reaponse status code: ${response.statusCode}");
     if (response.statusCode == 200) {
       Map<dynamic, dynamic> data =
-          json.decode(response.body)['data']['children'][0];
+          json.decode(response.body).asMap();
 
       return data;
     } else {

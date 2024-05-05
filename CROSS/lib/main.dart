@@ -67,8 +67,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         saveToken('jessicatoken', 'mocktoken');
 
         access_token = sharedPrefValue.getString('backtoken');
-
-        print(access_token);
       });
     });
   }
@@ -129,5 +127,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         );
   }
 }
+
 
 
