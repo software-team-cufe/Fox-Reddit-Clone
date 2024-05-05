@@ -11,4 +11,13 @@ export const createSessionSchema = object({
   }),
 });
 
+export const FCMTokenSchema = object({
+  body: object({
+    fcmtoken: string({
+      required_error: 'fcmtoken is required',
+    }),
+  }),
+});
 export type CreateSessionInput = TypeOf<typeof createSessionSchema>['body'];
+
+export type FCMTokenInput = TypeOf<typeof FCMTokenSchema>['body'];

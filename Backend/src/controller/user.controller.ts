@@ -1094,11 +1094,12 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
     );
     await createNotification(
       followed._id,
-      follows.avatar ?? 'defaultIcon.jpg',
+      follows.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
       'New Follower!',
       'newFollower',
       `${follows.username} followed you!`,
-      follows._id
+      follows._id,
+      res.locals.fcmtoken
     );
     return res.status(200).json({
       status: 'succeeded',

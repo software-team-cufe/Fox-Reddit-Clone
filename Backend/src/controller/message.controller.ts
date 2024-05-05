@@ -49,11 +49,12 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
     }
     await createNotification(
       checkReceiver._id,
-      user.avatar ?? 'default.jpg',
+      user.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
       `${user.username} sent a message`,
       'message',
       req.body.text,
-      createdMessage._id
+      createdMessage._id,
+      res.locals.fcmtoken
     );
     res.status(200).json(createdMessage); // 201: Created
   } catch (error) {

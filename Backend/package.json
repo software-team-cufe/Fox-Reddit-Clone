@@ -74,6 +74,7 @@
     "dotenv-safe": "^9.1.0",
     "express": "^5.0.0-alpha.8",
     "express-async-handler": "^1.2.0",
+    "firebase-admin": "^12.1.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^8.2.2",

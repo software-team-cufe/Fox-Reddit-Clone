@@ -2,6 +2,14 @@ import NotificationModel from '../model/notification.model'; // Adjust the impor
 import { findUserById } from '../service/user.service'; // Import the function to find a user by ID
 import { notificationInfo } from '../model/user.model'; // Import the notificationInfo type
 import { Types } from 'mongoose';
+import admin, { ServiceAccount } from 'firebase-admin';
+
+import serviceAccount from '../../serviceAccountKey.json';
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as ServiceAccount),
+  databaseURL: 'https://your-project-id.firebaseio.com', // Your Firebase database URL
+});
 
 export async function findNotificationById(id: string) {
   try {
@@ -22,11 +30,13 @@ export async function createNotification(
   title: string,
   type: string,
   text: string,
-  source: Types.ObjectId // Assuming 'source' is a Mongoose ObjectId
+  source: Types.ObjectId,
+  fcmtoken: string // Assuming 'source' is a Mongoose ObjectId
 ) {
   try {
     // Create a new notification instance
-    const textSlice = text.slice(0, 30) + '...';
+    let textSlice = text.slice(0, 30);
+    if (text.length > 30) textSlice += '...';
     const notification = new NotificationModel({
       icon,
       title,
@@ -34,6 +44,36 @@ export async function createNotification(
       textSlice,
       source,
     });
+
+    // Convert the source ObjectId to a string if necessary
+    const sourceId = source.toString();
+
+    // Send notification to Firebase
+    const message = {
+      notification: {
+        title: title,
+        body: textSlice,
+        icon: icon,
+      },
+      data: {
+        sourceId: sourceId,
+        type: type, // Include the source ID in the data payload
+      },
+      token: fcmtoken, // You need to obtain the user's FCM token
+    };
+
+    // Send a message to the device corresponding to the provided
+    // registration token.
+    admin
+      .messaging()
+      .send(message)
+      .then((response) => {
+        // Response is a message ID string.
+        console.log('Successfully sent message:', response);
+      })
+      .catch((error) => {
+        console.log('Error sending message:', error);
+      });
 
     // Save the notification to the database
     const savedNotification = await notification.save();

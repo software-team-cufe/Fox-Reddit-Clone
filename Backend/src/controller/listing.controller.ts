@@ -350,11 +350,12 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
     }
     await createNotification(
       postAuthor._id,
-      updatedUser.avatar ?? 'deafult.jpg',
+      updatedUser.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
       'New Comment!',
       'comment',
       `${updatedUser.username} has commented on your post.`,
-      createdComment._id
+      createdComment._id,
+      res.locals.fcmtoken
     );
     res.status(201).json(createdComment); // 201: Created
   } catch (error) {
@@ -1008,11 +1009,12 @@ export async function votePostHandler(req: Request, res: Response) {
       if (author) {
         createNotification(
           author._id,
-          author.avatar ?? 'default_avatar_url',
+          author.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
           'New Upvote!',
           'Upvote',
           `${user.username} upvoted your post!`,
-          post._id
+          post._id,
+          res.locals.fcmtoken
         );
       }
       res.status(200).json({
@@ -1176,11 +1178,12 @@ export async function submitPostHandler(req: Request, res: Response) {
       for (let i = 0; i < followers.length; i++) {
         await createNotification(
           followers[i]._id,
-          community.icon ?? 'default.jpg',
+          community.icon ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
           'New Post!',
           'newPost',
           `${community.name} has posted a new post!`,
-          createdPost._id
+          createdPost._id,
+          res.locals.fcmtoken
         );
       }
       res.status(201).json(createdPost);
@@ -1198,11 +1201,12 @@ export async function submitPostHandler(req: Request, res: Response) {
       for (let i = 0; i < followers.length; i++) {
         await createNotification(
           followers[i]._id,
-          user.avatar ?? 'default.jpg',
+          user.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
           'New Post!',
           'newPost',
           `${user.username} has posted a new post!`,
-          createdPost._id
+          createdPost._id,
+          res.locals.fcmtoken
         );
       }
       res.status(201).json(createdPost);
@@ -1452,11 +1456,12 @@ export async function addReplyHandler(req: Request, res: Response) {
     }
     await createNotification(
       commentAuthor?._id,
-      user.avatar ?? 'default.jpg',
+      user.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
       'New comment reply!',
       'reply',
       `${user.username} replied to your comment.`,
-      updatedComment._id
+      updatedComment._id,
+      res.locals.fcmtoken
     );
     res.status(201).json(createdReply); // 201: Created
   } catch (error) {
