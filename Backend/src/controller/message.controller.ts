@@ -202,10 +202,15 @@ export async function allMessagesHandler(req: Request, res: Response) {
         { toID: userId, fromID: { $ne: userId } },
         { fromID: userId, toID: { $ne: userId } },
       ],
-    }).populate({
-      path: 'toID',
-      select: 'username avatar', // Select the fields to populate
-    });
+    })
+      .populate({
+        path: 'toID',
+        select: 'username avatar', // Select the fields to populate
+      })
+      .populate({
+        path: 'fromID',
+        select: 'username avatar', // Select the fields to populate
+      });
     return res.status(200).json({
       response: 'success',
       messages: messages,
@@ -385,10 +390,15 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
   const userId = res.locals.user._id;
 
   try {
-    const messages = await MessageModel.find({ toID: userId, unread_status: true }).populate({
-      path: 'toID',
-      select: 'username avatar',
-    });
+    const messages = await MessageModel.find({ toID: userId, unread_status: true })
+      .populate({
+        path: 'toID',
+        select: 'username avatar',
+      })
+      .populate({
+        path: 'fromID',
+        select: 'username avatar',
+      });
     return res.status(200).json({
       response: 'success',
       messages: messages,
@@ -838,10 +848,15 @@ export async function getuserAllHandler(req: Request, res: Response) {
         { toID: user._id, fromID: { $ne: user._id } },
         { fromID: user._id, toID: { $ne: user._id } },
       ],
-    }).populate({
-      path: 'toID',
-      select: 'username avatar',
-    });
+    })
+      .populate({
+        path: 'toID',
+        select: 'username avatar',
+      })
+      .populate({
+        path: 'fromID',
+        select: 'username avatar',
+      });
 
     // Merge all arrays into one
     const allData = [...mentionedPosts, ...repliededPosts, ...messages];
