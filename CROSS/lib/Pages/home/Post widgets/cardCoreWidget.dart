@@ -71,9 +71,9 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
           ],
         ),
         const SizedBox(height: 8),
-        // if (widget.post['picture'] != null &&
-        //     widget.post['picture']!.isNotEmpty)
-        // Wrap GestureDetector around ClipRRect
+         if ('https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15' != null &&
+             'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15'!.isNotEmpty)
+        //Wrap GestureDetector around ClipRRect
         GestureDetector(
           onTap: () {
             if ((widget.post['nsfw'] || widget.post['spoiler']) &&

@@ -42,7 +42,7 @@ class _VoteSectionState extends State<VoteSection> {
   @override
   void initState() {
     super.initState();
-    voteCount = widget.post['votes'] ?? 0;
+    voteCount = widget.post['votesCount'] ?? 0;
     hasVoted = widget.post['hasVoted'] ?? false;
   }
 
@@ -76,7 +76,7 @@ class _VoteSectionState extends State<VoteSection> {
               ),
             ),
             Text(
-              "${voteCount.abs()}",
+              "$voteCount",
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             ConstrainedBox(

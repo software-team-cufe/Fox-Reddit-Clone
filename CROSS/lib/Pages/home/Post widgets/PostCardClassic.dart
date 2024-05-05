@@ -40,17 +40,18 @@ class _ClassicCardState extends State<ClassicCard> {
       child: Column(
         children: [
           ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             title: Row(
               children: [
-                widget.post['redditpic'] != null
+                'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15' !=
+                        null
                     ? CircleAvatar(
-                        backgroundImage: NetworkImage(widget.post['redditpic']),
+                        backgroundImage: NetworkImage(
+                            'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15'),
                       )
                     : const Icon(Icons.account_circle, size: 30),
                 Text(
-                  widget.post['redditName'],
+                  'r/${widget.post['communityName']}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -75,7 +76,7 @@ class _ClassicCardState extends State<ClassicCard> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      widget.post['description'],
+                      widget.post['text'],
                       style: TextStyle(
                         fontSize: 16,
                         color: isBlurred ? Colors.transparent : Colors.white,
