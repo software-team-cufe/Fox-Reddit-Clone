@@ -6,6 +6,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:reddit_fox/Pages/saved.dart';
+import 'package:reddit_fox/Pages/settings/HisoryScreen.dart';
 import 'package:reddit_fox/Pages/settings/setting.dart';
 import 'package:reddit_fox/features/auth/screens/login_screen.dart';
 import 'package:reddit_fox/features/auth/screens/starting_screen.dart';
@@ -148,7 +149,10 @@ class _endDrawerState extends State<endDrawer> {
                         leading: const Icon(Icons.access_time),
                         title: const Text('History'),
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HistoryPage()));
                         },
                       ),
                       ListTile(
@@ -176,7 +180,7 @@ class _endDrawerState extends State<endDrawer> {
                           // Navigate to the authentication screen
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => AuthContainer()),
+                                builder: (context) => const AuthContainer()),
                           );
                         },
                       ),

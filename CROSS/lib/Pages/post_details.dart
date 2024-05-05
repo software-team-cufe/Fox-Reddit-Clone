@@ -45,8 +45,29 @@ class _PostDetailsState extends State<PostDetails> {
       setState(() {
         // Store the token in the access_token variable
         access_token = sharedPrefValue.getString('backtoken');
+        addPostToHistory();
       });
     });
+  }
+
+  Future<void> addPostToHistory() async {
+    var url = Uri.parse(ApiRoutesBackend.viewedPost);
+
+    var response = await http.post(
+      url,
+      body: jsonEncode({"postID": widget.post['postID']}),
+      // body: {"postID": widget.post['postID']},
+      headers: {
+        'Authorization': 'Bearer $access_token',
+        'Content-Type': 'application/json'
+      },
+    );
+
+    print(jsonEncode({"postID": widget.post['postID']}));
+    print("##########");
+    print(response.statusCode);
+    print(response.body);
+    print("##########");
   }
 
   Future<String> fetchUserProfilePic(String accessToken) async {
