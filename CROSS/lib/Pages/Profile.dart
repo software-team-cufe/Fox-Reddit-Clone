@@ -38,8 +38,8 @@ import 'package:reddit_fox/Pages/postViewForProfile.dart';
     List<dynamic> data = [];
     List<dynamic> posts = [];
     List<dynamic> userComments = [];
-    late int totalKarma;
-    late int commentKarma;
+    late int totalKarma = 0;
+    late int commentKarma = 0;
     
 
     @override
@@ -335,6 +335,7 @@ Widget _buildTitleView() {
 }
 
     Widget _buildAlternateView() {
+      double screenWidth = MediaQuery.of(context).size.width;
       return CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -384,8 +385,9 @@ Widget _buildTitleView() {
                                         child: Text(
                                           '$userName',
                                           style: TextStyle(
-                                            fontSize: 26,
+                                            fontSize: 20,
                                             color: Colors.grey[400],
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
@@ -394,7 +396,7 @@ Widget _buildTitleView() {
                                         child: Text(
                                           'u/$userName • 1 karma • ${_formatDate(userData['createdAt'])}',
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             color: Colors.grey[400],
                                           ),
                                         ),
@@ -402,7 +404,7 @@ Widget _buildTitleView() {
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 50,),
+                                    padding: const EdgeInsets.only(),
                                       child: CircleAvatar(
                                         backgroundColor: Colors.transparent,
                                         radius: 50, // Increase the radius to increase the size of the CircleAvatar
@@ -413,8 +415,8 @@ Widget _buildTitleView() {
                                           ),
                                           child: Image.asset(
                                             'assets/Icons/Chat.png',
-                                            width: 32, // Set the width of the Image
-                                            height: 32, // Set the height of the Image
+                                            width: 28, // Set the width of the Image
+                                            height: 28, // Set the height of the Image
                                           ),
                                         ),
                                       ),
@@ -422,6 +424,7 @@ Widget _buildTitleView() {
                                   Padding(
                                     padding: const EdgeInsets.only(),
                                       child: SizedBox(
+                                        width: screenWidth * 0.25, // 50% of screen width
                                         height: 35,
                                         child: ElevatedButton(
                                           onPressed: () {
@@ -431,7 +434,7 @@ Widget _buildTitleView() {
                                       ),
                                     ),
                                 ],
-                              ),
+                              )
                             ],
                           ),
                         ),
