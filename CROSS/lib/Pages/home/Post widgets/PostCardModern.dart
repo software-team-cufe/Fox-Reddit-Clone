@@ -170,18 +170,21 @@
 // }
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/cardCoreWidget.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// A stateful widget that represents a post card in the home page.
 class ModernCard extends StatefulWidget {
   final Map<dynamic, dynamic> post;
+  bool currentuserpost = false;
 
   /// Constructs a [ModernCard] widget.
   ///
   /// The [post] parameter is required and contains the data for the post.
-  const ModernCard({
+  ModernCard({
     super.key,
     required this.post,
   });
@@ -194,6 +197,15 @@ class _ModernCardState extends State<ModernCard> {
   @override
   void initState() {
     super.initState();
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        if (widget.post['userID'] == sharedPrefValue.getString('userid')) {
+          widget.currentuserpost = true;
+        }
+      });
+    });
+    setState(() {});
   }
 
   @override
@@ -254,6 +266,17 @@ class _ModernCardState extends State<ModernCard> {
                                 Navigator.pop(context); // Close the menu
                                 // Handle option 1
                               },
+                            ),
+                            Visibility(
+                              visible: widget.currentuserpost,
+                              child: ListTile(
+                                leading: const Icon(Icons.bookmark),
+                                title: const Text('Save'),
+                                onTap: () {
+                                  Navigator.pop(context); // Close the menu
+                                  // Handle option 1
+                                },
+                              ),
                             ),
                             ListTile(
                               leading: const Icon(Icons.content_copy),

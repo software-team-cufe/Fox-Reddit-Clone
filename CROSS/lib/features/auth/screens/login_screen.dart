@@ -41,6 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
       final Map<String, dynamic> user = jsonDecode(response.body);
       print(response.body);
       saveToken(user["accessToken"], 'backtoken');
+
+      print(user['user']['_id']);
+      saveToken(user['user']['_id'], 'userid');
+      // saveToken(user['user']['_id'], 'userid');
       saveToken('jessicatoken', 'mocktoken');
 
       Get.to(const SplashScreen());
@@ -85,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 decoration: const InputDecoration(
                   hintText: "Password",
-                prefixIcon: Icon(Icons.password),
+                  prefixIcon: Icon(Icons.password),
                 ),
                 controller: passwordController,
                 obscureText: true,
