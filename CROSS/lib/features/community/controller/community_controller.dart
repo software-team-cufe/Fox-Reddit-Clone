@@ -8,9 +8,13 @@ import 'package:reddit_fox/core/utils.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
 import 'package:reddit_fox/features/community/repository/community_repository.dart';
 import 'package:reddit_fox/models/community_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 /// Provider that streams the list of user communities.
-final userCommunitiesProvider = StreamProvider((ref) {
+final userCommunitiesProvider = FutureProvider((ref) {
   final communityController = ref.watch(communityControllerProvider.notifier);
   return communityController.getUserCommunities();
 });
@@ -54,33 +58,63 @@ class CommunityController extends StateNotifier<bool> {
         super(false);
 
   /// Create a new community.
-  void createCommunity(String name, BuildContext context) async {
-    state = true;
-    final uid = _ref.read(userProvider)?.uid ?? '';
-    Community community = Community(
-      id: name,
-      name: name,
-      banner: Constants.bannerDefault,
-      avatar: Constants.avatarDefault,
-      members: [uid],
-      mods: [uid],
+void createCommunity(String name, BuildContext context) async {
+  state = true;
+  final prefs = await SharedPreferences.getInstance();
+  final access_token = prefs.getString('backtoken') ?? '';
+  final uid = _ref.read(userProvider)?.uid ?? '';
+  Community community = Community(
+    id: name,
+    name: name,
+    banner: Constants.bannerDefault,
+    avatar: Constants.avatarDefault,
+    members: [uid],
+    mods: [uid],
+  );
+
+  // Create the HTTP client.
+  var client = http.Client();
+
+  try {
+    // Send the POST request.
+    var response = await client.post(
+      Uri.parse('http://localhost:3000/create_subreddit'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $access_token',  // Replace with your token.
+      },
+      body: jsonEncode(<String, String>{
+        'name': community.name,
+        'type': 'Public',  // Replace with actual type.
+        'over18': 'false',  // Replace with actual value.
+      }),
     );
 
-    final res = await _communityRepository.createCommunity(community);
-    state = false;
-    res.fold(
-      (l) => showSnackBar(context, l.message),
-      (r) {
-        showSnackBar(context, 'Community created successfully!');
-        Navigator.pop(context);
-      },
-    );
+    // Handle the response.
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the JSON.
+      var data = jsonDecode(response.body);
+      // Use the data as needed.
+      showSnackBar(context, 'Community created successfully!');
+      Navigator.pop(context);
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      throw Exception('Failed to create community.');
+    }
+  } finally {
+    client.close();
   }
 
+  state = false;
+}
+
+
   /// Stream of the user's communities.
-  Stream<List<Community>> getUserCommunities() {
+  Future<List<String>> getUserCommunities() async {
     final uid = _ref.read(userProvider)!.uid;
-    return _communityRepository.getUserCommunities(uid);
+    List<String> communityNames = await
+     _communityRepository.getUserCommunities(uid);
+     return communityNames;
   }
 
   /// Fetch a community by its name.
