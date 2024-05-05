@@ -8,6 +8,7 @@ import CommunityModel, {
   ButtonWidget,
   ContentControls,
   PostSettings,
+  Details,
 } from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
@@ -698,6 +699,29 @@ export async function editCommunityContentControls(subreddit: string, controls: 
       { ContentControls: controls },
       { new: true }
     );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunitydetails(subreddit: string, details: Details) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(community._id, { Details: details }, { new: true });
   } catch (error) {
     return {
       status: false,

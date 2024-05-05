@@ -57,6 +57,8 @@ import {
   editPostSettingsHandler,
   getContentControlsHandler,
   editContentControlsHandler,
+  editCommunityDetailsHandler,
+  getCommunityDetailsHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -82,6 +84,7 @@ import {
   EditButtonWidgetArraySchema,
   EditPostSettingsSchema,
   EditContentControlsSchema,
+  editCommunityDetailsSchema,
 } from '../schema/community.schema';
 import uploadSingleMulter from '../middleware/multer/singleImage';
 import { uploadSingleCloudinary } from '../middleware/cloudinary/uploadMultiple';
@@ -129,6 +132,9 @@ router.get('/:subreddit/about/spam_comments', validateResource(subscribeCommunit
 
 router.patch('/:subreddit/api/edit_rules', validateResource(editCommunityRulesSchema), editCommunityRulesHandler);
 router.get('/:subreddit/api/rules', validateResource(getCommunitySchema), getCommunityRulesHandler);
+
+router.patch('/:subreddit/api/edit_details', validateResource(editCommunityDetailsSchema), editCommunityDetailsHandler);
+router.get('/:subreddit/api/details', validateResource(getCommunitySchema), getCommunityDetailsHandler);
 
 router.patch(
   '/:subreddit/api/edit_categories',

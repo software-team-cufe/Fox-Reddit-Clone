@@ -145,6 +145,14 @@ export class ImageWidget {
   image!: string;
 }
 
+export class Details {
+  @prop()
+  nickname!: string;
+
+  @prop()
+  description!: string;
+}
+
 class IsBanned {
   @prop({ default: false })
   value?: boolean;
@@ -277,6 +285,9 @@ export class Community {
 
   @prop({ default: () => new PostSettings() })
   PostSettings?: PostSettings;
+
+  @prop({ default: () => new Details() })
+  Details?: Details;
 
   @prop({ default: () => new ContentControls() })
   ContentControls?: ContentControls;
