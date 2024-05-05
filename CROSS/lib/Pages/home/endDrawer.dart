@@ -27,6 +27,7 @@ class _endDrawerState extends State<endDrawer> {
   late Future<String?> userId;
   late String? profilePic;
   late String? accessToken;
+  late String userName;
 
   @override
   void initState() {
@@ -50,6 +51,7 @@ class _endDrawerState extends State<endDrawer> {
       if (responseData.containsKey('user')) {
         Map<String, dynamic> user = responseData['user'];
         profilePic = user['avatar'];
+        userName = user['username'];
         if (profilePic == 'default.jpg') {
           profilePic = null;
         }
@@ -115,7 +117,7 @@ class _endDrawerState extends State<endDrawer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProfilePage(
-                                      userName: '',
+                                      userName: userName,
                                       myProfile: true,
                                       access_token: accessToken!,
                                     )),

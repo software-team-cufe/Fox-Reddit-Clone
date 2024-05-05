@@ -34,10 +34,12 @@ import 'package:reddit_fox/Pages/postViewForProfile.dart';
     late String? profilePic = null;
     late String? userName = widget.userName;
     bool _showTitle = true;
-    late String? created_at;
+    late String? createdAt = "";
     List<dynamic> data = [];
     List<dynamic> posts = [];
     List<dynamic> userComments = [];
+    late int totalKarma;
+    late int commentKarma;
     
 
     @override
@@ -61,11 +63,13 @@ import 'package:reddit_fox/Pages/postViewForProfile.dart';
 
 
     Future<void> fetchUserAbout(String userName) async {
-      var url = Uri.parse(ApiRoutesBackend.getUserAbout(userName));
-      print("Token : $access_token");
-      final response = await http.get(url);
-      print("response statues code: ${response.statusCode}");
       try {
+      var url = Uri.parse(ApiRoutesBackend.getUserAbout(userName));
+      var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $access_token'},
+    );
+      print("response statues code: ${response.statusCode}");
         if (response.statusCode == 200) {
           Map<String, dynamic> responseData = json.decode(response.body);
           print("Response Data: $responseData");
@@ -76,10 +80,10 @@ import 'package:reddit_fox/Pages/postViewForProfile.dart';
                 profilePic = null;
               }
               userID = responseData['userID'];
-              // created_at = responseData['createdAt'];
-              userName = responseData['email']; // Adjust username extraction here , Created at: $created_at
-              print(
-                  'User ID: $userID, Username: $userName, Profile Pic: $profilePic');
+              createdAt = responseData['createdAt'] ?? "";
+              userName = responseData['email'];
+              commentKarma = responseData['commentKarma'];
+              totalKarma = responseData['totalKarma'];
             });
           } else {
             throw Exception('User ID is not present in the response');
@@ -271,7 +275,7 @@ Widget _buildTitleView() {
                     Padding(
                       padding: const EdgeInsets.only(left: 20, top: 5),
                       child: Text(
-                        'u/$userName • 1 karma • ', // ${_formatDate(created_at)}
+                        'u/$userName • 1 karma •  ${_formatDate(createdAt)}',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey[400],
@@ -322,7 +326,7 @@ Widget _buildTitleView() {
           children: [
             buildPostsContainer(),
             Container(), // Placeholder for Comments
-            Container(), // Placeholder for About
+            buildAboutContainer(), // Placeholder for About
           ],
         ),
       ),
@@ -385,11 +389,10 @@ Widget _buildTitleView() {
                                           ),
                                         ),
                                       ),
-                                      // ${_formatDate(userData['created_at'])}
                                       Padding(
                                         padding: const EdgeInsets.only(),
                                         child: Text(
-                                          'u/$userName • 1 karma • ',
+                                          'u/$userName • 1 karma • ${_formatDate(userData['createdAt'])}',
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.grey[400],
@@ -476,7 +479,7 @@ Widget _buildTitleView() {
               children: [
                 buildPostsContainer(),
                 Container(), // Placeholder for Comments
-                Container(), // Placeholder for About
+                buildAboutContainer(), // Placeholder for About
               ],
             ),
           ),
@@ -498,6 +501,55 @@ Widget _buildTitleView() {
         ],
       );
     }
+
+    Widget buildAboutContainer(){
+        double screenHeight = MediaQuery.of(context).size.height;
+
+        return Scaffold(
+          body: Column(
+            children: [
+              Container(
+                height: screenHeight * 0.08, // 20% of screen height
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        color: Color.fromARGB(255, 26, 26, 26),
+                        alignment: Alignment.center,
+                        child: Text(
+                      "Post Karma: $totalKarma",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      )
+                    ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Color.fromARGB(255, 26, 26, 26),
+                        alignment: Alignment.center,
+                        child: Text(
+                      "Comment Karma: $commentKarma",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        )
+                      ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Divider(
+                color: const Color.fromARGB(255, 88, 88, 88),
+                height: 2,
+              ),
+            ],
+          ),
+        );
+
+      }
 
     @override
     Widget build(BuildContext context) {
