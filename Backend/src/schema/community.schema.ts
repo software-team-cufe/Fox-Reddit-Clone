@@ -119,6 +119,22 @@ export const editCommunityRulesSchema = object({
   }),
 });
 
+export const editCommunityDetailsSchema = object({
+  params: object({
+    subreddit: string({
+      required_error: 'subreddit is required',
+    }),
+  }),
+  body: object({
+    nickname: string({
+      required_error: 'nickname is required',
+    }),
+    description: string({
+      required_error: 'description is required',
+    }),
+  }),
+});
+
 export const editCommunityRemovalResonsSchema = object({
   params: object({
     subreddit: string({
