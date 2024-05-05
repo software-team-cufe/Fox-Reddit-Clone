@@ -813,32 +813,33 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
       throw new appError('User not found search auth user', 404);
     }
 
-    const privateCommunities = await UserModel.aggregate([
+    const userCommunities = await UserModel.aggregate([
       {
         $match: {
           _id: user._id,
         },
       },
       { $unwind: '$member' },
+      { $unwind: '$moderators' },
       {
         $lookup: {
           from: 'communities',
-          localField: 'member.communityId',
-          foreignField: '_id',
+          let: { memberId: '$member.communityId', moderatorId: '$moderators.communityId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $or: [{ $eq: ['$_id', '$$memberId'] }, { $eq: ['$_id', '$$moderatorId'] }],
+                },
+                $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
+              },
+            },
+          ],
           as: 'joinedCommunities',
         },
       },
       {
         $unwind: '$joinedCommunities',
-      },
-      {
-        $match: {
-          'joinedCommunities.privacyType': 'Private',
-          $or: [
-            { 'community.name': { $regex: query, $options: 'i' } },
-            { 'community.description': { $regex: query, $options: 'i' } },
-          ],
-        },
       },
       {
         $project: {
@@ -852,7 +853,9 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
       { $skip: (page - 1) * limit },
       { $limit: limit },
     ]);
-    const authUserCommunities = privateCommunities.concat(publicCommunities);
+    const authUserCommunities = userCommunities.concat(publicCommunities);
+    console.log(userCommunities);
+    console.log(publicCommunities);
     return authUserCommunities;
   } catch (error) {
     return error;
@@ -1090,12 +1093,12 @@ export async function getHomePostsAuth(page: number, limit: number, userID: numb
   // "Best" is just a normal feed with random sorting.
   // "New" should be sorted according to time (by the most recent) not an option like in "Top".
 
-  // let sortCriteria: Record<string, number>;
-  // switch (sort) {
-  //   case 'hot':
-  //     sortCriteria = { 'posts.views': -1 };
-  //     break;
-  // }
+  let sortCriteria: Record<string, number> = {};
+  switch (sort) {
+    case 'hot':
+      sortCriteria = { insightCnt: -1 };
+      break;
+  }
 
   const UserCommunityPosts = await UserModel.aggregate([
     {

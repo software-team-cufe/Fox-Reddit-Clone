@@ -168,7 +168,7 @@ export class Community {
   @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714595299/gcnool3ibj3zfyoa1emq.jpg' })
   banner?: string;
 
-  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714908975/gduxbj1bsk7xnaqtqnc1.png' })
   icon?: string;
 
   @prop({ default: 0 })
