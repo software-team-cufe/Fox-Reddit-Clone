@@ -21,8 +21,8 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
   @override
   void initState() {
     super.initState();
-    isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
-    textIsblurred = (widget.post['nsfw'] || widget.post['spoiler']);
+    isBlurred = (false || false);
+    textIsblurred = (false || false);
   }
 
   @override
@@ -31,12 +31,12 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.post['title'] ?? "title",
+          widget.post['postTitle'] ?? "title",
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         Row(
           children: [
-            if (widget.post['nsfw'])
+            if (false)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 margin: const EdgeInsets.only(top: 4, right: 4),
@@ -52,7 +52,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
                   ),
                 ),
               ),
-            if (widget.post['spoiler'])
+            if (false)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 margin: const EdgeInsets.only(top: 4),
@@ -76,11 +76,11 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
         //Wrap GestureDetector around ClipRRect
         GestureDetector(
           onTap: () {
-            if ((widget.post['nsfw'] || widget.post['spoiler']) &&
+            if ((false || false) &&
                 widget.detailsPageOpen) {
               // Check if the post is NSFW or spoiler
               setState(() {
-                isBlurred = !isBlurred; // Toggle blur if the post is NSFW
+                isBlurred = !isBlurred; // Toggle blur if the post is NSFWisBlurred
               });
             } else if (widget.detailsPageOpen) {
               //do nothing
@@ -142,7 +142,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
         const SizedBox(height: 8),
         GestureDetector(
           onTap: () {
-            if ((widget.post['nsfw'] || widget.post['spoiler']) &&
+            if ((false || false) &&
                 widget.detailsPageOpen) {
               // Check if the post is NSFW or spoiler
               setState(() {
@@ -167,7 +167,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              widget.post['text'],
+              widget.post['postTitle'],
               style: TextStyle(
                 fontSize: 16,
                 color: textIsblurred ? Colors.transparent : Colors.white,
@@ -175,13 +175,13 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
             ),
           ),
         ),
-        if (widget.post['poll'] == true &&
-            (widget.post['nsfw'] == false ||
-                widget.post['spoiler'] ==
-                    false)) // Check if post has a poll and if it should be shown
-          PollWidget(
-              pollOptions: const ['Option 1', 'Option 2', 'Option 3'],
-              onOptionSelected: (String) {}), // Render the poll widget if true
+      //   if (widget.post['poll'] == true &&
+      //       (false == false ||
+      //           false ==
+      //               false)) // Check if post has a poll and if it should be shown
+      //     PollWidget(
+      //         pollOptions: const ['Option 1', 'Option 2', 'Option 3'],
+      //         onOptionSelected: (String) {}), // Render the poll widget if true
       ],
     );
   }
