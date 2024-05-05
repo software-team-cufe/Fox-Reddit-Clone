@@ -781,7 +781,7 @@ export async function getSrSearchResultNotAuth(query: string, page: number, limi
   try {
     const communityResults = await CommunityModel.find({
       $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-      privacyType: 'public',
+      privacyType: 'Public',
     })
       .skip((page - 1) * limit)
       .limit(limit)
@@ -802,7 +802,7 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
       UserModel.findById(userID),
       CommunityModel.find({
         $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-        privacyType: 'public',
+        privacyType: 'Public',
       })
         .skip((page - 1) * limit)
         .limit(limit)
@@ -833,7 +833,7 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
       },
       {
         $match: {
-          'joinedCommunities.privacyType': 'private',
+          'joinedCommunities.privacyType': 'Private',
           $or: [
             { 'community.name': { $regex: query, $options: 'i' } },
             { 'community.description': { $regex: query, $options: 'i' } },
@@ -1137,7 +1137,7 @@ export async function getHomePostsNotAuth(page: number, limit: number) {
   const randomPosts = await CommunityModel.aggregate([
     {
       $match: {
-        privacyType: 'public',
+        privacyType: 'Public',
       },
     },
     {
