@@ -340,7 +340,8 @@ class _PostDetailsState extends State<PostDetails> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProfilePage(
-                              userName: "omar", //editedUsername,
+                              userName: "omar",
+                              access_token: access_token, //editedUsername,
                             ),
                           ),
                         );

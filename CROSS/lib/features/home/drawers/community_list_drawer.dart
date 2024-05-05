@@ -47,10 +47,10 @@ class CommunityListDrawer extends ConsumerWidget {
                           final community = communities[index];
                           return ListTile(
                             leading: CircleAvatar(
-                              backgroundImage: NetworkImage(community.avatar),
+                              //backgroundImage: NetworkImage(community.avatar),
                             ),
-                            title: Text('r/${community.name}'),
-                            onTap: () => navigateToCommunity(context, community),
+                            //title: Text('r/${community.name}'),
+                            //onTap: () => navigateToCommunity(context, community),
                           );
                         },
                       ),
