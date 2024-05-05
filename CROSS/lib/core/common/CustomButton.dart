@@ -122,8 +122,11 @@ class Textbuttoncontainer extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
+    required this.color,
   });
   final String? text;
+  final Color color;
+
   // final Function(List<String>) onSelectionChange;
   final VoidCallback onPressed;
   @override
@@ -136,7 +139,7 @@ class Textbuttoncontainer extends StatelessWidget {
         padding: const EdgeInsets.all(9),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: Colors.blue,
+          color: color,
         ),
         child: Center(
           child: RegularText(

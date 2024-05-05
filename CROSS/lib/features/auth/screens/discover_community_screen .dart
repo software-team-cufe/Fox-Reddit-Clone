@@ -175,6 +175,7 @@ class SuggestedCommunityCard extends StatelessWidget {
                   Textbuttoncontainer(
                     text: "Join",
                     onPressed: () => const Placeholder(),
+                    color: Colors.blue,
                   )
                 ],
               )

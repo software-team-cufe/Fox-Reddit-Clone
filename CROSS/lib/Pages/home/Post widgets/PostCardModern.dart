@@ -170,16 +170,19 @@
 // }
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/cardCoreWidget.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
+import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A stateful widget that represents a post card in the home page.
 class ModernCard extends StatefulWidget {
   final Map<dynamic, dynamic> post;
-  bool currentuserpost = false;
+  bool currentuserpost = true;
 
   /// Constructs a [ModernCard] widget.
   ///
@@ -270,10 +273,73 @@ class _ModernCardState extends State<ModernCard> {
                             Visibility(
                               visible: widget.currentuserpost,
                               child: ListTile(
-                                leading: const Icon(Icons.bookmark),
-                                title: const Text('Save'),
+                                leading: const Icon(Icons.edit_document),
+                                title: const Text('Edit'),
                                 onTap: () {
-                                  Navigator.pop(context); // Close the menu
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor: Colors.black87,
+                                          surfaceTintColor: Colors.black54,
+                                          content: SingleChildScrollView(
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.8,
+                                              child: Column(
+                                                children: [
+                                                  TextField(
+                                                    decoration: InputDecoration(
+                                                      suffixIconColor:
+                                                          Colors.white,
+                                                      prefixIconColor:
+                                                          Colors.white,
+                                                      fillColor:
+                                                          const Color.fromARGB(
+                                                              255, 18, 16, 15),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15)),
+
+                                                      filled: true,
+                                                      // fillColor: Color.fromARGB(
+                                                      //     255, 50, 43, 50),
+                                                    ),
+                                                    maxLines: 15,
+                                                  ),
+                                                  const Spacer(),
+                                                  Row(
+                                                    children: [
+                                                      Textbuttoncontainer(
+                                                          text: 'Cancel',
+                                                          color: const Color(
+                                                              0xFFB02F00),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          }),
+                                                      const Spacer(),
+                                                      Textbuttoncontainer(
+                                                          text: 'Change',
+                                                          color: const Color(
+                                                              0xFFB02F00),
+                                                          onPressed: () {}),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }); // Close the menu
                                   // Handle option 1
                                 },
                               ),
