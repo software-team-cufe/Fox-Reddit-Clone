@@ -6,6 +6,8 @@ import { Mail, Flag, CircleOff } from 'lucide-react';
 import { useState } from 'react';
 import { userAxios } from '../../Utils/UserAxios';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import  { useEffect } from 'react';
 
 function CardOptionsMenu() {  //prop takes the display to use it outside the component
     const username = useSelector(state => state.user.user.username);
@@ -73,9 +75,12 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
 
 
 export default function ViewerCard() {
-    
+
+    const { viewer } = useParams(); 
     const [isClicked , setCLicked]=useState("false")
     const username = useSelector(state => state.user.user.username);
+    const [numOfPost, setPost] = useState(0);
+    const [numOfComment, setComment] = useState(0);
     const handleFollow = async() => {
         try{
            const res= await userAxios.post('api/follow', {username});
@@ -98,13 +103,31 @@ export default function ViewerCard() {
         }
 
     }
+     useEffect(() => {
+        const fetchCommentPosts = async () => {
+            try {
+                const res = await userAxios.get(`/api/user/${viewer}/number_posts_comments`);
+                console.log("num of comments");
+                console.log(res.data.comment);
+                console.log("num of posts");
+                console.log(res.data.post);
+                setComment(res.data.comment);
+                setPost(res.data.post);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchCommentPosts();
+     },[])
     
+
     return (
         <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl md:block hidden pb-3 w-[340px]">
 
          
             <div className='flex flex-row justify-between items-center mx-3 mt-3'>
-                <span className='font-bold'>username</span>
+                <span className='font-bold'>{viewer}</span>
                 <CardOptionsMenu />
             </div>
              
@@ -147,13 +170,17 @@ export default function ViewerCard() {
 
             <div className='flex flex-row justify-between px-4 mt-2'>
                 <div className='flex flex-col'>
-                    <p className='text-sm font-bold'>1</p>
+                    <p className='text-sm font-bold'>
+                       {numOfPost}
+                    </p>
                     <p className='text-xs text-gray-500'>
                         Post Karma
                     </p>
                 </div>
                 <div className='flex flex-col'>
-                    <p className="text-sm font-bold">0</p>
+                     <p className="text-sm font-bold">
+                       {numOfComment}
+                    </p>
                     <p className='text-xs text-gray-500'>
                         Comment Karma
                     </p>

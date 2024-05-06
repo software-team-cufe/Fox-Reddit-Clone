@@ -1,5 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
+import { userAxios } from '@/Utils/UserAxios';
+import { useParams } from 'react-router-dom';
 const ModCard = () => {
 
     const [widget, setWidget] = useState(false);
@@ -17,12 +19,14 @@ const ModCard = () => {
     const [handleCalender, setHandleCalender] = useState(false);
     const [handlePostFair, setHandlePostFair] = useState(false);
     const [handleBookMark, setHandleBookMark] = useState(false);
+    const { community } = useParams();  
+
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
        <div className=' flex flex-row justify-between m-3'>
-           <div className=' text-sm'>
-               community_name15
+           <div className=' text-md font-semibold'>
+              { community}
            </div>
            <div>
                <button onClick={() => setIsOpened(!isOpened)} className=' rounded-full border border-gray-200 bg-gray-200 w-6 h-6 flex items-center justify-center '>
