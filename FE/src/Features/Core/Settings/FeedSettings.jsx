@@ -9,6 +9,7 @@ import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import axios from "axios";
 import Dropdown from "./dropDownlist";
 import { toast } from 'react-toastify';
+import { Switch } from '@headlessui/react'
 
 /**
  * 
@@ -32,68 +33,124 @@ export default function FeedSettings() {
     const [openPostsInNewTab, setOpenPostsInNewTab] = useState(false);
     const changeContent = true;
     const changeMenuContent = false;
-    let id = 2;
+    let id = 3;
 
-    const handleToggleInFeedMatureContent = (isChecked) => {
-        setShowMatureContent(isChecked);
-        toast.success("changes saved. \u{1F60A}");
-        console.log(isChecked);
-        //console.log(showMatureContent);
+    const handleToggleInFeedMatureContent = async () => {
+        try{axios.patch(`http://localhost:3002/users/${id}`, { 
+            NSFW: !showMatureContent,
+        })
+        setShowMatureContent(!showMatureContent)
+        }catch(error){
+            console.error(error);
+        } 
     }
-    const handleToggleInFeedBlurImage = (isChecked2) => {
-        setBlurMatureImg(isChecked2);
-        toast.success("changes saved. \u{1F60A}");
-        console.log(isChecked2);
-        //console.log(BlurMatureImg);
+    const handleToggleInFeedBlurImage = async () => {
+        try{axios.patch(`http://localhost:3002/users/${id}`, { 
+            blur: !blurMatureImg,
+        })
+        setBlurMatureImg(!blurMatureImg)
+        }catch(error){
+            console.error(error);
+        } 
     }
+    const handleToggleInFeedAutoplay = async () => {
+        try{axios.patch(`http://localhost:3002/users/${id}`, { 
+            autoPlayVideos: !autoplayMedia,
+        })
+        setAutoplayMedia(!autoplayMedia)
+        }catch(error){
+            console.error(error);
+        }
+    }
+    const handleToggleInFeedCommunityTheme = async () => {
+        try{axios.patch(`http://localhost:3002/users/${id}`, { 
+            communityTheme: !communityTheme,
+        })
+        setCommunityTheme(!communityTheme)
+        }catch(error){
+            console.error(error);
+        }
+    }
+    const handleToggleInFeedRememberSort = async () => {
+        try{axios.patch(`http://localhost:3002/users/${id}`, { 
+            rememberingSortPerCommunity: !rememberingSortPerCommunity,
+        })
+        setRememberingSortPerCommunity(!rememberingSortPerCommunity)
+        }catch(error){
+            console.error(error);
+        }
+    }
+    const handleToggleInFeedGlobalView = async () => {
+        try{axios.patch(`http://localhost:3002/users/${id}`, { 
+            globalView: !rememberGlobalView,
+        })
+        setrememberGlobalView(!rememberGlobalView)
+        }catch(error){
+            console.error(error);
+        }
+    }
+    const handleToggleInFeedNewTab = async () => {
+        try{axios.patch(`http://localhost:3002/users/${id}`, { 
+            openPostsInNewTab: !openPostsInNewTab,
+        })
+        setOpenPostsInNewTab(!openPostsInNewTab)
+        }catch(error){
+            console.error(error);
+        }
+    }
+    /** 
     const handleToggleInFeedAutoplay = (isChecked3) => {
         setAutoplayMedia(isChecked3);
-        toast.success("changes saved. \u{1F60A}");
+        toast.success("changes saved.");
         console.log(isChecked3);
         //console.log(autoplayMedia);
     }
     const handleToggleInFeedCommunityTheme = (isChecked4) => {
         setCommunityTheme(isChecked4);
-        toast.success("changes saved. \u{1F60A}");
+        toast.success("changes saved.");
         console.log(isChecked4);
         //console.log(communityTheme);
     }
     const handleToggleInFeedRememberSort = (isChecked5) => {
         setRememberingSortPerCommunity(isChecked5);
-        toast.success("changes saved. \u{1F60A}");
+        toast.success("changes saved.");
         console.log(isChecked5);
         //console.log(rememberingSortPerCommunity);
     }
     const handleToggleInFeedGlobalView = (isChecked6) => {
         setrememberGlobalView(isChecked6);
-        toast.success("changes saved. \u{1F60A}");
+        toast.success("changes saved.");
         console.log(isChecked6);
         //console.log(globalView);
     }
     const handleToggleInFeedNewTab = (isChecked7) => {
         setOpenPostsInNewTab(isChecked7);
-        toast.success("changes saved. \u{1F60A}");
+        toast.success("changes saved.");
         console.log(isChecked7);
         //console.log(openPostsInNewTab);
     };
+    */
 
-    // const getData= () => {
-    //     axios.get(`http://localhost:3002/users/4`).then((response) => {
-    //         setBlurMatureImg(response.data.blur);
-    //         setShowMatureContent(response.data.NSFW);
-    //         setAutoplayMedia(response.data.autoPlayVideos);
-    //         setCommunityTheme(response.data.communityTheme);
-    //         setRememberingSortPerCommunity(response.data.rememberingSortPerCommunity);
-    //         setrememberGlobalView(response.data.rememberGlobalView);
-    //         setOpenPostsInNewTab(response.data.openPostsInNewTab);
 
-    //     }).catch((error) => {
-    //         console.error(error);
-    //     })
-    // }
-    // useEffect(() => {getData()},[]);
+    useEffect(() => {
+        axios.get(`http://localhost:3002/users/${id}`).then((response) => {
+            console.log(response.data);
+            setBlurMatureImg(response.data.blur);
+            setShowMatureContent(response.data.NSFW);
+            setAutoplayMedia(response.data.autoPlayVideos);
+            setCommunityTheme(response.data.communityTheme);
+            setRememberingSortPerCommunity(response.data.rememberingSortPerCommunity);
+            setrememberGlobalView(response.data.rememberGlobalView);
+            setOpenPostsInNewTab(response.data.openPostsInNewTab);
 
-    // const handleDataFromSetting = () => {
+        }).catch((error) => {
+            console.error(error);
+        })
+    },[]);
+
+    // const handleDataFromSetting = async () => {
+    //     console.log("handleDataFromSetting");
+    //     console.log(showMatureContent);
     //     try{axios.patch(`http://localhost:3002/users/${id}`, { 
     //         blur: blurMatureImg,
     //         NSFW: showMatureContent,
@@ -107,16 +164,6 @@ export default function FeedSettings() {
     //         console.error(error);
     //     }   
     // }
-    // useEffect(() => {
-    //     handleDataFromSetting();
-    // },[showMatureContent , 
-    //     blurMatureImg,
-    //     autoplayMedia,
-    //     communityTheme,
-    //     rememberingSortPerCommunity,
-    //     rememberGlobalView,
-    //     openPostsInNewTab]);
-/** 
 
     // useEffect(() => {
     //     const handleChangingUserData=()=>{
@@ -185,7 +232,6 @@ export default function FeedSettings() {
     // useEffect(() => {
     //     console.log(communities);
     // }, [communities]);
-*/
 
 
 
@@ -209,7 +255,16 @@ export default function FeedSettings() {
                                 See NSFW (Not Safe for Work) mature and adult images, videos, written content, and other media in your Reddit feeds and search results.
                             </p>
                         </div >
-                        <ToggleButton onToggle={handleToggleInFeedMatureContent} initial={showMatureContent} />
+                        <Switch id="NSFWtoggle" 
+                            checked={showMatureContent}
+                            onChange={() => {handleToggleInFeedMatureContent();}}
+                            className={`${showMatureContent ? 'bg-blue-900' : 'bg-gray-300'}
+                                relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
+                            <span
+                                aria-hidden="true"
+                                className={`${showMatureContent ? 'translate-x-4' : 'translate-x-0'}
+                                pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
+                        </Switch>
                     </div>
 
                     <div className={`${showMatureContent ? '' : 'opacity-50 cursor-not-allowed'} grid grid-columns-2 grid-flow-col mb-7 justify-between`} role="toggleButton">
@@ -222,7 +277,15 @@ export default function FeedSettings() {
                                 Blur previews and thumbnails for any images or videos tagged as NSFW (Not Safe for Work).
                             </p>
                         </div>
-                        <ToggleButton className={`${showMatureContent ? '' : 'opacity-50 cursor-not-allowed'}`} onToggle={handleToggleInFeedBlurImage} initial={blurMatureImg} disabled={!showMatureContent}/>
+                        <Switch id="blurringtoggle" 
+                            checked={blurMatureImg}
+                            onChange={handleToggleInFeedBlurImage}
+                            className={`${blurMatureImg ? 'bg-blue-900' : 'bg-gray-300'}
+                                relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
+                            <span
+                                aria-hidden="true"
+                                className={`${blurMatureImg ? 'translate-x-4' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
+                        </Switch>                    
                     </div>
 
                     <div className="flex flex-row mb-7 justify-between">
@@ -234,7 +297,15 @@ export default function FeedSettings() {
                             Play videos and gifs automatically when in the viewport.
                         </div></div>
                         <div role="toggleButton" >
-                            <ToggleButton onToggle={handleToggleInFeedAutoplay} initial={autoplayMedia} />
+                        <Switch id="autoplaymedia" 
+                            checked={autoplayMedia}
+                            onChange={handleToggleInFeedAutoplay}
+                            className={`${autoplayMedia ? 'bg-blue-900' : 'bg-gray-300'}
+                                relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
+                            <span
+                                aria-hidden="true"
+                                className={`${autoplayMedia ? 'translate-x-4' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
+                        </Switch>
                         </div>
 
                     </div>
@@ -251,7 +322,15 @@ export default function FeedSettings() {
                         </div>
 
                         <div role="toggleButton">
-                            <ToggleButton onToggle={handleToggleInFeedCommunityTheme} initial={communityTheme} />
+                        <Switch id="blurringtoggle" 
+                            checked={communityTheme}
+                            onChange={handleToggleInFeedCommunityTheme}
+                            className={`${communityTheme ? 'bg-blue-900' : 'bg-gray-300'}
+                                relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
+                            <span
+                                aria-hidden="true"
+                                className={`${communityTheme ? 'translate-x-4' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
+                        </Switch>
                         </div>
                     </div>
 
@@ -279,7 +358,15 @@ export default function FeedSettings() {
                             </p>
                         </div>
                         <div>
-                            <ToggleButton onToggle={handleToggleInFeedRememberSort} initial={rememberingSortPerCommunity}/>
+                        <Switch id="rememberSortPerCommunity" 
+                            checked={rememberingSortPerCommunity}
+                            onChange={handleToggleInFeedRememberSort}
+                            className={`${rememberingSortPerCommunity ? 'bg-blue-900' : 'bg-gray-300'}
+                                relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
+                            <span
+                                aria-hidden="true"
+                                className={`${rememberingSortPerCommunity ? 'translate-x-4' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
+                        </Switch>
                         </div>
                     </div>
 
@@ -307,7 +394,15 @@ export default function FeedSettings() {
                             </p>
                         </div>
                         <div role="TextOfButtons">
-                            <ToggleButton onToggle={handleToggleInFeedGlobalView} initial={rememberGlobalView}/>
+                        <Switch id="rememberview" 
+                            checked={rememberGlobalView}
+                            onChange={handleToggleInFeedGlobalView}
+                            className={`${rememberGlobalView ? 'bg-blue-900' : 'bg-gray-300'}
+                                relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
+                            <span
+                                aria-hidden="true"
+                                className={`${rememberGlobalView ? 'translate-x-4' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
+                        </Switch>
                         </div>
                     </div>
 
@@ -319,7 +414,15 @@ export default function FeedSettings() {
                                 Enable to always open posts in a new tab.
                             </div>
                         <div role="toggleButton">
-                            <ToggleButton onToggle={handleToggleInFeedNewTab} initial={openPostsInNewTab} />
+                        <Switch id="newpagetogglebutton" 
+                            checked={openPostsInNewTab}
+                            onChange={handleToggleInFeedNewTab}
+                            className={`${openPostsInNewTab ? 'bg-blue-900' : 'bg-gray-300'}
+                                relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
+                            <span
+                                aria-hidden="true"
+                                className={`${openPostsInNewTab ? 'translate-x-4' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
+                        </Switch>
                         </div>
                     </div>
                 </div>

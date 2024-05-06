@@ -89,10 +89,10 @@
       "comV": true,
       "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "NSFW": false,
+      "NSFW": true,
       "allowFollow": true,
-      "openPostsInNewTab": false,
-      "rememberingSortPerCommunity": false,
+      "openPostsInNewTab": true,
+      "rememberingSortPerCommunity": true,
       "rememberGlobalView": false,
       "communityTheme": true,
       "blocked": [
