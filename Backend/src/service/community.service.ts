@@ -1009,7 +1009,7 @@ export async function getPostsSearchResultsNotAuth(
 export async function getPostsSearchResultsAuth(
   page: number,
   limit: number,
-  userId: string,
+  userID: string,
   query: string,
   sort: string | undefined,
   topBy: string | undefined
@@ -1019,6 +1019,7 @@ export async function getPostsSearchResultsAuth(
 
     let sortCriteria: Record<string, 1 | -1>;
     let additionalCriteria: Record<string, unknown> = {};
+
     switch (sort) {
       case 'hot':
         sortCriteria = { 'posts.insightCnt': -1 };
@@ -1056,6 +1057,17 @@ export async function getPostsSearchResultsAuth(
         sortCriteria = { 'posts.randomSort': -1 };
         break;
     }
+    const userPostsSearchRes = await CommunityModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { privacyType: 'Public' }, // Match public communities
+            { 'members.userID': userID }, // Match communities where the user is a member
+            { 'moderators.userID': userID }, // Match communities where the user is a moderator
+          ],
+        },
+      },
+    ]);
   } catch (error) {
     throw new appError('Something went wrong in search posts auth', 500);
   }

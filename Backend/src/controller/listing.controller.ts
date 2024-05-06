@@ -1532,6 +1532,7 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
 export async function getPostByIdHandler(req: Request<PostByIdInput['params']>, res: Response) {
   try {
     const postId = req.params.id;
+    console.log(postId);
     const post = await getPostById(postId);
     if (!post) {
       return res.status(400).json({ msg: 'Post not found' });
