@@ -13,6 +13,7 @@ import 'package:reddit_fox/models/user_model.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/Pages/settings/accountSetting.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -144,8 +145,8 @@ class _settingState extends State<setting> {
   // Function to fetch user preferences
   Future<void> fetchData() async {
     final response = await http.get(
-      Uri.parse(
-          'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/prefs'),
+      Uri.parse(ApiRoutesBackend
+          .emailPref), // 'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/prefs'
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $backtoken'
@@ -169,8 +170,7 @@ class _settingState extends State<setting> {
     };
 
     final response = await http.patch(
-      Uri.parse(
-          'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/prefs'),
+      Uri.parse(ApiRoutesBackend.emailPref),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $backtoken'

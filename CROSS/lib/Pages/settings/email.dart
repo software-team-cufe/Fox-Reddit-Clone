@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:reddit_fox/GeneralWidgets/switchpost.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:http/http.dart' as http;
 
 class EmailsSetting extends StatefulWidget {
@@ -54,8 +55,7 @@ class _EmailsSettingState extends State<EmailsSetting> {
 
   Future<void> fetchData() async {
     final response = await http.get(
-      Uri.parse(
-          'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/prefs'),
+      Uri.parse(ApiRoutesBackend.emailPref),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken'
@@ -101,8 +101,7 @@ class _EmailsSettingState extends State<EmailsSetting> {
     };
 
     final response = await http.patch(
-      Uri.parse(
-          'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/prefs'),
+      Uri.parse(ApiRoutesBackend.emailPref),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken'

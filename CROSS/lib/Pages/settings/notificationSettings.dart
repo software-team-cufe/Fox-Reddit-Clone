@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/GeneralWidgets/switch.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -56,7 +57,7 @@ class _NotificationSetttingState extends State<NotificationSettting> {
   Future<void> fetchData() async {
     final response = await http.get(
       Uri.parse(
-          'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/notification/settings'),
+          ApiRoutesBackend.notificationPref),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken'
@@ -173,7 +174,7 @@ class _NotificationSetttingState extends State<NotificationSettting> {
     };
     final response = await http.patch(
       Uri.parse(
-          'http://foxnew.southafricanorth.cloudapp.azure.com/api/v1/me/notification/settings'),
+          ApiRoutesBackend.notificationPref),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken',
