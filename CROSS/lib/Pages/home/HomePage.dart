@@ -44,15 +44,15 @@ class _HomePageState extends State<HomePage> {
   /// Fetches the list of posts based on the selected item.
   Future<Map<dynamic, dynamic>> fetchPosts() async {
     var url = Uri.parse(_selectedItem == 'Popular'
-        ? ApiRoutesBackend.homePostssorted()
-        : ApiRoutesBackend.homePostssorted());
+        ? ApiRoutesBackend.homePostssorted(category: 'top')
+        : ApiRoutesBackend.homePostssorted(category: _selectedItem));
     var response = await http.get(url);
 
     // response = await http.get(
     //   url,
     //   headers: {'Authorization': 'Bearer $access_token'},
-    // );
-     print("reaponse status code: ${response.statusCode}");
+    // );++k,
+    print("reaponse status code: ${response.statusCode}");
     if (response.statusCode == 200) {
       Map<dynamic, dynamic> data =
           json.decode(response.body)["homePagePosts"].asMap();
@@ -372,8 +372,8 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       var post = posts[index];
                       return isModernCard
-                          ? ModernCard(post: post)  // pass individual post
-                          : ClassicCard(post: post);  // pass individual post
+                          ? ModernCard(post: post) // pass individual post
+                          : ClassicCard(post: post); // pass individual post
                     },
                   );
                 }
