@@ -1,5 +1,4 @@
-  import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
   import 'package:flutter/widgets.dart';
   import 'package:http/http.dart' as http;
   import 'dart:convert';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
   import 'package:intl/intl.dart';
   import 'package:reddit_fox/Pages/Search.dart';
   import 'package:reddit_fox/Pages/EditProfile.dart';
-import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
+  import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
   import 'package:reddit_fox/navbar.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
@@ -51,7 +50,7 @@ import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
 
       fetchUserAbout(widget.userName);
       fetchData();
-      fetchDataBack(widget.userName);
+      fetchDataBack();
       getUserComments();
     }
 
@@ -129,19 +128,22 @@ import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
     }
 
 
-    Future<void> fetchDataBack(String username) async {
+    Future<void> fetchDataBack() async {
       // Base URL and endpoint
-      
-      Map<String, String> queryParams = {
-        'page': '1',
-        'count': '5',
-        'limit': '10',
-        't': 'all'
-        // Add any additional query parameters here if needed
-      };
+      String baseUrl = 'http://foxnew.southafricanorth.cloudapp.azure.com';
+      String endpoint = '/user/${widget.userName}/overview';
+
+      // Query parameters
+      // Map<String, String> queryParams = {
+      //   'page': '1',
+      //   'count': '5',
+      //   'limit': '10',
+      //   't': 'all'
+      //   // Add any additional query parameters here if needed
+      // };
 
       // Constructing URL with query parameters
-      Uri uri = Uri.parse(ApiRoutesBackend.getProfilePosts(username)).replace(queryParameters: queryParams);
+      Uri uri = Uri.parse(baseUrl + endpoint); //.replace(queryParameters: queryParams);
 
       try {
         // Sending GET request with headers
