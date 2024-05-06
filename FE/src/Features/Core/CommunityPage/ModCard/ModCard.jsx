@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { userAxios } from '@/Utils/UserAxios';
+
 import { useParams } from 'react-router-dom';
 const ModCard = () => {
 
