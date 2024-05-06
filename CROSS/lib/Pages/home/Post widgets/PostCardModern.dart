@@ -16,16 +16,17 @@ class ModernCard extends StatefulWidget {
   TextEditingController editedText = TextEditingController();
   String? access_token;
   String? userName;
+  bool myProfile;
 
   /// Constructs a [ModernCard] widget.
   ///
   /// The [post] parameter is required and contains the data for the post.
-  ModernCard({
-    super.key,
-    required this.post,
-    this.access_token,
-    this.userName,
-  });
+  ModernCard(
+      {super.key,
+      required this.post,
+      this.access_token,
+      this.userName,
+      this.myProfile = false});
 
   @override
   _ModernCardState createState() => _ModernCardState();
@@ -38,9 +39,17 @@ class _ModernCardState extends State<ModernCard> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        if (widget.post['_id'] == sharedPrefValue.getString('userid')) {
+        print('#######');
+        print(widget.post['_id']);
+        print(widget.currentuserpost);
+        print(sharedPrefValue.getString('userid'));
+        print('#######');
+        if (widget.post['userID'] == sharedPrefValue.getString('userid')) {
           widget.currentuserpost = true;
+          print('#######');
+          print(widget.post['userID']);
           print(widget.currentuserpost);
+          print('#######');
         }
       });
     });
@@ -88,10 +97,11 @@ class _ModernCardState extends State<ModernCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (widget.post["communityName"] != null)
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 18,
                         backgroundImage:
-                            AssetImage(widget.post["communityIcon"]),
+                            // AssetImage(widget.post["communityIcon"]),
+                            AssetImage('assets/images/avatar.png'),
                       )
                     else
                       const CircleAvatar(
@@ -151,7 +161,7 @@ class _ModernCardState extends State<ModernCard> {
                                 },
                               ),
                               Visibility(
-                                visible: widget.currentuserpost,
+                                visible: widget.myProfile,
                                 child: ListTile(
                                   leading: const Icon(Icons.edit_document),
                                   title: const Text('Edit'),
