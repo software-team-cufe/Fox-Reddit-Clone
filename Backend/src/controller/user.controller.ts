@@ -722,6 +722,7 @@ export async function aboutHandler(req: Request, res: Response) {
       userID: user._id,
       showActiveCommunities: user.showActiveCommunities,
       socialLinks: user.type,
+      contentVisibality: user.contentVisibility,
     };
 
     return res.status(200).json(obj);
