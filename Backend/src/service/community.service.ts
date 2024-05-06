@@ -962,72 +962,39 @@ export async function getSrSearchResultNotAuth(query: string, page: number, limi
     return error;
   }
 }
-export async function getSrSearchResultAuth(query: string, page: number, limit: number, userID: number) {
-  //get public communities and private communities that user joined
-  //get user from user id
-  //get user joined communities from Member array field in user model and filter private communities
-  //get the private communities that match the query     $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-
+export async function getSrSearchResultAuth(query: string, page: number, limit: number, userID: string) {
   try {
-    const [user, publicCommunities] = await Promise.all([
-      UserModel.findById(userID),
-      CommunityModel.find({
-        $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-        privacyType: 'Public',
-      })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .select('icon name membersCnt description'),
-    ]);
-
-    if (!user) {
-      throw new appError('User not found search auth user', 404);
-    }
-
-    const userCommunities = await UserModel.aggregate([
+    const skip = (page - 1) * limit;
+    const userCommunitiesSearchRes = await CommunityModel.aggregate([
       {
         $match: {
-          _id: user._id,
-        },
-      },
-      { $unwind: '$member' },
-      { $unwind: '$moderators' },
-      {
-        $lookup: {
-          from: 'communities',
-          let: { memberId: '$member.communityId', moderatorId: '$moderators.communityId' },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $or: [{ $eq: ['$_id', '$$memberId'] }, { $eq: ['$_id', '$$moderatorId'] }],
-                },
-                $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-              },
-            },
+          $or: [
+            { privacyType: 'Public' }, // Match public communities
+            { 'members.userID': userID }, // Match communities where the user is a member
+            { 'moderators.userID': userID }, // Match communities where the user is a moderator
           ],
-          as: 'joinedCommunities',
         },
       },
       {
-        $unwind: '$joinedCommunities',
+        $match: {
+          $or: [
+            { name: { $regex: query, $options: 'i' } }, // Match communities by name
+            { description: { $regex: query, $options: 'i' } }, // Match communities by description
+          ],
+        },
       },
       {
         $project: {
-          name: '$joinedCommunities.name',
-          description: '$joinedCommunities.description',
-          icon: '$joinedCommunities.icon',
-          membersCnt: '$joinedCommunities.membersCnt',
+          name: 1,
+          description: 1,
+          icon: 1,
+          membersCnt: 1,
         },
       },
-      // Optionally, add pagination
-      { $skip: (page - 1) * limit },
+      { $skip: skip },
       { $limit: limit },
     ]);
-    const authUserCommunities = userCommunities.concat(publicCommunities);
-    console.log(userCommunities);
-    console.log(publicCommunities);
-    return authUserCommunities;
+    return userCommunitiesSearchRes;
   } catch (error) {
     return error;
   }
