@@ -1,7 +1,34 @@
 import React from "react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { userAxios } from "../../../../Utils/UserAxios";
+import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 export default function MainFooter (){
+  
+  const { community } = useParams();  
+  const [members, setMembers] = useState(0);
+  useEffect( () => {
+    const getNumofMembers = async () => {
+      try{ 
+         const response = await userAxios.get(`/${community}/about/members`);
+         console.log("members");
+         console.log(response.data.membersCount);
+         setMembers(response.data.membersCount ??0);
+         
+      }
+      catch (error) {
+        console.log(error);
+      }
+    
+    };
+       getNumofMembers();
+  }, [community]); 
 
+  const navigator = useNavigate();
+  const handleNavigate=()=>{
+      navigator('/message/compose');
+  }
   const [selectedId, setSelectedId] = useState(null);
   const lists = [
     { id: 1, list: "1" },
@@ -63,13 +90,13 @@ export default function MainFooter (){
         <div className='w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg hidden md:block'>
            <div className=" flex flex-col content-between ">
               <div className=" flex flex-col">
-                <p className=" font-semibold text-sm"> community name</p>
+                <p className=" font-semibold text-sm"> {community}</p>
                 <p className=" text-xs text-gray-500 font-light">community description</p>
               </div>
              
               <div className=" flex flex-row justify-between my-3">
                   <div className=" flex flex-col">
-                      <p className=" font-semibold text-sm">6.1M</p>
+                      <p className=" font-semibold text-sm">{members}</p>
                       <p className=" text-xs text-gray-500 font-light">Members</p>
                   </div>
                   <div className=" flex flex-col">
@@ -135,7 +162,7 @@ export default function MainFooter (){
                     <p className=" text-sm font-light"> u/username5</p>     
               </div>
 
-              <button className="text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[35px] flex items-center justify-center hover:bg-gray-300 hover:underline">
+              <button  onClick={handleNavigate} className="text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[35px] flex items-center justify-center hover:bg-gray-300 hover:underline">
                  <svg className="w-5 h-5 self-center "
                   xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0 1.1.9 2 2 2z" /> 

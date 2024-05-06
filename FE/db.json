@@ -1,25 +1,4 @@
 {
-  "banned": [
-    {
-      "userName": "asdasdasdasd",
-      "reason": "other",
-      "note": "234234345",
-      "period": 234,
-      "id": "1",
-      "communityName": "test2",
-      "banMsg": "22222222222222",
-      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
-    }
-  ],
-  "muted": [
-    {
-      "id": "0168",
-      "communityName": "test2",
-      "userName": "efteeeeeeeeeeee",
-      "reason": "eee",
-      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
-    }
-  ],
   "users": [
     {
       "name": "test",
@@ -39,6 +18,7 @@
       "rememberingSortPerCommunity": false,
       "rememberGlobalView": false,
       "communityTheme": true,
+      "markAllAsRead": true,
       "blocked": [
         {
           "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
@@ -56,12 +36,6 @@
         }
       ],
       "SocialLinks": [
-        {
-          "icon": "/substack.png",
-          "linkName": "Substack",
-          "userName": "sdcs",
-          "link": "https://substack.com/home"
-        },
         {
           "icon": "/logo.png",
           "linkName": "Fox",
@@ -94,12 +68,13 @@
       "comV": true,
       "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "NSFW": false,
+      "NSFW": true,
       "allowFollow": true,
-      "openPostsInNewTab": false,
-      "rememberingSortPerCommunity": false,
+      "openPostsInNewTab": true,
+      "rememberingSortPerCommunity": true,
       "rememberGlobalView": false,
       "communityTheme": true,
+      "markAllAsRead": true,
       "blocked": [
         {
           "name": "blocked1",
@@ -147,6 +122,7 @@
       "rememberingSortPerCommunity": false,
       "rememberGlobalView": false,
       "communityTheme": false,
+      "markAllAsRead": true,
       "blocked": [
         {
           "name": "blocked1",
@@ -194,6 +170,7 @@
       "rememberingSortPerCommunity": true,
       "rememberGlobalView": true,
       "communityTheme": true,
+      "markAllAsRead": true,
       "blocked": [
         {
           "name": "blocked1",

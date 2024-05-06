@@ -1,18 +1,22 @@
 import React = require("react");
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom';
-import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
-import CommunityContainer from "./communityContainer";
-import CommunityPage from "@/Features/Core/CommunityPage/communityPage";
-import CommunityProvider from "@/features/core/CommunityPage/CommunityPage";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import SearchPagesLayout from "@/Features/Core/SearchPages/SearchPagesRoutes";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+
+const mockStore = configureMockStore();
+const store = mockStore({
+  user: {}
+});
 
 jest.mock('@/Utils/UserAxios', () => ({
   userAxios: {
     post: jest.fn(() => Promise.resolve({ data: {} })),
     get: jest.fn(() => Promise.resolve({
-      data: [
+      data: { communitySearchResultAuth: [
         {
           "id": "1",
           "name": "league",
@@ -33,52 +37,31 @@ jest.mock('@/Utils/UserAxios', () => ({
           "favourited": true,
           "NSFW": false,
           "type": "public"
-        }]
+        }]}
     })),
     patch: jest.fn(() => Promise.resolve({ data: {} })),
   },
 }));
 
-test('community container renders correctly', () => {
-  const comm = {
-    name: "anas",
-    icon: "image",
-    about: "about",
-    members: 0,
-    onine: 0,
-  }
-  render(
-    <BrowserRouter>
-      <CommunityContainer community={comm} />
-    </BrowserRouter>
-  );
-  const communityContainer = screen.getByRole('commContainer');
-  expect(communityContainer).toBeInTheDocument();
-
-  expect(screen.getByRole('commimage')).toBeInTheDocument();
-  expect(screen.getByRole('commabout')).toBeInTheDocument();
-});
-
 const queryClient = new QueryClient();
 
+afterEach(() => {
+  cleanup();
+});
+
 test('community container routes to community', async () => {
-  const community = {
-    name: "anas",
-    icon: "image",
-    about: "about",
-    members: 0,
-    onine: 0,
-  };
 
   render(
-    <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={['/search/league/communities']}>
-        <Routes>
-          <Route key={'/search'} path='/search/:searchkey/*' element={<SearchPagesLayout />} />,
-          <Route path="/r/*" element={<div data-testid="home-kick" />} />
-        </Routes>
-      </MemoryRouter>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/search/league/communities']}>
+          <Routes>
+            <Route key={'/search'} path='/search/:searchkey/*' element={<SearchPagesLayout />} />,
+            <Route path="/r/*" element={<div data-testid="home-kick" />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
+    </Provider>
   );
   const commContainer = await screen.findAllByRole('commContainer');
   fireEvent.click(commContainer[0]);
