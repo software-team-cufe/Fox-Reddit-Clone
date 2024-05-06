@@ -1,7 +1,6 @@
 import React, { useContext, useRef } from "react";
-import PostComponent from "@/GeneralComponents/Post/Post";
+import UserPostComponent from "./extras/userPost";
 import { useState } from "react";
-import axios from 'axios';
 import { userAxios } from "@/Utils/UserAxios";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
@@ -37,15 +36,13 @@ export default function ProfilePosts({ using, context }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    subReddit: {
-                        image: post.userID.avatar,
-                        title: post.username,
-                    },
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.textHTML,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
@@ -53,6 +50,7 @@ export default function ProfilePosts({ using, context }) {
                     spoiler: post.spoiler,
                     NSFW: post.nsfw
                 }));
+                console.log(newPosts);
                 setcurrentpage(2);
                 setPosts(newPosts);
                 setload(false);
@@ -74,15 +72,13 @@ export default function ProfilePosts({ using, context }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    subReddit: {
-                        image: post.userID.avatar,
-                        title: post.username,
-                    },
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.textHTML,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
@@ -116,7 +112,7 @@ export default function ProfilePosts({ using, context }) {
             {Posts.length > 0 ? (
                 <>
                     {Posts.map((post, index) => (
-                        <PostComponent key={index} post={post} />
+                        <UserPostComponent key={index} post={post} />
                     ))}
                     {!pagedone && !callingposts && (<button role="loadmore" id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}

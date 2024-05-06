@@ -35,15 +35,13 @@ export default function ProfileHidden({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    subReddit: {
-                        image: post.userID.avatar,
-                        title: post.username,
-                    },
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.textHTML,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
@@ -71,14 +69,12 @@ export default function ProfileHidden({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    subReddit: {
-                        image: post.userID.avatar,
-                        title: post.username,
-                    },
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.textHTML,
+                    description: post.textHTML,
                     votes: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,

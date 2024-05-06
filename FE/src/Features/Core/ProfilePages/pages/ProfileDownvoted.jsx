@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import PostComponent from "@/GeneralComponents/Post/Post";
+import UserPostComponent from "./extras/userPost";
 import { useState, useRef } from "react";
 import { ProfileContext } from "../ProfilePagesRoutes";
 import { userAxios } from "@/Utils/UserAxios";
@@ -35,15 +35,13 @@ export default function ProfileDownvoted({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    subReddit: {
-                        image: post.userID.avatar,
-                        title: post.username,
-                    },
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.textHTML,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
@@ -72,15 +70,13 @@ export default function ProfileDownvoted({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    subReddit: {
-                        image: post.userID.avatar,
-                        title: post.username,
-                    },
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.textHTML,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
@@ -114,7 +110,7 @@ export default function ProfileDownvoted({ using }) {
             {Posts.length > 0 ? (
                 <>
                     {Posts.map((post, index) => (
-                        <PostComponent key={index} post={post} />
+                        <UserPostComponent key={index} post={post} />
                     ))}
                     {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}

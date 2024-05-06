@@ -10,7 +10,7 @@ import React, { useContext, createContext, useState, useRef, useCallback } from 
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
-import PostComponent from "@/GeneralComponents/Post/Post";
+import UserPostComponent from "@/Features/Core/ProfilePages/pages/extras/userPost";
 import { Plus, Pen } from 'lucide-react';
 import OptionsMenu from "./accessories/optionsmenu";
 import MainFooter from "./footers/mainFooter";
@@ -127,6 +127,7 @@ export default function CommunityPage() {
 
       await userAxios.get(`/${community}`)
         .then((response) => {
+          console.log(response.data.community);
           const newcomm = {
             id: response.data.community._id,
             name: response.data.community.name,
@@ -165,23 +166,21 @@ export default function CommunityPage() {
     userAxios.get(link)
       .then((response) => {
         console.log(response.data);
-        const newPosts = response.data.map(post => ({
-          subReddit: {
-            image: post.userID.avatar,
-            title: post.username,
-          },
+        const newPosts = response.data.posts.map(post => ({
+          communityName: post.username,
+          communityIcon: post.userID.avatar,
           images: post.attachments,
           id: post._id,
           title: post.title,
-          subTitle: post.textHTML,
-          votes: post.votesCount,
+          description: post.textHTML,
+          votesCount: post.votesCount,
           comments: post.commentsCount,
           thumbnail: post.thumbnail,
           video: null,
           type: "post",
           spoiler: post.spoiler,
           NSFW: post.nsfw
-        }));
+      }));
         setcurrentpage(2);
         setPosts(newPosts);
         setFeed(false);
@@ -233,20 +232,21 @@ export default function CommunityPage() {
         if (response.data.length < limitpage) {
           setpagedone(true);
         }
-        const newPosts = response.data.map(post => ({
-          subReddit: {
-            image: commObj.icon,
-            title: post.communityName,
-          },
+        const newPosts = response.data.posts.map(post => ({
+          communityName: post.username,
+          communityIcon: post.userID.avatar,
           images: post.attachments,
           id: post._id,
           title: post.title,
-          subTitle: post.textHTML,
-          votes: post.votesCount,
-          comments: post.postComments.length,
-          thumbnail: post.attachments[0],
-          video: null
-        }));
+          description: post.textHTML,
+          votesCount: post.votesCount,
+          comments: post.commentsCount,
+          thumbnail: post.thumbnail,
+          video: null,
+          type: "post",
+          spoiler: post.spoiler,
+          NSFW: post.nsfw
+      }));
 
         setPosts(prevPosts => [...prevPosts, ...newPosts]);
         setCallingPosts(false);
@@ -284,14 +284,14 @@ export default function CommunityPage() {
       {showKickOut && <KickOutModal></KickOutModal>}
       <BackToTop />
       {/* background image of the community */}
-      <img src={commObj.backimage} alt='community' className={`w-full md:mx-auto h-20 md:h-36 object-cover`} />
+      <img src={commObj.backimage} alt='community' className={`w-full md:mx-auto h-20 md:h-36 object-fit rounded-lg`} />
       {commObj.modded && <button className={`absolute md:right-6 right-3 hover:bg-gray-700 p-2 rounded-full text-white top-12 md:top-[100px]`} onClick={() => handleEditComponents("Banner")}>
         <Pen className={`md:w-5 md:h-5 w-3 h-3`} />
       </button>}
       {/* community name and (members count in mobile mode)*/}
       <div className='w-full relative flex justify-between items-center md:m-3'>
         <div>
-          <img src={commObj.icon} alt='community' className={`${commObj.modded ? 'hover:brightness-50' : ''} absolute md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`} onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={commObj.modded ? () => handleEditComponents("Avatar") : undefined} />
+          <img src={commObj.icon} alt='community' className={`${commObj.modded ? 'hover:brightness-50' : ''} absolute object-fit md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`} onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={commObj.modded ? () => handleEditComponents("Avatar") : undefined} />
           {editIcon && commObj.modded ? <Pen className={`absolute md:-top-5 md:left-10 text-white left-8 top-5 md:w-4 md:h-4 w-2 h-2`} /> : <></>}
           <span className='absolute  md:top-10 top-0 md:left-0 left-16 md:text-3xl text-lg font-bold'>r/{commObj.name}</span>
           <div className='absolute md:top-10 top-[28px] md:left-28 left-16 md:hidden text-xs font-semibold text-gray-500 flex flex-wrap gap-x-3'>
@@ -363,7 +363,7 @@ export default function CommunityPage() {
             {Posts.length > 0 ? (
               <>
                 {Posts.map((post, index) => (
-                  <PostComponent key={index} post={post} />
+                  <UserPostComponent key={index} post={post} />
                 ))}
                 {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                 {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
