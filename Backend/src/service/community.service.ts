@@ -1072,6 +1072,8 @@ export async function getPostsSearchResultsNotAuth(
             { 'posts.title': { $regex: query, $options: 'i' } }, // Match posts by title
             { 'posts.textHTML': { $regex: query, $options: 'i' } }, // Match posts by body
           ],
+          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           ...additionalCriteria, // Apply additional criteria
         },
       },
@@ -1191,6 +1193,8 @@ export async function getPostsSearchResultsAuth(
             { 'posts.title': { $regex: query, $options: 'i' } }, // Match posts by title
             { 'posts.textHTML': { $regex: query, $options: 'i' } }, // Match posts by body
           ],
+          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           ...additionalCriteria, // Apply additional criteria
         },
       },
@@ -1536,6 +1540,8 @@ export async function getHomePostsAuth(
       {
         $match: {
           'posts.title': { $exists: true }, // Filter out posts without titles (optional)
+          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           ...additionalCriteria, // Apply additional criteria
         },
       },
@@ -1615,6 +1621,8 @@ export async function getHomePostsNotAuth(page: number, limit: number) {
     {
       $match: {
         'posts.title': { $exists: true }, // Filter out posts without title
+        'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+        'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
       },
     },
     { $sample: { size: limit } }, // Limit the number of posts per community

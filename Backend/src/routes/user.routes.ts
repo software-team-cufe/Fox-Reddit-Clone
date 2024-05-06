@@ -128,8 +128,8 @@ router.get('/user/:username/history_post', getHistoryPostHandler);
 router.post(
   '/me/upload-user-photo',
   requireUser,
-  uploadSingleMulter.single('image'),
-  resizeUserIcon,
+  //uploadSingleMulter.single('image'),
+  //resizeUserIcon,
   uploadSingleCloudinary,
   uploadUserPhoto
 );

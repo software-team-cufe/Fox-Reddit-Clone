@@ -2683,20 +2683,14 @@ export async function uploadCommunityIcon(req: Request, res: Response) {
     });
   }
   try {
-    if (!req.file || Object.keys(req.file).length === 0) {
-      throw new Error('No file uploaded');
+    if (!res.locals.image) {
+      throw new appError('No image', 400);
     }
 
-    const user = res.locals.user;
     const image = res.locals.image;
+    const user = res.locals.user;
 
     const community = await findCommunityByName(req.params.subreddit);
-
-    if (!user) {
-      return res.status(401).json({
-        error: 'Access token is missing or invalid',
-      });
-    }
 
     if (!community) {
       return res.status(404).json({
@@ -2716,7 +2710,7 @@ export async function uploadCommunityIcon(req: Request, res: Response) {
     if (isMod === false) {
       return res.status(404).json({ status: 'error', message: 'Only moderators can upload community icons' });
     }
-    await CommunityModel.findByIdAndUpdate(communityId, { icon: image }, { runValidators: true });
+    await CommunityModel.findByIdAndUpdate(communityId, { icon: image });
 
     res.status(200).json({
       msg: 'Icon uploaded successfully',

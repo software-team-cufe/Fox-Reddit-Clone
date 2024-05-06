@@ -1386,15 +1386,15 @@ export async function uploadUserPhoto(req: Request, res: Response) {
     });
   }
   try {
-    if (!req.file || Object.keys(req.file).length === 0) {
-      throw new Error('No file uploaded');
+    if (!res.locals.image) {
+      throw new appError('No file uploaded', 400);
     }
     const user = res.locals.user;
     const userId = user._id;
     const image = res.locals.image;
 
     //update user avatar by new link from cloudinary
-    await UserModel.findByIdAndUpdate(userId, { avatar: image }, { runValidators: true });
+    await UserModel.findByIdAndUpdate(userId, { avatar: image });
     res.status(200).json({
       msg: 'Avatar uploaded successfully',
       avatar: image,

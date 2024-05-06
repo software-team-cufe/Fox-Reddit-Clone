@@ -16,7 +16,6 @@ const uploadSingleCloudinary = asyncHandler(
       console.log(req.body);
       //const image = req.file as Express.Multer.File;
       const image = req.body.image;
-      console.log('AAAAAAAAAAAAA image:', image);
       if (!image) {
         throw new Error('No image file provided');
       }
