@@ -17,6 +17,7 @@ class ModernCard extends StatefulWidget {
   bool currentuserpost = true;
   TextEditingController editedText = TextEditingController();
   String? access_token;
+  String? userName;
 
   /// Constructs a [ModernCard] widget.
   ///
@@ -24,7 +25,8 @@ class ModernCard extends StatefulWidget {
   ModernCard({
     super.key,
     required this.post,
-    this.access_token
+    this.access_token,
+    this.userName,
   });
   @override
   _ModernCardState createState() => _ModernCardState();
@@ -222,6 +224,24 @@ class _ModernCardState extends State<ModernCard> {
                                   // Handle option 1
                                 },
                               ),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.delete),
+                              title: const Text('Delete'),
+                              onTap: () {
+                                delPost(widget.post["_id"]);
+                                Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfilePage(
+                                      userName: widget.userName!,
+                                      myProfile: true,
+                                      access_token: widget.access_token!,
+                                    )),
+                          ); // Close the menu
+                                // Handle option 1
+                              },
                             ),
                             ListTile(
                               leading: const Icon(Icons.content_copy),

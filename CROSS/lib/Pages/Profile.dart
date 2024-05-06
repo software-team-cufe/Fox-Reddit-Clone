@@ -503,7 +503,7 @@ Widget _buildTitleView() {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return ModernCard(post: posts[index], access_token: access_token);
+                return ModernCard(post: posts[index], access_token: access_token, userName: userName,);
               },
               childCount: posts.length,
             ),
