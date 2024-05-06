@@ -18,15 +18,15 @@ const uploadSingleCloudinary = asyncHandler(
       if (!image) {
         throw new Error('No image file provided');
       }
-      console.log(image);
       const b64 = Buffer.from(image.buffer).toString('base64');
-      console.log(b64);
       const dataURI = 'data:' + image.mimetype + ';base64,' + b64;
-      console.log(dataURI);
+      console.log('before upload to cloud');
       const result = await cloudinary.uploader.upload(dataURI, {
         resource_type: 'auto',
       });
+      console.log('after upload to cloud');
       res.locals.image = result.secure_url;
+      console.log(res.locals.image);
       next();
     } catch (error) {
       res.status(500).json({

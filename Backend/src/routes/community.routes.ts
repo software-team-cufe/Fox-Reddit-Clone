@@ -168,12 +168,12 @@ router.patch(
 );
 
 router.get('/:subreddit/api/post_settings', validateResource(getCommunitySchema), getPostSettingsHandler);
-router.patch('/:subreddit/api/edit_post_settings',  editPostSettingsHandler);
+router.patch('/:subreddit/api/edit_post_settings', editPostSettingsHandler);
 
 router.get('/:subreddit/api/content_controls', validateResource(getCommunitySchema), getContentControlsHandler);
 router.patch(
   '/:subreddit/api/edit_content_controls',
-  
+
   editContentControlsHandler
 );
 
@@ -202,14 +202,14 @@ router.get('/:subreddit/about/pending_members', validateResource(subscribeCommun
 router.post(
   '/:subreddit/api/upload_sr_icon',
   uploadSingleMulter.single('image'),
-  resizeCommunityIcon,
+  //resizeCommunityIcon,
   uploadSingleCloudinary,
   uploadCommunityIcon
 );
 router.post(
   '/:subreddit/api/upload_sr_banner',
   uploadSingleMulter.single('image'),
-  resizeCommunityBanner,
+  // resizeCommunityBanner,
   uploadSingleCloudinary,
   uploadCommunityBanner
 );
