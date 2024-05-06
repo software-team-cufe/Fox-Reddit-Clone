@@ -23,7 +23,7 @@ class _ClassicCardState extends State<ClassicCard> {
   @override
   void initState() {
     super.initState();
-    isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
+    isBlurred = (widget.post['nsfw'] || widget.post['spoiler'] || false);
   }
 
   @override
@@ -43,11 +43,9 @@ class _ClassicCardState extends State<ClassicCard> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             title: Row(
               children: [
-                'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15' !=
-                        null
+                widget.post['picture'] != null
                     ? CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15'),
+                        backgroundImage: NetworkImage(widget.post['picture']),
                       )
                     : const Icon(Icons.account_circle, size: 30),
                 Text(
@@ -64,56 +62,52 @@ class _ClassicCardState extends State<ClassicCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.post['postTitle']?? "error in fetching post title",
+                  widget.post['title'] ?? "error in fetching post title",
                   style: const TextStyle(fontSize: 16),
                 ),
-               if (widget.post['picture'] == null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isBlurred ? Colors.white : Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      widget.post['text']?? "error in fetching post text",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: isBlurred ? Colors.transparent : Colors.white,
+                if (widget.post['picture'] == null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isBlurred ? Colors.white : Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        widget.post['text'] ?? "error in fetching post text",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: isBlurred ? Colors.transparent : Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
-            trailing:
-                'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15' !=
-                        null
-                    // widget.post['picture'] != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Stack(
-                          children: [
-                            Image.network(
-                              'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15',
+            trailing: widget.post['picture'] != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Stack(
+                      children: [
+                        Image.network(
+                          'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15',
+                          width: 100,
+                          height: 250,
+                          fit: BoxFit.cover,
+                        ),
+                        if (isBlurred)
+                          BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Container(
+                              color: Colors.transparent,
                               width: 100,
                               height: 250,
-                              fit: BoxFit.cover,
                             ),
-                            if (isBlurred)
-                              BackdropFilter(
-                                filter:
-                                    ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                child: Container(
-                                  color: Colors.transparent,
-                                  width: 100,
-                                  height: 250,
-                                ),
-                              ),
-                          ],
-                        ),
-                      )
-                    : null,
+                          ),
+                      ],
+                    ),
+                  )
+                : null,
           ),
           Row(
             children: [
@@ -155,14 +149,14 @@ class _ClassicCardState extends State<ClassicCard> {
                 ),
             ],
           ),
-          if (widget.post['poll'] == true &&
-              (widget.post['nsfw'] == false ||
-                  widget.post['spoiler'] ==
-                      false)) // Check if post has a poll and if it should be shown
-            PollWidget(
-              pollOptions: const ['Option 1', 'Option 2', 'Option 3'],
-              onOptionSelected: (String) {},
-            ), // Render the poll widget if true
+          //if (widget.post['poll'] == true &&
+          //    (widget.post['nsfw'] == false ||
+          //        widget.post['spoiler'] ==
+          //            false)) // Check if post has a poll and if it should be shown
+          //  PollWidget(
+          //    pollOptions: const ['Option 1', 'Option 2', 'Option 3'],
+          //    onOptionSelected: (String) {},
+          //  ), // Render the poll widget if true
           VoteSection(post: widget.post),
           const Divider(
               height: 1,

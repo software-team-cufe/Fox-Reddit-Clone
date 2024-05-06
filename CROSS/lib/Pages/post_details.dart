@@ -54,14 +54,13 @@ class _PostDetailsState extends State<PostDetails> {
 
     var response = await http.post(
       url,
-      body: jsonEncode({"postID": widget.post['_id']}),
+      body: jsonEncode({"postID": widget.post['postId']}),
       // body: {"postID": widget.post['postID']},
       headers: {
         'Authorization': 'Bearer $access_token',
         'Content-Type': 'application/json'
       },
     );
-
   }
 
   Future<String> fetchUserProfilePic(String accessToken) async {
@@ -243,7 +242,8 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   Widget build(BuildContext context) {
     double userWidth = MediaQuery.of(context).size.width * 0.7;
-    String editedUsername = widget.post['userName']??'error in fetching username';
+    String editedUsername =
+        widget.post['userName'] ?? 'error in fetching username';
     if (editedUsername.startsWith('u/')) {
       editedUsername =
           editedUsername.substring(2); // Extracts the part after 'u/'
@@ -322,7 +322,7 @@ class _PostDetailsState extends State<PostDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.post['communityName']??'error in fetching community name',
+                      "r/${widget.post["communityName"]}",
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xFFFFFFFF),
@@ -341,7 +341,7 @@ class _PostDetailsState extends State<PostDetails> {
                         );
                       },
                       child: Text(
-                        widget.post['userName']??'error in fetching username',
+                        widget.post['userName'] ?? 'error in fetching username',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

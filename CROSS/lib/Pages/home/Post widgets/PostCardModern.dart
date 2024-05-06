@@ -1,8 +1,4 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/cardCoreWidget.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
@@ -40,7 +36,6 @@ class _ModernCardState extends State<ModernCard> {
     });
     setState(() {});
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +45,7 @@ class _ModernCardState extends State<ModernCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PostDetails(
-              post: widget.post,
-            ),
+            builder: (context) => PostDetails(post: widget.post),
           ),
         );
       },
@@ -66,17 +59,17 @@ class _ModernCardState extends State<ModernCard> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 18,
                       child: Icon(Icons.account_circle),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "r/ ${widget.post["communityName"]}",
-                          style: TextStyle(
+                          "r/${widget.post["communityName"]}",
+                          style: const TextStyle(
                             fontSize: 20,
                           ),
                         ),
@@ -245,8 +238,8 @@ class _ModernCardState extends State<ModernCard> {
                 ),
               ],
             ),
-             cardCoreWidget(post: widget.post, detailsPageOpen: false),
-             VoteSection(post: widget.post),
+            cardCoreWidget(post: widget.post, detailsPageOpen: false),
+            VoteSection(post: widget.post),
             const Divider(
                 height: 1,
                 color: Color.fromARGB(255, 44, 43, 43),
