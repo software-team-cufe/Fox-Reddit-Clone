@@ -87,7 +87,8 @@ export async function findHotPostsByCommunity(
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    const posts = await PostModel.find({ communityId: communityObject?.id }, null, queryOptions).exec();
+    let posts = await PostModel.find({ communityId: communityObject?.id }, null, queryOptions).exec();
+    posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     return posts;
   } catch (error) {
@@ -115,7 +116,8 @@ export async function findHotPostsByRandom(limit: number = 10, page: number = 1,
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    const posts = await PostModel.find({}, null, queryOptions).exec();
+    let posts = await PostModel.find({}, null, queryOptions).exec();
+    posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     return posts;
   } catch (error) {
@@ -151,7 +153,8 @@ export async function findNewPostsByCommunity(
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    const posts = await PostModel.find({ communityId: communityObject?.id }, null, queryOptions).exec();
+    let posts = await PostModel.find({ communityId: communityObject?.id }, null, queryOptions).exec();
+    posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     return posts;
   } catch (error) {
@@ -179,7 +182,8 @@ export async function findNewPostsByRandom(limit: number = 10, page: number = 1,
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    const posts = await PostModel.find({}, null, queryOptions).exec();
+    let posts = await PostModel.find({}, null, queryOptions).exec();
+    posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     return posts;
   } catch (error) {
@@ -236,7 +240,7 @@ export async function findTopPostsByCommunityWithinTime(
     queryOptions.limit = limit;
 
     // Adjust the query to include the time frame condition
-    const posts = await PostModel.find(
+    let posts = await PostModel.find(
       {
         communityId: communityObject?.id,
         createdAt: {
@@ -247,6 +251,7 @@ export async function findTopPostsByCommunityWithinTime(
       null,
       queryOptions
     ).exec();
+    posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     return posts;
   } catch (error) {
@@ -279,7 +284,7 @@ export async function findTopPostsByRandomWithinTime(
     queryOptions.limit = limit;
 
     // Adjust the query to include the time frame condition
-    const posts = await PostModel.find(
+    let posts = await PostModel.find(
       {
         createdAt: {
           $gte: startDate,
@@ -289,6 +294,7 @@ export async function findTopPostsByRandomWithinTime(
       null,
       queryOptions
     ).exec();
+    posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     return posts;
   } catch (error) {
@@ -320,7 +326,9 @@ export async function findRandomPostsByCommunity(
     }
 
     // Find posts that belong to the specified community
-    const posts = await PostModel.find({ CommunityID: communityObject.id });
+    let posts = await PostModel.find({ CommunityID: communityObject.id });
+    posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
+
     // Shuffle the array of posts
     let shuffledPosts = shuffle(posts);
 
@@ -374,9 +382,10 @@ export async function findRandomPostsByRandom(
     }
 
     // Randomly sample the posts
-    const posts = await PostModel.aggregate([
+    let posts = await PostModel.aggregate([
       { $sample: { size: limit } }, // Randomly sample 'limit' number of documents
     ]).exec();
+    posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     // Check if the start index exceeds the total number of records
     if (startIndex >= posts.length) {
