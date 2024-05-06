@@ -11,15 +11,7 @@
       "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
     }
   ],
-  "muted": [
-    {
-      "id": "0168",
-      "communityName": "test2",
-      "userName": "efteeeeeeeeeeee",
-      "reason": "eee",
-      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
-    }
-  ],
+  "muted": [],
   "users": [
     {
       "name": "test",
