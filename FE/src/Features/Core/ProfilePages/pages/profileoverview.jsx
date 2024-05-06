@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useEffect } from "react";
-import PostComponent from "@/GeneralComponents/Post/Post";
+import UserPostComponent from "./extras/userPost";
 import { useState } from "react";
 import { userAxios } from "@/Utils/UserAxios";
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
@@ -26,15 +26,13 @@ export default function ProfileOverview({ using, context }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    subReddit: {
-                        image: post.userID.avatar,
-                        title: post.username,
-                    },
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.textHTML,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
@@ -42,7 +40,6 @@ export default function ProfileOverview({ using, context }) {
                     spoiler: post.spoiler,
                     NSFW: post.nsfw
                 }));
-                console.log(newPosts);
                 setPosts(newPosts);
                 const newComments = response.data.comments.map(comment => ({
                     user: {
@@ -81,15 +78,13 @@ export default function ProfileOverview({ using, context }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    subReddit: {
-                        image: post.userID.avatar,
-                        title: post.username,
-                    },
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.textHTML,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
@@ -140,7 +135,7 @@ export default function ProfileOverview({ using, context }) {
             {Posts.length > 0 || comments.length > 0 ? (
                 <>
                     {items.map((item, index) => (
-                        'content' in item ? <CommentComponent key={index} comment={item} /> : <PostComponent key={index} post={item} />
+                        'content' in item ? <CommentComponent key={index} comment={item} /> : <UserPostComponent key={index} post={item} />
                     ))}
                     {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMoreData} className="w-fit mx-auto h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}

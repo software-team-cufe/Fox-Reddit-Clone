@@ -1,5 +1,5 @@
 import React from "react";
-import PostComponent from "@/GeneralComponents/Post/Post";
+import UserPostComponent from "./userPost";
 import { userAxios } from "@/Utils/UserAxios";
 
 export default function HiddenPost({ post, setpost, posts }) {
@@ -19,6 +19,6 @@ export default function HiddenPost({ post, setpost, posts }) {
         </div>
     }
     else {
-        return <PostComponent post={post} />
+        return <UserPostComponent post={post} />
     }
 }
