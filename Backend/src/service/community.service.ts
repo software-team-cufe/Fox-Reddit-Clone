@@ -53,6 +53,9 @@ export async function getUserCommunities(commIDs: string[]) {
 export function findCommunityByID(id: string) {
   return CommunityModel.findById(id);
 }
+export async function getCommunityByID(id: string) {
+  return CommunityModel.findById(id);
+}
 
 /**
  * Create subreddit
