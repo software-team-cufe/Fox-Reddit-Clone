@@ -10,6 +10,7 @@ import {
   nsfwPost,
   lockPost,
   submitPost,
+  PostByIdInput,
 } from '../schema/listing.schema';
 import {
   createPost,
@@ -26,6 +27,7 @@ import {
   getRandomPostsFromRandom,
   userPosts,
   addVoteToPost,
+  getPostById,
 } from '../service/post.service';
 import {
   findCommentById,
@@ -48,7 +50,7 @@ import {
   findUsersThatFollowCommunity,
 } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
-import { findCommunityByName } from '../service/community.service';
+import { findCommunityByName, getCommunityByID } from '../service/community.service';
 import UserModel, { User } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import CommunityModel from '../model/community.model';
@@ -1524,5 +1526,23 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
       status: 'error',
       message: 'Internal server error',
     });
+  }
+}
+
+export async function getPostByIdHandler(req: Request<PostByIdInput['params']>, res: Response) {
+  try {
+    const postId = req.params.postId;
+    const post = await getPostById(postId);
+    if (!post) {
+      return res.status(400).json({ msg: 'Post not found' });
+    }
+    //get community from post
+    //2 cases if community public or private
+    // const communityId = post.CommunityID as unknown as string;
+    // const community = await getCommunityByID(communityId);
+    //get post by id
+    return res.status(200).json(post);
+  } catch (error) {
+    return res.status(500).json({ msg: 'Internal server error' });
   }
 }
