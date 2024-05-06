@@ -1,4 +1,5 @@
-  import 'package:flutter/material.dart';
+  import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
   import 'package:flutter/widgets.dart';
   import 'package:http/http.dart' as http;
   import 'dart:convert';
@@ -50,7 +51,7 @@ import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
 
       fetchUserAbout(widget.userName);
       fetchData();
-      fetchDataBack();
+      fetchDataBack(widget.userName);
       getUserComments();
     }
 
@@ -128,22 +129,19 @@ import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
     }
 
 
-    Future<void> fetchDataBack() async {
+    Future<void> fetchDataBack(String username) async {
       // Base URL and endpoint
-      String baseUrl = 'http://foxnew.southafricanorth.cloudapp.azure.com';
-      String endpoint = '/user/${widget.userName}/overview';
-
-      // Query parameters
-      // Map<String, String> queryParams = {
-      //   'page': '1',
-      //   'count': '5',
-      //   'limit': '10',
-      //   't': 'all'
-      //   // Add any additional query parameters here if needed
-      // };
+      
+      Map<String, String> queryParams = {
+        'page': '1',
+        'count': '5',
+        'limit': '10',
+        't': 'all'
+        // Add any additional query parameters here if needed
+      };
 
       // Constructing URL with query parameters
-      Uri uri = Uri.parse(baseUrl + endpoint); //.replace(queryParameters: queryParams);
+      Uri uri = Uri.parse(ApiRoutesBackend.getProfilePosts(username)).replace(queryParameters: queryParams);
 
       try {
         // Sending GET request with headers

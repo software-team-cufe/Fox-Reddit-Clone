@@ -89,7 +89,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             theme: Pallete.darkModeAppTheme,
             home: (access_token == null)
                 ? const StartingScreen()
-                : const SplashScreen(),
+                : const HomePage(),
             routes: {
               Message.route: (context) => const Message(),
               

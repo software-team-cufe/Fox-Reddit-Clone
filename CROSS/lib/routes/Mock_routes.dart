@@ -10,12 +10,15 @@ class ApiRoutesBackend {
   static const String forgetPassword = '$baseUrl/api/users/forgotpassword';
   static String getPosts(String category, int page, int count, int limit) =>
       '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
+    static String getProfilePosts(String username) =>
+      '$baseUrl/user/$username/submitted';
   static String homePostssorted(
           {String category = 'new', int page = 1, int limit = 15}) =>
       '$baseUrl/user-home?page=$page&$limit=15&sort=$category';
 
   static String getUserAbout(String username) =>
       '$baseUrl/user/$username/about';
+  static const String delPost = "$baseUrl/api/del"; 
 
   // //!temprorary
   // static const String tempGetPosts =
