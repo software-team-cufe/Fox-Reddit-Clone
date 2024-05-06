@@ -39,7 +39,7 @@
     List<dynamic> userComments = [];
     late int totalKarma = 0;
     late int commentKarma = 0;
-    
+    String _selectedItem = '';
 
     @override
     void initState() {
@@ -130,22 +130,12 @@
 
 
     Future<void> fetchDataBack() async {
-      // Base URL and endpoint
-      String baseUrl = 'http://foxnew.southafricanorth.cloudapp.azure.com';
-      String endpoint = '/user/${widget.userName}/overview';
 
-      // Query parameters
-      // Map<String, String> queryParams = {
-      //   'page': '1',
-      //   'count': '5',
-      //   'limit': '10',
-      //   't': 'all'
-      //   // Add any additional query parameters here if needed
-      // };
-
+      Map<String, String> queryParams = {
+        'sort': _selectedItem,
+      };
       // Constructing URL with query parameters
-      Uri uri = Uri.parse(baseUrl + endpoint); //.replace(queryParameters: queryParams);
-
+      Uri uri = Uri.parse(ApiRoutesBackend.getProfilePosts(widget.userName)).replace(queryParameters: queryParams);
       try {
         // Sending GET request with headers
         http.Response response = await http.get(
@@ -250,21 +240,79 @@ Widget _buildTitleView() {
                             backgroundImage: _getImageProvider(profilePic ?? ''),
                             backgroundColor: Colors.black,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 15),
-                            child: SizedBox(
-                              height: 40,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => EditProfilePage()),
-                                  );
-                                },
-                                child: const Text('Edit Profile'),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10, top: 15),
+                                child: SizedBox(
+                                  height: 40,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => EditProfilePage()),
+                                      );
+                                    },
+                                    child: const Text('Edit Profile'),
+                                  ),
+                                ),
                               ),
-                            ),
+                              IconButton(
+                                icon: CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  child: Image.asset(
+                                    'assets/Icons/filter.png',
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  final RenderBox overlay = Overlay.of(context)
+                                      .context
+                                      .findRenderObject() as RenderBox;
+                                  final buttonPosition = overlay.localToGlobal(Offset.zero);
+                                  const buttonWidth = 24.0;
+                                  final screenSize = MediaQuery.of(context).size;
+                                  final appBarHeight = AppBar().preferredSize.height;
+                                  final topOffset = appBarHeight + 220;
+                                  final horizontalOffset = buttonPosition.dx + 80;
+
+                                  showMenu<String>(
+                                    context: context,
+                                    position: RelativeRect.fromLTRB(
+                                      horizontalOffset + buttonWidth,
+                                      topOffset,
+                                      screenSize.width - horizontalOffset + buttonWidth,
+                                      0,
+                                    ),
+                                    items: [
+                                      const PopupMenuItem<String>(
+                                        value: 'hot',
+                                        child: Text('Hot'),
+                                      ),
+                                      const PopupMenuItem<String>(
+                                        value: 'new',
+                                        child: Text('New'),
+                                      ),
+                                      const PopupMenuItem<String>(
+                                        value: 'top',
+                                        child: Text('Top'),
+                                      ),
+                                    ],
+                                    elevation: 8.0,
+                                  ).then((value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        _selectedItem = value;
+                                         fetchDataBack(); // Update the selected item
+                                      });
+                                    }
+                                  });
+                                },
+                              ),
+                            ],
                           ),
+
                         ],
                       ),
                     ),

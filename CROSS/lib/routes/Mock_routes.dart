@@ -52,6 +52,9 @@ class ApiRoutesBackend {
       '$baseUrl/message/chatMessages/?senderUsername=$userName&subject=$subject';
   static String getSaved(String userName) =>
       '$baseUrl/api/user/$userName/savedPosts';
+  static const String emailPref = '$baseUrl/api/v1/me/prefs';
+  static const String notificationPref = '$baseUrl/api/v1/me/notification/settings';
+  
 }
 
 class ApiRoutesMockserver {
