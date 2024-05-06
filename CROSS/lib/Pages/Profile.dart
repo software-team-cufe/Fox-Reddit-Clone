@@ -6,7 +6,7 @@
   import 'package:intl/intl.dart';
   import 'package:reddit_fox/Pages/Search.dart';
   import 'package:reddit_fox/Pages/EditProfile.dart';
-  import 'package:reddit_fox/Pages/postViewForProfile.dart';
+import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
   import 'package:reddit_fox/navbar.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
@@ -500,7 +500,7 @@ Widget _buildTitleView() {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return ClassicCard(post: posts[index]);
+                return ModernCard(post: posts[index]);
               },
               childCount: posts.length,
             ),
