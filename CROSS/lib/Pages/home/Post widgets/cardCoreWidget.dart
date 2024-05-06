@@ -21,8 +21,8 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
   @override
   void initState() {
     super.initState();
-    isBlurred = (false || false);
-    textIsblurred = (false || false);
+    isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
+    textIsblurred = (widget.post['nsfw'] || widget.post['spoiler']);
   }
 
   @override
