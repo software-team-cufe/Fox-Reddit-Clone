@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:share/share.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 enum VoteDirection { Up, Down }
 
@@ -10,6 +14,23 @@ class VoteSection extends StatefulWidget {
 
   @override
   _VoteSectionState createState() => _VoteSectionState();
+
+  Future<void> postVote(String postID, int type) async {
+    final response = await http.post(
+      Uri.parse(ApiRoutesBackend.postVote),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'postID': postID,
+        'type': type,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Vote posted successfully');
+    } else {
+      print('Failed to post vote. Status code: ${response.statusCode}');
+    }
+  }
 }
 
 class _VoteSectionState extends State<VoteSection> {
@@ -72,7 +93,10 @@ class _VoteSectionState extends State<VoteSection> {
                           height: 32,
                         ),
                 ),
-                onPressed: () => vote(VoteDirection.Up),
+                onPressed: () => {
+                  vote(VoteDirection.Up),
+                  widget.postVote(widget.post['id'], 1),
+                  },
               ),
             ),
             Text(
