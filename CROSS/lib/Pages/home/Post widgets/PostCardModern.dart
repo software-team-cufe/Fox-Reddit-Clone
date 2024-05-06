@@ -8,8 +8,7 @@ import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:intl/intl.dart';
+
 
 /// A stateful widget that represents a post card in the home page.
 class ModernCard extends StatefulWidget {
@@ -47,6 +46,7 @@ class _ModernCardState extends State<ModernCard> {
     });
     setState(() {});
   }
+
 
   Future<void> delPost(String postId) async{  
     final response = await http.post(

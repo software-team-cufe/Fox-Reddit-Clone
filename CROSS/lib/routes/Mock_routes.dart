@@ -18,7 +18,8 @@ class ApiRoutesBackend {
 
   static String getUserAbout(String username) =>
       '$baseUrl/user/$username/about';
-  static const String delPost = "$baseUrl/api/del"; 
+  static const String delPost = "$baseUrl/api/del";
+  static const String postVote = "$baseUrl/api/postvote"; 
 
   // //!temprorary
   // static const String tempGetPosts =
