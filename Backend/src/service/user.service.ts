@@ -1,4 +1,4 @@
-import { UserModel, User } from '../model/user.model';
+import { UserModel, User, Moderator } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import appError from '../utils/appError';
 import CommunityModel from '../model/community.model';
@@ -260,9 +260,15 @@ export async function getCommunitiesIdOfUserAsMemeber(username: string) {
   const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
 
   // Extract community names from fetched communities
-  const communityNames = communities.map((community) => community.name);
+  const communityDetails = communities.map((community) => {
+    return {
+      name: community.name,
+      memberCount: community.membersCnt, // Assuming members are stored in an array called 'members'
+      icon: community.icon, // Assuming the community document has an 'icon' field
+    };
+  });
 
-  return communityNames;
+  return communityDetails;
 }
 
 /**
@@ -288,9 +294,15 @@ export async function getCommunitiesIdOfUserAsModerator(username: string) {
   const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
 
   // Extract community names from fetched communities
-  const communityNames = communities.map((community) => community.name);
+  const communityDetails = communities.map((community) => {
+    return {
+      name: community.name,
+      memberCount: community.membersCnt, // Assuming members are stored in an array called 'members'
+      icon: community.icon, // Assuming the community document has an 'icon' field
+    };
+  });
 
-  return communityNames;
+  return communityDetails;
 }
 
 /**
@@ -322,9 +334,15 @@ export async function getCommunitiesIdOfUserAsCreator(username: string) {
   const communities = await CommunityModel.find({ _id: { $in: communityIDs } });
 
   // Extract community names from fetched communities
-  const communityNames = communities.map((community) => community.name);
+  const communityDetails = communities.map((community) => {
+    return {
+      name: community.name,
+      memberCount: community.membersCnt, // Assuming members are stored in an array called 'members'
+      icon: community.icon, // Assuming the community document has an 'icon' field
+    };
+  });
 
-  return communityNames;
+  return communityDetails;
 }
 
 /**
@@ -348,9 +366,15 @@ export async function getFavoriteCommunitiesOfUser(username: string) {
   const communities = await CommunityModel.find({ _id: { $in: user.favorites } });
 
   // Extract community names from fetched communities
-  const communityNames = communities.map((community) => community.name);
+  const communityDetails = communities.map((community) => {
+    return {
+      name: community.name,
+      memberCount: community.membersCnt, // Assuming members are stored in an array called 'members'
+      icon: community.icon, // Assuming the community document has an 'icon' field
+    };
+  });
 
-  return communityNames;
+  return communityDetails;
 }
 
 /**
@@ -439,6 +463,58 @@ export async function addModeratorToUser(userID: string, communityName: string) 
     };
   }
   const userModerator = {
+    communityId: communityID,
+    role: 'moderator',
+  };
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      { $addToSet: { moderators: userModerator } },
+      { upsert: true, new: true }
+    );
+    if (!user.moderators) {
+      return {
+        status: false,
+        error: 'error in adding user',
+      };
+    }
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * update Moderator to community
+ * @param {String} (username)
+ * @param {String} (communityID)
+ * @returns {object} mentions
+ * @function
+ */
+export async function updateModeratorToUser(userID: string, communityName: string, info: Moderator) {
+  const community = await CommunityModel.findOne({ name: communityName });
+  if (!community) {
+    return {
+      status: false,
+      error: 'community not found',
+    };
+  }
+  const communityID = community._id.toString();
+  const user = await UserModel.findById(userID);
+  if (!user) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+  const userModerator = {
+    ...info,
     communityId: communityID,
     role: 'moderator',
   };

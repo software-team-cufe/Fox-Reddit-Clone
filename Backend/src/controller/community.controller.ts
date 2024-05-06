@@ -5,6 +5,7 @@ import {
   createSubreddit,
   addMemberToCom,
   addModeratorToCom,
+  updateModeratorToCom,
   addUserToPending,
   removeMemberFromCom,
   removeModeratorFromCom,
@@ -31,6 +32,8 @@ import {
   editCommunityPostSettings,
   editCommunityTextWidgets,
   editCommunitydetails,
+  communityPostIDs,
+  getCommunityModerator,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -40,6 +43,7 @@ import {
   addMemberToUser,
   addCreatorToUser,
   addModeratorToUser,
+  updateModeratorToUser,
   addFavoriteToUser,
   removeMemberFromUser,
   removeModeratorFromUser,
@@ -55,11 +59,12 @@ import {
 import { Community, CommunityModel } from '../model/community.model';
 import { Moderator, UserModel } from '../model/user.model';
 import { NextFunction, Request, Response } from 'express';
-import { findPostById } from '../service/post.service';
+import { findPostById, communityPosts } from '../service/post.service';
 import { findCommentById } from '../service/comment.service';
 import PostModel from '../model/posts.model';
 import CommentModel from '../model/comments.model';
 import appError from '../utils/appError';
+import { omit, shuffle } from 'lodash';
 
 /**
  * Retrieves the communities that a user is a member of.
@@ -160,6 +165,165 @@ export async function getCommunityOfUserAsCreatorHandler(req: Request, res: Resp
   } catch (error) {
     console.error('Error in getCommunityOfUserAsCreatorHandler:', error);
     return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Retrieves the communities that a user is a member of.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A promise that resolves when the communities are retrieved and sent in the response.
+ */
+export async function getCommunityOfOtherUserAsMemeberHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const communities = await getCommunitiesIdOfUserAsMemeber(req.params.username);
+
+    res.status(200).json({ communities });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Handles the request to get the communities of a user as a moderator.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getCommunityOfOtherUserAsModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const communities = await getCommunitiesIdOfUserAsModerator(req.params.username);
+
+    res.status(200).json({ communities });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Handles the request to get the communities of a user as a creator.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getCommunityOfOtherUserAsCreatorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const communities = await getCommunitiesIdOfUserAsCreator(req.params.username);
+
+    res.status(200).json({ communities });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserAsCreatorHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const subreddit = req.params.subreddit;
+    const username = req.params.username;
+    const community = await findCommunityByName(req.params.subreddit);
+    const user2 = await findUserByUsername(req.params.username);
+
+    // Check if subreddit is provided
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+
+    // Check if username is provided
+    if (!user2) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Username is a required parameter',
+      });
+    }
+
+    // Additional validation if necessary
+
+    const moderator = await getCommunityModerator(subreddit, username);
+
+    if (!moderator.status) {
+      return res.status(500).json({});
+    }
+    res.status(200).json({ moderator });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserHandler:', error);
+    return res.status(501).json({
       status: 'error',
       message: 'Internal server error',
     });
@@ -850,6 +1014,76 @@ export async function joinModeratorHandler(req: Request, res: Response) {
   } catch (error) {
     // Handle any unexpected errors
     console.error('Error member joining moderation:', error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * edit Moderaor handler.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise of a void.
+ */
+export async function editModeratorHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  // Get user ID from request
+  const userID = res.locals.user._id;
+  const user = res.locals.user;
+  const subreddit = req.params.subreddit;
+  const community = await findCommunityByName(subreddit);
+  const info = req.body;
+
+  // Check if user is missing or invalid
+  if (!user) {
+    return res.status(401).json({
+      error: 'Access token is missing or invalid',
+    });
+  }
+
+  // Check if subreddit is missing or invalid
+  if (!community) {
+    return res.status(402).json({
+      error: 'Community not found',
+    });
+  }
+
+  let isMod = false;
+
+  if (community.moderators) {
+    community.moderators.forEach((el) => {
+      // Check if userID is defined and equal to commModerator
+      if (el.userID?.toString() === user._id?.toString()) isMod = true;
+    });
+  }
+  if (isMod === false) {
+    return res.status(404).json({ status: 'error', message: 'Members can not change widgets' });
+  }
+
+  try {
+    const updateUser = await updateModeratorToUser(userID, subreddit, info);
+    const updateUser1 = await updateModeratorToCom(userID, subreddit, info);
+
+    // Handle user addition failure
+    if (updateUser.status === false || updateUser1.status === false) {
+      return res.status(500).json({
+        error: updateUser.error,
+      });
+    }
+    // Return success response
+    return res.status(200).json({
+      status: 'succeeded',
+    });
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error editing moderation:', error);
     return res.status(500).json({
       error: 'Internal server error',
     });
@@ -1900,7 +2134,41 @@ export async function getFavoriteCommunitiesOfUserHandler(req: Request, res: Res
     });
   }
 }
+/**
+ * Handles the request to get the favorite communities of a user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function getFavoriteCommunitiesOfOtherUserHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = await findUserById(userID);
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const communties = await getFavoriteCommunitiesOfUser(req.params.username);
 
+    res.status(200).json({ communties });
+  } catch (error) {
+    console.error('Error in getCommunityOfUserHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
 /**
  * Handles the request to get spam posts of a community.
  *
@@ -3246,5 +3514,79 @@ export async function deleteCommunityBanner(req: Request, res: Response) {
     return res.status(500).json({
       error: 'Internal server error',
     });
+  }
+}
+
+/**
+ * Retrieves user submitted posts with pagination and sorting.
+ *
+ * @param {Request} req - The request object
+ * @param {Response} res - The response object
+ * @param {NextFunction} next - The next function to call
+ * @returns {Promise<void>} A Promise that resolves when the function completes
+ */
+export async function getCommunityPostHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    // Extract params
+    const comm = req.params.subreddit;
+    const community = await findCommunityByName(comm);
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+
+    const page: number = parseInt(req.query.page as string, 10) || 1; // Default to page 1 if not provided
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if not provided
+    const limit: number = parseInt(req.query.limit as string, 10) || 10; // Default to 10 if not provided
+    const sort: string = req.query.sort as string; // Sort parameter
+
+    // Validate parameters
+    if (!community || isNaN(page) || isNaN(count) || isNaN(limit)) {
+      return res.status(400).json({ error: 'Invalid request parameters.' });
+    }
+
+    // Fetch post IDs submitted by the user
+    const postIDs = await communityPostIDs(comm, page, count);
+
+    // Fetch posts
+    let posts = await communityPosts(postIDs, limit);
+
+    // Apply sorting
+    if (sort) {
+      switch (sort) {
+        case 'best':
+          posts = posts.sort((a, b) => b.bestFactor - a.bestFactor);
+          break;
+        case 'hot':
+          posts = posts.sort((a, b) => b.hotnessFactor - a.hotnessFactor);
+          break;
+        case 'top':
+          posts = posts.sort((a, b) => b.votesCount - a.votesCount);
+          break;
+        case 'new':
+          posts = posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          break;
+        case 'random':
+          posts = shuffle(posts);
+          break;
+        default:
+          posts = shuffle(posts);
+          break;
+      }
+    } else {
+      posts = shuffle(posts);
+    }
+
+    res.status(200).json({ posts });
+  } catch (error) {
+    console.error('Error getUserSubmittedHandler:', error);
+    return res.status(500).send('Internal server error');
   }
 }

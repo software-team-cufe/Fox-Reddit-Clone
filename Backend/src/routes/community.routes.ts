@@ -59,6 +59,13 @@ import {
   editContentControlsHandler,
   editCommunityDetailsHandler,
   getCommunityDetailsHandler,
+  getCommunityPostHandler,
+  getCommunityOfOtherUserAsCreatorHandler,
+  getCommunityOfOtherUserAsMemeberHandler,
+  getFavoriteCommunitiesOfOtherUserHandler,
+  getCommunityOfOtherUserAsModeratorHandler,
+  editModeratorHandler,
+  getModeratorHandler,
 } from '../controller/community.controller';
 import validateResource from '../middleware/validateResource';
 import {
@@ -82,8 +89,6 @@ import {
   EditImageWidgetArraySchema,
   EditTextWidgetArraySchema,
   EditButtonWidgetArraySchema,
-  EditPostSettingsSchema,
-  EditContentControlsSchema,
   editCommunityDetailsSchema,
 } from '../schema/community.schema';
 import uploadSingleMulter from '../middleware/multer/singleImage';
@@ -101,6 +106,13 @@ router.get('/subreddits/mine/moderator', getCommunityOfUserAsModeratorHandler);
 router.get('/subreddits/mine/creator', getCommunityOfUserAsCreatorHandler);
 router.get('/subreddits/mine/favorite', getFavoriteCommunitiesOfUserHandler);
 
+router.get('/:subreddit/moderator/:username', validateResource(unmuteSchema), getModeratorHandler);
+
+router.get('/subreddits/:username/member', getCommunityOfOtherUserAsMemeberHandler);
+router.get('/subreddits/:username/moderator', getCommunityOfOtherUserAsModeratorHandler);
+router.get('/subreddits/:username/creator', getCommunityOfOtherUserAsCreatorHandler);
+router.get('/subreddits/:username/favorite', getFavoriteCommunitiesOfOtherUserHandler);
+
 router.get('/:subreddit', validateResource(getCommunitySchema), getCommunityHandler);
 
 router.post('/create_subreddit', validateResource(createCommunitySchema), createSubredditHandler);
@@ -113,6 +125,7 @@ router.post('/:subreddit/api/unfavorite', validateResource(subscribeCommunitySch
 
 router.post('/:subreddit/api/join_moderator', validateResource(subscribeCommunitySchema), joinModeratorHandler);
 router.post('/:subreddit/api/leave_moderator', validateResource(subscribeCommunitySchema), leaveModeratorHandler);
+router.patch('/:subreddit/api/edit_moderator', validateResource(subscribeCommunitySchema), editModeratorHandler);
 
 router.post('/:subreddit/api/ban/:username', validateResource(banSchema), banHandler);
 router.post('/:subreddit/api/unban/:username', validateResource(unbanSchema), unbanHandler);
@@ -215,5 +228,7 @@ router.post(
 );
 router.delete('/:subreddit/api/delete_sr_icon', validateResource(subscribeCommunitySchema), deleteCommunityIcon);
 router.delete('/:subreddit/api/delete_sr_banner', validateResource(subscribeCommunitySchema), deleteCommunityBanner);
+
+router.get('/api/:subreddit/posts', getCommunityPostHandler);
 
 export default router;
