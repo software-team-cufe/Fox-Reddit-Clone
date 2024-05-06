@@ -929,14 +929,14 @@ export async function addReplyOnMessageHandler(req: Request, res: Response) {
     parentMessage.Replies.push(createdMessage); // Push the new reply to the Replies array
     await parentMessage.save();
 
-    await createNotification(
-      checkReceiver._id,
-      user.avatar ?? 'default.jpg',
-      `${user.username} sent a message`,
-      'message',
-      req.body.text,
-      createdMessage._id
-    );
+    // await createNotification(
+    //   checkReceiver._id,
+    //   user.avatar ?? 'default.jpg',
+    //   `${user.username} sent a message`,
+    //   'message',
+    //   req.body.text,
+    //   createdMessage._id
+    // );
     res.status(200).json(createdMessage); // 201: Created
   } catch (error) {
     console.error('Error in addReplyOnMessageHandler:', error);
