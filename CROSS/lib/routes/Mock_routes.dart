@@ -46,6 +46,8 @@ class ApiRoutesBackend {
   static const String seen = '$baseUrl/message/markReadMessage/';
   static String getChat(String userName, String subject) =>
       '$baseUrl/message/chatMessages/?senderUsername=$userName&subject=$subject';
+  static String getSaved(String userName) =>
+      '$baseUrl/api/user/$userName/savedPosts';
 }
 
 class ApiRoutesMockserver {

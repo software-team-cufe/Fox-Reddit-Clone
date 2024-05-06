@@ -20,6 +20,7 @@ class _inboxChatState extends State<inboxChat> {
   late TextEditingController _messageController = TextEditingController();
   late List<dynamic> messages = [];
   late List<dynamic> senderUser = [];
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -62,8 +63,6 @@ class _inboxChatState extends State<inboxChat> {
       String senderUsername =
           message['fromID'] != null ? message['fromID']['username'] ?? "" : "";
 
-      
-
       if (senderUsername == widget.username) {
         Map<String, dynamic> messageIdBody = {
           'messageId': messageId,
@@ -88,6 +87,9 @@ class _inboxChatState extends State<inboxChat> {
   }
 
   void fetchChat() async {
+    setState(() {
+      isLoading = true;
+    });
     final response = await http.get(
       Uri.parse(ApiRoutesBackend.getChat(widget.username, widget.subject)),
       headers: <String, String>{
@@ -103,6 +105,7 @@ class _inboxChatState extends State<inboxChat> {
       setState(() {
         messages = fetchedMessages;
         seen(messages);
+        isLoading = false;
       });
       print(messages);
 
@@ -143,127 +146,131 @@ class _inboxChatState extends State<inboxChat> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                    ),
-                    Text(
-                      widget.username,
-                      style: TextStyle(fontSize: 25),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        block();
-                      },
-                      child: Icon(
-                        Icons.flag,
-                        color: Colors.red,
-                        size: 25,
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 20, 8, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        body: isLoading
+            ? Center(
+                child: CircularProgressIndicator(), // Show loader while loading
+              )
+            : Column(
                 children: [
-                  Center(
-                    child: Text(
-                      widget.subject,
-                      style: TextStyle(
-                          color: Colors.white, decorationThickness: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                          ),
+                          Text(
+                            widget.username,
+                            style: TextStyle(fontSize: 25),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              block();
+                            },
+                            child: Icon(
+                              Icons.flag,
+                              color: Colors.red,
+                              size: 25,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 20, 8, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text(
+                            widget.subject,
+                            style: TextStyle(
+                                color: Colors.white, decorationThickness: 15),
+                          ),
+                        )
+                      ],
                     ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final message = messages[index];
+                        final isCurrentUser =
+                            message['fromID']['username'] == widget.username;
+
+                        return Align(
+                          alignment: (isCurrentUser)
+                              ? Alignment.centerLeft
+                              : Alignment.centerRight,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color: isCurrentUser
+                                  ? Colors.green[400]
+                                  : Colors.green[400],
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Text(
+                              message['text'],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 55,
+                        child: TextField(
+                          controller: _messageController,
+                          decoration: InputDecoration(
+                            hintText: "Type New message",
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            suffix: Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  TextButton(
+                                      onPressed: () {
+                                        sendMessage();
+                                        setState(() {
+                                          fetchChat();
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.send_rounded,
+                                        color: Colors.white,
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  final message = messages[index];
-                  final isCurrentUser =
-                      message['fromID']['username'] == widget.username;
-
-                  return Align(
-                    alignment: (isCurrentUser)
-                        ? Alignment.centerLeft
-                        : Alignment.centerRight,
-                    child: Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: isCurrentUser
-                            ? Colors.green[400]
-                            : Colors.green[400],
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Text(
-                        message['text'],
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 55,
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: "Type New message",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      suffix: Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            TextButton(
-                                onPressed: () {
-                                  sendMessage();
-                                  setState(() {
-                                    fetchChat();
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.send_rounded,
-                                  color: Colors.white,
-                                )),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
       ),
     );
   }
