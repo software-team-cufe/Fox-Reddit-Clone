@@ -10,7 +10,7 @@ class ApiRoutesBackend {
   static const String forgetPassword = '$baseUrl/api/users/forgotpassword';
   static String getPosts(String category, int page, int count, int limit) =>
       '$baseUrl/api/get_specific_category?category=$category&page=$page&count=$count&limit=$limit';
-    static String getProfilePosts(String username) =>
+  static String getProfilePosts(String username) =>
       '$baseUrl/user/$username/submitted';
   static String homePostssorted(
           {String category = 'new', int page = 1, int limit = 15}) =>
@@ -19,7 +19,7 @@ class ApiRoutesBackend {
   static String getUserAbout(String username) =>
       '$baseUrl/user/$username/about';
   static const String delPost = "$baseUrl/api/del";
-  static const String postVote = "$baseUrl/api/postvote"; 
+  static const String postVote = "$baseUrl/api/postvote";
 
   // //!temprorary
   // static const String tempGetPosts =
@@ -53,8 +53,9 @@ class ApiRoutesBackend {
   static String getSaved(String userName) =>
       '$baseUrl/api/user/$userName/savedPosts';
   static const String emailPref = '$baseUrl/api/v1/me/prefs';
-  static const String notificationPref = '$baseUrl/api/v1/me/notification/settings';
-  
+  static const String notificationPref =
+      '$baseUrl/api/v1/me/notification/settings';
+  static const String notification = '$baseUrl/api/v1/me/notification';
 }
 
 class ApiRoutesMockserver {
