@@ -1,5 +1,6 @@
 import { ComposeMessageInput, DeleteMessageInput } from '../schema/message.schema';
-import MessageModel from '../model/message.model';
+import MessageModel, { Message } from '../model/message.model';
+
 import { createMessage, deleteMessage, findMessageById } from '../service/message.service';
 import { findUserById, findUserByUsername } from '../service/user.service';
 import { Request, Response } from 'express';
@@ -57,7 +58,7 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
     );
     res.status(200).json(createdMessage); // 201: Created
   } catch (error) {
-    console.error('Error in addCommentHandler:', error);
+    console.error('Error in composeMessageHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',
@@ -525,10 +526,14 @@ export async function getAllMessagesUsernamesAndSubjectsHandler(req: Request, re
         };
       })
     );
+    // Remove duplicates from the userMessages array
+    const uniqueMessages = Array.from(new Set(userMessages.map((msg) => JSON.stringify(msg)))).map((str) =>
+      JSON.parse(str)
+    );
 
     return res.status(200).json({
       response: 'success',
-      messages: userMessages,
+      messages: uniqueMessages,
     });
   } catch (error) {
     console.error('Error in getAllMessagesUsernamesAndSubjectsHandler:', error);
@@ -872,6 +877,151 @@ export async function getuserAllHandler(req: Request, res: Response) {
     res.status(200).json(allData);
   } catch (error) {
     console.error('Error in getuserAllHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles adding a reply to a message.
+ *
+ * @param {Request} req - The request object containing the reply details.
+ * @param {Response} res - The response object to send the result.
+ * @return {Promise<void>} - Returns a Promise that resolves to void.
+ */
+export async function addReplyOnMessageHandler(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+    const checkReceiver = await findUserByUsername(req.body.toUsername);
+    if (!checkReceiver) {
+      return res.status(500).json({
+        response: 'invalid receiver username',
+      });
+    }
+    const parentMessage = await MessageModel.findById(req.body.parentID);
+    if (!parentMessage) {
+      return res.status(404).json({ message: 'Parent message not found' });
+    }
+
+    const message = new MessageModel({
+      text: req.body.text,
+      subject: parentMessage.subject,
+      fromID: user._id,
+      toID: checkReceiver._id,
+      isReply: true,
+    });
+    const createdMessage = await createMessage(message);
+
+    // Save the new comment
+    if (!createdMessage) {
+      return res.status(400).json({ message: 'Failed to create the comment' });
+    }
+    // Update the parent message with the reply
+    parentMessage.Replies.push(createdMessage); // Push the new reply to the Replies array
+    await parentMessage.save();
+
+    await createNotification(
+      checkReceiver._id,
+      user.avatar ?? 'default.jpg',
+      `${user.username} sent a message`,
+      'message',
+      req.body.text,
+      createdMessage._id
+    );
+    res.status(200).json(createdMessage); // 201: Created
+  } catch (error) {
+    console.error('Error in addReplyOnMessageHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+/**
+ * Handles the request to retrieve all messages between a sender and receiver of certain subject.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<Response>} The response object containing the messages, all reply IDs, or an error message.
+ */
+export async function chatMessagesFRONTHandler(req: Request, res: Response) {
+  const receiverId = res.locals.user._id;
+  // Check if user is missing or invalid
+  if (!receiverId) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Access token is missing or invalid',
+    });
+  }
+
+  const senderUsername = req.query.senderUsername?.toString();
+  const subject = req.query.subject?.toString();
+
+  // Check if subject is provided
+  if (!subject) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Subject is missing',
+    });
+  }
+
+  // Check if sender username is provided
+  if (!senderUsername) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Sender username is missing',
+    });
+  }
+
+  try {
+    // Find the sender user by username
+    const sender = await findUserByUsername(senderUsername);
+    if (!sender) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Sender not found',
+      });
+    }
+
+    // Retrieve all messages between sender and receiver with the provided subject
+    let messages = await MessageModel.find({
+      $or: [
+        { fromID: sender._id, toID: receiverId, subject: subject },
+        { fromID: receiverId, toID: sender._id, subject: subject },
+      ],
+      isDeleted: false,
+    })
+      .sort({ createdAt: 1 })
+      .populate('fromID', 'username') // Populate sender's username
+      .populate('toID', 'username') // Populate receiver's username; // Order by createdAt
+      .populate({
+        path: 'Replies',
+        populate: { path: 'fromID toID', select: 'username' }, // Populate all attributes of Replies including fromID and toID
+      });
+    // Extract all reply IDs from the messages array
+    const allReplyIds: string[] = [];
+    for (const message of messages) {
+      // Concatenate _id of each reply to allReplyIds
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      allReplyIds.push(...message.Replies.map((reply: any) => reply._id.toString()));
+    }
+    // Filter out messages with IDs present in allReplyIds
+    messages = messages.filter((message) => !allReplyIds.includes(message._id.toString()));
+
+    return res.status(200).json({
+      response: 'success',
+      messages: messages,
+    });
+  } catch (error) {
+    console.error('Error in chatMessagesFRONTHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',

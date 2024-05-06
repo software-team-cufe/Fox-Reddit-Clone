@@ -17,6 +17,8 @@ import {
   addPostReplyHandler,
   getuserPostreplisHandler,
   getuserAllHandler,
+  addReplyOnMessageHandler,
+  chatMessagesFRONTHandler,
 } from '../controller/message.controller';
 import {
   chatMessagesSchema,
@@ -24,6 +26,7 @@ import {
   deleteMessageSchema,
   mentionUserSchema,
   replyOnpostSchema,
+  addReplyOnMessageSchema,
 } from '../schema/message.schema';
 
 const router = express.Router();
@@ -59,5 +62,9 @@ router.post('/api/addPosstreply', validateResource(replyOnpostSchema), addPostRe
 router.get('/api/get_post_replies', getuserPostreplisHandler);
 
 router.get('/api/get_all', getuserAllHandler);
+
+router.post('/api/message/addReplyOnMessage', validateResource(addReplyOnMessageSchema), addReplyOnMessageHandler);
+
+router.get('/api/message/chatMessagesFRONT', validateResource(chatMessagesSchema), chatMessagesFRONTHandler);
 
 export default router;

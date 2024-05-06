@@ -26,6 +26,12 @@ export class Message {
 
   @prop({ required: [true, 'A message must have a text!'], trim: true, maxlength: 100000, minlength: 1 })
   text!: string;
+
+  @prop({ default: false })
+  isReply!: boolean;
+
+  @prop({ ref: Message, default: [] })
+  Replies!: Message[];
 }
 
 const MessageModel = getModelForClass(Message);
