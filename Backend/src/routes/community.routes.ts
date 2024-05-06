@@ -201,14 +201,14 @@ router.get('/:subreddit/about/pending_members', validateResource(subscribeCommun
 
 router.post(
   '/:subreddit/api/upload_sr_icon',
-  uploadSingleMulter.single('image'),
+  // uploadSingleMulter.single('image'),
   //resizeCommunityIcon,
   uploadSingleCloudinary,
   uploadCommunityIcon
 );
 router.post(
   '/:subreddit/api/upload_sr_banner',
-  uploadSingleMulter.single('image'),
+  //uploadSingleMulter.single('image'),
   // resizeCommunityBanner,
   uploadSingleCloudinary,
   uploadCommunityBanner
