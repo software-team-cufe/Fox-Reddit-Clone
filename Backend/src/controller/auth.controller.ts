@@ -114,6 +114,9 @@ export async function getFCMToken(req: Request, res: Response) {
       message: 'Access token is missing',
     });
   }
-  res.locals.fcmtoken = req.body;
+  let user = res.locals.user;
+  user = await findUserById(user._id);
+  user.fcmtoken = req.body.fcmtoken;
+  await user.save();
   return res.status(200).json('Token acquired.');
 }

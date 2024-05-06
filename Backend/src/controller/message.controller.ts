@@ -11,7 +11,7 @@ import PostModel from '../model/posts.model';
 import { findPostById } from '../service/post.service';
 import CommentModel from '../model/comments.model';
 import { findCommentById } from '../service/comment.service';
-//import { createNotification } from '../service/notification.service';
+import { createNotification } from '../service/notification.service';
 /**
  * Handles composing a message, checking user validity, creating the message, and returning the result.
  *
@@ -48,15 +48,15 @@ export async function composeMessageHandler(req: Request<ComposeMessageInput['bo
     if (!createdMessage) {
       return res.status(400).json({ message: 'Failed to create the comment' });
     }
-    // await createNotification(
-    //   checkReceiver._id,
-    //   user.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
-    //   `${user.username} sent a message`,
-    //   'message',
-    //   req.body.text,
-    //   createdMessage._id,
-    //   res.locals.fcmtoken
-    // );
+    await createNotification(
+      checkReceiver._id,
+      user.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+      `${user.username} sent a message`,
+      'message',
+      req.body.text,
+      createdMessage._id,
+      checkReceiver.fcmtoken
+    );
     res.status(200).json(createdMessage); // 201: Created
   } catch (error) {
     console.error('Error in composeMessageHandler:', error);
@@ -948,14 +948,15 @@ export async function addReplyOnMessageHandler(req: Request, res: Response) {
     parentMessage.Replies.push(createdMessage); // Push the new reply to the Replies array
     await parentMessage.save();
 
-    // await createNotification(
-    //   checkReceiver._id,
-    //   user.avatar ?? 'default.jpg',
-    //   `${user.username} sent a message`,
-    //   'message',
-    //   req.body.text,
-    //   createdMessage._id
-    // );
+    await createNotification(
+      checkReceiver._id,
+      user.avatar ?? 'default.jpg',
+      `${user.username} sent a message`,
+      'message',
+      req.body.text,
+      createdMessage._id,
+      checkReceiver.fcmtoken
+    );
     res.status(200).json(createdMessage); // 201: Created
   } catch (error) {
     console.error('Error in addReplyOnMessageHandler:', error);

@@ -39,7 +39,7 @@ import { userComments, userCommentss } from '../service/comment.service';
 import { findPostById, userPosts, userPostss } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
-//import { createNotification } from '../service/notification.service';
+import { createNotification } from '../service/notification.service';
 import { getHomePostsNotAuth, getHomePostsAuth } from '../service/community.service';
 
 /**
@@ -1168,15 +1168,15 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
       { $addToSet: { followers: follows._id } },
       { upsert: true, new: true }
     );
-    // await createNotification(
-    //   followed._id,
-    //   follows.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
-    //   'New Follower!',
-    //   'newFollower',
-    //   `${follows.username} followed you!`,
-    //   follows._id,
-    //   res.locals.fcmtoken
-    // );
+    await createNotification(
+      followed._id,
+      follows.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+      'New Follower!',
+      'newFollower',
+      `${follows.username} followed you!`,
+      follows._id,
+      followed.fcmtoken
+    );
     return res.status(200).json({
       status: 'succeeded',
     });

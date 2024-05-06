@@ -421,6 +421,12 @@ export class User {
   @prop({ enum: ['bare email', 'facebook', 'gmail'], default: 'bare email' })
   type?: string;
 
+  @prop({
+    required: false,
+    default:
+      'dS2hR_kST5aAT-C2HYJ30q:APA91bEKl8bLOGR7HHBs4vXA_SPmagBe8pEax953avEBXkLIGlNCoptsQTu9a30-a_JlDLxhA7X3GmxbVoIoUQHLzfAF0wJQcqUlR0OQ66E7O0sEXuKiW5r4-3G0_co0pOrxhzmw6M6G',
+  })
+  fcmtoken: string;
   /***************************************
    recursive relations
    ***************************************/
