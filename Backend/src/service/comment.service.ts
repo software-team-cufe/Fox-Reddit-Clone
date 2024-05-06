@@ -26,7 +26,30 @@ export async function userComments(commentsIDS: string[], limit: number) {
   // Fetch comments based on the provided commentIDs
   const comments = await CommentModel.find({
     _id: { $in: commentsIDS },
+    isDeleted: false,
   }).limit(limit);
+
+  // comments = await CommentModel.populate(comments, { path: 'authorId', select: '_id avatar' });
+
+  // Return the fetched comments
+  return comments;
+}
+
+/**
+ * Retrieves comments based on their IDs with pagination support.
+ *
+ * @param commentsIDS - Array of comment IDs.
+ * @param limit - Maximum number of comments to retrieve.
+ * @returns An array of comment objects.
+ */
+export async function userCommentss(commentsIDS: string[], limit: number) {
+  // Fetch comments based on the provided commentIDs
+  let comments = await CommentModel.find({
+    _id: { $in: commentsIDS },
+    isDeleted: false,
+  }).limit(limit);
+
+  comments = await CommentModel.populate(comments, { path: 'authorId', select: '_id avatar' });
 
   // Return the fetched comments
   return comments;

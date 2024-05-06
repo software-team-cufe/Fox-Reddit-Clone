@@ -35,7 +35,9 @@ import { nanoid } from 'nanoid';
 import { UserModel, VotePost } from '../model/user.model';
 import { omit, shuffle } from 'lodash';
 import PostModel from '../model/posts.model';
-import { userComments } from '../service/comment.service';
+import { userComments, userCommentss } from '../service/comment.service';
+import { findPostById, userPosts, userPostss } from '../service/post.service';
+import mergeTwo from '../middleware/user.control.midel';
 import { findPostById, userPosts } from '../service/post.service';
 import appError from '../utils/appError';
 //import { createNotification } from '../service/notification.service';
@@ -767,7 +769,7 @@ export async function getUserSubmittedHandler(req: Request, res: Response) {
     const postIDs = await userSubmittedPosts(username, page, count);
 
     // Fetch posts
-    let posts = await userPosts(postIDs, limit);
+    let posts = await userPostss(postIDs, limit);
 
     // Apply sorting
     if (sort) {
@@ -827,7 +829,7 @@ export async function getUserCommentsHandler(req: Request, res: Response) {
       return res.status(400).json({ error: 'Invalid request parameters.' });
     }
     const commmentsIDS = await userCommentsIds(username, page, count);
-    let comments = await userComments(commmentsIDS, limit);
+    let comments = await userCommentss(commmentsIDS, limit);
 
     if (sort) {
       switch (sort) {
@@ -883,15 +885,15 @@ export async function getUserOverviewHandler(req: Request, res: Response) {
 
     // get user posts by username
     const postIDs = await userSubmittedPosts(username, page, count);
-    let posts = await userPosts(postIDs, limit);
+    let posts = await userPostss(postIDs, limit);
 
     // get user comments by username
     const commentIds = await userCommentsIds(username, page, count);
-    let comments = await userComments(commentIds, limit);
+    let comments = await userCommentss(commentIds, limit);
 
     // get user replies by username
     const replyIds = await userRepliesIds(username, page, count);
-    let replies = await userComments(replyIds, limit);
+    let replies = await userCommentss(replyIds, limit);
     // Apply sorting
     if (sort) {
       switch (sort) {
