@@ -36,6 +36,7 @@ export const searchNormalSchema = object({
       message: 'Invalid type',
     }),
     sort: string().optional(), // Make sort optional
+    topBy: string().optional(), // Make topBy optional
     page: string().optional(), // Make page optional
     limit: string().optional(), // Make limit optional
   }),

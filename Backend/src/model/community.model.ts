@@ -36,47 +36,124 @@ export class removalReason {
   description?: string;
 }
 
-class FAQ {
-  @prop()
-  question?: string;
+export class ContentControls {
+  @prop({ default: true })
+  membersWithGuidelines!: boolean;
 
-  @prop()
-  answer?: string;
+  @prop({ default: true })
+  requirePostTitles!: boolean;
+
+  @prop({ default: true })
+  banWordsFromPostTitle!: boolean;
+
+  @prop({ default: true })
+  requirePostsInPostBody!: boolean;
+
+  @prop({ default: true })
+  banWordsFromPostBody!: boolean;
+
+  @prop({ default: true })
+  banLinksFromDomains!: boolean;
+
+  @prop({ default: true })
+  restrictTheSameLinkPosted!: boolean;
+
+  @prop({ default: 'requiredForTextOnlyPosts' })
+  textBody!: string;
+
+  @prop({ default: true })
+  postFlair!: boolean;
+
+  @prop({ default: true })
+  useRegExInTitles!: boolean;
+
+  @prop({ default: true })
+  useBodyTextReg!: boolean;
 }
 
-class CommunityOptions {
-  @prop({ default: true })
-  enableSpoilerTag?: boolean;
+export class PostSettings {
+  @prop({ default: 'Any' })
+  postType!: string;
 
   @prop({ default: true })
-  emailUsernameMention?: boolean;
+  activePosts!: boolean;
+
+  @prop({ default: true })
+  spoilerTag!: boolean;
+
+  @prop({ default: true })
+  allowImageUpload!: boolean;
+
+  @prop({ default: true })
+  multiplePosts!: boolean;
+
+  @prop({ default: true })
+  allowPolls!: boolean;
+
+  @prop({ default: 'low' })
+  posts!: string;
+
+  @prop({ default: 'low' })
+  links!: string;
+
+  @prop({ default: 'low' })
+  comments!: string;
+
+  @prop({ default: 'none' })
+  suggestedSort!: string;
 
   @prop({ default: false })
-  nsfw?: boolean;
+  collapseAndDeleteRemovedComments!: boolean;
 
   @prop()
-  welcomeMessage?: string;
+  minsToHideComment!: number;
 
-  @prop({ default: true })
-  allowImgAndLinksUploads?: boolean;
+  @prop({ default: false })
+  allowCommentsWithGifs!: boolean;
 
-  @prop({ default: true })
-  allowMultipleImagePerPost?: boolean;
+  @prop({ default: false })
+  allowCommentsWithCollectibleExpressions!: boolean;
 
-  @prop({ default: 'best' })
-  suggestedCommentSort?: string;
+  @prop({ default: false })
+  allowCommentsWithUploadedImages!: boolean;
+
+  @prop({ default: false })
+  allowCommentsWithUploadedGIFs!: boolean;
+}
+
+export class TextWidget {
+  @prop()
+  title!: string;
 
   @prop()
-  postType?: number;
+  description!: string;
+}
+
+export class ButtonWidget {
+  @prop()
+  title!: string;
 
   @prop()
-  region?: string;
+  link!: string;
+}
 
-  @prop({ default: 'public' })
-  privacyType?: string;
+export class ImageWidget {
+  @prop()
+  title!: string;
 
-  @prop({ default: 20 })
-  spamsNumBeforeRemove?: number;
+  @prop()
+  image!: string;
+}
+
+export class Details {
+  @prop()
+  nickname!: string;
+
+  @prop()
+  currentNickname!: string;
+
+  @prop()
+  description!: string;
 }
 
 class IsBanned {
@@ -168,7 +245,7 @@ export class Community {
   @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714595299/gcnool3ibj3zfyoa1emq.jpg' })
   banner?: string;
 
-  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png' })
+  @prop({ default: 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714908975/gduxbj1bsk7xnaqtqnc1.png' })
   icon?: string;
 
   @prop({ default: 0 })
@@ -189,10 +266,19 @@ export class Community {
   @prop({ type: String, default: 'Public' })
   privacyType?: string;
 
+  @prop({ type: String })
+  categories?: string[];
+
   //settings attributes
 
-  @prop({ type: FAQ })
-  FAQs?: FAQ[];
+  @prop()
+  ImageWidget?: ImageWidget[];
+
+  @prop()
+  ButtonWidget?: ButtonWidget[];
+
+  @prop()
+  TextWidget?: TextWidget[];
 
   @prop()
   communityRules?: CommunityRule[];
@@ -200,11 +286,14 @@ export class Community {
   @prop()
   removalReasons?: removalReason[];
 
-  @prop({ type: CommunityOptions, default: {} })
-  communityOptions?: CommunityOptions;
+  @prop({ default: () => new PostSettings() })
+  PostSettings?: PostSettings;
 
-  @prop({ type: String })
-  categories?: string[];
+  @prop({ default: () => new Details() })
+  Details?: Details;
+
+  @prop({ default: () => new ContentControls() })
+  ContentControls?: ContentControls;
 
   //users attirbutes
 

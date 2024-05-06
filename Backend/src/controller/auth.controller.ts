@@ -106,3 +106,14 @@ export async function refreshAccessTokenHandler(req: Request, res: Response) {
   const accessToken = signAccessToken(user);
   return res.status(200).json({ accessToken });
 }
+
+export async function getFCMToken(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  res.locals.fcmtoken = req.body;
+  return res.status(200).json('Token acquired.');
+}

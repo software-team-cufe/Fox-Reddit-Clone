@@ -1,5 +1,15 @@
 import appError from '../utils/appError';
-import CommunityModel, { Community, CommunityRule, removalReason } from '../model/community.model';
+import CommunityModel, {
+  Community,
+  CommunityRule,
+  removalReason,
+  ImageWidget,
+  TextWidget,
+  ButtonWidget,
+  ContentControls,
+  PostSettings,
+  Details,
+} from '../model/community.model';
 import { Post } from '../model/posts.model';
 import { findUserById } from './user.service';
 import { findPostById } from './post.service';
@@ -41,6 +51,9 @@ export async function getUserCommunities(commIDs: string[]) {
  * @returns A promise that resolves to the user object if found, or null if not found.
  */
 export function findCommunityByID(id: string) {
+  return CommunityModel.findById(id);
+}
+export async function getCommunityByID(id: string) {
   return CommunityModel.findById(id);
 }
 
@@ -565,6 +578,164 @@ export async function editCommunityCategories(subreddit: string, cats: Community
   };
 }
 
+export async function editCommunityImageWidgets(subreddit: string, widgets: ImageWidget[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { ImageWidget: widgets },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityTextWidgets(subreddit: string, widgets: TextWidget[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { TextWidget: widgets },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityButtonWidgets(subreddit: string, widgets: ButtonWidget[]) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { ButtonWidget: widgets },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityPostSettings(subreddit: string, settings: PostSettings) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { PostSettings: settings },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunityContentControls(subreddit: string, controls: ContentControls) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { ContentControls: controls },
+      { new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+export async function editCommunitydetails(subreddit: string, details: Details) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  try {
+    const updatedCommunity = await CommunityModel.findByIdAndUpdate(community._id, { Details: details }, { new: true });
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
 /**
  *  mark Spam Post
  * @param {string} body contain rules details
@@ -781,7 +952,7 @@ export async function getSrSearchResultNotAuth(query: string, page: number, limi
   try {
     const communityResults = await CommunityModel.find({
       $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-      privacyType: 'public',
+      privacyType: 'Public',
     })
       .skip((page - 1) * limit)
       .limit(limit)
@@ -802,7 +973,7 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
       UserModel.findById(userID),
       CommunityModel.find({
         $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
-        privacyType: 'public',
+        privacyType: 'Public',
       })
         .skip((page - 1) * limit)
         .limit(limit)
@@ -813,34 +984,33 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
       throw new appError('User not found search auth user', 404);
     }
 
-    console.log(user.username);
-    console.log(publicCommunities);
-    const privateCommunities = await UserModel.aggregate([
+    const userCommunities = await UserModel.aggregate([
       {
         $match: {
           _id: user._id,
         },
       },
       { $unwind: '$member' },
+      { $unwind: '$moderators' },
       {
         $lookup: {
           from: 'communities',
-          localField: 'member.communityId',
-          foreignField: '_id',
+          let: { memberId: '$member.communityId', moderatorId: '$moderators.communityId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $or: [{ $eq: ['$_id', '$$memberId'] }, { $eq: ['$_id', '$$moderatorId'] }],
+                },
+                $or: [{ name: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }],
+              },
+            },
+          ],
           as: 'joinedCommunities',
         },
       },
       {
         $unwind: '$joinedCommunities',
-      },
-      {
-        $match: {
-          'joinedCommunities.privacyType': 'private',
-          $or: [
-            { 'community.name': { $regex: query, $options: 'i' } },
-            { 'community.description': { $regex: query, $options: 'i' } },
-          ],
-        },
       },
       {
         $project: {
@@ -854,13 +1024,75 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
       { $skip: (page - 1) * limit },
       { $limit: limit },
     ]);
-    const authUserCommunities = privateCommunities.concat(publicCommunities);
+    const authUserCommunities = userCommunities.concat(publicCommunities);
+    console.log(userCommunities);
+    console.log(publicCommunities);
     return authUserCommunities;
   } catch (error) {
     return error;
   }
 }
+export async function getPostsSearchResultsNotAuth(
+  page: number,
+  limit: number,
+  sort: string | undefined,
+  topBy: string | undefined
+) {}
 
+export async function getPostsSearchResultsAuth(
+  page: number,
+  limit: number,
+  userId: string,
+  query: string,
+  sort: string | undefined,
+  topBy: string | undefined
+) {
+  try {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    let sortCriteria: Record<string, 1 | -1>;
+    let additionalCriteria: Record<string, unknown> = {};
+    switch (sort) {
+      case 'hot':
+        sortCriteria = { 'posts.insightCnt': -1 };
+        break;
+      case 'top':
+        sortCriteria = { 'posts.votesCount': -1 };
+        switch (topBy) {
+          case 'hour':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 60 * 60 * 1000) } };
+            break;
+          case 'day':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } };
+            break;
+          case 'week':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } };
+            break;
+          case 'month':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } };
+            break;
+          case 'year':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) } };
+            break;
+          default:
+            additionalCriteria = {};
+            break;
+        }
+        break;
+      case 'new':
+        sortCriteria = { 'posts.createdAt': -1 };
+        break;
+      case 'comments':
+        sortCriteria = { 'posts.commentsNum': -1 };
+        break;
+      default:
+        sortCriteria = { 'posts.randomSort': -1 };
+        break;
+    }
+  } catch (error) {
+    throw new appError('Something went wrong in search posts auth', 500);
+  }
+}
 /**
  * banMemberToCom
  * @param {string} body contain rules details
@@ -1081,4 +1313,202 @@ export async function unmuteUserInCommunity(userID: string, subreddit: string) {
   return {
     status: true,
   };
+}
+
+//get home page posts for logged in and authenticated user
+
+export async function getHomePostsAuth(
+  page: number,
+  limit: number,
+  userID: string,
+  sort: string | undefined,
+  topBy: string | undefined
+) {
+  //   What is the difference between the different sort options?
+  // "Hot" posts are sorted by number of views.
+  // "Top" posts are sorted by upvotes but they have an option of sorting by time where you can choose to view within a specific time frame.
+  // "Best" is just a normal feed with random sorting.
+  // "New" should be sorted according to time (by the most recent) not an option like in "Top".
+
+  try {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    let sortCriteria: Record<string, 1 | -1>;
+    let additionalCriteria: Record<string, unknown> = {};
+    switch (sort) {
+      case 'hot':
+        sortCriteria = { 'posts.insightCnt': -1 };
+        break;
+      case 'top':
+        sortCriteria = { 'posts.votesCount': -1 };
+        switch (topBy) {
+          case 'hour':
+            console.log('top by hour');
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 60 * 60 * 1000) } };
+            break;
+          case 'day':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } };
+            break;
+          case 'week':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } };
+            break;
+          case 'month':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } };
+            break;
+          case 'year':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) } };
+            break;
+          default:
+            additionalCriteria = {};
+            break;
+        }
+        break;
+      case 'best':
+        //sort randomly
+        sortCriteria = { 'posts.randomSort': -1 };
+        break;
+      case 'new':
+        sortCriteria = { 'posts.createdAt': -1 };
+        break;
+      default:
+        sortCriteria = { 'posts.randomSort': -1 };
+        break;
+    }
+    const userHomePosts = await CommunityModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { privacyType: 'Public' }, // Match public communities
+            { 'members.userId': userID }, // Match communities where the user is a member
+            { 'moderators.userId': userID }, // Match communities where the user is a moderator
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'posts', // Posts collection
+          localField: 'communityPosts', // Field containing post IDs in the community model
+          foreignField: '_id', // Field in the posts model
+          as: 'posts', // Name of the field to store posts in the result
+        },
+      },
+      { $unwind: '$posts' }, // Unwind the posts array
+      {
+        $match: {
+          'posts.title': { $exists: true }, // Filter out posts without titles (optional)
+          ...additionalCriteria, // Apply additional criteria
+        },
+      },
+      { $sort: sortCriteria }, // Apply sorting criteria
+      { $skip: skip }, // Skip documents based on page and limit
+      { $limit: limit }, // Limit the number of documents returned
+      {
+        $project: {
+          communityIcon: '$icon', // Project community icon
+          communityName: '$name', // Project community name
+          communityDescription: '$description', // Project community description
+          memberCount: '$membersCnt', // Project member count
+          postId: '$posts._id', // Project post ID
+          userId: '$posts.userId', // Project user ID
+          username: '$posts.username', // Project username
+          title: '$posts.title', // Project post title
+          textHTML: '$posts.textHTML', // Project post textHTML
+          textJSON: '$posts.textJSON', // Project post textJSON
+          isDeleted: '$posts.isDeleted', // Project post isDeleted
+          attachments: '$posts.attachments', // Project post attachments
+          poll: '$posts.poll', // Project post poll
+          spoiler: '$posts.spoiler', // Project post spoiler
+          isLocked: '$posts.isLocked', // Project post isLocked
+          type: '$posts.type', // Project post type
+          nsfw: '$posts.nsfw', // Project post nsfw
+          isHidden: '$posts.isHidden', // Project post isHidden
+          insightCnt: '$posts.insightCnt', // Project post insightCnt
+          spamCount: '$posts.spamCount', // Project post spamCount
+          votesCount: '$posts.votesCount', // Project post votesCount
+          createdAt: '$posts.createdAt', // Project post createdAt
+          editedAt: '$posts.editedAt', // Project post editedAt
+          followers: '$posts.followers', // Project post followers
+          CommunityID: '$posts.CommunityID', // Project post CommunityID
+          commentsNum: '$posts.commentsNum', // Project post commentsNum
+        },
+      },
+    ]);
+    return userHomePosts;
+  } catch (error) {
+    console.log(error);
+    throw new appError('Post error for auth user', 404);
+  }
+}
+
+/**
+ * Retrieves a random set of posts from public communities for the home page of a not authenticated user.
+ *
+ * @param {number} page - The page number of the results.
+ * @param {number} limit - The maximum number of posts to return per page.
+ * @return {Promise<Array<Object>>} A promise that resolves to an array of post objects with properties:
+ *   - communityIcon: The icon of the community where the post was made.
+ *   - postTitle: The title of the post.
+ *   - postTextHTML: The HTML content of the post.
+ *   - votesCount: The number of votes the post has received.
+ *   - commentsNum: The number of comments the post has.
+ *   - attachments: The attachments associated with the post.
+ */
+export async function getHomePostsNotAuth(page: number, limit: number) {
+  const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+  const randomPosts = await CommunityModel.aggregate([
+    {
+      $match: {
+        privacyType: 'Public',
+      },
+    },
+    {
+      //left outer join with posts collection
+      $lookup: {
+        from: 'posts', //  posts collection
+        localField: 'communityPosts', //name of the posts field in the community model
+        foreignField: '_id', //name of the _id field in the posts model
+        as: 'posts', //name of the posts field in the result
+      },
+    },
+    { $unwind: '$posts' }, // Unwind the posts array
+    {
+      $match: {
+        'posts.title': { $exists: true }, // Filter out posts without title
+      },
+    },
+    { $sample: { size: limit } }, // Limit the number of posts per community
+    { $skip: skip }, // Skip documents based on page and limit
+    {
+      $project: {
+        communityIcon: '$icon', // Project community icon
+        communityName: '$name', // Project community name
+        communityDescription: '$description', // Project community description
+        memberCount: '$membersCnt', // Project member count
+        postId: '$posts._id', // Project post ID
+        userId: '$posts.userId', // Project user ID
+        username: '$posts.username', // Project username
+        title: '$posts.title', // Project post title
+        textHTML: '$posts.textHTML', // Project post textHTML
+        textJSON: '$posts.textJSON', // Project post textJSON
+        isDeleted: '$posts.isDeleted', // Project post isDeleted
+        attachments: '$posts.attachments', // Project post attachments
+        poll: '$posts.poll', // Project post poll
+        spoiler: '$posts.spoiler', // Project post spoiler
+        isLocked: '$posts.isLocked', // Project post isLocked
+        type: '$posts.type', // Project post type
+        nsfw: '$posts.nsfw', // Project post nsfw
+        isHidden: '$posts.isHidden', // Project post isHidden
+        insightCnt: '$posts.insightCnt', // Project post insightCnt
+        spamCount: '$posts.spamCount', // Project post spamCount
+        votesCount: '$posts.votesCount', // Project post votesCount
+        createdAt: '$posts.createdAt', // Project post createdAt
+        editedAt: '$posts.editedAt', // Project post editedAt
+        followers: '$posts.followers', // Project post followers
+        CommunityID: '$posts.CommunityID', // Project post CommunityID
+        commentsNum: '$posts.commentsNum', // Project post commentsNum
+      },
+    },
+  ]);
+  return randomPosts;
 }

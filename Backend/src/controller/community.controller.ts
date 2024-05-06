@@ -25,6 +25,12 @@ import {
   unmuteUserInCommunity,
   getBannedUserInCommunity,
   getMutedUserInCommunity,
+  editCommunityButtonWidgets,
+  editCommunityContentControls,
+  editCommunityImageWidgets,
+  editCommunityPostSettings,
+  editCommunityTextWidgets,
+  editCommunitydetails,
 } from '../service/community.service';
 import {
   getCommunitiesIdOfUserAsMemeber,
@@ -427,6 +433,50 @@ export async function getCommunityHandler(req: Request, res: Response) {
     }
     return res.status(200).json({
       community,
+    });
+  } catch (error) {
+    console.error('Error in getCommunityInfoHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getAllCommunityHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+
+    const communities = await CommunityModel.aggregate([
+      {
+        $project: {
+          name: 1,
+          categories: 1,
+          count: { $size: '$members' },
+          icon: 1,
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+    ]);
+
+    return res.status(200).json({
+      communities,
     });
   } catch (error) {
     console.error('Error in getCommunityInfoHandler:', error);
@@ -1222,6 +1272,360 @@ export async function editCommunityRulesHandler(req: Request, res: Response) {
     }
 
     const result = await editCommunityRules(commName, rules);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing rules' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to edit the text widget of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editTextWidgetsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const widgets = req.body.widgets;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change widgets' });
+    }
+
+    const result = await editCommunityTextWidgets(commName, widgets);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing widgets' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to edit the button widget of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editButtonWidgetsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const widgets = req.body.widgets;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change widgets' });
+    }
+
+    const result = await editCommunityButtonWidgets(commName, widgets);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing widgets' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to edit the post settings of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editPostSettingsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const settings = req.body;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change post settings' });
+    }
+
+    const result = await editCommunityPostSettings(commName, settings);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing post settings' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to edit the post settings of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editCommunityDetailsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const details = req.body;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change details' });
+    }
+
+    const result = await editCommunitydetails(commName, details);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing details' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to edit the content control of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editContentControlsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const controls = req.body;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change content controls' });
+    }
+
+    const result = await editCommunityContentControls(commName, controls);
+
+    if (result.status === true) {
+      return res.status(200).json({ status: 'succeeded' });
+    } else {
+      return res.status(404).json({ status: 'error', message: 'Error in changing content controls' });
+    }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+/**
+ * Handles the request to edit the image widget of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} The promise that resolves when the function is complete.
+ */
+export async function editImageWidgetsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const user = res.locals.user;
+    const widgets = req.body.widgets;
+    const commName = req.params.subreddit;
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    }
+
+    const community = await findCommunityByName(commName);
+
+    if (!community) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Community not found',
+      });
+    }
+
+    let isMod = false;
+
+    if (community.moderators) {
+      community.moderators.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.userID?.toString() === user._id?.toString()) isMod = true;
+      });
+    }
+    if (isMod === false) {
+      return res.status(404).json({ status: 'error', message: 'Members can not change widgets' });
+    }
+
+    const result = await editCommunityImageWidgets(commName, widgets);
 
     if (result.status === true) {
       return res.status(200).json({ status: 'succeeded' });
@@ -2482,6 +2886,228 @@ export async function getCommunityCategoriesHandler(req: Request, res: Response)
     });
   } catch (error) {
     console.error('Error in getCommunityCategoriesHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getImageWidgetsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const rules = community.ImageWidget;
+    return res.status(200).json({
+      rules,
+    });
+  } catch (error) {
+    console.error('Error in getImageWidgetsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getTextWidgetsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const rules = community.TextWidget;
+    return res.status(200).json({
+      rules,
+    });
+  } catch (error) {
+    console.error('Error in getTextWidgetsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getButtonWidgetsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const rules = community.ButtonWidget;
+    return res.status(200).json({
+      rules,
+    });
+  } catch (error) {
+    console.error('Error in getButtonWidgetsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getPostSettingsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const rules = community.PostSettings;
+    return res.status(200).json({
+      rules,
+    });
+  } catch (error) {
+    console.error('Error in getPostSettingsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getContentControlsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const rules = community.ContentControls;
+    return res.status(200).json({
+      rules,
+    });
+  } catch (error) {
+    console.error('Error in getContentControlsHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+export async function getCommunityDetailsHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  try {
+    const userID = res.locals.user._id;
+    const user = res.locals.user;
+    const subreddit = req.params.subreddit;
+    const community = await findCommunityByName(subreddit);
+
+    // Check if user is missing or invalid
+    if (!user) {
+      return res.status(401).json({
+        error: 'Access token is missing or invalid',
+      });
+    }
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
+    const details = community.Details;
+    return res.status(200).json({
+      details,
+    });
+  } catch (error) {
+    console.error('Error in getContentControlsHandler:', error);
     return res.status(500).json({
       status: 'error',
       message: 'Internal server error',

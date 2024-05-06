@@ -27,6 +27,10 @@ export function findPostById(id: string) {
   return PostModel.findById(id);
 }
 
+export async function getPostById(id: string) {
+  return PostModel.findById(id);
+}
+
 // export async function findPostsByCommunity(community: string): Promise<Post[]> {
 //   try {
 //     const communityObject = await findCommunityByName(community);

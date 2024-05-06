@@ -10,6 +10,7 @@ import {
   nsfwPost,
   lockPost,
   submitPost,
+  PostByIdInput,
 } from '../schema/listing.schema';
 import {
   createPost,
@@ -26,6 +27,7 @@ import {
   getRandomPostsFromRandom,
   userPosts,
   addVoteToPost,
+  getPostById,
 } from '../service/post.service';
 import {
   findCommentById,
@@ -48,14 +50,14 @@ import {
   findUsersThatFollowCommunity,
 } from '../service/user.service';
 import CommentModel, { Comment } from '../model/comments.model';
-import { findCommunityByName } from '../service/community.service';
+import { findCommunityByName, getCommunityByID } from '../service/community.service';
 import UserModel, { User } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import CommunityModel from '../model/community.model';
 import { date } from 'zod';
 import { post } from '@typegoose/typegoose';
 import { ObjectId } from 'mongoose';
-import { createNotification } from '../service/notification.service';
+//import { createNotification } from '../service/notification.service';
 
 /**
  * Delete handler function that handles deletion of comments and posts based on the given id.
@@ -348,14 +350,15 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
         message: 'Post author not found',
       });
     }
-    await createNotification(
-      postAuthor._id,
-      updatedUser.avatar ?? 'deafult.jpg',
-      'New Comment!',
-      'comment',
-      `${updatedUser.username} has commented on your post.`,
-      createdComment._id
-    );
+    // await createNotification(
+    //   postAuthor._id,
+    //   updatedUser.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+    //   'New Comment!',
+    //   'comment',
+    //   `${updatedUser.username} has commented on your post.`,
+    //   createdComment._id,
+    //   res.locals.fcmtoken
+    // );
     res.status(201).json(createdComment); // 201: Created
   } catch (error) {
     console.error('Error in addCommentHandler:', error);
@@ -1005,16 +1008,17 @@ export async function votePostHandler(req: Request, res: Response) {
       const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), 1);
       const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), 1);
       //create upvote notification
-      if (author) {
-        createNotification(
-          author._id,
-          author.avatar ?? 'default_avatar_url',
-          'New Upvote!',
-          'Upvote',
-          `${user.username} upvoted your post!`,
-          post._id
-        );
-      }
+      // if (author) {
+      //   createNotification(
+      //     author._id,
+      //     author.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+      //     'New Upvote!',
+      //     'Upvote',
+      //     `${user.username} upvoted your post!`,
+      //     post._id,
+      //     res.locals.fcmtoken
+      //   );
+      // }
       res.status(200).json({
         status: 'success',
         message: 'Post is upvoted successfully',
@@ -1132,7 +1136,7 @@ export async function submitPostHandler(req: Request, res: Response) {
     }
     const data = JSON.parse(req.body.request);
 
-    const { title, text, nsfw, spoiler, Communityname, poll } = data;
+    const { title, text, nsfw, spoiler, Communityname, poll, createdAt } = data;
 
     const community = await findCommunityByName(Communityname);
 
@@ -1144,6 +1148,7 @@ export async function submitPostHandler(req: Request, res: Response) {
       attachments,
       nsfw,
       spoiler,
+      createdAt,
       userID: user._id,
       username: user.username,
       poll: pollOptions,
@@ -1172,16 +1177,17 @@ export async function submitPostHandler(req: Request, res: Response) {
         { new: true, upsert: true }
       );
       const followers = await findUsersThatFollowCommunity(community._id.toString());
-      for (let i = 0; i < followers.length; i++) {
-        await createNotification(
-          followers[i]._id,
-          community.icon ?? 'default.jpg',
-          'New Post!',
-          'newPost',
-          `${community.name} has posted a new post!`,
-          createdPost._id
-        );
-      }
+      // for (let i = 0; i < followers.length; i++) {
+      //   await createNotification(
+      //     followers[i]._id,
+      //     community.icon ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+      //     'New Post!',
+      //     'newPost',
+      //     `${community.name} has posted a new post!`,
+      //     createdPost._id,
+      //     res.locals.fcmtoken
+      //   );
+      // }
       res.status(201).json(createdPost);
     } else {
       const createdPost = await createPost(postInfo);
@@ -1194,16 +1200,17 @@ export async function submitPostHandler(req: Request, res: Response) {
         { new: true, upsert: true }
       );
       const followers = await findUsersThatFollowUser(user._id);
-      for (let i = 0; i < followers.length; i++) {
-        await createNotification(
-          followers[i]._id,
-          user.avatar ?? 'default.jpg',
-          'New Post!',
-          'newPost',
-          `${user.username} has posted a new post!`,
-          createdPost._id
-        );
-      }
+      // for (let i = 0; i < followers.length; i++) {
+      //   await createNotification(
+      //     followers[i]._id,
+      //     user.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+      //     'New Post!',
+      //     'newPost',
+      //     `${user.username} has posted a new post!`,
+      //     createdPost._id,
+      //     res.locals.fcmtoken
+      //   );
+      // }
       res.status(201).json(createdPost);
     }
   } catch (error) {
@@ -1449,14 +1456,15 @@ export async function addReplyHandler(req: Request, res: Response) {
         message: 'Post author not found',
       });
     }
-    await createNotification(
-      commentAuthor?._id,
-      user.avatar ?? 'default.jpg',
-      'New comment reply!',
-      'reply',
-      `${user.username} replied to your comment.`,
-      updatedComment._id
-    );
+    // await createNotification(
+    //   commentAuthor?._id,
+    //   user.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+    //   'New comment reply!',
+    //   'reply',
+    //   `${user.username} replied to your comment.`,
+    //   updatedComment._id,
+    //   res.locals.fcmtoken
+    // );
     res.status(201).json(createdReply); // 201: Created
   } catch (error) {
     console.error('Error in addReplyHandler:', error);
@@ -1518,5 +1526,23 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
       status: 'error',
       message: 'Internal server error',
     });
+  }
+}
+
+export async function getPostByIdHandler(req: Request<PostByIdInput['params']>, res: Response) {
+  try {
+    const postId = req.params.id;
+    const post = await getPostById(postId);
+    if (!post) {
+      return res.status(400).json({ msg: 'Post not found' });
+    }
+    //get community from post
+    //2 cases if community public or private
+    // const communityId = post.CommunityID as unknown as string;
+    // const community = await getCommunityByID(communityId);
+    //get post by id
+    return res.status(200).json(post);
+  } catch (error) {
+    return res.status(500).json({ msg: 'Internal server error' });
   }
 }

@@ -14,6 +14,7 @@ import {
   reportUser,
   ChangePasswordInput,
   ChangeEmailInput,
+  HomePagePostsInput,
 } from '../schema/user.schema';
 import { NextFunction, Request, Response } from 'express';
 import {
@@ -28,18 +29,19 @@ import {
   userHistoryPosts,
 } from '../service/user.service';
 import { sendEmail, generateVerificationLinkToken, generatePasswordResetLinkToken } from '../utils/mailer';
-import { signJwt, verifyJwt } from '../utils/jwt';
+import { verifyJwt } from '../utils/jwt';
 import log from '../utils/logger';
 import { nanoid } from 'nanoid';
 import { UserModel, VotePost } from '../model/user.model';
 import { omit, shuffle } from 'lodash';
-import { get } from 'config';
 import PostModel from '../model/posts.model';
 import { userComments, userCommentss } from '../service/comment.service';
 import { findPostById, userPosts, userPostss } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
+import { findPostById, userPosts } from '../service/post.service';
 import appError from '../utils/appError';
-import { createNotification } from '../service/notification.service';
+//import { createNotification } from '../service/notification.service';
+import { getHomePostsNotAuth, getHomePostsAuth } from '../service/community.service';
 
 /**
  * Handles the creation of a user.
@@ -1167,14 +1169,15 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
       { $addToSet: { followers: follows._id } },
       { upsert: true, new: true }
     );
-    await createNotification(
-      followed._id,
-      follows.avatar ?? 'defaultIcon.jpg',
-      'New Follower!',
-      'newFollower',
-      `${follows.username} followed you!`,
-      follows._id
-    );
+    // await createNotification(
+    //   followed._id,
+    //   follows.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+    //   'New Follower!',
+    //   'newFollower',
+    //   `${follows.username} followed you!`,
+    //   follows._id,
+    //   res.locals.fcmtoken
+    // );
     return res.status(200).json({
       status: 'succeeded',
     });
@@ -1564,5 +1567,42 @@ export async function getHistoryPostHandler(req: Request, res: Response) {
     res.status(200).json({ posts });
   } catch (err) {
     return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
+export async function getUserHomePagePostsHandler(
+  req: Request<{}, {}, {}, HomePagePostsInput['query']>,
+  res: Response
+) {
+  try {
+    const user = res.locals.user;
+    //page and limit
+    // Convert strings to numbers
+    const pageString = req.query.page;
+    const limitString = req.query.limit;
+    const page = pageString ? parseInt(pageString, 10) : 1; // Convert page string to number, default to 1 if not provided
+    const limit = limitString ? parseInt(limitString, 10) : 10; // Convert limit string to number, default to 10 if not provided
+    if (!user) {
+      //user not authenticated
+      const homePagePosts = await getHomePostsNotAuth(page, limit);
+      return res.status(200).json({ homePagePosts });
+    }
+    //user authenticated
+    const userId = user._id;
+    const sort = req.query.sort;
+    const topBy = req.query.topBy;
+    if (!userId) {
+      throw new Error('Authenticated failed');
+    }
+    if (!sort) {
+      throw new Error('Sort parameter missing');
+    }
+    const homePageAuthPosts = await getHomePostsAuth(page, limit, userId, sort, topBy);
+    return res.status(200).json({ homePageAuthPosts });
+  } catch (err) {
+    if (err instanceof Error) {
+      return res.status(400).json({ msg: err.message });
+    }
+    return res.status(500).json({ msg: 'Internal server error in home page' });
   }
 }
