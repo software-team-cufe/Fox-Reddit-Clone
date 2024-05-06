@@ -1,7 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 export default function MainFooter (){
-
+  const { community } = useParams();  
   const [selectedId, setSelectedId] = useState(null);
   const lists = [
     { id: 1, list: "1" },
@@ -63,7 +64,7 @@ export default function MainFooter (){
         <div className='w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg hidden md:block'>
            <div className=" flex flex-col content-between ">
               <div className=" flex flex-col">
-                <p className=" font-semibold text-sm"> community name</p>
+                <p className=" font-semibold text-sm"> {community}</p>
                 <p className=" text-xs text-gray-500 font-light">community description</p>
               </div>
              

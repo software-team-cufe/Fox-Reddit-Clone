@@ -1,4 +1,25 @@
 {
+  "banned": [
+    {
+      "userName": "asdasdasdasd",
+      "reason": "other",
+      "note": "234234345",
+      "period": 234,
+      "id": "1",
+      "communityName": "test2",
+      "banMsg": "22222222222222",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    }
+  ],
+  "muted": [
+    {
+      "id": "0168",
+      "communityName": "test2",
+      "userName": "efteeeeeeeeeeee",
+      "reason": "eee",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    }
+  ],
   "users": [
     {
       "name": "test",

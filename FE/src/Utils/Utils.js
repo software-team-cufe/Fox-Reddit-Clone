@@ -21,8 +21,8 @@ export const extractAxiosError = (ex) => {
         const err = ex.errors[0];
         return `Expected ${err.expected} in ${err.path.join('.')} but received ${err.received}`
     }
-    if (ex.response?.data != null && ex.response?.data?.length != 0) {
-        return ex.response?.data[0].message;
+    if (ex.response?.data != null && ex.response?.data?.length != 0 && ex.response?.data[0]?.message != null) {
+        return ex.response?.data[0]?.message;
     }
     return ex?.message;
 }

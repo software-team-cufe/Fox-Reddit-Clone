@@ -17,16 +17,19 @@ import RulesRemovalPage from './CommunityPage/rulesRemoval/rulesRemovalpage';
 import ModNavbar from '../../GeneralComponents/ModNavbar/ModNavbar';
 import UserManagemntRoutes from './moderation/about/UserManagement/pages/UserManagemntRoutes';
 import ModSettingsPage from './moderation/about/Settings/ModSettingsPage';
+import EditPage from './moderation/about/EditPage/EditPage';
 function CommunityLayout() {
     return <div className='flex gap-3 w-full h-full'>
-            
+
         <Routes>
             <Route path='/' element={<CommunityProvider><CommunityPage /></CommunityProvider>} />
             <Route path='/about/*' element={<div className='flex gap-3 w-full h-full'>
-                
+
+
                 <ModNavbar />
                 <Routes>
                     <Route path='/' element={<RulesRemovalPage></RulesRemovalPage>} />
+                    <Route path='/edit' element={<EditPage />} />
                     <Route path='/user-management/*' element={<UserManagemntRoutes />} />
                     <Route path='/settings' element={<ModSettingsPage />} />
                 </Routes>
@@ -50,7 +53,6 @@ export default [
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
-    <Route key={'/'} path='/r/:community/about/*' element={<RulesRemovalPage></RulesRemovalPage>} />,
     <Route key={'/community'} path='/community' element={<TopCommunities />} />,
-  
+
 ]
