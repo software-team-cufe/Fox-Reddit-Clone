@@ -69,32 +69,11 @@ function Messages({ DiffTime, setUnreadAtIndex, }) {
         // const chats = await Promise.all(promises)
 
         try {
-            const res = await userAxios.get('message/allmessages/');
+            const res = await userAxios.get('api/message/allMessagesFRONT');
             const filteredMessages = res.data.messages.filter(message => !message.isDeleted);
-            const messagesBySubject = []; // Initialize an array to store messages by subject
-            for (const message of filteredMessages) {
-                let existingSubjectIndex = -1;
-                for (let i = 0; i < messagesBySubject.length; i++) {
-                    if (messagesBySubject[i].subject === message.subject) {
-                        existingSubjectIndex = i;
-                        break;
-                    }
-                }
-                if (existingSubjectIndex === -1) {
-                    const res = await userAxios.get(`message/chatMessages/?senderUsername=${message.fromID.username}&subject=${message.subject}`);
-                    // If subject is not found, add a new entry
-                    messagesBySubject.push({ subject: message.subject, messages: [res.data] });
-                } else {
-                    // If subject is found, push the message to existing array of messages
-                    // messagesBySubject[existingSubjectIndex].messages.push(message);
-                    //do not do any thing it is just repeated
-                }
-                // Check if there's already an entry for this subject
-            };
-
-            // Now, messagesBySubject will contain an array of objects, each with a subject and messages array
-            console.log(messagesBySubject);
-            setAllMess(messagesBySubject);
+            console.log(res.data)
+            setAllMess(filteredMessages);
+            console.log(filteredMessages)
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -181,127 +160,195 @@ function Messages({ DiffTime, setUnreadAtIndex, }) {
         <div className=' w-full  sm:mx-40 lg:mx-60 sm:mt-2'>
             {AllMess.length === 0 && <div className='bg-white p-4 rounded sm:w-2/3 w-full '
             >there doesn't seem to be anything here</div>}
-            {AllMess.map((messA, j) => (
-                <div key={j}>
-                    {messA.messages.map((mess, i) => (
-                        <div key={i} className={`p-4 rounded sm:w-2/3 w-full  mb-1
+            {AllMess.map((mess, i) => {
+                return (
+                    <div key={i} className={`p-4 rounded sm:w-2/3 w-full  mb-1
                     ${mess.unread ? "bg-gray-300" : ""}
                     ${i % 2 === 0 && !mess.unread ? "bg-white" : "bg-[#fff6f1]"}
                     `}>
-                            <div className='flex'>
-                                <p className='text-lg font-bold ml-4' onClick={() => {
-                                    //navigate to post
-                                }}>{mess.subject}:</p>
-                            </div>
-                            <div className='flex mr-2 ml-14 mb-2'>
+                        <div className='flex'>
+                            <p className='text-lg font-bold ml-4' onClick={() => {
+                                //navigate to post
+                            }}>{mess.subject}:</p>
+                        </div>
+                        <div className='flex mr-2 sm:ml-14 ml-6 mb-2'>
 
-                                <div className='mr-2 w-full '>
-                                    <div className='flex mb-2'>
-                                        {!ShowExpand[i] && <CirclePlus onClick={() => { toggleShowExpand(i); }}
-                                            size={16} className='my-1 mr-1
+                            <div className='mr-2 w-full '>
+                                <div className='flex mb-2'>
+                                    {!ShowExpand[i] && <CirclePlus onClick={() => { toggleShowExpand(i); }}
+                                        size={16} className='my-1 mr-1
                                     text-[#935226ef] hover:text-[#edc6b2] hover:cursor-pointer' />}
-                                        {ShowExpand[i] && <CircleMinus onClick={() => { toggleShowExpand(i); }}
-                                            size={16} className='my-1  mr-1
+                                    {ShowExpand[i] && <CircleMinus onClick={() => { toggleShowExpand(i); }}
+                                        size={16} className='my-1  mr-1
                                     text-[#935226ef] hover:text-[#edc6b2] hover:cursor-pointer' />}
-                                        {mess.fromID && mess.fromID._id === currentId && <>
-                                            <p className='text-xs mt-1 mr-2 text-gray-500'>
-                                                to</p>
-                                            <p className='text-sm mr-2  text-blue-600
-                                        hover:cursor-pointer hover:underline'>
-                                                {mess.toID.username}</p></>}
-                                        {mess.fromID && !(mess.fromID._id === currentId) && <>
-                                            <p className='text-xs mt-1 mr-2 text-gray-500'>
-                                                from</p>
-                                            <p className='text-sm mr-2  text-blue-600
-                                        hover:cursor-pointer hover:underline'>
-                                                {mess.fromID.username}</p></>}
+                                    {mess.fromID._id === currentId && <>
                                         <p className='text-xs mt-1 mr-2 text-gray-500'>
-                                            {DiffTime(mess.createdAt)}</p>
-                                    </div>
-                                    {ShowExpand[i] && <div id="hidden in collapse">
-                                        <div className='mb-2  text-sm'
-                                            dangerouslySetInnerHTML={{ __html: mess.text }}></div>
-                                        {mess.fromID && !(mess.fromID._id === currentId) && <>
-                                            <div className='flex flex-wrap text-gray-500'>
-                                                {!SureToRemove && <p onClick={() => {
-                                                    setSureToRemove(true);
-                                                }}
-                                                    className='text-xs m-1 hover:cursor-pointer
+                                            to</p>
+                                        <p className='text-sm mr-2  text-blue-600
+                                        hover:cursor-pointer hover:underline'>
+                                            {mess.toID.username}</p></>}
+                                    {!(mess.fromID._id === currentId) && <>
+                                        <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                            from</p>
+                                        <p className='text-sm mr-2  text-blue-600
+                                        hover:cursor-pointer hover:underline'>
+                                            {mess.fromID.username}</p></>}
+                                    <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                        {DiffTime(mess.createdAt)}</p>
+                                </div>
+                                {ShowExpand[i] && <div id="hidden in collapse">
+                                    <div className='mb-2  text-sm'
+                                        dangerouslySetInnerHTML={{ __html: mess.text }}></div>
+                                    {!(mess.fromID._id === currentId) && <>
+                                        <div className='flex flex-wrap text-gray-500'>
+                                            {!SureToRemove && <p onClick={() => {
+                                                setSureToRemove(true);
+                                            }}
+                                                className='text-xs m-1 hover:cursor-pointer
                                      hover:underline'>Remove</p>}
-                                                {SureToRemove && <div className='flex'>
-                                                    <p className='text-xs
+                                            {SureToRemove && <div className='flex'>
+                                                <p className='text-xs
                                      text-red-600 m-1 '>are you sure?</p>
-                                                    <p onClick={() => {
-                                                        handleRemove(mess.id);
-                                                    }}
-                                                        className=' m-1 text-xs hover:cursor-pointer
-                                     hover:underline'>Yes</p>
-                                                    <p className='text-xs text-red-600 m-1 '>/</p>
-                                                    <p onClick={() => {
-                                                        setSureToRemove(false);
-                                                    }}
-                                                        className=' m-1 text-xs hover:cursor-pointer
-                                     hover:underline'>No</p>   </div>}
-                                                <p onClick={() => { setReportPop(true); setUserToReport(mess.username); }}
-                                                    className='mx-2 m-1 text-xs hover:cursor-pointer
-                                     hover:underline'>Report</p>
-                                                {!SureToBlock && <p onClick={() => {
-                                                    setSureToBlock(true);
+                                                <p onClick={() => {
+                                                    handleRemove(mess.id);
                                                 }}
-                                                    className='text-xs m-1 hover:cursor-pointer 
-                                    hover:underline'>Block user</p>}
-                                                {SureToBlock && <div className='flex'> <p
-                                                    className='text-xs text-red-600 m-1 '>
-                                                    are you sure?</p>
-                                                    <p onClick={() => {
-                                                        handleBlock(mess.username);
-                                                    }}
-                                                        className=' m-1 text-xs hover:cursor-pointer
+                                                    className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>Yes</p>
-                                                    <p className='text-xs text-red-600 m-1 '>/</p>
-                                                    <p onClick={() => {
-                                                        setSureToBlock(false);
-                                                    }}
-                                                        className=' m-1 text-xs hover:cursor-pointer
+                                                <p className='text-xs text-red-600 m-1 '>/</p>
+                                                <p onClick={() => {
+                                                    setSureToRemove(false);
+                                                }}
+                                                    className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}
-                                                <p onClick={() => { setUnreadAtIndex(i, true); }}
-                                                    className={`mx-2 text-xs m-1  hover:cursor-pointer
+                                            <p onClick={() => { setReportPop(true); setUserToReport(mess.username); }}
+                                                className='mx-2 m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>Report</p>
+                                            {!SureToBlock && <p onClick={() => {
+                                                setSureToBlock(true);
+                                            }}
+                                                className='text-xs m-1 hover:cursor-pointer 
+                                    hover:underline'>Block user</p>}
+                                            {SureToBlock && <div className='flex'> <p
+                                                className='text-xs text-red-600 m-1 '>
+                                                are you sure?</p>
+                                                <p onClick={() => {
+                                                    handleBlock(mess.username);
+                                                }}
+                                                    className=' m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>Yes</p>
+                                                <p className='text-xs text-red-600 m-1 '>/</p>
+                                                <p onClick={() => {
+                                                    setSureToBlock(false);
+                                                }}
+                                                    className=' m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>No</p>   </div>}
+                                            <p onClick={() => { setUnreadAtIndex(i, true); }}
+                                                className={`mx-2 text-xs m-1  hover:cursor-pointer
                                      hover:underline ${mess.unread ? "hidden" : "block"}`}>Mark Unread</p>
-                                                <p onClick={() => { setShowRepIn(true); toggleShowRepIn(i); }}
-                                                    className={`mx-2 text-xs m-1  hover:cursor-pointer
+                                            <p onClick={() => { setShowRepIn(true); toggleShowRepIn(i); }}
+                                                className={`mx-2 text-xs m-1  hover:cursor-pointer
                                      hover:underline ${mess.unread ? "hidden" : "block"}`}>Reply</p>
-                                            </div>
-                                            {ShowRepIn[i] && <div className=' my-1 h-max mt-4'>
-                                                <ReactQuill
-                                                    value={ReplyValue}
-                                                    onChange={(value) => { setReplyValue(value) }}
-                                                    modules={{
-                                                        toolbar: {
-                                                            container: ToolBar
-                                                        },
-                                                    }}
-                                                />
-                                                <div className=' relative w-full m-10 mt-12 '>
-                                                    <button onClick={() => { SendReply(); toggleShowRepIn(i); }}
-                                                        className='  p-2 bg-[#935226ef] text-white
+                                        </div>
+
+                                        <hr className='mt-4' />
+                                        {mess.Replies.map((rep, j) => {
+                                            return (
+                                                <div key={j} className={`p-4 rounded
+                    ${mess.unread ? "bg-gray-300" : ""}
+                    ${i % 2 === 0 && !mess.unread ? "bg-white" : "bg-[#fff6f1]"}
+                    `}>
+                                                    <div className='flex'>
+                                                    </div>
+                                                    <div className='flex mr-2 sm:ml-6 ml-2 '>
+                                                        <div className='mr-2 w-full '>
+                                                            <div className='flex mb-2'>
+                                                                {rep.fromID._id === currentId && <>
+                                                                    <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                                                        to</p>
+                                                                    <p className='text-sm mr-2  text-blue-600
+                                        hover:cursor-pointer hover:underline'>
+                                                                        {rep.toID.username}</p></>}
+                                                                {!(rep.fromID._id === currentId) && <>
+                                                                    <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                                                        from</p>
+                                                                    <p className='text-sm mr-2  text-blue-600
+                                        hover:cursor-pointer hover:underline'>
+                                                                        {rep.fromID.username}</p></>}
+                                                                <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                                                    {DiffTime(rep.createdAt)}</p>
+                                                            </div>
+                                                            <div id="hidden in collapse">
+                                                                <div className='mb-2  text-sm'
+                                                                    dangerouslySetInnerHTML={{ __html: rep.text }}></div>
+                                                                {!(rep.fromID._id === currentId) && <>
+                                                                    <div className='flex flex-wrap text-gray-500'>
+                                                                        <p onClick={() => { setReportPop(true); setUserToReport(rep.username); }}
+                                                                            className='mx-2 m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>Report</p>
+                                                                        {!SureToBlock && <p onClick={() => {
+                                                                            setSureToBlock(true);
+                                                                        }}
+                                                                            className='text-xs m-1 hover:cursor-pointer 
+                                    hover:underline'>Block user</p>}
+                                                                        {SureToBlock && <div className='flex'> <p
+                                                                            className='text-xs text-red-600 m-1 '>
+                                                                            are you sure?</p>
+                                                                            <p onClick={() => {
+                                                                                handleBlock(rep.username);
+                                                                            }}
+                                                                                className=' m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>Yes</p>
+                                                                            <p className='text-xs text-red-600 m-1 '>/</p>
+                                                                            <p onClick={() => {
+                                                                                setSureToBlock(false);
+                                                                            }}
+                                                                                className=' m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>No</p>   </div>}
+                                                                        <p onClick={() => { setShowRepIn(true); toggleShowRepIn(i); }}
+                                                                            className={`mx-2 text-xs m-1  hover:cursor-pointer
+                                     hover:underline ${mess.unread ? "hidden" : "block"}`}>Reply</p>
+                                                                    </div>
+
+                                                                </>}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <hr className='mt-4' />
+                                                </div>
+                                            )
+                                        })}
+
+                                        {ShowRepIn[i] && <div className=' my-1 h-max mt-4'>
+                                            <ReactQuill
+                                                value={ReplyValue}
+                                                onChange={(value) => { setReplyValue(value) }}
+                                                modules={{
+                                                    toolbar: {
+                                                        container: ToolBar
+                                                    },
+                                                }}
+                                            />
+                                            <div className=' relative w-full m-10 mt-12 '>
+                                                <button onClick={() => { SendReply(); toggleShowRepIn(i); }}
+                                                    className='  p-2 bg-[#935226ef] text-white
                                     hover:bg-[#edc6b2] hover:text-slate-900 disabled:bg-gray-300
                                      disabled:text-white absolute rounded-full 
                                          right-10 bottom-0 '>Send</button>
-                                                    <button onClick={() => { toggleShowRepIn(i); setReplyValue(''); }}
-                                                        className='p-2 bg-[#935226ef] text-white
+                                                <button onClick={() => { toggleShowRepIn(i); setReplyValue(''); }}
+                                                    className='p-2 bg-[#935226ef] text-white
                                     hover:bg-[#edc6b2] hover:text-slate-900 disabled:bg-gray-300
                                      disabled:text-white absolute rounded-full
                                          right-28 bottom-0  '>Cancel</button>
-                                                </div>
-                                            </div>}
-                                        </>}
-                                    </div>}
-                                </div>
+                                            </div>
+                                        </div>}
+                                    </>}
+                                </div>}
                             </div>
-
                         </div>
-                    ))}</div>
-            ))}
+
+                    </div>
+                )
+            })}
             {ReportPop && (
                 <div className="fixed inset-0 flex items-center 
                             justify-center bg-gray-800 bg-opacity-50">

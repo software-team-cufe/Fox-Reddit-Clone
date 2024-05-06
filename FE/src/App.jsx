@@ -28,7 +28,7 @@ function MainRoute() {
     return storedCommunities ? JSON.parse(storedCommunities) : [];
   });
 
-
+  const [WordViewedInSearch, setWordViewedInSearch] = useState(null);
   const path = window.location.pathname;
   const disp = useDispatch();
   const nav = useNavigate();
@@ -106,15 +106,16 @@ function MainRoute() {
     nav(0);
     return;
   }
-  
+
   const store = userStore.getState().user.user;
   return (
     <div className='w-full h-[calc(100%)]'>
-      <NavBar SetOpenSiseBar={handleOpenSideBar} IsLogged={store != null} ProfileImageSrc={store != null ? store.avatar : "logo.png"}
+      <NavBar SetOpenSiseBar={handleOpenSideBar} ViewdInSearch={WordViewedInSearch} setViewdInSearch={setWordViewedInSearch}
+        IsLogged={store != null} ProfileImageSrc={store != null ? store.avatar : "logo.png"}
         UserName={store != null ? store.username : "fidjfi"} IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
         {
-          !isUrlMatching(window.location.pathname,[
+          !isUrlMatching(window.location.pathname, [
             "/login",
             "/register",
             "/forget-username",
