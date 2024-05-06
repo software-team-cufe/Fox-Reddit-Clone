@@ -99,30 +99,30 @@ describe("rule form functions correctly", () => {
     });
 
     test('rule form functions correctly (add rule) allow', async () => {
+        const { userAxios } = require('@/Utils/UserAxios');
+    
         render(
             <MemoryRouter>
                 <RuleForm onclose={closeMock} rule={rules[0]} list={rules} setList={setlistMock} editing={false} index={0} />
             </MemoryRouter>
         );
-
+    
         const titleInput = await screen.findByRole('ruleTitleInput');
         fireEvent.change(titleInput, { target: { value: 'mock-title' } });
-
+    
         const radioInput = await screen.findByRole('ruleCommentRadio');
         fireEvent.click(radioInput);
-
+    
         const descriptionInput = await screen.findByRole('ruleDescriptionInput');
         fireEvent.change(descriptionInput, { target: { value: 'mock-description' } });
-
+    
         const reasonInput= await screen.findByRole('ruleReasonInput');
         fireEvent.change(reasonInput, { target: { value: 'mock-description' } });
-
+    
         const submit = await screen.findByRole('ruleSubmitButton');
         expect(submit).not.toBeDisabled();
         fireEvent.click(submit);
-
-        await waitFor(() => {
-            expect(closeMock).toHaveBeenCalled();
-        });
+    
+        expect(userAxios.patch).toHaveBeenCalled();
     });
 });

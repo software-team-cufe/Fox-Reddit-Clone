@@ -1,14 +1,12 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { useState } from "react";
 import { userAxios } from "@/Utils/UserAxios";
-import { useQuery } from "react-query";
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { toast } from "react-toastify";
 
 export default function ProfileOverview({ using, context }) {
 
-    // states for collecting posts from request and loading state
     const { selected, period } = useContext(context);
     const [loading, setload] = useState(false);
     const [items, setItems] = useState([]);
@@ -20,31 +18,31 @@ export default function ProfileOverview({ using, context }) {
     const [currentpage, setcurrentpage] = useState(1);
     const limitpage = 4;
 
-    //fetch posts on load and put into posts array
-    const fetchInitialData = () => {
+    useEffect(() => {
         setload(true);
-        userAxios.get(`user/${using}/overview?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`user/${using}/overview?page=1&count=${limitpage}&limit=${limitpage}&t=${period}$sort=${selected}`)
             .then(response => {
                 if (response.data.posts.length < limitpage && response.data.comments.length < limitpage) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
-                        image: post.communityImage,
-                        title: post.communityName,
+                        image: post.userID.avatar,
+                        title: post.username,
                     },
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
+                    subTitle: post.textHTML,
                     votes: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
-
                     spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
+                console.log(newPosts);
                 setPosts(newPosts);
                 const newComments = response.data.comments.map(comment => ({
                     user: {
@@ -62,8 +60,7 @@ export default function ProfileOverview({ using, context }) {
                     type: "comment"
                 }));
                 setComments(newComments);
-                const newItems = [...newPosts, ...newComments].sort((a, b) => b.votes - a.votes);
-                setItems(prevItems => [...prevItems, ...newItems]);
+                setItems([...newPosts, ...newComments]);
                 setcurrentpage(2);
                 setload(false);
             })
@@ -72,13 +69,11 @@ export default function ProfileOverview({ using, context }) {
                 toast.error("there was an issue with loading your posts please try again")
                 setload(false);
             });
-    };
-
-    const { error: postsError } = useQuery(['fetchInitialProfileOverview', selected, period], fetchInitialData, { retry: 0, refetchOnWindowFocus: false });
+    },[selected, period]);
 
     const fetchMoreData = () => {
         setCallingPosts(true);
-        userAxios.get(`/user/${using}/overview?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`/user/${using}/overview?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}&sort=${selected}`)
             .then(response => {
                 console.log(response.data);
 
@@ -87,17 +82,20 @@ export default function ProfileOverview({ using, context }) {
                 }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
+                        image: post.userID.avatar,
+                        title: post.username,
                     },
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
+                    subTitle: post.textHTML,
                     votes: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
-                    video: null
+                    video: null,
+                    type: "post",
+                    spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 const newComments = response.data.comments.map(comment => ({
@@ -115,7 +113,7 @@ export default function ProfileOverview({ using, context }) {
                     }
                 }));
                 setComments(prevComments => [...prevComments, ...newComments]);
-                const newItems = [...newPosts, ...newComments].sort((a, b) => b.votes - a.votes);
+                const newItems = [...newPosts, ...newComments];
                 setItems(prevItems => [...prevItems, ...newItems]);
                 setcurrentpage(currentpage + 1);
                 setCallingPosts(false);

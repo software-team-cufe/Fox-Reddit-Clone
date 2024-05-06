@@ -34,19 +34,22 @@ export default function ProfileDownvoted({ using }) {
                 if(response.data.downvotedPosts.length < limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.downvotedPosts.map(post => ({
+                const newPosts = response.data.posts.map(post => ({
                     subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
+                        image: post.userID.avatar,
+                        title: post.username,
                     },
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
+                    subTitle: post.textHTML,
                     votes: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
-                    video: null
+                    video: null,
+                    type: "post",
+                    spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
                 setcurrentpage(2);
                 setPosts(newPosts);
@@ -68,21 +71,23 @@ export default function ProfileDownvoted({ using }) {
                 if(response.data.downvotedPosts.length <limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.downvotedPosts.map(post => ({
+                const newPosts = response.data.posts.map(post => ({
                     subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
+                        image: post.userID.avatar,
+                        title: post.username,
                     },
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
+                    subTitle: post.textHTML,
                     votes: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
-                    video: null
+                    video: null,
+                    type: "post",
+                    spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
-
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
                 setcurrentpage(1+currentpage);

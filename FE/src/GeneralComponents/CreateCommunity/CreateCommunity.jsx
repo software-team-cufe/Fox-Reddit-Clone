@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import React from 'react';
 import { Switch } from '@headlessui/react'
 import {userAxios} from '@/Utils/UserAxios';
-
+import Spinner from '@/GeneralElements/Spinner/Spinner';
 /**
  * Component for creating a community.
  * @param {Object} props - The component props.
@@ -17,13 +17,14 @@ export default function CreateCommunity({ onClose = () => { }, setCommList = () 
     const invalidText = <div className={` text-red-600 text-xs mt-1 ml-5`}>Please fill out this field.</div>;
 
     const handleClose = () => {
-        onClose();
+        onClose(true);
     };
 
     const [inputValue, setInputValue] = useState('');  //input of the name field
     const [isValid, setIsValid] = useState(false);  //for valid or invalid name input
     const [commType, setCommType] = useState('');   //to select community type
     const [NSFW, setEnabled] = useState(false)      //to enable or disable NSFW
+    const [submittingReq, setSubmittingReq] = useState(false);
 
     const handleChange = (event) => {    //to handle and validate the input of the name field
         const value = event.target.value;
@@ -40,31 +41,32 @@ export default function CreateCommunity({ onClose = () => { }, setCommList = () 
         setCommType(event.target.value);
     };
 
-    const submitRequest = () => {   //to submit the request of creating a community
-        if (commType == '') {
-            toast.error('Please select a community type');
+    const submitRequest = async () => {   //to submit the request of creating a community
+        setSubmittingReq(true);
+        try {
+            if (commType == '') {
+                toast.error('Please select a community type');
+            } else {
+                const response = await userAxios.post('/create_subreddit', {
+                    name: inputValue,
+                    type: commType.replace('comm-',''),
+                    over18: NSFW
+                });
+                console.log(response.data);
+                setCommList([...commList, { icon: response.data.community.icon, name: response.data.community.name}]);
+                toast.success('Community created successfully');
+                handleClose();
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                toast.error('A community with this name already exists');
+            } else {
+                console.error('Error:', error);
+            }
+        } finally {
+            setSubmittingReq(false);
         }
-        else {
-            userAxios.post('/create_subreddit', {
-                name: inputValue,
-                type: commType.replace('comm-',''),
-                over18: NSFW
-            })
-            .then((response) => {
-                    console.log(response.data);
-                    setCommList([...commList, { icon: response.data.community.icon, name: response.data.community.name}]);
-                    toast.success('Community created successfully');
-                    handleClose();
-            })
-            .catch((error) => {
-                if (error.response && error.response.status === 400) {
-                    toast.error('A community with this name already exists');
-                } else {
-                    console.error('Error:', error);
-                }
-            });
-        }
-    }
+    };
 
     return (
         <>
@@ -164,7 +166,7 @@ export default function CreateCommunity({ onClose = () => { }, setCommList = () 
                                         
                                         {/* Cancel and submit buttons */}
                                         <button id="cancelCreateComm" role="cancelButton" onClick={handleClose} className="bg-gray-100 py-2 h-12 px-4 rounded-full text-sm font-semibold text-gray-500 hover:bg-gray-200 active:bg-gray-300">Cancel</button>
-                                        <button id="submitCreateComm" role="submitButton" onClick={submitRequest} disabled={!isValid} className="bg-slate-300 h-12 py-2 px-4 rounded-full text-sm font-semibold text-white ml-4 hover:bg-slate-400 enabled:hover:bg-blue-900 enabled:bg-blue-800">Create r/{inputValue}</button>
+                                        <button id="submitCreateComm" role="submitButton" onClick={submitRequest} disabled={!isValid} className="bg-slate-300 h-12 py-2 px-4 rounded-full text-sm font-semibold text-white ml-4 hover:bg-slate-400 enabled:hover:bg-blue-900 enabled:bg-blue-800">{submittingReq ? <Spinner></Spinner> : `Create r/${inputValue}`}</button>
                                     </div>
                                 </div>
                             </div>

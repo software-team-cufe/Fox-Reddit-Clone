@@ -127,7 +127,6 @@ export default function CommunityPage() {
 
       await userAxios.get(`/${community}`)
         .then((response) => {
-          console.log(response.data.community);
           const newcomm = {
             id: response.data.community._id,
             name: response.data.community.name,
@@ -165,19 +164,23 @@ export default function CommunityPage() {
     }
     userAxios.get(link)
       .then((response) => {
+        console.log(response.data);
         const newPosts = response.data.map(post => ({
           subReddit: {
-            image: commObj.icon,
-            title: post.communityName,
+            image: post.userID.avatar,
+            title: post.username,
           },
           images: post.attachments,
           id: post._id,
           title: post.title,
           subTitle: post.textHTML,
           votes: post.votesCount,
-          comments: post.postComments.length,
-          thumbnail: post.attachments[0],
-          video: null
+          comments: post.commentsCount,
+          thumbnail: post.thumbnail,
+          video: null,
+          type: "post",
+          spoiler: post.spoiler,
+          NSFW: post.nsfw
         }));
         setcurrentpage(2);
         setPosts(newPosts);
@@ -275,18 +278,18 @@ export default function CommunityPage() {
   }
   //main body of the page
   return (
-    <div role="communitypage" className={`flex-initial -mt-4 md:w-3/4 w-full md:mx-auto relative`}>
+    <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
       {showModal && <LoginFirtstModal onClose={setShowModal} />}
       {showEditModal && <EditModal onClose={setShowEditModal} optionheader={editComponent} />}
       {showKickOut && <KickOutModal></KickOutModal>}
       <BackToTop />
       {/* background image of the community */}
-      <img src={commObj.backimage} alt='community' className={`w-full md:mx-auto h-20 md:h-36 md:rounded-lg object-cover`} />
+      <img src={commObj.backimage} alt='community' className={`w-full md:mx-auto h-20 md:h-36 object-cover`} />
       {commObj.modded && <button className={`absolute md:right-6 right-3 hover:bg-gray-700 p-2 rounded-full text-white top-12 md:top-[100px]`} onClick={() => handleEditComponents("Banner")}>
-        <Pen className={`md:w-5 md:h-5 w-3 h-3`} /> 
+        <Pen className={`md:w-5 md:h-5 w-3 h-3`} />
       </button>}
       {/* community name and (members count in mobile mode)*/}
-      <div className='w-full relative flex justify-between items-center m-3'>
+      <div className='w-full relative flex justify-between items-center md:m-3'>
         <div>
           <img src={commObj.icon} alt='community' className={`${commObj.modded ? 'hover:brightness-50' : ''} absolute md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`} onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={commObj.modded ? () => handleEditComponents("Avatar") : undefined} />
           {editIcon && commObj.modded ? <Pen className={`absolute md:-top-5 md:left-10 text-white left-8 top-5 md:w-4 md:h-4 w-2 h-2`} /> : <></>}
@@ -336,7 +339,7 @@ export default function CommunityPage() {
       <div className='gap-3 flex'>
 
         {/* the feed and the sort elements (buttons for feed and about page traversal in mobile mode)*/}
-        <div className='min-w-[70%] w-screen md:w-[75%] flex-initial gap-3 ml-3'>
+        <div className='min-w-[70%] w-screen md:w-[75%] flex-initial gap-3'>
           <br />
           <div className='flex justify-between md:justify-end'>
 
@@ -382,13 +385,13 @@ export default function CommunityPage() {
           )}
         </div>
         {
-          commObj.modded? <ModCard></ModCard>:
-          <MainFooter comm={commObj} />
-          
+          commObj.modded ? <ModCard></ModCard> :
+            <MainFooter comm={commObj} />
+
         }
         {/* community description and rules and other tools on the right*/}
-       
-        
+
+
       </div>
     </div>
   )

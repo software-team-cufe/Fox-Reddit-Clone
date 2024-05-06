@@ -3,10 +3,12 @@ import { X } from "lucide-react";
 import { userAxios } from "@/Utils/UserAxios";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import Spinner from '@/GeneralElements/Spinner/Spinner';
 
 export default function RemovalForm({ onClose, editing, removal, index, list, setlist }) {
     const [Removal, setRemoval] = useState(editing ? removal.title : "");
     const [Message, setMessage] = useState(editing ? removal.description : "");
+    const [submittingReq, setSubmittingReq] = useState(false);
     const {community} = useParams();
 
     const submitDelete = () => {
@@ -24,32 +26,39 @@ export default function RemovalForm({ onClose, editing, removal, index, list, se
                 toast.error("Error deleting removal reason")});
     };
 
-    const submitRemoval = () => {
+    const submitRemoval = async () => {
+        setSubmittingReq(true);
         const newRule = {
-          title: Removal,
-          description: Message,
+            title: Removal,
+            description: Message,
         };
-      
+    
         let updatedList;
         if (editing) {
-          updatedList = list.map((rule, i) => (i === index ? newRule : rule));
+            updatedList = list.map((rule, i) => (i === index ? newRule : rule));
         } else {
-          updatedList = [...list, newRule];
+            updatedList = [...list, newRule];
         }
-      
+    
         const pack = { reasons: updatedList };
-        userAxios.patch(`${community}/api/edit_removal_reasons`, pack)
-          .then(() =>{
-          if(editing) toast.success("Removal reason edited");
-          else toast.success("Removal reason added");
-          setlist(updatedList);
-          console.log(updatedList);
-          onClose(false);
-          })
-          .catch(error => {
-            console.log(error);
-            toast.error("Error adding Removal reason")});
-      };
+    
+        try {
+            await userAxios.patch(`${community}/api/edit_removal_reasons`, pack)
+                .then(() => {
+                    if(editing) toast.success("Removal reason edited");
+                    else toast.success("Removal reason added");
+                    setlist(updatedList);
+                    console.log(updatedList);
+                    onClose(false);
+                })
+                .catch(error => {
+                    console.log(error);
+                    toast.error("Error adding Removal reason");
+                });
+        } finally {
+            setSubmittingReq(false);
+        }
+    };
 
     return (
         <>
@@ -80,7 +89,7 @@ export default function RemovalForm({ onClose, editing, removal, index, list, se
                                         {editing ? <button className="ml-2 text-red-500 font-semibold hover:text-red-600" onClick={() => submitDelete()}>Delete</button> : <div></div>}
                                         <div className={`flex gap-3`}>
                                             <button className="p-2 px-4 font-bold text-sm border border-opacity-75 border-gray-600 rounded-full hover:border-black" onClick={() => onClose(false)}>Cancel</button>
-                                            <button className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Removal.length == 0 || Message.length == 0} onClick={() => submitRemoval()}>Save</button>
+                                            <button className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Removal.length == 0 || Message.length == 0} onClick={() => submitRemoval()}>{submittingReq ? <Spinner></Spinner> : "Save"}</button>
                                         </div>
                                     </div>
                                 </div>
