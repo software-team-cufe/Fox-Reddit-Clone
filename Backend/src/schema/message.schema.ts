@@ -52,9 +52,22 @@ export const replyOnpostSchema = object({
     }),
   }),
 });
-
+export const addReplyOnMessageSchema = object({
+  body: object({
+    text: string({
+      required_error: 'text is required',
+    }),
+    toUsername: string({
+      required_error: 'toUsername is required',
+    }),
+    parentID: string({
+      required_error: 'parentID is required',
+    }),
+  }),
+});
 export type ComposeMessageInput = TypeOf<typeof composeMessageSchema>;
 export type DeleteMessageInput = TypeOf<typeof deleteMessageSchema>;
 export type ChatMessagesInput = TypeOf<typeof chatMessagesSchema>;
 export type mentionUser = TypeOf<typeof mentionUserSchema>;
 export type replyOnpost = TypeOf<typeof replyOnpostSchema>;
+export type AddReplyOnMessageInput = TypeOf<typeof addReplyOnMessageSchema>;
