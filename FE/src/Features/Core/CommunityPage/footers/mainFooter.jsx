@@ -161,7 +161,7 @@ export default function MainFooter (){
                   </svg>
                   <button 
                     className='text-sm ml-2 hover:underline flex flex-row self-center'
-                    onClick={() => navigate(`/user/${moderator}`)} 
+                    onClick={() => navigate(`/viewer/${moderator}`)} 
                   >
                     <p>u/</p>
                     <p>{moderator}</p>
