@@ -6,7 +6,6 @@
 library;
 
 import 'dart:io';
-import 'dart:ui';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   void initState() {
     super.initState();
-    isBlurred = (widget.post['nsfw'] || widget.post['spoiler']);
+    isBlurred = (false || false);
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
@@ -55,7 +54,7 @@ class _PostDetailsState extends State<PostDetails> {
 
     var response = await http.post(
       url,
-      body: jsonEncode({"postID": widget.post['postID']}),
+      body: jsonEncode({"postID": widget.post['_id']}),
       // body: {"postID": widget.post['postID']},
       headers: {
         'Authorization': 'Bearer $access_token',
@@ -63,11 +62,6 @@ class _PostDetailsState extends State<PostDetails> {
       },
     );
 
-    print(jsonEncode({"postID": widget.post['postID']}));
-    print("##########");
-    print(response.statusCode);
-    print(response.body);
-    print("##########");
   }
 
   Future<String> fetchUserProfilePic(String accessToken) async {
@@ -200,10 +194,10 @@ class _PostDetailsState extends State<PostDetails> {
               title: const Text('Download Image'),
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                if (widget.post['picture'] != null &&
-                    widget.post['picture']!.isNotEmpty) {
-                  _downloadImage(context); // Call the download image function
-                }
+                //if (widget.post['picture'] != null &&
+                //    widget.post['picture']!.isNotEmpty) {
+                //  _downloadImage(context); // Call the download image function
+                //}
               },
             ),
             ListTile(
@@ -249,7 +243,7 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   Widget build(BuildContext context) {
     double userWidth = MediaQuery.of(context).size.width * 0.7;
-    String editedUsername = widget.post['userName'];
+    String editedUsername = widget.post['userName']??'error in fetching username';
     if (editedUsername.startsWith('u/')) {
       editedUsername =
           editedUsername.substring(2); // Extracts the part after 'u/'
@@ -328,7 +322,7 @@ class _PostDetailsState extends State<PostDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.post['communityName'],
+                      widget.post['communityName']??'error in fetching community name',
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xFFFFFFFF),
@@ -347,7 +341,7 @@ class _PostDetailsState extends State<PostDetails> {
                         );
                       },
                       child: Text(
-                        widget.post['userName'],
+                        widget.post['userName']??'error in fetching username',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -361,7 +355,7 @@ class _PostDetailsState extends State<PostDetails> {
             ),
             cardCoreWidget(post: widget.post, detailsPageOpen: true),
             VoteSection(post: widget.post),
-            CommentSection(postId: widget.post['postID']),
+            CommentSection(postId: widget.post['_id']),
           ],
         ),
       ),

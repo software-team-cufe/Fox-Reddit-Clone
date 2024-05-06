@@ -31,7 +31,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.post['postTitle'] ?? "title",
+          widget.post['postTitle'] ?? "error in fetching post title",
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         Row(
@@ -167,7 +167,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              widget.post['postTitle'],
+              widget.post['text']?? 'error in fetching post text',
               style: TextStyle(
                 fontSize: 16,
                 color: textIsblurred ? Colors.transparent : Colors.white,

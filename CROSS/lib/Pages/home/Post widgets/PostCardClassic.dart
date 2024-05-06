@@ -64,10 +64,10 @@ class _ClassicCardState extends State<ClassicCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.post['title'],
+                  widget.post['postTitle']?? "error in fetching post title",
                   style: const TextStyle(fontSize: 16),
                 ),
-                // if (widget.post['picture'] == null)
+               if (widget.post['picture'] == null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 0),
                   child: Container(
@@ -76,7 +76,7 @@ class _ClassicCardState extends State<ClassicCard> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      widget.post['text'],
+                      widget.post['text']?? "error in fetching post text",
                       style: TextStyle(
                         fontSize: 16,
                         color: isBlurred ? Colors.transparent : Colors.white,

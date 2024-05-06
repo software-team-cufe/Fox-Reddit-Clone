@@ -42,8 +42,8 @@ class _VoteSectionState extends State<VoteSection> {
   @override
   void initState() {
     super.initState();
-    voteCount = widget.post['votesCount'] ?? 0;
-    // hasVoted = widget.post['hasVoted'] ?? false;
+    voteCount = widget.post['votesCount'];
+    hasVoted = widget.post['hasVoted'] ?? false;
   }
 
   @override
@@ -134,10 +134,10 @@ class _VoteSectionState extends State<VoteSection> {
                   child: const Icon(Icons.reply),
                 ),
                 onPressed: () {
-                  int postId = widget.post['id'];
+                  int postId = widget.post['id']?? 404;
                   String postUrl =
                       'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                  Share.share('${widget.post['title']}\n$postUrl');
+                  Share.share('${widget.post['postTitle']}\n$postUrl');
                 },
               ),
             ],
