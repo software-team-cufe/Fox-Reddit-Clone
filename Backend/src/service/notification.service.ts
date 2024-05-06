@@ -6,6 +6,7 @@ import admin, { ServiceAccount } from 'firebase-admin';
 
 import serviceAccount from '../../serviceAccountKey.json';
 
+process.env.GOOGLE_APPLICATION_CREDENTIALS;
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as ServiceAccount),
   databaseURL:
