@@ -4,14 +4,26 @@ import { Link } from "react-router-dom";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { userAxios } from "@/Utils/UserAxios";
 import ImageGallery from "react-image-gallery";
+import { toast } from 'react-toastify'
 export default function PostComponent({ refetch, role, post, className, viewMode = false }) {
     post.votes = post.votes ?? 0;
     // const images = [post.thumbnail, ...post.images];
     const [postObj, setPost] = useState(post);
     const [votes, setVotes] = useState(post.votes);
     const vote = async (upvote) => {
+        console.log(postObj._id);
         const votesss = upvote ? post.votes + 1 : post.votes - 1;
-        const res = await userAxios.post('');
+        const id = toast.loading('Please wait');
+        try {
+            const res = await userAxios.post('/api/postvote', {
+                postID: postObj._id,
+                type: upvote ? 1 : -1,
+            });
+            setPost(prev => { return { ...prev, votesCount: upvote ? prev.votesCount + 1 : prev.votesCount - 1 } })
+        } catch (ex) { }
+
+        toast.dismiss(id);
+
         setVotes(res.data.votesCount);
     };
 
@@ -21,15 +33,15 @@ export default function PostComponent({ refetch, role, post, className, viewMode
             {
                 !viewMode ?
                     <div className="flex flex-col items-start justify-between">
-                        <Link to={`/r/${postObj.CommunityID}`}>
+                        <Link to={`/r/${postObj.communityName}`}>
                             <div>
                                 <div className="mb-4 flex items-center gap-4">
-                                    <img src={postObj.subReddit?.image} alt="image" className="w-9 h-9 rounded-full" />
-                                    <h5 className=" text-sm ">{postObj.subReddit?.title}</h5>
+                                    <img src={postObj.communityIcon} alt="image" className="w-9 h-9 rounded-full" />
+                                    <h5 className=" text-sm ">r/{postObj.communityName}</h5>
                                 </div>
                             </div>
                         </Link>
-                        <Link to={`/posts/${postObj._id}`}>
+                        <Link className="w-full" to={`/posts/${postObj._id}`}>
                             <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
                             <p className=" text-gray-600 text-sm">{postObj.textHTML} </p>
                             <div
@@ -86,7 +98,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                     <ArrowDownCircle onClick={() => vote(false)} className="w-5 h-5 cursor-pointer" />
                 </div>
                 {!viewMode && <div className="flex bg-gray-100 gap-1 items-center rounded-[80px] px-3 py-2">
-                    <Link to={viewMode ? null : `/posts/${postObj.id}`}>
+                    <Link to={viewMode ? null : `/posts/${postObj._id}`}>
                         <MessageCircle className="w-5 h-5 cursor-pointer" />
                     </Link>
                     <p>{postObj.comments}</p>

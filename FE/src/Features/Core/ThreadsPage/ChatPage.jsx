@@ -11,19 +11,16 @@ export default function ChatPage() {
             <div className="flex flex-col h-full w-full bg-white ">
                 <Header user={{
                     name: "Mahmoud Khaled",
-                    id: "asdasdasdasdasdasdasd",
+                    _id: "asdasdasdasdasdasdasd",
                 }} />
                 <div className="h-full overflow-hidden px-4 py-6">
                     <div className="h-full overflow-y-auto">
                         <div className="grid grid-cols-12 gap-y-2">
-
-
-                            <Message isMe={true} />
-                            <Message isMe={false} />
-                            <Message isMe={true} />
-                            <Message isMe={false} />
-                            <Message isMe={true} />
-
+                            <Message userId={"asdasdasd"} isMe={true} />
+                            <Message userId={"asdasdasd"} isMe={false} />
+                            <Message userId={"asdasdasd"} isMe={true} />
+                            <Message userId={"asdasdasd"} isMe={false} />
+                            <Message userId={"asdasdasd"} isMe={true} />
                         </div>
                     </div>
                 </div>

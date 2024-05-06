@@ -4,8 +4,20 @@ import { Dialog, Transition } from '@headlessui/react'
 import { X } from 'lucide-react'
 import { Fragment, useState } from 'react'
 import TextBox from '../../../../../../GeneralElements/TextBox/TextBox'
+import { userAxios } from '../../../../../../Utils/UserAxios'
+import { useParams } from 'react-router-dom'
 export default function BanUserModal({ closeModal, isOpen }) {
+    const params = useParams();
     const [isPerminent, setPer] = useState(false);
+    const handelSubmit = async () => {
+        const data = Object.fromEntries(new FormData(document.getElementById('frm-ban')).entries());
+        data.period = isNaN(parseInt(data.period)) ? 99999 : parseInt(data.period);
+        try {
+            const res = await userAxios.post(`/${params.community}/api/ban/${data.userName}`, data);
+        } catch (ex) {
+
+        }
+    };
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-[9999px]" onClose={closeModal}>
@@ -40,11 +52,11 @@ export default function BanUserModal({ closeModal, isOpen }) {
                                         <button onClick={closeModal}><X /></button>
                                     </div>
                                     <hr />
-                                    <div className=' space-y-3 mt-4 p-6'>
-                                        <TextBox label='ENTER USERNAME' />
+                                    <form onSubmit={(e) => e.preventDefault()} id='frm-ban' className=' space-y-3 mt-4 p-6'>
+                                        <TextBox name='userName' label='ENTER USERNAME' />
                                         <div>
                                             <label>Reason</label>
-                                            <select className='select-picker'>
+                                            <select name='reason' className='select-picker'>
                                                 <option>None</option>
                                                 <option>Spam</option>
                                                 <option>Personal and confidential information</option>
@@ -52,12 +64,12 @@ export default function BanUserModal({ closeModal, isOpen }) {
                                                 <option>other</option>
                                             </select>
                                         </div>
-                                        <TextBox label='MOD NOTE' />
+                                        <TextBox name='note' label='MOD NOTE' />
                                         <div>
                                             <label>How Long?</label>
                                             <div className='flex gap-4'>
                                                 <div className='flex'>
-                                                    <TextBox disabled={isPerminent} className=' rounded-r-none' />
+                                                    <TextBox name='period' type='number' disabled={isPerminent} className=' rounded-r-none' />
                                                     <div className='border flex items-center justify-center px-2 text-center rounded-r-lg'>
                                                         Days
                                                     </div>
@@ -68,7 +80,7 @@ export default function BanUserModal({ closeModal, isOpen }) {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
                                     <div className=' bg-gray-100 p-4 flex flex-col'>
                                         <span className='mb-2'>Note to include in ban message*</span>
                                         <TextBox area={true} placeholder='Reason' />
@@ -78,7 +90,7 @@ export default function BanUserModal({ closeModal, isOpen }) {
                                                 <Button onClick={closeModal} className=" border bg-transparent hover:bg-transparent border-blue-500  font-semibold">
                                                     <p className='text-blue-500 '>Cancel</p>
                                                 </Button>
-                                                <Button className="bg-blue-500 hover:bg-blue-400">Ban</Button>
+                                                <Button onClick={handelSubmit} className="bg-blue-500 hover:bg-blue-400">Ban</Button>
                                             </div>
                                         </div>
                                     </div>
