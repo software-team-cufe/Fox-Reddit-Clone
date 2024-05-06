@@ -947,7 +947,6 @@ export async function addReplyOnMessageHandler(req: Request, res: Response) {
     // Update the parent message with the reply
     parentMessage.Replies.push(createdMessage); // Push the new reply to the Replies array
     await parentMessage.save();
-
     // await createNotification(
     //   checkReceiver._id,
     //   user.avatar ?? 'default.jpg',
@@ -972,51 +971,20 @@ export async function addReplyOnMessageHandler(req: Request, res: Response) {
  * @param {Response} res - The response object.
  * @return {Promise<Response>} The response object containing the messages, all reply IDs, or an error message.
  */
-export async function chatMessagesFRONTHandler(req: Request, res: Response) {
-  const receiverId = res.locals.user._id;
-  // Check if user is missing or invalid
-  if (!receiverId) {
+export async function allMessagesFRONTHandler(req: Request, res: Response) {
+  const user = await findUserById(res.locals.user._id);
+  if (!user) {
     return res.status(400).json({
       status: 'failed',
       message: 'Access token is missing or invalid',
     });
   }
-
-  const senderUsername = req.query.senderUsername?.toString();
-  const subject = req.query.subject?.toString();
-
-  // Check if subject is provided
-  if (!subject) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Subject is missing',
-    });
-  }
-
-  // Check if sender username is provided
-  if (!senderUsername) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Sender username is missing',
-    });
-  }
+  const userId = user._id;
 
   try {
-    // Find the sender user by username
-    const sender = await findUserByUsername(senderUsername);
-    if (!sender) {
-      return res.status(404).json({
-        status: 'failed',
-        message: 'Sender not found',
-      });
-    }
-
     // Retrieve all messages between sender and receiver with the provided subject
     let messages = await MessageModel.find({
-      $or: [
-        { fromID: sender._id, toID: receiverId, subject: subject },
-        { fromID: receiverId, toID: sender._id, subject: subject },
-      ],
+      $or: [{ fromID: userId }, { toID: userId }],
       isDeleted: false,
     })
       .sort({ createdAt: 1 })

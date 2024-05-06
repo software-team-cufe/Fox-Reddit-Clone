@@ -18,7 +18,7 @@ import {
   getuserPostreplisHandler,
   getuserAllHandler,
   addReplyOnMessageHandler,
-  chatMessagesFRONTHandler,
+  allMessagesFRONTHandler,
 } from '../controller/message.controller';
 import {
   chatMessagesSchema,
@@ -65,6 +65,6 @@ router.get('/api/get_all', getuserAllHandler);
 
 router.post('/api/message/addReplyOnMessage', validateResource(addReplyOnMessageSchema), addReplyOnMessageHandler);
 
-router.get('/api/message/chatMessagesFRONT', validateResource(chatMessagesSchema), chatMessagesFRONTHandler);
+router.get('/api/message/allMessagesFRONT', allMessagesFRONTHandler);
 
 export default router;
