@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { ArrowBigUp, ArrowBigDown, X, UserRoundX, BadgeCheck } from 'lucide-react'
 import { Switch } from '@headlessui/react'
+import { userAxios } from "@/Utils/UserAxios";
+import { userStore } from '../../../../hooks/UserRedux/UserStore';
 
 function PostReplies({ DiffTime, setUnreadAtIndex }) {
+    const currentId = userStore.getState().user.user.username;
     const [SureToRemove, setSureToRemove] = useState(false);
     const [SureToBlock, setSureToBlock] = useState(false);
     const [ReportPop, setReportPop] = useState(false);
@@ -12,22 +15,10 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
     const [UserToReport, setUserToReport] = useState('');
     const [BlockedUserInRep, setBlockedUserInRep] = useState(false);
 
-    const [loading, setLoading] = useState(false); //make it true
-    // setCrash(true);
-    // setLoading(false);
+    const [loading, setLoading] = useState(true);
     const [crash, setCrash] = useState(false);
 
-    const [Messages, setMessages] = useState([{
-        messId: "id",
-        username: 'to this user', subject: "title",
-        text: '<p>mess eeee eeeeeeeeee lllllllllllll eeeeeeeeeeeee</p>',
-        createdAt: new Date('2024-04-20T12:00:00'), postId: "idP",
-        commentId: "idC", UpOrDownV: "up", PostTitle: "title", CommentsNum: "10", unread: false
-    }, {
-        messId: "id2", PostTitle: "title", CommentsNum: "10",
-        username: 'to this user', subject: "title", text: '<p>mess eeee eeeeeeeeee lllllllllllll eeeeeeeeeeeee</p>',
-        createdAt: new Date('2024-04-20T12:00:00'), postId: "idP", commentId: "idC", UpOrDownV: "down", unread: false
-    }]);
+    const [Messages, setMessages] = useState([]);
     const buttons = ["Harassment", "Threatening violence",
         "Hate", "Minor abuse or sexualization", "Sharing personal information",
         "Non-consensual intimate media", "Prohibited transaction",
@@ -43,12 +34,34 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
     { title: "Report abuse", des: "Using Fox’s reporting tools to spam, harass, bully, intimidate, abuse, or create a hostile environment." }];
 
     useEffect(() => {
-
+        fetchMessages();
     }, [])
 
     useEffect(() => {
         selectedButton === null ? setDisableNext(true) : setDisableNext(false)
     }, [selectedButton])
+
+    const fetchMessages = async () => {
+        try {
+            const res = await userAxios.get('api/get_post_replies');
+            console.log(res.data);
+            const filteredMessages = res.data.filter(message => !message.Comment.isDeleted);
+            // if(!(res.dat.Comment.votesCount === 0))
+            //     {
+            //         for (let index = 0; index < res.dat.Comment.votes.length; index++) {
+            //             const element = array[index];
+
+            //         }
+            //         filteredMessages.vote=
+            //     }
+            setMessages(filteredMessages);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setCrash(true);
+            setLoading(false);
+        }
+    }
 
     const handleVote = (index, direction) => {
         setPostRep(prevState => {
@@ -150,7 +163,7 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                             <p className='text-sm mr-2 mt-1' >post reply:</p>
                             <p className='text-lg font-bold' onClick={() => {
                                 //navigate to post
-                            }}>{mess.PostTitle}</p>
+                            }}>{mess.postTitle}</p>
                         </div>
                         <div className='flex mr-2 sm:ml-14 ml-3 mb-2'>
                             <div className='flex flex-col mr-2'>
@@ -167,12 +180,12 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                                         from</p>
                                     <p className='text-sm mr-2  text-blue-600
                                      hover:cursor-pointer hover:underline'>
-                                        {mess.username}</p>
+                                        {mess.from.username}</p>
                                     <p className='text-xs mt-1 mr-2 text-gray-500'>
-                                        {DiffTime(mess.createdAt)}</p>
+                                        {DiffTime(mess.Comment.createdAt)}</p>
                                 </div>
                                 <div className='mb-2  text-sm'
-                                    dangerouslySetInnerHTML={{ __html: mess.text }}></div>
+                                    dangerouslySetInnerHTML={{ __html: mess.Comment.textHTML }}></div>
                                 <div className='flex flex-wrap text-gray-500'>
                                     <p className='text-xs m-1 hover:cursor-pointer 
                                     hover:underline' onClick={() => {
@@ -181,7 +194,7 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                                     <p onClick={() => {
                                         //go to post page
                                     }} className='mx-2 m-1 text-xs hover:cursor-pointer 
-                                    hover:underline '>Full Comments ({mess.CommentsNum})</p>
+                                    hover:underline '>Full Comments ({mess.commentNum})</p>
                                     {!SureToRemove && <p onClick={() => {
                                         setSureToRemove(true);
                                     }}
@@ -201,7 +214,7 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                                         }}
                                             className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}
-                                    <p onClick={() => { setReportPop(true); setUserToReport(mess.username); }}
+                                    <p onClick={() => { setReportPop(true); setUserToReport(mess.from.username); }}
                                         className='mx-2 m-1 text-xs hover:cursor-pointer
                                      hover:underline'>Report</p>
                                     {!SureToBlock && <p onClick={() => {
@@ -213,7 +226,7 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                                         className='text-xs text-red-600 m-1 '>
                                         are you sure?</p>
                                         <p onClick={() => {
-                                            handleBlock(mess.username);
+                                            handleBlock(mess.from.username);
                                         }}
                                             className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>Yes</p>
@@ -223,9 +236,6 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                                         }}
                                             className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}
-                                    <p onClick={() => { setUnreadAtIndex(i, true); }}
-                                        className={`mx-2 text-xs m-1  hover:cursor-pointer
-                                     hover:underline ${mess.unread ? "hidden" : "block"}`}>Mark Unread</p>
                                 </div>
                             </div>
                         </div>

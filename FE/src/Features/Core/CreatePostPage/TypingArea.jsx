@@ -2,7 +2,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
 import { Tabs, Tab } from '../../../GeneralElements/Tabs/Tab'
-import { NotepadText, ImageUp, BarChart2, Link2, Trash2, BadgeInfo, X } from 'lucide-react'
+import { NotepadText, ImageUp, BarChart2, Link2, Trash2, BadgeInfo, X, Plus, LoaderCircle } from 'lucide-react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 import './QuillStyle.css'
@@ -16,9 +16,10 @@ function TypingArea(props) {
     const [OpenImageTab, setOpenImageTab] = useState(false);
     const [ShowRemovePop, setShowRemovePop] = useState(false);
     const [ShowCancelPost, setShowCancelPost] = useState(false);
-    const [VideoFile, setVideoFile] = useState(false);    //boolean to mark the file type
+    const [VideoFile, setVideoFile] = useState([]);    //boolean to mark the file type
     const [DisablePost, setDisablePost] = useState(true);
-
+    const [ImageToRemove, setImageToRemove] = useState(null); //index
+    const [allowDrop, setAllowDrop] = useState(true);
     const [ToolBar, setToolBar] = useState([['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
     ['link', 'video'],
@@ -53,20 +54,20 @@ function TypingArea(props) {
 
 
     useEffect(() => {
-
-        if (OpenImageTab) {
-            const imageInput = document.getElementById("DropBannerImage");
-            if (!(imageInput === null)) {
-                imageInput.addEventListener('dragover', () => { event.preventDefault(); });
-                imageInput.addEventListener('drop', () => {
-                    event.preventDefault();
-                    handleBannerUpload(event, "Drop");
-                });
+        if (allowDrop) {
+            if (OpenImageTab) {
+                const imageInput = document.getElementById("DropBannerImage");
+                if (!(imageInput === null)) {
+                    imageInput.addEventListener('dragover', () => { event.preventDefault(); });
+                    imageInput.addEventListener('drop', () => {
+                        event.preventDefault();
+                        handleBannerUpload(event, "Drop");
+                    });
+                }
             }
         }
 
-
-    }, [OpenImageTab, props.VideoOrImageSrc]);
+    }, [OpenImageTab, props.VideoOrImageSrc, allowDrop]);
 
     const handleBannerUpload = async (event, UpOrDrop = "up") => {
 
@@ -76,7 +77,9 @@ function TypingArea(props) {
             file = event.target.files[0];
         }
         else {
+            setAllowDrop(false);
             file = event.dataTransfer.files[0];
+            console.log(event.dataTransfer.files[0])
         }
 
         if (file) {
@@ -84,16 +87,20 @@ function TypingArea(props) {
             reader.readAsDataURL(file);
             // Check the file type
             if (file.type.startsWith('image/')) {
-                setVideoFile(false);
+                setVideoFile(prevVideoFile => [...prevVideoFile, false]);
                 props.imageOrVideo('image');
             } else if (file.type.startsWith('video/')) {
-                setVideoFile(true);
+                setVideoFile(prevVideoFile => [...prevVideoFile, true]);
                 props.imageOrVideo('video');
             }
         }
         reader.onload = () => {
-            props.SetVideoOrImageSrc(reader.result);
+            props.SetVideoOrImageSrc(prevVideoFile => [...prevVideoFile, reader.result]);
+            console.log(props.VideoOrImageSrc)
         };
+        setTimeout(() => {
+            setAllowDrop(true);
+        }, 2000);
 
     }
 
@@ -110,10 +117,13 @@ function TypingArea(props) {
     }
 
     const handleRemoveImage = () => {
-        props.SetVideoOrImageSrc(null);
+        console.log(ImageToRemove)
+        const filteredArray = props.VideoOrImageSrc.filter((_, index) => !(index === ImageToRemove));
+        props.SetVideoOrImageSrc(filteredArray);
         setShowRemovePop(false);
-        //ToDo: Add Api
-
+        setImageToRemove(null);
+        const filteredArray2 = VideoFile.filter((_, index) => !(index === ImageToRemove));
+        setVideoFile(filteredArray2);
     }
 
 
@@ -122,7 +132,6 @@ function TypingArea(props) {
 
             <Tabs>
                 <Tab label="Post" num={0} addOnClick={NoDrag} icon={<NotepadText strokeWidth={1} color=" #e94c00" size={24} />}>
-
                     <div className='p-4 relative'>
                         <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ?
                             'border-gray-800' : 'border-gray-300'}`}>
@@ -168,65 +177,87 @@ function TypingArea(props) {
 
                         <div className="w-full h-fit ">
 
-                            {props.VideoOrImageSrc && (
-                                <div className="w-full h-[425px] bg-white border rounded relative ">
-                                    <div className=" w-full h-96 grid overflow-hidden  place-content-center relative">
-                                        {VideoFile &&
-                                            <video width={1280} height={720} controls>
-                                                <source src={props.VideoOrImageSrc} />
-                                                Your browser does not support the video tag.
-                                            </video>}
-                                        {!VideoFile && <>
-                                            <img className='object-cover object-center  w-full blur-lg '
-                                                src={props.VideoOrImageSrc}
-                                                alt="Selected" />
-                                            <img className='object-cover object-top h-96 absolute
+                            {!(props.VideoOrImageSrc.length === 0) && (<div className="flex flex-wrap">{
+                                props.VideoOrImageSrc.map((element, i) => {
+                                    return (
+                                        <div key={i} className=" h-32 bg-white border rounded relative m-1 ">
+                                            <div className=" w-32 h-32 grid overflow-hidden rounded    place-content-center relative">
+                                                {VideoFile[i] &&
+                                                    <video width={1280} height={720} controls>
+                                                        <source src={element} />
+                                                        Your browser does not support the video tag.
+                                                    </video>}
+                                                {!VideoFile[i] && <>
+                                                    {/* <img className='object-cover object-center  w-full blur-lg '
+                                                        src={element}
+                                                        alt="Selected" /> */}
+                                                    <img className='object-cover rounded object-top h-96 absolute
                                              overflow-auto top-1/2 left-1/2
-                                     transform -translate-x-1/2 -translate-y-1/2  ' src={props.VideoOrImageSrc} alt="Selected" />
-                                        </>}
+                                     transform -translate-x-1/2 -translate-y-1/2  ' src={element} alt="Selected" />
+                                                </>}
 
-                                    </div>
-                                    <Trash2 strokeWidth={1} size={30} color='#e94c00' className='absolute p-1
+                                            </div>
+                                            <Trash2 strokeWidth={1} size={30} color='#e94c00' className='absolute p-1
                                      bg-white border
                                      rounded-full bottom-1 right-1 hover:bg-gray-300'
-                                        onClick={() => { ShowRemovePop ? setShowRemovePop(false) : setShowRemovePop(true); }}
-                                    />
+                                                onClick={() => {
+                                                    ShowRemovePop ? setShowRemovePop(false) : setShowRemovePop(true);
+                                                    setImageToRemove(i);
+                                                }}
+                                            />
 
-                                    <div className="relative flex ">
+                                            <div className="relative flex ">
 
-                                        {ShowRemovePop && <div className=" shadow-slate-300 shadow border rounded  
-                                           absolute  bg-white right-0 bottom-10 border-orange-600 z-50 w-max h-48">
-                                            <div className=" relative ">
-                                                <p className="p-4">Remove image?</p>
-                                                <hr className="w-80 grid mx-5" />
-                                                <p className="p-4">Are you sure you want to remove your image?</p>
-                                                <hr className="w-80 grid mx-5" />
-                                                <div className="flex p-4 right-0 absolute ">
-                                                    <button
-                                                        onClick={() => { setShowRemovePop(false); }}
-                                                        type="submit"
-                                                        className="bg-white text-black border rounded-full 
-                                                         p-1 px-2 m-1 border-orange-600 
-                                                         hover:bg-orange-800 hover:text-white"
-                                                    >
-                                                        keep
-                                                    </button>
-                                                    <button
-                                                        onClick={handleRemoveImage}
-                                                        type="submit"
-                                                        className="bg-orange-600 text-white rounded-full
-                                                         m-1 p-1 px-2 hover:bg-orange-800"
-                                                    >
-                                                        Remove
-                                                    </button>
-                                                </div>
+
                                             </div>
-                                        </div>}
+                                        </div>
+                                    )
+                                })}
+                                <div id="DropBannerImage" className='relative text-center border-dashed hover:cursor-pointer
+                    	         border border-gray-400 h-20 w-24 m-1 bg-white  rounded'
+                                    onClick={() => document.getElementById("Banner-load").click()}>
+                                    <input
+                                        className='hidden'
+                                        id="Banner-load"
+                                        type="file"
+                                        accept="image/*,video/*"
+                                        onChange={handleBannerUpload}
+                                    />
+                                    <div className='items-center text-center h-full w-full justify-items-center' >
+                                        <Plus size={60} strokeWidth={1} className="m-2 mx-4 text-gray-400" />
                                     </div>
                                 </div>
+                            </div>
                             )}
-
-                            {!props.VideoOrImageSrc && (<>
+                            {ShowRemovePop && <div className=" shadow-slate-300 shadow border rounded  
+                                           absolute  bg-white right-0 bottom-10 border-orange-600 z-50 w-max h-48">
+                                <div className=" relative ">
+                                    <p className="p-4">Remove image?</p>
+                                    <hr className="w-80 grid mx-5" />
+                                    <p className="p-4">Are you sure you want to remove your image?</p>
+                                    <hr className="w-80 grid mx-5" />
+                                    <div className="flex p-4 right-0 absolute ">
+                                        <button
+                                            onClick={() => { setShowRemovePop(false); setImageToRemove(null); }}
+                                            type="submit"
+                                            className="bg-white text-black border rounded-full 
+                                                         p-1 px-2 m-1 border-orange-600 
+                                                         hover:bg-orange-800 hover:text-white"
+                                        >
+                                            keep
+                                        </button>
+                                        <button
+                                            onClick={handleRemoveImage}
+                                            type="submit"
+                                            className="bg-orange-600 text-white rounded-full
+                                                         m-1 p-1 px-2 hover:bg-orange-800"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>}
+                            {props.VideoOrImageSrc.length === 0 && (<>
                                 <div id="DropBannerImage" className='relative text-center border-dashed hover:cursor-pointer
                     	         border border-[#e94c00] h-full  w-full bg-white  rounded'
                                     onClick={() => document.getElementById("Banner-load").click()}>
@@ -326,16 +357,18 @@ function TypingArea(props) {
                 <button onClick={props.PostFunc}
                     disabled={DisablePost}
                     type="submit"
-                    className="bg-orange-600 text-white rounded-full px-4 py-2 
-                    absolute right-4  hover:bg-orange-800 disabled:bg-gray-400"
+                    className={`bg-orange-600 text-white rounded-full  py-2 
+                    absolute right-4 flex hover:bg-orange-800 disabled:bg-gray-400
+                    ${props.load ? "px-2" : "px-4"}`}
                 >
+                    {props.load && <LoaderCircle class="animate-spin mx-1" />}
                     Post
                 </button>
                 <button
                     onClick={() => { setShowCancelPost(true); }}
                     type="submit"
                     className="border-orange-600 text-orange-600 rounded-full px-4 py-2
-                     absolute right-24 border font-bold  hover:bg-orange-100"
+                     absolute right-28 border font-bold  hover:bg-orange-100"
                 >
                     Cancel
                 </button>
@@ -385,7 +418,7 @@ function TypingArea(props) {
                 <div id="DropBannerImage" className="hidden" />
             </div>
 
-        </div>
+        </div >
     )
 }
 

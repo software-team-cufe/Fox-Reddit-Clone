@@ -20,7 +20,14 @@ export default function TopCommunities() {
                     icon: comm.icon,
                 }));
 
+                // for (let i = 0; i < newComms.length; i++) {
+                //     if (newComms[i].icon && newComms[i].icon =="default-icon.jpg"){
+                //         newComms[i].icon = "https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png";
+                //     }
+                // }
+
                 setForShow(newComms);
+                console.log(forShow);
                 for(let i = 0; i < newComms.length; i++){
                     if (newComms[i].name && newComms[i].name.length > 9) {
                         newComms[i].name = newComms[i].name.slice(0, 9)+'..';
