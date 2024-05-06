@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { ArrowBigUp, ArrowBigDown, X, UserRoundX, BadgeCheck } from 'lucide-react'
 import { Switch } from '@headlessui/react'
+import { userAxios } from "@/Utils/UserAxios";
+import { userStore } from '../../../../hooks/UserRedux/UserStore';
 
-function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
+function PostReplies({ DiffTime, setUnreadAtIndex }) {
+    const currentId = userStore.getState().user.user.username;
     const [SureToRemove, setSureToRemove] = useState(false);
     const [SureToBlock, setSureToBlock] = useState(false);
     const [ReportPop, setReportPop] = useState(false);
     const [selectedButton, setSelectedButton] = useState(null);
-    const [Unread, setUnread] = useState(false);
     const [DisableNext, setDisableNext] = useState(false);
-    const [DoneReportPop, setDoneReportPop] = useState(true);
+    const [DoneReportPop, setDoneReportPop] = useState(false);
     const [UserToReport, setUserToReport] = useState('');
     const [BlockedUserInRep, setBlockedUserInRep] = useState(false);
 
+    const [loading, setLoading] = useState(true);
+    const [crash, setCrash] = useState(false);
+
+    const [Messages, setMessages] = useState([]);
     const buttons = ["Harassment", "Threatening violence",
         "Hate", "Minor abuse or sexualization", "Sharing personal information",
         "Non-consensual intimate media", "Prohibited transaction",
@@ -28,15 +34,74 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
     { title: "Report abuse", des: "Using Fox’s reporting tools to spam, harass, bully, intimidate, abuse, or create a hostile environment." }];
 
     useEffect(() => {
-
+        fetchMessages();
     }, [])
 
     useEffect(() => {
         selectedButton === null ? setDisableNext(true) : setDisableNext(false)
     }, [selectedButton])
 
-    const handleUpVote = () => { }
-    const handleDownVote = () => { }
+    const fetchMessages = async () => {
+        try {
+            const res = await userAxios.get('api/get_post_replies');
+            console.log(res.data);
+            const filteredMessages = res.data.filter(message => !message.Comment.isDeleted);
+            // if(!(res.dat.Comment.votesCount === 0))
+            //     {
+            //         for (let index = 0; index < res.dat.Comment.votes.length; index++) {
+            //             const element = array[index];
+
+            //         }
+            //         filteredMessages.vote=
+            //     }
+            setMessages(filteredMessages);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setCrash(true);
+            setLoading(false);
+        }
+    }
+
+    const handleVote = (index, direction) => {
+        setPostRep(prevState => {
+            const newState = [...prevState];
+            const post = newState[index];
+
+            if (direction === "up") {
+                post.UpOrDownV = "up";
+            } else if (direction === "down") {
+                post.UpOrDownV = "down";
+            } else {
+                // Make it empty if direction is neither "up" nor "down"
+                post.UpOrDownV = "";
+            }
+
+            newState[index] = post;
+            return newState;
+        });
+    };
+
+
+    const handleUpVote = (id, index, UpOrDownV) => {
+        //after api
+        if (UpOrDownV === 'up') {
+            handleVote(index, "")
+        }
+        else {
+            handleVote(index, 'up')
+        }
+    }
+    const handleDownVote = (id, index, UpOrDownV) => {
+        //after api
+        if (UpOrDownV === 'down') {
+            handleVote(index, "")
+        }
+        else {
+            handleVote(index, 'down')
+        }
+
+    }
     const handleRemove = () => { }
     const handleBlock = () => {
         //check if UserToBlock is not empty set BlockedUserInRep
@@ -63,11 +128,33 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
         return null;
     });
 
+    const SendReport = () => {
+        //after done
+        setSelectedButton(null);
+        setUserToReport('');
+
+    }
+    if (loading) {
+        return (
+            <img src={'/logo.png'} className="h-20 w-20 mt-48 mx-auto animate-ping" alt="Logo" />
+        )
+    }
+
+    if (crash) {
+        return (
+            <div>
+                <img src={'/snooNotFound.jpg'} className="h-96 w-96 mt-20 mx-auto" alt="Logo" />
+                <p className="text-gray-600 mx-auto font-semibold">Failed to load page</p>
+            </div>
+        )
+    }
     return (
-        <div className=' w-full  sm:mx-40 lg:mx-60 sm:mt-2'>
+        <div className=' w-full  sm:mx-40 lg:mx-60 sm:mt-2  '>
+            {Messages.length === 0 && <div className='bg-white p-4 rounded sm:w-2/3 w-full '
+            >there doesn't seem to be anything here</div>}
             {Messages.map((mess, i) => {
                 return (
-                    <div key={i} className={`p-4 rounded sm:w-2/3 w-full 
+                    <div key={i} className={`p-4 rounded sm:w-2/3 w-full mb-1
                    
                     ${mess.unread ? "bg-gray-300" : ""}
                     ${i % 2 === 0 && !mess.unread ? "bg-white" : "bg-[#fff6f1]"}
@@ -76,16 +163,16 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
                             <p className='text-sm mr-2 mt-1' >post reply:</p>
                             <p className='text-lg font-bold' onClick={() => {
                                 //navigate to post
-                            }}>{mess.PostTitle}</p>
+                            }}>{mess.postTitle}</p>
                         </div>
-                        <div className='flex mr-2 ml-14 mb-2'>
+                        <div className='flex mr-2 sm:ml-14 ml-3 mb-2'>
                             <div className='flex flex-col mr-2'>
-                                <ArrowBigUp onClick={() => { handleUpVote(mess.id) }}
+                                <ArrowBigUp onClick={() => { handleUpVote(mess.id, i, mess.UpOrDownV) }}
                                     className={`${mess.UpOrDownV === 'up' ?
-                                        ' text-green-600 rounded-full' : 'text-slate-400'}`} />
-                                <ArrowBigDown onClick={() => { handleDownVote(mess.id) }}
+                                        ' text-green-600 rounded-full' : 'text-slate-400'} hover:cursor-pointer`} />
+                                <ArrowBigDown onClick={() => { handleDownVote(mess.id, i, mess.UpOrDownV) }}
                                     className={`${mess.UpOrDownV === 'down' ?
-                                        ' text-red-600 rounded-full' : 'text-slate-400'}`} />
+                                        ' text-red-600 rounded-full' : 'text-slate-400'} hover:cursor-pointer`} />
                             </div>
                             <div className='mr-2 w-full '>
                                 <div className='flex mb-2'>
@@ -93,12 +180,12 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
                                         from</p>
                                     <p className='text-sm mr-2  text-blue-600
                                      hover:cursor-pointer hover:underline'>
-                                        {mess.username}</p>
+                                        {mess.from.username}</p>
                                     <p className='text-xs mt-1 mr-2 text-gray-500'>
-                                        {DiffTime(mess.createdAt)}</p>
+                                        {DiffTime(mess.Comment.createdAt)}</p>
                                 </div>
-                                <div className='mb-2  w-24 text-sm'
-                                    dangerouslySetInnerHTML={{ __html: mess.text }}></div>
+                                <div className='mb-2  text-sm'
+                                    dangerouslySetInnerHTML={{ __html: mess.Comment.textHTML }}></div>
                                 <div className='flex flex-wrap text-gray-500'>
                                     <p className='text-xs m-1 hover:cursor-pointer 
                                     hover:underline' onClick={() => {
@@ -107,7 +194,7 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
                                     <p onClick={() => {
                                         //go to post page
                                     }} className='mx-2 m-1 text-xs hover:cursor-pointer 
-                                    hover:underline '>Full Comments ({mess.CommentsNum})</p>
+                                    hover:underline '>Full Comments ({mess.commentNum})</p>
                                     {!SureToRemove && <p onClick={() => {
                                         setSureToRemove(true);
                                     }}
@@ -127,7 +214,7 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
                                         }}
                                             className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}
-                                    <p onClick={() => { setReportPop(true); setUserToReport(mess.username); }}
+                                    <p onClick={() => { setReportPop(true); setUserToReport(mess.from.username); }}
                                         className='mx-2 m-1 text-xs hover:cursor-pointer
                                      hover:underline'>Report</p>
                                     {!SureToBlock && <p onClick={() => {
@@ -139,7 +226,7 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
                                         className='text-xs text-red-600 m-1 '>
                                         are you sure?</p>
                                         <p onClick={() => {
-                                            handleBlock(mess.username);
+                                            handleBlock(mess.from.username);
                                         }}
                                             className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>Yes</p>
@@ -149,13 +236,9 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
                                         }}
                                             className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}
-                                    <p onClick={() => { setUnreadAtIndex(i, true); }}
-                                        className={`mx-2 text-xs m-1  hover:cursor-pointer
-                                     hover:underline ${mess.unread ? "hidden" : "block"}`}>Mark Unread</p>
                                 </div>
                             </div>
                         </div>
-                        <hr />
                     </div>
                 )
             })}
@@ -191,7 +274,8 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
                             </button>
                         ))}
                         <br />
-                        <button className='p-2 bg-[#935226ef] text-white
+                        <button onClick={() => { setReportPop(false); setDoneReportPop(true); }}
+                            className='p-2 bg-[#935226ef] text-white
                                      rounded-full absolute bottom-3 right-4 hover:bg-[#edc6b2] 
                                       hover:text-slate-900 disabled:bg-gray-300 disabled:text-white'
                             disabled={DisableNext}>
@@ -204,44 +288,51 @@ function PostReplies({ Messages, DiffTime, setUnreadAtIndex }) {
                 <div className="fixed inset-0 flex items-center 
                             justify-center bg-gray-800 bg-opacity-50">
                     <div className={`bg-white p-3 w-full sm:w-[500px] relative rounded shadow-md
-                    ${selectedButton === null ? " sm:h-[375px] h-[500px]" : "sm:h-[500px] h-[600px]"}`}>
+                    ${selectedButton === null ? " sm:h-[355px] h-[320px]" : "sm:h-[450px] h-[500px]"}`}>
                         <h2 className="text-lg font-semibold mb-4">Submit
                             a Report
                         </h2>
                         <X onClick={() => { setDoneReportPop(false); setUserToReport(''); }}
                             size={20} className=' text-gray-400 absolute top-4 right-4 
                             hover:cursor-pointer hover:text-black' />
-                        <BadgeCheck />
-                        <p>Thanks for your report </p>
-                        <p className="text-gray-700 text-xs mb-2">
+                        <BadgeCheck className=' text-orange-600  rounded-full'
+                            strokeWidth={1.5} size={35} />
+                        <p className='mt-3 mb-1'>Thanks for your report </p>
+                        <p className="text-gray-700 text-xs mb-3">
                             Thanks again for your report and for looking out for
                             yourself and your fellow. Your reporting
                             helps make Fox a better, safer, and more welcoming place
                             for everyone; and it means a lot to us.
                         </p>
                         <hr />
-                        <UserRoundX />
-                        <p>Block Feeling-Abrocoma-862</p>
-                        <p>You won't be able to send direct messages or chat requests to each other.</p>
-                        <Switch
-                            checked={BlockedUserInRep}
-                            onChange={() => handleBlock(UserToReport)}
-                            className={`${BlockedUserInRep ? 'bg-blue-700' : 'bg-gray-300'}
+                        <div className='flex'>
+                            <UserRoundX className=' text-orange-600  rounded-full my-2'
+                                strokeWidth={1.5} size={26} />
+                            <div>
+                                <p className='text-sm mx-2 mt-3 mb-1'>Block Feeling-Abrocoma-862</p>
+                                <p className='text-xs mx-2 mb-2'>You won't be able to send direct messages or chat requests to each other.</p>
+                            </div>
+                            <Switch
+                                checked={BlockedUserInRep}
+                                onChange={() => handleBlock(UserToReport)}
+                                className={`${BlockedUserInRep ? 'bg-blue-700' : 'bg-gray-300'}
                                                     relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full
-                                                     border-2 border-transparent transition-colors duration-200 ease-in-out 
+                                                    my-6 mx-6 border-2 border-transparent transition-colors duration-200 ease-in-out 
                                                      focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
-                            <span
-                                aria-hidden="true"
-                                className={`${BlockedUserInRep ? 'translate-x-4' : 'translate-x-0'}
+                                <span
+                                    aria-hidden="true"
+                                    className={`${BlockedUserInRep ? 'translate-x-4' : 'translate-x-0'}
                                                         pointer-events-none inline-block h-5 w-5 transform rounded-full
                                                          bg-white shadow-lg ring-0 transition duration-200 ease-in-out`} />
-                        </Switch>
+                            </Switch>
+                        </div>
                         <hr />
                         <br />
-                        <button className='p-2 bg-[#935226ef] text-white
+                        <button onClick={() => { setDoneReportPop(false); SendReport(); }}
+                            className='p-2 bg-[#935226ef] text-white
                                      rounded-full absolute bottom-3 right-4 hover:bg-[#edc6b2] 
                                       hover:text-slate-900 disabled:bg-gray-300 disabled:text-white'>
-                            Done</button>
+                            Submit</button>
                         <div>{ReportDes}</div>
                     </div>
                 </div>

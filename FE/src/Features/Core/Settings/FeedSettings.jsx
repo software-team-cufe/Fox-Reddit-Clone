@@ -6,138 +6,188 @@
  */
 import React, { useEffect, useState } from "react";
 import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
-import { getByRole, waitFor } from '@testing-library/react';
 import axios from "axios";
 import Dropdown from "./dropDownlist";
-/**
-=======
-// import Dropdown from "./DropDownlist";
+import { toast } from 'react-toastify';
+
 /**
  * 
->>>>>>> origin/newnew-nadine
- * Adult content, autoplay media, community themes, community content sort, global content view, open pots in new tab
+ * Adult content,
+ * autoplay media, 
+ * community themes, 
+ * community content sort, 
+ * global content view, 
+ * open pots in new tab
  */
 
 export default function FeedSettings() {
 
-    const [communities, setCommunities] = useState([]); // array of communities to show
-    const [showMatureContent, setShowMatureContent] = useState(true);//mature toggle view
-    const [postsForusers,setPostsForusers] = useState([]); // array of posts to show
-    // const [loading, setLoading] = useState(true); // loading state for fetching 
-    const changeContent = true;
-    const changeMenuContent = false;
-
-      useEffect(() => {
-         axios.get("http://localhost:3002/communities") //fetch communities and organize into communities array for mapping
-            .then(response => {
-              const newComms = response.data.map(comm => ({
-                name: comm.name,  
-                id: comm.id,
-                NSFW: comm.NSFW
-            }));
-        
-            let tempcomm =[];
-          for (let i = 0; i < newComms.length; i++) {
-             if(showMatureContent === false){
-                 if (newComms[i].NSFW === false) {
-                    tempcomm.push(newComms[i]);
-                 }
-             }else{
-                tempcomm.push(newComms[i]);
-            }
-        
-            }
-            //console.log(tempcomm);
-            setCommunities(tempcomm);
-          //console.log(communities);
-          //setCommunities(newComms);
-          //setLoading(false); //set loading to false after fetching to load body
-         });
-     }, [showMatureContent]);
-      useEffect(() => {
-         console.log(communities);
-     }, [communities]);
-
     //state for each setting statement to be toggled
-    const [blurMatureImg, setBlurMatureImg] = useState(true);
+    const [showMatureContent, setShowMatureContent] = useState(false);
+    const [blurMatureImg, setBlurMatureImg] = useState(false);
     const [autoplayMedia, setAutoplayMedia] = useState(true);
     const [communityTheme, setCommunityTheme] = useState(true);
-    const [rememberingSortPerCommunity, setRememberingSortPerCommunity] = useState(true);
-    const [globalView, setGlobalView] = useState(true);
-    const [openPostsInNewTab, setOpenPostsInNewTab] = useState(true);
-    const handleToggleInFeedMatureContent = async (isChecked) => {
+    const [rememberingSortPerCommunity, setRememberingSortPerCommunity] = useState(false);
+    const [rememberGlobalView, setrememberGlobalView] = useState(false);
+    const [openPostsInNewTab, setOpenPostsInNewTab] = useState(false);
+    const changeContent = true;
+    const changeMenuContent = false;
+    let id = 2;
+
+    const handleToggleInFeedMatureContent = (isChecked) => {
         setShowMatureContent(isChecked);
+        toast.success("changes saved. \u{1F60A}");
         console.log(isChecked);
         //console.log(showMatureContent);
     }
     const handleToggleInFeedBlurImage = (isChecked2) => {
         setBlurMatureImg(isChecked2);
+        toast.success("changes saved. \u{1F60A}");
         console.log(isChecked2);
         //console.log(BlurMatureImg);
     }
     const handleToggleInFeedAutoplay = (isChecked3) => {
         setAutoplayMedia(isChecked3);
+        toast.success("changes saved. \u{1F60A}");
         console.log(isChecked3);
         //console.log(autoplayMedia);
     }
     const handleToggleInFeedCommunityTheme = (isChecked4) => {
         setCommunityTheme(isChecked4);
+        toast.success("changes saved. \u{1F60A}");
         console.log(isChecked4);
         //console.log(communityTheme);
     }
     const handleToggleInFeedRememberSort = (isChecked5) => {
         setRememberingSortPerCommunity(isChecked5);
+        toast.success("changes saved. \u{1F60A}");
         console.log(isChecked5);
         //console.log(rememberingSortPerCommunity);
     }
     const handleToggleInFeedGlobalView = (isChecked6) => {
-        setGlobalView(isChecked6);
+        setrememberGlobalView(isChecked6);
+        toast.success("changes saved. \u{1F60A}");
         console.log(isChecked6);
         //console.log(globalView);
     }
     const handleToggleInFeedNewTab = (isChecked7) => {
         setOpenPostsInNewTab(isChecked7);
+        toast.success("changes saved. \u{1F60A}");
         console.log(isChecked7);
         //console.log(openPostsInNewTab);
     };
-    //here i check that i get posts that is marked blurred
-    useEffect(()=> {
-        axios.get("http://localhost:3002/users") //fetch posts and organize into posts array for mapping
-        .then(response => {
-        const newusers = response.data.map(user => ({
-            name: user.name,
-            id: user.id,
-            blur: user.blur
-        }));
-        let tempContentToBlur =[];
-          for (let i = 0; i < newusers.length; i++) {
-                if(showMatureContent === true){
-                    if(blurMatureImg === true){
-                        if (newusers[i].blur === true) {
-                            tempContentToBlur.push(newusers[i]);
-                        }
-                    }else{
-                        tempContentToBlur.push(newusers[i]);
-                    }
-                }
-            }
-            setPostsForusers(tempContentToBlur);
-        })
-    },[blurMatureImg]);
-    useEffect(() => {
-        console.log(postsForusers);
-        const updatedPosts = postsForusers.map(postsForuser => ({
-          ...postsForuser,
-          blur: blurMatureImg
-        }));
-        updatedPosts.forEach(postsForuser => {
-          axios.patch(`http://localhost:3002/users/${postsForuser.id}`, { blur: postsForuser.blur });
-        });
-        console.log("2222222222222222222222");
-        console.log(updatedPosts);
-        console.log("3333333333333333333333");
-        console.log(postsForusers);
-      }, [blurMatureImg]);
+
+    // const getData= () => {
+    //     axios.get(`http://localhost:3002/users/4`).then((response) => {
+    //         setBlurMatureImg(response.data.blur);
+    //         setShowMatureContent(response.data.NSFW);
+    //         setAutoplayMedia(response.data.autoPlayVideos);
+    //         setCommunityTheme(response.data.communityTheme);
+    //         setRememberingSortPerCommunity(response.data.rememberingSortPerCommunity);
+    //         setrememberGlobalView(response.data.rememberGlobalView);
+    //         setOpenPostsInNewTab(response.data.openPostsInNewTab);
+
+    //     }).catch((error) => {
+    //         console.error(error);
+    //     })
+    // }
+    // useEffect(() => {getData()},[]);
+
+    // const handleDataFromSetting = () => {
+    //     try{axios.patch(`http://localhost:3002/users/${id}`, { 
+    //         blur: blurMatureImg,
+    //         NSFW: showMatureContent,
+    //         openPostsInNewTab: openPostsInNewTab,
+    //         rememberingSortPerCommunity: rememberingSortPerCommunity,
+    //         rememberGlobalView: rememberGlobalView,
+    //         autoPlayVideos: autoplayMedia,
+    //         communityTheme: communityTheme,
+    //     })
+    //     }catch(error){
+    //         console.error(error);
+    //     }   
+    // }
+    // useEffect(() => {
+    //     handleDataFromSetting();
+    // },[showMatureContent , 
+    //     blurMatureImg,
+    //     autoplayMedia,
+    //     communityTheme,
+    //     rememberingSortPerCommunity,
+    //     rememberGlobalView,
+    //     openPostsInNewTab]);
+/** 
+
+    // useEffect(() => {
+    //     const handleChangingUserData=()=>{
+    //         const updatedPosts = postsForusers.map(postsForuser => ({
+    //             ...postsForuser,
+    //             blur: blurMatureImg
+    //           }));
+    //           updatedPosts.forEach(postsForuser => {
+    //             axios.patch(`http://localhost:3002/users/${postsForuser.id}`, { blur: postsForuser.blur });
+    //           });      
+    //     }
+
+    //     handleChangingUserData();
+    //     //console.log(postsForusers);
+    //     // console.log("2222222222222222222222");
+    //     // console.log(updatedPosts);
+    //     // console.log("3333333333333333333333");
+    //     // console.log(postsForusers);
+    //   }, [blurMatureImg]);
+
+    //   useEffect(() => {
+    //     axios.get("http://localhost:3002/users/1") //fetch communities and organize into communities array for mapping
+    //     .then(response => {
+    //       const userPreferences = response.data;
+    //       console.log(userPreferences);
+    //       setAutoplayMedia(userPreferences.autoPlayVideos);
+    //       setBlurMatureImg(userPreferences.blur);
+    //       setOpenPostsInNewTab(userPreferences.newTab);
+    //       setShowMatureContent(userPreferences.NSFW);
+    //       console.log(autoplayMedia);
+    //       console.log(blurMatureImg);
+    //       console.log(openPostsInNewTab);
+    //       console.log(showMatureContent);
+    //     })},[]);
+        //useEffect(() => {
+        //  axios.get("http://localhost:3002/users") 
+        //    .then(response => {
+        //      const userPreferences = response.data.map(userPreference => ({
+        //        name: userPreference.name,  
+        //        id: userPreference.id,
+        //        blur: userPreference.blur,
+        //        NSFW: userPreference.NSFW,
+        //        autoPlayVideos: userPreference.autoPlayVideos,
+        //        newTab: userPreference.newTab,
+        //    }));
+        //   console.log(userPreferences);
+        //    let tempSettings =[];
+        //  for (let i = 0; i < userPreferences.length; i++) {
+        //     if(showMatureContent === false){
+        //         if (userPreferences[i].NSFW === false) {
+        //            tempcomm.push(userPreferences[i]);
+        //         }
+        //     }else{
+        //         tempSettings.push(userPreferences[i]);
+        //    }
+       
+        //    }
+           //console.log(tempcomm);
+           //setCommunities(tempcomm);
+         //console.log(communities);
+         //setCommunities(newComms);
+         //setLoading(false); //set loading to false after fetching to load body
+       // });
+    //}, [showMatureContent]);
+     
+    // useEffect(() => {
+    //     console.log(communities);
+    // }, [communities]);
+*/
+
+
 
     return (
         <div >
@@ -159,10 +209,10 @@ export default function FeedSettings() {
                                 See NSFW (Not Safe for Work) mature and adult images, videos, written content, and other media in your Reddit feeds and search results.
                             </p>
                         </div >
-                        <ToggleButton onToggle={handleToggleInFeedMatureContent} />
+                        <ToggleButton onToggle={handleToggleInFeedMatureContent} initial={showMatureContent} />
                     </div>
 
-                    <div className="flex flex-row mb-7 justify-between" role="toggleButton">
+                    <div className={`${showMatureContent ? '' : 'opacity-50 cursor-not-allowed'} grid grid-columns-2 grid-flow-col mb-7 justify-between`} role="toggleButton">
                         <div>
                             <p role="TextOfButtons">
                                 Blur mature images and media
@@ -172,7 +222,7 @@ export default function FeedSettings() {
                                 Blur previews and thumbnails for any images or videos tagged as NSFW (Not Safe for Work).
                             </p>
                         </div>
-                        <ToggleButton onToggle={handleToggleInFeedBlurImage} />
+                        <ToggleButton className={`${showMatureContent ? '' : 'opacity-50 cursor-not-allowed'}`} onToggle={handleToggleInFeedBlurImage} initial={blurMatureImg} disabled={!showMatureContent}/>
                     </div>
 
                     <div className="flex flex-row mb-7 justify-between">
@@ -184,7 +234,7 @@ export default function FeedSettings() {
                             Play videos and gifs automatically when in the viewport.
                         </div></div>
                         <div role="toggleButton" >
-                            <ToggleButton onToggle={handleToggleInFeedAutoplay} />
+                            <ToggleButton onToggle={handleToggleInFeedAutoplay} initial={autoplayMedia} />
                         </div>
 
                     </div>
@@ -201,7 +251,7 @@ export default function FeedSettings() {
                         </div>
 
                         <div role="toggleButton">
-                            <ToggleButton onToggle={handleToggleInFeedCommunityTheme} />
+                            <ToggleButton onToggle={handleToggleInFeedCommunityTheme} initial={communityTheme} />
                         </div>
                     </div>
 
@@ -229,7 +279,7 @@ export default function FeedSettings() {
                             </p>
                         </div>
                         <div>
-                            <ToggleButton onToggle={handleToggleInFeedRememberSort} />
+                            <ToggleButton onToggle={handleToggleInFeedRememberSort} initial={rememberingSortPerCommunity}/>
                         </div>
                     </div>
 
@@ -257,7 +307,7 @@ export default function FeedSettings() {
                             </p>
                         </div>
                         <div role="TextOfButtons">
-                            <ToggleButton onToggle={handleToggleInFeedGlobalView} />
+                            <ToggleButton onToggle={handleToggleInFeedGlobalView} initial={rememberGlobalView}/>
                         </div>
                     </div>
 
@@ -269,7 +319,7 @@ export default function FeedSettings() {
                                 Enable to always open posts in a new tab.
                             </div>
                         <div role="toggleButton">
-                            <ToggleButton onToggle={handleToggleInFeedNewTab} />
+                            <ToggleButton onToggle={handleToggleInFeedNewTab} initial={openPostsInNewTab} />
                         </div>
                     </div>
                 </div>

@@ -69,6 +69,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
     };
 
     const submitImage = () => {
+        toast.info("Uploading image...", { position: 'top-center' });
         let reqType = "";
         if (OptionHeader == "Avatar") {
             reqType = 'upload_sr_icon';
@@ -76,24 +77,18 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
         else if (OptionHeader == "Banner") {
             reqType = 'upload_sr_banner';
         }
-        const formData = new FormData();
-        formData.append('image', imageDisplay);
-
-        console.log(formData);
-        userAxios.post(`${community}/api/${reqType}`, formData , {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }}
-        )
-            .then(() => {
-                toast.info("Uploading image...", { position: 'top-center' });
-                toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
-                onClose(false);
-                window.location.reload();
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            const formData = new FormData();
+            formData.append('image', imageDisplay);
+    
+            userAxios.post(`${community}/api/${reqType}`, formData)
+                .then(() => {
+                    toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
+                    onClose(false);
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
     };
 
     return (

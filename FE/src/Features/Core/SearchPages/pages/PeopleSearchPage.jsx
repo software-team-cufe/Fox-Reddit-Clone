@@ -7,10 +7,9 @@
  */
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import Spinner from "@/GeneralElements/Spinner/Spinner";
 import UserComponent from "@/GeneralComponents/userContainer/userContainer";
 import axios from 'axios';
-
+import {userAxios} from "@/Utils/UserAxios";
 
 export default function PeopleSearchPage({ searched = "filler" }) {
 
@@ -19,21 +18,20 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   const [callingposts, setCallingPosts] = useState(false);
   const loadMoreButtonRef = useRef(null);
   const [pagedone, setpagedone] = useState(false);
-  const [currentpage,setcurrentpage] = useState(0);
+  const [currentpage,setcurrentpage] = useState(2);
   const limitpage = 5;
 
   useEffect(() => {
-    axios.get(`http://localhost:3002/users?_limit=${limitpage}`)  //fetch users and organize into users array for mapping
+    userAxios.get(`r/search/?q=${searched}&type=user&page=1&limit=${limitpage}`)  //fetch users and organize into users array for mapping
       .then(response => {
-        let newUsers = response.data.map(user => ({
-          id: user.userID,
-          name: user.name,
+        let newUsers = response.data.users.map(user => ({
+          id: user._id,
+          name: user.username,
           avatar: user.avatar,
           about: user.about,
-          karma: user.totalKarma,
+          karma: user.karma,
         }));
 
-        newUsers = newUsers.filter(user => user.name.toLowerCase().includes(searched));
         if (newUsers.length < limitpage) {
           setpagedone(true);
         }
@@ -48,22 +46,19 @@ export default function PeopleSearchPage({ searched = "filler" }) {
 
   const fetchMoreUsers = () => {
     setCallingPosts(true);
-    axios.get(`http://localhost:3002/users?_start=${currentpage+limitpage}&_limit=${limitpage}`)
-    .then(response => {
-            if(response.data.length < limitpage) {
-                setpagedone(true);
-            }
-            const newUsers = response.data.map(user => ({
-              id: user.userID,
-              name: user.name,
-              avatar: user.avatar,
-              about: user.about,
-              karma: user.totalKarma,
-            }));
+    userAxios.get(`r/search/?q=${searched}&type=user&page=${currentpage}&limit=${limitpage}`)  //fetch users and organize into users array for mapping
+      .then(response => {
+        let newUsers = response.data.users.map(user => ({
+          id: user._id,
+          name: user.username,
+          avatar: user.avatar,
+          about: user.about,
+          karma: user.karma,
+        }));
 
             setUsers(prevUsers => [...prevUsers, ...newUsers]);
             setCallingPosts(false);
-            setcurrentpage(limitpage+currentpage);
+            setcurrentpage(1+currentpage);
 
         })
         .catch(error => {
