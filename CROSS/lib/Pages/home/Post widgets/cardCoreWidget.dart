@@ -171,7 +171,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              widget.post['text'] ?? '',
+              widget.post['textHTML'] ?? '',
               style: TextStyle(
                 fontSize: 16,
                 color: textIsblurred ? Colors.transparent : Colors.white,

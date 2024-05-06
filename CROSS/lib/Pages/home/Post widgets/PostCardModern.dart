@@ -28,12 +28,12 @@ class ModernCard extends StatefulWidget {
     this.access_token,
     this.userName,
   });
+
   @override
   _ModernCardState createState() => _ModernCardState();
 }
 
 class _ModernCardState extends State<ModernCard> {
-  
   @override
   void initState() {
     super.initState();
@@ -48,7 +48,7 @@ class _ModernCardState extends State<ModernCard> {
     setState(() {});
   }
 
-  Future<void> delPost(String postId) async{  
+  Future<void> delPost(String postId) async {
     final response = await http.post(
       Uri.parse(ApiRoutesBackend.delPost),
       headers: {
@@ -59,10 +59,9 @@ class _ModernCardState extends State<ModernCard> {
       body: json.encode({'linkID': "t3_$postId"}),
     );
     print("response status code: ${response.statusCode}");
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       print("Post deleted");
-    }
-    else{
+    } else {
       print("Post not deleted");
     }
   }
@@ -95,6 +94,7 @@ class _ModernCardState extends State<ModernCard> {
                         backgroundImage:
                             AssetImage(widget.post["communityIcon"]),
                       )
+                    
                     else
                       const CircleAvatar(
                         radius: 18,
@@ -113,7 +113,9 @@ class _ModernCardState extends State<ModernCard> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ProfilePage(userName: widget.post['username'], access_token: widget.access_token),
+                                  builder: (context) => ProfilePage(
+                                      userName: widget.post['username'],
+                                      access_token: widget.access_token),
                                 ),
                               );
                             }

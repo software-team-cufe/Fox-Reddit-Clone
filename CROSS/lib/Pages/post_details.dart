@@ -319,8 +319,7 @@ class _PostDetailsState extends State<PostDetails> {
                     Text(
                       widget.post["communityName"] != null
                           ? "r/${widget.post["communityName"]}"
-                          : widget.post['username'] ??
-                              'error in fetching username',
+                          : "u/${widget.post["username"]}",
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xFFFFFFFF),
@@ -341,7 +340,7 @@ class _PostDetailsState extends State<PostDetails> {
                           );
                         },
                         child: Text(
-                          widget.post['username'] ??
+                          widget.post['username']??
                               'error in fetching username',
                           style: const TextStyle(
                             fontSize: 12,
