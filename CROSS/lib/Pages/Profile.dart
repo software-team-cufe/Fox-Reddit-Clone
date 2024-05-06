@@ -50,7 +50,7 @@
 
       fetchUserAbout(widget.userName);
       fetchData();
-      fetchDataBack();
+      //fetchDataBack();
       getUserComments();
     }
 
@@ -274,11 +274,12 @@ Widget _buildTitleView() {
                                   const buttonWidth = 24.0;
                                   final screenSize = MediaQuery.of(context).size;
                                   final appBarHeight = AppBar().preferredSize.height;
-                                  final topOffset = appBarHeight + 220;
+                                  final topOffset = appBarHeight / 4;
                                   final horizontalOffset = buttonPosition.dx + 80;
 
                                   showMenu<String>(
                                     context: context,
+                                    initialValue: "hot",
                                     position: RelativeRect.fromLTRB(
                                       horizontalOffset + buttonWidth,
                                       topOffset,
@@ -329,7 +330,7 @@ Widget _buildTitleView() {
                     Padding(
                       padding: const EdgeInsets.only(left: 20, top: 5),
                       child: Text(
-                        'u/$userName • 1 karma •  ${_formatDate(createdAt)}',
+                        'u/$userName • ${totalKarma} karma •  ${_formatDate(createdAt)}',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey[400],
