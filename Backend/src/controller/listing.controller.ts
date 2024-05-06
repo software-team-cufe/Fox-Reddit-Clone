@@ -1128,17 +1128,16 @@ export async function submitPostHandler(req: Request, res: Response) {
       });
     }
 
-    let attachments: Array<string>;
-    if (req.files) {
-      attachments = res.locals.images;
-    } else {
-      attachments = [];
-    }
-    const data = JSON.parse(req.body.request);
+    const data = req.body;
 
-    const { title, text, nsfw, spoiler, Communityname, poll, createdAt } = data;
+    const { title, text, nsfw, spoiler, Communityname, poll, attachments, createdAt } = data;
 
     const community = await findCommunityByName(Communityname);
+    if (!community) {
+      return res.status(402).json({
+        error: 'Community not found',
+      });
+    }
 
     const pollOptions = Array.isArray(poll) ? poll.map((option: string) => ({ title: option, votes: 0 })) : undefined;
 

@@ -440,7 +440,28 @@ async function userPostss(postIDs: string[], limit: number = 10): Promise<Post[]
   return posts;
 }
 
-export { userPosts, userPostss };
+/**
+ * Retrieves user posts based on the provided array of post IDs with pagination support.
+ *
+ * @param {string[]} postIDs - An array of post IDs.
+ * @param {number} [limit=10] - The maximum number of posts to retrieve. Defaults to 10 if not provided.
+ * @returns {Promise<Post[]>} A promise that resolves to an array of populated posts.
+ */
+async function communityPosts(postIDs: string[], limit: number = 10): Promise<Post[]> {
+  // Fetch comments based on the provided postIDs
+  limit = limit || 10;
+
+  let posts = await PostModel.find({ _id: { $in: postIDs }, isDeleted: false }).limit(limit);
+
+  // Populate user and community information
+  posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
+  posts = await PostModel.populate(posts, { path: 'CommunityID', select: '_id icon' });
+
+  // Return the populated posts
+  return posts;
+}
+
+export { userPosts, userPostss, communityPosts };
 
 /**
  * Retrieves a list of best posts from the specified subreddit.

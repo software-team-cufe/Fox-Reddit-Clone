@@ -67,8 +67,8 @@ router.post('/api/commentvote', validateResource(voteCommentSchema) as RequestHa
 router.post(
   '/api/submit',
   //validateResource(submitPostSchema) as RequestHandler,
-  uploadMultipleMulter,
-  uploadMultipleCloudinary,
+  // uploadMultipleMulter,
+  // uploadMultipleCloudinary,
   submitPostHandler
 );
 router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);

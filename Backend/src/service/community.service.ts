@@ -11,10 +11,10 @@ import CommunityModel, {
   Details,
 } from '../model/community.model';
 import { Post } from '../model/posts.model';
-import { findUserById } from './user.service';
+import { findUserById, findUserByUsername } from './user.service';
 import { findPostById } from './post.service';
 import { findCommentById } from './comment.service';
-import UserModel from '../model/user.model';
+import UserModel, { Moderator } from '../model/user.model';
 
 /**
  * Finds a community by its subreddit name.
@@ -123,6 +123,11 @@ export async function createSubreddit(communityName: string, privacyType: string
 
   try {
     const createdCommunity = await createcomm(new_community);
+    const updatedCommunity2 = await CommunityModel.findByIdAndUpdate(
+      createdCommunity._id,
+      { $inc: { membersCnt: 1 } },
+      { upsert: true, new: true }
+    );
     return {
       createdCommunity,
       status: true,
@@ -245,6 +250,51 @@ export async function addModeratorToCom(userID: string, subreddit: string) {
 
   try {
     const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $addToSet: { moderators: moderator } },
+      { upsert: true, new: true }
+    );
+  } catch (error) {
+    return {
+      status: false,
+      error: error,
+    };
+  }
+  return {
+    status: true,
+  };
+}
+
+/**
+ * addModeratorToCom
+ * @param {string} body contain rules details
+ * @param {string} user user information
+ * @return {Object} state
+ * @function
+ */
+export async function updateModeratorToCom(userID: string, subreddit: string, info: Moderator) {
+  const community = await findCommunityByName(subreddit);
+
+  if (!community) {
+    return {
+      status: false,
+      error: 'user not found',
+    };
+  }
+
+  const moderator = {
+    ...info,
+    userID: userID,
+    role: 'moderator',
+  };
+
+  try {
+    const updatedCommunity1 = await CommunityModel.findByIdAndUpdate(
+      community._id,
+      { $pull: { moderators: { userID: userID } } },
+      { new: true }
+    );
+    const updatedCommunity2 = await CommunityModel.findByIdAndUpdate(
       community._id,
       { $addToSet: { moderators: moderator } },
       { upsert: true, new: true }
@@ -1651,4 +1701,62 @@ export async function getHomePostsNotAuth(page: number, limit: number) {
     },
   ]);
   return randomPosts;
+}
+
+/**
+ * Finds user posts by username with pagination support.
+ *
+ * @param name - The username of the user to find posts for.
+ * @param page - The page number for pagination.
+ * @param count - The number of posts per page.
+ * @returns post ids of the user by username for the specified page.
+ */
+export async function communityPostIDs(name: string, page: number, count: number) {
+  // Calculate skip based on page and count
+  const skip = (page - 1) * count;
+
+  // Find the user by username and retrieve their user submitted posts with pagination
+  const community = await CommunityModel.findOne({ name: name }, 'communityPosts')
+    .lean()
+    .populate({
+      path: 'communityPosts',
+      options: { skip: skip, limit: count },
+    });
+
+  // If user is not found, throw an error
+  if (!community) {
+    throw new appError("This community doesn't exist!", 404);
+  }
+
+  // Extract the post IDs from the user's submitted posts if it exists
+  const postIDs = community.communityPosts ? community.communityPosts.map((post) => post._id.toString()) : [];
+
+  // Return the post IDs
+  return postIDs;
+}
+
+export async function getCommunityModerator(communityName: string, username: string) {
+  // Find the community by name
+  const community = await findCommunityByName(communityName);
+
+  const moderatorr = await findUserByUsername(username);
+
+  if (!moderatorr) {
+    return { status: false };
+  }
+  // If community is not found, return status false
+  if (!community || !community.moderators) {
+    return { status: false };
+  }
+  const userID = moderatorr._id.toString();
+
+  // Find the moderator with the given username in the community moderators array
+  const mode = community.moderators.find((mod) => mod.userID?.toString() == userID);
+
+  // If moderator not found, return status false
+  if (!mode) {
+    return { status: false };
+  }
+
+  return { status: true, moderator: mode };
 }

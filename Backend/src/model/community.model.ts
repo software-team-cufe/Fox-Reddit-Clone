@@ -39,36 +39,59 @@ export class removalReason {
 export class ContentControls {
   @prop({ default: true })
   membersWithGuidelines!: boolean;
+  @prop()
+  membersWithGuidelinesStr!: string;
 
   @prop({ default: true })
   requirePostTitles!: boolean;
+  @prop()
+  requirePostTitlesStr!: string;
 
   @prop({ default: true })
   banWordsFromPostTitle!: boolean;
+  @prop()
+  banWordsFromPostTitleStr!: string;
 
   @prop({ default: true })
   requirePostsInPostBody!: boolean;
+  @prop()
+  requirePostsInPostBodyStr!: string;
 
   @prop({ default: true })
   banWordsFromPostBody!: boolean;
+  @prop()
+  banWordsFromPostBodyStr!: string;
 
   @prop({ default: true })
   banLinksFromDomains!: boolean;
+  @prop()
+  banLinksFromDomainsStr!: string;
 
   @prop({ default: true })
   restrictTheSameLinkPosted!: boolean;
+  @prop()
+  restrictTheSameLinkPostedStr!: string;
 
   @prop({ default: 'requiredForTextOnlyPosts' })
   textBody!: string;
 
   @prop({ default: true })
   postFlair!: boolean;
+  @prop()
+  postFlairStr!: string;
 
   @prop({ default: true })
   useRegExInTitles!: boolean;
+  @prop()
+  useRegExInTitlesStr!: string;
 
   @prop({ default: true })
   useBodyTextReg!: boolean;
+  @prop()
+  useBodyTextRegStr!: string;
+
+  @prop()
+  noteInBanMsg!: string;
 }
 
 export class PostSettings {
@@ -77,18 +100,28 @@ export class PostSettings {
 
   @prop({ default: true })
   activePosts!: boolean;
+  @prop()
+  activePostsStr!: string;
 
   @prop({ default: true })
   spoilerTag!: boolean;
+  @prop()
+  spoilerTagStr!: string;
 
   @prop({ default: true })
   allowImageUpload!: boolean;
+  @prop()
+  allowImageUploadStr!: string;
 
   @prop({ default: true })
   multiplePosts!: boolean;
+  @prop()
+  multiplePostsStr!: string;
 
   @prop({ default: true })
   allowPolls!: boolean;
+  @prop()
+  allowPollsStr!: string;
 
   @prop({ default: 'low' })
   posts!: string;
@@ -104,21 +137,31 @@ export class PostSettings {
 
   @prop({ default: false })
   collapseAndDeleteRemovedComments!: boolean;
+  @prop()
+  collapseAndDeleteRemovedCommentsStr!: string;
 
   @prop()
   minsToHideComment!: number;
 
   @prop({ default: false })
   allowCommentsWithGifs!: boolean;
+  @prop()
+  allowCommentsWithGifsStr!: string;
 
   @prop({ default: false })
   allowCommentsWithCollectibleExpressions!: boolean;
+  @prop()
+  allowCommentsWithCollectibleExpressionsStr!: string;
 
   @prop({ default: false })
   allowCommentsWithUploadedImages!: boolean;
+  @prop()
+  allowCommentsWithUploadedImagesStr!: string;
 
   @prop({ default: false })
   allowCommentsWithUploadedGIFs!: boolean;
+  @prop()
+  allowCommentsWithUploadedGIFsStr!: string;
 }
 
 export class TextWidget {
@@ -195,12 +238,41 @@ export class Member {
   isBanned?: IsBanned;
 }
 
+// class Moderator {
+//   @prop({ ref: 'User' })
+//   userID?: Ref<User>;
+
+//   @prop({ enum: ['creator', 'moderator'] })
+//   role?: string;
+// }
+
 class Moderator {
   @prop({ ref: 'User' })
   userID?: Ref<User>;
 
   @prop({ enum: ['creator', 'moderator'] })
   role?: string;
+
+  @prop({ default: false })
+  manageUsers?: boolean;
+
+  @prop({ default: false })
+  createLiveChat?: boolean;
+
+  @prop({ default: false })
+  manageSettings?: boolean;
+
+  @prop({ default: false })
+  manageFlair?: boolean;
+
+  @prop({ default: false })
+  manageWikiPages?: boolean;
+
+  @prop({ default: false })
+  managePosts?: boolean;
+
+  @prop({ default: false })
+  manageModMail?: boolean;
 }
 
 class SpamPost {

@@ -289,6 +289,27 @@ export class Moderator {
 
   @prop({ enum: ['creator', 'moderator'] })
   role?: string;
+
+  @prop({ default: false })
+  manageUsers?: boolean;
+
+  @prop({ default: false })
+  createLiveChat?: boolean;
+
+  @prop({ default: false })
+  manageSettings?: boolean;
+
+  @prop({ default: false })
+  manageFlair?: boolean;
+
+  @prop({ default: false })
+  manageWikiPages?: boolean;
+
+  @prop({ default: false })
+  managePosts?: boolean;
+
+  @prop({ default: false })
+  manageModMail?: boolean;
 }
 class Mention {
   @prop({ ref: () => User })

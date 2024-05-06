@@ -92,7 +92,7 @@ export const muteSchema = object({
 export const unmuteSchema = object({
   params: object({
     subreddit: string({
-      required_error: 'Subreddit Id is required',
+      required_error: 'Subreddit is required',
     }),
     username: string({
       required_error: 'username is required',
