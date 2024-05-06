@@ -10,7 +10,7 @@ import { userAxios } from "@/Utils/UserAxios";
 export default function PostPage() {
     const params = useParams();
     const { isLoading, data, refetch } = useQuery(`get post ${params.id}`,
-        () => userAxios.get(`/${params.id}`), { retry: 0, refetchOnWindowFocus: false, });
+        () => userAxios.get(`/posts/${params.id}`), { retry: 0, refetchOnWindowFocus: false, });
     if (isLoading) return <></>;
     let post = data?.data;
     if (post == null) return <div role='not-found'>Post not found</div>;
