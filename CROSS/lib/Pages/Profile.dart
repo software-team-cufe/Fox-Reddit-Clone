@@ -10,7 +10,6 @@ import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
   import 'package:reddit_fox/navbar.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
-  import 'package:shared_preferences/shared_preferences.dart';
 
 
   class ProfilePage extends StatefulWidget {
@@ -64,8 +63,12 @@ import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
 
     Future<void> fetchUserAbout(String userName) async {
       print("userName: $userName");
+      String editedUsername = userName;
+    if (editedUsername.startsWith('u/')) {
+      editedUsername = editedUsername.substring(2); // Extracts the part after 'u/'
+    }
       try {
-      var url = Uri.parse(ApiRoutesBackend.getUserAbout(userName));
+      var url = Uri.parse(ApiRoutesBackend.getUserAbout(editedUsername));
       var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $access_token'},
@@ -195,7 +198,7 @@ import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
       } else if (profilePic is Uint8List) {
         return MemoryImage(profilePic! as Uint8List);
       } else {
-        return AssetImage('assets/images/avatar.png');
+        return const AssetImage('assets/images/avatar.png');
       }
     }
 
@@ -221,11 +224,11 @@ Widget _buildTitleView() {
               title: userName != null  && _showTitle
                   ? Text(
                       userName!,
-                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     )
                   : null,
               background: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.deepPurple, Colors.black],
                     begin: Alignment.topCenter,
@@ -257,7 +260,7 @@ Widget _buildTitleView() {
                                     MaterialPageRoute(builder: (context) => EditProfilePage()),
                                   );
                                 },
-                                child: Text('Edit Profile'),
+                                child: const Text('Edit Profile'),
                               ),
                             ),
                           ),
@@ -315,7 +318,7 @@ Widget _buildTitleView() {
       SliverToBoxAdapter(
         child: TabBar(
           controller: _tabController,
-          tabs: [
+          tabs: const [
             Tab(text: 'Posts'),
             Tab(text: 'Comments'),
             Tab(text: 'About'),
@@ -351,11 +354,11 @@ Widget _buildTitleView() {
                   title: userName  != null && _showTitle
                       ? Text(
                           userName!,
-                          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                         )
                       : null,
                   background: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.deepPurple, Colors.black],
                         begin: Alignment.topCenter,
@@ -416,7 +419,7 @@ Widget _buildTitleView() {
                                     child: ElevatedButton(
                                       onPressed: () {},
                                       style: ElevatedButton.styleFrom(
-                                        shape: CircleBorder(), // Make the ElevatedButton circular
+                                        shape: const CircleBorder(), // Make the ElevatedButton circular
                                       ),
                                       child: Image.asset(
                                         'assets/Icons/Chat.png',
@@ -434,7 +437,7 @@ Widget _buildTitleView() {
                                     child: ElevatedButton(
                                       onPressed: () {
                                       },
-                                      child: Text('Follow'),
+                                      child: const Text('Follow'),
                                     ),
                                   ),
                                 ),
@@ -473,7 +476,7 @@ Widget _buildTitleView() {
           SliverToBoxAdapter(
             child: TabBar(
               controller: _tabController,
-              tabs: [
+              tabs: const [
                 Tab(text: 'Posts'),
                 Tab(text: 'Comments'),
                 Tab(text: 'About'),
@@ -500,7 +503,7 @@ Widget _buildTitleView() {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return ModernCard(post: posts[index]);
+                return ModernCard(post: posts[index], access_token: access_token);
               },
               childCount: posts.length,
             ),
@@ -515,17 +518,17 @@ Widget _buildTitleView() {
         return Scaffold(
           body: Column(
             children: [
-              Container(
+              SizedBox(
                 height: screenHeight * 0.08, // 20% of screen height
                 child: Row(
                   children: [
                     Expanded(
                       child: Container(
-                        color: Color.fromARGB(255, 26, 26, 26),
+                        color: const Color.fromARGB(255, 26, 26, 26),
                         alignment: Alignment.center,
                         child: Text(
                       "Post Karma: $totalKarma",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       )
@@ -534,11 +537,11 @@ Widget _buildTitleView() {
                     ),
                     Expanded(
                       child: Container(
-                        color: Color.fromARGB(255, 26, 26, 26),
+                        color: const Color.fromARGB(255, 26, 26, 26),
                         alignment: Alignment.center,
                         child: Text(
                       "Comment Karma: $commentKarma",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         )
@@ -548,8 +551,8 @@ Widget _buildTitleView() {
                   ],
                 ),
               ),
-              Divider(
-                color: const Color.fromARGB(255, 88, 88, 88),
+              const Divider(
+                color: Color.fromARGB(255, 88, 88, 88),
                 height: 2,
               ),
             ],
@@ -562,7 +565,7 @@ Widget _buildTitleView() {
     Widget build(BuildContext context) {
       return Scaffold(
         body: postData.isEmpty
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : _myProfile
                 ? _buildTitleView()
                 : _buildAlternateView(),

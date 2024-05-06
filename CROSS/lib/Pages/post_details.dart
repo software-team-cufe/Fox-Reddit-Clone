@@ -242,12 +242,7 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   Widget build(BuildContext context) {
     double userWidth = MediaQuery.of(context).size.width * 0.7;
-    String editedUsername =
-        widget.post['userName'] ?? 'error in fetching username';
-    if (editedUsername.startsWith('u/')) {
-      editedUsername =
-          editedUsername.substring(2); // Extracts the part after 'u/'
-    }
+    
     return Scaffold(
       appBar: AppBar(
         leading: const CloseButton(),
@@ -322,30 +317,37 @@ class _PostDetailsState extends State<PostDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "r/${widget.post["communityName"]}",
+                      widget.post["communityName"] != null
+                          ? "r/${widget.post["communityName"]}"
+                          : widget.post['username'] ??
+                              'error in fetching username',
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xFFFFFFFF),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProfilePage(
-                              userName: editedUsername,
-                              access_token: access_token, //editedUsername,
+                    Visibility(
+                      visible: widget.post["communityName"] != null,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfilePage(
+                                userName: widget.post['username'],
+                                access_token: access_token,
+                              ),
                             ),
+                          );
+                        },
+                        child: Text(
+                          widget.post['username'] ??
+                              'error in fetching username',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
                           ),
-                        );
-                      },
-                      child: Text(
-                        widget.post['userName'] ?? 'error in fetching username',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
                         ),
                       ),
                     ),

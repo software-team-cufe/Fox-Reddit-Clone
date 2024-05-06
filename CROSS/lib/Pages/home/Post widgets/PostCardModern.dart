@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/cardCoreWidget.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
@@ -10,6 +11,7 @@ class ModernCard extends StatefulWidget {
   final Map<dynamic, dynamic> post;
   bool currentuserpost = true;
   TextEditingController editedText = TextEditingController();
+  String? access_token;
 
   /// Constructs a [ModernCard] widget.
   ///
@@ -17,12 +19,14 @@ class ModernCard extends StatefulWidget {
   ModernCard({
     super.key,
     required this.post,
+    this.access_token
   });
   @override
   _ModernCardState createState() => _ModernCardState();
 }
 
 class _ModernCardState extends State<ModernCard> {
+  
   @override
   void initState() {
     super.initState();
@@ -59,18 +63,42 @@ class _ModernCardState extends State<ModernCard> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CircleAvatar(
-                      radius: 18,
-                      child: Icon(Icons.account_circle),
-                    ),
+                    if (widget.post["communityName"] != null)
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundImage:
+                            AssetImage(widget.post["communityIcon"]),
+                      )
+                    else
+                      const CircleAvatar(
+                        radius: 18,
+                        child: Icon(Icons.account_circle),
+                      ),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "r/${widget.post["communityName"]}",
-                          style: const TextStyle(
-                            fontSize: 20,
+                        GestureDetector(
+                          onTap: () {
+                            if (widget.post["communityName"] != null) {
+                              // Navigate to the community page
+                            } else {
+                              // Navigate to the user's profile page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfilePage(userName: widget.post['username'], access_token: widget.access_token),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text(
+                            widget.post["communityName"] != null
+                                ? "r/${widget.post["communityName"]}"
+                                : "u/${widget.post["username"]}",
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ],
