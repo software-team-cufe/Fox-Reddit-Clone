@@ -79,21 +79,24 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
         else if (OptionHeader == "Banner") {
             reqType = 'upload_sr_banner';
         }
-        const formData = new FormData();
-        formData.append('image', imageDisplay);
     
-        try {
-            await userAxios.post(`${community}/api/${reqType}`, formData)
-                .then(() => {
-                    toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
-                    onClose(false);
-                    window.location.reload();
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        } finally {
-            setSubmittingReq(false);
+        const reader = new FileReader();
+        reader.readAsDataURL(imageDisplay);
+        reader.onloadend = async function () {
+            const base64Image = reader.result;
+            try {
+                await userAxios.post(`${community}/api/${reqType}`, { image: base64Image })
+                    .then(() => {
+                        toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
+                        onClose(false);
+                        window.location.reload();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } finally {
+                setSubmittingReq(false);
+            }
         }
     };
 
