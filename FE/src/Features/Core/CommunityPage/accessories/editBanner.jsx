@@ -77,13 +77,8 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
         else if (OptionHeader == "Banner") {
             reqType = 'upload_sr_banner';
         }
-    
-        const reader = new FileReader();
-        reader.readAsDataURL(imageDisplay);
-        reader.onloadend = function() {
-            const base64data = reader.result;                
             const formData = new FormData();
-            formData.append('image', base64data);
+            formData.append('image', imageDisplay);
     
             userAxios.post(`${community}/api/${reqType}`, formData)
                 .then(() => {
@@ -94,7 +89,6 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
                 .catch((err) => {
                     console.log(err);
                 });
-        }
     };
 
     return (
