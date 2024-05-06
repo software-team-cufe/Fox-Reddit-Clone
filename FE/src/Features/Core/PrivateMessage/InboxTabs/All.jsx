@@ -2,20 +2,11 @@ import ReactQuill from 'react-quill';
 import React, { useEffect, useState } from 'react'
 import { ArrowBigUp, ArrowBigDown, X, UserRoundX, BadgeCheck } from 'lucide-react'
 import { Switch } from '@headlessui/react'
-
+import { userAxios } from "@/Utils/UserAxios";
+import { userStore } from '../../../../hooks/UserRedux/UserStore';
 export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
-    const [AllM, setAllM] = useState([{
-        messId: "id",
-        username: 'to this user', subject: "title",
-        text: 'mess eeee eeeeeeeeee lllllllllllll eeeeeeeeeeeee',
-        createdAt: new Date('2024-04-20T12:00:00'), postId: "idP",
-        commentId: "idC", UpOrDownV: "up", PostTitle: "title", CommentsNum: "10", unread: false
-    }, {
-        messId: "id2", PostTitle: "title", CommentsNum: "10",
-        username: 'to this user', subject: "title", text: '<p>mess eeee eeeeeeeeee lllllllllllll eeeeeeeeeeeee</p>',
-        createdAt: new Date('2024-04-20T12:00:00'), postId: "idP", commentId: "idC", UpOrDownV: "down", unread: false
-    }])
-
+    const currentId = userStore.getState().user.user._id;
+    const [AllM, setAllM] = useState([]);
     const [SureToRemove, setSureToRemove] = useState(false);
     const [SureToBlock, setSureToBlock] = useState(false);
     const [ReportPop, setReportPop] = useState(false);
@@ -26,9 +17,7 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
     const [BlockedUserInRep, setBlockedUserInRep] = useState(false);
     const [ShowRepIn, setShowRepIn] = useState(Array(AllM.length).fill(false));
     const [ReplyValue, setReplyValue] = useState('');
-    const [loading, setLoading] = useState(false); //make it true
-    // setCrash(true);
-    // setLoading(false);
+    const [loading, setLoading] = useState(true);
     const [crash, setCrash] = useState(false);
 
 
@@ -54,12 +43,26 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
     { title: "Report abuse", des: "Using Fox’s reporting tools to spam, harass, bully, intimidate, abuse, or create a hostile environment." }];
 
     useEffect(() => {
-
+        fetchMessages();
     }, [])
 
     useEffect(() => {
         selectedButton === null ? setDisableNext(true) : setDisableNext(false)
     }, [selectedButton])
+
+    const fetchMessages = async () => {
+        try {
+            const res = await userAxios.get('api/get_all');
+            console.log(res.data);
+            const filteredMessages = res.data.filter(message => !message.isDeleted);
+            setAllM(filteredMessages);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setCrash(true);
+            setLoading(false);
+        }
+    }
 
     const handleUpVote = (id, index, UpOrDownV) => {
         //after api
@@ -150,41 +153,59 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
                     ${i % 2 === 0 && !mess.unread ? "bg-white" : "bg-[#fff6f1]"}
                     `}>
                         <div className='flex'>
-                            <p className='text-sm mr-2 mt-1' >post reply:</p>
+
+                            {mess.postTitle && <p className='text-sm mr-2 mt-1' >post reply:</p>}
                             <p className='text-lg font-bold' onClick={() => {
                                 //navigate to post
-                            }}>{mess.PostTitle}</p>
+                            }}>{mess.postTitle}</p>
+                            <p className='text-lg font-bold' onClick={() => {
+                                //navigate to post
+                            }}>{mess.subject}</p>
                         </div>
                         <div className='flex mr-2 sm:ml-14 ml-3 mb-2'>
-                            <div className='flex flex-col mr-2'>
+                            {mess.postTitle && <div className='flex flex-col mr-2'>
                                 <ArrowBigUp onClick={() => { handleUpVote(mess.id, i, mess.UpOrDownV) }}
                                     className={`${mess.UpOrDownV === 'up' ?
                                         ' text-green-600 rounded-full' : 'text-slate-400'} hover:cursor-pointer`} />
                                 <ArrowBigDown onClick={() => { handleDownVote(mess.id, i, mess.UpOrDownV) }}
                                     className={`${mess.UpOrDownV === 'down' ?
                                         ' text-red-600 rounded-full' : 'text-slate-400'} hover:cursor-pointer`} />
-                            </div>
+                            </div>}
                             <div className='mr-2 w-full '>
                                 <div className='flex mb-2'>
-                                    <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                    {mess.fromID && mess.fromID._id === currentId && <>
+                                        <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                            to</p>
+                                        <p className='text-sm mr-2  text-blue-600
+                                        hover:cursor-pointer hover:underline'>
+                                            {mess.toID.username}</p></>}
+                                    {mess.fromID && !(mess.fromID._id === currentId) && <>
+                                        <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                            from</p>
+                                        <p className='text-sm mr-2  text-blue-600
+                                        hover:cursor-pointer hover:underline'>
+                                            {mess.fromID.username}</p></>}
+                                    {mess.postTitle && <><p className='text-xs mt-1 mr-2 text-gray-500'>
                                         from</p>
-                                    <p className='text-sm mr-2  text-blue-600
+                                        <p className='text-sm mr-2  text-blue-600
                                      hover:cursor-pointer hover:underline'>
-                                        {mess.username}</p>
+                                            {mess.from.username}</p></>}
                                     <p className='text-xs mt-1 mr-2 text-gray-500'>
                                         {DiffTime(mess.createdAt)}</p>
                                 </div>
-                                <div className='mb-2  text-sm'
-                                    dangerouslySetInnerHTML={{ __html: mess.text }}></div>
+                                {!mess.postTitle && <div className='mb-2  text-sm'
+                                    dangerouslySetInnerHTML={{ __html: mess.text }}></div>}
+                                {mess.postTitle && <div className='mb-2  text-sm'
+                                    dangerouslySetInnerHTML={{ __html: mess.Comment.textHTML }}></div>}
                                 <div className='flex flex-wrap text-gray-500'>
-                                    <p className='text-xs m-1 hover:cursor-pointer 
+                                    {mess.postTitle && <> <p className='text-xs m-1 hover:cursor-pointer 
                                     hover:underline' onClick={() => {
                                             //go to comment page
                                         }}>Context</p>
-                                    <p onClick={() => {
-                                        //go to post page
-                                    }} className='mx-2 m-1 text-xs hover:cursor-pointer 
-                                    hover:underline '>Full Comments ({mess.CommentsNum})</p>
+                                        <p onClick={() => {
+                                            //go to post page
+                                        }} className='mx-2 m-1 text-xs hover:cursor-pointer 
+                                    hover:underline '>Full Comments ({mess.commentNum})</p></>}
                                     {!SureToRemove && <p onClick={() => {
                                         setSureToRemove(true);
                                     }}
@@ -226,12 +247,12 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
                                         }}
                                             className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}
-                                    <p onClick={() => { setUnreadAtIndex(i, true); }}
+                                    {!mess.postTitle && <p onClick={() => { setUnreadAtIndex(i, true); }}
                                         className={`mx-2 text-xs m-1  hover:cursor-pointer
-                                     hover:underline ${mess.unread ? "hidden" : "block"}`}>Mark Unread</p>
-                                    <p onClick={() => { setShowRepIn(true); toggleShowRepIn(i); }}
+                                     hover:underline ${mess.unread ? "hidden" : "block"}`}>Mark Unread</p>}
+                                    {!mess.postTitle && <p onClick={() => { setShowRepIn(true); toggleShowRepIn(i); }}
                                         className={`mx-2 text-xs m-1  hover:cursor-pointer
-                                     hover:underline ${mess.unread ? "hidden" : "block"}`}>Reply</p>
+                                     hover:underline ${mess.unread ? "hidden" : "block"}`}>Reply</p>}
                                 </div>
                             </div>
                         </div>
