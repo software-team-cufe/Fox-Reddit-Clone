@@ -16,8 +16,8 @@ function SafetySettings() {
     //To do add of both fields
 
     useEffect(() => {
-        fetchMock();
-        //fetchBlock();
+        //fetchMock();
+        fetchBlock();
     }, [])
     useEffect(() => {
         if (BlockValue.length === 0)
@@ -48,6 +48,7 @@ function SafetySettings() {
         try {
             const res = await userAxios.get('/api/v1/me/blocked');
             console.log(res.data);
+            setBlocked(res.data);
         } catch (ex) {
             if (ex.issues != null && ex.issues.length != 0) {
                 toast.error(ex.issues[0].message);

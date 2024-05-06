@@ -249,7 +249,7 @@ function CreatePostPage(props) {
 
 
     return (
-        <div className='bg-gray-300 h-[1100px] ' id="parentElement"  >
+        <div className='bg-gray-300 min-h-[100vh] h-max ' id="parentElement"  >
             <div className='flex'>
                 <div className='lg:w-[60%] w-full md:ml-40  '>
                     <div className='h-12'></div>

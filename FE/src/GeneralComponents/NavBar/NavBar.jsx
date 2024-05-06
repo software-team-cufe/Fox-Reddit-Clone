@@ -11,7 +11,9 @@ import { useLocation } from "react-router-dom";
 import { userStore } from '../../hooks/UserRedux/UserStore';
 import SearchComponent from "../../GeneralElements/Search/Search";
 import NotificationsPopup from "./NotificationsPopup";
-export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOnline, IsLogged }) {
+export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
+  ViewdInSearch, setViewdInSearch,
+  UserName, IsOnline, IsLogged }) {
 
 
   const navigator = useNavigate();
@@ -141,7 +143,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
         <Logo role="FoxLogo"
           className=" text-2xl" />
 
-        <SearchComponent />
+        <SearchComponent Viewed={ViewdInSearch} setViewed={setViewdInSearch} />
 
         {IsLogged && <>
 
@@ -304,7 +306,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
               {IsOpenProfList && (
                 <ul ref={listProfRef} role="profile-menu" className=" rounded-lg flex-col shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                   <li>
-                    <button onClick={() => { navigator(`/user/${UserName}/posts`) }}
+                    <button onClick={() => { navigator(`/user/${UserName}/posts`); setIsOpenProfList(false); }}
                       className="bg-white hover:bg-orange-100  text-black h-16 py-2 px-4 rounded inline-flex items-center w-full">
                       <ProfileIcon imageSrc={ProfileImageSrc} altText={UserName} isOnline={IsOnline} />
                       <div className="flex-col flex my-2">
@@ -316,6 +318,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
 
                   <li>
                     <button onClick={() => {
+                      setIsOpenProfList(false);
                       localStorage.removeItem('authorization');
                       localStorage.removeItem('refreshToken');
                       window.location.href = '/'
@@ -333,7 +336,10 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc, UserName, IsOn
                   </li>
                   <div className="bg-gray-200 h-px mx-4 my-2"></div>
                   <li>
-                    <button onClick={() => { navigator("/setting/account"); }}
+                    <button onClick={() => {
+                      navigator("/setting/account");
+                      setIsOpenProfList(false);
+                    }}
                       className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1 
                          rounded inline-flex items-center w-full">
                       <Settings strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
