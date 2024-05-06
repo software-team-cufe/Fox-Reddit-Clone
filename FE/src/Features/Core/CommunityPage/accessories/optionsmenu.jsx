@@ -2,9 +2,9 @@ import React from "react";
 import { Menu, Transition } from '@headlessui/react';
 import { GripHorizontal } from "lucide-react";
 import { Fragment } from "react";
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { userAxios } from "@/Utils/UserAxios";
+import {useSelector} from "react-redux";
 
 /**
  * Renders an options menu for a community page.
@@ -16,6 +16,7 @@ import { userAxios } from "@/Utils/UserAxios";
  */
 export default function OptionsMenu({comm, setComm}) {
 
+      const username = useSelector((state) => state.user.user.username);
     const handleFavouriteChange = () => {
       const favStatus = comm.favourited ? "unfavorite" : "favorite";
 
@@ -34,7 +35,8 @@ export default function OptionsMenu({comm, setComm}) {
         })};
 
     const handleMuteChange = () => {
-      axios.patch(`http://localhost:3002/communities/${comm.id}`, { muted: !comm.muted })
+      const requestType = comm.muted ? "unmute" : "mute";
+      userAxios.post(`${comm.name}/api/${requestType}/${username}`, {reason: "mute"})
       .then(() => {
         if(comm.muted) {
           toast.success(`r/${comm.name} unmuted!`);

@@ -72,8 +72,8 @@ export function HomeProvider({ children }) {
 
 export default function HomePage() {
   const { selected } = useContext(HomeContext);
-  const { isLoading, isError, error, data, } = useQuery(['get-post'],
-    () => userAxios.get(`/api/listing/posts/r/example_subreddit/top?page=2&limit=2&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`),
+  const { isLoading, isError, error, data, } = useQuery(['get-post', selected],
+    () => userAxios.get(`/user-home?page=1&limit=15&sort=${selected.toLowerCase()}`),
     {
       retry: 0,
       refetchOnWindowFocus: false,
@@ -91,7 +91,7 @@ export default function HomePage() {
         </div>
         <hr />
         {
-          data?.data?.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
+          data?.data?.homePageAuthPosts?.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
       </div>
       <div className="p-5   max-w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">

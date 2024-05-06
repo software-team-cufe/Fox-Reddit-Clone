@@ -23,9 +23,13 @@ function InboxFunc() {
                     <Link key={index} to={tab.link} className='w-full my-2 mx-1'>
                         <button className={` rounded-full p-1 text-sm w-full 
                          hover:bg-[#edc6b2] hover:text-slate-900 h-12 
-                         ${path.pathname.endsWith(tab.link.slice(1)) ?
-                                "bg-[#edc6b2] text-slate-900" :
-                                "bg-[#935226ef] text-white"} `}>
+                         ${index !== 0 ?
+                                (path.pathname.endsWith(tab.link.slice(1)) ?
+                                    "bg-[#edc6b2] text-slate-900" :
+                                    "bg-[#935226ef] text-white") :
+                                ((path.pathname.endsWith("message/inbox") || path.pathname.endsWith("message/inbox/")) ?
+                                    "bg-[#edc6b2] text-black" :
+                                    "bg-[#935226ef] text-white")}`}>
                             {tab.label}</button>
                     </Link>
                 )}

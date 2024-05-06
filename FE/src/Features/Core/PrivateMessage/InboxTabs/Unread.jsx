@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
-    ArrowBigUp, ArrowBigDown, X, UserRoundX, BadgeCheck
+    X, UserRoundX, BadgeCheck
     , CirclePlus, CircleMinus
 } from 'lucide-react'
 import { Switch } from '@headlessui/react'
@@ -21,9 +21,7 @@ function Unread({ DiffTime }) {
     const [ShowRepIn, setShowRepIn] = useState(Array(UnreadMess.length).fill(false));
     const [ReplyValue, setReplyValue] = useState('');
     const [ShowExpand, setShowExpand] = useState(Array(UnreadMess.length).fill(true));
-    const [loading, setLoading] = useState(false); //make it true
-    // setCrash(true);
-    // setLoading(false);
+    const [loading, setLoading] = useState(true);
     const [crash, setCrash] = useState(false);
 
 
@@ -53,6 +51,10 @@ function Unread({ DiffTime }) {
     useEffect(() => {
         fetchMessages();
     }, [])
+
+    useEffect(() => {
+        setShowExpand(Array(UnreadMess.length).fill(true));
+    }, [UnreadMess])
 
     useEffect(() => {
         selectedButton === null ? setDisableNext(true) : setDisableNext(false)

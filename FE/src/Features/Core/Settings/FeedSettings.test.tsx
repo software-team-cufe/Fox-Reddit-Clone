@@ -1,5 +1,5 @@
 import React =require("react")
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, getByRole } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import FeedSettings from './feedSettings';

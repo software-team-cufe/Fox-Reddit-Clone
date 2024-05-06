@@ -5,6 +5,7 @@ import axios from 'axios';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { userAxios } from "../../../Utils/UserAxios";
+import { toast } from 'react-toastify';
 
 
 /**
@@ -14,19 +15,9 @@ import { userAxios } from "../../../Utils/UserAxios";
 
 export default function ChatMessaging() {
 
-
-    // const { isLoading, error, data, refetch } = useQuery(
-    //     "get-client",
-    //     () => userAxios.get('api/user/me/prefs').then((d) => {
-    //         disp(setUser(d.data.user));
-    //         return userAxios.post('user/me/markAllAsRead').then(() => d.data.user);
-    //     }),
-    //     {
-    //         refetchOnWindowFocus: false,
-    //         retry: 0,
-    //         enabled: localStorage.getItem('authorization') != null,
-    //     }
-    // );
+    const handleReadAll = () => {
+        toast.success("changes saved. \u{1F60A}");
+    }
 
     return (
         <div className="w-[75%]">
@@ -39,7 +30,7 @@ export default function ChatMessaging() {
                     <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
                         className="text-black dark:text-blue-500 w-auto focus:ring-blue-300 font-medium border-solid border-2 border-sky-500 rounded-lg text-sm px-5 py-2.5 text-center 
                         inline-flex gap-5 items-center bg-transparent dark:bg-transparent dark:hover:bg-blue-200 dark:focus:ring-blue-800 rounded-3xl" type="button"
-                        role="markButton">
+                        role="markButton" onClick={handleReadAll}>
                         Mark as Read
                     </button>
                 </div>

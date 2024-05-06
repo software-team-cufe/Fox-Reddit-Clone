@@ -23,14 +23,14 @@ function CreatePostPage(props) {
     const [NSFW, setNSFW] = useState(false);
     const [Spoiler, setSpoiler] = useState(false);
     const [PostNotifications, setPostNotifications] = useState(false);
-    const [VideoOrImageSrc, setVideoOrImageSrc] = useState(null);
+    const [VideoOrImageSrc, setVideoOrImageSrc] = useState([]);
     const [PollOptions, setPollOptions] = useState([]);
     const [VoteLength, setVoteLength] = useState(1);
     const [imageOrVideo, setimageOrVideo] = useState(null);
     const [height, setHeight] = useState(window.innerHeight);
     const [imageFile, setimageFile] = useState(null);
     const [imageShow, setimageShow] = useState(null);
-
+    const [load, setload] = useState(false);
     const updatePollOptions = () => {
         let newOptions = [];
         if (Poll1) newOptions.push(Poll1);
@@ -60,9 +60,15 @@ function CreatePostPage(props) {
     }, [SelectedCom])
 
     const uploadImage = async (file) => {
+        let imageOrVideo;
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', 'postImageOrVideo');
+        if (file.startsWith('data:image/')) {
+            imageOrVideo = 'image'
+        } else if (file.startsWith('data:video/')) {
+            imageOrVideo = 'video'
+        }
         if (imageOrVideo) {
             const response = await fetch(`https://api.cloudinary.com/v1_1/dtl7z245k/${imageOrVideo}/upload`, {
                 method: 'POST',
@@ -110,16 +116,21 @@ function CreatePostPage(props) {
     // }
 
     const Post = async () => {
+        setload(true);
         if (PostNotifications === "on")
             setPostNotifications(true);
 
-        const imageUrl = await uploadImage(VideoOrImageSrc);
+        let imageUrl = [];
+        for (let index = 0; index < VideoOrImageSrc.length; index++) {
+            imageUrl.push(await uploadImage(VideoOrImageSrc[index]));
+        }
+        console.log(imageUrl)
         let NewPost;
 
         if (SelectedCom.name === store.username) {
             NewPost = {
                 title: TitleValue,
-                text: PostText, spoiler: Spoiler,
+                text: PostText + '' + PostURL, spoiler: Spoiler,
                 nsfw: NSFW, pollOptions: PollOptions, attachments: [imageUrl],
                 createdAt: new Date()
             }
@@ -135,16 +146,18 @@ function CreatePostPage(props) {
         }
         console.log(imageUrl);
         setimageShow(imageUrl);
-        userAxios.post('api/submit', NewPost)
-            .then((res) => {
-                console.log(res)
-                toast.success("Post created successfully \u{1F60A}");
-            })
-            .catch((ex) => {
-                if (ex.issues != null && ex.issues.length != 0) {
-                    toast.error(ex.issues[0].message);
-                }
-            });
+
+        try {
+            const res = userAxios.post('api/submit', NewPost)
+            console.log(res)
+            setload(false);
+            toast.success("Post created successfully \u{1F60A}");
+        } catch (error) {
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+                setload(false);
+            }
+        }
     }
 
     // const Post = async () => {
@@ -245,7 +258,7 @@ function CreatePostPage(props) {
                     <ChooseCommunity
                         Selected={SelectedCom} setSelected={setSelectedCom}
                         id="ChooseCom" />
-                    <TypingArea setimageFile={setimageFile}
+                    <TypingArea load={load} setimageFile={setimageFile}
                         PostFunc={Post} imageOrVideo={setimageOrVideo}
                         Poll3={Poll3} SetPoll3={setPoll3}
                         VoteLength={VoteLength} SetVoteLength={setVoteLength}

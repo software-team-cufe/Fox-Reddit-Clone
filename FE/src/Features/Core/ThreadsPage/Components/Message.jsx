@@ -1,6 +1,8 @@
-import React from 'react'
 
-export default function Message({ isMe }) {
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+export default function Message({ isMe, userId }) {
 
     (
         <div className="col-start-6 col-end-13 p-3 rounded-lg">
@@ -15,11 +17,11 @@ export default function Message({ isMe }) {
         </div>
     )
     return (
-        <div className={isMe? "col-start-6 col-end-13 p-3 rounded-lg" : "col-start-1 col-end-8 p-3 rounded-lg"}>
+        <div className={isMe ? "col-start-6 col-end-13 p-3 rounded-lg" : "col-start-1 col-end-8 p-3 rounded-lg"}>
             <div className={`flex gap-4 ${isMe ? "flex-row-reverse" : "flex-row"} items-center`}>
-                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                <Link to={`/user/${userId}`} className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
                     A
-                </div>
+                </Link>
                 <div className={`relative text-sm ${isMe ? "bg-indigo-100" : "bg-white"} py-2 px-4 shadow rounded-xl`}>
                     <div>Hey How are you today?</div>
                 </div>

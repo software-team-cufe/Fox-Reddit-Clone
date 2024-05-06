@@ -1,4 +1,25 @@
 {
+  "banned": [
+    {
+      "userName": "asdasdasdasd",
+      "reason": "other",
+      "note": "234234345",
+      "period": 234,
+      "id": "1",
+      "communityName": "test2",
+      "banMsg": "22222222222222",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    }
+  ],
+  "muted": [
+    {
+      "id": "0168",
+      "communityName": "test2",
+      "userName": "efteeeeeeeeeeee",
+      "reason": "eee",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    }
+  ],
   "users": [
     {
       "name": "test",
@@ -7,13 +28,17 @@
       "about": "Hi, I'm a user. I love hiking, reading books, and playing the guitar in my free time. New from browser\n",
       "totalKarma": 2424,
       "isModerator": true,
-      "blur": true,
+      "blur": false,
       "autoPlayVideos": true,
       "comV": true,
       "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "nsfw": true,
+      "NSFW": false,
       "allowFollow": false,
+      "openPostsInNewTab": false,
+      "rememberingSortPerCommunity": false,
+      "rememberGlobalView": false,
+      "communityTheme": true,
       "blocked": [
         {
           "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
@@ -59,13 +84,17 @@
       "about": "Hello, I'm user2. My hobbies include painting, cooking, and playing video games.",
       "totalKarma": 5342,
       "isModerator": false,
-      "blur": true,
-      "autoPlayVideos": false,
+      "blur": false,
+      "autoPlayVideos": true,
       "comV": true,
       "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "nsfw": false,
+      "NSFW": false,
       "allowFollow": true,
+      "openPostsInNewTab": false,
+      "rememberingSortPerCommunity": false,
+      "rememberGlobalView": false,
+      "communityTheme": true,
       "blocked": [
         {
           "name": "blocked1",
@@ -107,8 +136,12 @@
       "comV": true,
       "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "nsfw": false,
+      "NSFW": false,
       "allowFollow": true,
+      "openPostsInNewTab": true,
+      "rememberingSortPerCommunity": false,
+      "rememberGlobalView": false,
+      "communityTheme": false,
       "blocked": [
         {
           "name": "blocked1",
@@ -150,8 +183,12 @@
       "comV": true,
       "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "nsfw": false,
+      "NSFW": false,
       "allowFollow": true,
+      "openPostsInNewTab": true,
+      "rememberingSortPerCommunity": true,
+      "rememberGlobalView": true,
+      "communityTheme": true,
       "blocked": [
         {
           "name": "blocked1",
@@ -193,8 +230,12 @@
       "comV": true,
       "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "nsfw": false,
+      "NSFW": false,
       "allowFollow": true,
+      "openPostsInNewTab": true,
+      "rememberingSortPerCommunity": false,
+      "rememberGlobalView": false,
+      "communityTheme": false,
       "blocked": [
         {
           "name": "blocked1",

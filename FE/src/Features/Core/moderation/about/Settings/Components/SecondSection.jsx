@@ -4,7 +4,7 @@ import ToggleButton from "@/GeneralElements/ToggleButton/ToggleButton";
 import TextBox from '../../../../../../GeneralElements/TextBox/TextBox';
 
 
-export default function SecondSection({ obj }) {
+export default function SecondSection({ obj, initial }) {
     obj = obj ?? {};
     return (
         <div>
@@ -22,15 +22,15 @@ export default function SecondSection({ obj }) {
                             Allow posts to have body text
                         </p>
                     </div>
-                    <div className='flex  gap-2 items-center'> 
+                    <div className='flex  gap-2 items-center'>
                         <input name='textBody' value={'optionalForAllPosts'} className=' ' type='radio' />
                         <label className=' text-gray-600'>Text body is optional for all post types</label>
                     </div>
-                    <div className='flex  gap-2 items-center'> 
+                    <div className='flex  gap-2 items-center'>
                         <input name='textBody' value={'requiredForTextOnlyPosts'} className=' ' type='radio' />
                         <label className=' text-gray-600'>Text body is required for text-only posts</label>
                     </div>
-                    <div className='flex  gap-2 items-center'> 
+                    <div className='flex  gap-2 items-center'>
                         <input name='textBody' value={'notAllowed'} className=' ' type='radio' />
                         <label className=' text-gray-600'>Text body is not allowed</label>
                     </div>
