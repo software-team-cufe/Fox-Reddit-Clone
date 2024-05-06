@@ -6,7 +6,12 @@ import PostModel from '../model/posts.model';
 import CommunityModel from '../model/community.model';
 import UserModel from '../model/user.model';
 import CommentModel from '../model/comments.model';
-import { getSrSearchResultNotAuth, getSrSearchResultAuth } from '../service/community.service';
+import {
+  getSrSearchResultNotAuth,
+  getSrSearchResultAuth,
+  getPostsSearchResultsNotAuth,
+  getPostsSearchResultsAuth,
+} from '../service/community.service';
 import { getUserSearchResult } from '../service/user.service';
 export async function searchHomeHandler(
   req: Request<{}, {}, {}, SearchNormalInput['query']>,
@@ -18,6 +23,7 @@ export async function searchHomeHandler(
     const searchkey = query.q as string;
     const type = query.type as 'link' | 'sr' | 'comment' | 'user';
     const sort = query.sort as string;
+    const topBy = query.topBy as string;
     //page and limit
     // Convert strings to numbers
     const pageString = req.query.page;
@@ -38,7 +44,22 @@ export async function searchHomeHandler(
     //search logic here
     //switch case
     switch (searchType) {
-      // case 'posts':
+      case 'posts':
+        if (!userAuthenticated) {
+          const postsSearchResultNotAuth = await getPostsSearchResultsNotAuth(page, limit, searchkey, sort, topBy);
+          return res.status(200).json({ postsSearchResultNotAuth });
+        } else if (userAuthenticated) {
+          const postsSearchResultAuth = await getPostsSearchResultsAuth(
+            page,
+            limit,
+            res.locals.user._id,
+            searchkey,
+            sort,
+            topBy
+          );
+          return res.status(200).json({ postsSearchResultAuth });
+        }
+        break;
 
       case 'subreddits':
         {

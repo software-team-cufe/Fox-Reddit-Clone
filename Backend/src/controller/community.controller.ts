@@ -2742,8 +2742,8 @@ export async function uploadCommunityBanner(req: Request, res: Response) {
     });
   }
   try {
-    if (!req.file || Object.keys(req.file).length === 0) {
-      throw new Error('No file uploaded');
+    if (!res.locals.image) {
+      throw new Error('No image');
     }
 
     const image = res.locals.image;
@@ -2769,7 +2769,9 @@ export async function uploadCommunityBanner(req: Request, res: Response) {
       return res.status(404).json({ status: 'error', message: 'Only moderators can upload community icons' });
     }
 
-    await CommunityModel.findByIdAndUpdate(communityId, { banner: image }, { runValidators: true });
+    console.log('before save to model');
+    await CommunityModel.findByIdAndUpdate(communityId, { banner: image });
+    console.log('after save to model');
 
     res.status(200).json({
       msg: 'Banner uploaded successfully',
