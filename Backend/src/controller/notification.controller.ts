@@ -29,7 +29,11 @@ export async function getUserNotifications(req: Request, res: Response) {
           }
           return null; // or handle undefined case as needed
         })
-      );
+      ).then((notifications) => {
+        // Filter out null values
+        const filteredNotifications = notifications.filter((notification) => notification !== null);
+        return filteredNotifications.sort((a, b) => (b?.createdAt?.getTime() ?? 0) - (a?.createdAt?.getTime() ?? 0));
+      }); // Sort notifications by createdAt in descending order
 
       return res.status(200).json({
         notifications,
