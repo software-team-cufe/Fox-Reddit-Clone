@@ -132,7 +132,7 @@ export const submitPostSchema = object({
 
 export const postByIdSchema = object({
   params: object({
-    postId: string({
+    id: string({
       required_error: 'id is required',
     }),
   }),

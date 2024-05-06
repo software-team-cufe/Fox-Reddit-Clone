@@ -75,5 +75,5 @@ router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);
 
 router.post('/api/addreply', validateResource(addCommentSchema), addReplyHandler);
 router.get('/api/get_comment_replies/:commentId', getCommentRepliesHandler);
-router.get('/posts/:id', validateResource(postByIdSchema), getPostByIdHandler);
+router.get('/posts/:id', getPostByIdHandler);
 export default router;
