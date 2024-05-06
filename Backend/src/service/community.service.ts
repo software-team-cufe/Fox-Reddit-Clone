@@ -1346,8 +1346,8 @@ export async function getHomePostsAuth(
         $match: {
           $or: [
             { privacyType: 'Public' }, // Match public communities
-            { 'members.userId': userID }, // Match communities where the user is a member
-            { 'moderators.userId': userID }, // Match communities where the user is a moderator
+            { 'members.userID': userID }, // Match communities where the user is a member
+            { 'moderators.userID': userID }, // Match communities where the user is a moderator
           ],
         },
       },
