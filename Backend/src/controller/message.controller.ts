@@ -88,6 +88,12 @@ export async function deleteMessageHandler(req: Request<DeleteMessageInput['body
         message: 'Message not found',
       });
     }
+    if (message.isDeleted == true) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Message already deleted',
+      });
+    }
     const result = await deleteMessage(message._id.toString());
     if (result.status) {
       return res.status(200).json({
@@ -198,12 +204,15 @@ export async function allMessagesHandler(req: Request, res: Response) {
   const userId = res.locals.user._id;
 
   try {
-    const messages = await MessageModel.find({
-      $or: [
-        { toID: userId, fromID: { $ne: userId } },
-        { fromID: userId, toID: { $ne: userId } },
-      ],
-    })
+    const messages = await MessageModel.find(
+      {
+        $or: [
+          { toID: userId, fromID: { $ne: userId } },
+          { fromID: userId, toID: { $ne: userId } },
+        ],
+      },
+      { isDeleted: false }
+    )
       .populate({
         path: 'toID',
         select: 'username avatar', // Select the fields to populate
@@ -391,7 +400,7 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
   const userId = res.locals.user._id;
 
   try {
-    const messages = await MessageModel.find({ toID: userId, unread_status: true })
+    const messages = await MessageModel.find({ toID: userId, unread_status: true, isDeleted: false })
       .populate({
         path: 'toID',
         select: 'username avatar',
@@ -502,9 +511,14 @@ export async function getAllMessagesUsernamesAndSubjectsHandler(req: Request, re
   const userId: string = res.locals.user._id as string; // Assuming _id is a string
 
   try {
-    // Retrieve messages where the current user is either the sender or the recipient
+    // Retrieve messages where the current user is either the sender or the recipient, and isDeleted is false
     const messages = await MessageModel.find({
-      $or: [{ fromID: userId }, { toID: userId }],
+      $and: [
+        {
+          $or: [{ fromID: userId }, { toID: userId }],
+        },
+        { isDeleted: false },
+      ],
     });
 
     // Fetch usernames associated with sender and recipient IDs
@@ -849,9 +863,14 @@ export async function getuserAllHandler(req: Request, res: Response) {
     }
 
     const messages = await MessageModel.find({
-      $or: [
-        { toID: user._id, fromID: { $ne: user._id } },
-        { fromID: user._id, toID: { $ne: user._id } },
+      $and: [
+        {
+          $or: [
+            { toID: user._id, fromID: { $ne: user._id } },
+            { fromID: user._id, toID: { $ne: user._id } },
+          ],
+        },
+        { isDeleted: false },
       ],
     })
       .populate({
