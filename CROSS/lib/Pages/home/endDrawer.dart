@@ -140,8 +140,9 @@ class _endDrawerState extends State<endDrawer> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    SavedPage()), // Replace SavedPage with the actual name of your saved page widget
+                                builder: (context) => SavedPage(
+                                      userName: userName,
+                                    )), // Replace SavedPage with the actual name of your saved page widget
                           );
                         },
                       ),
