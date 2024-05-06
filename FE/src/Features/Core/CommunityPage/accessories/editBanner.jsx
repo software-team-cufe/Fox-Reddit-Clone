@@ -3,6 +3,7 @@ import { X, ChevronDown, ChevronRight, ChevronLeft, CloudUpload, Trash2 } from "
 import { userAxios } from "@/Utils/UserAxios";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import Spinner from '@/GeneralElements/Spinner/Spinner';
 
 export default function EditModal({ onClose = () => { }, optionheader = "Community appearance" }) {
     const handleClose = () => {
@@ -24,6 +25,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = useRef();
     const [imageDisplay, setImagedisplay] = useState(null);
+    const [submittingReq, setSubmittingReq] = useState(false);
 
     const handleFileSelect = (event) => {
         const file = event.target.files[0];
@@ -68,8 +70,8 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
         }
     };
 
-    const submitImage = () => {
-        toast.info("Uploading image...", { position: 'top-center' });
+    const submitImage = async () => {
+        setSubmittingReq(true);
         let reqType = "";
         if (OptionHeader == "Avatar") {
             reqType = 'upload_sr_icon';
@@ -77,10 +79,11 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
         else if (OptionHeader == "Banner") {
             reqType = 'upload_sr_banner';
         }
-            const formData = new FormData();
-            formData.append('image', imageDisplay);
+        const formData = new FormData();
+        formData.append('image', imageDisplay);
     
-            userAxios.post(`${community}/api/${reqType}`, formData)
+        try {
+            await userAxios.post(`${community}/api/${reqType}`, formData)
                 .then(() => {
                     toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
                     onClose(false);
@@ -89,6 +92,9 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
                 .catch((err) => {
                     console.log(err);
                 });
+        } finally {
+            setSubmittingReq(false);
+        }
     };
 
     return (
@@ -132,7 +138,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
                     </div>
                     {imageFile ? <div className="flex mx-auto gap-2 justify-between">
                         <button onClick={() => setImageFile(null)} className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" role="commAppearanceBannerRemove" id="commAppearanceBannerRemove"><Trash2 className="w-4 h-4" /></button>
-                        <button className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" onClick={() => submitImage()} role="commAppearanceAvatarSubmit" id="commAppearanceAvatarSubmit">Submit</button></div> : <></>}
+                        <button className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" onClick={() => submitImage()} role="commAppearanceAvatarSubmit" id="commAppearanceAvatarSubmit">{submittingReq ? <Spinner></Spinner> : "Submit"}</button></div> : <></>}
                 </div>)}
         </div>
     );

@@ -1,8 +1,7 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes, matchRoutes, useNavigate, } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useNavigate, } from 'react-router-dom';
 import CoreRoutes from './Features/Core/CoreRoutes';
 import AuthRoutes from './Features/Auth/AuthRoutes';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
-import Spinner from './GeneralElements/Spinner/Spinner';
 import { userAxios } from './Utils/UserAxios';
 import { useDispatch } from 'react-redux';
 import { logOutUser, setUser } from './hooks/UserRedux/UserModelSlice';

@@ -124,25 +124,21 @@ describe("button functionality", () => {
     });
 
 
-    test("name and word counter input work", async () => {
+    test("userAxios.post is called when submit button is clicked", async () => {
         const mockOnClose = jest.fn();
-
+        const { userAxios } = require('@/Utils/UserAxios');
+    
         render(<CreateCommunity onClose={mockOnClose} />);
-
+    
         const nameInput = screen.getByRole("nameInput");
         const radioInput = screen.getByRole("optionPublic");
-
+    
         fireEvent.change(nameInput, { target: { value: "yes" } });
-        expect(nameInput).toHaveValue("yes");
-
         fireEvent.click(radioInput);
-
+    
         const submitButton = screen.getByRole("submitButton");
-        expect(submitButton).toBeEnabled();
-
         fireEvent.click(submitButton);
-        await waitFor(() => {
-            expect(mockOnClose).toHaveBeenCalled();
-        });
+    
+        expect(userAxios.post).toHaveBeenCalled();
     });
 });

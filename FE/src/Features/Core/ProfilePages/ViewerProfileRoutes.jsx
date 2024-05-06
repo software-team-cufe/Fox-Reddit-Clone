@@ -76,7 +76,7 @@ function Layout() {
       })
   };
 
-  const { isError} = useQuery('ViewerProfileAbout', fetchViewerAbout);
+  const {isError} = useQuery('ViewerProfileAbout', fetchViewerAbout);
 
   // loading spinner to wait for fetch then load body of apge
   if (loading) {

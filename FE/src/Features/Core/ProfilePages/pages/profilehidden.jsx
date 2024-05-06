@@ -29,26 +29,27 @@ export default function ProfileHidden({ using }) {
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
         setLoading(true);
-        userAxios.get(`api/user/${using}/hiddenPosts?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`api/user/${using}/hiddenPosts?page=1&count=${limitpage}&limit=${limitpage}&t=${period}&sort=${selected}`)
             .then(response => {
                 if (response.data.posts.length < limitpage) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
+                        image: post.userID.avatar,
+                        title: post.username,
                     },
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
+                    subTitle: post.textHTML,
                     votes: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
-                    hidden: true,
+                    type: "post",
                     spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
                 setPosts(newPosts);
                 setLoading(false);
@@ -64,29 +65,28 @@ export default function ProfileHidden({ using }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`api/user/${using}/hiddenPosts?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`api/user/${using}/hiddenPosts?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}&sort=${selected}`)
             .then(response => {
                 if (response.data.posts.length < limitpage) {
                     setpagedone(true);
                 }
-                const newPosts = response.data.posts
-                    .map(post => ({
-                        subReddit: {
-                            image: post.attachments.subredditIcon,
-                            title: post.communityName,
-                        },
-                        images: post.attachments.postData,
-                        id: post.id,
-                        title: post.title,
-                        subTitle: post.postText,
-                        votes: post.votesCount,
-                        comments: post.commentsCount,
-                        thumbnail: post.thumbnail,
-                        video: null,
-                        hidden: true,
-
-                        spoiler: post.spoiler,
-                    }));
+                const newPosts = response.data.posts.map(post => ({
+                    subReddit: {
+                        image: post.userID.avatar,
+                        title: post.username,
+                    },
+                    images: post.attachments,
+                    id: post._id,
+                    title: post.title,
+                    subTitle: post.textHTML,
+                    votes: post.votesCount,
+                    comments: post.commentsCount,
+                    thumbnail: post.thumbnail,
+                    video: null,
+                    type: "post",
+                    spoiler: post.spoiler,
+                    NSFW: post.nsfw
+                }));
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);

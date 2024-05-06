@@ -21,7 +21,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
             {
                 !viewMode ?
                     <div className="flex flex-col items-start justify-between">
-                        <Link to={`/r/${postObj.CommunityID}`}>
+                        <Link to={`/r/${postObj.subReddit.title}`}>
                             <div>
                                 <div className="mb-4 flex items-center gap-4">
                                     <img src={postObj.subReddit?.image} alt="image" className="w-9 h-9 rounded-full" />

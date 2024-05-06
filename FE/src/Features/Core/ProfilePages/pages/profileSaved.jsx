@@ -27,24 +27,27 @@ export default function ProfileSaved({ using }) {
     //fetch posts on load and put into posts array
     const fetchInitialPosts = () => {
         setload(true);
-        userAxios.get(`api/user/${using}/savedPosts?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`api/user/${using}/savedPosts?page=1&count=${limitpage}&limit=${limitpage}&t=${period}&sort=${selected}`)
             .then(response => {
                 if(response.data.posts.length < limitpage){
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
+                        image: post.userID.avatar,
+                        title: post.username,
                     },
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
+                    subTitle: post.textHTML,
                     votes: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
-                    video: null
+                    video: null,
+                    type: "post",
+                    spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
                 setcurrentpage(2);
                 setPosts(newPosts);
@@ -60,24 +63,27 @@ export default function ProfileSaved({ using }) {
 
     const fetchMorePosts = () => {
         setCallingPosts(true);
-        userAxios.get(`api/user/${using}/savedPosts?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
+        userAxios.get(`api/user/${using}/savedPosts?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}&sort=${selected}`)
             .then(response => {
                 if(response.data.posts.length <limitpage){
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
                     subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
+                        image: post.userID.avatar,
+                        title: post.username,
                     },
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
+                    subTitle: post.textHTML,
                     votes: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
-                    video: null
+                    video: null,
+                    type: "post",
+                    spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
