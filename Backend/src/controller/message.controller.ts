@@ -410,7 +410,7 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
         path: 'fromID',
         select: 'username avatar',
       })
-      .sort({ created_at: -1 });
+      .sort({ created_at: 1 });
     return res.status(200).json({
       response: 'success',
       messages: messages,
