@@ -989,7 +989,7 @@ export async function allMessagesFRONTHandler(req: Request, res: Response) {
       $or: [{ fromID: userId }, { toID: userId }],
       isDeleted: false,
     })
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .populate('fromID', 'username') // Populate sender's username
       .populate('toID', 'username') // Populate receiver's username; // Order by createdAt
       .populate({
