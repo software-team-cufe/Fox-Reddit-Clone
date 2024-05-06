@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/cardCoreWidget.dart';
@@ -74,6 +75,7 @@ class _ModernCardState extends State<ModernCard> {
     }
   }
 
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     print("Post data: ${widget.post}");
@@ -166,73 +168,124 @@ class _ModernCardState extends State<ModernCard> {
                                   leading: const Icon(Icons.edit_document),
                                   title: const Text('Edit'),
                                   onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            backgroundColor: Colors.black87,
-                                            surfaceTintColor: Colors.black54,
-                                            content: SingleChildScrollView(
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.7,
-                                                child: Column(
-                                                  children: [
-                                                    TextField(
-                                                      controller:
-                                                          widget.editedText,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIconColor:
-                                                            Colors.white,
-                                                        prefixIconColor:
-                                                            Colors.white,
-                                                        fillColor: const Color
-                                                            .fromARGB(
-                                                            255, 18, 16, 15),
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15)),
-
-                                                        filled: true,
-                                                        // fillColor: Color.fromARGB(
-                                                        //     255, 50, 43, 50),
-                                                      ),
-                                                      maxLines: 15,
-                                                    ),
-                                                    const Spacer(),
-                                                    Row(
+                                    showModalBottomSheet(
+                                      context: context,
+                                      // isScrollControlled:
+                                      //     true, // Adjust based on content size
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(
+                                          builder: (context, setState) =>
+                                              Container(
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width, // Adjust height as needed
+                                            decoration: const BoxDecoration(
+                                              color: Colors.black87,
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top: Radius.circular(
+                                                          20.0)),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: SingleChildScrollView(
+                                                child: Form(
+                                                  // Wrap in Form for validation (optional)
+                                                  key: _formKey,
+                                                  child: SizedBox(
+                                                    height: 1000,
+                                                    width: 500,
+                                                    child: Column(
                                                       children: [
-                                                        Textbuttoncontainer(
-                                                            text: 'Cancel',
-                                                            color: const Color(
-                                                                0xFFB02F00),
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            }),
-                                                        const Spacer(),
-                                                        Textbuttoncontainer(
-                                                            text: 'Save',
-                                                            color: const Color(
-                                                                0xFFB02F00),
-                                                            onPressed: () {}),
+                                                        Row(
+                                                          children: [
+                                                            IconButton(
+                                                              icon: const Icon(Icons
+                                                                  .cancel_outlined),
+                                                              iconSize: 35,
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context),
+                                                            ),
+                                                            // Textbuttoncontainer(
+                                                            //   text: 'Cancel',
+                                                            //   color: const Color(
+                                                            //       0xFFB02F00),
+                                                            //   onPressed: () =>
+                                                            //       Navigator.pop(
+                                                            //           context),
+                                                            // ),
+                                                            const Gap(15),
+                                                            RegularText(
+                                                                text:
+                                                                    "Edit Post"),
+                                                            const Spacer(),
+                                                            Textbuttoncontainer(
+                                                              text: 'Save',
+                                                              color: const Color(
+                                                                  0xFFB02F00),
+                                                              onPressed: () {
+                                                                if (_formKey
+                                                                    .currentState!
+                                                                    .validate()) {
+                                                                  // Save the text (implement your logic here)
+                                                                  Navigator.pop(
+                                                                      context); // Close bottom sheet after save
+                                                                }
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const Gap(30),
+                                                        TextField(
+                                                          controller:
+                                                              widget.editedText,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            suffixIconColor:
+                                                                Colors.white,
+                                                            prefixIconColor:
+                                                                Colors.white,
+                                                            fillColor:
+                                                                const Color
+                                                                    .fromARGB(
+                                                                    255,
+                                                                    18,
+                                                                    16,
+                                                                    15),
+                                                            filled: true,
+                                                            border:
+                                                                OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15.0),
+                                                            ),
+                                                          ),
+                                                          maxLines: 10,
+                                                          // validator: (value) {
+                                                          //   if (value == null ||
+                                                          //       value.isEmpty) {
+                                                          //     return 'Please enter some text';
+                                                          //   }
+                                                          //   return null; // Add validation logic here (optional)
+                                                          // },
+                                                        ),
+                                                        // const Spacer(),
                                                       ],
-                                                    )
-                                                  ],
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          );
-                                        }); // Close the menu
-                                    // Handle option 1
+                                          ),
+                                        );
+                                      },
+                                    ); // Handle option 1
                                   },
                                 ),
                               ),
