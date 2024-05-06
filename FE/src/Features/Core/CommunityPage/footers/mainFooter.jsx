@@ -1,8 +1,30 @@
 import React from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { userAxios } from "../../../../Utils/UserAxios";
+import { useEffect } from "react";
 export default function MainFooter (){
+
   const { community } = useParams();  
+  const [members, setMembers] = useState(0);
+  useEffect( () => {
+    const getNumofMembers = async () => {
+      try{ 
+         const response = await userAxios.get(`/${community}/about/members`);
+         console.log("members");
+         console.log(response.data.membersCount);
+         setMembers(response.data.membersCount ??0);
+         
+      }
+      catch (error) {
+        console.log(error);
+      }
+    
+    };
+       getNumofMembers();
+  }, [community]); 
+
+
   const [selectedId, setSelectedId] = useState(null);
   const lists = [
     { id: 1, list: "1" },
@@ -70,7 +92,7 @@ export default function MainFooter (){
              
               <div className=" flex flex-row justify-between my-3">
                   <div className=" flex flex-col">
-                      <p className=" font-semibold text-sm">6.1M</p>
+                      <p className=" font-semibold text-sm">{members}</p>
                       <p className=" text-xs text-gray-500 font-light">Members</p>
                   </div>
                   <div className=" flex flex-col">

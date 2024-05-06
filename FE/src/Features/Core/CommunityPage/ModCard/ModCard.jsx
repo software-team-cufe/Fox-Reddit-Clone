@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { userAxios } from '../../../../Utils/UserAxios';
 const ModCard = () => {
 
     const [widget, setWidget] = useState(false);
@@ -21,6 +22,24 @@ const ModCard = () => {
     const [handleBookMark, setHandleBookMark] = useState(false);
     const { community } = useParams();  
     const moderatorName = useSelector(state => state.user.user.username);
+    const [members, setMembers] = useState(0);
+    useEffect( () => {
+      const getNumofMembers = async () => {
+        try{ 
+           const response = await userAxios.get(`/${community}/about/members`);
+           console.log("members");
+           console.log(response.data.membersCount);
+           setMembers(response.data.membersCount ??0);
+           
+        }
+        catch (error) {
+          console.log(error);
+        }
+      
+      };
+         getNumofMembers();
+    }, [community]); 
+
 
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
@@ -106,7 +125,7 @@ const ModCard = () => {
        </div>
        <div className=' flex flex-row  mx-3'>
            <div className=' flex flex-col w-1/2'>
-                 <span className='text-sm'>57</span>
+                 <span className='text-sm'>{members}</span>
                  <p className='text-sm text-gray-500'> Members</p>
            </div>
            <div className=' flex flex-col w-1/2'>
