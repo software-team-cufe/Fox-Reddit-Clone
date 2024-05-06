@@ -298,7 +298,7 @@ export async function markReadMessageHandler(req: Request, res: Response) {
   try {
     // Update the specified message to mark it as read
     const updatedMessage = await MessageModel.findOneAndUpdate(
-      { _id: messageId, toID: userId },
+      { _id: messageId },
       { $set: { unread_status: false } },
       { new: true } // Return the updated message
     );
@@ -354,7 +354,7 @@ export async function markUnreadMessageHandler(req: Request, res: Response) {
   try {
     // Update the specified message to mark it as read
     const updatedMessage = await MessageModel.findOneAndUpdate(
-      { _id: messageId, toID: userId },
+      { _id: messageId },
       { $set: { unread_status: true } },
       { new: true } // Return the updated message
     );
@@ -409,7 +409,8 @@ export async function getUnreadMessagesHandler(req: Request, res: Response): Pro
       .populate({
         path: 'fromID',
         select: 'username avatar',
-      });
+      })
+      .sort({ created_at: -1 });
     return res.status(200).json({
       response: 'success',
       messages: messages,
@@ -671,6 +672,18 @@ export async function getPostAndCommentUserMentionedHandler(req: Request, res: R
         }
       }
     }
+    // Sort repliededPosts array by createdAt in descending order
+    mentionedPosts.sort((a, b) => {
+      // Ensure createdAt is defined for both a and b
+      if (a.createdAt && b.createdAt) {
+        // Sort in descending order
+        return b.createdAt.getTime() - a.createdAt.getTime();
+      } else {
+        // Handle the case where createdAt is undefined for either a or b
+        return 0; // You can choose a different logic if necessary
+      }
+    });
+
     res.status(200).json(mentionedPosts);
   } catch (error) {
     console.error('Error in getPostAndCommentUserMentionedHandler:', error);
@@ -790,7 +803,17 @@ export async function getuserPostreplisHandler(req: Request, res: Response) {
         }
       }
     }
-
+    // Sort repliededPosts array by createdAt in descending order
+    repliededPosts.sort((a, b) => {
+      // Ensure createdAt is defined for both a and b
+      if (a.createdAt && b.createdAt) {
+        // Sort in descending order
+        return b.createdAt.getTime() - a.createdAt.getTime();
+      } else {
+        // Handle the case where createdAt is undefined for either a or b
+        return 0; // You can choose a different logic if necessary
+      }
+    });
     res.status(200).json(repliededPosts);
   } catch (error) {
     console.error('Error in getPostUserMentionedHandler:', error);
@@ -886,11 +909,11 @@ export async function getuserAllHandler(req: Request, res: Response) {
     // Merge all arrays into one
     const allData = [...mentionedPosts, ...repliededPosts, ...messages];
 
-    // Sort the merged array by createdAt field
+    // Sort the merged array by createdAt field in descending order
     allData.sort((a, b) => {
       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
       const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-      return dateA - dateB;
+      return dateB - dateA;
     });
 
     // Send the sorted merged array as the response
