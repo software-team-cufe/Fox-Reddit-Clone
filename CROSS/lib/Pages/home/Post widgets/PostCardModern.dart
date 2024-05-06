@@ -46,20 +46,23 @@ class _ModernCardState extends State<ModernCard> {
     setState(() {});
   }
 
-  Future<void> delPost(String postId) async{
-    
+  Future<void> delPost(String postId) async{  
     final response = await http.post(
       Uri.parse(ApiRoutesBackend.delPost),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode({'_id': "t3_$postId"}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${widget.access_token}'
+      },
+      body: json.encode({'linkID': "t3_$postId"}),
     );
+    print("response status code: ${response.statusCode}");
     if(response.statusCode == 200){
       print("Post deleted");
     }
     else{
       print("Post not deleted");
     }
-
   }
 
   @override
