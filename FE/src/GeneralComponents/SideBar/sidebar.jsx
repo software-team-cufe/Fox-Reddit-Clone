@@ -10,7 +10,7 @@ import CreateCommunity from "../CreateCommunity/CreateCommunity";
 import { Link, useLocation } from "react-router-dom";
 import { key } from 'localforage';
 import { userAxios } from "../../Utils/UserAxios";
-
+import { useSelector } from 'react-redux';
 const icons = [
    {
       icon: Home,
@@ -20,12 +20,12 @@ const icons = [
    {
       icon: Flame,
       title: "Popular",
-      link: "/Popular",
+      link: "/r/Popular",
    },
    {
       icon: Globe,
       title: "All",
-      link: "/All",
+      link: "/r/All",
    },
 ];
 
@@ -48,8 +48,11 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
     * @returns {void} - this function does not return anything
     */
 
-   let temp = false;
-
+   const [temp,settemp] =useState(false);
+   const [isModerators, setIsModerators] = useState(false);//gata of user to test if moderator or not
+   const [ creatorForSubredit , setCreatorForSubreddit ] = useState ([]);//the creator in the subreddit
+   const[userMemberInSubreddits,setUserMemberInSubreddits]=useState([]);//follower for subreddit
+   const [ moderatorInSubreddits , setModeratorInSubreddits ] = useState([]);//moderator in the subreddit
    function functionToExecute(event) {
       // Get the dropdown list associated with the clicked button
       const dropdownList = event.target.nextElementSibling;
@@ -63,17 +66,88 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
          dropdownList.style.display = "none";
       }
    }
+
+   //check if user is moderator
    const fetchUserData = async () => {
       try {
-         const response = await userAxios.get(`/user/${username}/about`);
+         const response = await userAxios.get(`/user/annas_alaa/about`);
          const isModerator = response.data.isMod;
-         temp = isModerator;
-         console.log(isModerator);
+         setIsModerators(response.data.isMod);
+         //console.log(response.data);
+         //console.log(isModerator);
      } catch (error) {
          console.error('Error fetching user info:', error);
      }
    }
 
+   //get subreddits where user is moderator
+   useEffect(() => {
+      const fetchSubreddits = async () => {
+         try {
+            const response = await userAxios.get(`subreddits/mine/moderator`);
+            const subreddits = response.data;
+            setModeratorInSubreddits(subreddits.communities);
+            console.log(response.data.communities);
+            if(subreddits.communities.length > 0){
+               settemp(true);
+            }else{
+               settemp(false);
+            }
+            //console.log(subreddits);
+            //console.log(response.data);
+         } catch (error) {
+            console.error('Error fetching user info:', error);
+         }
+      }
+
+      fetchSubreddits();
+
+   }, [])
+
+   //get subreddits where user is member
+   useEffect(() => {
+      const fetchSubredditsUserMemberAt = async () => {
+         try {
+            const response = await userAxios.get(`subreddits/mine/member`);
+            const subreddits = response.data.communities;
+            setUserMemberInSubreddits(response.data.communities);
+            //console.log(subreddits);
+         } catch (error) {
+            console.error('Error fetching user info:', error);
+         }
+      }
+
+      fetchSubredditsUserMemberAt();
+   },[])
+   
+
+   //get subreddits where user is creator
+   useEffect(() => {
+      const fetchSubredditsUserCreated = async () => {
+         try {
+            const response = await userAxios.get(`subreddits/mine/creator`);
+            const subreddits = response.data.communities;
+            setCreatorForSubreddit(response.data.communities);
+//            console.log(subreddits);
+         } catch (error) {
+            console.error('Error fetching user info:', error);
+         }
+      }
+
+      fetchSubredditsUserCreated();
+   },[])
+   //handle youCommunitiesList known that it contains both moderator and creator subreddits
+   const  modComList = [...creatorForSubredit , ...moderatorInSubreddits];
+   let tempForClear = [];
+
+   for(let i = 0; i < modComList.length; i++){
+       if(moderatorInSubreddits.includes(modComList[i]) && !tempForClear.includes(modComList[i])){
+           tempForClear.push(modComList[i]);
+       }
+   }
+
+   tempForClear = [...new Set(tempForClear)];
+   const yourCommunitiesList = [...creatorForSubredit,...userMemberInSubreddits]
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [yourCommunities, setYourCommunities] = useState([]);
 
@@ -120,7 +194,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
 
 
 
-                  {temp &&
+                  {temp ?
                      <>
                         <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
                         <button
@@ -147,15 +221,21 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                  <span className=" px-2 py-2 text-gray-800">r/mod</span>
                               </Link>
                               </li>
-                              {/*
-                              <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray ">
-                                 here communities wher i am moderate should exist
-                              </li>
-                              */}
+                              {tempForClear.map((subreddit, index) => (
+                                 <a
+                                    href={`/r/${subreddit}`}
+                                    className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                    key={index}>
+                                    <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7"/>
+
+                                    {subreddit}
+                                 
+                                 </a>
+                              ))}
                            </ul>
                         </div>
                      </>
-                  }
+                  : <></>}
 
                   <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
@@ -178,8 +258,9 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                               {RecentCommunities.map((subreddit, index) => (
                                  <a
                                     href={`/r/${subreddit}`}
-                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                    className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
+                                    <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7"/>
 
                                     {subreddit}
                                  
@@ -224,12 +305,13 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                            </li>
                            <li>
                            {
-                              yourCommunities.map((yourCommunity, index) => (
+                              yourCommunitiesList.map((commun, index) => (
                                  <a
-                                    href={`/r/${yourCommunity.name}`}
+                                    href={`/r/${commun}`}
                                     className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}>
-                                    <img src={yourCommunity.icon} className="rounded-full w-7 my-auto h-7"/><p className="text-sm mt-1 font-medium">{yourCommunity.name}</p>
+                                    <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7"/>
+                                    {commun}
                                  </a>
                               ))
                            }
@@ -237,7 +319,11 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                         </ul>
                      </div>
                   </li>
-
+                  <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
+                     <a href={"/submit"} className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400 rounded-lg" >   
+                        <Plus className="ml-2 w-5 h-5"/>
+                        <span className=" px-2 py-2 text-gray-800">create post</span>
+                     </a>
                   <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
 
                   <li>

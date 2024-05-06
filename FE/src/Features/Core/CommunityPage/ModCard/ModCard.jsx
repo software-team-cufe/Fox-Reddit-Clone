@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { userAxios } from '@/Utils/UserAxios';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { userAxios } from '../../../../Utils/UserAxios';
 const ModCard = () => {
 
     const [widget, setWidget] = useState(false);
@@ -20,6 +21,25 @@ const ModCard = () => {
     const [handlePostFair, setHandlePostFair] = useState(false);
     const [handleBookMark, setHandleBookMark] = useState(false);
     const { community } = useParams();  
+    const moderatorName = useSelector(state => state.user.user.username);
+    const [members, setMembers] = useState(0);
+    useEffect( () => {
+      const getNumofMembers = async () => {
+        try{ 
+           const response = await userAxios.get(`/${community}/about/members`);
+           console.log("members");
+           console.log(response.data.membersCount);
+           setMembers(response.data.membersCount ??0);
+           
+        }
+        catch (error) {
+          console.log(error);
+        }
+      
+      };
+         getNumofMembers();
+    }, [community]); 
+
 
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
@@ -105,7 +125,7 @@ const ModCard = () => {
        </div>
        <div className=' flex flex-row  mx-3'>
            <div className=' flex flex-col w-1/2'>
-                 <span className='text-sm'>57</span>
+                 <span className='text-sm'>{members}</span>
                  <p className='text-sm text-gray-500'> Members</p>
            </div>
            <div className=' flex flex-col w-1/2'>
@@ -121,8 +141,12 @@ const ModCard = () => {
         <div className=' flex flex-col mx-3 '> 
            <p className='text-sm text-gray-500 mt-3  font-medium'> MODERATORS</p>
            <div className=' flex flex-row my-6'>
-               <button className='text-sm  ml-9 hover:underline'>
-                   u/ApprehensiveLaw9713
+               <svg className="text-orange-400 w-7 h-7 self-center"
+               xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>   
+           
+               <button className='text-sm ml-2 hover:underline flex flex-row  self-center'>
+                   <p>u/</p>
+                   <p>{moderatorName}</p>
                </button>
            </div> 
            <button className=" text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[35px] flex items-center justify-center hover:bg-gray-300 hover:underline">
@@ -153,7 +177,7 @@ const ModCard = () => {
              </button>
                 { widget && 
                     <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
-                       <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[320px]'>
+                       <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-fit'>
                              <div className=' flex flex-row justify-between m-4'>
                                 <span className='text-sm font-light  '> Edit widget </span>
                                 <div>
@@ -372,7 +396,7 @@ const ModCard = () => {
                                
                                  </div>
 
-                                <div className=' flex flex-row justify-end space-x-3 mt-2'>
+                                <div className=' flex flex-row justify-end space-x-3 mt-2 mb-5'>
                                   <button onClick={ ()=> setWidget(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
                                    Cancel
                                   </button>
