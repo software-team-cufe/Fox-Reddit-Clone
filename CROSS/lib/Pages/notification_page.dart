@@ -85,14 +85,15 @@ class _NotificationPageState extends State<NotificationPage> {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = json.decode(response.body);
-      final List<dynamic> notificationData = data['notifications'];
+      final List<dynamic> notificationData = data['notifications']??[];
       setState(() {
         notifications = notificationData
             .map((notificationJson) => Notification.fromJson(notificationJson))
             .toList();
       });
-      print(data);
+      print('notifications fetched correctly ${response.statusCode}');
     } else {
+      print(response.statusCode);
       throw Exception('Failed to fetch notifications');
     }
   }
@@ -125,7 +126,7 @@ class _NotificationPageState extends State<NotificationPage> {
               title: Text('${notification.title} To Your Post'),
               subtitle: Text(notification.timeElapsed()),
             );
-          } 
+          }
         },
       );
     }

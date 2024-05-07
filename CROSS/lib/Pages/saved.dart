@@ -45,7 +45,6 @@ class _SavedPageState extends State<SavedPage>
 
   Future<void> fetchDataBack() async {
     try {
-      
       final response = await http.get(
         Uri.parse(ApiRoutesBackend.getSaved(widget.userName)),
         headers: <String, String>{
@@ -58,8 +57,8 @@ class _SavedPageState extends State<SavedPage>
         setState(() {
           posts = responseData['posts'];
         });
-        print("status code : ${response.statusCode}");
-        
+        print(posts);
+        print("status code for post: ${response.statusCode}");
       } else {
         print('Request failed with status: ${response.statusCode}');
       }
@@ -99,7 +98,11 @@ class _SavedPageState extends State<SavedPage>
   Widget buildPostsContainer() {
     if (posts.isEmpty) {
       // Show loading indicator while fetching posts
-      return Center(child: CircularProgressIndicator());
+      return Center(
+          child: Text(
+        'Nothing to show',
+        style: TextStyle(fontSize: 30),
+      ));
     } else {
       // Show posts once fetched
       return CustomScrollView(
