@@ -14,7 +14,7 @@ function useMessages(chatId) {
     const [chat, setChat] = useState([]);
     useEffect(() => {
         const colRef = collection(appFirestore, `chat/${chatId}/chat`);
-        const snapShot = onSnapshot(query(colRef, orderBy('createdAt', 'asc')), (snap) => {
+        onSnapshot(query(colRef, orderBy('createdAt', 'asc')), (snap) => {
             const messages = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setChat(messages);
         });
