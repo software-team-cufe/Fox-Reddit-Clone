@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 /// A stateful widget that represents a post card in the home page.
+// ignore: must_be_immutable
 class ModernCard extends StatefulWidget {
   final Map<dynamic, dynamic> post;
   TextEditingController editedText = TextEditingController();

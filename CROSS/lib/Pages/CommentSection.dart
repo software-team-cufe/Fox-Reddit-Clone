@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'CommentCard.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
  import 'package:http/http.dart' as http;
   import 'dart:convert';
+  
 // Sample class for comment data
 class CommentData {
   final String username;
@@ -26,19 +26,17 @@ class CommentSection extends StatelessWidget {
     final access_token;
 
   CommentSection({
-    Key? key,
+    super.key,
     required this.postId,
     required this.access_token,
-  }) : super(key: key);
+  });
 
   void _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      // Handle the picked image file (e.g., upload it as a comment)
-      File imageFile = File(pickedFile.path);
-      // Call a function to handle adding the image as a comment
+      // Handle the picked image file
     } else {
       // Handle if no image was picked
     }
@@ -47,7 +45,7 @@ class CommentSection extends StatelessWidget {
 Future<void> createComment(String linkID, String textHTML, String textJSON) async {
   try {
     // Add 't3_' before the post ID
-    String formattedLinkID = 't3_' + linkID;
+    String formattedLinkID = 't3_$linkID';
 
     // API endpoint URL
     String apiUrl = ApiRoutesBackend.addComment;
@@ -61,17 +59,14 @@ Future<void> createComment(String linkID, String textHTML, String textJSON) asyn
       }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${access_token}',
+        'Authorization': 'Bearer $access_token',
       },
     );
 
     if (response.statusCode == 200) {
-      print('Comment created successfully');
     } else {
-      print('Failed to create comment: ${response.statusCode}');
     }
   } catch (error) {
-    print('Error creating comment: $error');
   }
 }
 
