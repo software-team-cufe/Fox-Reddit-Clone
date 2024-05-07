@@ -1605,7 +1605,7 @@ export async function getHomePostsAuth(
           communityDescription: '$description', // Project community description
           memberCount: '$membersCnt', // Project member count
           postId: '$posts._id', // Project post ID
-          userId: '$posts.userId', // Project user ID
+          userID: { _id: '$posts.userID' }, // Project user ID
           username: '$posts.username', // Project username
           title: '$posts.title', // Project post title
           textHTML: '$posts.textHTML', // Project post textHTML
@@ -1684,7 +1684,7 @@ export async function getHomePostsNotAuth(page: number, limit: number) {
         communityDescription: '$description', // Project community description
         memberCount: '$membersCnt', // Project member count
         postId: '$posts._id', // Project post ID
-        userId: '$posts.userId', // Project user ID
+        userID: { _id: '$posts.userID' }, // Project user ID
         username: '$posts.username', // Project username
         title: '$posts.title', // Project post title
         textHTML: '$posts.textHTML', // Project post textHTML
@@ -1705,6 +1705,7 @@ export async function getHomePostsNotAuth(page: number, limit: number) {
         followers: '$posts.followers', // Project post followers
         CommunityID: '$posts.CommunityID', // Project post CommunityID
         commentsNum: '$posts.commentsNum', // Project post commentsNum
+        posts: '$posts',
       },
     },
   ]);
@@ -1767,4 +1768,58 @@ export async function getCommunityModerator(communityName: string, username: str
   }
 
   return { status: true, moderator: mode };
+}
+export async function getCommentsSearchResultsAuth(
+  userID: string,
+  page: number,
+  limit: number,
+  query: string,
+  sort: string | undefined
+) {
+  try {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    let sortCriteria: Record<string, 1 | -1>;
+    switch (sort) {
+      case 'top':
+        sortCriteria = { 'comments.votesCount': -1 };
+        break;
+      case 'new':
+        sortCriteria = { 'comments.createdAt': -1 };
+        break;
+      default:
+        sortCriteria = {};
+        break;
+    }
+    const commentsSearchResultsAuth = await CommunityModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { privacyType: 'Public' }, // Match public communities
+            { 'members.userID': userID }, // Match communities where the user is a member
+            { 'moderators.userID': userID }, // Match communities where the user is a moderator
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'posts', // Posts collection
+          localField: 'communityPosts', // Field containing post IDs in the community model
+          foreignField: '_id', // Field in the posts model
+          as: 'posts', // Name of the field to store posts in the result
+        },
+      },
+      { $unwind: '$posts' }, // Unwind the posts array
+      {
+        $match: {
+          'posts.title': { $exists: true }, // Filter out posts without title
+          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+        },
+      },
+    ]);
+  } catch (error) {
+    console.error(error);
+    throw new appError('Failed to get comments search results', 500);
+  }
 }

@@ -81,7 +81,6 @@ export async function searchHomeHandler(
         break;
       case 'comments': {
         //pass sort option
-        //check if user is authenticated
       }
     }
   } catch (error) {

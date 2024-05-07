@@ -175,5 +175,3 @@ export function extractUsernamesFromTextJSON(textJSON: string): string[] {
 
   return usernames;
 }
-
-export async function getCommentsSearchResults() {}
