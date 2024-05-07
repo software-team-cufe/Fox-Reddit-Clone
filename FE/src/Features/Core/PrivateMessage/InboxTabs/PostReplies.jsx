@@ -3,22 +3,25 @@ import { ArrowBigUp, ArrowBigDown, X, UserRoundX, BadgeCheck } from 'lucide-reac
 import { Switch } from '@headlessui/react'
 import { userAxios } from "@/Utils/UserAxios";
 import { userStore } from '../../../../hooks/UserRedux/UserStore';
+import { useNavigate } from 'react-router-dom';
 
 function PostReplies({ DiffTime, setUnreadAtIndex }) {
     const currentId = userStore.getState().user.user.username;
-    const [SureToRemove, setSureToRemove] = useState(false);
-    const [SureToBlock, setSureToBlock] = useState(false);
+    const navigator = useNavigate();
+    const [Messages, setMessages] = useState([]);
+    const [SureToRemove, setSureToRemove] = useState(Array(Messages.length).fill(false));
+    const [SureToBlock, setSureToBlock] = useState(Array(Messages.length).fill(false));
     const [ReportPop, setReportPop] = useState(false);
     const [selectedButton, setSelectedButton] = useState(null);
     const [DisableNext, setDisableNext] = useState(false);
     const [DoneReportPop, setDoneReportPop] = useState(false);
     const [UserToReport, setUserToReport] = useState('');
     const [BlockedUserInRep, setBlockedUserInRep] = useState(false);
-
+    const [Removed, setRemoved] = useState(Array(Messages.length).fill(true));
     const [loading, setLoading] = useState(true);
     const [crash, setCrash] = useState(false);
+    const [Blocked, setBlocked] = useState(Array(Messages.length).fill(false));
 
-    const [Messages, setMessages] = useState([]);
     const buttons = ["Harassment", "Threatening violence",
         "Hate", "Minor abuse or sexualization", "Sharing personal information",
         "Non-consensual intimate media", "Prohibited transaction",
@@ -102,10 +105,65 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
         }
 
     }
-    const handleRemove = () => { }
-    const handleBlock = () => {
-        //check if UserToBlock is not empty set BlockedUserInRep
-        setBlockedUserInRep(!BlockedUserInRep);
+    const handleRemove = async (id, i) => {
+        try {
+            console.log(id);
+            const res = await userAxios.post('software_eng_fox/FoxAPI/1.0.0/api/remove', id);
+            console.log(res.data);
+            setRemoved(prevState => {
+                const newState = [...prevState];
+                newState[i] = true;
+                return newState;
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleBlock = async () => {
+        if (UserToReport) {
+            try {
+                if (BlockedUserInRep) {
+                    const data = {
+                        username: UserToReport,
+                        type: "unblock"
+                    }
+                    const res = await userAxios.post('api/block_user', data);
+                    //check if UserToBlock is not empty set BlockedUserInRep
+                    setBlockedUserInRep(!BlockedUserInRep);
+                }
+                else {
+                    const data = {
+                        username: UserToReport,
+                        type: "block"
+                    }
+                    const res = await userAxios.post('api/block_user', data);
+                    //check if UserToBlock is not empty set BlockedUserInRep
+                    setBlockedUserInRep(!BlockedUserInRep);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
+    }
+
+    const handleBlockk = async (username, i) => {
+        try {
+            const data = {
+                username: username,
+                type: "block"
+            }
+            const res = await userAxios.post('api/block_user', data);
+            console.log(res.data);
+            setBlocked(prevState => {
+                const newState = [...prevState];
+                newState[i] = true;
+                return newState;
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleClick = (buttonName) => {
@@ -120,10 +178,10 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
 
     const ReportDes = Desc.map(item => {
         if (item.title === selectedButton) {
-            return <>
+            return <div key={item.title}>
                 <div className='text-sm mt-4 mb-2'>{item.title}</div>
                 <div className='text-xs text-gray-500'>{item.des}</div>
-            </>;
+            </div>;
         }
         return null;
     });
@@ -159,10 +217,8 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                     ${i % 2 === 0 && !mess.unread ? "bg-white" : "bg-[#fff6f1]"}
                     `}>
                         <div className='flex'>
-                            <p className='text-sm mr-2 mt-1' >post reply:</p>
-                            <p className='text-lg font-bold' onClick={() => {
-                                //navigate to post
-                            }}>{mess.postTitle}</p>
+                            <p className='text-sm mr-2 mt-1' >post reply on:</p>
+                            <p className='text-lg font-bold'>{mess.postTitle}</p>
                         </div>
                         <div className='flex mr-2 sm:ml-14 ml-3 mb-2'>
                             <div className='flex flex-col mr-2'>
@@ -177,9 +233,20 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                                 <div className='flex mb-2'>
                                     <p className='text-xs mt-1 mr-2 text-gray-500'>
                                         from</p>
-                                    <p className='text-sm mr-2  text-blue-600
+                                    <p onClick={() => {
+                                        navigator(`/user/${mess.from.username}`);
+                                    }}
+                                        className='text-sm mr-2  text-blue-600
                                      hover:cursor-pointer hover:underline'>
                                         {mess.from.username}</p>
+                                    {mess.communityName && <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                        via</p>}
+                                    <p onClick={() => {
+                                        navigator(`r/${mess.communityName}`);
+                                    }}
+                                        className='text-sm mr-2  text-blue-600
+                                     hover:cursor-pointer hover:underline'>
+                                        {mess.communityName}</p>
                                     <p className='text-xs mt-1 mr-2 text-gray-500'>
                                         {DiffTime(mess.Comment.createdAt)}</p>
                                 </div>
@@ -191,50 +258,68 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                                             //go to comment page
                                         }}>Context</p>
                                     <p onClick={() => {
-                                        //go to post page
+                                        navigator(`/posts/${mess.postID}`)
                                     }} className='mx-2 m-1 text-xs hover:cursor-pointer 
                                     hover:underline '>Full Comments ({mess.commentNum})</p>
-                                    {!SureToRemove && <p onClick={() => {
-                                        setSureToRemove(true);
+                                    {!Removed[i] && <>{!SureToRemove[i] && <p onClick={() => {
+                                        setSureToRemove(prevState => {
+                                            const newState = [...prevState];
+                                            newState[i] = !newState[i];
+                                            return newState;
+                                        });
                                     }}
                                         className='text-xs m-1 hover:cursor-pointer
                                      hover:underline'>Remove</p>}
-                                    {SureToRemove && <div className='flex'>
-                                        <p className='text-xs
+                                        {SureToRemove[i] && <div className='flex'>
+                                            <p className='text-xs
                                      text-red-600 m-1 '>are you sure?</p>
-                                        <p onClick={() => {
-                                            handleRemove(mess.id);
-                                        }}
-                                            className=' m-1 text-xs hover:cursor-pointer
+                                            <p onClick={() => {
+                                                handleRemove(mess.
+                                                    commentID, i);
+                                            }}
+                                                className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>Yes</p>
-                                        <p className='text-xs text-red-600 m-1 '>/</p>
-                                        <p onClick={() => {
-                                            setSureToRemove(false);
-                                        }}
-                                            className=' m-1 text-xs hover:cursor-pointer
+                                            <p className='text-xs text-red-600 m-1 '>/</p>
+                                            <p onClick={() => {
+                                                setSureToRemove(prevState => {
+                                                    const newState = [...prevState];
+                                                    newState[i] = !newState[i];
+                                                    return newState;
+                                                });
+                                            }}
+                                                className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}
+                                    </>}
                                     <p onClick={() => { setReportPop(true); setUserToReport(mess.from.username); }}
                                         className='mx-2 m-1 text-xs hover:cursor-pointer
                                      hover:underline'>Report</p>
-                                    {!SureToBlock && <p onClick={() => {
-                                        setSureToBlock(true);
+                                    {!Blocked[i] && <>{!SureToBlock[i] && <p onClick={() => {
+                                        setSureToBlock(prevState => {
+                                            const newState = [...prevState];
+                                            newState[i] = !newState[i];
+                                            return newState;
+                                        });
                                     }}
                                         className='text-xs m-1 hover:cursor-pointer 
                                     hover:underline'>Block user</p>}
-                                    {SureToBlock && <div className='flex'> <p
-                                        className='text-xs text-red-600 m-1 '>
-                                        are you sure?</p>
-                                        <p onClick={() => {
-                                            handleBlock(mess.from.username);
-                                        }}
-                                            className=' m-1 text-xs hover:cursor-pointer
+                                        {SureToBlock[i] && <div className='flex'> <p
+                                            className='text-xs text-red-600 m-1 '>
+                                            are you sure?</p>
+                                            <p onClick={() => {
+                                                handleBlockk(mess.from.username, i);
+                                            }}
+                                                className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>Yes</p>
-                                        <p className='text-xs text-red-600 m-1 '>/</p>
-                                        <p onClick={() => {
-                                            setSureToBlock(false);
-                                        }}
-                                            className=' m-1 text-xs hover:cursor-pointer
-                                     hover:underline'>No</p>   </div>}
+                                            <p className='text-xs text-red-600 m-1 '>/</p>
+                                            <p onClick={() => {
+                                                setSureToBlock(prevState => {
+                                                    const newState = [...prevState];
+                                                    newState[i] = !newState[i];
+                                                    return newState;
+                                                });
+                                            }}
+                                                className=' m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>No</p>   </div>}</>}
                                 </div>
                             </div>
                         </div>

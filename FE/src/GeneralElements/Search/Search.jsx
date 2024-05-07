@@ -41,7 +41,7 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     const [hideit, sethideit] = useState(false);
 
     useEffect(() => {
-        fetchData();
+        //fetchData();
         //TODO: show popular when search is emtpy
     }, [])
 
