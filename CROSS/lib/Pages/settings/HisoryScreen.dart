@@ -23,7 +23,7 @@ class HistoryPage extends StatefulWidget {
 
 /// The state class associated with the [HistoryPage] StatefulWidget.
 class _HistoryPageState extends State<HistoryPage> {
-  late String _selectedItem = 'Home'; // Declare _selectedItem here
+  late final String _selectedItem = 'Home'; // Declare _selectedItem here
   String? access_token;
   late String? profilePic;
   late int user_Id; // Variable to store the access token
@@ -44,19 +44,18 @@ class _HistoryPageState extends State<HistoryPage> {
   /// Fetches the list of posts based on the selected item.
   Future<Map<dynamic, dynamic>> fetchPosts() async {
     var url = Uri.parse(_selectedItem == 'Popular'
-        ? ApiRoutesMockserver.getPopular
-        : ApiRoutesMockserver.getPosts);
+        ? ApiRoutesBackend.homePostssorted(category: 'top')
+        : ApiRoutesBackend.homePostssorted(category: _selectedItem));
     var response = await http.get(url);
 
-    // url = Uri.parse(ApiRoutesBackend.tempGetPosts);
-    response = await http.get(
-      url,
-      headers: {'Authorization': 'Bearer $access_token'},
-    );
-    // print("asdasdasdasd$access_token");
+    // response = await http.get(
+    //   url,
+    //   headers: {'Authorization': 'Bearer $access_token'},
+    // );++k,
+    print("reaponse status code: ${response.statusCode}");
     if (response.statusCode == 200) {
       Map<dynamic, dynamic> data =
-          json.decode(response.body)['data']['children'][0];
+          json.decode(response.body)["homePagePosts"].asMap();
 
       return data;
     } else {
@@ -97,180 +96,198 @@ class _HistoryPageState extends State<HistoryPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
-        // actions: _selectedItem == "Home"
-        //     ? [
-        //         IconButton(
-        //           icon: isModernCard
-        //               ? const Icon(Icons.view_agenda)
-        //               : const Icon(Icons.reorder),
-        //           onPressed: () {
-        //             setState(() {
-        //               isModernCard = !isModernCard;
-        //             });
-        //           },
-        //         ),
-        //         IconButton(
-        //           icon: CircleAvatar(
-        //             backgroundColor: Colors.transparent,
-        //             child: Image.asset(
-        //               'assets/Icons/filter.png',
-        //               width: 24,
-        //               height: 24,
-        //             ),
-        //           ),
-        //           onPressed: () {
-        //             final RenderBox overlay = Overlay.of(context)
-        //                 .context
-        //                 .findRenderObject() as RenderBox;
-        //             final buttonPosition = overlay.localToGlobal(Offset.zero);
-        //             const buttonWidth = 24.0;
-        //             final screenSize = MediaQuery.of(context).size;
-        //             final appBarHeight = AppBar().preferredSize.height;
-        //             final topOffset = appBarHeight + 22;
-        //             final horizontalOffset = buttonPosition.dx +
-        //                 ((screenSize.width - buttonWidth) / 2);
-        //           },
-        //         ),
-        //         IconButton(
-        //           onPressed: () {
-        //             Navigator.push(
-        //               context,
-        //               MaterialPageRoute(builder: (context) => const Search()),
-        //             );
-        //           },
-        //           icon: const Icon(Icons.search),
-        //         ),
-        //         Builder(builder: (context) {
-        //           return IconButton(
-        //             icon: access_token != null
-        //                 ? FutureBuilder(
-        //                     future: fetchUserProfilePic(access_token!),
-        //                     builder: (context, snapshot) {
-        //                       if (snapshot.connectionState ==
-        //                           ConnectionState.waiting) {
-        //                         return const CircularProgressIndicator();
-        //                       } else if (snapshot.hasError) {
-        //                         return const CircleAvatar(
-        //                           backgroundColor: Colors.transparent,
-        //                           backgroundImage:
-        //                               AssetImage('assets/images/avatar.png'),
-        //                         );
-        //                       } else {
-        //                         if (snapshot.data == null ||
-        //                             snapshot.data.toString().isEmpty) {
-        //                           return const CircleAvatar(
-        //                             backgroundColor: Colors.transparent,
-        //                             backgroundImage:
-        //                                 AssetImage('assets/images/avatar.png'),
-        //                           );
-        //                         } else {
-        //                           return CircleAvatar(
-        //                             backgroundColor: Colors.transparent,
-        //                             backgroundImage:
-        //                                 NetworkImage(snapshot.data.toString()),
-        //                           );
-        //                         }
-        //                       }
-        //                     },
-        //                   )
-        //                 : const CircleAvatar(
-        //                     backgroundImage:
-        //                         AssetImage('assets/images/avatar.png'),
-        //                   ),
-        //             onPressed: () {
-        //               Scaffold.of(context).openEndDrawer();
-        //             },
-        //           );
-        //         }),
-        //       ]
-        //     : [
-        //         IconButton(
-        //           icon: isModernCard
-        //               ? const Icon(Icons.view_agenda)
-        //               : const Icon(Icons.view_carousel),
-        //           onPressed: () {
-        //             setState(() {
-        //               isModernCard = !isModernCard;
-        //             });
-        //           },
-        //         ),
-        //         IconButton(
-        //           onPressed: () {
-        //             Navigator.push(
-        //               context,
-        //               MaterialPageRoute(builder: (context) => const Search()),
-        //             );
-        //           },
-        //           icon: const Icon(Icons.search),
-        //         ),
-        //         Builder(builder: (context) {
-        //           return IconButton(
-        //             icon: access_token != null
-        //                 ? FutureBuilder(
-        //                     future: fetchUserProfilePic(access_token!),
-        //                     builder: (context, snapshot) {
-        //                       if (snapshot.connectionState ==
-        //                           ConnectionState.waiting) {
-        //                         return const CircularProgressIndicator();
-        //                       } else if (snapshot.hasError) {
-        //                         return const CircleAvatar(
-        //                           backgroundColor: Colors.transparent,
-        //                           backgroundImage:
-        //                               AssetImage('assets/images/avatar.png'),
-        //                         );
-        //                       } else {
-        //                         if (snapshot.data == null ||
-        //                             snapshot.data.toString().isEmpty) {
-        //                           return const CircleAvatar(
-        //                             backgroundColor: Colors.transparent,
-        //                             backgroundImage:
-        //                                 AssetImage('assets/images/avatar.png'),
-        //                           );
-        //                         } else {
-        //                           return CircleAvatar(
-        //                             backgroundColor: Colors.transparent,
-        //                             backgroundImage:
-        //                                 NetworkImage(snapshot.data.toString()),
-        //                           );
-        //                         }
-        //                       }
-        //                     },
-        //                   )
-        //                 : const CircleAvatar(
-        //                     backgroundImage:
-        //                         AssetImage('assets/images/avatar.png'),
-        //                   ),
-        //             onPressed: () {
-        //               Scaffold.of(context).openEndDrawer();
-        //             },
-        //           );
-        //         }),
-        //       ],
-        title: PopupMenuButton<String>(
-          icon: _selectedItem == 'Home'
-              ? const Text(
-                  "History",
-                  style: (TextStyle(
-                    fontSize: 22,
-                    color: Color(0xFFE74C3C),
-                    fontWeight: FontWeight.bold,
-                  )),
-                )
-              : Text(
-                  _selectedItem,
-                  style: const TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
+        actions: _selectedItem == "Home"
+            ? [
+                IconButton(
+                  icon: isModernCard
+                      ? const Icon(Icons.view_agenda)
+                      : const Icon(Icons.reorder),
+                  onPressed: () {
+                    setState(() {
+                      isModernCard = !isModernCard;
+                    });
+                  },
                 ),
-          initialValue: _selectedItem,
-          itemBuilder: (context) => [],
-          onSelected: (value) {
-            setState(() {
-              _selectedItem = value; // Update the selected item
-            });
-          },
-        ),
+                IconButton(
+                  icon: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: Image.asset(
+                      'assets/Icons/filter.png',
+                      width: 24,
+                      height: 24,
+                    ),
+                  ),
+                  onPressed: () {
+                    final RenderBox overlay = Overlay.of(context)
+                        .context
+                        .findRenderObject() as RenderBox;
+                    final buttonPosition = overlay.localToGlobal(Offset.zero);
+                    const buttonWidth = 24.0;
+                    final screenSize = MediaQuery.of(context).size;
+                    final appBarHeight = AppBar().preferredSize.height;
+                    final topOffset = appBarHeight + 22;
+                    final horizontalOffset = buttonPosition.dx +
+                        ((screenSize.width - buttonWidth) / 2);
+
+                    showMenu<String>(
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        horizontalOffset + buttonWidth,
+                        topOffset,
+                        screenSize.width - horizontalOffset + buttonWidth,
+                        0,
+                      ),
+                      items: [
+                        const PopupMenuItem<String>(
+                          value: 'Best',
+                          child: Text('Best'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Hot',
+                          child: Text('Hot'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'New',
+                          child: Text('New'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'Top',
+                          child: Text('Top'),
+                        ),
+                      ],
+                      elevation: 8.0,
+                    ).then((value) {
+                      if (value != null) {
+                        setState(() {
+                          // Handle menu item selection if needed
+                        });
+                      }
+                    });
+                  },
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Search()),
+                    );
+                  },
+                  icon: const Icon(Icons.search),
+                ),
+                Builder(builder: (context) {
+                  return IconButton(
+                    icon: access_token != null
+                        ? FutureBuilder(
+                            future: fetchUserProfilePic(access_token!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return const CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage:
+                                      AssetImage('assets/images/avatar.png'),
+                                );
+                              } else {
+                                if (snapshot.data == null ||
+                                    snapshot.data.toString().isEmpty) {
+                                  return const CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        AssetImage('assets/images/avatar.png'),
+                                  );
+                                } else {
+                                  return CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        NetworkImage(snapshot.data.toString()),
+                                  );
+                                }
+                              }
+                            },
+                          )
+                        : const CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/avatar.png'),
+                          ),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
+                }),
+              ]
+            : [
+                IconButton(
+                  icon: isModernCard
+                      ? const Icon(Icons.view_agenda)
+                      : const Icon(Icons.view_carousel),
+                  onPressed: () {
+                    setState(() {
+                      isModernCard = !isModernCard;
+                    });
+                  },
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Search()),
+                    );
+                  },
+                  icon: const Icon(Icons.search),
+                ),
+                Builder(builder: (context) {
+                  return IconButton(
+                    icon: access_token != null
+                        ? FutureBuilder(
+                            future: fetchUserProfilePic(access_token!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return const CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage:
+                                      AssetImage('assets/images/avatar.png'),
+                                );
+                              } else {
+                                if (snapshot.data == null ||
+                                    snapshot.data.toString().isEmpty) {
+                                  return const CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        AssetImage('assets/images/avatar.png'),
+                                  );
+                                } else {
+                                  return CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage:
+                                        NetworkImage(snapshot.data.toString()),
+                                  );
+                                }
+                              }
+                            },
+                          )
+                        : const CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/avatar.png'),
+                          ),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
+                }),
+              ],
       ),
       drawer: CommunityListDrawer(
         drawer_Width: drawerWidth,
@@ -282,12 +299,12 @@ class _HistoryPageState extends State<HistoryPage> {
       bottomNavigationBar: const nBar(),
       body: Column(
         children: [
-          // Visibility(
-          //   visible: "Home" == _selectedItem,
-          //   child: const Align(
-          //     alignment: Alignment.topRight,
-          //   ),
-          // ),
+          Visibility(
+            visible: "Home" == _selectedItem,
+            child: const Align(
+              alignment: Alignment.topRight,
+            ),
+          ),
           Expanded(
             child: FutureBuilder<Map<dynamic, dynamic>>(
               future: fetchPosts(),
@@ -307,8 +324,8 @@ class _HistoryPageState extends State<HistoryPage> {
                     itemBuilder: (context, index) {
                       var post = posts[index];
                       return isModernCard
-                          ? ModernCard(post: posts)
-                          : ClassicCard(post: posts);
+                          ? ModernCard(post: post) // pass individual post
+                          : ClassicCard(post: post); // pass individual post
                     },
                   );
                 }

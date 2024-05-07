@@ -2,30 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/home/endDrawer.dart';
 import 'package:reddit_fox/core/common/customContainer.dart';
+import 'package:reddit_fox/features/auth/screens/SearchLiveChat.dart';
 import 'package:reddit_fox/features/home/drawers/community_list_drawer.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'package:http/http.dart' as http;
 
-/// The main application widget.
-///
-/// This widget initializes the chat screen.
-/// The main chat screen widget.
-///
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const ChatScreen(title: 'Chat');
-  }
-}
-
-/// This widget displays the main chat screen with channels and options for users.
-/// Fetches the user's profile picture from the backend.
-///
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.title});
 
@@ -43,10 +26,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Retrieve token from shared preferences when the widget initializes
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
-        // Store the token in the access_token variable
         access_token = sharedPrefValue.getString('backtoken');
       });
     });
@@ -204,16 +185,38 @@ class _ChatScreenState extends State<ChatScreen> {
           const SizedBox(
             height: 15,
           ),
-          const Text(
-            "Welcom to Chat",
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 25),
+          Column(
+            children: [
+              const Text(
+                "Welcom to Chat",
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 25),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text("Chat with other Foxers about your favorite topic"),
+              
+            ],
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Text("Chat with other Foxers about your favorite topic"),
+          
         ],
+
       ),
+      floatingActionButton:FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SearchLiveChat()),
+          );
+        },
+        
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.red,
+        child: Icon(Icons.add),
+        elevation: 0, 
+        shape: CircleBorder(),
+      ),
+      
       bottomNavigationBar: const nBar(),
       endDrawerEnableOpenDragGesture: true,
       drawerEnableOpenDragGesture: true,
