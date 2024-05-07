@@ -33,7 +33,7 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(
         home: ProfilePage(
-          user_Id: 'testUserId',
+          userName: 'testUser',
           myProfile: true,
           access_token: 'testAccessToken',
         ),
@@ -48,7 +48,7 @@ void main() {
     testWidgets('ProfilePage renders alternate view when myProfile is false', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: ProfilePage(
-          user_Id: 'testUserId',
+          userName: 'testUser',
           myProfile: false,
         ),
       ));
@@ -63,7 +63,7 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(
         home: ProfilePage(
-          user_Id: 'testUserId',
+          userName: 'testUser',
           myProfile: true,
           access_token: 'testAccessToken',
         ),
