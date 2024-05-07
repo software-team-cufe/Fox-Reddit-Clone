@@ -11,10 +11,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 /// A stateful widget that represents a post card in the home page.
-// ignore: must_be_immutable
 class ModernCard extends StatefulWidget {
   final Map<dynamic, dynamic> post;
-  TextEditingController editedText = TextEditingController();
   String? access_token;
   String? userName;
   final bool history;
@@ -39,7 +37,10 @@ class ModernCard extends StatefulWidget {
 class _ModernCardState extends State<ModernCard> {
   bool currentuserpost = false;
 
+  TextEditingController editedText = TextEditingController();
   @override
+  // final String editedText = widget.editedText.text; // Get the entered text
+
   void initState() {
     super.initState();
     String? id;
@@ -52,7 +53,7 @@ class _ModernCardState extends State<ModernCard> {
                 : widget.post['userID']['_id'])) {
           currentuserpost = true;
         }
-        print(currentuserpost);
+        print(widget.post);
 
         //   print(widget.currentuserpost);
         // }
@@ -78,6 +79,33 @@ class _ModernCardState extends State<ModernCard> {
       print("Post not deleted");
     }
   }
+
+  Future<void> editpost(String text) async {
+    print('######################');
+    print('postId');
+    print(text);
+    print(widget.post['_id']);
+    final response = await http.post(
+      Uri.parse(ApiRoutesBackend.editPost_Comment),
+      headers: {
+        // 'Content-Type': 'application/json',
+        // 'Accept': 'application/json',
+        'Authorization': 'Bearer ${widget.access_token}'
+      },
+      body: json.encode({
+        'linkID': "t3_${widget.post['_id']}",
+        "textJSON": text,
+        "textHTML": text,
+      }),
+    );
+    print("response status code: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("Post deleted");
+    } else {
+      print("Post not deleted");
+    }
+  }
+
   Future<void> saveItem(String postId) async {
     final response = await http.post(
       Uri.parse(ApiRoutesBackend.saveItem),
@@ -106,7 +134,7 @@ class _ModernCardState extends State<ModernCard> {
           MaterialPageRoute(
             builder: (context) => PostDetails(
               post: widget.post,
-              myProfile: widget.history,
+              myProfile: currentuserpost,
             ),
           ),
         );
@@ -134,7 +162,6 @@ class _ModernCardState extends State<ModernCard> {
                           radius: 18,
                           backgroundImage:
                               AssetImage('assets/images/avatar.png')),
-                
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,15 +281,11 @@ class _ModernCardState extends State<ModernCard> {
                                                               color: const Color(
                                                                   0xFFB02F00),
                                                               onPressed: () {
-                                                                if (_formKey
-                                                                    .currentState!
-                                                                    .validate()) {
-                                                                  saveItem(widget
-                                                                          .post[
-                                                                      "_id"]);
-                                                                  Navigator.pop(
-                                                                      context); // Close bottom sheet after save
-                                                                }
+                                                                editpost(
+                                                                    editedText
+                                                                        .text);
+                                                                Navigator.pop(
+                                                                    context);
                                                               },
                                                             ),
                                                           ],
@@ -270,7 +293,7 @@ class _ModernCardState extends State<ModernCard> {
                                                         const Gap(30),
                                                         TextField(
                                                           controller:
-                                                              widget.editedText,
+                                                              editedText,
                                                           decoration:
                                                               InputDecoration(
                                                             suffixIconColor:
@@ -293,7 +316,7 @@ class _ModernCardState extends State<ModernCard> {
                                                                           15.0),
                                                             ),
                                                           ),
-                                                          maxLines: 10,
+                                                          maxLines: 5,
                                                           // validator: (value) {
                                                           //   if (value == null ||
                                                           //       value.isEmpty) {
