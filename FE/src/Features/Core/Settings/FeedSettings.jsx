@@ -35,6 +35,7 @@ export default function FeedSettings() {
     const changeMenuContent = false;
     let id = 3;
 
+    //connecting to mock
     const handleToggleInFeedMatureContent = async () => {
         try{axios.patch(`http://localhost:3002/users/${id}`, { 
             NSFW: !showMatureContent,
