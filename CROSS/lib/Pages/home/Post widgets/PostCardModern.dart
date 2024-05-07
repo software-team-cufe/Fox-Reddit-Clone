@@ -17,6 +17,7 @@ class ModernCard extends StatefulWidget {
   String? access_token;
   String? userName;
   final bool history;
+  final bool myProfile;
 
   /// Constructs a [ModernCard] widget.
   ///
@@ -27,6 +28,7 @@ class ModernCard extends StatefulWidget {
     this.access_token,
     this.userName,
     this.history = false,
+    this.myProfile = false,
   });
 
   @override
@@ -104,6 +106,7 @@ class _ModernCardState extends State<ModernCard> {
                         backgroundImage:
                             // AssetImage(widget.post["communityIcon"]),
                             AssetImage('assets/images/avatar.png'),
+                            backgroundColor: Colors.transparent,
                       )
                     else
                       const CircleAvatar(
@@ -289,8 +292,9 @@ class _ModernCardState extends State<ModernCard> {
                                   },
                                 ),
                               ),
-                              ListTile(
-                                leading: const Icon(Icons.delete),
+                              widget.myProfile == true
+                              ?ListTile(
+                                leading:const Icon(Icons.delete),
                                 title: const Text('Delete'),
                                 onTap: () {
                                   delPost(widget.post["_id"]);
@@ -307,7 +311,8 @@ class _ModernCardState extends State<ModernCard> {
                                   ); // Close the menu
                                   // Handle option 1
                                 },
-                              ),
+                              )
+                              :
                               ListTile(
                                 leading: const Icon(Icons.content_copy),
                                 title: const Text('Copy text'),

@@ -612,12 +612,14 @@ Widget _buildTitleView() {
                                     ? ElevatedButton(
                                         onPressed: () {
                                           followUser(widget.userName);
+                                          isFollowed = true;
                                         },
                                         child: const Text('Follow'),
                                       )
                                     : ElevatedButton(
                                         onPressed: () {
                                           unFollowUser(widget.userName);
+                                          isFollowed = false;
                                         },
                                         child: const Text('Unfollow'),
                                       ),
