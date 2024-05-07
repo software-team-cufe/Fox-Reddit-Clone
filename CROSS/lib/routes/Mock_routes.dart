@@ -1,7 +1,3 @@
-// class ApiRoutes {
-//   static const String Popular = '$baseUrl/trendingSearches';
-// }
-
 class ApiRoutesBackend {
   static const String baseUrl =
       'http://foxnew.southafricanorth.cloudapp.azure.com';
@@ -45,6 +41,7 @@ class ApiRoutesBackend {
   static const String notificationPref ='$baseUrl/api/v1/me/notification/settings';
   static const String notification = '$baseUrl/api/v1/me/notification';
   static String getUserFollowings(String username) => '$baseUrl/api/v1/me/followings/$username';
+  static const String Search = '$baseUrl/r/search';
 }
 
 class ApiRoutesMockserver {

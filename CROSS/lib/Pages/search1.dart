@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class search1 extends StatefulWidget {
   final String searchItem;
@@ -13,11 +17,18 @@ class search1 extends StatefulWidget {
 class _search1State extends State<search1> with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
+  String? access_token;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        access_token = sharedPrefValue.getString('backtoken');
+      });
+    });
   }
 
   @override
@@ -31,9 +42,36 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
     _searchController.clear();
   }
 
-  // Future<Void> _searchUser(){
+  Future<void> _searchUser() async {
+  try {
+    Map<String, String> queryParams = {
+      'q': widget.searchItem,
+      'type': 'user',
+      'page': "1",
+      'limit': "10", // Adding limit parameter as per the cURL command
+    };
+    // Constructing URL with query parameters
+    Uri uri = Uri.parse(ApiRoutesBackend.Search).replace(queryParameters: queryParams);
 
-  // }
+    // Sending GET request with headers
+    http.Response response = await http.get(
+      uri,
+      headers: {'Authorization': 'Bearer ${access_token}'},
+    );
+
+    print("status code for searchUser: ${response.statusCode}");
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      // Process the responseData as needed
+      print(responseData);
+    } else {
+      throw Exception('Failed to load search results');
+    }
+  } catch (error) {
+    throw Exception('Error searching users: $error');
+  }
+}
 
   Widget SerachUser(){
     return ListView.builder(

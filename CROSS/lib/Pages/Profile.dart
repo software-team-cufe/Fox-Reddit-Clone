@@ -15,22 +15,23 @@
 
 void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList, String userName) {
   try {
-    if (isFollowed) {
-      final List<dynamic> followingUsernames = followingList.map((following) => following['username']).toList();
-      if (followingUsernames.contains(userName)) {
-        print('$userName is followed');
-        isFollowed = true;
+    print('Username to Check: $userName');
+    for (int i = 0; i < followingList.length; i++) {
+      if (userName == followingList[i]['username']) {
+        isFollowed = true; // User is followed, so set isFollowed to true
+        break; // Exit the loop since we found a match
       } else {
-        print('$userName is not followed');
-        isFollowed = false;
+        isFollowed = false; // User is not followed, set isFollowed to false (this might be redundant, but it ensures the value is set if there's no match)
       }
-    } else {
-      print('User is not currently followed, cannot check if $userName is followed.');
     }
+    print("isFollowed: $isFollowed");
   } catch (error) {
     print('Error checking if $userName is followed: $error');
   }
 }
+
+
+
 
 
 
@@ -64,7 +65,7 @@ void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList,
     String _selectedItem = 'hot';
     List<Map<String, dynamic>> userComments = []; // Define userComments here
     List<Map<String, dynamic>> followingList = []; //
-    late bool isFollowed ;
+    late bool isFollowed = false;
 
     @override
     void initState() {
@@ -79,7 +80,7 @@ void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList,
          fetchDataBack();
       }
       getUserComments();
-      getFollwoingLit();
+      getFollowingList();
       checkIfFollowing(isFollowed, followingList, widget.userName);
     }
 
@@ -240,39 +241,57 @@ void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList,
     }
   }
   Future<void> unFollowUser(String username) async {
-  try {
-    // API endpoint URL
-    String apiUrl = ApiRoutesBackend.unFollow;
+    try {
+      // API endpoint URL
+      String apiUrl = ApiRoutesBackend.unFollow;
 
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      body: json.encode({
-        'username': username,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${widget.access_token}', // Add Authorization header
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: json.encode({
+          'username': username,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.access_token}', // Add Authorization header
+        }
+        );
+
+        if (response.statusCode == 200) {
+          print('User followed successfully');
+        } else {
+          print('Failed to follow user: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error following user: $error');
       }
+    }
+  Future<void> getFollowingList() async {
+    try {
+      final response = await http.get(
+        Uri.parse(ApiRoutesBackend.getUserFollowings(widget.userName)),
+        headers: {'Authorization': 'Bearer $access_token'},
       );
 
       if (response.statusCode == 200) {
-        print('User followed successfully');
+        final responseData = json.decode(response.body);
+        final followingsData = responseData.asMap;
+        print("Followings Data: $followingsData");
+        if (followingsData != null) {
+          followingList = List<Map<String, dynamic>>.from(followingsData);
+        } else {
+          print("Invalid or missing followingsData: $followingsData");
+        }
       } else {
-        print('Failed to follow user: ${response.statusCode}');
+        print("Failed to retrieve following list: ${response.statusCode}");
       }
     } catch (error) {
-      print('Error following user: $error');
+      print("Error retrieving following list: $error");
     }
   }
-  Future<void> getFollwoingLit() async {
-    final Response = await http.get(
-      Uri.parse(ApiRoutesBackend.getUserFollowings(widget.userName)),
-      headers: {'Authorization': 'Bearer $access_token'},);
-    if (Response.statusCode == 200) {
-      print("following list : ${Response.body}");
-    }
-  }
+
+
+
   @override
     ImageProvider<Object> _getImageProvider(dynamic picture) {
       if (profilePic is String) {
