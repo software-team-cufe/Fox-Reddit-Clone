@@ -220,17 +220,20 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                     <span className=" px-2 py-2 text-gray-800">r/mod</span>
                                  </Link>
                               </li>
-                              {tempForClear.map((subreddit, index) => (
-                                 <a
-                                    href={`/r/${subreddit}`}
-                                    className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
-                                    key={index}>
-                                    <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7" />
+                              {tempForClear.map((subreddit, index) => {
+                                
+                                 return (
+                                    <a
+                                       href={`/r/${subreddit.name}`}
+                                       className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                       key={index}>
+                                       <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7" />
 
-                                    {subreddit}
+                                       {subreddit.name}
 
-                                 </a>
-                              ))}
+                                    </a>
+                                 );
+                              })}
                            </ul>
                         </div>
                      </>
@@ -306,11 +309,11 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                               {
                                  yourCommunitiesList.map((commun, index) => (
                                     <a
-                                       href={`/r/${commun}`}
+                                       href={`/r/${commun.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                        key={index}>
                                        <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7" />
-                                       {commun}
+                                       {commun.name}
                                     </a>
                                  ))
                               }

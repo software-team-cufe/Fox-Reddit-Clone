@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { userAxios } from "@/Utils/UserAxios";
 import ImageGallery from "react-image-gallery";
 import { toast } from 'react-toastify'
 export default function PostComponent({ refetch, role, post, className, viewMode = false }) {
+    const params = useParams();
     post.votes = post.votes ?? 0;
     // const images = [post.thumbnail, ...post.images];
     const [postObj, setPost] = useState(post);
     const [votes, setVotes] = useState(post.votes);
+    console.log({ post });
     const vote = async (upvote) => {
         console.log(postObj._id);
         const votesss = upvote ? post.votes + 1 : post.votes - 1;
         const id = toast.loading('Please wait');
         try {
             const res = await userAxios.post('/api/postvote', {
-                postID: postObj.postId,
+                postID: postObj.postId ?? params.id,
                 type: upvote ? 1 : -1,
             });
             setPost(prev => { return { ...prev, votesCount: upvote ? prev.votesCount + 1 : prev.votesCount - 1 } })

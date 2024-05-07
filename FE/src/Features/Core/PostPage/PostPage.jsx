@@ -20,7 +20,7 @@ export default function PostPage() {
 
             <UserHeader post={post} />
             <PostComponent refetch={refetch} post={post} viewMode={true} />
-            <CommentSection />
+            <CommentSection comments={post.postComments}/>
         </div>
     )
 }

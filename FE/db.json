@@ -149,7 +149,22 @@
       "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
     }
   ],
-  "moderators": [],
+  "moderators": [
+    {
+      "id": "c3a9",
+      "communityName": "test2",
+      "username": "بلابلابلا",
+      "rules": {
+        "manageUsers": true,
+        "createLiveChat": true,
+        "manageSettings": false,
+        "manageFlair": false,
+        "manageModMail": false,
+        "managePosts": false,
+        "manageWikiPages": false
+      }
+    }
+  ],
   "users": [
     {
       "name": "test",
@@ -833,6 +848,42 @@
       "createdAt": "2022/02/15, 15:05:45",
       "commentText": "This is a comment on post 1",
       "postID": 1
+    },
+    {
+      "id": "asdasdasd",
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 10,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "This is a comment on post 1",
+      "postID": 1
+    },
+    {
+      "id": "c4c6",
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 11,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "asdasd",
+      "postID": "663667aa94a9e133a9491043"
+    },
+    {
+      "id": "fa1f",
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 11,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "asdasd4",
+      "postID": "663667aa94a9e133a9491043"
     }
   ]
 }
