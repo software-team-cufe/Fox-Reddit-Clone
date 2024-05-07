@@ -36,26 +36,32 @@ class _HistoryPageState extends State<HistoryPage> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        access_token = sharedPrefValue.getString('backtoken');
+        access_token =
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjNhMGI5OWVkMTQyNmY3Y2IyYmI3Y2UiLCJlbWFpbCI6Imhvc3NhbWFzZGFzZGFzZEBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImgiLCJhdmF0YXIiOiJodHRwczovL3Jlcy5jbG91ZGluYXJ5LmNvbS9kdm5mOHl2c2cvaW1hZ2UvdXBsb2FkL3YxNzE0OTA4OTc1L2dkdXhiajFic2s3eG5hcXRxbmMxLnBuZyIsInBvc3RLYXJtYSI6MCwiY29tbWVudEthcm1hIjowLCJrYXJtYSI6MCwiZmNtdG9rZW4iOiJkUzJoUl9rU1Q1YUFULUMySFlKMzBxOkFQQTkxYkVLbDhiTE9HUjdISEJzNHZYQV9TUG1hZ0JlOHBFYXg5NTNhdkVCWGtMSUdsTkNvcHRzUVR1OWEzMC1hX0psREx4aEE3WDNHbXhiVm9Jb1VRSEx6ZkFGMHdKUWNxVWxSME9RNjZFN08wc0VYdUtpVzVyNC0zRzBfY28wcE9yeGh6bXc2TTZHIiwiZm9sbG93ZXJzIjpbXSwidXNlckZvbGxvd3MiOltdLCJub3RpZkFycmF5IjpbXSwiaGlzdG9yeVBvc3RzIjpbIjY2MzVmZDhkOGU3MDNlODFjYTRjZTEyYSJdLCJwb3N0Vm90ZXMiOltdLCJjb21tZW50Vm90ZXMiOltdLCJtZW50aW9uZWRJbiI6W10sInJlcGxpZWRJblBvc3QiOltdLCJtZW1iZXIiOltdLCJtb2RlcmF0b3JzIjpbXSwiZmF2b3JpdGVzIjpbXSwiY3JlYXRlZEF0IjoiMjAyNC0wNS0wN1QxMTowODowOS41NDBaIiwibm90aWZpY2F0aW9uUHJlZnMiOnsibWVzc2FnZXMiOnRydWUsImNoYXRNZXNzYWdlcyI6dHJ1ZSwiY2hhdFJlcXVlc3RzIjp0cnVlLCJtZW50aW9uT2ZVc2VybmFtZSI6dHJ1ZSwiY29tbWVudHNPbllvdXJQb3N0cyI6dHJ1ZSwidXB2b3Rlc09uWW91clBvc3RzIjp0cnVlLCJ1cHZvdGVkT25Zb3VyQ29tbWVudHMiOnRydWUsInJlcGxpZXNUb1lvdXJDb21tZW50cyI6dHJ1ZSwiYWN0aXZpdHlPbllvdXJDb21tZW50cyI6dHJ1ZSwiYWN0aXZpdHlPbkNoYXRQb3N0c1lvdXJlSW4iOnRydWUsIm5ld0ZvbGxvd2VycyI6dHJ1ZSwiYXdhcmRzWW91UmVjZWl2ZSI6dHJ1ZSwicG9zdHNZb3VGb2xsb3ciOnRydWUsImNvbW1lbnRzWW91Rm9sbG93Ijp0cnVlLCJ0cmVuZGluZ1Bvc3RzIjp0cnVlLCJjb21tdW5pdHlSZWNvbW1lbmRhdGlvbnMiOnRydWUsInJlUmVkZGl0Ijp0cnVlLCJmZWF0dXJlZENvbnRlbnQiOnRydWUsImNvbW11bml0eUFsZXJ0cyI6dHJ1ZSwicmVkZGl0QW5ub3VuY2VtZW50cyI6dHJ1ZSwiY2FrZURheSI6dHJ1ZSwibW9kTm90aWZpY2F0aW9ucyI6dHJ1ZSwiX2lkIjoiNjYzYTBiOTllZDE0MjZmN2NiMmJiN2QwIn0sImlhdCI6MTcxNTA4MDc3OSwiZXhwIjoxNzE3NjcyNzc5fQ.edAcO1atQRxAqRT-CPZ7Yj12nRSJ2r72PoOhlo9_Htc';
+        // access_token = sharedPrefValue.getString('backtoken');
       });
     });
   }
 
   /// Fetches the list of posts based on the selected item.
-  Future<Map<dynamic, dynamic>> fetchPosts() async {
-    var url = Uri.parse(_selectedItem == 'Popular'
-        ? ApiRoutesBackend.homePostssorted(category: 'top')
-        : ApiRoutesBackend.homePostssorted(category: _selectedItem));
-    var response = await http.get(url);
+  Future<Map<dynamic, dynamic>> fetchHistoyPosts() async {
+    var url = Uri.parse(ApiRoutesBackend.getHistroyPosts);
+
+    print(access_token);
+    print(url);
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $access_token'},
+    );
 
     // response = await http.get(
     //   url,
-    //   headers: {'Authorization': 'Bearer $access_token'},
-    // );++k,
+    // );
     print("reaponse status code: ${response.statusCode}");
+    print("reaponse status code: ${response.body}");
     if (response.statusCode == 200) {
       Map<dynamic, dynamic> data =
-          json.decode(response.body)["homePagePosts"].asMap();
+          json.decode(response.body)["posts"].asMap();
 
       return data;
     } else {
@@ -307,7 +313,7 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
           Expanded(
             child: FutureBuilder<Map<dynamic, dynamic>>(
-              future: fetchPosts(),
+              future: fetchHistoyPosts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -324,7 +330,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     itemBuilder: (context, index) {
                       var post = posts[index];
                       return isModernCard
-                          ? ModernCard(post: post) // pass individual post
+                          ? ModernCard(post: post,history: true,) // pass individual post
                           : ClassicCard(post: post); // pass individual post
                     },
                   );
