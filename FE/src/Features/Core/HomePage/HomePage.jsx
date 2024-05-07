@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PostComponent from "@/GeneralComponents/Post/Post";
 
 import { useQuery } from "react-query";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import { createContext, useContext } from "react";
 import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
-
+import InfinitScroll from 'react-infinite-scroll-component';
 /**
  * HomePage Component
  * 
@@ -72,15 +72,33 @@ export function HomeProvider({ children }) {
 
 export default function HomePage() {
   const { selected } = useContext(HomeContext);
-  const { isLoading, isError, error, data, } = useQuery(['get-post', selected],
-    () => userAxios.get(`/user-home?page=1&limit=15&sort=${selected.toLowerCase()}`),
+  const [page, setPage] = useState(1);
+  const [posts, setPosts] = useState([]);
+  const handleScroll = () => {
+    console.log(window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight);
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      setPage(page + 1) // Load more data when user scrolls to bottom
+    }
+  };
+  const { isLoading, isError, error, data, } = useQuery(['get-post', selected, page],
+    () => userAxios.get(`/user-home?page=${page}&limit=5&sort=${selected.toLowerCase()}`).then(data => {
+      setPosts(prev => {
+        return [...prev, ...data?.data?.homePageAuthPosts];
+      });
+      return data;
+    }),
     {
       retry: 0,
       refetchOnWindowFocus: false,
     });
-  if (isLoading) return <Spinner />;
-
-
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [posts]);
   return (
     <div className="w-full h-full relative flex gap-10">
       <div className="w-full relative overflow-y-auto space-y-4">
@@ -90,9 +108,18 @@ export default function HomePage() {
           <PeriodSelect appearance={selected} context={HomeContext} />
         </div>
         <hr />
+
         {
-          data?.data?.homePageAuthPosts?.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
+          posts?.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
+        {/* <InfinitScroll
+          hasMore={true}
+          loader={<h4>Loading...</h4>}
+          next={() => setPage(page + 1)} dataLength={posts?.length ?? 0}>
+          {
+            posts?.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
+          }
+        </InfinitScroll> */}
       </div>
       <div className="p-5   max-w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">
         <h2 className=" font-bold">Recent Posts</h2>
