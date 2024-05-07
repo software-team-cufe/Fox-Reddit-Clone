@@ -54,6 +54,8 @@ class ApiRoutesBackend {
 
   static String getUserForChat(String userName) =>
       '$baseUrl/r/search/?q=$userName&type=user';
+
+  static const String addComment = '$baseUrl/api/comment';
 }
 
 class ApiRoutesMockserver {

@@ -90,7 +90,7 @@ class _ClassicCardState extends State<ClassicCard> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        widget.post['text'] ?? "",
+                        widget.post['text'] ?? "no text",
                         style: TextStyle(
                           fontSize: 16,
                           color: isBlurred ? Colors.transparent : Colors.white,

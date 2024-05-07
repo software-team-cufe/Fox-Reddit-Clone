@@ -98,18 +98,18 @@ class _ModernCardState extends State<ModernCard> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.post["communityName"] != null)
-                      const CircleAvatar(
+                    if (widget.post["communityName"] != null &&
+                        (widget.post["communityIcon"] != null && widget.post["communityIcon"] != 'default-icon.jpg'))
+                       CircleAvatar(
                         radius: 18,
                         backgroundImage:
-                            // AssetImage(widget.post["communityIcon"]),
-                            AssetImage('assets/images/avatar.png'),
+                             NetworkImage(widget.post["communityIcon"]),
                       )
                     else
-                      const CircleAvatar(
+                       const CircleAvatar(
                         radius: 18,
-                        child: Icon(Icons.account_circle),
-                      ),
+                        backgroundImage:
+                            AssetImage('assets/images/avatar.png')),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
