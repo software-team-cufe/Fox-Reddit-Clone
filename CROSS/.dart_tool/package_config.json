@@ -164,6 +164,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "custom_refresh_indicator",
+      "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/custom_refresh_indicator-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "dart_style",
       "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/dart_style-2.3.6",
       "packageUri": "lib/",
@@ -585,15 +591,21 @@
     },
     {
       "name": "js",
-      "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.7.1",
+      "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "2.19"
     },
     {
       "name": "json_annotation",
       "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/json_annotation-4.8.1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "jwt_decoder",
+      "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/jwt_decoder-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "leak_tracker",
@@ -890,6 +902,18 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "socket_io_client",
+      "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/socket_io_client-2.0.3+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "socket_io_common",
+      "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/socket_io_common-2.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "source_gen",
       "rootUri": "file:///C:/Users/Mohammad%20Tamer/AppData/Local/Pub/Cache/hosted/pub.dev/source_gen-1.5.0",
       "packageUri": "lib/",
@@ -1088,7 +1112,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-05-06T08:05:56.902196Z",
+  "generated": "2024-05-07T15:20:09.532053Z",
   "generator": "pub",
   "generatorVersion": "3.3.4"
 }

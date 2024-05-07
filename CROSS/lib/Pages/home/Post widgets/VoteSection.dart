@@ -158,10 +158,11 @@ class _VoteSectionState extends State<VoteSection> {
                   child: const Icon(Icons.reply),
                 ),
                 onPressed: () {
-                  String postId = widget.post['postId'] ?? 404;
+
+                  String postId = widget.post['_id'] ?? 404;
                   String postUrl =
                       'https://icy-desert-094269b03.5.azurestaticapps.net/posts/$postId';
-                  Share.share('${widget.post['postTitle']}\n$postUrl');
+                  Share.share('${widget.post['title']}\n$postUrl');
                 },
               ),
             ],
