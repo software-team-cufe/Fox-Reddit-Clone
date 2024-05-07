@@ -29,7 +29,12 @@
           "name": "user2"
         }
       ],
-      "Muted": [],
+      "Muted": [
+        {
+          "icon": "https://i.pinimg.com/736x/87/ea/4b/87ea4bd1f27494d698bb682b25ac142f.jpg",
+          "name": "art"
+        }
+      ],
       "SocialLinks": [
         {
           "icon": "/logo.png",
