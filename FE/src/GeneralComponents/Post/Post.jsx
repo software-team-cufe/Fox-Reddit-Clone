@@ -3,7 +3,6 @@ import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, Mess
 import { Link, useParams } from "react-router-dom";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { userAxios } from "@/Utils/UserAxios";
-import ImageGallery from "react-image-gallery";
 import { toast } from 'react-toastify'
 import { userStore } from "../../hooks/UserRedux/UserStore";
 export default function PostComponent({ refetch, role, post, className, viewMode = false }) {
@@ -27,7 +26,6 @@ export default function PostComponent({ refetch, role, post, className, viewMode
     post.votes = post.votes ?? 0;
     // const images = [post.thumbnail, ...post.images];
     const [postObj, setPost] = useState(post);
-    const [votes, setVotes] = useState(post.votes);
 
     const vote = async (upvote) => {
         const id = toast.loading('Please wait');

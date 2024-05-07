@@ -70,6 +70,8 @@ export function HomeProvider({ children }) {
 }
 
 export default function HomePage() {
+
+  // const { selected } = { selected: "new" };
   const { selected } = useContext(HomeContext);
   const [page, setPage] = useState(1);
   const [posts, setPosts] = useState([]);
@@ -83,10 +85,12 @@ export default function HomePage() {
       setPage(page + 1) // Load more data when user scrolls to bottom
     }
   };
+  
   const { isLoading, isError, error, data, } = useQuery(['get-post', selected, page],
-    () => userAxios.get(`/user-home?page=${page}&limit=5&sort=${selected.toLowerCase()}`).then(data => {
+    () => userAxios.get(`/user-home${localStorage.getItem("authorization") == null ? "" : `?page=${page}&limit=5&sort=${selected.toLowerCase()}`}`).then(data => {
       setPosts(prev => {
-        return [...prev, ...data?.data?.homePageAuthPosts];
+        
+        return [...prev, ...(data?.data?.homePageAuthPosts ?? data?.data?.homePagePosts)];
       });
       return data;
     }),
@@ -94,6 +98,7 @@ export default function HomePage() {
       retry: 0,
       refetchOnWindowFocus: false,
     });
+    
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -111,14 +116,6 @@ export default function HomePage() {
         {
           posts?.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
         }
-        {/* <InfinitScroll
-          hasMore={true}
-          loader={<h4>Loading...</h4>}
-          next={() => setPage(page + 1)} dataLength={posts?.length ?? 0}>
-          {
-            posts?.map((e, idx) => <PostComponent role={'post'} post={e} key={idx} />)
-          }
-        </InfinitScroll> */}
       </div>
       <div className="p-5   max-w-[600px] shadow  rounded-md border h-fit  hidden lg:flex lg:flex-col">
         <h2 className=" font-bold">Recent Posts</h2>
