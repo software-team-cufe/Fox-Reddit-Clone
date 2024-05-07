@@ -20,7 +20,6 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
     const [loading, setLoading] = useState(true);
     const [crash, setCrash] = useState(false);
 
-
     const [ToolBar, setToolBar] = useState([['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
 

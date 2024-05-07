@@ -24,7 +24,17 @@ const Dropdown = (props) => {
     const [searchTerm, setSearchTerm] = useState('');
     const dropdownRef = useRef(null);
     const [ShowCreateCom, setShowCreateCom] = useState(false);
-    const [YourCommunities, setYourCommunities] = useState([]);
+    const [YourCommunities, setYourCommunities] = useState([{ name: "r / com3", icon: "DumPhoto3.jpg", membersCount: "123", id: "125654" },
+    {
+        name: "r / com4", icon: "DumPhoto4.jpg", membersCount: "1235", rules: [
+            "Be respectful to other members.",
+            "No spamming or self-promotion.",
+            "Keep discussions relevant to League of Legends.",
+            "No hate speech or harassment of any kind.",
+            "Follow Reddit's content policy."
+        ],
+        id: "1256254"
+    }]);
     useEffect(() => {
         fetchMyComs();
         const handleClickOutside = (event) => {
@@ -54,9 +64,10 @@ const Dropdown = (props) => {
     // const filteredYourCom = YourCommunities.filter(item =>
     //     item.name.toLowerCase().includes(searchTerm.toLowerCase())
     // );
-    const filteredYourCom = YourCommunities.filter(item =>
-        item.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredYourCom = []
+    //  YourCommunities.filter(item =>
+    //     item.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
     const filteredOtherCom = OtherCommunities.filter(item =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );

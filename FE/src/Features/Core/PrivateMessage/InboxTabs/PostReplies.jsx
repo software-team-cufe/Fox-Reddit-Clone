@@ -155,7 +155,6 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
             {Messages.map((mess, i) => {
                 return (
                     <div key={i} className={`p-4 rounded sm:w-2/3 w-full mb-1
-                   
                     ${mess.unread ? "bg-gray-300" : ""}
                     ${i % 2 === 0 && !mess.unread ? "bg-white" : "bg-[#fff6f1]"}
                     `}>
