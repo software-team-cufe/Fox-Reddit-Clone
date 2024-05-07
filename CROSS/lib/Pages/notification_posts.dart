@@ -11,11 +11,11 @@ import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'CommentSection.dart';
 
 class PostDetails extends StatefulWidget {
   final Map<String, dynamic> post;
-
   const PostDetails({
     Key? key,
     required this.post,
@@ -27,12 +27,20 @@ class PostDetails extends StatefulWidget {
 
 class _PostDetailsState extends State<PostDetails> {
   bool isBlurred = false;
+  String? access_token;
 
   @override
   void initState() {
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        // Store the token in the access_token variable
+        access_token = sharedPrefValue.getString('backtoken');
+      });
+    });
     super.initState();
     if (widget.post['nsfw'] || widget.post['spoiler']) {
       isBlurred = true; // Apply blur if the post is NSFW
+      
     }
   }
 
@@ -343,7 +351,7 @@ class _PostDetailsState extends State<PostDetails> {
               ],
             ),
             const SizedBox(height: 1),
-            CommentSection(postId: "${widget.post['id']}",),
+            CommentSection(postId: "${widget.post['id']}", access_token: access_token!),
           ],
         ),
       ),
