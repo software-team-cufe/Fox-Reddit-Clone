@@ -1,7 +1,9 @@
 import React from 'react'
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { useState } from 'react';
 const RemovedPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className='w-full flex flex-row'>
       <div className='w-2/4 mx-auto  ml-8'>
@@ -232,7 +234,43 @@ const RemovedPage = () => {
      </div>
       </div>
       <div className='w-2/4 h-full' >
-         <div className=' m-10 mr-12 border border-gray-300  h-[200px] w-[350px]'>
+         <div className=' m-10 mr-12 border border-gray-300   w-[350px]'>
+           <button onClick={() => setIsOpen(!isOpen)} className=" w-full h-[55px] text-xs font-semibold py-2 px-3 flex flex-row justify-between">
+         <p className=" text-md self-center">Last 7 days Insights</p>
+         {isOpen ? (
+          <svg className="w-5 h-5 self-center"
+          xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 9 12 15 18 9" /></svg>
+         ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 self-center">
+          <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+        </svg>
+         )}
+          </button>
+          {isOpen && (
+            <div>
+             <div className=' flex flex-row ml-3 space-x-2'>
+               <svg className="text-pink-500 w-5 h-5 self-center"
+                xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round">  <polyline points="20 12 20 22 4 22 4 12" />  <rect x="2" y="7" width="20" height="5" />  <line x1="12" y1="22" x2="12" y2="7" />  <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />  <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" /></svg>
+                <div className='flex flex-col '>
+                   <span className='text-xs font-semibold'>
+                     0 removed posts
+                   </span>
+                   <span className='text-xs font-light'>It's the same as the previous 7 days.</span>
+                </div>
+             </div>
+              
+             
+             <div className=' flex flex-row ml-3 space-x-2 my-3'>
+             <svg className="text-indigo-500 w-5 h-6"
+             xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M12 21a9 9 0 1 1 0 -18a9 8 0 0 1 9 8a4.5 4 0 0 1 -4.5 4h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25" />  <circle cx="7.5" cy="10.5" r=".5" fill="currentColor" />  <circle cx="12" cy="7.5" r=".5" fill="currentColor" />  <circle cx="16.5" cy="10.5" r=".5" fill="currentColor" /></svg> <div className='flex flex-col '>
+                   <span className='text-xs font-semibold'>
+                     0 removed Comments
+                   </span>
+                   <span className='text-xs font-light'>It's the same as the previous 7 days.</span>
+                </div>
+             </div>
+           </div>
+          )}
          </div>
       </div>
     </div>
