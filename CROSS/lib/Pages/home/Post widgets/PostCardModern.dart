@@ -13,39 +13,49 @@ import 'dart:convert';
 /// A stateful widget that represents a post card in the home page.
 class ModernCard extends StatefulWidget {
   final Map<dynamic, dynamic> post;
-  bool currentuserpost = false;
   TextEditingController editedText = TextEditingController();
   String? access_token;
   String? userName;
-  bool myProfile;
+  final bool history;
 
   /// Constructs a [ModernCard] widget.
   ///
   /// The [post] parameter is required and contains the data for the post.
-  ModernCard(
-      {super.key,
-      required this.post,
-      this.access_token,
-      this.userName,
-      this.myProfile = false});
+  ModernCard({
+    super.key,
+    required this.post,
+    this.access_token,
+    this.userName,
+    this.history = false,
+  });
 
   @override
   _ModernCardState createState() => _ModernCardState();
 }
 
 class _ModernCardState extends State<ModernCard> {
+  bool currentuserpost = false;
+
   @override
   void initState() {
     super.initState();
+    String? id;
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
-        // Store the token in the access_token variable
-        if (widget.post['userID'] == sharedPrefValue.getString('userid')) {
-          widget.currentuserpost = true;
+        id = sharedPrefValue.getString('userid')!;
+        if (id ==
+            (widget.history
+                ? widget.post['userID']
+                : widget.post['userID']['_id'])) {
+          currentuserpost = true;
         }
+        print(currentuserpost);
+
+        //   print(widget.currentuserpost);
+        // }
       });
+      print(currentuserpost);
     });
-    setState(() {});
   }
 
   Future<void> delPost(String postId) async {
@@ -153,7 +163,7 @@ class _ModernCardState extends State<ModernCard> {
                                 },
                               ),
                               Visibility(
-                                visible: widget.myProfile,
+                                visible: currentuserpost,
                                 child: ListTile(
                                   leading: const Icon(Icons.edit_document),
                                   title: const Text('Edit'),
