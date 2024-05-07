@@ -18,7 +18,7 @@
       "rememberingSortPerCommunity": false,
       "rememberGlobalView": false,
       "communityTheme": true,
-      "markAllAsRead": true,
+      "markAllAsRead": false,
       "blocked": [
         {
           "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
@@ -69,7 +69,7 @@
       "rememberingSortPerCommunity": true,
       "rememberGlobalView": false,
       "communityTheme": true,
-      "markAllAsRead": true,
+      "markAllAsRead": false,
       "blocked": [
         {
           "name": "blocked1",
@@ -117,7 +117,7 @@
       "rememberingSortPerCommunity": false,
       "rememberGlobalView": false,
       "communityTheme": false,
-      "markAllAsRead": true,
+      "markAllAsRead": false,
       "blocked": [
         {
           "name": "blocked1",
@@ -165,7 +165,7 @@
       "rememberingSortPerCommunity": true,
       "rememberGlobalView": true,
       "communityTheme": true,
-      "markAllAsRead": true,
+      "markAllAsRead": false,
       "blocked": [
         {
           "name": "blocked1",
@@ -213,6 +213,7 @@
       "rememberingSortPerCommunity": false,
       "rememberGlobalView": false,
       "communityTheme": false,
+      "markAllAsRead": false,
       "blocked": [
         {
           "name": "blocked1",

@@ -22,11 +22,10 @@ export default function ChatMessaging() {
         try{axios.patch(`http://localhost:3002/users/${id}`, { 
             markAllAsRead: true,
         })
-        console.log("fnewjitnui");
-        setMarkAllAsRead(true)
         }catch(error){
             console.error(error);
         }
+        //setMarkAllAsRead(true);
     }
 
     return (
