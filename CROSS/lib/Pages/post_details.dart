@@ -341,7 +341,7 @@ class _PostDetailsState extends State<PostDetails> {
                         },
                         child: Text(
                           widget.post['username']??
-                              'error in fetching username',
+                              'no username',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,

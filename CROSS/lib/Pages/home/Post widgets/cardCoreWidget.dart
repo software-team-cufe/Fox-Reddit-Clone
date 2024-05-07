@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/pollWidget.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
+import 'package:video_player/video_player.dart';
 
 class cardCoreWidget extends StatefulWidget {
   final Map<dynamic, dynamic> post;
@@ -27,6 +28,21 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
 
   @override
   Widget build(BuildContext context) {
+    
+    List<String> attachments = widget.post['attachments']
+        .cast<String>(); // Assuming attachments are strings
+
+    String? firstImage;
+    String? firstVideo;
+    for (String attachment in attachments) {
+      if (attachment.endsWith('.jpg') || attachment.endsWith('.png')) {
+        firstImage = attachment;
+        break;
+      } else if (attachment.endsWith('.mp4')) {
+        firstVideo = attachment;
+        break;
+      }
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -71,10 +87,8 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
           ],
         ),
         const SizedBox(height: 8),
-        if ('https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15' !=
-                null &&
-            'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15'!
-                .isNotEmpty)
+        if ((firstImage != null && firstImage != 'file:///attachment1.jpg') ||
+            (firstVideo != null && firstVideo != 'file:///attachment1.mp4'))
           //Wrap GestureDetector around ClipRRect
           GestureDetector(
             onTap: () {
@@ -104,18 +118,21 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
                 alignment: Alignment.center,
                 children: [
                   // Image without blur effect
-                  Image.network(
-                    'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15',
-                    // widget.post['picture']!,
-                    width: double.infinity,
-                    height: 400,
-                    fit: BoxFit.cover,
-                    color: isBlurred
-                        ? const Color.fromARGB(0, 158, 158, 158)
-                        : null,
-                    colorBlendMode:
-                        isBlurred ? BlendMode.saturation : BlendMode.dst,
-                  ),
+                  if (firstImage != null)
+                    Image.network(
+                      firstImage,
+                      width: double.infinity,
+                      height: 400,
+                      fit: BoxFit.cover,
+                      color: isBlurred
+                          ? const Color.fromARGB(0, 158, 158, 158)
+                          : null,
+                      colorBlendMode:
+                          isBlurred ? BlendMode.saturation : BlendMode.dst,
+                    )
+                  // Video without blur effect
+                  else if (firstVideo != null)
+                    VideoPlayerWidget(videoUrl: firstVideo),
                   if (isBlurred)
                     // Blur effect with BackdropFilter
                     BackdropFilter(
@@ -188,5 +205,43 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
         //         onOptionSelected: (String) {}), // Render the poll widget if true
       ],
     );
+  }
+}
+
+class VideoPlayerWidget extends StatefulWidget {
+  final String videoUrl;
+
+  VideoPlayerWidget({required this.videoUrl});
+
+  @override
+  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
+}
+
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _controller.value.isInitialized
+        ? AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          )
+        : CircularProgressIndicator();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 }
