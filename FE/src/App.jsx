@@ -125,7 +125,8 @@ function MainRoute() {
             "/r/:id/about/:idd/:idd",
             "/r/:id/about/:idd/:idd/:iddd",
             "/community",
-          ]) && <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
+          ]) && 
+          <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
         }
 
         <div className='h-full w-full overflow-y-auto '>
