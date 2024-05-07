@@ -50,8 +50,9 @@ const Dropdown = (props) => {
     }, [])
 
     const fetchMyComs = async () => {
-        const res = await userAxios.get('subreddits/mine/member')
+        const res = await userAxios.get('/subreddits/mine/member')
         setYourCommunities(res.data.communities);
+        console.log(res.data.communities);
     }
 
     const handleCreateNewCom = () => {
@@ -61,13 +62,9 @@ const Dropdown = (props) => {
     const filteredProfile = Profile.filter(item =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    // const filteredYourCom = YourCommunities.filter(item =>
-    //     item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
-    const filteredYourCom = []
-    //  YourCommunities.filter(item =>
-    //     item.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
+    const filteredYourCom = YourCommunities.filter(item =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
     const filteredOtherCom = OtherCommunities.filter(item =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -87,7 +84,7 @@ const Dropdown = (props) => {
                 </button>
                 {isOpen && (
                     <div className="absolute w-full z-10  mt-2 rounded-md shadow-lg bg-white ring-1 ring-black
-                     ring-opacity-5 p-1 space-y-1">
+                     ring-opacity-5 p-1 space-y-1 h-[300px] overflow-auto">
                         <input
                             className="block w-full px-4 py-2 text-gray-800 border rounded-md border-gray-300 focus:outline-none"
                             type="text"
@@ -121,11 +118,10 @@ const Dropdown = (props) => {
                             <button key={id} onClick={() => { props.setSelected(item); setIsOpen(false); }}
                                 className=" px-4 py-2 text-gray-700 w-full 
                         hover:bg-gray-100 active:bg-blue-100 cursor-pointer h-12 flex gap-7 rounded-md">
-                                {/* <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' /> */}
+                                <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
                                 <div>
-                                    {/* <p className='mx-2 '>{item.name}</p> */}
-                                    <p className='mx-2 '>{item}</p>
-                                    {/* <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p> */}
+                                    <p className='mx-2 '>{item.name}</p>
+                                    <p className='text-xs   mx-2  text-gray-500'>{item.memberCount} members </p>
                                 </div>
                             </button>
                         ))}
