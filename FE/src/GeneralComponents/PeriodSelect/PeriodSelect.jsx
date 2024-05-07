@@ -65,7 +65,7 @@ export default function PeriodSelect({appearance, context}) {
             {periods.map((period, index) => (
               <Menu.Item key={index}>
                 {({ active }) => (
-                  <div id={`${period.name} Option`}className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex pr-4 h-12 p-3 text-sm', current == period.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(period.name)}>
+                  <div id={`${period.name}Option`}className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex pr-4 h-12 p-3 text-sm', current == period.name ? 'bg-gray-200' : '')} onClick={() => handleSwitch(period.name)}>
                     <span className='text-xs font-semibold'>{period.name}</span>
                   </div>
                 )}

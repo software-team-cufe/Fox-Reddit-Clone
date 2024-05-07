@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import { userAxios } from "@/Utils/UserAxios";
 import 'react-toastify/dist/ReactToastify.css';
 import { userStore } from '../../../hooks/UserRedux/UserStore';
+import { ChevronUp, ChevronDown } from "lucide-react"
 
 function CreatePostPage(props) {
     const store = userStore.getState().user.user;
@@ -31,22 +32,15 @@ function CreatePostPage(props) {
     const [imageFile, setimageFile] = useState(null);
     const [imageShow, setimageShow] = useState(null);
     const [load, setload] = useState(false);
-    const updatePollOptions = () => {
-        let newOptions = [];
-        if (Poll1) newOptions.push(Poll1);
-        if (Poll2) newOptions.push(Poll2);
-        Poll3.forEach(option => {
-            if (option.value) newOptions.push(option.value);
-        });
-        setPollOptions(newOptions);
-    };
-
+    const [Rules, setRules] = useState([]);
+    const [ShowExpand, setShowExpand] = useState(Array(Rules.length).fill(false));
     // Call update function when any of the state variables change
     useEffect(() => {
         updatePollOptions();
     }, [Poll1, Poll2, Poll3]);
 
     useEffect(() => {
+        getRules();
         if (SelectedCom.rules)
             setComHasRules(true)
         else
@@ -58,6 +52,29 @@ function CreatePostPage(props) {
             setShowComCard(true);
 
     }, [SelectedCom])
+
+    const updatePollOptions = () => {
+        let newOptions = [];
+        if (Poll1) newOptions.push(Poll1);
+        if (Poll2) newOptions.push(Poll2);
+        Poll3.forEach(option => {
+            if (option.value) newOptions.push(option.value);
+        });
+        setPollOptions(newOptions);
+    };
+
+    const getRules = async () => {
+        if (SelectedCom && SelectedCom.name !== store.name &&
+            SelectedCom.name !== "Choose Community") {
+            try {
+                const res = await userAxios.get(`${SelectedCom.name}/api/rules`)
+                console.log(res.data)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        else setRules([]);
+    }
 
     const uploadImage = async (file) => {
         let imageOrVideo;
@@ -82,38 +99,6 @@ function CreatePostPage(props) {
             return '';
 
     };
-
-    //, isNotifications: PostNotifications   
-    // function convertBase64(file) {
-
-    //     return new Promise((res, rej) => {
-    //         const fileReader = new FileReader();
-    //         fileReader.onload = () => {
-    //             res(fileReader.result);
-    //         }
-    //         fileReader.readAsDataURL(file);
-    //         fileReader.onerror = (error) => {
-    //             rej(error);
-    //         }
-    //     })
-    // }
-
-    // function fileToBase64(file) {
-    //     return new Promise((resolve, reject) => {
-    //         const reader = new FileReader();
-
-    //         reader.onload = () => {
-    //             const base64String = reader.result.split(',')[1];
-    //             resolve(base64String);
-    //         };
-
-    //         reader.onerror = (error) => {
-    //             reject(error);
-    //         };
-
-    //         reader.readAsDataURL(file);
-    //     });
-    // }
 
     const Post = async () => {
         setload(true);
@@ -160,92 +145,14 @@ function CreatePostPage(props) {
         }
     }
 
-    // const Post = async () => {
-
-    //     let NewPost;
-    //     const formData = new FormData();
-
-    //     // Append attachments
-    //     formData.append('attachments', VideoOrImageSrc);
-    //     // Add more attachments as needed
-    //     // formData.append('attachments', anotherVideoOrImageSrc, 'filename2');
-
-    //     // Create the request body
-    //     NewPost = {
-    //         title: TitleValue,
-    //         text: PostText,
-    //         spoiler: Spoiler,
-    //         nsfw: NSFW,
-    //         pollOptions: PollOptions,
-    //     };
-
-    //     // Append the request body as a stringified JSON object
-    //     formData.append(JSON.stringify(NewPost));
-
-    //     // Send the POST request
-    //     userAxios.post('api/submit', formData)
-    //         .then((res) => {
-    //             console.log(res);
-    //             toast.success("Post created successfully \u{1F60A}");
-    //         })
-    //         .catch((ex) => {
-    //             if (ex.issues != null && ex.issues.length != 0) {
-    //                 toast.error(ex.issues[0].message);
-    //             }
-    //         });
-    // }
-
-
-
-    // const Post = async () => {
-    //     if (PostNotifications === "on")
-    //         setPostNotifications(true);
-    //     // const imageUrl = `https://res.cloudinary.com/dvnf8yvsg/${imageOrVideo}/upload/${VideoOrImageSrc}`
-    //     //const imageUrl = await uploadImage(VideoOrImageSrc);
-    //     // console.log(imageUrl);
-
-    //     // Create a new FormData instance
-    //     let formData = new FormData();
-    //     // Append attachments to formData
-    //     formData.append('attachments', VideoOrImageSrc);
-    //     // formData.append('attachments', PostURL);
-
-    //     // Create request object
-    //     let request = {
-    //         title: TitleValue,
-    //         text: PostText,
-    //         nsfw: NSFW,
-    //         spoiler: Spoiler,
-    //         poll: PollOptions,
-    //         Communityname: "any",
-    //         createdAt: new Date()
-    //     };
-
-    //     if (SelectedCom.name !== store.username) {
-    //         request.Communityname = SelectedCom.name;
-    //     }
-
-    //     // Append request object to formData
-    //     formData.append('request', JSON.stringify(request));
-
-    //     // Make the POST request with formData
-    //     userAxios.post('api/submit', formData, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data'
-    //         }
-    //     })
-    //         .then((res) => {
-    //             console.log(res);
-    //             toast.success("Post created successfully \u{1F60A}");
-    //         })
-    //         .catch((ex) => {
-    //             if (ex.issues != null && ex.issues.length != 0) {
-    //                 toast.error(ex.issues[0].message);
-    //             }
-    //         });
-    // }
-
-
+    const toggleExpand = (index) => {
+        setShowExpand(prevState => {
+            let newState = [...prevState];
+            newState[index] = !newState[index];
+            console.log(newState);
+            return newState;
+        });
+    };
 
 
     return (
@@ -275,16 +182,35 @@ function CreatePostPage(props) {
                 <div className=' LeSS:hidden mt-16 m-2 w-0 md:block md:w-80'>
                     <div className='bg-white rounded my-2'>
 
-                        {ComHasRules &&
+                        {Rules.length > 0 &&
                             <>
                                 <div className='bg-orange-700 px-4 my-1 rounded text-white w-full h-max'>
                                     {SelectedCom.name} Rules
                                 </div>
-                                {SelectedCom.rules.map((item, index) => (
-                                    <div key={index}>
-                                        <p className='my-1 text-lg 
-                           '>{index + 1} . {item}</p>
-                                        <hr className='w-[90%] mx-4' />
+                                {Rules.map((item, index) => (
+                                    <div key={index} className='px-2'>
+                                        <div className='flex'>
+                                            <p className='my-1 text-lg min-w-max 
+                           '>{index + 1} . {item.title}</p>
+                                            <div className='w-[100%]'></div>
+                                            {ShowExpand[index] && <><ChevronUp onClick={() => {
+                                                toggleExpand(index)
+                                            }}
+                                                strokeWidth={1}
+                                                size={20}
+                                                className='mr-4 my-2 hover:cursor-pointer' />
+                                            </>}
+                                            {!ShowExpand[index] && <ChevronDown onClick={() => {
+                                                toggleExpand(index)
+                                            }}
+                                                strokeWidth={1}
+                                                size={20}
+                                                className='mr-4 my-2' />}
+                                        </div>
+                                        {ShowExpand[index] && <div className=' text-sm px-3 p-1'>
+                                            {item.description}
+                                        </div>}
+                                        <hr className='w-[90%] mx-4 mb-1' />
                                     </div>
                                 ))} </>}
                     </div>

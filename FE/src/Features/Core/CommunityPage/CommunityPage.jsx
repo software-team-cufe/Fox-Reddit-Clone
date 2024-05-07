@@ -141,7 +141,7 @@ export default function CommunityPage() {
             joined: joinedComms.includes(response.data.community.name),
             modded: moddedComms.includes(response.data.community.name),
             favourited: favComms.includes(response.data.community.name),
-            type: response.data.community.communityOptions.privacyType,
+            type: response.data.community.privacyType,
             muted: response.data.community.muted
           }
           setComm(newcomm);
@@ -287,13 +287,13 @@ export default function CommunityPage() {
       <BackToTop />
       {/* background image of the community */}
       <img src={commObj.backimage} alt='community' className={`w-full md:mx-auto h-20 md:h-36 object-fit rounded-lg`} />
-      {commObj.modded && <button className={`absolute md:right-6 right-3 hover:bg-gray-700 p-2 rounded-full text-white top-12 md:top-[100px]`} onClick={() => handleEditComponents("Banner")}>
+      {commObj.modded && <button id="bannerEditPen" className={`absolute md:right-6 right-3 hover:bg-gray-700 p-2 rounded-full text-white top-12 md:top-[100px]`} onClick={() => handleEditComponents("Banner")}>
         <Pen className={`md:w-5 md:h-5 w-3 h-3`} />
       </button>}
       {/* community name and (members count in mobile mode)*/}
       <div className='w-full relative flex justify-between items-center md:m-3'>
         <div>
-          <img src={commObj.icon} alt='community' className={`${commObj.modded ? 'hover:brightness-50' : ''} absolute object-fit md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`} onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={commObj.modded ? () => handleEditComponents("Avatar") : undefined} />
+          <img id="iconEditPen" src={commObj.icon} alt='community' className={`${commObj.modded ? 'hover:brightness-50' : ''} absolute object-fit md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`} onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={commObj.modded ? () => handleEditComponents("Avatar") : undefined} />
           {editIcon && commObj.modded ? <Pen className={`absolute md:-top-5 md:left-10 text-white left-8 top-5 md:w-4 md:h-4 w-2 h-2`} /> : <></>}
           <span className='absolute  md:top-10 top-0 md:left-0 left-16 md:text-3xl text-lg font-bold'>r/{commObj.name}</span>
           <div className='absolute md:top-10 top-[28px] md:left-28 left-16 md:hidden text-xs font-semibold text-gray-500 flex flex-wrap gap-x-3'>

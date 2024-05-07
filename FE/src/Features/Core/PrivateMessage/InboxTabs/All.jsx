@@ -83,9 +83,34 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
 
     }
     const handleRemove = () => { }
-    const handleBlock = () => {
-        //check if UserToBlock is not empty set BlockedUserInRep
-        setBlockedUserInRep(!BlockedUserInRep);
+    const handleBlock = async () => {
+        if (UserToReport) {
+            try {
+                if (BlockedUserInRep) {
+                    const data = {
+                        username: "joe_test",
+                        type: "unblock"
+                    }
+                    const res = await userAxios.post('api/block_user', data);
+                    console.log(res.data);
+                    //check if UserToBlock is not empty set BlockedUserInRep
+                    setBlockedUserInRep(!BlockedUserInRep);
+                }
+                else {
+                    const data = {
+                        username: "joe_test",
+                        type: "block"
+                    }
+                    const res = await userAxios.post('api/block_user', data);
+                    console.log(res.data);
+                    //check if UserToBlock is not empty set BlockedUserInRep
+                    setBlockedUserInRep(!BlockedUserInRep);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
     }
 
     const handleClick = (buttonName) => {

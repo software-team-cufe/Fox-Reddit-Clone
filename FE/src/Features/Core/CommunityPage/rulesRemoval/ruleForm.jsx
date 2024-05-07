@@ -84,16 +84,17 @@ export default function RuleForm({ onClose, editing, rule, list, setlist, index 
                                         <p className="font-medium text-md text-gray-900" id="modal-title">
                                             {!editing ? "Add Rule" : "Edit Rule"}
                                         </p>
-                                        <X className="w-5 h-5 text-gray-500 hover:text-black" onClick={() => onClose(false)} />
+                                        <X id="closeRuleForm" className="w-5 h-5 text-gray-500 hover:text-black" onClick={() => onClose(false)} />
                                     </div>
                                     <hr className="my-2 font-light text-gray-900" />
                                     <p className="text-md my-3 mb-1 font-semibold">Rule</p>
-                                    <textarea role="ruleTitleInput" maxLength={100} placeholder='Rule displayed (e.g. "no photos")' className="w-full p-2 h-12 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={Rule} onChange={(e) => setRule(e.target.value)} />
+                                    <textarea id="ruleTitleInput" role="ruleTitleInput" maxLength={100} placeholder='Rule displayed (e.g. "no photos")' className="w-full p-2 h-12 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={Rule} onChange={(e) => setRule(e.target.value)} />
                                     <label className="text-xs my-3 mb-1 text-gray-400 font-semibold">{100 - Rule.length} Characters remaining</label>
                                     <p className="text-md my-3 mb-2 font-semibold">Applies to</p>
                                     <div data-testid="rueApplyRadioInput" className="flex flex-col gap-2">
                                         <label className="gap-2 flex text-sm">
                                             <input
+                                                id="ruleBothRadio"
                                                 role="ruleBothRadio"
                                                 type="radio"
                                                 name="appliesTo"
@@ -105,6 +106,7 @@ export default function RuleForm({ onClose, editing, rule, list, setlist, index 
                                         </label>
                                         <label className="gap-2 flex text-sm">
                                             <input
+                                                id="rulePostRadio"
                                                 role="rulePostRadio"
                                                 type="radio"
                                                 name="appliesTo"
@@ -116,6 +118,7 @@ export default function RuleForm({ onClose, editing, rule, list, setlist, index 
                                         </label>
                                         <label className="gap-2 flex text-sm">
                                             <input
+                                                id="ruleCommentRadio"
                                                 role="ruleCommentRadio"
                                                 type="radio"
                                                 name="appliesTo"
@@ -127,11 +130,11 @@ export default function RuleForm({ onClose, editing, rule, list, setlist, index 
                                         </label>
                                         <p className="text-md mt-4 font-semibold">Report reason</p>
                                         <p className="text-xs text-gray-800 -mt-1 font-medium">defaults to rule name if blank</p>
-                                        <textarea role="ruleReasonInput" maxLength={100} placeholder='Reason rule is broken (e.g. "this is a photo")' className="w-full p-2 h-12 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={reportReason} onChange={(e) => setReportReason(e.target.value)} />
+                                        <textarea id="ruleReasonInput" role="ruleReasonInput" maxLength={100} placeholder='Reason rule is broken (e.g. "this is a photo")' className="w-full p-2 h-12 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={reportReason} onChange={(e) => setReportReason(e.target.value)} />
                                         <label className="text-xs mb-1 text-gray-400 font-semibold">{100 - reportReason.length} Characters remaining</label>
 
                                         <p className="text-md mt-4 font-semibold">Full description</p>
-                                        <textarea role="ruleDescriptionInput" maxLength={500} placeholder='Rule displayed (e.g. "no photos")' className="w-full p-2 h-28 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={description} onChange={(e) => setDescription(e.target.value)} />
+                                        <textarea id="ruleDescriptionInput" role="ruleDescriptionInput" maxLength={500} placeholder='Rule displayed (e.g. "no photos")' className="w-full p-2 h-28 border border-gray-500 border-opacity-25 rounded-md focus:border-blue-500 focus:outline-none" value={description} onChange={(e) => setDescription(e.target.value)} />
                                         <label className="text-xs mb-1 text-gray-400 font-semibold">{500 - description.length} Characters remaining</label>
 
                                         <div className="flex justify-between mt-4 p-3 h-16 -mx-3 -mb-4 rounded-b-lg bg-gray-200">

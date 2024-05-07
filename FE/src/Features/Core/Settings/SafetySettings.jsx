@@ -15,6 +15,7 @@ function SafetySettings() {
     const [Blocked, setBlocked] = useState([]);
     //To do add of both fields
 
+
     useEffect(() => {
         //fetchMock();
         fetchBlock();
@@ -48,7 +49,7 @@ function SafetySettings() {
         try {
             const res = await userAxios.get('/api/v1/me/blocked');
             console.log(res.data);
-            setBlocked(res.data);
+            setBlocked(res.data.blockedsData);
         } catch (ex) {
             if (ex.issues != null && ex.issues.length != 0) {
                 toast.error(ex.issues[0].message);
@@ -89,44 +90,60 @@ function SafetySettings() {
         setMuteValue(event.target.value);
 
     }
+    // const handleRemoveBlock = async (nameToRemove) => {
+    //     try {
+    //         const updatedBlocked = Blocked.filter(block => block.name !== nameToRemove);
+    //         const res = await axios.patch(`http://localhost:3002/users/1`, { blocked: updatedBlocked });
+    //         setBlocked(updatedBlocked);
+    //     } catch (ex) {
+    //         console.error(ex);
+    //         if (ex.issues != null && ex.issues.length != 0) {
+    //             toast.error(ex.issues[0].message);
+    //         }
+    //     }
+    // };
+
     const handleRemoveBlock = async (nameToRemove) => {
         try {
-            const updatedBlocked = Blocked.filter(block => block.name !== nameToRemove);
-            const res = await axios.patch(`http://localhost:3002/users/1`, { blocked: updatedBlocked });
-            setBlocked(updatedBlocked);
-        } catch (ex) {
-            console.error(ex);
-            if (ex.issues != null && ex.issues.length != 0) {
-                toast.error(ex.issues[0].message);
-            }
-        }
-    };
 
-    const handleAddBlock = async () => {
-        const val = await idFromName(BlockValue);
-        if (val != null) {
-            //check if user is already blocked
-            for (const user of Blocked) {
-                if (user.name === BlockValue) {
-                    toast.success("user already blocked");
-                    return;
-                }
+            const data = {
+                username: nameToRemove,
+                type: "unblock"
             }
-            try {
-                //add user to the block list
-                const res = await axios.get(`http://localhost:3002/users/${val}`);
-                const updatedBlock = [...Blocked, { avatar: res.data.avatar, name: res.data.name }];
-                const ress = await axios.patch(`http://localhost:3002/users/1`, { blocked: updatedBlock });
-                setBlocked(updatedBlock);
-                setBlockValue('');
-            } catch (ex) {
-                console.error(ex);
-                if (ex.issues != null && ex.issues.length != 0) {
-                    toast.error(ex.issues[0].message);
-                }
-            }
+            const res = await userAxios.post('api/block_user', data);
+            console.log(res.data);
+            const updatedBlocked = Blocked.filter(block => block.username !== nameToRemove);
+            setBlocked(updatedBlocked);
+        } catch (error) {
+            console.log(error);
         }
     }
+
+    // const handleAddBlock = async () => {
+    //     const val = await idFromName(BlockValue);
+    //     if (val != null) {
+    //         //check if user is already blocked
+    //         for (const user of Blocked) {
+    //             if (user.name === BlockValue) {
+    //                 toast.success("user already blocked");
+    //                 return;
+    //             }
+    //         }
+    //         try {
+    //             //add user to the block list
+    //             const res = await axios.get(`http://localhost:3002/users/${val}`);
+    //             const updatedBlock = [...Blocked, { avatar: res.data.avatar, name: res.data.name }];
+    //             const ress = await axios.patch(`http://localhost:3002/users/1`, { blocked: updatedBlock });
+    //             setBlocked(updatedBlock);
+    //             setBlockValue('');
+    //         } catch (ex) {
+    //             console.error(ex);
+    //             if (ex.issues != null && ex.issues.length != 0) {
+    //                 toast.error(ex.issues[0].message);
+    //             }
+    //         }
+    //     }
+    // }
 
     const handleRemoveMute = async (nameToRemove) => {
         try {
@@ -163,6 +180,22 @@ function SafetySettings() {
                     toast.error("An error occurred while muting the community.");
                 }
             }
+        }
+    }
+
+    const handleAddBlock = async () => {
+        try {
+            const data = {
+                username: BlockValue,
+                type: "block"
+            }
+            const res = await userAxios.post('api/block_user', data);
+            fetchBlock();
+        } catch (error) {
+            const errorMessage = error.response ?
+                error.response.data.message : error.message;
+            console.log(errorMessage);
+            toast.error(errorMessage);
         }
     }
 
@@ -203,12 +236,12 @@ function SafetySettings() {
                     </button>
 
                 </div>
-                {Blocked.map((block, index) => (
-                    <div className='w-full flex my-2' key={block.name}>
-                        <img src={block.avatar} alt={block.name} className="w-8 h-8  rounded m-1" />
-                        <p className="pt-3 text-sm min-w-max">{block.name}</p>
+                {Blocked && Blocked.map((block, index) => (
+                    <div className='w-full flex my-2' key={block.username}>
+                        <img src={block.avatar} alt={block.username} className="w-8 h-8  rounded m-1" />
+                        <p className="pt-3 text-sm min-w-max">{block.username}</p>
                         <div className="w-full" />
-                        <button onClick={() => { handleRemoveBlock(block.name) }}
+                        <button onClick={() => { handleRemoveBlock(block.username) }}
                             className="font-bold text-sm 
                          text-gray-500 hover:text-blue-600 pb-1  ">Remove</button>
                     </div>

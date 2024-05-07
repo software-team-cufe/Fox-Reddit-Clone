@@ -1,13 +1,47 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useState } from 'react';
+import ModQueueRoutes from './ModQueueRoutes';
+import { useParams } from 'react-router-dom';
+import { userAxios } from '../../../../../Utils/UserAxios';
 const RemovedPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [spamPosts, setSpamPosts] = useState([]);
+  const [spamComments, setSpamComments] = useState([]);
+  const { community } = useParams(); 
+  const [selected, setselected] = useState(null);
+
+  const fetchPosts = async () => {
+    try {
+   
+        const response = await userAxios.get(`/${community}/about/spam_posts`);
+        setSpamPosts(response.data.posts);  
+        console.log(response.data.posts);
+        console.log("spamPosts");
+           
+    } catch (error) {
+      console.log(error);
+    }
+  
+  };
+
+  const fetchComments = async () => {
+    try {
+      const response = await userAxios.get(`/${community}/about/spam_comments`);
+      setSpamComments(response.data.comments.commentID);
+      console.log(response.data.comments);
+      console.log("spamComments");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className='w-full flex flex-row'>
       <div className='w-2/4 mx-auto  ml-8'>
     <div className='text-xl font-semibold'>Queue</div>
+    <ModQueueRoutes></ModQueueRoutes>
     <div className='flex flex-row justify-between'>
     <div className=''>
    {/*first dropdown menu */}
@@ -77,13 +111,13 @@ const RemovedPage = () => {
           </button>
       </Menu.Item>
      <Menu.Item className="px-3 border-b-gray-300 border-b">
-         <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+         <button onClick={fetchPosts} className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                            
          <p> Posts</p>
          </button>
      </Menu.Item>
      <Menu.Item className="px-3 border-b-gray-300 border-b">
-         <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+         <button onClick={fetchComments} className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                        
            <p> Comments</p>
          </button>
@@ -233,11 +267,20 @@ const RemovedPage = () => {
    </Menu>
      </div>
 
-     <div className=' flex items-center justify-center mt-4 w-full border border-gray-300 h-[500px]'>
-           <svg className="text-yellow-300 w-36 h-36 mx-auto"
-            xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="0.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <path d="M10 14v2a2 2 0 0 0 4 0v-2m1 0h-6" /></svg>
-        
-     </div>
+     <div className='flex flex-col items-center justify-center mt-4 w-full border border-gray-300 h-[500px]'>
+     {spamPosts.map((posts, index) => (
+       <div key={index} className='flex flex-row items-center'>
+         <div className='w-2 h-2 rounded-full bg-red-500 mr-2'></div>
+         <div>{posts}</div>
+       </div>
+     ))}
+     {spamComments.map((comments, index) => (
+      <div key={index} className='flex flex-row items-center'>
+        <div className='w-2 h-2 rounded-full bg-red-500 mr-2'></div>
+        <div>{comments}</div>
+      </div>
+    ))}
+   </div>
       </div>
       <div className='w-2/4 h-full' >
          <div className=' m-10 mr-12 border border-gray-300   w-[350px]'>

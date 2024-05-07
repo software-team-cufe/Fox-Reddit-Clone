@@ -28,8 +28,8 @@ export default function LoginFirtstModal({ onClose = () => { } }) {
                                 <div className='mt-8 sm:mt-3 mb-8'>
                                     <div role="loginFirstHeader" className='font-semibold text-3xl mb-1'>Sign up</div>
                                     <div className='text-gray-900 text-xs'>You need to be logged in in order to join and interact with communities, please if you have an account
-                                        <Link role="toLoginLink" to='/login' className='text-blue-700 font-bold hover:text-red-500'> login </Link>
-                                        or <Link role="toSignupLink" to='/register' className='text-blue-700 font-bold hover:text-red-500'>create a new account</Link>!</div>
+                                        <Link id="toLoginLink" role="toLoginLink" to='/login' className='text-blue-700 font-bold hover:text-red-500'> login </Link>
+                                        or <Link id="toSignupLink" role="toSignupLink" to='/register' className='text-blue-700 font-bold hover:text-red-500'>create a new account</Link>!</div>
                                 </div>
                                 <div className='flex gap-2'>
                                     <div className='mx-auto items-center'>

@@ -1,11 +1,13 @@
 import React from 'react'
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import ModQueueRoutes from './ModQueueRoutes';
 const EditedPage = () => {
   return (
     <div className='flex w-full'>
     <div className=' w-2/4 ml-10'>
     <div className='text-xl font-semibold'>Queue</div>
+    <ModQueueRoutes></ModQueueRoutes>
      <div className='flex flex-row justify-between'>
              <div className=''>
             {/*first dropdown menu */}

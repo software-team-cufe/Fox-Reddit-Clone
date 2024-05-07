@@ -9,7 +9,6 @@ import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import { createContext, useContext } from "react";
 import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
-import InfinitScroll from 'react-infinite-scroll-component';
 /**
  * HomePage Component
  * 

@@ -18,7 +18,6 @@ import ModNavbar from '../../GeneralComponents/ModNavbar/ModNavbar';
 import UserManagemntRoutes from './moderation/about/UserManagement/pages/UserManagemntRoutes';
 import ModSettingsPage from './moderation/about/Settings/ModSettingsPage';
 import EditPage from './moderation/about/EditPage/EditPage';
-import ModQueueRoutes from './moderation/about/ModQueue/ModQueueRoutes';
 import RemovedPage from './moderation/about/ModQueue/RemovedPage';
 import EditedPage from './moderation/about/ModQueue/EditedPage';
 import UnmoderatedPage from './moderation/about/ModQueue/UnmoderatedPage';
@@ -39,7 +38,6 @@ function CommunityLayout() {
                     <Route path='/user-management/*' element={<UserManagemntRoutes />} />
                     <Route path='/settings' element={<ModSettingsPage />} />
                     <Route path='/spam' element={<RemovedPage />} />
-                    <Route path='/mod/*' element={<ModQueueRoutes />} />
                     <Route path='/edited' element={<EditedPage />} />
                     <Route path='/unmoderated' element={<UnmoderatedPage />} />
                     <Route path='/scheduledposts' element={<ScheduledPosts />} />

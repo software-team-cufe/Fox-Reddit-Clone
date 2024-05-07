@@ -131,7 +131,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
                 <div className="flex flex-col gap-2 items-center justify-center">
                     <div className={`${imageFile ? 'bg-white' : 'p-1 bg-gray-200'} w-full rounded-2xl h-36 ${dragging ? 'border-blue-500' : 'border-gray-500'}`} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleClick}>
                         {!imageFile ? (
-                            <div role={`commAppearance${OptionHeader}Upload`}>
+                            <div id= "uploadImageSpace" role={`commAppearance${OptionHeader}Upload`}>
                                 <CloudUpload className="w-6 mt-10 mx-auto text-gray-400" />
                                 <p className="text-gray-400 text-sm mx-auto text-center">Drag and drop or click to upload</p>
                                 <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileSelect} style={{ display: 'none' }} />
@@ -140,8 +140,8 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
                             <img role={`commAppearance${OptionHeader}Image`} src={imageFile} alt="uploaded" className={`mx-auto object-cover ${OptionHeader == "Avatar" ? "rounded-full w-36 h-36" : "rounded-2xl w-full h-full"}`} />)}
                     </div>
                     {imageFile ? <div className="flex mx-auto gap-2 justify-between">
-                        <button onClick={() => setImageFile(null)} className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" role="commAppearanceBannerRemove" id="commAppearanceBannerRemove"><Trash2 className="w-4 h-4" /></button>
-                        <button className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" onClick={() => submitImage()} role="commAppearanceAvatarSubmit" id="commAppearanceAvatarSubmit">{submittingReq ? <Spinner></Spinner> : "Submit"}</button></div> : <></>}
+                        <button id="uploadDeleteButton" onClick={() => setImageFile(null)} className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" role="commAppearanceBannerRemove" id="commAppearanceBannerRemove"><Trash2 className="w-4 h-4" /></button>
+                        <button id="uploadSubmitButton" className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" onClick={() => submitImage()} role="commAppearanceAvatarSubmit" id="commAppearanceAvatarSubmit">{submittingReq ? <Spinner></Spinner> : "Submit"}</button></div> : <></>}
                 </div>)}
         </div>
     );
