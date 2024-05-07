@@ -114,7 +114,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                     <ArrowDownCircle onClick={() => vote(false)} className={`w-5 h-5 cursor-pointer ${voteType == -1 ? " text-blue-600" : ""}`} />
                 </div>
                 {!viewMode && <div className="flex bg-gray-100 gap-1 items-center rounded-[80px] px-3 py-2">
-                    <Link to={viewMode ? null : `/posts/${postObj._id}`}>
+                    <Link to={viewMode ? null : `/posts/${postObj.postId}`}>
                         <MessageCircle className="w-5 h-5 cursor-pointer" />
                     </Link>
                     <p>{postObj.comments}</p>
