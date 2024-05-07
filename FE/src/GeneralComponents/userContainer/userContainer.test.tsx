@@ -1,18 +1,15 @@
 import React = require("react");
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import '@testing-library/jest-dom';
-import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
-import UserContainer from "./userContainer";
-import ViewerProfilePage from '@/Features/core/ProfilePages/ViewerProfileRoutes';
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import SearchPagesLayout from "@/Features/Core/SearchPages/SearchPagesRoutes";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 jest.mock('@/Utils/UserAxios', () => ({
     userAxios: {
         post: jest.fn(() => Promise.resolve({ data: {} })),
-        get: jest.fn(() => Promise.resolve({ data: [
-            {
-                "name": "test",
+        get: jest.fn(() => Promise.resolve({ data: { users: [
+                {"name": "test",
                 "id": "1",
                 "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
                 "about": "Hi, I'm a user. I love hiking, reading books, and playing the guitar in my free time. New from browser",
@@ -105,8 +102,7 @@ jest.mock('@/Utils/UserAxios', () => ({
                     "link": "https://ko-fi.com/"
                   }
                 ]
-              }
-        ] })),
+              }]}})),
         patch: jest.fn(() => Promise.resolve({ data: {} })),
     },
 }));
@@ -132,12 +128,6 @@ test('user container renders correctly', async () => {
 const queryClient = new QueryClient();
 
 test('user container routes to community', async () => {
-    const user = {
-        name: "anas",
-        avatar: "image",
-        karma: 0,
-        about: "depressed",
-    }
 
     render(
         <QueryClientProvider client={queryClient}>

@@ -361,7 +361,7 @@ function TypingArea(props) {
                     absolute right-4 flex hover:bg-orange-800 disabled:bg-gray-400
                     ${props.load ? "px-2" : "px-4"}`}
                 >
-                    {props.load && <LoaderCircle class="animate-spin mx-1" />}
+                    {props.load && <LoaderCircle className="animate-spin mx-1" />}
                     Post
                 </button>
                 <button

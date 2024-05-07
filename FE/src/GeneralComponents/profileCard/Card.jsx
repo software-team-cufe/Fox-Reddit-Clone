@@ -6,10 +6,29 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { userAxios } from '../../Utils/UserAxios';
 
+
 export default function Card (){
     const username = useSelector(state => state.user.user.username);
     const [numOfPosts, setNumOfPosts] = useState(0);
     const [numOfComments, setNumOfComments] = useState(0);
+    const [communities, setCommunities] = useState([]);
+    const [numOfMembers, setNumOfMembers] = useState(0);
+    
+    useEffect(() => { 
+        const getCommunities = async () => {
+      try {
+        const response = await userAxios.get(`/subreddits/mine/creator`);
+        console.log("creator");
+        console.log(response.data.communities);
+        setCommunities(response.data.communities);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCommunities();
+  }, []);
+ 
     useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,7 +53,7 @@ export default function Card (){
     }
   
     return(
-        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
+        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block overflow-y-auto">
         
         <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
             <button onClick={handleNavigate} className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
@@ -344,24 +363,31 @@ export default function Card (){
         <div className='ml-6 '>
          <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">YOU'RE A MODERATOR OF THESE COMMUNITIES</h1>
         </div> 
-        <div className=' flex flex-row space-x-2 hover:bg-gray-100 h-12 '>
-            <button  className=' flex flex-row w-full justify-between hover:bg-gray-100 '>
-               <div className='flex flex-row space-x-3 ml-6 my-3'>  
-                  <svg className="text-blue-600 w-7 h-7"
-                   xmlns="http://www.w3.org/2000/svg" width="24"  height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                  </svg>
-                  <div className=' flex flex-col  '>
-                     <span className=' text-xs'>r/communityname</span>     
-                     <span className=' text-xs text-gray-400'> 10K members</span>                
-                  </div>
-               </div>
-          
-               <div>
-                  <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300  w-[55px] h-7  px-2  text-black text-xs font-semibold '> Joined</button>
-               </div>
-           </button>      
-         </div>
+        <div className='flex flex-col hover:bg-gray-100 h-12'>
+        {communities.map((community, index) => (
+        <a key={index} href={`/r/${community}`} className='flex flex-row w-full justify-between hover:bg-gray-100'>
+            <div className='flex flex-row space-x-3 ml-6 my-3'>
+                <svg className="text-blue-600 w-7 h-7"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <div className='flex flex-col'>
+                    <div className='flex flex-row'>
+                        <div className='flex flex-row'>
+                            <span className='text-xs'>r/</span>
+                            <span>{community}</span>
+                        </div>
+                    </div>
+                    <span className='text-xs text-gray-400'>10K members</span>
+                </div>
+            </div>
+            <div>
+                <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[55px] h-7 px-2 text-black text-xs font-semibold'>Joined</button>
+            </div>
+        </a>
+    ))}
+</div>
 
      </div>
     )

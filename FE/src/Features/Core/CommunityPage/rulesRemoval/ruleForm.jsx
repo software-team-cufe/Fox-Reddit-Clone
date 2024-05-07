@@ -3,12 +3,15 @@ import { X } from "lucide-react";
 import { userAxios } from "@/Utils/UserAxios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Spinner from '@/GeneralElements/Spinner/Spinner';
 
 export default function RuleForm({ onClose, editing, rule, list, setlist, index }) {
     const [Rule, setRule] = useState(editing ? rule.title : "");
     const [appliesTo, setAppliesTo] = useState(editing ? rule.appliesTo : "");
     const [reportReason, setReportReason] = useState(editing ? rule.reason : "");
     const [description, setDescription] = useState(editing ? rule.description : "");
+    const [submittingReq, setSubmittingReq] = useState(false);
+
     const { community } = useParams();
 
     const handleRadioChange = (e) => {
@@ -33,7 +36,8 @@ export default function RuleForm({ onClose, editing, rule, list, setlist, index 
             });
     };
 
-    const submitRule = () => {
+    const submitRule = async () => {
+        setSubmittingReq(true);
         const newRule = {
             title: Rule,
             reason: reportReason.length == 0 ? Rule : reportReason,
@@ -41,26 +45,30 @@ export default function RuleForm({ onClose, editing, rule, list, setlist, index 
             appliesTo: appliesTo,
             createdAt: new Date().toISOString()
         };
-
+    
         let updatedList;
         if (editing) {
             updatedList = list.map((rule, i) => (i === index ? newRule : rule));
         } else {
             updatedList = [...list, newRule];
         }
-
+    
         const pack = { rules: updatedList };
-
-        userAxios.patch(`${community}/api/edit_rules`, pack)
-            .then(() => {
-                toast.success("Rules updated successfully");
-                setlist(updatedList);
-                onClose(false);
-            })
-            .catch(error => {
-                console.log(error);
-                toast.error("Error adding rule")
-            });
+    
+        try {
+            await userAxios.patch(`${community}/api/edit_rules`, pack)
+                .then(() => {
+                    toast.success("Rules updated successfully");
+                    setlist(updatedList);
+                    onClose(false);
+                })
+                .catch(error => {
+                    console.log(error);
+                    toast.error("Error adding rule")
+                });
+        } finally {
+            setSubmittingReq(false);
+        }
     };
 
     return (
@@ -130,7 +138,7 @@ export default function RuleForm({ onClose, editing, rule, list, setlist, index 
                                             {editing ? <button id="ruleDeleteButton" role="ruleDeleteButton" className="ml-2 text-red-500 font-semibold hover:text-red-600" onClick={submitDelete}>Delete</button> : <div></div>}
                                             <div className={`flex gap-3`}>
                                                 <button id="ruleCancelButton" role="ruleCancelButton" className="p-2 px-4 font-bold text-sm border border-opacity-75 border-gray-600 rounded-full hover:border-black" onClick={() => onClose(false)}>Cancel</button>
-                                                <button id="ruleSubmitButton" role="ruleSubmitButton" className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Rule.length == 0 || appliesTo == "" || description.length == 0} onClick={submitRule}>Save</button>
+                                                <button id="ruleSubmitButton" role="ruleSubmitButton" className="p-2 px-4 font-bold text-sm rounded-full enabled:hover:bg-blue-500 enabled:bg-blue-600 text-white bg-gray-400" disabled={Rule.length == 0 || appliesTo == "" || description.length == 0} onClick={submitRule}>{submittingReq ? <Spinner></Spinner> : "Save"}</button>
                                             </div>
                                         </div>
                                     </div>

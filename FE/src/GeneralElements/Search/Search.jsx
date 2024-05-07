@@ -11,10 +11,11 @@
  */
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
-const SearchComponent = () => {
+const SearchComponent = ({ Viewed, setViewed }) => {
+    let path = useLocation().pathname;
     const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
     const YourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
     { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125" }];
@@ -44,7 +45,28 @@ const SearchComponent = () => {
         //TODO: show popular when search is emtpy
     }, [])
 
+    useEffect(() => {
 
+        if (path.includes("/user/")) {
+            const IncludeIndex = path.indexOf("/user/") + 6; // Add 6 to skip "/user/"
+            // Find the index of the first occurrence of the character after the "/user/" part
+            const characterIndex = path.indexOf("/", IncludeIndex);
+            let user = path.substring(IncludeIndex, characterIndex !== -1 ? characterIndex : path.length);
+            setViewed(user);
+        }
+        if (path.includes("/r/")) {
+            const IncludeIndex = path.indexOf("/r/") + 3; // Add 6 to skip "/user/"
+            // Find the index of the first occurrence of the character after the "/user/" part
+            const characterIndex = path.indexOf("/", IncludeIndex);
+            let user = path.substring(IncludeIndex, characterIndex !== -1 ? characterIndex : path.length);
+            setViewed(user);
+        }
+
+    }, [path])
+
+    useEffect(() => {
+        console.log(Viewed)
+    }, [Viewed])
     useEffect(() => {
         const timer = setTimeout(goSearch, 200);
         // console.log(showSelector)
@@ -98,14 +120,15 @@ const SearchComponent = () => {
         `}>
             <div className="  rounded-full p-2 flex gap-1 flex-wrap"
                 onClick={() => setShowSelector(false)}>
-                {/* {selected &&
+                {Viewed &&
                     <div className="bg-gray-200 my-auto rounded-full flex items-center">
-                        <div className="p-2">{selected}</div>
+                        <div className="p-2">{Viewed}</div>
                         <div onClick={() => setSelected("")} className="p-2 select-none rounded-r-md 
                         cursor-pointer hover:bg-magma-orange-clear">
-                            <X strokeWidth={1} size={12} className='hover:bg-slate-300 rounded' />
+                            <X onClick={() => { setViewed(null) }}
+                                strokeWidth={1} size={12} className='hover:bg-slate-300 rounded' />
                         </div>
-                    </div>} */}
+                    </div>}
 
                 <div className="flex-1 my-auto">
                     <input type="text" value={search}

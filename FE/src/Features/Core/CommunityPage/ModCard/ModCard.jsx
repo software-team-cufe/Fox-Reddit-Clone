@@ -1,5 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { userAxios } from '../../../../Utils/UserAxios';
+import { useNavigate } from 'react-router-dom';
 const ModCard = () => {
 
     const [widget, setWidget] = useState(false);
@@ -17,12 +21,56 @@ const ModCard = () => {
     const [handleCalender, setHandleCalender] = useState(false);
     const [handlePostFair, setHandlePostFair] = useState(false);
     const [handleBookMark, setHandleBookMark] = useState(false);
+    const { community } = useParams();  
+    const moderatorName = useSelector(state => state.user.user.username);
+    const [members, setMembers] = useState(0);
+    const [moderators, setModerators] = useState([]);
+    const navigator = useNavigate();
+    const navigate =useNavigate();
+    const handleNavigate=()=>{
+        navigator('/message/compose');
+    }
+    useEffect( () => {
+      const getNumofMembers = async () => {
+        try{ 
+           const response = await userAxios.get(`/${community}/about/members`);
+           console.log("members");
+           console.log(response.data.membersCount);
+           setMembers(response.data.membersCount ??0);
+           
+        }
+        catch (error) {
+          console.log(error);
+        }
+      
+      };
+         getNumofMembers();
+    }, [community]); 
+
+    useEffect(() => {  
+      const getModerators = async () => {
+      try {
+        const response = await userAxios.get(`/${community}/about/moderators`);
+        console.log("moderators");
+        console.log(response.data.Moderators.users);
+        setModerators(response.data.Moderators.users.map(user => user.username) ?? []);
+      
+      
+      } catch (error) {
+        console.log(error);
+      } 
+    };
+    getModerators();}
+    , [community])
+  
+
+
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
        <div className=' flex flex-row justify-between m-3'>
-           <div className=' text-sm'>
-               community_name15
+           <div className=' text-md font-semibold'>
+              { community}
            </div>
            <div>
                <button onClick={() => setIsOpened(!isOpened)} className=' rounded-full border border-gray-200 bg-gray-200 w-6 h-6 flex items-center justify-center '>
@@ -101,7 +149,7 @@ const ModCard = () => {
        </div>
        <div className=' flex flex-row  mx-3'>
            <div className=' flex flex-col w-1/2'>
-                 <span className='text-sm'>57</span>
+                 <span className='text-sm'>{members}</span>
                  <p className='text-sm text-gray-500'> Members</p>
            </div>
            <div className=' flex flex-col w-1/2'>
@@ -116,12 +164,26 @@ const ModCard = () => {
        <hr className="w-[100%] h-px mb-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
         <div className=' flex flex-col mx-3 '> 
            <p className='text-sm text-gray-500 mt-3  font-medium'> MODERATORS</p>
-           <div className=' flex flex-row my-6'>
-               <button className='text-sm  ml-9 hover:underline'>
-                   u/ApprehensiveLaw9713
+     
+           <div className='flex flex-col my-6'>
+           {moderators.map((moderator, index) => (
+             <div key={index} className='flex flex-row'>
+               <svg className="text-orange-400 w-7 h-7 self-center" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                 <path stroke="none" d="M0 0h24v24H0z"/>
+                 <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" />
+               </svg>
+               <button 
+                 className='text-sm ml-2 hover:underline flex flex-row self-center'
+                 onClick={() => navigate(moderatorName === moderator ? `/user/${moderator}` : `/viewer/${moderator}`)} 
+               >
+                 <p>u/</p>
+                 <p>{moderator}</p>
                </button>
-           </div> 
-           <button className=" text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[35px] flex items-center justify-center hover:bg-gray-300 hover:underline">
+             </div>
+           ))}
+         </div>
+
+           <button onClick={handleNavigate} className=" text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[35px] flex items-center justify-center hover:bg-gray-300 hover:underline">
                  <svg className="w-5 h-5 self-center "
                   xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0 1.1.9 2 2 2z" /> 
@@ -149,7 +211,7 @@ const ModCard = () => {
              </button>
                 { widget && 
                     <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
-                       <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[320px]'>
+                       <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-fit'>
                              <div className=' flex flex-row justify-between m-4'>
                                 <span className='text-sm font-light  '> Edit widget </span>
                                 <div>
@@ -368,7 +430,7 @@ const ModCard = () => {
                                
                                  </div>
 
-                                <div className=' flex flex-row justify-end space-x-3 mt-2'>
+                                <div className=' flex flex-row justify-end space-x-3 mt-2 mb-5'>
                                   <button onClick={ ()=> setWidget(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
                                    Cancel
                                   </button>

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import PostComponent from "@/GeneralComponents/Post/Post";
+import UserPostComponent from "./extras/userPost";
 import { useState, useRef } from "react";
 import { ProfileContext } from "../ProfilePagesRoutes";
 import { userAxios } from "@/Utils/UserAxios";
@@ -34,19 +34,20 @@ export default function ProfileDownvoted({ using }) {
                 if(response.data.downvotedPosts.length < limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.downvotedPosts.map(post => ({
-                    subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
-                    },
+                const newPosts = response.data.posts.map(post => ({
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
-                    video: null
+                    video: null,
+                    type: "post",
+                    spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
                 setcurrentpage(2);
                 setPosts(newPosts);
@@ -68,21 +69,21 @@ export default function ProfileDownvoted({ using }) {
                 if(response.data.downvotedPosts.length <limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.downvotedPosts.map(post => ({
-                    subReddit: {
-                        image: post.attachments.subredditIcon,
-                        title: post.communityName,
-                    },
+                const newPosts = response.data.posts.map(post => ({
+                    communityName: post.username,
+                    communityIcon: post.userID.avatar,
                     images: post.attachments,
                     id: post._id,
                     title: post.title,
-                    subTitle: post.postText,
-                    votes: post.votesCount,
+                    description: post.textHTML,
+                    votesCount: post.votesCount,
                     comments: post.commentsCount,
                     thumbnail: post.thumbnail,
-                    video: null
+                    video: null,
+                    type: "post",
+                    spoiler: post.spoiler,
+                    NSFW: post.nsfw
                 }));
-
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
                 setcurrentpage(1+currentpage);
@@ -109,7 +110,7 @@ export default function ProfileDownvoted({ using }) {
             {Posts.length > 0 ? (
                 <>
                     {Posts.map((post, index) => (
-                        <PostComponent key={index} post={post} />
+                        <UserPostComponent key={index} post={post} />
                     ))}
                     {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}

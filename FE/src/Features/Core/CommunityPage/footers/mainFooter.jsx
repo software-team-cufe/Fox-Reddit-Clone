@@ -1,7 +1,53 @@
 import React from "react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { userAxios } from "../../../../Utils/UserAxios";
+import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 export default function MainFooter (){
+  const [moderators, setModerators] = useState([]);
+  const { community } = useParams();  
+  const [members, setMembers] = useState(0);
+  const navigate =useNavigate();
+  useEffect( () => {
+    const getNumofMembers = async () => {
+      try{ 
+         const response = await userAxios.get(`/${community}/about/members`);
+         console.log("members");
+         console.log(response.data.membersCount);
+         setMembers(response.data.membersCount ??0);
+         
+      }
+      catch (error) {
+        console.log(error);
+      }
+    
+    };
+       getNumofMembers();
+  }, [community]); 
+   
+  
+  useEffect(() => {  
+    const getModerators = async () => {
+    try {
+      const response = await userAxios.get(`/${community}/about/moderators`);
+      console.log("moderators");
+      console.log(response.data.Moderators.users);
+      setModerators(response.data.Moderators.users.map(user => user.username) ?? []);
+    
+    
+    } catch (error) {
+      console.log(error);
+    } 
+  };
+  getModerators();}
+  , [community])
 
+
+  const navigator = useNavigate();
+  const handleNavigate=()=>{
+      navigator('/message/compose');
+  }
   const [selectedId, setSelectedId] = useState(null);
   const lists = [
     { id: 1, list: "1" },
@@ -63,13 +109,13 @@ export default function MainFooter (){
         <div className='w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg hidden md:block'>
            <div className=" flex flex-col content-between ">
               <div className=" flex flex-col">
-                <p className=" font-semibold text-sm"> community name</p>
+                <p className=" font-semibold text-sm"> {community}</p>
                 <p className=" text-xs text-gray-500 font-light">community description</p>
               </div>
              
               <div className=" flex flex-row justify-between my-3">
                   <div className=" flex flex-col">
-                      <p className=" font-semibold text-sm">6.1M</p>
+                      <p className=" font-semibold text-sm">{members}</p>
                       <p className=" text-xs text-gray-500 font-light">Members</p>
                   </div>
                   <div className=" flex flex-col">
@@ -103,39 +149,29 @@ export default function MainFooter (){
            </div>
            <hr className="w-[100%] h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"></hr>
           
-           <div className=" flex flex-col space-y-2">
+           <div className=" flex flex-col space-y-2 ">
               <p className="text-xs text-gray-500 mb-5">MODERATORS</p>
              
-              <div className=" flex flex-row space-x-2 mx-2" >
-                <svg className="text-orange-400 w-7 h-7"
-              xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>   
-                <p className=" text-sm font-light"> u/username1</p>
-              </div>
-             
-              <div className=" flex flex-row space-x-2 mx-2">
-                <svg className="text-pink-200 w-7 h-7"
-                xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>
-                <p className=" text-sm font-light"> u/username2</p>
-              </div>
+              <div className='flex flex-col mb-10'>
+              {moderators.map((moderator, index) => (
+                <div key={index} className='flex flex-row'>
+                  <svg className="text-orange-400 w-7 h-7 self-center" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z"/>
+                    <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" />
+                  </svg>
+                  <button 
+                    className='text-sm ml-2 hover:underline flex flex-row self-center'
+                    onClick={() => navigate(`/viewer/${moderator}`)} 
+                  >
+                    <p>u/</p>
+                    <p>{moderator}</p>
+                  </button>
+                </div>
+              ))}
+            </div>
+   
 
-              <div className=" flex flex-row space-x-2 mx-2">    
-                 <svg className="text-green-500 w-7 h-7"
-                 xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>    
-                 <p className=" text-sm font-light"> u/username3</p>
-              </div>
-
-              <div className=" flex flex-row space-x-2 mx-2">
-                <svg className="text-indigo-300 w-7 h-7"
-                 xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg>
-                 <p className=" text-sm font-light"> u/username4</p>   
-              </div>
-              <div className=" flex flex-row space-x-2 mx-2">
-                   <svg className="text-red-500 w-7 h-7"
-                    xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" /></svg> 
-                    <p className=" text-sm font-light"> u/username5</p>     
-              </div>
-
-              <button className="text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[35px] flex items-center justify-center hover:bg-gray-300 hover:underline">
+              <button  onClick={handleNavigate} className="  text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[35px] flex items-center justify-center hover:bg-gray-300 hover:underline">
                  <svg className="w-5 h-5 self-center "
                   xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0 1.1.9 2 2 2z" /> 

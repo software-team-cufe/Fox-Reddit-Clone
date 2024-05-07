@@ -169,6 +169,7 @@
       "rememberingSortPerCommunity": false,
       "rememberGlobalView": false,
       "communityTheme": true,
+      "markAllAsRead": false,
       "blocked": [
         {
           "avatar": "https://i.redd.it/jva2jzpj9fk91.png",
@@ -179,14 +180,13 @@
           "name": "user2"
         }
       ],
-      "Muted": [],
-      "SocialLinks": [
+      "Muted": [
         {
-          "icon": "/substack.png",
-          "linkName": "Substack",
-          "userName": "sdcs",
-          "link": "https://substack.com/home"
-        },
+          "icon": "https://i.pinimg.com/736x/87/ea/4b/87ea4bd1f27494d698bb682b25ac142f.jpg",
+          "name": "art"
+        }
+      ],
+      "SocialLinks": [
         {
           "icon": "/logo.png",
           "linkName": "Fox",
@@ -219,12 +219,13 @@
       "comV": true,
       "conV": true,
       "BannerImage": "https://i.redd.it/jva2jzpj9fk91.png",
-      "NSFW": false,
+      "NSFW": true,
       "allowFollow": true,
-      "openPostsInNewTab": false,
-      "rememberingSortPerCommunity": false,
+      "openPostsInNewTab": true,
+      "rememberingSortPerCommunity": true,
       "rememberGlobalView": false,
       "communityTheme": true,
+      "markAllAsRead": false,
       "blocked": [
         {
           "name": "blocked1",
@@ -272,6 +273,7 @@
       "rememberingSortPerCommunity": false,
       "rememberGlobalView": false,
       "communityTheme": false,
+      "markAllAsRead": false,
       "blocked": [
         {
           "name": "blocked1",
@@ -319,6 +321,7 @@
       "rememberingSortPerCommunity": true,
       "rememberGlobalView": true,
       "communityTheme": true,
+      "markAllAsRead": false,
       "blocked": [
         {
           "name": "blocked1",
@@ -366,6 +369,7 @@
       "rememberingSortPerCommunity": false,
       "rememberGlobalView": false,
       "communityTheme": false,
+      "markAllAsRead": false,
       "blocked": [
         {
           "name": "blocked1",

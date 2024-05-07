@@ -146,19 +146,18 @@ function CreatePostPage(props) {
         }
         console.log(imageUrl);
         setimageShow(imageUrl);
-        setload(false);
-        // userAxios.post('api/submit', NewPost)
-        //     .then((res) => {
-        //         console.log(res)
-        //         setload(false);
-        //         toast.success("Post created successfully \u{1F60A}");
-        //     })
-        //     .catch((ex) => {
-        //         if (ex.issues != null && ex.issues.length != 0) {
-        //             toast.error(ex.issues[0].message);
-        //             setload(false);
-        //         }
-        //     });
+
+        try {
+            const res = userAxios.post('api/submit', NewPost)
+            console.log(res)
+            setload(false);
+            toast.success("Post created successfully \u{1F60A}");
+        } catch (error) {
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+                setload(false);
+            }
+        }
     }
 
     // const Post = async () => {
@@ -250,7 +249,7 @@ function CreatePostPage(props) {
 
 
     return (
-        <div className='bg-gray-300 h-[1100px] ' id="parentElement"  >
+        <div className='bg-gray-300 min-h-[100vh] h-max ' id="parentElement"  >
             <div className='flex'>
                 <div className='lg:w-[60%] w-full md:ml-40  '>
                     <div className='h-12'></div>
