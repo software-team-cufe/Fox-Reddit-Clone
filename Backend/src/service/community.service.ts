@@ -1124,6 +1124,7 @@ export async function getPostsSearchResultsNotAuth(
           ],
           'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+          'posts.createdAt': { $lte: new Date() },
           ...additionalCriteria, // Apply additional criteria
         },
       },
@@ -1245,6 +1246,7 @@ export async function getPostsSearchResultsAuth(
           ],
           'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+          'posts.createdAt': { $lte: new Date() },
           ...additionalCriteria, // Apply additional criteria
         },
       },
@@ -1592,6 +1594,7 @@ export async function getHomePostsAuth(
           'posts.title': { $exists: true }, // Filter out posts without titles (optional)
           'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+          'posts.createdAt': { $lte: new Date() },
           ...additionalCriteria, // Apply additional criteria
         },
       },
@@ -1673,6 +1676,7 @@ export async function getHomePostsNotAuth(page: number, limit: number) {
         'posts.title': { $exists: true }, // Filter out posts without title
         'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
         'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+        'posts.createdAt': { $lte: new Date() },
       },
     },
     { $sample: { size: limit } }, // Limit the number of posts per community
@@ -1767,58 +1771,4 @@ export async function getCommunityModerator(communityName: string, username: str
   }
 
   return { status: true, moderator: mode };
-}
-export async function getCommentsSearchResultsAuth(
-  userID: string,
-  page: number,
-  limit: number,
-  query: string,
-  sort: string | undefined
-) {
-  try {
-    const skip = (page - 1) * limit; // Calculate the number of documents to skip
-
-    let sortCriteria: Record<string, 1 | -1>;
-    switch (sort) {
-      case 'top':
-        sortCriteria = { 'comments.votesCount': -1 };
-        break;
-      case 'new':
-        sortCriteria = { 'comments.createdAt': -1 };
-        break;
-      default:
-        sortCriteria = {};
-        break;
-    }
-    const commentsSearchResultsAuth = await CommunityModel.aggregate([
-      {
-        $match: {
-          $or: [
-            { privacyType: 'Public' }, // Match public communities
-            { 'members.userID': userID }, // Match communities where the user is a member
-            { 'moderators.userID': userID }, // Match communities where the user is a moderator
-          ],
-        },
-      },
-      {
-        $lookup: {
-          from: 'posts', // Posts collection
-          localField: 'communityPosts', // Field containing post IDs in the community model
-          foreignField: '_id', // Field in the posts model
-          as: 'posts', // Name of the field to store posts in the result
-        },
-      },
-      { $unwind: '$posts' }, // Unwind the posts array
-      {
-        $match: {
-          'posts.title': { $exists: true }, // Filter out posts without title
-          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
-          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
-        },
-      },
-    ]);
-  } catch (error) {
-    console.error(error);
-    throw new appError('Failed to get comments search results', 500);
-  }
 }

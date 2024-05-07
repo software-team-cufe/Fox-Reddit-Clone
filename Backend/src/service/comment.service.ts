@@ -175,3 +175,212 @@ export function extractUsernamesFromTextJSON(textJSON: string): string[] {
 
   return usernames;
 }
+
+export async function getCommentSearchResultsNotAuth(
+  page: number,
+  limit: number,
+  query: string,
+  sort: string | undefined
+) {
+  try {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    let sortCriteria: Record<string, 1 | -1>;
+    switch (sort) {
+      case 'top':
+        sortCriteria = { votesCount: -1 };
+        break;
+      case 'new':
+        sortCriteria = { createdAt: -1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 };
+        break;
+    }
+
+    const commentsResultsNotAuth = CommentModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { textHTML: { $regex: query, $options: 'i' } }, // Match comments by HTML text
+            { textJSON: { $regex: query, $options: 'i' } }, // Match comments by JSON text
+          ],
+          isDeleted: { $ne: true }, // Exclude posts with isDeleted set to true
+        },
+      },
+      {
+        $lookup: {
+          from: 'posts', // Users collection
+          localField: 'postID', // Field containing user IDs in the comments
+          foreignField: '_id', // Field in the users model
+          as: 'posts', // Name of the field to store user details in the result
+        },
+      },
+      {
+        $match: {
+          'posts.title': { $exists: true }, // Filter out posts without title
+          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+          'posts.createdAt': { $lte: new Date() },
+        },
+      },
+      {
+        $lookup: {
+          from: 'communities', // Users collection
+          localField: 'posts.CommunityID', // Field containing user IDs in the comments
+          foreignField: '_id', // Field in the users model
+          as: 'communities', // Name of the field to store user details in the result
+        },
+      },
+      {
+        $match: {
+          'communities.privacyType': 'Public', // Filter out posts without title
+        },
+      },
+      {
+        $lookup: {
+          from: 'users', // Users collection
+          localField: 'authorId', // Field containing user IDs in the comments
+          foreignField: '_id', // Field in the users model
+          as: 'users', // Name of the field to store user details in the result
+        },
+      },
+      { $sort: sortCriteria }, // Apply sorting criteria
+      { $skip: skip }, // Skip documents based on page and limit
+      { $limit: limit }, // Limit the number of documents returned
+      {
+        $project: {
+          communityID: '$communities._id', // Project comment communityID
+          communityIcon: '$communities.icon', // Project community icon
+          communityName: '$communities.name', // Project community name
+          communityDescription: '$communities.description', // Project community description
+          memberCount: '$communities.membersCnt', // Project member count
+          postId: '$postID', // Project post ID
+          title: '$posts.title', // Project post title
+          userId: '$authorId', // Project user ID
+          username: '$users.username', // Project username
+          useravatar: '$users.avatar', // Project useravatar
+          textHTML: '$textHTML', // Project comment textHTML
+          textJSON: '$textJSON', // Project comment textJSON
+          commentvotesCount: '$votesCount', // Project comment votesCount
+          postvotesCount: '$posts.votesCount', // Project post votesCount
+          commentcreatedAt: '$createdAt', // Project comment createdAt
+          postcreatedAt: '$posts.createdAt', // Project post createdAt
+          postcommentsNum: '$posts.commentsNum', // Project post commentsNum
+          editedAt: '$editedAt', // Project comment editedAt
+        },
+      },
+    ]);
+    return commentsResultsNotAuth;
+  } catch (error) {
+    console.log(error);
+    throw new appError('Failed to get search results comments', 400);
+  }
+}
+
+export async function getCommentSearchResultsAuth(
+  userID: string,
+  page: number,
+  limit: number,
+  query: string,
+  sort: string | undefined
+) {
+  try {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    let sortCriteria: Record<string, 1 | -1>;
+    switch (sort) {
+      case 'top':
+        sortCriteria = { votesCount: -1 };
+        break;
+      case 'new':
+        sortCriteria = { createdAt: -1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 };
+        break;
+    }
+
+    const commentsResultsAuth = CommentModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { textHTML: { $regex: query, $options: 'i' } }, // Match comments by HTML text
+            { textJSON: { $regex: query, $options: 'i' } }, // Match comments by JSON text
+          ],
+          isDeleted: { $ne: true }, // Exclude posts with isDeleted set to true
+        },
+      },
+      {
+        $lookup: {
+          from: 'posts', // Users collection
+          localField: 'postID', // Field containing user IDs in the comments
+          foreignField: '_id', // Field in the users model
+          as: 'posts', // Name of the field to store user details in the result
+        },
+      },
+      {
+        $match: {
+          'posts.title': { $exists: true }, // Filter out posts without title
+          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+          'posts.createdAt': { $lte: new Date() },
+        },
+      },
+      {
+        $lookup: {
+          from: 'communities', // Users collection
+          localField: 'posts.CommunityID', // Field containing user IDs in the comments
+          foreignField: '_id', // Field in the users model
+          as: 'communities', // Name of the field to store user details in the result
+        },
+      },
+      {
+        $match: {
+          $or: [
+            { 'communities.privacyType': 'Public' }, // Match public communities
+            { 'communities.members.userID': userID }, // Match communities where the user is a member
+            { 'communities.moderators.userID': userID }, // Match communities where the user is a moderator
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'users', // Users collection
+          localField: 'authorId', // Field containing user IDs in the comments
+          foreignField: '_id', // Field in the users model
+          as: 'users', // Name of the field to store user details in the result
+        },
+      },
+      { $sort: sortCriteria }, // Apply sorting criteria
+      { $skip: skip }, // Skip documents based on page and limit
+      { $limit: limit }, // Limit the number of documents returned
+      {
+        $project: {
+          communityID: '$communities._id', // Project comment communityID
+          communityIcon: '$communities.icon', // Project community icon
+          communityName: '$communities.name', // Project community name
+          communityDescription: '$communities.description', // Project community description
+          memberCount: '$communities.membersCnt', // Project member count
+          postId: '$postID', // Project post ID
+          title: '$posts.title', // Project post title
+          userId: '$authorId', // Project user ID
+          username: '$users.username', // Project username
+          useravatar: '$users.avatar', // Project useravatar
+          textHTML: '$textHTML', // Project comment textHTML
+          textJSON: '$textJSON', // Project comment textJSON
+          commentvotesCount: '$votesCount', // Project comment votesCount
+          postvotesCount: '$posts.votesCount', // Project post votesCount
+          commentcreatedAt: '$createdAt', // Project comment createdAt
+          postcreatedAt: '$posts.createdAt', // Project post createdAt
+          postcommentsNum: '$posts.commentsNum', // Project post commentsNum
+          editedAt: '$editedAt', // Project comment editedAt
+        },
+      },
+    ]);
+    return commentsResultsAuth;
+  } catch (error) {
+    console.log(error);
+    throw new appError('Failed to get search results comments', 400);
+  }
+}

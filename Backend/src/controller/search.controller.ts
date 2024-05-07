@@ -11,7 +11,10 @@ import {
   getSrSearchResultAuth,
   getPostsSearchResultsNotAuth,
   getPostsSearchResultsAuth,
+  // getCommentsSearchResultsAuth,
+  //getCommentsSearchResultsNotAuth,
 } from '../service/community.service';
+import { getCommentSearchResultsNotAuth, getCommentSearchResultsAuth } from '../service/comment.service';
 import { getUserSearchResult } from '../service/user.service';
 export async function searchHomeHandler(
   req: Request<{}, {}, {}, SearchNormalInput['query']>,
@@ -79,14 +82,43 @@ export async function searchHomeHandler(
           return res.status(200).json({ users });
         }
         break;
-      case 'comments': {
-        //pass sort option
-      }
+      case 'comments':
+        {
+          if (!userAuthenticated) {
+            const commentsSearchResultNotAuth = await getCommentSearchResultsNotAuth(page, limit, searchkey, sort);
+            return res.status(200).json({ commentsSearchResultNotAuth });
+          } else if (userAuthenticated) {
+            const commentsSearchResultAuth = await getCommentSearchResultsAuth(
+              res.locals.user._id,
+              page,
+              limit,
+              searchkey,
+              sort
+            );
+            return res.status(200).json({ commentsSearchResultAuth });
+          }
+        }
+        break;
+      default:
+        //default to posts
+        if (!userAuthenticated) {
+          const postsSearchResultNotAuth = await getPostsSearchResultsNotAuth(page, limit, searchkey, sort, topBy);
+          return res.status(200).json({ postsSearchResultNotAuth });
+        } else if (userAuthenticated) {
+          const postsSearchResultAuth = await getPostsSearchResultsAuth(
+            page,
+            limit,
+            res.locals.user._id,
+            searchkey,
+            sort,
+            topBy
+          );
+          return res.status(200).json({ postsSearchResultAuth });
+        }
     }
   } catch (error) {
     return res.status(500).json({
-      status: 'error',
-      message: 'Internal server error',
+      msg: 'Internal server error in search',
     });
   }
 }
