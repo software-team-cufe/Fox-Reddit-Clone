@@ -329,7 +329,8 @@ class _ModernCardState extends State<ModernCard> {
                                   // Handle option 1
                                 },
                               ),
-                              ListTile(
+                              widget.myProfile == false
+                              ?ListTile(
                                 tileColor: Colors
                                     .transparent, // Transparent background
                                 onTap: () {
@@ -345,8 +346,10 @@ class _ModernCardState extends State<ModernCard> {
                                       color: Colors
                                           .red.shade400), // Softer red text
                                 ),
-                              ),
-                              ListTile(
+                              )
+                              :
+                              widget.myProfile == false
+                              ?ListTile(
                                 tileColor: Colors
                                     .transparent, // Transparent background
                                 onTap: () {
@@ -362,7 +365,8 @@ class _ModernCardState extends State<ModernCard> {
                                       color: Colors
                                           .red.shade400), // Softer red text
                                 ),
-                              ),
+                              )
+                              :
                               ListTile(
                                 leading:
                                     const Icon(Icons.visibility_off_outlined),
