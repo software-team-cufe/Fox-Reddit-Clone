@@ -989,6 +989,35 @@ export async function addReplyOnMessageHandler(req: Request, res: Response) {
     });
   }
 }
+export async function reportMessageHandler(req: Request, res: Response) {
+  // Check if user is missing or invalid
+  if (!res.locals.user) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Access token is missing or invalid',
+    });
+  }
+  const messageId = req.body.msg_id; // Get messageId from request parameters
+
+  if (!messageId) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Message ID is missing',
+    });
+  }
+  try {
+    return res.status(200).json({
+      status: 'Done',
+      message: 'Message is reported successfully',
+    });
+  } catch (error) {
+    console.error('Error in reportMessageHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
 /**
  * Handles the request to retrieve all messages between a sender and receiver of certain subject.
  *
