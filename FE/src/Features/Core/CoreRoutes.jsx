@@ -30,7 +30,7 @@ function CommunityLayout() {
 
                 <ModNavbar />
                 <Routes>
-                    <Route path='/' element={<RulesRemovalPage></RulesRemovalPage>} />
+                    <Route path='/*' element={<RulesRemovalPage></RulesRemovalPage>} />
                     <Route path='/edit' element={<EditPage />} />
                     <Route path='/user-management/*' element={<UserManagemntRoutes />} />
                     <Route path='/settings' element={<ModSettingsPage />} />
