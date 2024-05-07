@@ -100,7 +100,7 @@ export default function CommunityPage() {
       let joinedComms = 0;
       await userAxios.get(`/subreddits/mine/member`)
         .then((response) => {
-          const joins = response.data.communities.map((join) => join.name);
+          const joins = response?.data?.communities?.map((join) => join.name);
           joinedComms = joins;
         })
         .catch(error => {
@@ -110,7 +110,7 @@ export default function CommunityPage() {
       let moddedComms = 0;
       await userAxios.get(`/subreddits/mine/moderator`)
         .then((response) => {
-          const mods = response.data.communities.map((mod) => mod.name);
+          const mods = response?.data?.communities?.map((mod) => mod.name);
           moddedComms = mods;
         })
         .catch(error => {
@@ -120,7 +120,7 @@ export default function CommunityPage() {
       let favComms = 0;
       await userAxios.get('/subreddits/mine/favorite')
         .then((response) => {
-          const favs = response.data.communties.map((fav) => fav.name);
+          const favs = response?.data?.communties?.map((fav) => fav.name);
           favComms = favs;
         })
         .catch(error => {

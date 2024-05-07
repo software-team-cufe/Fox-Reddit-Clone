@@ -179,7 +179,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                   }  lg:visible`}
             >
                <ul className="space-y-2 font-light">
-                  {icons.map((e, idx) => (
+                  {icons?.map((e, idx) => (
                      <li key={idx}>
                         <Link
                            to={e.link}
@@ -220,7 +220,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                     <span className=" px-2 py-2 text-gray-800">r/mod</span>
                                  </Link>
                               </li>
-                              {tempForClear.map((subreddit, index) => {
+                              {tempForClear?.map((subreddit, index) => {
                                 
                                  return (
                                     <a
@@ -257,7 +257,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                         <ul className="" aria-labelledby="dropdownDefaultButton">
                            {/*here is where the ui print the subreddits i just entered */}
                            <li>
-                              {RecentCommunities.map((subreddit, index) => (
+                              {RecentCommunities?.map((subreddit, index) => (
                                  <a
                                     href={`/r/${subreddit}`}
                                     className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
@@ -307,7 +307,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                            </li>
                            <li>
                               {
-                                 yourCommunitiesList.map((commun, index) => (
+                                 yourCommunitiesList?.map((commun, index) => (
                                     <a
                                        href={`/r/${commun.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
