@@ -6,6 +6,7 @@ import TextBox from '../../../../../../GeneralElements/TextBox/TextBox';
 
 export default function SecondSection({ obj, initial }) {
     obj = obj ?? {};
+    console.log(obj);
     return (
         <div>
             <h2 className=' font-bold text-xl'>
@@ -23,15 +24,15 @@ export default function SecondSection({ obj, initial }) {
                         </p>
                     </div>
                     <div className='flex  gap-2 items-center'>
-                        <input name='textBody' value={'optionalForAllPosts'} className=' ' type='radio' />
+                        <input defaultChecked={obj.textBody == "optionalForAllPosts"} name='textBody' value={'optionalForAllPosts'} className=' ' type='radio' />
                         <label className=' text-gray-600'>Text body is optional for all post types</label>
                     </div>
                     <div className='flex  gap-2 items-center'>
-                        <input name='textBody' value={'requiredForTextOnlyPosts'} className=' ' type='radio' />
+                        <input defaultChecked={obj.textBody == "requiredForTextOnlyPosts"} name='textBody' value={'requiredForTextOnlyPosts'} className=' ' type='radio' />
                         <label className=' text-gray-600'>Text body is required for text-only posts</label>
                     </div>
                     <div className='flex  gap-2 items-center'>
-                        <input name='textBody' value={'notAllowed'} className=' ' type='radio' />
+                        <input defaultChecked={obj.textBody == "notAllowed"} name='textBody' value={'notAllowed'} className=' ' type='radio' />
                         <label className=' text-gray-600'>Text body is not allowed</label>
                     </div>
                 </div>

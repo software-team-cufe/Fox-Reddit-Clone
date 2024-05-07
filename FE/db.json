@@ -1,17 +1,155 @@
 {
-  "banned": [
+  "approved": [
     {
-      "userName": "asdasdasdasd",
-      "reason": "other",
-      "note": "234234345",
-      "period": 234,
-      "id": "1",
+      "id": "f107",
+      "userName": "asdasd",
       "communityName": "test2",
-      "banMsg": "22222222222222",
       "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
     }
   ],
-  "muted": [],
+  "banned": [
+    {
+      "_id": "66238c7a9b661e0d5302b12f",
+      "username": "m",
+      "avatar": "default.jpg",
+      "createdAt": "2024-04-20T09:35:54.603Z",
+      "banInfo": {
+        "value": true,
+        "date": "2024-05-06T11:11:38.058Z",
+        "reason": "member not banned",
+        "note": "member not banned",
+        "period": "member not banned"
+      },
+      "id": "b75e"
+    },
+    {
+      "id": "c85c",
+      "userName": "dasfsdfsdf",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "fcgsdfgdfg",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "d177",
+      "userName": "dasfsdfsdf",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "fcgsdfgdfg",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "d28a",
+      "userName": "e",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "fcgsdfgdfg",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "f961",
+      "userName": "h",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "fcgsdfgdfg",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "0ffb",
+      "userName": "2222222",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "fcgsdfgdfg",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "96fc",
+      "userName": "2222222",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "fcgsdfgdfg",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "7010",
+      "userName": "m",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "fcgsdfgdfg",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "a634",
+      "userName": "m",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "fcgsdfgdfg",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "306c",
+      "userName": "sdfsdfsdf",
+      "reason": "None",
+      "note": "sdfsdfsdf",
+      "period": 99999,
+      "communityName": "test2",
+      "banMsg": "",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    }
+  ],
+  "muted": [
+    {
+      "_id": "662147734b4a2ca3ff08ce99",
+      "username": "asdasd",
+      "avatar": "default.jpg",
+      "communityName": "test2",
+      "createdAt": "2024-04-18T16:16:51.264Z",
+      "muteInfo": {
+        "value": true,
+        "date": "2024-05-06T13:00:34.456Z",
+        "reason": "asdasdasd"
+      },
+      "id": "085e"
+    },
+    {
+      "id": "7280",
+      "communityName": "test2",
+      "userName": "asdasd",
+      "reason": "asdasd",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "5b93",
+      "communityName": "test2",
+      "userName": "asdasd",
+      "reason": "asdasd",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    },
+    {
+      "id": "2c25",
+      "communityName": "test2",
+      "userName": "dddd",
+      "reason": "ddd",
+      "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+    }
+  ],
+  "moderators": [],
   "users": [
     {
       "name": "test",

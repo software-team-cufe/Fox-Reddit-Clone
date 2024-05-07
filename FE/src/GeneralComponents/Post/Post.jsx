@@ -16,7 +16,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
         const id = toast.loading('Please wait');
         try {
             const res = await userAxios.post('/api/postvote', {
-                postID: postObj._id,
+                postID: postObj.postId,
                 type: upvote ? 1 : -1,
             });
             setPost(prev => { return { ...prev, votesCount: upvote ? prev.votesCount + 1 : prev.votesCount - 1 } })
@@ -41,7 +41,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                 </div>
                             </div>
                         </Link>
-                        <Link className="w-full" to={`/posts/${postObj._id}`}>
+                        <Link className="w-full" to={`/posts/${postObj.postId}`}>
                             <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
                             <p className=" text-gray-600 text-sm">{postObj.textHTML} </p>
                             <div
@@ -60,7 +60,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
 
                         <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
                         <p className=" text-gray-600 text-sm mb-4">{postObj.description} </p>
-                        {(images.length != 0 && postObj.video == null) &&
+                        {/* {(images?.length != 0 && postObj.video == null) &&
                             <div className=" max-w-[700px]">
                                 <ImageGallery
                                     showBullets={images.length > 1}
@@ -81,7 +81,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                         };
                                     })} />
                             </div>
-                        }
+                        } */}
                         {
                             postObj.video && <div>
                                 <video src={postObj.video} controls />

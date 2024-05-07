@@ -7,23 +7,43 @@ import TextBox from '../../../../../../GeneralElements/TextBox/TextBox'
 import { userAxios } from '../../../../../../Utils/UserAxios'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 export default function BanUserModal({ closeModal, isOpen, values }) {
     const params = useParams();
-    values = values ?? {};
+    // values = values ?? {};
 
     const [isPerminent, setPer] = useState(false);
     const handelSubmit = async () => {
         const data = Object.fromEntries(new FormData(document.getElementById('frm-ban')).entries());
         data.period = isNaN(parseInt(data.period)) ? 99999 : parseInt(data.period);
+        const id = toast.loading("Please wait");
         try {
-            // const res = await userAxios.post(`/${params.community}/api/ban/${data.userName}`, data);
-            for (const x of Object.keys(data)) {
-                values[x] = data[x];
-            }
-            const res2 = await axios.put(`http://localhost:3002/banned/${values.id}`, values);
-        } catch (ex) {
 
+            if (values != null) {
+                for (const x of Object.keys(data)) {
+                    values[x] = data[x];
+                }
+                const res = await userAxios.patch(`/${params.community}/api/edit_content_controls`, data);
+                const res2 = await axios.put(`http://localhost:3002/banned/${values.id}`, values);
+            } else {
+                const res2 = await axios.post(`http://localhost:3002/banned`, {
+                    "userName": data.userName,
+                    "reason": data.reason,
+                    "note": data.note,
+                    "period": data.period,
+                    "communityName": params.community,
+                    "banMsg": data.banMsg,
+                    "image": "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"
+                });
+                const res = await userAxios.post(`/${params.community}/api/ban/${data.userName}`, data);
+
+
+            }
+
+        } catch (ex) {
+            
         }
+        toast.dismiss(id);
     };
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -61,10 +81,10 @@ export default function BanUserModal({ closeModal, isOpen, values }) {
                                     <hr />
                                     <form onSubmit={(e) => e.preventDefault()} id='frm-ban' className=' '>
                                         <div className='pt-0 p-6  space-y-4 mt-4 '>
-                                            <TextBox initialValue={values.userName} name='userName' label='ENTER USERNAME' />
+                                            <TextBox initialValue={values?.username} name='userName' label='ENTER USERNAME' />
                                             <div>
                                                 <label>Reason</label>
-                                                <select defaultValue={values.reason} name='reason' className='select-picker'>
+                                                <select defaultValue={values?.banInfo?.reason} name='reason' className='select-picker'>
                                                     <option>None</option>
                                                     <option>Spam</option>
                                                     <option>Personal and confidential information</option>
@@ -72,12 +92,12 @@ export default function BanUserModal({ closeModal, isOpen, values }) {
                                                     <option>other</option>
                                                 </select>
                                             </div>
-                                            <TextBox initialValue={values.note} name='note' label='MOD NOTE' />
+                                            <TextBox initialValue={values?.banInfo?.note} name='note' label='MOD NOTE' />
                                             <div>
                                                 <label>How Long?</label>
                                                 <div className='flex gap-4'>
                                                     <div className='flex'>
-                                                        <TextBox initialValue={values.period} name='period' type='number' disabled={isPerminent} className=' rounded-r-none' />
+                                                        <TextBox initialValue={values?.banInfo?.period} name='period' type='number' disabled={isPerminent} className=' rounded-r-none' />
                                                         <div className='border flex items-center justify-center px-2 text-center rounded-r-lg'>
                                                             Days
                                                         </div>
@@ -92,7 +112,7 @@ export default function BanUserModal({ closeModal, isOpen, values }) {
 
                                         <div className=' bg-gray-100 p-4 flex flex-col'>
                                             <span className='mb-2'>Note to include in ban message*</span>
-                                            <TextBox initialValue={values.banMsg} name='banMsg' area={true} placeholder='Reason' />
+                                            <TextBox initialValue={values?.banMsg} name='banMsg' area={true} placeholder='Reason' />
                                             <div className='flex gap-2 mt-5 justify-between items-center'>
                                                 <span className=' text-sm'>Visible to banned user</span>
                                                 <div className='flex gap-2'>
