@@ -100,7 +100,8 @@ export default function CommunityPage() {
       let joinedComms = 0;
       await userAxios.get(`/subreddits/mine/member`)
         .then((response) => {
-          joinedComms = response.data.communities;
+          const joins = response.data.communities.map((join) => join.name);
+          joinedComms = joins;
         })
         .catch(error => {
           console.error("cant fetch communitites", error);
@@ -109,7 +110,8 @@ export default function CommunityPage() {
       let moddedComms = 0;
       await userAxios.get(`/subreddits/mine/moderator`)
         .then((response) => {
-          moddedComms = response.data.communities;
+          const mods = response.data.communities.map((mod) => mod.name);
+          moddedComms = mods;
         })
         .catch(error => {
           console.error("can't fetch modded", error)
@@ -118,7 +120,8 @@ export default function CommunityPage() {
       let favComms = 0;
       await userAxios.get('/subreddits/mine/favorite')
         .then((response) => {
-          favComms = response.data.communties;
+          const favs = response.data.communties.map((fav) => fav.name);
+          favComms = favs;
         })
         .catch(error => {
           console.error("can't fetch favs", error);
@@ -127,7 +130,6 @@ export default function CommunityPage() {
 
       await userAxios.get(`/${community}`)
         .then((response) => {
-          console.log(response.data.community);
           const newcomm = {
             id: response.data.community._id,
             name: response.data.community.name,
@@ -139,7 +141,8 @@ export default function CommunityPage() {
             joined: joinedComms.includes(response.data.community.name),
             modded: moddedComms.includes(response.data.community.name),
             favourited: favComms.includes(response.data.community.name),
-            type: response.data.community.privacyType
+            type: response.data.community.communityOptions.privacyType,
+            muted: response.data.community.muted
           }
           setComm(newcomm);
           if (newcomm.type == "Private" && !joinedComms.includes(newcomm.name)) {
@@ -165,7 +168,6 @@ export default function CommunityPage() {
     }
     userAxios.get(link)
       .then((response) => {
-        console.log(response.data);
         const newPosts = response.data.posts.map(post => ({
           communityName: post.username,
           communityIcon: post.userID.avatar,
