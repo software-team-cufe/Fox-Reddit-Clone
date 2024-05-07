@@ -9,6 +9,7 @@ class CommentData {
   final String content;
   final int votes;
   final List<CommentData> replies;
+  
 
   CommentData({
     required this.username,

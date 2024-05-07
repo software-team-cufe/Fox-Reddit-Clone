@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'CommentCard.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+ import 'package:http/http.dart' as http;
+  import 'dart:convert';
 // Sample class for comment data
 class CommentData {
   final String username;
@@ -21,10 +23,12 @@ class CommentData {
 class CommentSection extends StatelessWidget {
   final String postId;
   final TextEditingController commentController = TextEditingController();
+    final access_token;
 
   CommentSection({
     Key? key,
     required this.postId,
+    required this.access_token,
   }) : super(key: key);
 
   void _pickImage() async {
@@ -39,6 +43,37 @@ class CommentSection extends StatelessWidget {
       // Handle if no image was picked
     }
   }
+
+Future<void> createComment(String linkID, String textHTML, String textJSON) async {
+  try {
+    // Add 't3_' before the post ID
+    String formattedLinkID = 't3_' + linkID;
+
+    // API endpoint URL
+    String apiUrl = ApiRoutesBackend.addComment;
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: json.encode({
+        'linkID': formattedLinkID, // Use the formatted link ID
+        'textHTML': textHTML,
+        'textJSON': textJSON,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${access_token}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Comment created successfully');
+    } else {
+      print('Failed to create comment: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error creating comment: $error');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +119,7 @@ class CommentSection extends StatelessWidget {
               String newComment = commentController.text;
               commentController.clear();
               // Call a function to handle adding the new comment
+                createComment(postId, newComment, newComment);
             },
           ),
         ],

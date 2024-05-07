@@ -368,7 +368,7 @@ class _PostDetailsState extends State<PostDetails> {
             ),
             cardCoreWidget(post: widget.post, detailsPageOpen: true),
             VoteSection(post: widget.post),
-            CommentSection(postId: widget.post['_id']),
+            CommentSection(postId: widget.post['_id'], access_token: access_token,),
           ],
         ),
       ),
