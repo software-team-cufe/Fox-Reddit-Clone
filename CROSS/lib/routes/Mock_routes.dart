@@ -34,7 +34,6 @@ class ApiRoutesBackend {
   static String getPostsByCreatorId(String id) =>
       '$baseUrl/posts?creatorId=$id';
   static const String submitPost = '$baseUrl/api/submit';
-  static const String viewedPost = '$baseUrl/api/view_post';
   static const String delelteUser = '$baseUrl/api/users/delete_user';
   static const String getCommunities = '$baseUrl/subreddits/mine/member';
   static const String sendinbox = '$baseUrl/message/compose/';
