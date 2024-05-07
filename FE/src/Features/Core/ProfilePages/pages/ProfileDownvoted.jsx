@@ -34,7 +34,7 @@ export default function ProfileDownvoted({ using }) {
                 if(response.data.downvotedPosts.length < limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.posts.map(post => ({
+                const newPosts = response.data.downvotedPosts.map(post => ({
                     communityName: post.username,
                     communityIcon: post.userID.avatar,
                     images: post.attachments,
@@ -69,7 +69,7 @@ export default function ProfileDownvoted({ using }) {
                 if(response.data.downvotedPosts.length <limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.posts.map(post => ({
+                const newPosts = response.data.downvotedPosts.map(post => ({
                     communityName: post.username,
                     communityIcon: post.userID.avatar,
                     images: post.attachments,
