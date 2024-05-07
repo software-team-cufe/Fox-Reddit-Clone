@@ -18,6 +18,7 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
   String? access_token;
+  String Type = "posts";
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
         access_token = sharedPrefValue.getString('backtoken');
       });
     });
+    _search(Type);
   }
 
   @override
@@ -42,11 +44,11 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
     _searchController.clear();
   }
 
-  Future<void> _searchUser() async {
+  Future<void> _search(String type) async {
   try {
     Map<String, String> queryParams = {
       'q': widget.searchItem,
-      'type': 'user',
+      'type': type,
       'page': "1",
       'limit': "10", // Adding limit parameter as per the cURL command
     };
@@ -59,7 +61,7 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
       headers: {'Authorization': 'Bearer ${access_token}'},
     );
 
-    print("status code for searchUser: ${response.statusCode}");
+    print("status code for search: ${response.statusCode}");
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
