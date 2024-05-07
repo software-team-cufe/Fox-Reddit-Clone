@@ -79,16 +79,7 @@ export default function AddModeratorModal({ closeModal, isOpen, initial }) {
             // const res = await userAxios.post(`/${params.community}/api/mute/${data.userName}`, data);
 
         } catch (ex) { }
-        try {
 
-            const res2 = await userAxios.post(`/${params.community}/api/join_moderator`, {
-                "communityName": params.community,
-                "username": data.username,
-                "rules": obj
-            });
-            // const res = await userAxios.post(`/${params.community}/api/mute/${data.userName}`, data);
-
-        } catch (ex) { }
         toast.dismiss(id);
     };
     return (
@@ -153,7 +144,9 @@ export default function AddModeratorModal({ closeModal, isOpen, initial }) {
                                                     <Button onClick={closeModal} className=" border bg-transparent hover:bg-transparent border-blue-500  font-semibold">
                                                         <p className='text-blue-500 '>Cancel</p>
                                                     </Button>
-                                                    <Button onClick={handelSubmit} className="bg-blue-500 hover:bg-blue-400">Add</Button>
+                                                    <Button onClick={handelSubmit} className="bg-blue-500 hover:bg-blue-400">{
+                                                        !initial ? "Add" : "Edit"
+                                                    }</Button>
                                                 </div>
                                             </div>
                                         </div>

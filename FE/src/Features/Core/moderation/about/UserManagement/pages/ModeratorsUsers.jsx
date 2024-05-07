@@ -14,8 +14,8 @@ export default function ModeratorsUsers() {
 
   const { data, isLoading, isError, refetch } = useQuery(
     "get-mocked-Moderators-users",
-    // () => axios.get(`http://localhost:3002/moderators`),
-    () => userAxios.get(`/${params.community}/about/moderators`),
+    () => axios.get(`http://localhost:3002/moderators`),
+    // () => userAxios.get(`/${params.community}/about/moderators`),
     {
       retry: 0,
       refetchOnWindowFocus: false,
@@ -32,9 +32,8 @@ export default function ModeratorsUsers() {
   if (isLoading) {
     return <>Loading ...</>;
   }
-  // const mutedUsers = data?.data?.users ?? [];
-  // const mutedUsers = data?.data ?? [];
-  const mutedUsers = data?.data?.users ?? [];
+  const moderators = data?.data ?? [];
+  // const moderators = data?.data?.users ?? [];
   return (
     <div className='w-full'>
       <AddModeratorModal isOpen={isOpen.open} initial={isOpen.values} closeModal={() => setOpen({ open: false, values: null })} />
@@ -46,13 +45,13 @@ export default function ModeratorsUsers() {
         </div>
         <div className=' rounded-lg border p-4 w-full'>
           {
-            mutedUsers?.length == 0 && <div className='flex my-14 text-gray-600 flex-col gap-4 items-center justify-center'>
+            moderators?.length == 0 && <div className='flex my-14 text-gray-600 flex-col gap-4 items-center justify-center'>
               <Info size={45} />
               No moderators users in r/{params.community}
             </div>
           }
           {
-            mutedUsers?.map((e, idx) => <div className='flex items-center justify-between gap-4' key={idx}>
+            moderators?.map((e, idx) => <div className='flex items-center justify-between gap-4' key={idx}>
               <Link target='__blank' to={`/user/${e.userId}`} className='flex rounded-lg items-center gap-2 hover:bg-gray-300 px-4 py-2'>
                 <img className=' aspect-square w-10 rounded-md' src={e.image ?? "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png"} />
                 <div className='flex flex-col '>

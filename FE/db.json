@@ -151,42 +151,14 @@
   ],
   "moderators": [
     {
-      "id": "c3a9",
+      "id": "7a79",
       "communityName": "test2",
-      "username": "بلابلابلا",
+      "username": "drtdrtgdrtg",
       "rules": {
         "manageUsers": true,
         "createLiveChat": true,
-        "manageSettings": false,
+        "manageSettings": true,
         "manageFlair": false,
-        "manageModMail": false,
-        "managePosts": false,
-        "manageWikiPages": false
-      }
-    },
-    {
-      "id": "479f",
-      "communityName": "test2",
-      "username": "vdgfdhg",
-      "rules": {
-        "manageUsers": true,
-        "createLiveChat": true,
-        "manageSettings": true,
-        "manageFlair": true,
-        "manageModMail": false,
-        "managePosts": false,
-        "manageWikiPages": false
-      }
-    },
-    {
-      "id": "726f",
-      "communityName": "test2",
-      "username": "vdgfdhg",
-      "rules": {
-        "manageUsers": true,
-        "createLiveChat": true,
-        "manageSettings": true,
-        "manageFlair": true,
         "manageModMail": false,
         "managePosts": false,
         "manageWikiPages": false
@@ -912,6 +884,30 @@
       "createdAt": "2022/02/15, 15:05:45",
       "commentText": "asdasd4",
       "postID": "663667aa94a9e133a9491043"
+    },
+    {
+      "id": "3ba6",
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 12,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "sredrstet",
+      "postID": "6638c63e5fa5c2cce673f577"
+    },
+    {
+      "id": "29a3",
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 11,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "werwer",
+      "postID": "6638c63e5fa5c2cce673f577"
     }
   ]
 }

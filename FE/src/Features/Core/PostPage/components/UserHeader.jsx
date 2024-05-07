@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft, Edit, EllipsisVertical, EyeOff, Flag, Lock, Pocket, Trash } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from "react";
@@ -8,53 +8,55 @@ import { userStore } from "../../../../hooks/UserRedux/UserStore";
 import { userAxios } from "../../../../Utils/UserAxios";
 import { toast } from "react-toastify";
 export default function UserHeader({ post }) {
+  const params = useParams();
   const navigate = useNavigate();
   const handelSave = async () => {
     const id = toast.loading("Please wait");
     try {
       const res = await userAxios.post("/api/save", {
-        "linkID": post._id,
+        "linkID": params.id,
       })
-    } catch (ex) {}
+    } catch (ex) { }
     toast.dismiss(id);
   };
   const handelDelete = async () => {
     const id = toast.loading("Please wait");
     try {
       const res = await userAxios.post("/api/save", {
-        "linkID": post._id,
+        "linkID": params.id,
       })
-    } catch (ex) {}
+    } catch (ex) { }
     toast.dismiss(id);
   };
   const handelLock = async () => {
     const id = toast.loading("Please wait");
     try {
-      const res = await userAxios.post("/api/save", {
-        "linkID": post._id,
+      const res = await userAxios.post("/api/lock", {
+        "linkID": params.id,
       })
-    } catch (ex) {}
+    } catch (ex) { }
     toast.dismiss(id);
   };
   const handelReport = async () => {
     const id = toast.loading("Please wait");
     try {
-      const res = await userAxios.post("/api/save", {
-        "linkID": post._id,
+      const res = await userAxios.post("/api/report", {
+        "linkID": params.id,
       })
-    } catch (ex) {}
+    } catch (ex) { }
     toast.dismiss(id);
   };
   const handelHide = async () => {
     const id = toast.loading("Please wait");
     try {
-      const res = await userAxios.post("/api/save", {
-        "linkID": post._id,
+      const res = await userAxios.post("/api/hide", {
+        "linkID": params.id,
       })
-    } catch (ex) {}
+      window.location.reload();
+    } catch (ex) { }
     toast.dismiss(id);
   };
-  
+
   const userId = userStore.getState().user.user?._id;
   return (
     <div className=" flex items-center justify-between gap-3">
