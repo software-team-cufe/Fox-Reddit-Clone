@@ -1,32 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { userAxios } from "@/Utils/UserAxios";
 import ImageGallery from "react-image-gallery";
 import { toast } from 'react-toastify'
+import { userStore } from "../../hooks/UserRedux/UserStore";
 export default function PostComponent({ refetch, role, post, className, viewMode = false }) {
+    const user = userStore.getState().user.user;
+    const params = useParams();
+    const [voteType, setVotesType] = useState(null);
+    useEffect(() => {
+        try {
+            const votesArr = post?.votes ?? [];
+            for (const x of votesArr) {
+                if (x.userID == user._id) {
+                    setVotesType(x.type);
+                    break;
+                }
+            }
+        } catch (ex) {
+
+        }
+        console.log('object');
+    }, [voteType]);
     post.votes = post.votes ?? 0;
     // const images = [post.thumbnail, ...post.images];
     const [postObj, setPost] = useState(post);
     const [votes, setVotes] = useState(post.votes);
+    console.log({ post });
     const vote = async (upvote) => {
-        console.log(postObj._id);
-        const votesss = upvote ? post.votes + 1 : post.votes - 1;
         const id = toast.loading('Please wait');
         try {
             const res = await userAxios.post('/api/postvote', {
-                postID: postObj._id,
+                postID: postObj.postId ?? params.id,
                 type: upvote ? 1 : -1,
             });
-            setPost(prev => { return { ...prev, votesCount: upvote ? prev.votesCount + 1 : prev.votesCount - 1 } })
+            if (voteType == null) {
+                setPost(prev => { return { ...prev, votesCount: upvote ? prev.votesCount + 1 : prev.votesCount - 1 } })
+                setVotesType(upvote ? 1 : -1)
+
+            }
+            if (upvote && voteType == 1) {
+                setPost(prev => { return { ...prev, votesCount: prev.votesCount - 1 } });
+                setVotesType(null);
+            } else if (!upvote && voteType == -1) {
+                setPost(prev => { return { ...prev, votesCount: prev.votesCount + 1 } });
+                setVotesType(null);
+            }
+            if (upvote && voteType == -1) {
+                setPost(prev => { return { ...prev, votesCount: prev.votesCount + 2 } });
+                setVotesType(1);
+            }
+            if (!upvote && voteType == 1) {
+                setPost(prev => { return { ...prev, votesCount: prev.votesCount - 2 } });
+                setVotesType(-1);
+            }
         } catch (ex) { }
 
         toast.dismiss(id);
 
-        setVotes(res.data.votesCount);
+        // setVotes(res.data.votesCount);
     };
 
+    console.log(voteType);
     return (
         <div role={role} className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
 
@@ -41,7 +78,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                 </div>
                             </div>
                         </Link>
-                        <Link className="w-full" to={`/posts/${postObj._id}`}>
+                        <Link className="w-full" to={`/posts/${postObj.postId}`}>
                             <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
                             <p className=" text-gray-600 text-sm">{postObj.textHTML} </p>
                             <div
@@ -60,28 +97,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
 
                         <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
                         <p className=" text-gray-600 text-sm mb-4">{postObj.description} </p>
-                        {(images.length != 0 && postObj.video == null) &&
-                            <div className=" max-w-[700px]">
-                                <ImageGallery
-                                    showBullets={images.length > 1}
-                                    renderLeftNav={(onClick, disabled) => (
-                                        <button className=" absolute z-20 top-[50%] ml-4" onClick={onClick} disabled={disabled} >
-                                            <ArrowLeftCircle className=" text-white" />
-                                        </button>
-                                    )}
-                                    renderRightNav={(onClick, disabled) => (
-                                        <button className=" absolute z-20 top-[50%] right-4" onClick={onClick} disabled={disabled} >
-                                            <ArrowRightCircle className=" text-white" />
-                                        </button>
-                                    )}
-                                    showThumbnails={false} showPlayButton={false} showFullscreenButton={false} items={images.map((e, idx) => {
-                                        return {
-                                            original: e,
-                                            thumbnail: e,
-                                        };
-                                    })} />
-                            </div>
-                        }
+
                         {
                             postObj.video && <div>
                                 <video src={postObj.video} controls />
@@ -93,12 +109,12 @@ export default function PostComponent({ refetch, role, post, className, viewMode
 
             <div className="flex flex-row mt-4 items-center gap-4">
                 <div className="flex bg-gray-100 gap-3 items-center rounded-[80px] px-3 py-2">
-                    <ArrowUpCircle onClick={() => vote(true)} className="w-5 h-5 cursor-pointer" />
+                    <ArrowUpCircle onClick={() => vote(true)} className={`w-5 h-5 cursor-pointer ${voteType == 1 ? " text-blue-600" : ""}`} />
                     <p>{postObj.votesCount}</p>
-                    <ArrowDownCircle onClick={() => vote(false)} className="w-5 h-5 cursor-pointer" />
+                    <ArrowDownCircle onClick={() => vote(false)} className={`w-5 h-5 cursor-pointer ${voteType == -1 ? " text-blue-600" : ""}`} />
                 </div>
                 {!viewMode && <div className="flex bg-gray-100 gap-1 items-center rounded-[80px] px-3 py-2">
-                    <Link to={viewMode ? null : `/posts/${postObj._id}`}>
+                    <Link to={viewMode ? null : `/posts/${postObj.postId}`}>
                         <MessageCircle className="w-5 h-5 cursor-pointer" />
                     </Link>
                     <p>{postObj.comments}</p>

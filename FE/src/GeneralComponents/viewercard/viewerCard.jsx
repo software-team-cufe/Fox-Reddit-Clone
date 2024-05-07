@@ -138,7 +138,7 @@ export default function ViewerCard() {
                     if(!isClicked) handleFollow();
                     if(isClicked) handleUnfollow();
                   }} 
-                  className={`flex flex-row items-center justify-center space-x-1 border  rounded-3xl px-2  h-[35px] ${isClicked ? 'bg-gray-200 border-black w-[105px]' : 'bg-blue-800  border-blue-700  w-[85px]'}`}>
+                  className={`flex flex-row items-center justify-center space-x-1 border  rounded-3xl px-2  h-[35px] ${isClicked ? 'bg-gray-100 border-black w-[105px]' : 'bg-blue-800  border-blue-700  w-[85px]'}`}>
                     {isClicked ? 
                         <svg className="w-4 h-4 text-black" xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z"/>

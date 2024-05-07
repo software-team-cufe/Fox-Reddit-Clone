@@ -15,7 +15,7 @@ function InboxFunc() {
 
     const path = useLocation();
     return (
-        <div className=' w-full bg-[#0f080416] h-[max(100%,38rem)]'>
+        <div className=' w-full bg-[#0f080416] min-h-[100vh] h-max'>
             <div className="flex w-full">
 
                 {tabs.map((tab, index) =>
@@ -27,7 +27,8 @@ function InboxFunc() {
                                 (path.pathname.endsWith(tab.link.slice(1)) ?
                                     "bg-[#edc6b2] text-slate-900" :
                                     "bg-[#935226ef] text-white") :
-                                ((path.pathname.endsWith("message/inbox") || path.pathname.endsWith("message/inbox/")) ?
+                                ((path.pathname.endsWith("message/inbox") ||
+                                    path.pathname.endsWith("message/inbox/")) ?
                                     "bg-[#edc6b2] text-black" :
                                     "bg-[#935226ef] text-white")}`}>
                             {tab.label}</button>

@@ -15,17 +15,17 @@ import { toast } from 'react-toastify';
 
 export default function ChatMessaging() {
 
-    let id =4
+    let id = 3;
     const [markAllAsRead, setMarkAllAsRead] = useState(false);
 
     const handleReadAll = async () => {
         try{axios.patch(`http://localhost:3002/users/${id}`, { 
-            markAllAsRead: !markAllAsRead,
+            markAllAsRead: true,
         })
-        setMarkAllAsRead(!markAllAsRead)
         }catch(error){
             console.error(error);
         }
+        //setMarkAllAsRead(true);
     }
 
     return (
