@@ -6,10 +6,32 @@
   import 'package:intl/intl.dart';
   import 'package:reddit_fox/Pages/Search.dart';
   import 'package:reddit_fox/Pages/EditProfile.dart';
+  import 'package:reddit_fox/Pages/commentView.dart';
   import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
   import 'package:reddit_fox/navbar.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
+
+
+void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList, String userName) {
+  try {
+    if (isFollowed) {
+      final List<dynamic> followingUsernames = followingList.map((following) => following['username']).toList();
+      if (followingUsernames.contains(userName)) {
+        print('$userName is followed');
+        isFollowed = true;
+      } else {
+        print('$userName is not followed');
+        isFollowed = false;
+      }
+    } else {
+      print('User is not currently followed, cannot check if $userName is followed.');
+    }
+  } catch (error) {
+    print('Error checking if $userName is followed: $error');
+  }
+}
+
 
 
   class ProfilePage extends StatefulWidget {
@@ -36,10 +58,13 @@
     late String? createdAt = "";
     List<dynamic> data = [];
     List<dynamic> posts = [];
-    List<dynamic> userComments = [];
+    //List<dynamic> userComments = [];
     late int totalKarma = 0;
     late int commentKarma = 0;
-    String _selectedItem = '';
+    String _selectedItem = 'hot';
+    List<Map<String, dynamic>> userComments = []; // Define userComments here
+    List<Map<String, dynamic>> followingList = []; //
+    late bool isFollowed ;
 
     @override
     void initState() {
@@ -50,8 +75,12 @@
 
       fetchUserAbout(widget.userName);
       fetchData();
-      //fetchDataBack();
+      if(_selectedItem == "hot"){
+         fetchDataBack();
+      }
       getUserComments();
+      getFollwoingLit();
+      checkIfFollowing(isFollowed, followingList, widget.userName);
     }
 
     @override
@@ -63,7 +92,6 @@
 
 
     Future<void> fetchUserAbout(String userName) async {
-      print("userName: $userName");
       String editedUsername = userName;
     if (editedUsername.startsWith('u/')) {
       editedUsername = editedUsername.substring(2); // Extracts the part after 'u/'
@@ -74,10 +102,9 @@
       url,
       headers: {'Authorization': 'Bearer $access_token'},
     );
-      print("response statues code: ${response.statusCode}");
         if (response.statusCode == 200) {
           Map<String, dynamic> responseData = json.decode(response.body);
-          print("Response Data: $responseData");
+
           if (responseData.containsKey('userID')) {
             setState(() {
               profilePic = responseData['avatar'];
@@ -144,7 +171,6 @@
         );
 
         print("status code for fetchDataBack: ${response.statusCode}");
-        print("response body: ${response.body}");
 
         if (response.statusCode == 200) {
           // Parsing response data
@@ -165,23 +191,88 @@
 
 
   Future<void> getUserComments() async {
-    try{
-      final commentResponse = await http.get(Uri.parse('http://foxnew.southafricanorth.cloudapp.azure.com/user/${widget.userName}/comments?page=1&count=5&limit=10&t=1'), headers: {'Authorization': 'Bearer $access_token'});
-    print("status code for getUserComments: ${commentResponse.statusCode}");
-    if (commentResponse.statusCode == 200) {
-      setState(() {
-        userComments = json.decode(commentResponse.body)['posts'].cast<Map<String, dynamic>>();
-        print("user Comments : $userComments");
-      });
-    } else {
-      throw Exception('Failed to load user comments');
+    try {
+      final commentResponse = await http.get(
+        Uri.parse(ApiRoutesBackend.myComment(widget.userName)),
+        headers: {'Authorization': 'Bearer $access_token'},
+      );
+      print("status code for getUserComments: ${commentResponse.statusCode}");
+      if (commentResponse.statusCode == 200) {
+        final jsonData = json.decode(commentResponse.body);
+        final commentsData = jsonData['comments'];
+
+        setState(() {
+          userComments = List<Map<String, dynamic>>.from(commentsData);
+        });
+      } else {
+        throw Exception('Failed to load user comments');
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+      // Handle error, show error message, retry logic, etc.
     }
-  } catch (error) {
-    print('Error fetching data: $error');
-    // Handle error, show error message, retry logic, etc.
-  }
   }
 
+  Future<void> followUser(String username) async {
+  try {
+    // API endpoint URL
+    String apiUrl = ApiRoutesBackend.follow;
+
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: json.encode({
+        'username': username,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${widget.access_token}', // Add Authorization header
+      }
+      );
+
+      if (response.statusCode == 200) {
+        print('User followed successfully');
+      } else {
+        print('Failed to follow user: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error following user: $error');
+    }
+  }
+  Future<void> unFollowUser(String username) async {
+  try {
+    // API endpoint URL
+    String apiUrl = ApiRoutesBackend.unFollow;
+
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: json.encode({
+        'username': username,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${widget.access_token}', // Add Authorization header
+      }
+      );
+
+      if (response.statusCode == 200) {
+        print('User followed successfully');
+      } else {
+        print('Failed to follow user: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error following user: $error');
+    }
+  }
+  Future<void> getFollwoingLit() async {
+    final Response = await http.get(
+      Uri.parse(ApiRoutesBackend.getUserFollowings(widget.userName)),
+      headers: {'Authorization': 'Bearer $access_token'},);
+    if (Response.statusCode == 200) {
+      print("following list : ${Response.body}");
+    }
+  }
   @override
     ImageProvider<Object> _getImageProvider(dynamic picture) {
       if (profilePic is String) {
@@ -200,6 +291,13 @@
       }
       return ''; // Return an empty string if date is null or empty
     }
+
+Widget _myComments() {
+  return Container(
+    child: CommentListView(comments: userComments, userName: widget.userName,),
+  );
+  }
+
 
 Widget _buildTitleView() {
   return CustomScrollView(
@@ -279,7 +377,6 @@ Widget _buildTitleView() {
 
                                   showMenu<String>(
                                     context: context,
-                                    initialValue: "hot",
                                     position: RelativeRect.fromLTRB(
                                       horizontalOffset + buttonWidth,
                                       topOffset,
@@ -380,7 +477,7 @@ Widget _buildTitleView() {
           controller: _tabController,
           children: [
             buildPostsContainer(),
-            Container(), // Placeholder for Comments
+            _myComments(), // Placeholder for Comments
             buildAboutContainer(), // Placeholder for About
           ],
         ),
@@ -449,7 +546,7 @@ Widget _buildTitleView() {
                                       Padding(
                                         padding: const EdgeInsets.only(),
                                         child: Text(
-                                          'u/$userName • 1 karma • ${_formatDate(createdAt)}',
+                                          'u/$userName • ${totalKarma} karma • ${_formatDate(createdAt)}',
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.grey[400],
@@ -481,16 +578,25 @@ Widget _buildTitleView() {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(),
-                                  child: SizedBox(
-                                    width: screenWidth * 0.25, // 50% of screen width
-                                    height: 35,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                      },
-                                      child: const Text('Follow'),
-                                    ),
-                                  ),
+                                child: SizedBox(
+                                  width: screenWidth * 0.25, // 25% of screen width
+                                  height: 35,
+                                  child: isFollowed == false
+                                    ? ElevatedButton(
+                                        onPressed: () {
+                                          followUser(widget.userName);
+                                        },
+                                        child: const Text('Follow'),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: () {
+                                          unFollowUser(widget.userName);
+                                        },
+                                        child: const Text('Unfollow'),
+                                      ),
                                 ),
+                              ),
+
                               ],)
                             ],
                           ),
@@ -538,7 +644,7 @@ Widget _buildTitleView() {
               controller: _tabController,
               children: [
                 buildPostsContainer(),
-                Container(), // Placeholder for Comments
+                _myComments(), // Placeholder for Comments
                 buildAboutContainer(), // Placeholder for About
               ],
             ),

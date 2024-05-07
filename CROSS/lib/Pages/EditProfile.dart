@@ -169,33 +169,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: buildProfileImage(),
         ),
         Positioned(
-          top: top + profileHight - 180.0,
-          left: MediaQuery.of(context).size.width * 0.5 - 40.0,
-          child: GestureDetector(
-            onTap: () {
-              // Handle changing cover photo
-              pickImageFromPhone(ImageSource.gallery);
-            },
-            child: Container(
-              width: 80.0,
-              height: 44.0,
-              decoration: BoxDecoration(
-                color: Colors.purple,
-                borderRadius: BorderRadius.circular(22.0),
-              ),
-              child: Center(
-                child: Text(
-                  "Add Image",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
           top: top + profileHight / 2 + 25.0,
           left: MediaQuery.of(context).size.width * 0.5 + 25.0,
           child: GestureDetector(

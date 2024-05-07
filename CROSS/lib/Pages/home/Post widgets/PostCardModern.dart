@@ -40,17 +40,8 @@ class _ModernCardState extends State<ModernCard> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         // Store the token in the access_token variable
-        print('#######');
-        print(widget.post['_id']);
-        print(widget.currentuserpost);
-        print(sharedPrefValue.getString('userid'));
-        print('#######');
         if (widget.post['userID'] == sharedPrefValue.getString('userid')) {
           widget.currentuserpost = true;
-          print('#######');
-          print(widget.post['userID']);
-          print(widget.currentuserpost);
-          print('#######');
         }
       });
     });
@@ -78,7 +69,6 @@ class _ModernCardState extends State<ModernCard> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    print("Post data: ${widget.post}");
     return GestureDetector(
       onTap: () {
         Navigator.push(

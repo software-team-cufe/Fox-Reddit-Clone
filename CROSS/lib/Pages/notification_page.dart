@@ -1,67 +1,101 @@
-// import 'package:flutter/material.dart';
-
-// class NotificationsPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder<List<Notification>>(
-//       future: fetchNotifications(), // Function to fetch notifications
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return CircularProgressIndicator(); // Loading indicator
-//         } else if (snapshot.hasError) {
-//           return Text('Error: ${snapshot.error}');
-//         } else if (snapshot.data.isEmpty) {
-//           return Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               Icon(Icons.notifications_off, size: 100),
-//               SizedBox(height: 20),
-//               Text(
-//                 'Wow, such empty',
-//                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//               ),
-//             ],
-//           );
-//         } else {
-//           return ListView.builder(
-//             itemCount: snapshot.data.length,
-//             itemBuilder: (context, index) {
-//               var notification = snapshot.data[index];
-//               return ListTile(
-//                 leading: Icon(Icons.person), // Replace with user's profile picture
-//                 title: Text('u/${notification.username} replied to your post in r/${notification.subreddit}'),
-//                 subtitle: Text(notification.message),
-//                 trailing: Text('${notification.timeElapsed} ago'),
-//               );
-//             },
-//           );
-//         }
-//       },
-//     );
-//   }
-// }
-// notification_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:reddit_fox/Pages/notification_posts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
 
-class NotificationPage extends StatelessWidget {
-  final List<Notification> notifications = [
-    Notification(
-      username: 'u/zsoltjuhos',
-      subreddit: 'r/DBZDokkanBattle',
-      content: 'Wish it could be said about her EZA as well',
-      time: '3h ago',
-    ),
-    Notification(
-      username: 'u/Fun-Detective-6089',
-      subreddit: 'r/DBZDokkanBattle',
-      content: 'I do kinda like the Sticker effect for her Untransformed state...',
-      time: '3h ago',
-    ),
-    // Add more notifications here...
-  ];
+class Notification {
+  final String id;
+  final String? text;
+  final String title;
+  final String type;
+  final String? userIcon;
+  final DateTime createdAt;
+
+  Notification({
+    required this.id,
+    this.text,
+    required this.title,
+    required this.type,
+    this.userIcon,
+    required this.createdAt,
+  });
+
+  factory Notification.fromJson(Map<String, dynamic> json) {
+    return Notification(
+      id: json['_id'],
+      text: json['text'],
+      title: json['title'],
+      type: json['type'],
+      userIcon: json['userIcon'],
+      createdAt: DateTime.parse(json['createdAt']),
+    );
+  }
+
+  String timeElapsed() {
+    Duration difference = DateTime.now().difference(createdAt);
+
+    if (difference.inDays > 365) {
+      return '${(difference.inDays / 365).floor()} years ago';
+    } else if (difference.inDays > 30) {
+      return '${(difference.inDays / 30).floor()} months ago';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays} days ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} hours ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} minutes ago';
+    } else {
+      return 'Just now';
+    }
+  }
+}
+
+class NotificationPage extends StatefulWidget {
+  const NotificationPage({Key? key}) : super(key: key);
+
+  @override
+  State<NotificationPage> createState() => _NotificationPageState();
+}
+
+class _NotificationPageState extends State<NotificationPage> {
+  late List<Notification> notifications = [];
+  String? accessToken;
+
+  @override
+  void initState() {
+    super.initState();
+
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        accessToken = sharedPrefValue.getString('backtoken');
+      });
+      fetchNotifications();
+    });
+  }
+
+  void fetchNotifications() async {
+    final response = await http.get(
+      Uri.parse(ApiRoutesBackend.notification),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = json.decode(response.body);
+      final List<dynamic> notificationData = data['notifications'];
+      setState(() {
+        notifications = notificationData
+            .map((notificationJson) => Notification.fromJson(notificationJson))
+            .toList();
+      });
+      print(data);
+    } else {
+      throw Exception('Failed to fetch notifications');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +109,7 @@ class NotificationPage extends StatelessWidget {
             SizedBox(height: 20),
             Text(
               'Wow Such empty',
-              style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -85,47 +118,16 @@ class NotificationPage extends StatelessWidget {
       return ListView.builder(
         itemCount: notifications.length,
         itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              // Navigate to the PostDetails page when a notification is tapped
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PostDetails(
-                    post: generateRandomPost(), // Pass the random post
-                  ),
-                ),
-              );
-            },
-            child: ListTile(
+          final notification = notifications[index];
+          if (notification.type != "message") {
+            return ListTile(
               leading: const Icon(Icons.notification_important),
-              title: Text('${notifications[index].username} replied to your post in ${notifications[index].subreddit}'),
-              subtitle: Text(notifications[index].content),
-              trailing: Text(notifications[index].time),
-            ),
-          );
+              title: Text('${notification.title} To Your Post'),
+              subtitle: Text(notification.timeElapsed()),
+            );
+          } 
         },
       );
     }
   }
-
-  // Function to generate a random post
-  Map<String, dynamic> generateRandomPost() {
-    // Replace this with your logic to generate a random post
-    return {
-      'redditName': 'Random User',
-      'title': 'Random Post Title',
-      'description': 'Random Post Description',
-      // Add other relevant data for the post
-    };
-  }
-}
-
-class Notification {
-  final String username;
-  final String subreddit;
-  final String content;
-  final String time;
-
-  Notification({required this.username, required this.subreddit, required this.content, required this.time});
 }
