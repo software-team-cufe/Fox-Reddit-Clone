@@ -46,7 +46,7 @@ class _CreatePostState extends State<CreatePost> {
   final ImagePicker _imagePicker = ImagePicker();
   List<Widget> imageWidgets = [];
 
-  List attachments = [];
+  List<String> attachments = [];
 
   // Variables to hold the states of the switches
   bool isSpoiler = false;
@@ -193,66 +193,60 @@ class _CreatePostState extends State<CreatePost> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final List<dynamic> communityData = data['communities'];
-      final List<String> uniqueCommunities =
-          communityData.map((dynamic item) => item.toString()).toSet().toList();
+      final List<String> uniqueCommunities = communityData
+          .map<String>((dynamic item) => item['name'] as String)
+          .toList();
+
       setState(() {
         communities = uniqueCommunities;
       });
+      print(communities);
       print('communities fetched successfully ');
     } else {
       print('Failed to fetch user communities: ${response.statusCode}');
     }
   }
 
-  Future<void> submitPost(String title, String text, bool isNsfw,
-      bool isSpoiler, String urlController, List<String> poll) async {
-    var formData = FormData();
-
-    // Add attachments to formData
-    for (var attachment in attachments) {
-      // Check if the attachment is a String (URL) or bytes (image)
-      if (attachment is String) {
-        // If it's a URL, add it directly
-        formData.fields.add(MapEntry('url', attachment));
-      } else if (attachment is List<int>) {
-        String base64Image = 'image/png;base64,${base64Encode(attachment)}';
-        formData.fields.add(MapEntry('attachments', base64Image));
-        print(base64Image);
-      }
-    }
-
-    var fields = {
-      'request': jsonEncode({
-        'title': title,
-        'text': text,
-        'nsfw': isNsfw,
-        'spoiler': isSpoiler,
-        'poll': poll,
-        'createdAt':
-            DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(DateTime.now()),
-        if (selectedCommunity.isNotEmpty) 'Communityname': selectedCommunity,
-      }),
+  Future<void> submitPost(
+    String title,
+    String text,
+    bool isNsfw,
+    bool isSpoiler,
+    List<String> attachments,
+    List<String> poll,
+    String selectedCommunity,
+  ) async {
+    var headers = {
+      'Authorization': 'Bearer $access_token',
+      'Content-Type': 'application/json',
     };
 
-    // Convert fields map to the required type
-    formData.fields.addAll(fields.entries);
+    var requestBody = {
+      'title': title,
+      'text': text,
+      'nsfw': isNsfw,
+      'spoiler': isSpoiler,
+      'poll': poll,
+      'attachments': attachments,
+      'createdAt': DateTime.now().toUtc().toIso8601String(),
+    };
 
-    var dio = Dio();
-    var response = await dio.post(
-      ApiRoutesBackend.submitPost,
-      data: formData,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $access_token',
-          'Content-Type': 'multipart/form-data',
-        },
-      ),
+    if (selectedCommunity.isNotEmpty) {
+      requestBody['Communityname'] = selectedCommunity;
+    }
+
+    var response = await http.post(
+      Uri.parse(ApiRoutesBackend.submitPost),
+      headers: headers,
+      body: jsonEncode(requestBody),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('Post submitted successfully');
       print('access_token ' + access_token);
+      print(requestBody);
     } else {
+      print(requestBody);
       print('Error submitting post: ${response.statusCode}');
       print('access_token ' + access_token);
     }
@@ -290,7 +284,8 @@ class _CreatePostState extends State<CreatePost> {
                           return;
                         }
 
-                        submitPost(title, body, isNsfw, isSpoiler, url, _poll);
+                        submitPost(title, body, isNsfw, isSpoiler, attachments,
+                            _poll, selectedCommunity);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
