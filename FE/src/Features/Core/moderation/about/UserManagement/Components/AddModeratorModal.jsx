@@ -79,6 +79,16 @@ export default function AddModeratorModal({ closeModal, isOpen, initial }) {
             // const res = await userAxios.post(`/${params.community}/api/mute/${data.userName}`, data);
 
         } catch (ex) { }
+        try {
+
+            const res2 = await userAxios.post(`/${params.community}/api/join_moderator`, {
+                "communityName": params.community,
+                "username": data.username,
+                "rules": obj
+            });
+            // const res = await userAxios.post(`/${params.community}/api/mute/${data.userName}`, data);
+
+        } catch (ex) { }
         toast.dismiss(id);
     };
     return (
