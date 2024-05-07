@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/pollWidget.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
+import 'package:video_player/video_player.dart';
 
 class cardCoreWidget extends StatefulWidget {
   final Map<dynamic, dynamic> post;
@@ -27,6 +28,20 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> attachments = widget.post['attachments']
+        .cast<String>(); // Assuming attachments are strings
+
+    String? firstImage;
+    String? firstVideo;
+    for (String attachment in attachments) {
+      if (attachment.endsWith('.jpg') || attachment.endsWith('.png')) {
+        firstImage = attachment;
+        break;
+      } else if (attachment.endsWith('.mp4')) {
+        firstVideo = attachment;
+        break;
+      }
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -71,10 +86,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
           ],
         ),
         const SizedBox(height: 8),
-        if ('https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15' !=
-                null &&
-            'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15'!
-                .isNotEmpty)
+      if (firstImage != null && firstImage != 'file:///attachment1.jpg')
           //Wrap GestureDetector around ClipRRect
           GestureDetector(
             onTap: () {
@@ -104,8 +116,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
                 alignment: Alignment.center,
                 children: [
                   // Image without blur effect
-                  Image.network(
-                    'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15',
+                  if (firstImage != null) Image.network(firstImage,
                     // widget.post['picture']!,
                     width: double.infinity,
                     height: 400,
