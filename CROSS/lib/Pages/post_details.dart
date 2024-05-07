@@ -21,10 +21,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PostDetails extends StatefulWidget {
   final Map<dynamic, dynamic> post;
+  final bool myProfile;
 
   const PostDetails({
     super.key,
     required this.post,
+    this.myProfile = false,
   });
 
   @override
@@ -51,16 +53,26 @@ class _PostDetailsState extends State<PostDetails> {
 
   Future<void> addPostToHistory() async {
     var url = Uri.parse(ApiRoutesBackend.viewedPost);
+    print('########################');
+    print(widget.post['postId']);
+    print(widget.post['_id']);
+    print(widget.post);
+    print(widget.myProfile);
+    print('########################');
 
     var response = await http.post(
       url,
-      body: jsonEncode({"postID": widget.post['postId']}),
+      body: jsonEncode({
+        "postID": widget.myProfile ? widget.post['_id'] : widget.post['postId']
+      }),
+
       // body: {"postID": widget.post['postID']},
       headers: {
         'Authorization': 'Bearer $access_token',
         'Content-Type': 'application/json'
       },
     );
+    print(response.body);
   }
 
   Future<String> fetchUserProfilePic(String accessToken) async {
@@ -242,7 +254,7 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   Widget build(BuildContext context) {
     double userWidth = MediaQuery.of(context).size.width * 0.7;
-    
+
     return Scaffold(
       appBar: AppBar(
         leading: const CloseButton(),
@@ -340,7 +352,7 @@ class _PostDetailsState extends State<PostDetails> {
                           );
                         },
                         child: Text(
-                          widget.post['username']??
+                          widget.post['username'] ??
                               'no username',
                           style: const TextStyle(
                             fontSize: 12,
