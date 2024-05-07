@@ -1224,12 +1224,6 @@ export async function submitPostHandler(req: Request, res: Response) {
 /*YOUSEF PHASE 3 WORK */
 
 export async function getSortedPosts(req: Request, res: Response) {
-  if (!res.locals.user) {
-    return res.status(401).json({
-      status: 'failed',
-      message: 'Access token is missing',
-    });
-  }
   try {
     const sub = req.params.subreddit || ' ';
     const subreddit = await findCommunityByName(sub);
