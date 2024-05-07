@@ -253,10 +253,6 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                                 <div className='mb-2  text-sm'
                                     dangerouslySetInnerHTML={{ __html: mess.Comment.textHTML }}></div>
                                 <div className='flex flex-wrap text-gray-500'>
-                                    <p className='text-xs m-1 hover:cursor-pointer 
-                                    hover:underline' onClick={() => {
-                                            //go to comment page
-                                        }}>Context</p>
                                     <p onClick={() => {
                                         navigator(`/posts/${mess.postID}`)
                                     }} className='mx-2 m-1 text-xs hover:cursor-pointer 
@@ -393,7 +389,7 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                             <UserRoundX className=' text-orange-600  rounded-full my-2'
                                 strokeWidth={1.5} size={26} />
                             <div>
-                                <p className='text-sm mx-2 mt-3 mb-1'>Block Feeling-Abrocoma-862</p>
+                                <p className='text-sm mx-2 mt-3 mb-1'>Block {UserToReport}</p>
                                 <p className='text-xs mx-2 mb-2'>You won't be able to send direct messages or chat requests to each other.</p>
                             </div>
                             <Switch

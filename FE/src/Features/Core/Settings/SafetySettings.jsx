@@ -17,7 +17,7 @@ function SafetySettings() {
 
 
     useEffect(() => {
-        //fetchMock();
+        fetchMock();
         fetchBlock();
     }, [])
     useEffect(() => {
@@ -34,7 +34,6 @@ function SafetySettings() {
     const fetchMock = async () => {
         try {
             const res = await axios.get('http://localhost:3002/users/1');
-            setBlocked(res.data.blocked);
             setMutedCom(res.data.Muted);
         } catch (ex) {
             console.error(ex);
@@ -90,18 +89,6 @@ function SafetySettings() {
         setMuteValue(event.target.value);
 
     }
-    // const handleRemoveBlock = async (nameToRemove) => {
-    //     try {
-    //         const updatedBlocked = Blocked.filter(block => block.name !== nameToRemove);
-    //         const res = await axios.patch(`http://localhost:3002/users/1`, { blocked: updatedBlocked });
-    //         setBlocked(updatedBlocked);
-    //     } catch (ex) {
-    //         console.error(ex);
-    //         if (ex.issues != null && ex.issues.length != 0) {
-    //             toast.error(ex.issues[0].message);
-    //         }
-    //     }
-    // };
 
     const handleRemoveBlock = async (nameToRemove) => {
         try {
@@ -118,32 +105,6 @@ function SafetySettings() {
             console.log(error);
         }
     }
-
-    // const handleAddBlock = async () => {
-    //     const val = await idFromName(BlockValue);
-    //     if (val != null) {
-    //         //check if user is already blocked
-    //         for (const user of Blocked) {
-    //             if (user.name === BlockValue) {
-    //                 toast.success("user already blocked");
-    //                 return;
-    //             }
-    //         }
-    //         try {
-    //             //add user to the block list
-    //             const res = await axios.get(`http://localhost:3002/users/${val}`);
-    //             const updatedBlock = [...Blocked, { avatar: res.data.avatar, name: res.data.name }];
-    //             const ress = await axios.patch(`http://localhost:3002/users/1`, { blocked: updatedBlock });
-    //             setBlocked(updatedBlock);
-    //             setBlockValue('');
-    //         } catch (ex) {
-    //             console.error(ex);
-    //             if (ex.issues != null && ex.issues.length != 0) {
-    //                 toast.error(ex.issues[0].message);
-    //             }
-    //         }
-    //     }
-    // }
 
     const handleRemoveMute = async (nameToRemove) => {
         try {

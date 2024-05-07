@@ -116,15 +116,15 @@ function CreatePostPage(props) {
             NewPost = {
                 title: TitleValue,
                 text: PostText + '' + PostURL, spoiler: Spoiler,
-                nsfw: NSFW, pollOptions: PollOptions, attachments: [imageUrl],
+                nsfw: NSFW, pollOptions: PollOptions, attachments: imageUrl,
                 createdAt: new Date()
             }
         }
         else {
             NewPost = {
                 title: TitleValue,
-                text: PostText, spoiler: Spoiler,
-                nsfw: NSFW, pollOptions: PollOptions, attachments: [imageUrl, PostURL],
+                text: PostText + '' + PostURL, spoiler: Spoiler,
+                nsfw: NSFW, pollOptions: PollOptions, attachments: imageUrl,
                 Communityname: SelectedCom.name,
                 createdAt: new Date()
             }
