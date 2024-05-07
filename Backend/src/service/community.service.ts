@@ -1705,7 +1705,6 @@ export async function getHomePostsNotAuth(page: number, limit: number) {
         followers: '$posts.followers', // Project post followers
         CommunityID: '$posts.CommunityID', // Project post CommunityID
         commentsNum: '$posts.commentsNum', // Project post commentsNum
-        posts: '$posts',
       },
     },
   ]);
