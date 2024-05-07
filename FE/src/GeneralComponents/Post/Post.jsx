@@ -96,6 +96,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                         <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
                         <p className=" text-gray-600 text-sm mb-4">{postObj.description} </p>
 
+                        <p className=" text-gray-600 text-sm">{postObj.textHTML} </p>
                         {
                             postObj.video && <div>
                                 <video src={postObj.video} controls />
