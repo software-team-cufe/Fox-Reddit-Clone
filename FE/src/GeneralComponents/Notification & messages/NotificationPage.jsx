@@ -1,6 +1,7 @@
 import React from 'react'
 import NavOfNotification from './NavOfNotification'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+
 const NotificationPage = () => {
 
   
@@ -8,6 +9,7 @@ const NotificationPage = () => {
   const handleNavigate=()=>{
      navigator('/setting/notifications');
   }
+
   return (
     <div>
        <h1 className='text-2xl font-semibold mt-3 mb-8'>Notifications </h1>

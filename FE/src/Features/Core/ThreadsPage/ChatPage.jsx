@@ -1,39 +1,65 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SendMessageBar from './Components/SendMessageBar'
-import SideBar from './Components/SideBar'
+
 import Header from './Components/Header'
 import Message from './Components/Message'
-// import { firebaseApp } from '../../../Utils/firebase'
+import { useQuery } from 'react-query';
+import { userStore } from '../../../hooks/UserRedux/UserStore';
+import { collection, doc, getDoc, onSnapshot, orderBy, query } from '@firebase/firestore';
+import { useParams } from 'react-router-dom';
+import { appFirestore } from '../../../Utils/firebase';
 
-async function getChats() {
-    const chat = await firebaseApp.collection('chat');
-    
+
+function useMessages(chatId) {
+    const [chat, setChat] = useState([]);
+    useEffect(() => {
+        const colRef = collection(appFirestore, `chat/${chatId}/chat`);
+        const snapShot = onSnapshot(query(colRef, orderBy('createdAt', 'asc')), (snap) => {
+            const messages = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setChat(messages);
+        });
+    }, []);
+    return chat;
 }
 
+async function getChats(docId) {
+    return new Promise(async (res, rej) => {
+        const colRef = collection(appFirestore, 'chat');
+        const docRef = await getDoc(doc(colRef, docId));
+
+        return res(docRef.data());
+    })
+}
+
+
 export default function ChatPage() {
-    '/r/search/?q=$userName&type=user';
+
+    const user = userStore.getState().user.user;
+    const params = useParams();
+    const { data, isLoading, isError } = useQuery(`get-user-chat-${params.id}`,
+        () => getChats(params.id), {
+        retry: 0,
+        refetchOnWindowFocus: false,
+    })
+    const messages = useMessages(params.id);
 
     return (
-        <div className="flex flex-row h-screen antialiased text-gray-800">
-            <SideBar />
-            <div className="flex flex-col h-full w-full bg-white ">
-                <Header user={{
-                    name: "Mahmoud Khaled",
-                    _id: "asdasdasdasdasdasdasd",
-                }} />
-                <div className="h-full overflow-hidden px-4 py-6">
-                    <div className="h-full overflow-y-auto">
-                        <div className="grid grid-cols-12 gap-y-2">
-                            <Message userId={"asdasdasd"} isMe={true} />
-                            <Message userId={"asdasdasd"} isMe={false} />
-                            <Message userId={"asdasdasd"} isMe={true} />
-                            <Message userId={"asdasdasd"} isMe={false} />
-                            <Message userId={"asdasdasd"} isMe={true} />
-                        </div>
+        <div className="flex flex-col h-full w-full bg-white ">
+            <Header username={(data?.sender == user.username ? data?.reciever : data?.sender) ?? "n"} />
+            <div className="h-full overflow-hidden px-4 py-6">
+                <div className="h-full overflow-y-auto">
+                    <div className="grid grid-cols-12 gap-y-2">
+                        {
+                            messages?.map((e, idx) =>
+                                <Message key={idx} message={e.message}
+                                    createdAt={e.createdAt} userId={e.usernameFrom}
+                                    isMe={e.usernameFrom == user.username} />
+                            )
+                        }
                     </div>
                 </div>
-                <SendMessageBar />
             </div>
+            <SendMessageBar />
         </div>
 
     )
