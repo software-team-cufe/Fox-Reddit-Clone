@@ -34,7 +34,7 @@ export default function ProfileUpvoted({using}) {
                 if(response.data.upvotedPosts.length < limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.posts.map(post => ({
+                const newPosts = response.data.upvotedPosts.map(post => ({
                     communityName: post.username,
                     communityIcon: post.userID.avatar,
                     images: post.attachments,
@@ -66,10 +66,10 @@ export default function ProfileUpvoted({using}) {
         setCallingPosts(true);
         userAxios.get(`api/user/me/upvoted/${selected.toLowerCase()}?page=${currentpage}&count=${limitpage}&limit=${limitpage}`)
             .then(response => {
-                if(response.data. upvotedPosts.length <limitpage){
+                if(response.data.upvotedPosts.length <limitpage){
                     setpagedone(true);
                 }
-                const newPosts = response.data.posts.map(post => ({
+                const newPosts = response.data.upvotedPosts.map(post => ({
                     communityName: post.username,
                     communityIcon: post.userID.avatar,
                     images: post.attachments,

@@ -10,7 +10,7 @@ const RemovedPage = () => {
   const [spamPosts, setSpamPosts] = useState([]);
   const [spamComments, setSpamComments] = useState([]);
   const { community } = useParams(); 
-  const [selected, setselected] = useState(null);
+ 
 
   const fetchPosts = async () => {
     try {
@@ -29,7 +29,7 @@ const RemovedPage = () => {
   const fetchComments = async () => {
     try {
       const response = await userAxios.get(`/${community}/about/spam_comments`);
-      setSpamComments(response.data.comments.commentID);
+      setSpamComments(response.data.comments);
       console.log(response.data.comments);
       console.log("spamComments");
     } catch (error) {

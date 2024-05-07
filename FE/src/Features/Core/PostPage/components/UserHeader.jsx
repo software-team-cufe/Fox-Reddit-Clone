@@ -83,69 +83,71 @@ export default function UserHeader({ post }) {
           </div>
         </div>
       </div>
-      <Menu as="div" className="flex">
+      {
+        userId != null && <Menu as="div" className="flex">
 
-        {/* Sort button header*/}
-        <Menu.Button role="dropDownButton" className="inline-flex justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full aspect-square w-[30px] bg-white text-sm text-gray-900 ">
-          <EllipsisVertical className="h-5 w-4 fill-black" />
-        </Menu.Button>
+          {/* Sort button header*/}
+          <Menu.Button role="dropDownButton" className="inline-flex justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full aspect-square w-[30px] bg-white text-sm text-gray-900 ">
+            <EllipsisVertical className="h-5 w-4 fill-black" />
+          </Menu.Button>
 
-        {/*the animation of menu opening and closing*/}
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
+          {/*the animation of menu opening and closing*/}
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
 
-          {/* Sort options list mapped*/}
-          <Menu.Items className="absolute right-0 mt-2 w-32 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            {
-              post.userId == userId && <>
-                <Menu.Item>
-                  <button onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
-                    <Edit className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                    <span className="font-semibold text-sm">Edit</span>
-                  </button>
-                </Menu.Item>
-                <Menu.Item>
-                  <button onClick={handelDelete} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
-                    <Trash className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                    <span className="font-semibold text-sm">Delete</span>
-                  </button>
-                </Menu.Item>
-                <Menu.Item>
-                  <button onClick={handelLock} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
-                    <Lock className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                    <span className="font-semibold text-sm">Lock</span>
-                  </button>
-                </Menu.Item>
-              </>
-            }
-            <Menu.Item>
-              <button onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
-                <Pocket className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                <span className="font-semibold text-sm">Save</span>
-              </button>
-            </Menu.Item>
-            <Menu.Item>
-              <button onClick={handelHide} className="text-start p-3 flex gap-3 mb-2 hover:bg-gray-200 w-full">
-                <EyeOff className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                <span className='font-semibold text-sm'>Hide</span>
-              </button>
-            </Menu.Item>
-            <Menu.Item>
-              <button onClick={handelReport} className="text-start p-3 pt-2 flex gap-3 hover:bg-gray-200 w-full">
-                <Flag className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                <span className='font-semibold text-sm'>Report</span>
-              </button>
-            </Menu.Item>
-          </Menu.Items>
-        </Transition>
-      </Menu>
+            {/* Sort options list mapped*/}
+            <Menu.Items className="absolute right-0 mt-2 w-32 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              {
+                (post.userId == userId && userId != null) && <>
+                  <Menu.Item>
+                    <button onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                      <Edit className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
+                      <span className="font-semibold text-sm">Edit</span>
+                    </button>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <button onClick={handelDelete} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                      <Trash className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
+                      <span className="font-semibold text-sm">Delete</span>
+                    </button>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <button onClick={handelLock} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                      <Lock className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
+                      <span className="font-semibold text-sm">Lock</span>
+                    </button>
+                  </Menu.Item>
+                </>
+              }
+              <Menu.Item>
+                <button onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                  <Pocket className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
+                  <span className="font-semibold text-sm">Save</span>
+                </button>
+              </Menu.Item>
+              <Menu.Item>
+                <button onClick={handelHide} className="text-start p-3 flex gap-3 mb-2 hover:bg-gray-200 w-full">
+                  <EyeOff className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
+                  <span className='font-semibold text-sm'>Hide</span>
+                </button>
+              </Menu.Item>
+              <Menu.Item>
+                <button onClick={handelReport} className="text-start p-3 pt-2 flex gap-3 hover:bg-gray-200 w-full">
+                  <Flag className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
+                  <span className='font-semibold text-sm'>Report</span>
+                </button>
+              </Menu.Item>
+            </Menu.Items>
+          </Transition>
+        </Menu>
+      }
     </div>
   )
 }
