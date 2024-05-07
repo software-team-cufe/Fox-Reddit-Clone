@@ -65,9 +65,17 @@ export const addReplyOnMessageSchema = object({
     }),
   }),
 });
+export const reportMessageSchema = object({
+  body: object({
+    msg_id: string({
+      required_error: 'Id is required',
+    }),
+  }),
+});
 export type ComposeMessageInput = TypeOf<typeof composeMessageSchema>;
 export type DeleteMessageInput = TypeOf<typeof deleteMessageSchema>;
 export type ChatMessagesInput = TypeOf<typeof chatMessagesSchema>;
 export type mentionUser = TypeOf<typeof mentionUserSchema>;
 export type replyOnpost = TypeOf<typeof replyOnpostSchema>;
 export type AddReplyOnMessageInput = TypeOf<typeof addReplyOnMessageSchema>;
+export type ReportMessageInput = TypeOf<typeof reportMessageSchema>;

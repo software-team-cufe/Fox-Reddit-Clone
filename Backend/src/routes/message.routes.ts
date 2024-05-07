@@ -19,6 +19,7 @@ import {
   getuserAllHandler,
   addReplyOnMessageHandler,
   allMessagesFRONTHandler,
+  reportMessageHandler,
 } from '../controller/message.controller';
 import {
   chatMessagesSchema,
@@ -27,6 +28,7 @@ import {
   mentionUserSchema,
   replyOnpostSchema,
   addReplyOnMessageSchema,
+  reportMessageSchema,
 } from '../schema/message.schema';
 
 const router = express.Router();
@@ -62,6 +64,8 @@ router.post('/api/addPosstreply', validateResource(replyOnpostSchema), addPostRe
 router.get('/api/get_post_replies', getuserPostreplisHandler);
 
 router.get('/api/get_all', getuserAllHandler);
+
+router.post('/api/report_msg', validateResource(reportMessageSchema), reportMessageHandler);
 
 router.post('/api/message/addReplyOnMessage', validateResource(addReplyOnMessageSchema), addReplyOnMessageHandler);
 
