@@ -31,9 +31,17 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
     _searchController.clear();
   }
 
-  Widget _buildPostsContainer() {
-    // Implement your widget for Posts here
-    return Container();
+  // Future<Void> _searchUser(){
+
+  // }
+
+  Widget SerachUser(){
+    return ListView.builder(
+      itemCount: 1,
+      itemBuilder: (BuildContext context, int index) {
+        return ;
+      },
+    );
   }
 
   @override
@@ -106,5 +114,5 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
         ],
       ),
     );
-  }
+  } 
 }

@@ -20,42 +20,31 @@ class ApiRoutesBackend {
       '$baseUrl/user/$username/about';
   static const String delPost = "$baseUrl/api/del";
   static const String postVote = "$baseUrl/api/postvote";
-
-  // //!temprorary
-  // static const String tempGetPosts =
-  //     'https://virtserver.swaggerhub.com/software_eng_fox/FoxAPI/1.0.0/best?page=2&count=2&limit=2';
-
+  static String myComment(String userName) => "$baseUrl/user/$userName/comments";
+  static const String follow= "$baseUrl/api/follow";
+  static const String unFollow= "$baseUrl/api/unfollow";
   static const String followersAccs = '$baseUrl/api/v1/me/followings';
   static const String unFolow = '$baseUrl/api/unfollow';
-
   static const String blockedAccs = '$baseUrl/api/v1/me/blocked';
   static const String block_unblock = '$baseUrl/api/block_user';
-
   static const String changeEmail = '$baseUrl/user/changeemail';
   static const String changePassword = '$baseUrl/user/changepassword';
-
   static String getUserByToken(String token) => '$baseUrl/api/v1/me';
   static String getUserById(String id) => '$baseUrl/user/$id';
-  static String getPostsByCreatorId(String id) =>
-      '$baseUrl/posts?creatorId=$id';
+  static String getPostsByCreatorId(String id) =>'$baseUrl/posts?creatorId=$id';
   static const String submitPost = '$baseUrl/api/submit';
-
   static const String viewedPost = '$baseUrl/api/view_post';
-
   static const String delelteUser = '$baseUrl/api/users/delete_user';
   static const String getCommunities = '$baseUrl/subreddits/mine/member';
   static const String sendinbox = '$baseUrl/message/compose/';
-  static const String getinbox =
-      '$baseUrl/message/getAllMessagesUsernamesAndSubjects/';
+  static const String getinbox ='$baseUrl/message/getAllMessagesUsernamesAndSubjects/';
   static const String seen = '$baseUrl/message/markReadMessage/';
-  static String getChat(String userName, String subject) =>
-      '$baseUrl/message/chatMessages/?senderUsername=$userName&subject=$subject';
-  static String getSaved(String userName) =>
-      '$baseUrl/api/user/$userName/savedPosts';
+  static String getChat(String userName, String subject) =>'$baseUrl/message/chatMessages/?senderUsername=$userName&subject=$subject';
+  static String getSaved(String userName) =>'$baseUrl/api/user/$userName/savedPosts';
   static const String emailPref = '$baseUrl/api/v1/me/prefs';
-  static const String notificationPref =
-      '$baseUrl/api/v1/me/notification/settings';
+  static const String notificationPref ='$baseUrl/api/v1/me/notification/settings';
   static const String notification = '$baseUrl/api/v1/me/notification';
+  static String getUserFollowings(String username) => '$baseUrl/api/v1/me/followings/$username';
 }
 
 class ApiRoutesMockserver {

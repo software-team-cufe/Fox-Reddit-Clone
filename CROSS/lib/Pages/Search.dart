@@ -36,7 +36,6 @@ class _SearchState extends State<Search> {
   Future<void> _fetchRecentlySearched() async {
     final response =
         await http.get(Uri.parse(ApiRoutesMockserver.getRecentSearch));
-        print("statuseCode:  $response.statusCode");
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
@@ -61,7 +60,19 @@ class _SearchState extends State<Search> {
   }
 
   void _clearSearch() {
-    _searchController.clear();
+    setState(() {
+      _searchController.clear();
+    });
+  }
+
+  void _handleSearch() {
+    // Perform search operation or navigate to search result page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => search1(searchItem: _searchController.text),
+      ),
+    );
   }
 
   @override
@@ -84,7 +95,7 @@ class _SearchState extends State<Search> {
                   filled: true,
                   fillColor: const Color.fromARGB(255, 50, 50, 50),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0), // Adjust border radius
+                    borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
                   prefixIcon: const Icon(Icons.search, color: Colors.white),
@@ -94,8 +105,8 @@ class _SearchState extends State<Search> {
                   ),
                 ),
                 style: const TextStyle(color: Colors.white),
-                onChanged: (value) {
-                  // Handle text field changes
+                onSubmitted: (value) {
+                  _handleSearch();
                 },
               ),
             ),
@@ -121,60 +132,19 @@ class _SearchState extends State<Search> {
             ListView.builder(
               shrinkWrap: true,
               itemCount: _recentlySearched.length,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, index) {
+                final term = _recentlySearched[index];
                 return ListTile(
                   title: Text(
-                    _recentlySearched[index],
+                    term,
                     style: TextStyle(color: Colors.white),
                   ),
-                  onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => search1(searchItem: _recentlySearched[index],)),
-                                  );
-                                },
-                );
-              },
-            ),
-            SizedBox(height: 16.0),
-            ListTile(
-              title: Text(
-                'Trending Today',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(height: 8.0),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: _trendingToday.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _trendingToday[index]['searchTerm'],
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      _trendingToday[index]['description'],
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    SizedBox(height: 16.0),
-                  ],
+                  // Add any other relevant UI components for each recently searched term
                 );
               },
             ),
           ],
         ),
-
       ),
     );
   }
