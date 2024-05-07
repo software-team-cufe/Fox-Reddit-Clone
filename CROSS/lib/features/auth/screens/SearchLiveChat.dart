@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:reddit_fox/features/auth/screens/liveChat.dart';
 
 class SearchLiveChat extends StatefulWidget {
   const SearchLiveChat({super.key});
@@ -15,8 +16,6 @@ class SearchLiveChat extends StatefulWidget {
 
 class _SearchLiveChatState extends State<SearchLiveChat> {
   String? accessToken;
-  late String? profilePic;
-  late String userName;
   late List<dynamic> users = [];
 
   @override
@@ -98,14 +97,16 @@ class _SearchLiveChatState extends State<SearchLiveChat> {
                     title: Text(users[index]['username']),
                     subtitle: Text('${users[index]['karma'].toString()} Karma'),
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ChatScreen(
-                      //       title: users[index]['username'],
-                      //     ),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => liveChat(
+                            userName: users[index]['username'],
+                            karma: users[index]['karma'],
+                            profilePic: users[index]['avatar'],
+                          ),
+                        ),
+                      );
                     },
                   );
                 },
