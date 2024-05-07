@@ -8,16 +8,18 @@
   import 'package:reddit_fox/Pages/EditProfile.dart';
   import 'package:reddit_fox/Pages/commentView.dart';
   import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardModern.dart';
+import 'package:reddit_fox/features/auth/screens/liveChat.dart';
   import 'package:reddit_fox/navbar.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
 
 
-void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList, String userName) {
+void checkIfFollowing(bool isFollowed, Iterable<dynamic> followingList, String userName) {
   try {
     print('Username to Check: $userName');
-    for (int i = 0; i < followingList.length; i++) {
-      if (userName == followingList[i]['username']) {
+    List<dynamic> followingListAsList = followingList.toList();
+    for (int i = 0; i < followingListAsList.length; i++) {
+      if (userName == followingListAsList[i]['username']) {
         isFollowed = true; // User is followed, so set isFollowed to true
         break; // Exit the loop since we found a match
       } else {
@@ -29,6 +31,7 @@ void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList,
     print('Error checking if $userName is followed: $error');
   }
 }
+
 
 
 
@@ -64,7 +67,7 @@ void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList,
     late int commentKarma = 0;
     String _selectedItem = 'hot';
     List<Map<String, dynamic>> userComments = []; // Define userComments here
-    List<Map<String, dynamic>> followingList = []; //
+    Iterable<dynamic> followingList = []; //
     late bool isFollowed = false;
 
     @override
@@ -275,10 +278,10 @@ void checkIfFollowing(bool isFollowed, List<Map<String, dynamic>> followingList,
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        final followingsData = responseData.asMap;
+        final followingsData = responseData;
         print("Followings Data: $followingsData");
         if (followingsData != null) {
-          followingList = List<Map<String, dynamic>>.from(followingsData);
+          followingList = (followingsData);
         } else {
           print("Invalid or missing followingsData: $followingsData");
         }
@@ -583,7 +586,12 @@ Widget _buildTitleView() {
                                     backgroundColor: Colors.transparent,
                                     radius: 50, // Increase the radius to increase the size of the CircleAvatar
                                     child: ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => liveChat(userName: userName!, karma: totalKarma,profilePic: profilePic!,)),
+                                        );
+                                      },
                                       style: ElevatedButton.styleFrom(
                                         shape: const CircleBorder(), // Make the ElevatedButton circular
                                       ),
