@@ -255,6 +255,7 @@ export default function FeedSettings() {
                                 See NSFW (Not Safe for Work) mature and adult images, videos, written content, and other media in your Reddit feeds and search results.
                             </p>
                         </div >
+                        <div role="NSFWtoggle">
                         <Switch id="NSFWtoggle" 
                             checked={showMatureContent}
                             onChange={() => {handleToggleInFeedMatureContent();}}
@@ -265,6 +266,7 @@ export default function FeedSettings() {
                                 className={`${showMatureContent ? 'translate-x-4' : 'translate-x-0'}
                                 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
                         </Switch>
+                        </div>
                     </div>
 
                     <div className={`${showMatureContent ? '' : 'opacity-50 cursor-not-allowed'} grid grid-columns-2 grid-flow-col mb-7 justify-between`} role="toggleButton">
@@ -277,6 +279,7 @@ export default function FeedSettings() {
                                 Blur previews and thumbnails for any images or videos tagged as NSFW (Not Safe for Work).
                             </p>
                         </div>
+                        <div role="toggleButtonForBlurring">
                         <Switch id="blurringtoggle" 
                             checked={blurMatureImg}
                             onChange={handleToggleInFeedBlurImage}
@@ -285,7 +288,8 @@ export default function FeedSettings() {
                             <span
                                 aria-hidden="true"
                                 className={`${blurMatureImg ? 'translate-x-4' : 'translate-x-0'} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}/>
-                        </Switch>                    
+                        </Switch>         
+                        </div>           
                     </div>
 
                     <div className="flex flex-row mb-7 justify-between">

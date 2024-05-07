@@ -67,17 +67,17 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
    }
 
    //check if user is moderator
-   const fetchUserData = async () => {
-      try {
-         const response = await userAxios.get(`/user/annas_alaa/about`);
-         const isModerator = response.data.isMod;
-         setIsModerators(response.data.isMod);
-         //console.log(response.data);
-         //console.log(isModerator);
-      } catch (error) {
-         console.error('Error fetching user info:', error);
-      }
-   }
+   // const fetchUserData = async () => {
+   //    try {
+   //       const response = await userAxios.get(`/user/annas_alaa/about`);
+   //       const isModerator = response.data.isMod;
+   //       setIsModerators(response.data.isMod);
+   //       //console.log(response.data);
+   //       //console.log(isModerator);
+   //    } catch (error) {
+   //       console.error('Error fetching user info:', error);
+   //    }
+   // }
 
    //get subreddits where user is moderator
    useEffect(() => {
@@ -227,7 +227,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                        href={`/r/${subreddit.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                        key={index}>
-                                       <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7" />
+                                       <img src={subreddit.icon} className="rounded-full w-7 my-auto h-7" />
 
                                        {subreddit.name}
 
@@ -312,7 +312,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                        href={`/r/${commun.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                        key={index}>
-                                       <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7" />
+                                       <img src={commun.icon} className="rounded-full w-7 my-auto h-7" />
                                        {commun.name}
                                     </a>
                                  ))
@@ -457,9 +457,6 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
                                  <span className=" px-2 py-2 text-gray-800">User agreement</span>
                               </a>
                            </li>
-
-                           <button onClick={fetchUserData} className="flex w-auto items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400">testing</button>
-
                         </ul>
                      </div>
                   </li>

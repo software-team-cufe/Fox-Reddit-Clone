@@ -10,34 +10,35 @@ export default function TopCommunities() {
 
     //connect to back
     useEffect(() => {const fetchData =async() => {
-            try {
-                    const response = await userAxios.get('/api/all_subreddits');
-                    const comms = response.data.communities;
-                    const newComms = comms.map(comm => ({
-                    name: comm.name,  
-                    _id: comm._id,
-                    count: comm.count,
-                    icon: comm.icon,
-                }));
+            
+        try {   
+            const response = await userAxios.get('/api/all_subreddits');
+            const comms = response.data.communities;
+            const newComms = comms.map(comm => ({
+            name: comm.name,  
+            _id: comm._id,
+            count: comm.count,
+            icon: comm.icon,
+            }));
 
-                // for (let i = 0; i < newComms.length; i++) {
-                //     if (newComms[i].icon && newComms[i].icon =="default-icon.jpg"){
-                //         newComms[i].icon = "https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png";
-                //     }
-                // }
+            // for (let i = 0; i < newComms.length; i++) {
+            //     if (newComms[i].icon && newComms[i].icon =="default-icon.jpg"){
+            //         newComms[i].icon = "https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png";
+            //     }
+            // }
 
-                setForShow(newComms);
-                console.log(forShow);
-                for(let i = 0; i < newComms.length; i++){
-                    if (newComms[i].name && newComms[i].name.length > 9) {
-                        newComms[i].name = newComms[i].name.slice(0, 9)+'..';
-                    }
+            setForShow(newComms);
+            console.log(forShow);
+            for(let i = 0; i < newComms.length; i++){
+                if (newComms[i].name && newComms[i].name.length > 9) {
+                    newComms[i].name = newComms[i].name.slice(0, 9)+'..';
                 }
-
-                setCommunities(newComms);
-            } catch (error) {
-                console.error('Error fetching communities:', error);
             }
+
+            setCommunities(newComms);
+        } catch (error) {
+            console.error('Error fetching communities:', error);
+        }
         };
         fetchData();
     }, []);
