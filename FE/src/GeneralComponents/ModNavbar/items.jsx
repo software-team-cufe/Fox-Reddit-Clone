@@ -6,7 +6,7 @@ export const modNavbarItems = [
         items: [
             {
                 name: "Queues",
-                link: "/mod",
+                link: "/spam",
                 icon: BookHeart ,
                 newTap: false,
             },

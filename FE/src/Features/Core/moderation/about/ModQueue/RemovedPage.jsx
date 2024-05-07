@@ -2,12 +2,14 @@ import React from 'react'
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useState } from 'react';
+import ModQueueRoutes from './ModQueueRoutes';
 const RemovedPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className='w-full flex flex-row'>
       <div className='w-2/4 mx-auto  ml-8'>
     <div className='text-xl font-semibold'>Queue</div>
+    <ModQueueRoutes></ModQueueRoutes>
     <div className='flex flex-row justify-between'>
     <div className=''>
    {/*first dropdown menu */}
