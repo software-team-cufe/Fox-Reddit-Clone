@@ -20,6 +20,8 @@ import ModSettingsPage from './moderation/about/Settings/ModSettingsPage';
 import EditPage from './moderation/about/EditPage/EditPage';
 import ModQueueRoutes from './moderation/about/ModQueue/ModQueueRoutes';
 import RemovedPage from './moderation/about/ModQueue/RemovedPage';
+import EditedPage from './moderation/about/ModQueue/EditedPage';
+import UnmoderatedPage from './moderation/about/ModQueue/UnmoderatedPage';
 function CommunityLayout() {
     return <div className='flex gap-3 w-full h-full'>
 
@@ -36,6 +38,8 @@ function CommunityLayout() {
                     <Route path='/settings' element={<ModSettingsPage />} />
                     <Route path='/spam' element={<RemovedPage />} />
                     <Route path='/mod/*' element={<ModQueueRoutes />} />
+                    <Route path='/edited' element={<EditedPage />} />
+                    <Route path='/unmoderated' element={<UnmoderatedPage />} />
                 </Routes>
             </div>
             } />
