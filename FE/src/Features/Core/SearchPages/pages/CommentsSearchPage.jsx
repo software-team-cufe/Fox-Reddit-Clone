@@ -8,11 +8,11 @@
  */
 import React, { useContext, useRef } from "react";
 import { useState, useEffect } from "react";
-import Spinner from "@/GeneralElements/Spinner/Spinner";
-import axios from 'axios';
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { SearchContext } from "../SearchPagesRoutes";
-
+import {userAxios} from "@/Utils/UserAxios";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 export default function COmmentsSearchPage({ searched = "filler" }) {
 
@@ -24,31 +24,30 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
   const [pagedone, setpagedone] = useState(false);
   const [currentpage, setcurrentpage] = useState(0);
   const limitpage = 5;
-
+  const userRedux = useSelector(state => state.user);
+  
   useEffect(() => {
     setLoading(true);
-    axios.get(`http://localhost:3002/comments?_limit=${limitpage}`)
+    if(userRedux == null){
+    userAxios.get(`/r/search/?q=${searched}&type=comment&page=1&limit=${limitpage}&sort=${selected}`)
       .then(response => {
-        let newComments = response.data.map(comment => ({
+        let newComments = response.data.commentsSearchResultNotAuth.map(comment => ({
           user: {
-            image: comment.user.avatar,
-            Username: comment.user.username,
-            id: comment.user.userID
+            image: comment.useravatar[0],
+            Username: comment.username[0],
+            id: comment.userId
           },
           info: {
-            votes: comment.votesCount,
-            time: comment.createdAt,
+            votes: comment.commentvotesCount,
+            time: comment.commentcreatedAt,
           },
           content: {
-            text: comment.commentText
+            text: comment.textHTML
           }
       }));
-
-        newComments = newComments.filter(comment => comment.content.text.toLowerCase().includes(searched));
         if (newComments.length < limitpage) {
           setpagedone(true);
         }
-        console.log(newComments);
         setComments(newComments);
         setLoading(false);
       })
@@ -56,6 +55,34 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
         console.error('Error:', error);
         setLoading(false);
       });
+    } else {
+      userAxios.get(`/r/search/?q=${searched}&type=comment&page=1&limit=${limitpage}&sort=${selected}`)
+      .then(response => {
+        let newComments = response.data.commentsSearchResultAuth.map(comment => ({
+          user: {
+            image: comment.useravatar[0],
+            Username: comment.username[0],
+            id: comment.userId
+          },
+          info: {
+            votes: comment.commentvotesCount,
+            time: comment.commentcreatedAt,
+          },
+          content: {
+            text: comment.textHTML
+          }
+      }));
+        if (newComments.length < limitpage) {
+          setpagedone(true);
+        }
+        setComments(newComments);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setLoading(false);
+      });
+    }
   }, [period, selected]);
 
   const fetchMoreComments = () => {
