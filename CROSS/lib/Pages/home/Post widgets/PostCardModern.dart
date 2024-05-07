@@ -133,10 +133,7 @@ class _ModernCardState extends State<ModernCard> {
                           radius: 18,
                           backgroundImage:
                               AssetImage('assets/images/avatar.png')),
-                      const CircleAvatar(
-                          radius: 18,
-                          backgroundImage:
-                              AssetImage('assets/images/avatar.png')),
+                
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
