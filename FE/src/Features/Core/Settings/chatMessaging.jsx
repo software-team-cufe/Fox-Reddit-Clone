@@ -18,15 +18,27 @@ export default function ChatMessaging() {
     let id = 3;
     const [markAllAsRead, setMarkAllAsRead] = useState(false);
 
-    const handleReadAll = async () => {
-        try{axios.patch(`http://localhost:3002/users/${id}`, { 
-            markAllAsRead: true,
-        })
-        }catch(error){
-            console.error(error);
+    //connecting to mock
+    // const handleReadAll = async () => {
+    //     try{axios.patch(`http://localhost:3002/users/${id}`, { 
+    //         markAllAsRead: true,
+    //     })
+    //     }catch(error){
+    //         console.error(error);
+    //     }
+    //     //setMarkAllAsRead(true);
+    //    toast.success('All messages marked as read');
+    // }
+
+        const handleUnReadmessages = async () => {
+            try {
+               const response = await userAxios.post(`message/markReadAllMessages/`, { markAllAsRead: true });
+               toast.success('All messages marked as read');
+            } catch (error) {
+               console.error('Error fetching user info:', error);
+            }
+
         }
-        //setMarkAllAsRead(true);
-    }
 
     return (
         <div className="w-[75%]">
@@ -39,7 +51,7 @@ export default function ChatMessaging() {
                     <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
                         className="text-black dark:text-blue-500 w-auto focus:ring-blue-300 font-medium border-solid border-2 border-sky-500 rounded-lg text-sm px-5 py-2.5 text-center 
                         inline-flex gap-5 items-center bg-transparent dark:bg-transparent dark:hover:bg-blue-200 dark:focus:ring-blue-800 rounded-3xl" type="button"
-                        role="markButton" onClick={handleReadAll}>
+                        role="markButton" onClick={handleUnReadmessages}>
                         Mark as Read
                     </button>
                 </div>

@@ -19,8 +19,8 @@ export default function Card (){
       try {
         const response = await userAxios.get(`/subreddits/mine/creator`);
         console.log("creator");
-        console.log(response.data.communities);
-        setCommunities(response.data.communities);
+        console.log(response.data.communities.map(comm => ({ name: comm.name, memberCount: comm.memberCount, icon: comm.icon })));
+        setCommunities(response.data.communities.map(comm => ({ name: comm.name, memberCount: comm.memberCount, icon: comm.icon })));
       } catch (error) {
         console.log(error);
       }
@@ -365,29 +365,24 @@ export default function Card (){
         </div> 
         <div className='flex flex-col hover:bg-gray-100 h-12'>
         {communities.map((community, index) => (
-        <a key={index} href={`/r/${community}`} className='flex flex-row w-full justify-between hover:bg-gray-100'>
-            <div className='flex flex-row space-x-3 ml-6 my-3'>
-                <svg className="text-blue-600 w-7 h-7"
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <div className='flex flex-col'>
-                    <div className='flex flex-row'>
+            <a key={index} href={`/r/${community.name}`} className='flex flex-row w-full justify-between hover:bg-gray-100'>
+                <div className='flex flex-row space-x-3 ml-6 my-3'>
+                    <img src={community.icon} alt={community.name} className="w-7 h-7" />
+                    <div className='flex flex-col'>
                         <div className='flex flex-row'>
-                            <span className='text-xs'>r/</span>
-                            <span>{community}</span>
+                            <div className='flex flex-row'>
+                                <span className='text-xs'>r/{community.name}</span>
+                            </div>
                         </div>
+                        <span className='text-xs text-gray-400'>{community.memberCount} members</span>
                     </div>
-                    <span className='text-xs text-gray-400'>10K members</span>
                 </div>
-            </div>
-            <div>
-                <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[55px] h-7 px-2 text-black text-xs font-semibold'>Joined</button>
-            </div>
-        </a>
-    ))}
-</div>
+                <div>
+                    <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[55px] h-7 px-2 text-black text-xs font-semibold'>Joined</button>
+                </div>
+            </a>
+        ))}
+    </div>
 
      </div>
     )

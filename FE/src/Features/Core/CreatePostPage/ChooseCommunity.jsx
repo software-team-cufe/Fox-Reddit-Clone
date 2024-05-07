@@ -6,35 +6,15 @@ import { userStore } from '../../../hooks/UserRedux/UserStore';
 const Dropdown = (props) => {
     const store = userStore.getState().user.user;
     const Profile = [{ name: store.username, icon: store.avatar }]
-
-    const OtherCommunities = [{ name: "r / com3", icon: "DumPhoto3.jpg", membersCount: "123", id: "125654" },
-    {
-        name: "r / com4", icon: "DumPhoto4.jpg", membersCount: "1235", rules: [
-            "Be respectful to other members.",
-            "No spamming or self-promotion.",
-            "Keep discussions relevant to League of Legends.",
-            "No hate speech or harassment of any kind.",
-            "Follow Reddit's content policy."
-        ],
-        id: "1256254"
-    }];
     // { name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12", id: "1254" },
     // { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125", id: "12562" }
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const dropdownRef = useRef(null);
     const [ShowCreateCom, setShowCreateCom] = useState(false);
-    const [YourCommunities, setYourCommunities] = useState([{ name: "r / com3", icon: "DumPhoto3.jpg", membersCount: "123", id: "125654" },
-    {
-        name: "r / com4", icon: "DumPhoto4.jpg", membersCount: "1235", rules: [
-            "Be respectful to other members.",
-            "No spamming or self-promotion.",
-            "Keep discussions relevant to League of Legends.",
-            "No hate speech or harassment of any kind.",
-            "Follow Reddit's content policy."
-        ],
-        id: "1256254"
-    }]);
+    const [YourCommunities, setYourCommunities] = useState([]);
+    const [OtherCommunities, setOtherCommunities] = useState([])
+
     useEffect(() => {
         fetchMyComs();
         const handleClickOutside = (event) => {
@@ -49,10 +29,29 @@ const Dropdown = (props) => {
         }
     }, [])
 
+    useEffect(() => {
+        fetchOtherComs();
+    }, [searchTerm])
+
+
+
     const fetchMyComs = async () => {
-        const res = await userAxios.get('/subreddits/mine/member')
-        setYourCommunities(res.data.communities);
-        console.log(res.data.communities);
+        try {
+            const res = await userAxios.get('/subreddits/mine/member')
+            setYourCommunities(res.data.communities);
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const fetchOtherComs = async () => {
+        try {
+            const res = await userAxios.get(`r/search/?q=${searchTerm}&type=sr&page=1&limit=5`)
+            setOtherCommunities(res.data.communitySearchResultAuth);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleCreateNewCom = () => {
@@ -84,7 +83,7 @@ const Dropdown = (props) => {
                 </button>
                 {isOpen && (
                     <div className="absolute w-full z-10  mt-2 rounded-md shadow-lg bg-white ring-1 ring-black
-                     ring-opacity-5 p-1 space-y-1 h-[300px] overflow-auto">
+                     ring-opacity-5 p-1 space-y-1 max-h-[300px] h-max overflow-auto">
                         <input
                             className="block w-full px-4 py-2 text-gray-800 border rounded-md border-gray-300 focus:outline-none"
                             type="text"
@@ -136,9 +135,13 @@ const Dropdown = (props) => {
                                 <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
                                 <div>
                                     <p className='mx-2 '>{item.name}</p>
-                                    <p className='text-xs   mx-2  text-gray-500'>{item.membersCount} members </p>
+                                    <p className='text-xs   mx-2  text-gray-500'>{item.membersCnt} members </p>
                                 </div></button>
                         ))}
+                        {filteredOtherCom.length === 0 && filteredYourCom.length === 0
+                            && filteredProfile.length === 0 &&
+                            <div className=' border p-1 px-6 w-full rounded'>No communities found</div>
+                        }
                     </div>
                 )}
             </div>

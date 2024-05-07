@@ -47,21 +47,25 @@ const ModCard = () => {
          getNumofMembers();
     }, [community]); 
 
-    useEffect(() => {  
+    useEffect(() => {
       const getModerators = async () => {
-      try {
-        const response = await userAxios.get(`/${community}/about/moderators`);
-        console.log("moderators");
-        console.log(response.data.Moderators.users);
-        setModerators(response.data.Moderators.users.map(user => user.username) ?? []);
-      
-      
-      } catch (error) {
-        console.log(error);
-      } 
-    };
-    getModerators();}
-    , [community])
+        try {
+          const response = await userAxios.get(`/${community}/about/moderators`);
+          console.log("moderators");
+          console.log(response.data.Moderators.users);
+          const moderatorsData = response.data.Moderators.users.map(user => ({
+            name: user.username,
+            avatar: user.avatar || 'default.jpg',
+          }));
+    
+          setModerators(moderatorsData);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    
+      getModerators();
+    }, [community]);
   
 
 
@@ -168,21 +172,21 @@ const ModCard = () => {
            <div className='flex flex-col my-6'>
            {moderators.map((moderator, index) => (
              <div key={index} className='flex flex-row'>
-               <svg className="text-orange-400 w-7 h-7 self-center" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                 <path stroke="none" d="M0 0h24v24H0z"/>
-                 <path d="M21 14l-9 7-9-7L6 3l3 7h6l3-7z" />
-               </svg>
-               <button 
+               <img
+                 className="w-7 h-7 self-center rounded-full mr-2"
+                 src={`/${community}/avatars/${moderator.avatar}`}
+                 alt={moderator.name}
+               />
+               <button
                  className='text-sm ml-2 hover:underline flex flex-row self-center'
-                 onClick={() => navigate(moderatorName === moderator ? `/user/${moderator}` : `/viewer/${moderator}`)} 
+                 onClick={() => navigate(moderatorName === moderator.name ? `/user/${moderator.name}` : `/viewer/${moderator.name}`)}
                >
                  <p>u/</p>
-                 <p>{moderator}</p>
+                 <p>{moderator.name}</p>
                </button>
              </div>
            ))}
          </div>
-
            <button onClick={handleNavigate} className=" text-xs bg-gray-200 rounded-3xl text-gray-700 font-semibold h-[35px] flex items-center justify-center hover:bg-gray-300 hover:underline">
                  <svg className="w-5 h-5 self-center "
                   xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round">
