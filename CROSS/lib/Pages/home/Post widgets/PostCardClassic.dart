@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/pollWidget.dart';
 import 'package:reddit_fox/Pages/post_details.dart';
+import 'package:video_player/video_player.dart';
 
 /// A stateful widget that represents a post card in the home page.
 class ClassicCard extends StatefulWidget {
@@ -28,6 +29,20 @@ class _ClassicCardState extends State<ClassicCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> attachments = widget.post['attachments']
+        .cast<String>(); // Assuming attachments are strings
+
+    String? firstImage;
+    String? firstVideo;
+    for (String attachment in attachments) {
+      if (attachment.endsWith('.jpg') || attachment.endsWith('.png')) {
+        firstImage = attachment;
+        break;
+      } else if (attachment.endsWith('.mp4')) {
+        firstVideo = attachment;
+        break;
+      }
+    }
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -62,10 +77,11 @@ class _ClassicCardState extends State<ClassicCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.post['title'] ?? "error in fetching post title",
+                  widget.post['title'] ?? "no title",
                   style: const TextStyle(fontSize: 16),
                 ),
-                if (widget.post['picture'] == null)
+                if ((firstImage != null && firstImage != 'file:///attachment1.jpg') ||
+            (firstVideo != null && firstVideo != 'file:///attachment1.mp4'))
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0),
                     child: Container(
@@ -74,7 +90,7 @@ class _ClassicCardState extends State<ClassicCard> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        widget.post['text'] ?? "error in fetching post text",
+                        widget.post['text'] ?? "",
                         style: TextStyle(
                           fontSize: 16,
                           color: isBlurred ? Colors.transparent : Colors.white,
@@ -84,13 +100,13 @@ class _ClassicCardState extends State<ClassicCard> {
                   ),
               ],
             ),
-            trailing: widget.post['picture'] != null
+            trailing: firstImage != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Stack(
                       children: [
                         Image.network(
-                          'https://drive.google.com/uc?export=download&id=1SrenDt5OMbDbH12eJKTO8avyoCq3P_15',
+                          firstImage,
                           width: 100,
                           height: 250,
                           fit: BoxFit.cover,

@@ -28,6 +28,7 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
 
   @override
   Widget build(BuildContext context) {
+    
     List<String> attachments = widget.post['attachments']
         .cast<String>(); // Assuming attachments are strings
 
@@ -86,7 +87,8 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
           ],
         ),
         const SizedBox(height: 8),
-      if (firstImage != null && firstImage != 'file:///attachment1.jpg')
+        if ((firstImage != null && firstImage != 'file:///attachment1.jpg') ||
+            (firstVideo != null && firstVideo != 'file:///attachment1.mp4'))
           //Wrap GestureDetector around ClipRRect
           GestureDetector(
             onTap: () {
@@ -116,17 +118,21 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
                 alignment: Alignment.center,
                 children: [
                   // Image without blur effect
-                  if (firstImage != null) Image.network(firstImage,
-                    // widget.post['picture']!,
-                    width: double.infinity,
-                    height: 400,
-                    fit: BoxFit.cover,
-                    color: isBlurred
-                        ? const Color.fromARGB(0, 158, 158, 158)
-                        : null,
-                    colorBlendMode:
-                        isBlurred ? BlendMode.saturation : BlendMode.dst,
-                  ),
+                  if (firstImage != null)
+                    Image.network(
+                      firstImage,
+                      width: double.infinity,
+                      height: 400,
+                      fit: BoxFit.cover,
+                      color: isBlurred
+                          ? const Color.fromARGB(0, 158, 158, 158)
+                          : null,
+                      colorBlendMode:
+                          isBlurred ? BlendMode.saturation : BlendMode.dst,
+                    )
+                  // Video without blur effect
+                  else if (firstVideo != null)
+                    VideoPlayerWidget(videoUrl: firstVideo),
                   if (isBlurred)
                     // Blur effect with BackdropFilter
                     BackdropFilter(
@@ -199,5 +205,43 @@ class _cardCoreWidgetState extends State<cardCoreWidget> {
         //         onOptionSelected: (String) {}), // Render the poll widget if true
       ],
     );
+  }
+}
+
+class VideoPlayerWidget extends StatefulWidget {
+  final String videoUrl;
+
+  VideoPlayerWidget({required this.videoUrl});
+
+  @override
+  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
+}
+
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _controller.value.isInitialized
+        ? AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          )
+        : CircularProgressIndicator();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 }
