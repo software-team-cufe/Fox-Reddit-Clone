@@ -163,6 +163,34 @@
         "managePosts": false,
         "manageWikiPages": false
       }
+    },
+    {
+      "id": "479f",
+      "communityName": "test2",
+      "username": "vdgfdhg",
+      "rules": {
+        "manageUsers": true,
+        "createLiveChat": true,
+        "manageSettings": true,
+        "manageFlair": true,
+        "manageModMail": false,
+        "managePosts": false,
+        "manageWikiPages": false
+      }
+    },
+    {
+      "id": "726f",
+      "communityName": "test2",
+      "username": "vdgfdhg",
+      "rules": {
+        "manageUsers": true,
+        "createLiveChat": true,
+        "manageSettings": true,
+        "manageFlair": true,
+        "manageModMail": false,
+        "managePosts": false,
+        "manageWikiPages": false
+      }
     }
   ],
   "users": [
