@@ -12,13 +12,17 @@ class ApiRoutesBackend {
           {String category = 'new', int page = 1, int limit = 15}) =>
       '$baseUrl/user-home?page=$page&$limit=15&sort=$category';
 
+  static const String viewedPost = '$baseUrl/api/view_post';
+  static const String getHistroyPosts = '$baseUrl/user/h/history_post';
+
   static String getUserAbout(String username) =>
       '$baseUrl/user/$username/about';
   static const String delPost = "$baseUrl/api/del";
   static const String postVote = "$baseUrl/api/postvote";
-  static String myComment(String userName) => "$baseUrl/user/$userName/comments";
-  static const String follow= "$baseUrl/api/follow";
-  static const String unFollow= "$baseUrl/api/unfollow";
+  static String myComment(String userName) =>
+      "$baseUrl/user/$userName/comments";
+  static const String follow = "$baseUrl/api/follow";
+  static const String unFollow = "$baseUrl/api/unfollow";
   static const String followersAccs = '$baseUrl/api/v1/me/followings';
   static const String unFolow = '$baseUrl/api/unfollow';
   static const String blockedAccs = '$baseUrl/api/v1/me/blocked';
@@ -27,24 +31,29 @@ class ApiRoutesBackend {
   static const String changePassword = '$baseUrl/user/changepassword';
   static String getUserByToken(String token) => '$baseUrl/api/v1/me';
   static String getUserById(String id) => '$baseUrl/user/$id';
-  static String getPostsByCreatorId(String id) =>'$baseUrl/posts?creatorId=$id';
+  static String getPostsByCreatorId(String id) =>
+      '$baseUrl/posts?creatorId=$id';
   static const String submitPost = '$baseUrl/api/submit';
-  static const String viewedPost = '$baseUrl/api/view_post';
   static const String delelteUser = '$baseUrl/api/users/delete_user';
   static const String getCommunities = '$baseUrl/subreddits/mine/member';
   static const String sendinbox = '$baseUrl/message/compose/';
-  static const String getinbox ='$baseUrl/message/getAllMessagesUsernamesAndSubjects/';
+  static const String getinbox =
+      '$baseUrl/message/getAllMessagesUsernamesAndSubjects/';
   static const String seen = '$baseUrl/message/markReadMessage/';
-  static String getChat(String userName, String subject) =>'$baseUrl/message/chatMessages/?senderUsername=$userName&subject=$subject';
-  static String getSaved(String userName) =>'$baseUrl/api/user/$userName/savedPosts';
+  static String getChat(String userName, String subject) =>
+      '$baseUrl/message/chatMessages/?senderUsername=$userName&subject=$subject';
+  static String getSaved(String userName) =>
+      '$baseUrl/api/user/$userName/savedPosts';
   static const String emailPref = '$baseUrl/api/v1/me/prefs';
-  static const String notificationPref ='$baseUrl/api/v1/me/notification/settings';
+  static const String notificationPref =
+      '$baseUrl/api/v1/me/notification/settings';
   static const String notification = '$baseUrl/api/v1/me/notification';
-  static String getUserFollowings(String username) => '$baseUrl/api/v1/me/followings/$username';
+  static String getUserFollowings(String username) =>
+      '$baseUrl/api/v1/me/followings/$username';
   static const String Search = '$baseUrl/r/search';
 
-  static String getUserForChat(String userName) =>'$baseUrl/r/search/?q=$userName&type=user';
-
+  static String getUserForChat(String userName) =>
+      '$baseUrl/r/search/?q=$userName&type=user';
 }
 
 class ApiRoutesMockserver {
