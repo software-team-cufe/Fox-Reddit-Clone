@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:reddit_fox/core/constants/constants.dart';
+import 'package:reddit_fox/core/failure.dart';
 import 'package:reddit_fox/core/providers/storage_repository_provider.dart';
 import 'package:reddit_fox/core/utils.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
@@ -32,7 +34,7 @@ final communityControllerProvider =
 });
 
 /// Provider that fetches a community by its name.
-final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
+final getCommunityByNameProvider = FutureProvider.family((ref, String name) {
   return ref.watch(communityControllerProvider.notifier).getCommunityByName(name);
 });
 
@@ -58,108 +60,120 @@ class CommunityController extends StateNotifier<bool> {
         super(false);
 
   /// Create a new community.
-void createCommunity(String name, BuildContext context) async {
-  state = true;
-  final prefs = await SharedPreferences.getInstance();
-  final access_token = prefs.getString('backtoken') ?? '';
-  final uid = _ref.read(userProvider)?.uid ?? '';
-  Community community = Community(
-    id: name,
-    name: name,
-    banner: Constants.bannerDefault,
-    avatar: Constants.avatarDefault,
-    members: [uid],
-    mods: [uid],
-  );
-
-  // Create the HTTP client.
-  var client = http.Client();
-
-  try {
-    // Send the POST request.
-    var response = await client.post(
-      Uri.parse('http://localhost:3000/create_subreddit'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $access_token',  // Replace with your token.
-      },
-      body: jsonEncode(<String, String>{
-        'name': community.name,
-        'type': 'Public',  // Replace with actual type.
-        'over18': 'false',  // Replace with actual value.
-      }),
+  Future<Either<Failure, String>> createCommunity(String name, BuildContext context) async {
+    state = true;
+    final uid = _ref.read(userProvider)?.uid ?? '';
+    Community community = Community(
+      name: name,
+      avatar: Constants.avatarDefault,
+      memberCount: 1, // Default member count
+      // Other properties remain unchanged
     );
 
-    // Handle the response.
-    if (response.statusCode == 200) {
-      // If the server returns a 200 OK response, parse the JSON.
-      var data = jsonDecode(response.body);
-      // Use the data as needed.
-      showSnackBar(context, 'Community created successfully!');
-      Navigator.pop(context);
-    } else {
-      // If the server did not return a 200 OK response, throw an exception.
-      throw Exception('Failed to create community.');
+    try {
+      // Use the community repository to create the community
+      final result = await _communityRepository.createCommunity(community);
+      result.fold(
+        (failure) {
+          // Handle failure
+          showSnackBar(context, failure.message);
+        },
+        (message) {
+          // Handle success
+          showSnackBar(context, message);
+          Navigator.pop(context);
+        },
+      );
+      return result;
+    } finally {
+      state = false;
     }
-  } finally {
-    client.close();
   }
-
-  state = false;
-}
 
 
   /// Stream of the user's communities.
-  Future<List<String>> getUserCommunities() async {
-    final uid = _ref.read(userProvider)!.uid;
-    List<String> communityNames = await
-     _communityRepository.getUserCommunities(uid);
-     return communityNames;
+Future<List<Community>> getUserCommunities() async {
+  // Get the user ID from the user provider
+  final uid = _ref.read(userProvider)?.uid ?? '';
+  
+  try {
+    // Call the repository method to fetch user communities
+    return await _communityRepository.getUserCommunities(uid);
+  } catch (e) {
+    // Handle any exceptions.
+    throw Exception('Failed to get user communities: $e');
   }
+}
 
   /// Fetch a community by its name.
-  Stream<Community> getCommunityByName(String name) {
-    return _communityRepository.getCommunityByName(name);
+  Future<Either<Failure, Community>> getCommunityByName(String name) async {
+  try {
+    final community = await _communityRepository.getCommunityByName(name);
+    return Right(community as Community);
+  } catch (e) {
+    return Left(Failure('Failed to get community by name: $e'));
+  }
   }
 
-  /// Edit a community.
-  void editCommunity({
-    required File? profileFile,
-    required File? bannerFile,
-    required BuildContext context,
-    required Community community,
-  }) async {
-    state = true;
-    if (profileFile != null) {
-      final res = await _storageRepository.storeFile(
-        path: 'communities/profile',
-        id: community.name,
-        file: profileFile,
-      );
-      res.fold(
-        (l) => showSnackBar(context, l.message),
-        (r) => community = community.copyWith(avatar: r),
-      );
-    }
+/// Edit a community.
+Future<void> editCommunity({
+  required File? profileFile,
+  required File? bannerFile,
+  required BuildContext context,
+  required Either<Failure, Community> communityResult,
+}) async {
+  state = true;
+  
+  communityResult.fold(
+    (failure) {
+      // Handle failure case
+      showSnackBar(context, failure.message);
+      state = false; // Reset state
+    },
+    (community) async {
+      // Handle success case
+      Community updatedCommunity = community; // Initialize with the original community
 
-    if (bannerFile != null) {
-      final res = await _storageRepository.storeFile(
-        path: 'communities/banner',
-        id: community.name,
-        file: bannerFile,
-      );
-      res.fold(
-        (l) => showSnackBar(context, l.message),
-        (r) => community = community.copyWith(banner: r),
-      );
-    }
-    final res = await _communityRepository.editCommunity(community);
-    state = false;
-    res.fold(
-      (l) => showSnackBar(context, l.message),
-      (r) => Navigator.pop(context),
-    );
-  }
+      try {
+        if (profileFile != null) {
+          final profileRes = await _storageRepository.storeFile(
+            path: 'communities/profile',
+            id: community.name,
+            file: profileFile,
+          );
+          profileRes.fold(
+            (l) => showSnackBar(context, l.message),
+            (r) => updatedCommunity = updatedCommunity.copyWith(avatar: r),
+          );
+        }
+
+        if (bannerFile != null) {
+          final bannerRes = await _storageRepository.storeFile(
+            path: 'communities/banner',
+            id: community.name,
+            file: bannerFile,
+          );
+          bannerRes.fold(
+            (l) => showSnackBar(context, l.message),
+            (r) => updatedCommunity = updatedCommunity.copyWith(banner: r),
+          );
+        }
+
+        // Perform the edit operation using the updated community
+        final res = await _communityRepository.editCommunity(updatedCommunity);
+        res.fold(
+          (l) => showSnackBar(context, l.message),
+          (r) => Navigator.pop(context),
+        );
+      } finally {
+        state = false;
+      }
+    },
+  );
+}
+
+
+
 
   /// Search for communities based on a query.
   Stream<List<Community>> searchCommunity(String query) {
