@@ -18,6 +18,7 @@ class ApiRoutesBackend {
   static String getUserAbout(String username) =>
       '$baseUrl/user/$username/about';
   static const String delPost = "$baseUrl/api/del";
+  static const String saveItem = "$baseUrl/api/save";
   static const String postVote = "$baseUrl/api/postvote";
   static String myComment(String userName) =>
       "$baseUrl/user/$userName/comments";

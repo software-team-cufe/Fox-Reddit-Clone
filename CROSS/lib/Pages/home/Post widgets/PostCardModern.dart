@@ -77,6 +77,23 @@ class _ModernCardState extends State<ModernCard> {
       print("Post not deleted");
     }
   }
+  Future<void> saveItem(String postId) async {
+    final response = await http.post(
+      Uri.parse(ApiRoutesBackend.saveItem),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${widget.access_token}'
+      },
+      body: json.encode({'linkID': "t3_$postId"}),
+    );
+    print("response status code: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("Item saved");
+    } else {
+      print("Item not saved");
+    }
+  }
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -101,18 +118,18 @@ class _ModernCardState extends State<ModernCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (widget.post["communityName"] != null &&
-                        (widget.post["communityIcon"] != null && widget.post["communityIcon"] != 'default-icon.jpg'))
-                       CircleAvatar(
+                        (widget.post["communityIcon"] != null &&
+                            widget.post["communityIcon"] != 'default-icon.jpg'))
+                      CircleAvatar(
                         radius: 18,
                         backgroundImage:
-                            // AssetImage(widget.post["communityIcon"]),
-                            AssetImage('assets/images/avatar.png'),
+                            NetworkImage(widget.post["communityIcon"]),
                       )
                     else
-                       const CircleAvatar(
-                        radius: 18,
-                        backgroundImage:
-                            AssetImage('assets/images/avatar.png')),
+                      const CircleAvatar(
+                          radius: 18,
+                          backgroundImage:
+                              AssetImage('assets/images/avatar.png')),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +252,9 @@ class _ModernCardState extends State<ModernCard> {
                                                                 if (_formKey
                                                                     .currentState!
                                                                     .validate()) {
-                                                                  // Save the text (implement your logic here)
+                                                                  saveItem(widget
+                                                                          .post[
+                                                                      "_id"]);
                                                                   Navigator.pop(
                                                                       context); // Close bottom sheet after save
                                                                 }
