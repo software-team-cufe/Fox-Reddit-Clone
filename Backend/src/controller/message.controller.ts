@@ -642,11 +642,11 @@ export async function mentionUserHandler(req: Request, res: Response) {
  */
 export async function getPostAndCommentUserMentionedHandler(req: Request, res: Response) {
   try {
-    const user = await UserModel.findOne({ username: req.body.mentionedUsername });
+    const user = await UserModel.findOne({ username: res.locals.user.username as string });
     if (!user) {
       return res.status(400).json({
         status: 'failed',
-        message: 'User not found',
+        message: 'Access token is missing or invalid',
       });
     }
     const mentionedPosts = [];
