@@ -53,7 +53,7 @@ export default function RemovalPage() {
         <div>
             {ShowForm && <RemovalForm onClose={setShowForm} index={Number} list={Removal} setlist={setRemoval} editing={Editing} removal={Removal[Number]}/>}
             <div className="flex justify-end mb-4 gap-3 mr-2">
-                <button className="p-2 px-4 font-bold text-sm rounded-full hover:bg-blue-500 bg-blue-600 text-white" onClick={()=>{setShowForm(true); setEditing(false);}}>Add removal reason</button>
+                <button id="addRemovalButton" className="p-2 px-4 font-bold text-sm rounded-full hover:bg-blue-500 bg-blue-600 text-white" onClick={()=>{setShowForm(true); setEditing(false);}}>Add removal reason</button>
             </div>
             {Removal.length == 0 ?
             (
@@ -71,7 +71,7 @@ export default function RemovalPage() {
                                         <p className="font-medium">{index+1}</p>
                                         <p>{rule.title}</p>
                                     </div>
-                                    <p onClick={() => {setNumber(index); setShowForm(true); setEditing(true);} } className="text-blue-600 hover:text-blue-500 mr-2 font-semibold cursor-pointer">Edit</p>
+                                    <p id={`editRemoval${index}`} onClick={() => {setNumber(index); setShowForm(true); setEditing(true);} } className="text-blue-600 hover:text-blue-500 mr-2 font-semibold cursor-pointer">Edit</p>
                                 </div>
                             </div>
                         </div>
