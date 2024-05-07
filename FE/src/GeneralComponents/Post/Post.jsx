@@ -28,7 +28,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
     // const images = [post.thumbnail, ...post.images];
     const [postObj, setPost] = useState(post);
     const [votes, setVotes] = useState(post.votes);
-    console.log({ post });
+
     const vote = async (upvote) => {
         const id = toast.loading('Please wait');
         try {

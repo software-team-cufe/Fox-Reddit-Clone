@@ -3,8 +3,16 @@ import SendMessageBar from './Components/SendMessageBar'
 import SideBar from './Components/SideBar'
 import Header from './Components/Header'
 import Message from './Components/Message'
+import { firebaseApp } from '../../../Utils/firebase'
+
+async function getChats() {
+    const chat = await firebaseApp.collection('chat');
+    
+}
 
 export default function ChatPage() {
+    '/r/search/?q=$userName&type=user';
+
     return (
         <div className="flex flex-row h-screen antialiased text-gray-800">
             <SideBar />
