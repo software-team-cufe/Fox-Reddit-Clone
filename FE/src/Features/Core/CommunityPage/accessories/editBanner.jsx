@@ -72,6 +72,7 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
 
     const submitImage = async () => {
         setSubmittingReq(true);
+        toast.info('Uploading image...', { position: 'top-center' });
         let reqType = "";
         if (OptionHeader == "Avatar") {
             reqType = 'upload_sr_icon';
@@ -87,7 +88,6 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
             try {
                 await userAxios.post(`${community}/api/${reqType}`, { image: base64Image })
                     .then(() => {
-                        toast.success("Image uploaded successfully, please wait while page loads", { position: 'top-center' });
                         onClose(false);
                         window.location.reload();
                     })
