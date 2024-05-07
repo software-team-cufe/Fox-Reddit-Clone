@@ -5,6 +5,7 @@ import SecondSection from './Components/SecondSection';
 import { userAxios } from '../../../../../Utils/UserAxios';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
+import { toast } from 'react-toastify';
 
 const schema = {
     "membersWithGuidelines": false,
@@ -31,8 +32,14 @@ export default function ModSettingsPage() {
             obj[x] = data[x] == 'on' ? true : data[x] == null ? false : data[x];
             // obj[x] = data[x] == 'on' ? true : data[x];
         }
+        const id = toast.loading("Please wait");
         console.log(obj);
-        const res = await userAxios.patch(`/${params.community}/api/edit_content_controls`, obj);
+        try {
+            const res = await userAxios.patch(`/${params.community}/api/edit_content_controls`, obj);
+            toast.success("Changes Saved")
+        } catch (ex) {}
+        
+        toast.dismiss(id);
     };
     const handelChange = () => {
         const data = Object.fromEntries(new FormData(document.getElementById("frm-data")).entries());

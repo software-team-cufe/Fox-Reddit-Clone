@@ -24,7 +24,10 @@ userAxios.interceptors.response.use(response => {
     if (response.data.refreshToken != null) {
         localStorage.setItem('refreshToken', response.data.refreshToken);
     }
-    
+    if(response?.data?.status == 'succeeded'){
+        toast.success(response?.data?.status);
+        return response;
+    }
     if (response != null && response.data.msg != null) {
         toast(response.data.msg);
         return response;
@@ -33,6 +36,10 @@ userAxios.interceptors.response.use(response => {
     return response;
 },
     error => {
+        if (error?.response?.data?.error != null) {
+            toast.error(error?.response?.data?.error);
+            return Promise.reject(error);
+        }
         const err = extractAxiosError(error);
         if (err != null) {
             toast.error(err);

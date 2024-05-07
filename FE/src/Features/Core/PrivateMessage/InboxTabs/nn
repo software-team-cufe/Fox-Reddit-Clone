@@ -1,0 +1,64 @@
+{AllMess.Replies.map((rep, j) => {
+                return (
+                    <div key={j} className={`p-4 rounded sm:w-2/3 w-full  mb-1
+                    ${mess.unread ? "bg-gray-300" : ""}
+                    ${i % 2 === 0 && !mess.unread ? "bg-white" : "bg-[#fff6f1]"}
+                    `}>
+                        <div className='flex'>
+                           
+                        </div>
+                        <div className='flex mr-2 ml-14 mb-2'>
+                            <div className='mr-2 w-full '>
+                                <div className='flex mb-2'>
+                                    {rep.fromID._id === currentId && <>
+                                        <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                            to</p>
+                                        <p className='text-sm mr-2  text-blue-600
+                                        hover:cursor-pointer hover:underline'>
+                                            {rep.toID.username}</p></>}
+                                    {!(rep.fromID._id === currentId) && <>
+                                        <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                            from</p>
+                                        <p className='text-sm mr-2  text-blue-600
+                                        hover:cursor-pointer hover:underline'>
+                                            {rep.fromID.username}</p></>}
+                                    <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                        {DiffTime(rep.createdAt)}</p>
+                                </div>
+                                 <div id="hidden in collapse">
+                                    <div className='mb-2  text-sm'
+                                        dangerouslySetInnerHTML={{ __html: rep.text }}></div>
+                                    {!(rep.fromID._id === currentId) && <>
+                                        <div className='flex flex-wrap text-gray-500'>
+                                            <p onClick={() => { setReportPop(true); setUserToReport(rep.username); }}
+                                                className='mx-2 m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>Report</p>
+                                            {!SureToBlock && <p onClick={() => {
+                                                setSureToBlock(true);
+                                            }}
+                                                className='text-xs m-1 hover:cursor-pointer 
+                                    hover:underline'>Block user</p>}
+                                            {SureToBlock && <div className='flex'> <p
+                                                className='text-xs text-red-600 m-1 '>
+                                                are you sure?</p>
+                                                <p onClick={() => {
+                                                    handleBlock(rep.username);
+                                                }}
+                                                    className=' m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>Yes</p>
+                                                <p className='text-xs text-red-600 m-1 '>/</p>
+                                                <p onClick={() => {
+                                                    setSureToBlock(false);
+                                                }}
+                                                    className=' m-1 text-xs hover:cursor-pointer
+                                     hover:underline'>No</p>   </div>}
+                                        </div>
+                                         
+                                    </>}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                )
+            })}

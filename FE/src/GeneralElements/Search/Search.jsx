@@ -54,12 +54,15 @@ const SearchComponent = ({ Viewed, setViewed }) => {
             let user = path.substring(IncludeIndex, characterIndex !== -1 ? characterIndex : path.length);
             setViewed(user);
         }
-        if (path.includes("/r/")) {
+        else if (path.includes("/r/")) {
             const IncludeIndex = path.indexOf("/r/") + 3; // Add 6 to skip "/user/"
             // Find the index of the first occurrence of the character after the "/user/" part
             const characterIndex = path.indexOf("/", IncludeIndex);
             let user = path.substring(IncludeIndex, characterIndex !== -1 ? characterIndex : path.length);
             setViewed(user);
+        }
+        else {
+            setViewed(null);
         }
 
     }, [path])
