@@ -53,18 +53,10 @@ class _PostDetailsState extends State<PostDetails> {
 
   Future<void> addPostToHistory() async {
     var url = Uri.parse(ApiRoutesBackend.viewedPost);
-    print('########################');
-    print(widget.post['postId']);
-    print(widget.post['_id']);
-    print(widget.post);
-    print(widget.myProfile);
-    print('########################');
 
     var response = await http.post(
       url,
-      body: jsonEncode({
-        "postID": widget.myProfile ? widget.post['_id'] : widget.post['postId']
-      }),
+      body: jsonEncode({"postID": widget.post['postId']}),
 
       // body: {"postID": widget.post['postID']},
       headers: {
@@ -352,8 +344,7 @@ class _PostDetailsState extends State<PostDetails> {
                           );
                         },
                         child: Text(
-                          widget.post['username'] ??
-                              'no username',
+                          widget.post['username'] ?? 'no username',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -368,7 +359,10 @@ class _PostDetailsState extends State<PostDetails> {
             ),
             cardCoreWidget(post: widget.post, detailsPageOpen: true),
             VoteSection(post: widget.post),
-            CommentSection(postId: widget.post['_id'], access_token: access_token,),
+            CommentSection(
+              postId: widget.post['_id'],
+              access_token: access_token,
+            ),
           ],
         ),
       ),

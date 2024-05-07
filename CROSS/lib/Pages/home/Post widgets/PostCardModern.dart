@@ -86,7 +86,10 @@ class _ModernCardState extends State<ModernCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PostDetails(post: widget.post),
+            builder: (context) => PostDetails(
+              post: widget.post,
+              myProfile: widget.history,
+            ),
           ),
         );
       },
@@ -101,18 +104,19 @@ class _ModernCardState extends State<ModernCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (widget.post["communityName"] != null &&
-                        (widget.post["communityIcon"] != null && widget.post["communityIcon"] != 'default-icon.jpg'))
-                       CircleAvatar(
+                        (widget.post["communityIcon"] != null &&
+                            widget.post["communityIcon"] != 'default-icon.jpg'))
+                      const CircleAvatar(
                         radius: 18,
                         backgroundImage:
                             // AssetImage(widget.post["communityIcon"]),
                             AssetImage('assets/images/avatar.png'),
                       )
                     else
-                       const CircleAvatar(
-                        radius: 18,
-                        backgroundImage:
-                            AssetImage('assets/images/avatar.png')),
+                      const CircleAvatar(
+                          radius: 18,
+                          backgroundImage:
+                              AssetImage('assets/images/avatar.png')),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,34 +297,34 @@ class _ModernCardState extends State<ModernCard> {
                                 ),
                               ),
                               widget.myProfile == true
-                              ?ListTile(
-                                leading:const Icon(Icons.delete),
-                                title: const Text('Delete'),
-                                onTap: () {
-                                  delPost(widget.post["_id"]);
-                                  Navigator.pop(context);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProfilePage(
-                                              userName: widget.userName!,
-                                              myProfile: true,
-                                              access_token:
-                                                  widget.access_token!,
-                                            )),
-                                  ); // Close the menu
-                                  // Handle option 1
-                                },
-                              )
-                              :
-                              ListTile(
-                                leading: const Icon(Icons.content_copy),
-                                title: const Text('Copy text'),
-                                onTap: () {
-                                  Navigator.pop(context); // Close the menu
-                                  // Handle option 2
-                                },
-                              ),
+                                  ? ListTile(
+                                      leading: const Icon(Icons.delete),
+                                      title: const Text('Delete'),
+                                      onTap: () {
+                                        delPost(widget.post["_id"]);
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ProfilePage(
+                                                    userName: widget.userName!,
+                                                    myProfile: true,
+                                                    access_token:
+                                                        widget.access_token!,
+                                                  )),
+                                        ); // Close the menu
+                                        // Handle option 1
+                                      },
+                                    )
+                                  : ListTile(
+                                      leading: const Icon(Icons.content_copy),
+                                      title: const Text('Copy text'),
+                                      onTap: () {
+                                        Navigator.pop(
+                                            context); // Close the menu
+                                        // Handle option 2
+                                      },
+                                    ),
                               ListTile(
                                 leading: const Icon(Icons.call_split),
                                 title: const Text('Crosspost to community'),
@@ -330,52 +334,54 @@ class _ModernCardState extends State<ModernCard> {
                                 },
                               ),
                               widget.myProfile == false
-                              ?ListTile(
-                                tileColor: Colors
-                                    .transparent, // Transparent background
-                                onTap: () {
-                                  Navigator.pop(context); // Close the menu
-                                  // Handle option 1
-                                },
-                                leading: Icon(Icons.flag_outlined,
-                                    color:
-                                        Colors.red.shade400), // Softer red icon
-                                title: Text(
-                                  'Report',
-                                  style: TextStyle(
-                                      color: Colors
-                                          .red.shade400), // Softer red text
-                                ),
-                              )
-                              :
-                              widget.myProfile == false
-                              ?ListTile(
-                                tileColor: Colors
-                                    .transparent, // Transparent background
-                                onTap: () {
-                                  Navigator.pop(context); // Close the menu
-                                  // Handle option 2
-                                },
-                                leading: Icon(Icons.person_off_outlined,
-                                    color:
-                                        Colors.red.shade400), // Softer red icon
-                                title: Text(
-                                  'Block account',
-                                  style: TextStyle(
-                                      color: Colors
-                                          .red.shade400), // Softer red text
-                                ),
-                              )
-                              :
-                              ListTile(
-                                leading:
-                                    const Icon(Icons.visibility_off_outlined),
-                                title: const Text('Hide'),
-                                onTap: () {
-                                  Navigator.pop(context); // Close the menu
-                                  // Handle option 1
-                                },
-                              ),
+                                  ? ListTile(
+                                      tileColor: Colors
+                                          .transparent, // Transparent background
+                                      onTap: () {
+                                        Navigator.pop(
+                                            context); // Close the menu
+                                        // Handle option 1
+                                      },
+                                      leading: Icon(Icons.flag_outlined,
+                                          color: Colors
+                                              .red.shade400), // Softer red icon
+                                      title: Text(
+                                        'Report',
+                                        style: TextStyle(
+                                            color: Colors.red
+                                                .shade400), // Softer red text
+                                      ),
+                                    )
+                                  : widget.myProfile == false
+                                      ? ListTile(
+                                          tileColor: Colors
+                                              .transparent, // Transparent background
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context); // Close the menu
+                                            // Handle option 2
+                                          },
+                                          leading: Icon(
+                                              Icons.person_off_outlined,
+                                              color: Colors.red
+                                                  .shade400), // Softer red icon
+                                          title: Text(
+                                            'Block account',
+                                            style: TextStyle(
+                                                color: Colors.red
+                                                    .shade400), // Softer red text
+                                          ),
+                                        )
+                                      : ListTile(
+                                          leading: const Icon(
+                                              Icons.visibility_off_outlined),
+                                          title: const Text('Hide'),
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context); // Close the menu
+                                            // Handle option 1
+                                          },
+                                        ),
                             ],
                           ),
                         );
