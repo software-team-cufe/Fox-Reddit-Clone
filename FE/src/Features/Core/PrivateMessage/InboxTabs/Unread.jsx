@@ -7,8 +7,10 @@ import { Switch } from '@headlessui/react'
 import ReactQuill from 'react-quill';
 import { userAxios } from "@/Utils/UserAxios";
 import { userStore } from '../../../../hooks/UserRedux/UserStore';
+import { useNavigate } from 'react-router-dom';
 function Unread({ DiffTime }) {
     const currentId = userStore.getState().user.user._id;
+    const navigator = useNavigate();
     const [UnreadMess, setUnreadMess] = useState([]);
     const [SureToRemove, setSureToRemove] = useState(Array(UnreadMess.length).fill(false));
     const [SureToBlock, setSureToBlock] = useState(Array(UnreadMess.length).fill(false));
@@ -104,9 +106,7 @@ function Unread({ DiffTime }) {
 
     const handleRemove = async (id, i) => {
         try {
-            console.log(id);
             const res = await userAxios.post('api/del_msg', { msgId: id });
-            console.log(res.data);
             setRemoved(prevState => {
                 const newState = [...prevState];
                 newState[i] = true;
@@ -227,7 +227,10 @@ function Unread({ DiffTime }) {
                                     text-[#935226ef] hover:text-[#edc6b2] hover:cursor-pointer' />}
                                     <p className='text-xs mt-1 mr-2 text-gray-500'>
                                         from</p>
-                                    <p className='text-sm mr-2  text-blue-600
+                                    <p onClick={() => {
+                                        navigator(`/user/${mess.fromID.username}`);
+                                    }}
+                                        className='text-sm mr-2  text-blue-600
                                         hover:cursor-pointer hover:underline'>
                                         {mess.fromID.username}</p>
                                     <p className='text-xs mt-1 mr-2 text-gray-500'>

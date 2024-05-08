@@ -12,8 +12,7 @@ export default function Card (){
     const [numOfPosts, setNumOfPosts] = useState(0);
     const [numOfComments, setNumOfComments] = useState(0);
     const [communities, setCommunities] = useState([]);
-    const [numOfMembers, setNumOfMembers] = useState(0);
-    
+  
     useEffect(() => { 
         const getCommunities = async () => {
       try {
@@ -45,7 +44,7 @@ export default function Card (){
   
       fetchData();
     }, []);
-  
+
 
     const navigator=useNavigate();
     const handleNavigate=()=>{
