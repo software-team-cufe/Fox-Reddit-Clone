@@ -339,7 +339,7 @@ class _ModernCardState extends State<ModernCard> {
                                   },
                                 ),
                               ),
-                              widget.myProfile == true
+                              currentuserpost == true
                                   ? ListTile(
                                       leading: const Icon(Icons.delete),
                                       title: const Text('Delete'),
