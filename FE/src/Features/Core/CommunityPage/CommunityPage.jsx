@@ -162,7 +162,7 @@ export default function CommunityPage() {
 
   const fetchInitialPosts = () => {
     setFeed(true);
-    let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=1&limit=${limitpage}`;
+    let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
     if (selected == 'Top') {
       link = link + `&t=${period}`;
     }
@@ -225,7 +225,7 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}`;
+    let link = `api/listing/posts/r/example_subreddit_2_lavish_hair/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
     if (selected == 'Top') {
       link = link + `&t=${period}`;
     }
