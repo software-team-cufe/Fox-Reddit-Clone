@@ -182,7 +182,7 @@ export default function CommunityPage() {
     }
     setLoading(false);
   }, []);
-
+  
   let { error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity });
 
   const fetchInitialPosts = () => {
