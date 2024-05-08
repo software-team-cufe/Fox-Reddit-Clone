@@ -66,8 +66,8 @@ export default function LoginPage({ }) {
         </div>
         <div className="mt-10">
           <form id="frm-login" className="space-y-6" onSubmit={login}>
-            <TextBox role="email" name="email" disabled={loading} placeholder="me@domain.com" label="Email address" />
-            <TextBox role="password" name="password" disabled={loading} placeholder="********" label="Password" />
+            <TextBox role="email" name="email" disabled={loading} placeholder="username" label="username" />
+            <TextBox role="password" type="password" name="password" disabled={loading} placeholder="********" label="Password" />
             <div className=" space-y-2" >
               <p className="mt-4 text-sm text-gray-500">
                 Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>

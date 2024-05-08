@@ -22,7 +22,7 @@ const DeleteAccount = ({setDelete}) => {
   return (
       <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center '>
        
-    <div className=' bg-white flex-col shadow-md rounded-md w-[420px] h-[420px]'>
+    <div className=' bg-white flex-col shadow-md rounded-md w-[420px] h-[250px]'>
       <div className=' flex w-full justify-end '> 
          <button onClick={()=>setDelete(false)} className=' mt-3 mr-4'>
            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">

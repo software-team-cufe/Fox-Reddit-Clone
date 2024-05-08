@@ -5,6 +5,7 @@ import { ArrowDownCircle, ArrowUpCircle, MessageCircle, Share } from "lucide-rea
 import { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 
 export default function CommentComponent({ comment, margin = 0 }) {
@@ -26,12 +27,12 @@ export default function CommentComponent({ comment, margin = 0 }) {
         <div style={{
             marginLeft: margin,
         }}>
-            <div className=" flex gap-2 items-center">
+            <Link to={`/user/${comm?.user?.username}`} className=" flex gap-2 items-center">
                 <img src={comm.user.avatar} className=" aspect-square w-[30px] rounded-full overflow-hidden" />
                 <p className="font-bold">{comm.user.username}</p>
                 <p className="font-bold">.</p>
                 <p className="text-sm text-gray-500">{comm.createdAt}</p>
-            </div>
+            </Link>
             <div className="mt-2 mb-6 ml-3">
                 <p className="ml-2">{comm.commentText}</p>
                 <div className="mt-2 flex items-center gap-3">
