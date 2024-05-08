@@ -1022,6 +1022,7 @@ export async function votePostHandler(req: Request, res: Response) {
       res.status(200).json({
         status: 'success',
         message: 'Post is upvoted successfully',
+        value: post.votesCount,
       });
     } else if (type == -1) {
       const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), -1);
@@ -1030,6 +1031,7 @@ export async function votePostHandler(req: Request, res: Response) {
       res.status(200).json({
         status: 'success',
         message: 'Post is downvoted successfully',
+        value: post.votesCount,
       });
     } else {
       return res.status(402).json({
@@ -1087,6 +1089,7 @@ export async function voteCommentHandler(req: Request, res: Response) {
       res.status(200).json({
         status: 'success',
         message: 'Comment is upvoted successfully',
+        value: comment.votesCount,
       });
     } else if (type == -1) {
       const postResult = await addVoteToComment(user._id.toString(), comment._id.toString(), -1);
@@ -1095,6 +1098,7 @@ export async function voteCommentHandler(req: Request, res: Response) {
       res.status(200).json({
         status: 'success',
         message: 'Comment is downvoted successfully',
+        value: comment.votesCount,
       });
     } else {
       return res.status(402).json({

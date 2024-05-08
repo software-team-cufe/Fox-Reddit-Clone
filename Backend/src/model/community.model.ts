@@ -196,7 +196,7 @@ export class Details {
   currentNickname!: string;
 
   @prop()
-  description!: string;
+  communityDescription!: string;
 }
 
 class IsBanned {

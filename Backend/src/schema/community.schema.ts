@@ -132,7 +132,7 @@ export const editCommunityDetailsSchema = object({
     currentNickname: string({
       required_error: 'nickname is required',
     }),
-    description: string({
+    communityDescription: string({
       required_error: 'description is required',
     }),
   }),
