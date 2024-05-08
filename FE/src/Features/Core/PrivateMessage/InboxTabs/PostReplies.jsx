@@ -48,7 +48,6 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
     const fetchMessages = async () => {
         try {
             const res = await userAxios.get('api/get_post_replies');
-            console.log(res.data);
             res.data.map((item, i) => {
                 if (item.Comment.votes.length > 0) {
                     for (let index = 0; index < item.Comment.votes.length; index++) {

@@ -51,6 +51,7 @@ function Unread({ DiffTime }) {
 
     useEffect(() => {
         fetchMessages();
+        MarkRead();
     }, [])
 
     useEffect(() => {
@@ -61,10 +62,17 @@ function Unread({ DiffTime }) {
         selectedButton === null ? setDisableNext(true) : setDisableNext(false)
     }, [selectedButton])
 
+    const MarkRead = async () => {
+        try {
+            const res = await userAxios.post("message/markReadAllMessages/")
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const fetchMessages = async () => {
         try {
             const res = await userAxios.get('message/unreadMessages/');
-            console.log(res.data);
             const filteredMessages = res.data.messages.filter(message => !message.isDeleted);
             setUnreadMess(filteredMessages);
             setLoading(false);

@@ -33,8 +33,6 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
     const match = useMatch("/r/:community");
     const dispatcher = useDispatch();
 
-    const [YourCommunities, setYourCommunities] = useState([]);
-
     useEffect(() => {
         //fetchData();
         //TODO: show popular when search is emtpy
@@ -79,7 +77,6 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
                     communitySearchResultNotAuth
                 )
             }
-            console.log(IsLogged)
         } catch (error) {
             console.log(error);
         }
@@ -88,7 +85,6 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
         try {
             const res = await userAxios.get(`r/search/?q=${search}&type=user&page=1&limit=5`)
             setpeople(res.data.users);
-            console.log(res.data)
         } catch (error) {
             console.log(error);
         }
