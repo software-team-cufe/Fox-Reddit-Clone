@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:reddit_fox/Pages/home/HomePage.dart';
 import 'package:reddit_fox/Pages/search1.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 
@@ -82,6 +83,14 @@ class _SearchState extends State<Search> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         toolbarHeight: 80,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomePage()),
+                  );}),
         title: Container(
           padding: const EdgeInsets.only(top: 20.0, right: 20.0, bottom: 20.0),
           child: Center(

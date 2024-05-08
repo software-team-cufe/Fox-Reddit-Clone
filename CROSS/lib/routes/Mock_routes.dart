@@ -59,6 +59,7 @@ class ApiRoutesBackend {
       '$baseUrl/r/search/?q=$userName&type=user';
 
   static const String addComment = '$baseUrl/api/comment';
+  static String isFollwed(String userName) =>'$baseUrl/api/v1/me/followings/$userName';
 }
 
 class ApiRoutesMockserver {

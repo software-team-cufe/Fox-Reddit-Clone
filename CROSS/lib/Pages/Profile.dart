@@ -13,31 +13,6 @@ import 'package:reddit_fox/features/auth/screens/liveChat.dart';
   import 'package:reddit_fox/routes/Mock_routes.dart';
   import 'package:share/share.dart';
 
-
-void checkIfFollowing(bool isFollowed, Iterable<dynamic> followingList, String userName) {
-  try {
-    print('Username to Check: $userName');
-    List<dynamic> followingListAsList = followingList.toList();
-    for (int i = 0; i < followingListAsList.length; i++) {
-      if (userName == followingListAsList[i]['username']) {
-        isFollowed = true; // User is followed, so set isFollowed to true
-        break; // Exit the loop since we found a match
-      } else {
-        isFollowed = false; // User is not followed, set isFollowed to false (this might be redundant, but it ensures the value is set if there's no match)
-      }
-    }
-    print("isFollowed: $isFollowed");
-  } catch (error) {
-    print('Error checking if $userName is followed: $error');
-  }
-}
-
-
-
-
-
-
-
   class ProfilePage extends StatefulWidget {
     ProfilePage({Key? key, required this.userName, this.myProfile = false, this.access_token = null}) : super(key: key);
     final String userName;
@@ -78,13 +53,12 @@ void checkIfFollowing(bool isFollowed, Iterable<dynamic> followingList, String u
       access_token = widget.access_token;
 
       fetchUserAbout(widget.userName);
+      getFollowingList();
       fetchData();
       if(_selectedItem == "hot"){
          fetchDataBack();
       }
       getUserComments();
-      getFollowingList();
-      checkIfFollowing(isFollowed, followingList, widget.userName);
     }
 
     @override
@@ -271,27 +245,36 @@ void checkIfFollowing(bool isFollowed, Iterable<dynamic> followingList, String u
     }
   Future<void> getFollowingList() async {
     try {
-      final response = await http.get(
-        Uri.parse(ApiRoutesBackend.getUserFollowings(widget.userName)),
-        headers: {'Authorization': 'Bearer $access_token'},
-      );
+    // API endpoint URL
+    String apiUrl = ApiRoutesBackend.isFollwed(widget.userName);
 
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        final followingsData = responseData;
-        print("Followings Data: $followingsData");
-        if (followingsData != null) {
-          followingList = (followingsData);
-        } else {
-          print("Invalid or missing followingsData: $followingsData");
-        }
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: json.encode({
+        'username': widget.userName,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${widget.access_token}', // Use provided access token
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Parse the response based on the "followingData" field
+      Map<String, dynamic> responseData = json.decode(response.body);
+      if (responseData['followingData'] == 'none') {
+        print('User followed successfully. No following data available.');
+        isFollowed = false;
       } else {
-        print("Failed to retrieve following list: ${response.statusCode}");
+        isFollowed = true;
       }
-    } catch (error) {
-      print("Error retrieving following list: $error");
+    } else {
+      print('Failed to follow user: ${response.statusCode}');
     }
+  } catch (error) {
+    print('Error following user: $error');
   }
+}
 
 
 
@@ -606,26 +589,24 @@ Widget _buildTitleView() {
                               Padding(
                                 padding: const EdgeInsets.only(),
                                 child: SizedBox(
-                                  width: screenWidth * 0.25, // 25% of screen width
+                                  width: screenWidth * 0.3, // 25% of screen width
                                   height: 35,
-                                  child: isFollowed == false
-                                    ? ElevatedButton(
-                                        onPressed: () {
-                                          followUser(widget.userName);
-                                          isFollowed = true;
-                                        },
-                                        child: const Text('Follow'),
-                                      )
-                                    : ElevatedButton(
-                                        onPressed: () {
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (isFollowed == false) {
                                           unFollowUser(widget.userName);
-                                          isFollowed = false;
-                                        },
-                                        child: const Text('Unfollow'),
-                                      ),
-                                ),
-                              ),
+                                        } else {
+                                          followUser(widget.userName);
+                                        }
+                                        isFollowed = !isFollowed;
+                                      });
+                                    },
+                                    child: Text(isFollowed ? 'Unfollow' : 'Follow'), // Proper usage of child property
+                                  ),
 
+                              ),
+                              )
                               ],)
                             ],
                           ),

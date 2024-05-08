@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:reddit_fox/Pages/CommentCard.dart';
 import 'package:reddit_fox/Pages/Search.dart';
-import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardClassic.dart';
+import 'package:reddit_fox/Pages/commentSearch.dart';
+import 'package:reddit_fox/Pages/postViweSearch.dart';
 import 'package:reddit_fox/Pages/userView.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'dart:convert';
@@ -15,6 +16,7 @@ class Search1 extends StatefulWidget {
 
   @override
   State<Search1> createState() => _Search1State();
+  
 }
 
 class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
@@ -22,7 +24,9 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String? access_token;
   Map<dynamic, dynamic> PostData = {};
+  Map<dynamic, dynamic> PostDataHash = {};
   List<Map<String, dynamic>> userData = [];
+  List<Map<String, dynamic>> commentData = [];
 
   @override
   void initState() {
@@ -32,8 +36,9 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
       access_token = sharedPrefValue.getString('backtoken');
     });
     _searchPost('link');
-    //_searchComment('comment');
+    _searchComment('comment');
     _searchUser('user');
+    _searchHash('link');
   }
 
   @override
@@ -59,7 +64,7 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
       http.Response response = await http.get(
         uri,
         // Add headers if required, for example:
-        // headers: {'Authorization': 'Bearer ${access_token}'},
+        headers: {'Authorization': 'Bearer ${access_token}'},
       );
 
       print("status code for search: ${response.statusCode}");
@@ -68,7 +73,6 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
         final responseData = json.decode(response.body);
         PostData = (responseData['postsSearchResultNotAuth']).asMap();
         print('respose PostData [posts]: $PostData');
-        print(responseData);
       } else {
         // Print response body for debugging
         print(response.body);
@@ -79,7 +83,7 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
     }
   }
 
-  Future<void> _searchUser(String type) async {
+  Future<void> _searchComment(String type) async {
     try {
       // Constructing URL with query parameters
       Uri uri = Uri.parse(ApiRoutesBackend.Search);
@@ -95,25 +99,69 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
       http.Response response = await http.get(
         uri,
         // Add headers if required, for example:
-        // headers: {'Authorization': 'Bearer ${access_token}'},
+        headers: {'Authorization': 'Bearer ${access_token}'},
       );
 
       print("status code for search: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        userData = (responseData['users']);
-        print('respose commentData: $userData');
+        commentData = (List<Map<String, dynamic>>.from(responseData['commentsSearchResultNotAuth']));
+        print('respose CommentData: $commentData');
         print(responseData);
       } else {
         // Print response body for debugging
-        print(response.body);
+        print('user back in search: ${response.body}');
         throw Exception('Failed to load search results. Status code: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Error searching users: $error');
     }
   }
+
+  Future<void> _searchUser(String type) async {
+  try {
+    // Constructing URL with query parameters
+    Uri uri = Uri.parse(ApiRoutesBackend.Search);
+    Map<String, String> queryParams = {
+      'q': widget.searchItem,
+      'type': type,
+      'page': "1",
+      'limit': "10", // Adding limit parameter as per the cURL command
+    };
+    uri = uri.replace(queryParameters: queryParams);
+
+    // Sending GET request with headers
+    http.Response response = await http.get(
+      uri,
+      // Add headers if required, for example:
+      headers: {'Authorization': 'Bearer ${access_token}'},
+    );
+
+    print("status code for search: ${response.statusCode}");
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      // Check if responseData['users'] is not null before accessing it
+      if (responseData['users'] != null) {
+        // Assign response data to userData
+        userData = (List<Map<String, dynamic>>.from(responseData['users']));
+        print('response userData: $userData');
+        print(responseData);
+      } else {
+        print('No users found');
+        // Handle the case where no users are found
+      }
+    } else {
+      // Print response body for debugging
+      print('user back in search: ${response.body}');
+      throw Exception('Failed to load search results. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    throw Exception('Error searching users: $error');
+  }
+}
+
 
   Future<void> _searchHash(String type) async {
     try {
@@ -131,16 +179,17 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
       http.Response response = await http.get(
         uri,
         // Add headers if required, for example:
-        // headers: {'Authorization': 'Bearer ${access_token}'},
+        headers: {'Authorization': 'Bearer ${access_token}'},
       );
 
       print("status code for search: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        PostData = (responseData['postsSearchResultNotAuth']).asMap();
-        print('respose data [posts]: $PostData');
-        print(responseData);
+        if(responseData != null){
+          PostDataHash = (responseData['postsSearchResultNotAuth']).asMap();
+          print('respose data [postsHash]: $PostDataHash');
+        }
       } else {
         // Print response body for debugging
         print(response.body);
@@ -173,7 +222,7 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
                   itemCount: PostData.length,
                   itemBuilder: (context, index) {
                     var post = PostData[index];
-              return ModernCard(post: post);
+              return  ModernCardSearch(post: post);
             },
           );
           }
@@ -184,14 +233,8 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
 
   Widget SearchUser(){
     return Container(
-    child: userView(comments: userData,),
-    );
-  }
-
-  Widget SearchHash(){
-    return Container(
       child:  FutureBuilder<void>(
-        future: _searchHash('link'),
+        future: _searchUser('user'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -204,10 +247,11 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
           }
           else{
             return ListView.builder(
-                  itemCount: PostData.length,
+                  itemCount: userData.length,
                   itemBuilder: (context, index) {
-                    var post = PostData[index];
-              return ModernCard(post: post);
+                    var user = userData[index];
+                    print('passed user: $user');
+              return  UserView(users: user, accessToken: access_token!);
             },
           );
           }
@@ -216,11 +260,67 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
     );
   }
 
-
-
-  Widget searchUser(){
-    return Container();
+  Widget SearchComment(){
+    return Container(
+      child:  FutureBuilder<void>(
+        future: _searchComment('comment'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          else{
+            return ListView.builder(
+                  itemCount: commentData.length,
+                  itemBuilder: (context, index) {
+                    var comment = commentData[index];
+                    print('passed user: $comment');
+              return  comentViewSerch(comment: comment);
+            },
+          );
+          }
+        }
+      )
+    );
   }
+
+  Widget SearchHash(){
+    if(PostDataHash != {}){
+      return Container(
+        child:  FutureBuilder<void>(
+          future: _searchHash('link'),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
+            else{
+              return ListView.builder(
+                    itemCount: PostDataHash.length,
+                    itemBuilder: (context, index) {
+                      var post = PostDataHash[index];
+                return ModernCardSearch(post: post);
+              },
+            );
+            }
+          }
+        )
+      );
+    }
+    else{
+      return Container();}
+  }
+
 
 
   @override
@@ -235,6 +335,7 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
         ),
         backgroundColor: Colors.black,
         toolbarHeight: 80,
+        
         title: Container(
           padding: const EdgeInsets.only(top: 15.0, right: 20.0, bottom: 20.0),
           child: Center(
@@ -287,8 +388,8 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
                       // Replace these with actual content
                       SearchPost(),
                       Container(), 
-                      Container(),
-                      Container(),
+                      SearchComment(),
+                      SearchUser(),
                       SearchHash(), 
                     ],
                   ),
