@@ -51,6 +51,43 @@ class _PostDetailsState extends State<PostDetails> {
     });
   }
 
+  Future<void> saveItem(String postId) async {
+    final response = await http.post(
+      Uri.parse(ApiRoutesBackend.saveItem),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $access_token'
+      },
+      body: json.encode({'linkID': "t3_$postId"}),
+    );
+    print("response status code: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("Item saved");
+    } else {
+      print("Item not saved");
+      print(access_token);
+    }
+  }
+
+  Future<void> reportItem(String postId) async {
+    final response = await http.post(
+      Uri.parse(ApiRoutesBackend.reportItem),
+      headers: {
+        'Authorization': 'Bearer $access_token',
+        'Content-Type': 'application/json'
+
+      },
+      body: json.encode({'linkID': '<$postId>'}),
+    );
+    print("response status code: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("Item reported");
+    } else {
+      print("Item not reported");
+      print(access_token);
+    }
+  }
+
   Future<void> addPostToHistory() async {
     var url = Uri.parse(ApiRoutesBackend.viewedPost);
 
@@ -157,7 +194,7 @@ class _PostDetailsState extends State<PostDetails> {
               title: const Text("Save"),
               onTap: () {
                 Navigator.pop(context); // Close the bottom sheet
-                // Handle save action
+                saveItem(widget.post['postId']);
               },
             ),
             ListTile(
@@ -207,7 +244,7 @@ class _PostDetailsState extends State<PostDetails> {
               tileColor: Colors.transparent, // Transparent background
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                // Handle option 1
+                reportItem(widget.post['postId']);
               },
               leading: Icon(Icons.flag_outlined,
                   color: Colors.red.shade400), // Softer red icon

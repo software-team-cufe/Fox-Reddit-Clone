@@ -372,7 +372,7 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       var post = posts[index];
                       return isModernCard
-                          ? ModernCard(post: post) // pass individual post
+                          ? ModernCard(post: post, access_token: access_token,) // pass individual post
                           : ClassicCard(post: post); // pass individual post
                     },
                   );

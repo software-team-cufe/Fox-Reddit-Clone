@@ -299,6 +299,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           ? ModernCard(
                               post: post,
                               history: true,
+                              access_token: access_token,
                             ) // pass individual post
                           : ClassicCard(post: post); // pass individual post
                     },

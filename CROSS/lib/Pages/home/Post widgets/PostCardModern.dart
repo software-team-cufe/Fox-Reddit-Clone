@@ -13,7 +13,7 @@ import 'dart:convert';
 /// A stateful widget that represents a post card in the home page.
 class ModernCard extends StatefulWidget {
   final Map<dynamic, dynamic> post;
-  String? access_token;
+  final String? access_token;
   String? userName;
   final bool history;
   final bool myProfile;
@@ -24,7 +24,7 @@ class ModernCard extends StatefulWidget {
   ModernCard({
     super.key,
     required this.post,
-    this.access_token,
+    required this.access_token,
     this.userName,
     this.history = false,
     this.myProfile = false,
@@ -111,7 +111,6 @@ class _ModernCardState extends State<ModernCard> {
       Uri.parse(ApiRoutesBackend.saveItem),
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
         'Authorization': 'Bearer ${widget.access_token}'
       },
       body: json.encode({'linkID': "t3_$postId"}),
@@ -121,6 +120,25 @@ class _ModernCardState extends State<ModernCard> {
       print("Item saved");
     } else {
       print("Item not saved");
+      print(widget.access_token);
+    }
+  }
+
+  Future<void> reportItem(String postId) async {
+    final response = await http.post(
+      Uri.parse(ApiRoutesBackend.reportItem),
+      headers: {
+        'Authorization': 'Bearer ${widget.access_token}',
+        'Content-Type': 'application/json'
+      },
+      body: json.encode({'linkID': '<$postId>'}),
+    );
+    print("response status code: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("Item reported");
+    } else {
+      print("Item not reported");
+      print(widget.access_token);
     }
   }
 
@@ -197,7 +215,7 @@ class _ModernCardState extends State<ModernCard> {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.more_vert), // Menu icon
+                  icon: const Icon(Icons.more_vert),
                   onPressed: () {
                     showModalBottomSheet(
                       context: context,
@@ -210,8 +228,8 @@ class _ModernCardState extends State<ModernCard> {
                                 leading: const Icon(Icons.bookmark),
                                 title: const Text('Save'),
                                 onTap: () {
-                                  Navigator.pop(context); // Close the menu
-                                  // Handle option 1
+                                  Navigator.pop(context);
+                                  saveItem(widget.post["postId"]);
                                 },
                               ),
                               Visibility(
@@ -383,7 +401,7 @@ class _ModernCardState extends State<ModernCard> {
                                       onTap: () {
                                         Navigator.pop(
                                             context); // Close the menu
-                                        // Handle option 1
+                                        reportItem(widget.post['postId']);
                                       },
                                       leading: Icon(Icons.flag_outlined,
                                           color: Colors

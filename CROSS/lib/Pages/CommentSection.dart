@@ -64,9 +64,11 @@ Future<void> createComment(String linkID, String textHTML, String textJSON) asyn
     );
 
     if (response.statusCode == 200) {
+          print('comment created');
     } else {
     }
   } catch (error) {
+    print('comment not created');
   }
 }
 
