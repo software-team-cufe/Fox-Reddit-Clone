@@ -7,18 +7,21 @@ import { userAxios } from "@/Utils/UserAxios";
 import { toast } from 'react-toastify'
 import { userStore } from "../../hooks/UserRedux/UserStore";
 import axios from 'axios';
-function PollComponent(polls) {
-    polls = polls?.polls ?? [];
+function PollComponent({ polls, postId }) {
+    const [poll, setPolls] = useState(polls ?? []);
+
 
     if (polls.length == 0) return <></>;
-    const handelVote = async (option) => {
-        const val = document.getElementById('poll-option').value;
+    const handelVote = async () => {
+        const val = document.getElementById(`poll-option-${postId}`).value;
+        console.log({ val });
         if (val == null || val == "") return;
         const id = toast.loading("Please wait");
         try {
-            const res = await axios.post(`http://localhost:3001/votes/`,{
-                
-            })
+            const res = await userAxios.post(`/api/posts/${postId}/pool`, {
+                choice: val,
+            });
+            
         } catch (ex) {
 
         }
@@ -26,13 +29,13 @@ function PollComponent(polls) {
     };
     return <div className='flex border rounded-lg my-4 w-full p-4 space-y-4 flex-col'>
         {
-            polls.map((e, idx) => <div key={idx} className='flex items-center gap-1'>
-                <input name='poll-option' type='radio' defaultValue={e.title} />
+            poll.map((e, idx) => <div key={idx} className='flex items-center gap-1'>
+                <input id={`poll-option-${postId}`} type='radio' defaultValue={e.title} />
                 <label>{e.title} ({e.votes})</label>
             </div>)
         }
         <div>
-            <button className='px-4 py-2 rounded-full bg-gray-300 '>Vote</button>
+            <button onClick={handelVote} className='px-4 py-2 rounded-full bg-gray-300 '>Vote</button>
         </div>
     </div>
 }
@@ -94,7 +97,6 @@ export default function PostComponent({ refetch, role, post, className, viewMode
         // setVotes(res.data.votesCount);
     };
 
-    console.log(voteType);
     return (
         <div role={role} className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
 
@@ -125,7 +127,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                     src={postObj.thumbnail} />
                             </div>
                         </Link>
-                        <PollComponent polls={post?.poll} />
+                        <PollComponent postId={postObj.postId ?? params.id } polls={post?.poll} />
                     </div> :
 
                     <div>
@@ -139,7 +141,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                 <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
                             </>
                         }
-                        <PollComponent polls={post.poll} />
+                        <PollComponent postId={postObj.postId ?? params.id } polls={post?.poll} />
                         {
                             postObj.video && <div>
                                 <video src={postObj.video} controls />
