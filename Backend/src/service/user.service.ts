@@ -81,19 +81,19 @@ export async function findUserIdByUsername(username: string) {
 }
 
 /**
- * Finds user posts by username with pagination support.
+ * Finds user posts by username with pagination support, excluding hidden posts.
  *
  * @param username - The username of the user to find posts for.
  * @param page - The page number for pagination.
  * @param count - The number of posts per page.
- * @returns post ids of the user by username for the specified page.
+ * @returns post ids of the user by username for the specified page, excluding hidden posts.
  */
 export async function userSubmittedPosts(username: string, page: number, count: number) {
   // Calculate skip based on page and count
   const skip = (page - 1) * count;
 
   // Find the user by username and retrieve their user submitted posts with pagination
-  const user = await UserModel.findOne({ username: username }, 'hasPost')
+  const user = await UserModel.findOne({ username: username }, 'hasPost hiddenPosts')
     .lean()
     .populate({
       path: 'hasPost',
@@ -108,9 +108,14 @@ export async function userSubmittedPosts(username: string, page: number, count: 
   // Extract the post IDs from the user's submitted posts if it exists
   const postIDs = user.hasPost ? user.hasPost.map((post) => post._id.toString()) : [];
 
-  // Return the post IDs
-  return postIDs;
+  // Exclude hidden posts from the list
+  const visiblePostIDs = postIDs.filter(
+    (postID) => user.hiddenPosts && !user.hiddenPosts.includes(new Types.ObjectId(postID))
+  );
+  // Return the visible post IDs
+  return visiblePostIDs;
 }
+
 /**
  * Finds user posts by username with pagination support.
  *
