@@ -4,6 +4,7 @@ import 'package:reddit_fox/Pages/CommentCard.dart';
 import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/Pages/commentSearch.dart';
 import 'package:reddit_fox/Pages/postViweSearch.dart';
+import 'package:reddit_fox/Pages/srView.dart';
 import 'package:reddit_fox/Pages/userView.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'dart:convert';
@@ -27,6 +28,7 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
   Map<dynamic, dynamic> PostDataHash = {};
   List<Map<String, dynamic>> userData = [];
   List<Map<String, dynamic>> commentData = [];
+  List<Map<String, dynamic>> srData = [];
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
       access_token = sharedPrefValue.getString('backtoken');
     });
     _searchPost('link');
+    _searchSr('sr');
     _searchComment('comment');
     _searchUser('user');
     _searchHash('link');
@@ -108,6 +111,49 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
         final responseData = json.decode(response.body);
         commentData = (List<Map<String, dynamic>>.from(responseData['commentsSearchResultNotAuth']));
         print('respose CommentData: $commentData');
+        print(responseData);
+      } else {
+        // Print response body for debugging
+        print('user back in search: ${response.body}');
+        throw Exception('Failed to load search results. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error searching users: $error');
+    }
+  }
+
+  Future<void> _searchSr(String type) async {
+    try {
+      // Constructing URL with query parameters
+      Uri uri = Uri.parse(ApiRoutesBackend.Search);
+      Map<String, String> queryParams = {
+        'q': widget.searchItem,
+        'type': type,
+        'page': "1",
+        'limit': "10", // Adding limit parameter as per the cURL command
+      };
+      uri = uri.replace(queryParameters: queryParams);
+
+      // Sending GET request with headers
+      http.Response response = await http.get(
+        uri,
+        // Add headers if required, for example:
+        //headers: {'Authorization': 'Bearer ${access_token}'},
+      );
+
+      print("status code for SRData: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print("respose data of SR: ${responseData['communitySearchResultNotAuth']}");
+        
+        if (responseData['communitySearchResultNotAuth']!= null) {
+          srData = (List<Map<String, dynamic>>.from(responseData['communitySearchResultNotAuth']));
+        } else if(responseData['communitySearchResultAuth']!= null) {
+          srData = (List<Map<String, dynamic>>.from(responseData['communitySearchResultAuth']));
+        }
+        //srData = (List<Map<String, dynamic>>.from(responseData['communitySearchResultNotAuth']));
+        print('respose SRData: $srData');
         print(responseData);
       } else {
         // Print response body for debugging
@@ -260,6 +306,36 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
     );
   }
 
+  Widget SearchSR(){
+    return Container(
+      child:  FutureBuilder<void>(
+        future: _searchSr('sr'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          else{
+            return ListView.builder(
+                  itemCount: srData.length,
+                  itemBuilder: (context, index) {
+                    var sr = srData[index];
+                    print('passed user: $sr');
+              return  SRView(users: sr, accessToken: access_token!);
+            },
+          );
+          }
+        }
+      )
+    );
+  }
+
+
   Widget SearchComment(){
     return Container(
       child:  FutureBuilder<void>(
@@ -387,7 +463,7 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
                     children: [
                       // Replace these with actual content
                       SearchPost(),
-                      Container(), 
+                      SearchSR(), 
                       SearchComment(),
                       SearchUser(),
                       SearchHash(), 

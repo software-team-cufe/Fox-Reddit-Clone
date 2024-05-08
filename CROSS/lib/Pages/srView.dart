@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:reddit_fox/Pages/Profile.dart';
 
 // ignore: must_be_immutable
-class UserView extends StatelessWidget {
+class SRView extends StatelessWidget {
   final Map<String, dynamic> users;
   String? accessToken;
 
-  UserView({super.key, required this.users, required this.accessToken});
+  SRView({super.key, required this.users, required this.accessToken});
 
   @override
   Widget build(BuildContext context) {
+    print("srUser : $users");
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: users.entries.map((MapEntry<String, dynamic> userEntry) {
-          final avatar = users['avatar'];
-          final username = users['username'];
-          final karma = '${users['karma']}';
+          final avatar = users['icon'];
+          final username = users['name'];
+          final karma = '${users['membersCnt']}';
 
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -44,7 +45,7 @@ class UserView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "u/$username",
+                        "r/$username",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -52,7 +53,7 @@ class UserView extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "$karma Karma",
+                        "$karma member",
                         style: TextStyle(
                           fontSize: 14,
                           color: Color(0xFF989898),
