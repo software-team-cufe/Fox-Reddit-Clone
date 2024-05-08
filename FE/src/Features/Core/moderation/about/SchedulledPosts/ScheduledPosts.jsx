@@ -1,12 +1,13 @@
 import { useParams } from "react-router-dom"
 import React from 'react'
 import { Clock, RotateCw } from "lucide-react";
+import react from 'react'
 
 export default function ScheduledPosts() {
     
 const {community} = useParams();
     return (
-    <div className="flex flex-col w-full mt-16 gap-8 mx-8 h-1/4">
+    <div className="flex flex-col w-full mt-16 gap-8 mx-8 h-1/4" role="test">
         <div className="flex justify-between">
             <h4>Scheduled posts</h4>
             <button className="border border-solid border-1 border-blue-200 bg-blue-400 hover:bg-blue-500 rounded-xl ">schedule post</button>
@@ -26,6 +27,5 @@ const {community} = useParams();
             </div>
         </div>
     </div>
-</div>
-    );
+</div>);
 }

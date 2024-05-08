@@ -11,6 +11,7 @@ import { Link, useLocation } from "react-router-dom";
 import { key } from 'localforage';
 import { userAxios } from "../../Utils/UserAxios";
 import { useSelector } from 'react-redux';
+import { userStore } from "../../hooks/UserRedux/UserStore"; 
 const icons = [
    {
       icon: Home,
@@ -78,7 +79,7 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
    //       console.error('Error fetching user info:', error);
    //    }
    // }
-
+if(userStore.getState().user.user != null){
    //get subreddits where user is moderator
    useEffect(() => {
       const fetchSubreddits = async () => {
@@ -135,6 +136,8 @@ function Sidebar({ className, IsOpen, RecentCommunities }) {
 
       fetchSubredditsUserCreated();
    }, [])
+}
+   
    //handle youCommunitiesList known that it contains both moderator and creator subreddits
    const modComList = [...creatorForSubredit, ...moderatorInSubreddits];
    let tempForClear = [];
