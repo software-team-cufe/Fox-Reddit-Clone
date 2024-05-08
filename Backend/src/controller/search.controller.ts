@@ -179,6 +179,7 @@ export async function searchSubredditHandler(
     const searchType = type === 'link' ? 'posts' : type === 'comment' ? 'comments' : 'posts';
     //check if user is authenticated
 
+    //check the moderator and hidden part
     //search logic here
     //switch case
     switch (searchType) {

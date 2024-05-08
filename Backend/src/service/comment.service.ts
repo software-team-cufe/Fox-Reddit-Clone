@@ -431,7 +431,7 @@ export async function getSubredditCommentsSearch(
           'posts.title': { $exists: true }, // Filter out posts without title
           'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
-          'posts.createdAt': { $lte: new Date() },
+          'posts.createdAt': { $lte: new Date() }, // Exclude posts created after the current date
         },
       },
       {
@@ -477,7 +477,7 @@ export async function getSubredditCommentsSearch(
           commentcreatedAt: '$createdAt', // Project comment createdAt
           postcreatedAt: '$posts.createdAt', // Project post createdAt
           postcommentsNum: '$posts.commentsNum', // Project post commentsNum
-          editedAt: '$editedAt', // Project comment editedAt
+          commentEditedAt: '$editedAt', // Project comment editedAt
         },
       },
     ]);

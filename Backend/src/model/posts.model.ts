@@ -135,7 +135,7 @@ export class Post {
   @prop({ type: () => [String], ref: () => User })
   postComments: Ref<Comment>[];
 
-  @prop()
+  @prop({ default: 0 })
   commentsNum!: number;
 
   @prop()
