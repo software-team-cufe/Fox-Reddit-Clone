@@ -6,7 +6,39 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import { userAxios } from "@/Utils/UserAxios";
 import { toast } from 'react-toastify'
 import { userStore } from "../../hooks/UserRedux/UserStore";
+import axios from 'axios';
+function PollComponent(polls) {
+    polls = polls?.polls ?? [];
+
+    if (polls.length == 0) return <></>;
+    const handelVote = async (option) => {
+        const val = document.getElementById('poll-option').value;
+        if (val == null || val == "") return;
+        const id = toast.loading("Please wait");
+        try {
+            const res = await axios.post(`http://localhost:3001/votes/`,{
+                
+            })
+        } catch (ex) {
+
+        }
+        toast.dismiss(id);
+    };
+    return <div className='flex border rounded-lg my-4 w-full p-4 space-y-4 flex-col'>
+        {
+            polls.map((e, idx) => <div key={idx} className='flex items-center gap-1'>
+                <input name='poll-option' type='radio' defaultValue={e.title} />
+                <label>{e.title} ({e.votes})</label>
+            </div>)
+        }
+        <div>
+            <button className='px-4 py-2 rounded-full bg-gray-300 '>Vote</button>
+        </div>
+    </div>
+}
+
 export default function PostComponent({ refetch, role, post, className, viewMode = false }) {
+    const [isOpen, setOpen] = useState(false);
     const user = userStore.getState().user.user;
     const params = useParams();
     const [voteType, setVotesType] = useState(null);
@@ -66,6 +98,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
     return (
         <div role={role} className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
 
+
             {
                 !viewMode ?
                     <div className="flex flex-col items-start justify-between">
@@ -77,6 +110,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                 </div>
                             </div>
                         </Link>
+
                         <Link className="w-full" to={`/posts/${postObj.postId}`}>
                             <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
                             <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
@@ -91,6 +125,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                     src={postObj.thumbnail} />
                             </div>
                         </Link>
+                        <PollComponent polls={post?.poll} />
                     </div> :
 
                     <div>
@@ -104,7 +139,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                 <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
                             </>
                         }
-                        {/* <p className=" text-gray-600 text-sm">{postObj.textHTML} </p> */}
+                        <PollComponent polls={post.poll} />
                         {
                             postObj.video && <div>
                                 <video src={postObj.video} controls />
