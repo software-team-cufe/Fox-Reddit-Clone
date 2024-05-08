@@ -21,7 +21,7 @@ import { userAxios } from "@/Utils/UserAxios";
 const SearchComponent = ({ Viewed, setViewed }) => {
     let path = useLocation().pathname;
     const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
-    const YourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
+    const yourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
     { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125" }];
     const OtherCommunities = [{ name: "r / com3", icon: "DumPhoto3.jpg", membersCount: "123" },
     {
@@ -46,7 +46,7 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     const match = useMatch("/r/:community");
     const dispatcher = useDispatch();
 
-    const [YourCommunities, setYourCommunities] = useState([])
+    const [YourCommunities, setYourCommunities] = useState([]);
 
     useEffect(() => {
         //fetchData();
@@ -92,7 +92,7 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     const fetchPeople = async () => {
         try {
             const res = await userAxios.get(`r/search/?q=${search}&type=user&page=1&limit=5`)
-            setpeople(res.data.communitySearchResultAuth);
+            setpeople(res.data.users);
         } catch (error) {
             console.log(error);
         }
@@ -137,7 +137,7 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     };
 
     const filteredPeople = peoplee.filter(item =>
-        item.name.toLowerCase().includes(search.toLowerCase())
+        item.username.toLowerCase().includes(search.toLowerCase())
     );
     const filteredComs = Coms.filter(item =>
         item.name.toLowerCase().includes(search.toLowerCase())

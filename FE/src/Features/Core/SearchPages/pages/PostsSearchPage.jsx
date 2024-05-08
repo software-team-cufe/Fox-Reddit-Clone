@@ -44,7 +44,6 @@ export default function PeopleSearchPage({ searched = "filler" }) {
 
     userAxios.get(`r/search/?q=${searched}&type=link&page=1&limit=${limitpage}&sort=${selected}&sortBy=${searchPeriod}`)
       .then(response => {
-        console.log(response.data);
         if (userRedux == null) {
           const newPosts = response.data.postsSearchResultsNotAuth.map(post => ({
             communityName: post.communityName,
