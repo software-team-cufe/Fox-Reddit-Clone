@@ -177,12 +177,14 @@ class _endDrawerState extends State<endDrawer> {
                               await SharedPreferences.getInstance();
                           await prefs.remove('backtoken');
                           await prefs.remove('mocktoken');
+    Get.off(() => const StartingScreen());
+
 
                           // Navigate to the authentication screen
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const AuthContainer()),
-                          );
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //       builder: (context) => const AuthContainer()),
+                          // );
                         },
                       ),
                     ],
