@@ -51,6 +51,8 @@ import {
   viewPostHandler,
   getHistoryPostHandler,
   getUserHomePagePostsHandler,
+  getFollowerHandler,
+  getFollowingHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -106,9 +108,9 @@ router.get('/api/v1/me/blocked', getALLBlockedHandler);
 
 router.get('/api/v1/me/friends/:username', getUserHandler);
 
-router.get('/api/v1/me/followers/:username', getUserHandler);
+router.get('/api/v1/me/followers/:username', getFollowerHandler);
 
-router.get('/api/v1/me/followings/:username', getUserHandler);
+router.get('/api/v1/me/followings/:username', getFollowingHandler);
 
 router.post('/api/follow', validateResource(followUserSchema), followRequestHandler);
 

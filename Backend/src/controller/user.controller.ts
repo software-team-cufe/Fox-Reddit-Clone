@@ -1332,6 +1332,122 @@ export async function getALLFollowingHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the follower with the username specified in the params.
+ *
+ * @param {Request} req - The request object containing the access token and username to search for.
+ * @param {Response} res - The response object to send the follower data.
+ * @return {Promise<void>} A promise that resolves when the follower data is retrieved and sent in the response.
+ * @throws {Error} If the access token is missing or invalid, the user does not have any followers, or an internal server error occurs.
+ */
+export async function getFollowerHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  const user = await findUserByUsername(res.locals.user.username);
+
+  const followerUsername = req.params.username;
+
+  try {
+    if (!user || !res.locals.user.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else if (!user.userFollows || user.userFollows.length === 0) {
+      return res.status(200).json({
+        followerData: 'none',
+      });
+    } else {
+      const follower = user.userFollows.find((f) => f.username === followerUsername);
+      if (follower) {
+        const followerData = {
+          username: follower.username,
+          about: follower.about,
+          avatar: follower.avatar,
+        };
+        return res.status(200).json({
+          followerData,
+        });
+      } else {
+        return res.status(200).json({
+          followerData: 'none',
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error in getFollowerHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
+/**
+ * Retrieves the following with the username specified in the params.
+ *
+ * @param {Request} req - The request object containing the access token and username to search for.
+ * @param {Response} res - The response object to send the following data.
+ * @return {Promise<void>} A promise that resolves when the following data is retrieved and sent in the response.
+ * @throws {Error} If the access token is missing or invalid, the user does not have any followings, or an internal server error occurs.
+ */
+export async function getFollowingHandler(req: Request, res: Response) {
+  if (!res.locals.user) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Access token is missing',
+    });
+  }
+  const user = await findUserByUsername(res.locals.user.username);
+
+  const followingUsername = req.params.username;
+
+  const user1 = await findUserByUsername(followingUsername);
+  const userID = user1?._id;
+
+  if (!user1) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'follower not found',
+    });
+  }
+
+  try {
+    if (!user || !res.locals.user.username) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access token is missing or invalid',
+      });
+    } else {
+      const followingID = user.followers?.find((f) => f.toString() === userID?.toString());
+      if (followingID) {
+        const followingData = {
+          username: user1.username,
+          about: user1.about,
+          avatar: user1.avatar,
+        };
+        return res.status(200).json({
+          followingData,
+        });
+      } else {
+        return res.status(200).json({
+          followingData: 'none',
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error in getFollowingHandler:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    });
+  }
+}
+
 /****************************** BOUDY ***********************************/
 
 /**
