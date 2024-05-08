@@ -85,11 +85,11 @@ class _ModernCardState extends State<ModernCard> {
     print('postId');
     print(text);
     print(widget.post['_id']);
-    final response = await http.post(
+    final response = await http.patch(
       Uri.parse(ApiRoutesBackend.editPost_Comment),
       headers: {
-        // 'Content-Type': 'application/json',
-        // 'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer ${widget.access_token}'
       },
       body: json.encode({
