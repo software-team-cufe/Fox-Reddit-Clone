@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:ui';
 import 'package:dio/dio.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -305,7 +306,10 @@ class _CreatePostState extends State<CreatePost> {
                           },
                         ),
                       ),
-                      child: const Text('Next'),
+                      child: const Text(
+                        'Next',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     )
                   ],
                 ),
@@ -323,7 +327,7 @@ class _CreatePostState extends State<CreatePost> {
                 TextField(
                   controller: _bodyController,
                   decoration: const InputDecoration(
-                    labelText: 'Body Text (optional)',
+                    labelText: 'Body Text ',
                   ),
                   onChanged: (text) {
                     setState(() {
