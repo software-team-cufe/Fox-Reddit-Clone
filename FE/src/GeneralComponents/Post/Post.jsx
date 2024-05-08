@@ -1,3 +1,4 @@
+import parse from 'html-react-parser';
 import React, { useEffect, useState } from "react";
 import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
@@ -78,7 +79,8 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                         </Link>
                         <Link className="w-full" to={`/posts/${postObj.postId}`}>
                             <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
-                            <p className=" text-gray-600 text-sm">{postObj.textHTML} </p>
+                            <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
+                            {/* <p className=" text-gray-600 text-sm">{parse(post.textHTML)} </p> */}
                             <div
 
                                 className=" rounded-lg my-4 w-full bg-gray-600">
@@ -92,11 +94,17 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                     </div> :
 
                     <div>
-
-                        <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
-                        <p className=" text-gray-600 text-sm mb-4">{postObj.description} </p>
-
-                        <p className=" text-gray-600 text-sm">{postObj.textHTML} </p>
+                        {
+                            postObj.isDeleted && <p>Post is deleted</p>
+                        }
+                        {
+                            !postObj.isDeleted && <>
+                                <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
+                                <p className=" text-gray-600 text-sm mb-4">{postObj.description} </p>
+                                <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
+                            </>
+                        }
+                        {/* <p className=" text-gray-600 text-sm">{postObj.textHTML} </p> */}
                         {
                             postObj.video && <div>
                                 <video src={postObj.video} controls />
