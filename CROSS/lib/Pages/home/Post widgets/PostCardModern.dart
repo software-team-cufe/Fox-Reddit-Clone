@@ -124,6 +124,24 @@ class _ModernCardState extends State<ModernCard> {
     }
   }
 
+  Future<void> reportItem(String postId) async {
+    final response = await http.post(
+      Uri.parse(ApiRoutesBackend.reportItem),
+      headers: {
+        'Authorization': 'Bearer ${widget.access_token}',
+        'Content-Type': 'application/json'
+      },
+      body: json.encode({'linkID': '<$postId>'}),
+    );
+    print("response status code: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("Item reported");
+    } else {
+      print("Item not reported");
+      print(widget.access_token);
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -383,7 +401,7 @@ class _ModernCardState extends State<ModernCard> {
                                       onTap: () {
                                         Navigator.pop(
                                             context); // Close the menu
-                                        // Handle option 1
+                                        reportItem(widget.post['postId']);
                                       },
                                       leading: Icon(Icons.flag_outlined,
                                           color: Colors
