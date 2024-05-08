@@ -254,10 +254,11 @@ const ModCard = () => {
            {/* diplay title here */}
            {title.toUpperCase()}
          </p>
-         <div className='text-sm text-gray-500'>
+         <div className='text-sm text-gray-500 capitalize'>
          {/* diplay description here */}
          {description}
          </div>
+         
        </div>
        <hr className="w-[100%] h-px mb-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
         <div className=' flex flex-col mx-3 '> 
