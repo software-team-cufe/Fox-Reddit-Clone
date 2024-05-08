@@ -18,23 +18,10 @@ import { setSearchField } from '@/hooks/UserRedux/searchSlice';
 import { useMatch } from 'react-router-dom';
 import { userAxios } from "@/Utils/UserAxios";
 
-const SearchComponent = ({ Viewed, setViewed }) => {
+const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
     let path = useLocation().pathname;
-    const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
-    const yourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
-    { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125" }];
-    const OtherCommunities = [{ name: "r / com3", icon: "DumPhoto3.jpg", membersCount: "123" },
-    {
-        name: "r / com4", icon: "DumPhoto4.jpg", membersCount: "1235", rules: [
-            "Be respectful to other members.",
-            "No spamming or self-promotion.",
-            "Keep discussions relevant to League of Legends.",
-            "No hate speech or harassment of any kind.",
-            "Follow Reddit's content policy."
-        ],
-    }];
 
-    const [peoplee, setpeople] = useState([]);
+    const [people, setpeople] = useState([]);
     const [Coms, setComs] = useState([]);
     const [search, setSearch] = useState('');
     const [showSelector, setShowSelector] = useState(false);
@@ -84,7 +71,15 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     const fetchOtherComs = async () => {
         try {
             const res = await userAxios.get(`r/search/?q=${search}&type=sr&page=1&limit=5`)
-            setComs(res.data.communitySearchResultAuth);
+            if (IsLogged)
+                setComs(res.data.communitySearchResultAuth);
+            else if (!IsLogged) {
+                setComs(res.data.communitySearchResultNotAuth);
+                console.log(res.data.
+                    communitySearchResultNotAuth
+                )
+            }
+            console.log(IsLogged)
         } catch (error) {
             console.log(error);
         }
@@ -93,6 +88,7 @@ const SearchComponent = ({ Viewed, setViewed }) => {
         try {
             const res = await userAxios.get(`r/search/?q=${search}&type=user&page=1&limit=5`)
             setpeople(res.data.users);
+            console.log(res.data)
         } catch (error) {
             console.log(error);
         }
@@ -136,7 +132,7 @@ const SearchComponent = ({ Viewed, setViewed }) => {
         }
     };
 
-    const filteredPeople = peoplee.filter(item =>
+    const filteredPeople = people.filter(item =>
         item.username.toLowerCase().includes(search.toLowerCase())
     );
     const filteredComs = Coms.filter(item =>
