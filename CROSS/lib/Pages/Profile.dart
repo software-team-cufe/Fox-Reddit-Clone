@@ -248,26 +248,26 @@ import 'package:reddit_fox/features/auth/screens/liveChat.dart';
     // API endpoint URL
     String apiUrl = ApiRoutesBackend.isFollwed(widget.userName);
 
-    final response = await http.post(
+    final response = await http.get(
       Uri.parse(apiUrl),
-      body: json.encode({
-        'username': widget.userName,
-      }),
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': 'Bearer ${widget.access_token}', // Use provided access token
       },
     );
 
+    print('User followed successfully. No following data available.:${response.statusCode}');
+
     if (response.statusCode == 200) {
       // Parse the response based on the "followingData" field
       Map<String, dynamic> responseData = json.decode(response.body);
-      if (responseData['followingData'] == 'none') {
-        print('User followed successfully. No following data available.');
+      setState(() {
+        if (responseData['followingData'] == 'none') {
+        print('User followed successfully. No following data available.: ${responseData['followingData']}');
         isFollowed = false;
       } else {
         isFollowed = true;
-      }
+      }       
+      });                                         
     } else {
       print('Failed to follow user: ${response.statusCode}');
     }
@@ -594,9 +594,11 @@ Widget _buildTitleView() {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       setState(() {
-                                        if (isFollowed == false) {
+                                        if (isFollowed == true) {
+                                          print('User followed successfully [useName un]: ${widget.userName}');
                                           unFollowUser(widget.userName);
                                         } else {
+                                          print('User followed successfully [useName]: ${widget.userName}');
                                           followUser(widget.userName);
                                         }
                                         isFollowed = !isFollowed;
