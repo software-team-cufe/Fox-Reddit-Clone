@@ -110,12 +110,12 @@ class _MyAppState extends ConsumerState<MyApp> {
                 return ModToolsScreen(name: name);
               },
               // CommunityScreen route with a parameter for the community name
-              '/r/:name': (context) {
-                // Extract the community name from the route arguments
-                final name = ModalRoute.of(context)?.settings.arguments as String;
-                // Return the CommunityScreen widget with the community name
-                return CommunityScreen(name: name);
-              },
+              // '/r/:name': (context) {
+              //   // Extract the community name from the route arguments
+              //   final name = ModalRoute.of(context)?.settings.arguments as String;
+              //   // Return the CommunityScreen widget with the community name
+              //   return CommunityScreen(community: )
+              // }
               // Other routes...
             },
             

@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:reddit_fox/Pages/home/Post%20widgets/VoteSection.dart';
-import 'dart:io';
+
 // Sample class for comment data
 class CommentData {
   final String username;
   final String content;
   final int votes;
   final List<CommentData> replies;
-  
 
   CommentData({
     required this.username,
@@ -31,14 +30,14 @@ class CommentCard extends StatefulWidget {
   ///
   /// The [username], [commentContent], [upvotes], [downvotes], [onReply], and [replies] parameters are required.
   const CommentCard({
-    Key? key,
+    super.key,
     required this.username,
     required this.commentContent,
     required this.votes,
     required this.onReply,
     required this.onViewMenu,
     required this.replies,
-  }) : super(key: key);
+  });
 
   @override
   _CommentCardState createState() => _CommentCardState();
@@ -79,13 +78,11 @@ class _CommentCardState extends State<CommentCard> {
     });
   }
 
-void _pickImage() async {
+  void _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      // Handle the picked image file (e.g., upload it as a comment)
-      File imageFile = File(pickedFile.path);
       // Call a function to handle adding the image as a comment
     } else {
       // Handle if no image was picked
@@ -114,7 +111,9 @@ void _pickImage() async {
             ],
           ),
           Container(
-            padding: const EdgeInsets.only(left: 10.0), // Add padding to create space between the avatar and the comment content
+            padding: const EdgeInsets.only(
+                left:
+                    10.0), // Add padding to create space between the avatar and the comment content
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -126,12 +125,13 @@ void _pickImage() async {
                       border: Border(
                         left: BorderSide(
                             width: 2.0,
-                            color:Colors.grey), // Vertical line for reply input
+                            color:
+                                Colors.grey), // Vertical line for reply input
                       ),
                     ),
                     child: Row(
                       children: [
-                                const SizedBox(width: 10), // Add a small space here
+                        const SizedBox(width: 10), // Add a small space here
                         const Expanded(
                           child: TextField(
                             decoration: InputDecoration(
@@ -143,19 +143,18 @@ void _pickImage() async {
                           ),
                         ),
                         IconButton(
-            icon: const Icon(Icons.camera_alt),
-            onPressed: () {
-              // Add your logic here to handle adding an image as a comment
-              _pickImage();
-            },
-          ),
+                          icon: const Icon(Icons.camera_alt),
+                          onPressed: () {
+                            _pickImage();
+                          },
+                        ),
                         IconButton(
                           icon: const Icon(Icons.send),
                           onPressed: () {
                             setState(() {
-                              isReplying = false; // Close the reply field
+                              isReplying = false;
                             });
-                            // Add logic to handle sending the reply
+                            //handle sending the reply
                           },
                         ),
                       ],
@@ -170,46 +169,44 @@ void _pickImage() async {
             children: [
               IconButton(
                 icon: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child:
-                              hasVoted && voteDirection == VoteDirection.Up
-                                  ? Image.asset(
-                                      'assets/Icons/up vote.png',
-                                      key: UniqueKey(),
-                                      width: 18,
-                                      height: 18,
-                                    )
-                                  : Image.asset(
-                                      'assets/Icons/arrow-up.png',
-                                      key: UniqueKey(),
-                                      width: 18,
-                                      height: 18,
-                                    )),
-                      onPressed: () => vote(VoteDirection.Up),
-                    ),
+                    duration: const Duration(milliseconds: 200),
+                    child: hasVoted && voteDirection == VoteDirection.Up
+                        ? Image.asset(
+                            'assets/Icons/up vote.png',
+                            key: UniqueKey(),
+                            width: 18,
+                            height: 18,
+                          )
+                        : Image.asset(
+                            'assets/Icons/arrow-up.png',
+                            key: UniqueKey(),
+                            width: 18,
+                            height: 18,
+                          )),
+                onPressed: () => vote(VoteDirection.Up),
+              ),
               Text(
                 "${voteCount.abs()}",
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               IconButton(
                 icon: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child:
-                              hasVoted && voteDirection == VoteDirection.Down
-                                  ? Image.asset(
-                                      'assets/Icons/down vote.png',
-                                      key: UniqueKey(),
-                                      width: 18,
-                                      height: 18,
-                                    )
-                                  : Image.asset(
-                                      'assets/Icons/arrow-down.png',
-                                      key: UniqueKey(),
-                                      width: 18,
-                                      height: 18,
-                                    )),
-                      onPressed: () => vote(VoteDirection.Down),
-                    ),
+                    duration: const Duration(milliseconds: 200),
+                    child: hasVoted && voteDirection == VoteDirection.Down
+                        ? Image.asset(
+                            'assets/Icons/down vote.png',
+                            key: UniqueKey(),
+                            width: 18,
+                            height: 18,
+                          )
+                        : Image.asset(
+                            'assets/Icons/arrow-down.png',
+                            key: UniqueKey(),
+                            width: 18,
+                            height: 18,
+                          )),
+                onPressed: () => vote(VoteDirection.Down),
+              ),
               const Spacer(),
               IconButton(
                 icon: const Icon(LucideIcons.reply),
@@ -234,8 +231,7 @@ void _pickImage() async {
                             title: const Text('Share'),
                             onTap: () {
                               // Handle edit action
-                              Navigator.pop(
-                                  context); // Close the bottom sheet
+                              Navigator.pop(context); // Close the bottom sheet
                             },
                           ),
                           ListTile(
@@ -243,8 +239,7 @@ void _pickImage() async {
                             title: const Text('Save'),
                             onTap: () {
                               // Handle delete action
-                              Navigator.pop(
-                                  context); // Close the bottom sheet
+                              Navigator.pop(context); // Close the bottom sheet
                             },
                           ),
                           ListTile(
@@ -252,8 +247,7 @@ void _pickImage() async {
                             title: const Text('Get Reply notifications'),
                             onTap: () {
                               // Handle delete action
-                              Navigator.pop(
-                                  context); // Close the bottom sheet
+                              Navigator.pop(context); // Close the bottom sheet
                             },
                           ),
                           ListTile(
@@ -261,8 +255,7 @@ void _pickImage() async {
                             title: const Text('Copy text'),
                             onTap: () {
                               // Handle delete action
-                              Navigator.pop(
-                                  context); // Close the bottom sheet
+                              Navigator.pop(context); // Close the bottom sheet
                             },
                           ),
                           ListTile(
@@ -270,8 +263,7 @@ void _pickImage() async {
                             title: const Text('Collapse thread'),
                             onTap: () {
                               // Handle delete action
-                              Navigator.pop(
-                                  context); // Close the bottom sheet
+                              Navigator.pop(context); // Close the bottom sheet
                             },
                           ),
                           ListTile(
@@ -279,8 +271,7 @@ void _pickImage() async {
                             title: const Text('Block account'),
                             onTap: () {
                               // Handle delete action
-                              Navigator.pop(
-                                  context); // Close the bottom sheet
+                              Navigator.pop(context); // Close the bottom sheet
                             },
                           ),
                           ListTile(
@@ -288,8 +279,7 @@ void _pickImage() async {
                             title: const Text('report'),
                             onTap: () {
                               // Handle delete action
-                              Navigator.pop(
-                                  context); // Close the bottom sheet
+                              Navigator.pop(context); // Close the bottom sheet
                             },
                           ),
                         ],

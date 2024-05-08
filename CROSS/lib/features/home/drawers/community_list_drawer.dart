@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_fox/core/common/error_text.dart';
 import 'package:reddit_fox/core/common/loader.dart';
 import 'package:reddit_fox/features/community/controller/community_controller.dart';
-import 'package:reddit_fox/models/community_model.dart';
+import 'package:reddit_fox/features/community/repository/community_repository.dart';
+import 'package:reddit_fox/features/community/screens/community_screen.dart';
 import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
+import 'package:reddit_fox/models/community_model.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 
 class CommunityListDrawer extends ConsumerWidget {
@@ -15,116 +17,135 @@ class CommunityListDrawer extends ConsumerWidget {
     Navigator.pushNamed(context, '/create-community');
   }
 
-  void navigateToCommunity(BuildContext context, Community community) {
-    Navigator.pushNamed(context, '/r/${community.name}');
-  }
+void navigateToCommunity(BuildContext context, Community community, WidgetRef ref) async {
+  // Fetch the community data
+  final result = await ref.read(communityRepositoryProvider).getCommunityByName(community.name);
+  result.fold(
+    (failure) {
+      // Handle failure case
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(failure.message)));
+    },
+    (communityData) {
+      // Navigate to the community screen with the fetched community data
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CommunityScreen(community: communityData),
+        ),
+      );
+    },
+  );
+}
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Stack(
-      children: [
-        Positioned(
-          top: 0,
-          bottom: 0,
-          left: 0,
+@override
+Widget build(BuildContext context, WidgetRef ref) {
+  return Stack(
+    children: [
+      Positioned(
+        top: 0,
+        bottom: 0,
+        left: 0,
+        width: drawer_Width,
+        child: Drawer(
           width: drawer_Width,
-          child: Drawer(
-            width: drawer_Width,
-            backgroundColor: Pallete.darkModeAppTheme.colorScheme.background,
-            child: SafeArea(
-              child: Column(
-                children: [
-                  ListTile(
-                    title: const Text('Create a community'),
-                    leading: const Icon(Icons.add),
-                    onTap: () => navigateToCreateCommunity(context),
-                  ),
-                  ref.watch(userCommunitiesProvider).when(
-                    data: (communities) => Expanded(
-                      child: ListView.builder(
-                        itemCount: communities.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final community = communities[index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              //backgroundImage: NetworkImage(community.avatar),
-                            ),
-                            //title: Text('r/${community.name}'),
-                            //onTap: () => navigateToCommunity(context, community),
-                          );
-                        },
-                      ),
-                    ),
-                    error: (error, stackTrace) => ErrorText(
-                      error: error.toString(),
-                    ),
-                    loading: () => const Loader(),
-                  ),
-                  const SizedBox(height: 10), // Add some space between items
-                  const Divider(color: Colors.white), // Add a divider
-                  // Moderating section
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Moderating',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.star, color: Colors.white),
-                    title: const Text(
-                      "Mod Feed",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      // Navigate to Mod Feed page
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.list, color: Colors.white),
-                    title: const Text(
-                      "Queues",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      // Navigate to Queues page
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.circle, color: Colors.white),
-                    title: const Text(
-                      "r/Valorant",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      // Navigate to Mod Feed page
-                    },
-                  ),
-                  const Divider(color: Colors.white), // Add a divider
-                  ListTile(
-                    title: const Text(
-                      "Mod Tools",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ModToolsScreen(name: ''),
+          backgroundColor: Pallete.darkModeAppTheme.colorScheme.background,
+          child: SafeArea(
+            child: Column(
+              children: [
+                ListTile(
+                  title: const Text('Create a community'),
+                  leading: const Icon(Icons.add),
+                  onTap: () => navigateToCreateCommunity(context),
+                ),
+                    ref.watch(userCommunitiesProvider).when(
+                      data: (communities) => Expanded(
+                        child: ListView.builder(
+                          itemCount: communities.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final community = communities[index];
+                            return GestureDetector(
+                              onTap: () => navigateToCommunity(context, community, ref),// Pass the community name
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: NetworkImage(community.avatar),
+                                ),
+                                title: Text('r/${community.name}'),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                               
+                   error: (error, stackTrace) => ErrorText(
+                    error: error.toString(),
                   ),
-                ],
-              ),
+                  loading: () => const Loader(),
+                ),
+                const SizedBox(height: 10), // Add some space between items
+                const Divider(color: Colors.white), // Add a divider
+                // Moderating section
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Moderating',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.star, color: Colors.white),
+                  title: const Text(
+                    "Mod Feed",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    // Navigate to Mod Feed page
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.list, color: Colors.white),
+                  title: const Text(
+                    "Queues",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    // Navigate to Queues page
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.circle, color: Colors.white),
+                  title: const Text(
+                    "r/Valorant",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    // Navigate to Mod Feed page
+                  },
+                ),
+                const Divider(color: Colors.white), // Add a divider
+                ListTile(
+                  title: const Text(
+                    "Mod Tools",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ModToolsScreen(name: ''),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 }

@@ -15,6 +15,8 @@ class ApiRoutesBackend {
   static const String viewedPost = '$baseUrl/api/view_post';
   static const String getHistroyPosts = '$baseUrl/user/h/history_post';
 
+  static const String editPost_Comment = '$baseUrl/api/editusertext';
+
   static String getUserAbout(String username) =>
       '$baseUrl/user/$username/about';
   static const String delPost = "$baseUrl/api/del";

@@ -95,7 +95,7 @@ class _VoteSectionState extends State<VoteSection> {
                 ),
                 onPressed: () => {
                   vote(VoteDirection.Up),
-                  widget.postVote(widget.post['id'], 1),
+                  widget.postVote(widget.post['postId'], 1),
                   },
               ),
             ),
