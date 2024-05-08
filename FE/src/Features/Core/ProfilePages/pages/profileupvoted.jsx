@@ -35,14 +35,15 @@ export default function ProfileUpvoted({using}) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.upvotedPosts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.communityName,
+                    communityIcon: post.communityIcon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post.postId,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    comments: post.postComments,
+                    commentsNum: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
@@ -70,14 +71,15 @@ export default function ProfileUpvoted({using}) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.upvotedPosts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.communityName,
+                    communityIcon: post.communityIcon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post.postId,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    comments: post.postComments,
+                    commentsNum: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",

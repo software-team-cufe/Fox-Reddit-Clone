@@ -15,7 +15,6 @@ export const userSlice = createSlice({
 
             state.user = action.payload;
         },
-        
         logOutUser: (state) => {
             state.user = null;
             localStorage.removeItem('authorization');

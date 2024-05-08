@@ -44,14 +44,15 @@ export default function PeopleSearchPage({ searched = "filler" }) {
 
     userAxios.get(`r/search/?q=${searched}&type=link&page=1&limit=${limitpage}&sort=${selected}&sortBy=${searchPeriod}`)
       .then(response => {
+        console.log(response.data);
         if (userRedux == null) {
           const newPosts = response.data.postsSearchResultsNotAuth.map(post => ({
             communityName: post.communityName,
             communityIcon: post.communityIcon,
             images: post.attachments,
-            _id: post.postId,
+            postId: post.postId,
             title: post.title,
-            description: post.textHTML,
+            textHTML: post.textHTML,
             votesCount: post.votesCount,
             comments: post.commentsCount,
             thumbnail: post.thumbnail,
@@ -70,9 +71,9 @@ export default function PeopleSearchPage({ searched = "filler" }) {
             communityName: post.communityName,
             communityIcon: post.communityIcon,
             images: post.attachments,
-            _id: post.postId,
+            postId: post.postId,
             title: post.title,
-            description: post.textHTML,
+            textHTML: post.textHTML,
             votesCount: post.votesCount,
             comments: post.commentsCount,
             thumbnail: post.thumbnail,
@@ -120,7 +121,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
             communityName: post.communityName,
             communityIcon: post.communityIcon,
             images: post.attachments,
-            _id: post.postId,
+            postId: post.postId,
             title: post.title,
             description: post.textHTML,
             votesCount: post.votesCount,
@@ -141,7 +142,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
             communityName: post.communityName,
             communityIcon: post.communityIcon,
             images: post.attachments,
-            _id: post.postId,
+            postId: post.postId,
             title: post.title,
             description: post.textHTML,
             votesCount: post.votesCount,

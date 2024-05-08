@@ -11,8 +11,11 @@
  */
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { setSearchField } from '@/hooks/UserRedux/searchSlice';
+import { useMatch } from 'react-router-dom';
 
 const SearchComponent = ({ Viewed, setViewed }) => {
     let path = useLocation().pathname;
@@ -30,7 +33,6 @@ const SearchComponent = ({ Viewed, setViewed }) => {
         ],
     }];
 
-
     const [peoplee, setpeople] = useState([]);
     const [Coms, setComs] = useState([]);
     const [search, setSearch] = useState('');
@@ -39,6 +41,10 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     const [Focus, setFocus] = useState(false);
     const navigator = useNavigate();
     const [hideit, sethideit] = useState(false);
+    const params = useParams();
+    const match = useMatch("/r/:community");
+    const dispatcher = useDispatch();
+
 
     useEffect(() => {
         //fetchData();
@@ -48,18 +54,12 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     useEffect(() => {
 
         if (path.includes("/user/")) {
-            const IncludeIndex = path.indexOf("/user/") + 6; // Add 6 to skip "/user/"
-            // Find the index of the first occurrence of the character after the "/user/" part
-            const characterIndex = path.indexOf("/", IncludeIndex);
-            let user = path.substring(IncludeIndex, characterIndex !== -1 ? characterIndex : path.length);
-            setViewed(user);
+            const user = params.user;
+            setViewed(`u/${user}`);
         }
         else if (path.includes("/r/")) {
-            const IncludeIndex = path.indexOf("/r/") + 3; // Add 6 to skip "/user/"
-            // Find the index of the first occurrence of the character after the "/user/" part
-            const characterIndex = path.indexOf("/", IncludeIndex);
-            let user = path.substring(IncludeIndex, characterIndex !== -1 ? characterIndex : path.length);
-            setViewed(user);
+            const comm = params.community;
+            setViewed(`r/${comm}`);
         }
         else {
             setViewed(null);
@@ -92,10 +92,15 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     }
 
     const navToSearch = (value) => {
-        setSelected(value);
-        setSearch("");
-        sethideit(true);
-        navigator(`/search/${value}/posts`);
+        if (match && Viewed != null) {
+            dispatcher(setSearchField(value));
+        }
+        else {
+            setSelected(value);
+            setSearch("");
+            sethideit(true);
+            navigator(`/search/${value}/posts`);
+        }
     };
 
     const handlechange = (comingvalue) => {

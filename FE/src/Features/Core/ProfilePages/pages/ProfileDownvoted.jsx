@@ -23,7 +23,7 @@ export default function ProfileDownvoted({ using }) {
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage,setcurrentpage] = useState(1);
+    const [currentpage,setcurrentpage] = useState(2);
     const limitpage = 5;
 
     //fetch posts on load and put into posts array
@@ -35,14 +35,15 @@ export default function ProfileDownvoted({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.downvotedPosts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.communityName,
+                    communityIcon: post.communityIcon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post.postId,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    comments: post.postComments,
+                    commentsNum: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
@@ -70,14 +71,15 @@ export default function ProfileDownvoted({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.downvotedPosts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.communityName,
+                    communityIcon: post.communityIcon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post.postId,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    comments: post.postComments,
+                    commentsNum: post.commentsCount,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",

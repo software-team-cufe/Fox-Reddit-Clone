@@ -6,7 +6,7 @@
  * The component is wrapped in a CommunityProvider component that provides the selected sorting and period values.
  * @file FILEPATH
  */
-import React, { useContext, createContext, useState, useRef, useCallback } from "react";
+import React, { useContext, createContext, useState, useRef, useCallback, useEffect } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
@@ -65,6 +65,8 @@ export default function CommunityPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editComponent, setEditComponent] = useState("Banner");
   const [showKickOut, setShowKickOut] = useState(false);
+  const searchRedux = useSelector(state => state.search);
+
 
   //to fetch the community data from the server and use them
   const fetchCommunity = useCallback(async () => {
@@ -195,6 +197,12 @@ export default function CommunityPage() {
 
   const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], fetchInitialPosts, { enabled: !loading, staleTime: Infinity });
 
+  useEffect(() => {
+    if (searchRedux != null && searchRedux != "") {
+      toast.error("gkro0kg");
+    }
+  }, [searchRedux]);
+
   const swtichJoinState = async () => {
     if (user == null) {
       setShowModal(true);
@@ -235,12 +243,12 @@ export default function CommunityPage() {
           setpagedone(true);
         }
         const newPosts = response.data.posts.map(post => ({
-          communityName: post.username,
+          communityName: post.coummunityName,
           communityIcon: post.userID.avatar,
           images: post.attachments,
           id: post._id,
           title: post.title,
-          description: post.textHTML,
+          textHTML: post.textHTML,
           votesCount: post.votesCount,
           comments: post.commentsCount,
           thumbnail: post.thumbnail,
@@ -286,7 +294,7 @@ export default function CommunityPage() {
       {showKickOut && <KickOutModal></KickOutModal>}
       <BackToTop />
       {/* background image of the community */}
-      <img src={commObj.backimage} alt='community' className={`w-full md:mx-auto h-20 md:h-36 object-fit rounded-lg`} />
+      <img src={commObj.backimage} alt='community' className={`w-full md:mx-auto h-20 md:h-36 object-cover rounded-lg`} />
       {commObj.modded && <button id="bannerEditPen" className={`absolute md:right-6 right-3 hover:bg-gray-700 p-2 rounded-full text-white top-12 md:top-[100px]`} onClick={() => handleEditComponents("Banner")}>
         <Pen className={`md:w-5 md:h-5 w-3 h-3`} />
       </button>}
