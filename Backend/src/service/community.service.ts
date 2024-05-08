@@ -1138,7 +1138,7 @@ export async function getPostsSearchResultsNotAuth(
           communityDescription: '$description', // Project community description
           memberCount: '$membersCnt', // Project member count
           postId: '$posts._id', // Project post ID
-          userId: '$posts.userId', // Project user ID
+          userId: '$posts.userID', // Project user ID
           username: '$posts.username', // Project username
           title: '$posts.title', // Project post title
           textHTML: '$posts.textHTML', // Project post textHTML
@@ -1260,7 +1260,7 @@ export async function getPostsSearchResultsAuth(
           communityDescription: '$description', // Project community description
           memberCount: '$membersCnt', // Project member count
           postId: '$posts._id', // Project post ID
-          userId: '$posts.userId', // Project user ID
+          userId: '$posts.userID', // Project user ID
           username: '$posts.username', // Project username
           title: '$posts.title', // Project post title
           textHTML: '$posts.textHTML', // Project post textHTML
@@ -1860,12 +1860,13 @@ export async function getSubredditSearchPosts(
       { $limit: limit }, // Limit the number of documents returned
       {
         $project: {
+          CommunityID: '$posts.CommunityID', // Project post CommunityID
           communityIcon: '$icon', // Project community icon
           communityName: '$name', // Project community name
           communityDescription: '$description', // Project community description
           memberCount: '$membersCnt', // Project member count
           postId: '$posts._id', // Project post ID
-          userId: '$posts.userId', // Project user ID
+          userId: '$posts.userID', // Project user ID
           username: '$posts.username', // Project username
           title: '$posts.title', // Project post title
           textHTML: '$posts.textHTML', // Project post textHTML
@@ -1877,14 +1878,11 @@ export async function getSubredditSearchPosts(
           isLocked: '$posts.isLocked', // Project post isLocked
           type: '$posts.type', // Project post type
           nsfw: '$posts.nsfw', // Project post nsfw
-          isHidden: '$posts.isHidden', // Project post isHidden
-          insightCnt: '$posts.insightCnt', // Project post insightCnt
           spamCount: '$posts.spamCount', // Project post spamCount
           votesCount: '$posts.votesCount', // Project post votesCount
           createdAt: '$posts.createdAt', // Project post createdAt
           editedAt: '$posts.editedAt', // Project post editedAt
           followers: '$posts.followers', // Project post followers
-          CommunityID: '$posts.CommunityID', // Project post CommunityID
           commentsNum: '$posts.commentsNum', // Project post commentsNum
         },
       },
