@@ -77,7 +77,7 @@ export async function findHotPostsByCommunity(
 ): Promise<Post[]> {
   try {
     const communityObject = await findCommunityByName(community);
-
+    if (!communityObject) throw new Error('Community does not exist');
     const queryOptions: QueryOptions = { sort: { insightCnt: -1 } };
 
     // Calculate skip based on page and limit
@@ -87,7 +87,7 @@ export async function findHotPostsByCommunity(
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    let posts = await PostModel.find({ communityId: communityObject?.id }, null, queryOptions).exec();
+    let posts = await PostModel.find({ CommunityID: communityObject._id }, null, queryOptions).exec();
     posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     return posts;
@@ -143,7 +143,7 @@ export async function findNewPostsByCommunity(
 ): Promise<Post[]> {
   try {
     const communityObject = await findCommunityByName(community);
-
+    if (!communityObject) throw new Error('Community does not exist');
     const queryOptions: QueryOptions = { sort: { createdAt: -1 } };
 
     // Calculate skip based on page and limit
@@ -153,7 +153,7 @@ export async function findNewPostsByCommunity(
     queryOptions.skip = skip;
     queryOptions.limit = limit;
 
-    let posts = await PostModel.find({ communityId: communityObject?.id }, null, queryOptions).exec();
+    let posts = await PostModel.find({ CommunityID: communityObject._id }, null, queryOptions).exec();
     posts = await PostModel.populate(posts, { path: 'userID', select: '_id avatar' });
 
     return posts;
@@ -222,7 +222,7 @@ export async function findTopPostsByCommunityWithinTime(
 ): Promise<Post[]> {
   try {
     const communityObject = await findCommunityByName(community);
-
+    if (!communityObject) throw new Error('Community does not exist');
     const queryOptions: QueryOptions = {
       sort: { votesCount: -1 },
       // Add the time frame condition to the query
@@ -242,7 +242,7 @@ export async function findTopPostsByCommunityWithinTime(
     // Adjust the query to include the time frame condition
     let posts = await PostModel.find(
       {
-        communityId: communityObject?.id,
+        CommunityID: communityObject._id,
         createdAt: {
           $gte: startDate,
           $lte: endDate,
