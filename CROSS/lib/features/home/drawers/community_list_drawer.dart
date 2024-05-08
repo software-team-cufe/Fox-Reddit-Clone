@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_fox/core/common/error_text.dart';
 import 'package:reddit_fox/core/common/loader.dart';
 import 'package:reddit_fox/features/community/controller/community_controller.dart';
-import 'package:reddit_fox/models/community_model.dart';
+import 'package:reddit_fox/features/community/repository/community_repository.dart';
+import 'package:reddit_fox/features/community/screens/community_screen.dart';
 import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
+import 'package:reddit_fox/models/community_model.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 
 class CommunityListDrawer extends ConsumerWidget {
@@ -15,9 +17,25 @@ class CommunityListDrawer extends ConsumerWidget {
     Navigator.pushNamed(context, '/create-community');
   }
 
-  void navigateToCommunity(BuildContext context, Community community) {
-    Navigator.pushNamed(context, '/r/${community.name}');
-  }
+void navigateToCommunity(BuildContext context, Community community, WidgetRef ref) async {
+  // Fetch the community data
+  final result = await ref.read(communityRepositoryProvider).getCommunityByName(community.name);
+  result.fold(
+    (failure) {
+      // Handle failure case
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(failure.message)));
+    },
+    (communityData) {
+      // Navigate to the community screen with the fetched community data
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CommunityScreen(community: communityData),
+        ),
+      );
+    },
+  );
+}
 
 @override
 Widget build(BuildContext context, WidgetRef ref) {
@@ -39,25 +57,26 @@ Widget build(BuildContext context, WidgetRef ref) {
                   leading: const Icon(Icons.add),
                   onTap: () => navigateToCreateCommunity(context),
                 ),
-                ref.watch(userCommunitiesProvider).when(
-                  data: (communities) => Expanded(
-                    child: ListView.builder(
-                      itemCount: communities.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final community = communities[index];
-                        return GestureDetector(
-                          onTap: () => navigateToCommunity(context, community),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(community.avatar),
-                            ),
-                            title: Text('r/${community.name}'),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  error: (error, stackTrace) => ErrorText(
+                    ref.watch(userCommunitiesProvider).when(
+                      data: (communities) => Expanded(
+                        child: ListView.builder(
+                          itemCount: communities.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final community = communities[index];
+                            return GestureDetector(
+                              onTap: () => navigateToCommunity(context, community, ref),// Pass the community name
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: NetworkImage(community.avatar),
+                                ),
+                                title: Text('r/${community.name}'),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                               
+                   error: (error, stackTrace) => ErrorText(
                     error: error.toString(),
                   ),
                   loading: () => const Loader(),

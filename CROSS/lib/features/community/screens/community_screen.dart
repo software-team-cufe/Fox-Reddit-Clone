@@ -4,19 +4,22 @@ import 'package:reddit_fox/core/common/error_text.dart';
 import 'package:reddit_fox/core/common/loader.dart';
 import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
 import 'package:reddit_fox/features/community/controller/community_controller.dart';
-import 'package:reddit_fox/models/community_model.dart'; // Import the new community model
+import 'package:reddit_fox/models/community_model.dart';
 
 class CommunityScreen extends ConsumerWidget {
-  final String name;
-  const CommunityScreen({Key? key, required this.name}) : super(key: key);
+  final Community community;
 
-  void navigateToModTools(BuildContext context) {
-    Navigator.pushNamed(context, '/mod-tools/$name');
-  }
+  const CommunityScreen({Key? key, required this.community}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
+    final name = community.name; // Extract community name
+
+    void navigateToModTools(BuildContext context) {
+      Navigator.pushNamed(context, '/mod-tools/$name');
+    }
+
     return Scaffold(
       body: ref.watch(getCommunityByNameProvider(name)).when(
         data: (communityEither) => communityEither.fold(
@@ -34,7 +37,7 @@ class CommunityScreen extends ConsumerWidget {
                     children: [
                       Positioned.fill(
                         child: Image.network(
-                          community.banner,
+                          community.banner ?? '', // Handle null banner
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -49,7 +52,7 @@ class CommunityScreen extends ConsumerWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage(community.avatar), // Use the new property for the avatar
+                            backgroundImage: NetworkImage(community.avatar ?? ''), // Handle null avatar
                             radius: 36,
                           ),
                         ),
@@ -58,13 +61,13 @@ class CommunityScreen extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'r/${community.name}',
+                              'r/${community.name ?? ''}', // Handle null name
                               style: const TextStyle(
                                 fontSize: 19,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            community.mods.contains(user.uid)
+                            community.mods?.contains(user.uid) ?? false // Handle null or empty mods list
                                 ? OutlinedButton(
                                     onPressed: () {
                                       navigateToModTools(context);
@@ -85,13 +88,13 @@ class CommunityScreen extends ConsumerWidget {
                                       ),
                                       padding: const EdgeInsets.symmetric(horizontal: 25),
                                     ),
-                                    child: Text(community.members.contains(user.uid) ? 'Joined' : 'Join'),
+                                    child: Text(community.members?.contains(user.uid) ?? false ? 'Joined' : 'Join'), // Handle null or empty members list
                                   ),
                           ],
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
-                          child: Text('${community.memberCount} members'), // Use the new property for member count
+                          child: Text('${community.memberCount ?? 0} members'), // Handle null memberCount
                         ),
                       ],
                     ),
