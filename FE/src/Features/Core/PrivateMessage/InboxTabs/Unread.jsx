@@ -73,7 +73,6 @@ function Unread({ DiffTime }) {
     const fetchMessages = async () => {
         try {
             const res = await userAxios.get('message/unreadMessages/');
-            console.log(res.data);
             const filteredMessages = res.data.messages.filter(message => !message.isDeleted);
             setUnreadMess(filteredMessages);
             setLoading(false);

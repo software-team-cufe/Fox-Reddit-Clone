@@ -43,63 +43,16 @@ function InboxFunc() {
 
 export default function Inbox({ DiffT }) {
 
-    const setUnreadAtIndex = (index, value) => {
-        setPostRep(prevPostRep => {
-            const updatedPostRep = [...prevPostRep];
-            if (index >= 0 && index < updatedPostRep.length) {
-                updatedPostRep[index] = {
-                    ...updatedPostRep[index],
-                    unread: value
-                };
-            }
-            return updatedPostRep;
-        });
-    };
-
-    const setUnreadAtIndexM = (index, value) => {
-        setAllMessages(prevPostRep => {
-            const updatedPostRep = [...prevPostRep];
-            if (index >= 0 && index < updatedPostRep.length) {
-                updatedPostRep[index] = {
-                    ...updatedPostRep[index],
-                    unread: value
-                };
-            }
-            return updatedPostRep;
-        });
-    };
-
-
-    const setUnreadAtIndexAll = (index, value) => {
-        setAllM(prevPostRep => {
-            const updatedPostRep = [...prevPostRep];
-            if (index >= 0 && index < updatedPostRep.length) {
-                updatedPostRep[index] = {
-                    ...updatedPostRep[index],
-                    unread: value
-                };
-            }
-            return updatedPostRep;
-        });
-    };
-
     return (
 
         // nested routing for the setting pages renders navofsetting then feed according to route
         < Routes >
             <Route element={<InboxFunc />} >
-                <Route key={'/inbox'} path='/' element={<All setUnreadAtIndex={setUnreadAtIndexAll}
-                    DiffTime={DiffT} />} />
-                <Route key={"/unread"} path="/unread" element={<Unread
-                    DiffTime={DiffT} />} />
-
-                <Route key={"/messages"} path="/messages" element={<Messages setUnreadAtIndex={setUnreadAtIndexM}
-                    DiffTime={DiffT} />} />
-
-                <Route key={"/selfreply"} path="/selfreply" element={<PostReplies setUnreadAtIndex={setUnreadAtIndex}
-                    DiffTime={DiffT} />} />
-                <Route key={"/mentions"} path="/mentions" element={<UsernameMentions
-                    DiffTime={DiffT}
+                <Route key={'/inbox'} path='/' element={<All DiffTime={DiffT} />} />
+                <Route key={"/unread"} path="/unread" element={<Unread DiffTime={DiffT} />} />
+                <Route key={"/messages"} path="/messages" element={<Messages DiffTime={DiffT} />} />
+                <Route key={"/selfreply"} path="/selfreply" element={<PostReplies DiffTime={DiffT} />} />
+                <Route key={"/mentions"} path="/mentions" element={<UsernameMentions DiffTime={DiffT}
                 />} />
             </Route>
         </Routes >
