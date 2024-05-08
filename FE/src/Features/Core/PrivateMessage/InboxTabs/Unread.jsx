@@ -51,6 +51,7 @@ function Unread({ DiffTime }) {
 
     useEffect(() => {
         fetchMessages();
+        MarkRead();
     }, [])
 
     useEffect(() => {
@@ -60,6 +61,14 @@ function Unread({ DiffTime }) {
     useEffect(() => {
         selectedButton === null ? setDisableNext(true) : setDisableNext(false)
     }, [selectedButton])
+
+    const MarkRead = async () => {
+        try {
+            const res = await userAxios.post("message/markReadAllMessages/")
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const fetchMessages = async () => {
         try {
