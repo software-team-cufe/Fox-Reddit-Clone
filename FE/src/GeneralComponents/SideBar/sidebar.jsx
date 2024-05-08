@@ -2,7 +2,6 @@
  * @file Sidebar component for the Fox Reddit Clone application.
  * @module Sidebar
  */
-
 import React, { useEffect } from "react";
 import { useState, useContext } from "react";
 import { Home, Flame, Globe, Plus, ChevronDown, BookLock, Handshake, Siren, LayoutGrid, Sparkles, Mail, Table } from 'lucide-react';
@@ -140,6 +139,8 @@ if(userStore.getState().user.user != null){
    
    //handle youCommunitiesList known that it contains both moderator and creator subreddits
    const modComList = [...creatorForSubredit, ...moderatorInSubreddits];
+   const yourCommunitiesList = [...creatorForSubredit, ...userMemberInSubreddits];
+
    let tempForClear = [];
 
    for (let i = 0; i < modComList.length; i++) {
@@ -149,7 +150,19 @@ if(userStore.getState().user.user != null){
    }
 
    tempForClear = [...new Set(tempForClear)];
-   const yourCommunitiesList = [...creatorForSubredit, ...userMemberInSubreddits]
+
+   let tempForYourCom = [];
+
+   for (let i = 0; i < yourCommunitiesList.length; i++) {
+      if (userMemberInSubreddits.includes(yourCommunitiesList[i]) && !tempForYourCom.includes(yourCommunitiesList[i])) {
+         tempForYourCom.push(yourCommunitiesList[i]);
+      }
+   }
+   console.log(tempForYourCom);
+
+   tempForYourCom = [...new Set(tempForYourCom)];
+   console.log(yourCommunitiesList);
+   console.log(userMemberInSubreddits);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [yourCommunities, setYourCommunities] = useState([]);
 
@@ -310,7 +323,7 @@ if(userStore.getState().user.user != null){
                            </li>
                            <li>
                               {
-                                 yourCommunitiesList?.map((commun, index) => (
+                                 tempForYourCom?.map((commun, index) => (
                                     <a
                                        href={`/r/${commun.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
