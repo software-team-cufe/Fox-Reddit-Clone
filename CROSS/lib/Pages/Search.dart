@@ -70,7 +70,7 @@ class _SearchState extends State<Search> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => search1(searchItem: _searchController.text),
+        builder: (context) => Search1(searchItem: _searchController.text),
       ),
     );
   }

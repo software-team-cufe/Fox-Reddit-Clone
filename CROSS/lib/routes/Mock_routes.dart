@@ -51,7 +51,7 @@ class ApiRoutesBackend {
   static const String notification = '$baseUrl/api/v1/me/notification';
   static String getUserFollowings(String username) =>
       '$baseUrl/api/v1/me/followings/$username';
-  static const String Search = '$baseUrl/r/search';
+  static const String Search = '$baseUrl/r/search/';
 
   static String getUserForChat(String userName) =>
       '$baseUrl/r/search/?q=$userName&type=user';

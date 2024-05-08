@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:reddit_fox/Pages/home/HomePage.dart';
+import 'package:http/http.dart' as http;
+import 'package:reddit_fox/Pages/CommentCard.dart';
+import 'package:reddit_fox/Pages/Search.dart';
+import 'package:reddit_fox/Pages/home/Post%20widgets/PostCardClassic.dart';
+import 'package:reddit_fox/Pages/userView.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reddit_fox/Pages/home/Post widgets/PostCardModern.dart';
 
-class search1 extends StatefulWidget {
+class Search1 extends StatefulWidget {
   final String searchItem;
-  const search1({Key? key, required this.searchItem}) : super(key: key);
+  const Search1({Key? key, required this.searchItem}) : super(key: key);
 
   @override
-  State<search1> createState() => _search1State();
+  State<Search1> createState() => _Search1State();
 }
 
-class _search1State extends State<search1> with SingleTickerProviderStateMixin {
+class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
   String? access_token;
-  String Type = "posts";
+  Map<dynamic, dynamic> PostData = {};
+  List<Map<String, dynamic>> userData = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     SharedPreferences.getInstance().then((sharedPrefValue) {
-      setState(() {
-        // Store the token in the access_token variable
-        access_token = sharedPrefValue.getString('backtoken');
-      });
+      access_token = sharedPrefValue.getString('backtoken');
     });
-    _search(Type);
+    _searchPost('link');
+    //_searchComment('comment');
+    _searchUser('user');
   }
 
   @override
@@ -40,49 +43,185 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  void _clearSearch() {
-    _searchController.clear();
-  }
+  Future<void> _searchPost(String type) async {
+    try {
+      // Constructing URL with query parameters
+      Uri uri = Uri.parse(ApiRoutesBackend.Search);
+      Map<String, String> queryParams = {
+        'q': widget.searchItem,
+        'type': type,
+        'page': "1",
+        'limit': "10", // Adding limit parameter as per the cURL command
+      };
+      uri = uri.replace(queryParameters: queryParams);
 
-  Future<void> _search(String type) async {
-  try {
-    Map<String, String> queryParams = {
-      'q': widget.searchItem,
-      'type': type,
-      'page': "1",
-      'limit': "10", // Adding limit parameter as per the cURL command
-    };
-    // Constructing URL with query parameters
-    Uri uri = Uri.parse(ApiRoutesBackend.Search).replace(queryParameters: queryParams);
+      // Sending GET request with headers
+      http.Response response = await http.get(
+        uri,
+        // Add headers if required, for example:
+        // headers: {'Authorization': 'Bearer ${access_token}'},
+      );
 
-    // Sending GET request with headers
-    http.Response response = await http.get(
-      uri,
-      headers: {'Authorization': 'Bearer ${access_token}'},
-    );
+      print("status code for search: ${response.statusCode}");
 
-    print("status code for search: ${response.statusCode}");
-
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      // Process the responseData as needed
-      print(responseData);
-    } else {
-      throw Exception('Failed to load search results');
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        PostData = (responseData['postsSearchResultNotAuth']).asMap();
+        print('respose PostData [posts]: $PostData');
+        print(responseData);
+      } else {
+        // Print response body for debugging
+        print(response.body);
+        throw Exception('Failed to load search results. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error searching users: $error');
     }
-  } catch (error) {
-    throw Exception('Error searching users: $error');
   }
-}
 
-  Widget SerachUser(){
-    return ListView.builder(
-      itemCount: 1,
-      itemBuilder: (BuildContext context, int index) {
-        return ;
-      },
+  Future<void> _searchUser(String type) async {
+    try {
+      // Constructing URL with query parameters
+      Uri uri = Uri.parse(ApiRoutesBackend.Search);
+      Map<String, String> queryParams = {
+        'q': widget.searchItem,
+        'type': type,
+        'page': "1",
+        'limit': "10", // Adding limit parameter as per the cURL command
+      };
+      uri = uri.replace(queryParameters: queryParams);
+
+      // Sending GET request with headers
+      http.Response response = await http.get(
+        uri,
+        // Add headers if required, for example:
+        // headers: {'Authorization': 'Bearer ${access_token}'},
+      );
+
+      print("status code for search: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        userData = (responseData['users']);
+        print('respose commentData: $userData');
+        print(responseData);
+      } else {
+        // Print response body for debugging
+        print(response.body);
+        throw Exception('Failed to load search results. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error searching users: $error');
+    }
+  }
+
+  Future<void> _searchHash(String type) async {
+    try {
+      // Constructing URL with query parameters
+      Uri uri = Uri.parse(ApiRoutesBackend.Search);
+      Map<String, String> queryParams = {
+        'q': '#${widget.searchItem}',
+        'type': type,
+        'page': "1",
+        'limit': "10", // Adding limit parameter as per the cURL command
+      };
+      uri = uri.replace(queryParameters: queryParams);
+
+      // Sending GET request with headers
+      http.Response response = await http.get(
+        uri,
+        // Add headers if required, for example:
+        // headers: {'Authorization': 'Bearer ${access_token}'},
+      );
+
+      print("status code for search: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        PostData = (responseData['postsSearchResultNotAuth']).asMap();
+        print('respose data [posts]: $PostData');
+        print(responseData);
+      } else {
+        // Print response body for debugging
+        print(response.body);
+        throw Exception('Failed to load search results. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error searching users: $error');
+    }
+  }
+
+
+
+
+  Widget SearchPost(){
+    return Container(
+      child:  FutureBuilder<void>(
+        future: _searchPost('link'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          else{
+            return ListView.builder(
+                  itemCount: PostData.length,
+                  itemBuilder: (context, index) {
+                    var post = PostData[index];
+              return ModernCard(post: post);
+            },
+          );
+          }
+        }
+      )
     );
   }
+
+  Widget SearchUser(){
+    return Container(
+    child: userView(comments: userData,),
+    );
+  }
+
+  Widget SearchHash(){
+    return Container(
+      child:  FutureBuilder<void>(
+        future: _searchHash('link'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          else{
+            return ListView.builder(
+                  itemCount: PostData.length,
+                  itemBuilder: (context, index) {
+                    var post = PostData[index];
+              return ModernCard(post: post);
+            },
+          );
+          }
+        }
+      )
+    );
+  }
+
+
+
+  Widget searchUser(){
+    return Container();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +230,7 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const Search()));
           },
         ),
         backgroundColor: Colors.black,
@@ -124,35 +263,38 @@ class _search1State extends State<search1> with SingleTickerProviderStateMixin {
             ),
           ),
         ),
-
         titleSpacing: 0,
       ),
       body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(text: 'Posts'),
-                Tab(text:'Communities'),
-                Tab(text: 'Comments'),
-                Tab(text: 'People'),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: TabBar(
+                    controller: _tabController,
+                    isScrollable: true, // Allow swiping between tabs
+                    tabs: const [
+                      Tab(text: 'Posts',),
+                      Tab(text:'Communities'),
+                      Tab(text: 'Comments'),
+                      Tab(text: 'People'),
+                      Tab(text: 'Hashtags',)
+                    ],
+                  ),
+                ),
+                SliverFillRemaining(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      // Replace these with actual content
+                      SearchPost(),
+                      Container(), 
+                      Container(),
+                      Container(),
+                      SearchHash(), 
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-          SliverFillRemaining(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                Container(),
-                Container(), 
-                Container(),
-                Container(), 
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   } 
 }

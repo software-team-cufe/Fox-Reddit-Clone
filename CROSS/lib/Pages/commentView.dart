@@ -75,6 +75,12 @@ class _CommentListViewState extends State<CommentListView> {
                    color: Color(0xFF989898),
                 ),
               ),
+              const Divider(
+                height: 1,
+                color: Color.fromARGB(255, 44, 43, 43),
+                thickness: 1,
+                indent: 1,
+                endIndent: 1),
             ],
           ),
         );
