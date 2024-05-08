@@ -164,7 +164,7 @@ function SafetySettings() {
 
 
         <div>
-            <div className="w-[75%]">
+            <div className="sm:w-[75%] w-full">
                 <h1 className='font-bold my-4 text-xl'>Safety & Privacy</h1>
                 <div className='text-xs mb-6 text-gray-500'><div className='text-xs
                   text-gray-500'>Manage how we use data to personalize your Fox experience,
