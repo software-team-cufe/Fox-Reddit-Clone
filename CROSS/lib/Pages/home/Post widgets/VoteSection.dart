@@ -164,7 +164,7 @@ class _VoteSectionState extends State<VoteSection> {
                 ),
                 onPressed: () {
 
-                  String postId = widget.post['_id'] ?? 404;
+                  String postId = widget.post['postId'] ?? 404;
                   String postUrl =
                       'http://devopsagmdmnfront.southafricanorth.cloudapp.azure.com/posts/$postId';
                   Share.share('${widget.post['title']}\n$postUrl');
