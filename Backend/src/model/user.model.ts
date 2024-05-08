@@ -445,7 +445,7 @@ export class User {
   @prop({
     required: false,
     default:
-      'dS2hR_kST5aAT-C2HYJ30q:APA91bEKl8bLOGR7HHBs4vXA_SPmagBe8pEax953avEBXkLIGlNCoptsQTu9a30-a_JlDLxhA7X3GmxbVoIoUQHLzfAF0wJQcqUlR0OQ66E7O0sEXuKiW5r4-3G0_co0pOrxhzmw6M6G',
+      'dLOGE0M9SFi2nuO207BXrT:APA91bHDz9zuFWgx7FnmS4N6AxecBF0bQ00h6owg8IEj39izvGOwDCeTzXxyUY6uzFN6nvJ8wKRTZEO_3wE4cdPN02yrygKLoLu6O4uG4YavYow1uF-xT3L4mZyuLGAsFwtD3dPKvFfc',
   })
   fcmtoken: string;
   /***************************************
