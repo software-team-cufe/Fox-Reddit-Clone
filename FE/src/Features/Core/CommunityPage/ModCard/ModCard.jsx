@@ -115,6 +115,43 @@ const ModCard = () => {
       console.log(error);
     }
    }
+
+   const getText = async () => {
+    try {
+      const res = await userAxios.get(`/${community}/api/text_widgets`);
+      const { data } = res.data;
+  
+      const formattedData = {
+        rules: data.map(item => ({
+          title: item.title,
+          description: item.description
+        }))
+      };
+  
+      console.log(formattedData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    getText();
+  }, []);
+ 
+  /*
+  const [nickname, setNickname] = useState('');
+  const [currentNickname, setCurrentNickname] = useState('');
+  
+   const editCommunity = async (event) => {
+    try {
+      const res = await userAxios.patch(`/${community}/api/edit_details` ,nickname,currentNickname,description);
+      console.log(res.data);
+      console.log("community edited successfully");
+    } catch (error) {
+      console.log(error);
+    }
+   }
+  */
+
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
@@ -210,6 +247,17 @@ const ModCard = () => {
                    <p className='text-sm text-gray-500'>Online</p>
                  </span>
            </div>
+       </div>
+       <hr className="w-[100%] h-px mb-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+       <div className=' mx-3  flex flex-col'>
+         <p className='text-sm text-gray-500'>
+           {/* diplay title here */}
+           {title}
+         </p>
+         <p className='text-sm text-gray-500'>
+         {/* diplay description here */}
+         {description}
+         </p>
        </div>
        <hr className="w-[100%] h-px mb-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
         <div className=' flex flex-col mx-3 '> 
