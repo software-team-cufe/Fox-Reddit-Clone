@@ -18,7 +18,7 @@ export const modNavbarItems = [
             },
             {
                 name: "Scheduled Posts",
-                link: "",
+                link: "/scheduledposts",
                 icon: CalendarCheck ,
                 newTap: false,
             },
