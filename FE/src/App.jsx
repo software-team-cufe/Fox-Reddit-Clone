@@ -113,7 +113,7 @@ function MainRoute() {
         IsLogged={store != null} ProfileImageSrc={store != null ? store.avatar : "logo.png"}
         UserName={store != null ? store.username : "fidjfi"} IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
-        {
+        {/* {
           !isUrlMatching(window.location.pathname, [
             "/login",
             "/register",
@@ -127,7 +127,7 @@ function MainRoute() {
             "/community",
           ]) && 
           <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
-        }
+        } */}
 
         <div className='h-full w-full overflow-y-auto '>
           <Outlet />

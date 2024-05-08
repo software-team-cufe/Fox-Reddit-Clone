@@ -14,7 +14,7 @@ export default function UserHeader({ post }) {
     const id = toast.loading("Please wait");
     try {
       const res = await userAxios.post("/api/save", {
-        "linkID": params.id,
+        "linkID": `t3_${params.id}`,
       })
     } catch (ex) { }
     toast.dismiss(id);
@@ -23,7 +23,7 @@ export default function UserHeader({ post }) {
     const id = toast.loading("Please wait");
     try {
       const res = await userAxios.post("/api/save", {
-        "linkID": params.id,
+        "linkID": `t3_${params.id}`,
       })
     } catch (ex) { }
     toast.dismiss(id);
@@ -32,7 +32,7 @@ export default function UserHeader({ post }) {
     const id = toast.loading("Please wait");
     try {
       const res = await userAxios.post("/api/lock", {
-        "linkID": params.id,
+        "linkID": `t3_${params.id}`,
       })
     } catch (ex) { }
     toast.dismiss(id);
@@ -41,7 +41,7 @@ export default function UserHeader({ post }) {
     const id = toast.loading("Please wait");
     try {
       const res = await userAxios.post("/api/report", {
-        "linkID": params.id,
+        "linkID": `t3_${params.id}`,
       })
     } catch (ex) { }
     toast.dismiss(id);
@@ -50,7 +50,7 @@ export default function UserHeader({ post }) {
     const id = toast.loading("Please wait");
     try {
       const res = await userAxios.post("/api/hide", {
-        "linkID": params.id,
+        "linkID": `t3_${params.id}`,
       })
       window.location.reload();
     } catch (ex) { }
