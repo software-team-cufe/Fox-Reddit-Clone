@@ -23,6 +23,7 @@ import {
   addReplyHandler,
   getCommentRepliesHandler,
   getPostByIdHandler,
+  voteOnPostPoll,
 } from '../controller/listing.controller';
 import validateResource from '../middleware/validateResource';
 import uploadMultipleMulter from '../middleware/multer/multipleFiles';
@@ -76,4 +77,5 @@ router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);
 router.post('/api/addreply', validateResource(addCommentSchema), addReplyHandler);
 router.get('/api/get_comment_replies/:commentId', getCommentRepliesHandler);
 router.get('/posts/:id', getPostByIdHandler);
+router.post('/api/posts/:id/poll', voteOnPostPoll);
 export default router;

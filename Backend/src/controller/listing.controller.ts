@@ -1543,3 +1543,26 @@ export async function getPostByIdHandler(req: Request<PostByIdInput['params']>, 
     return res.status(500).json({ msg: 'Internal server error' });
   }
 }
+
+export async function voteOnPostPoll(req: Request, res: Response) {
+  const postId = req.params.id;
+  const post = await findPostById(postId);
+  if (!post) {
+    return res.status(400).json({ msg: 'Post not found' });
+  }
+
+  const poll = post.poll;
+  if (!poll) {
+    return res.status(400).json({ msg: 'Post has no poll' });
+  }
+  const choice = req.body.choice;
+
+  for (let i = 0; i < poll?.length; i++) {
+    if (poll[i].title == choice) {
+      poll[i].votes += 1;
+      await post.save();
+      res.status(200).json(poll);
+    }
+  }
+  res.status(404).json({ msg: 'not found' });
+}
