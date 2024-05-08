@@ -95,8 +95,13 @@ class _VoteSectionState extends State<VoteSection> {
                 ),
                 onPressed: () => {
                   vote(VoteDirection.Up),
+                  if(widget.post['postId'] != null){
                   widget.postVote(widget.post['postId'], 1),
+                  }
+                  else{
+                    widget.postVote(widget.post['_id'], 1),
                   },
+                }
               ),
             ),
             Text(

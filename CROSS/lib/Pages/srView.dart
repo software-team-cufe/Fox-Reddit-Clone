@@ -23,14 +23,7 @@ class SRView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProfilePage(
-                                      userName: username,
-                                      access_token: accessToken!,
-                                    )),
-                          );
+                
               },
               child: Row(
                 children: [
