@@ -951,7 +951,6 @@ class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
         ),
         TextButton(
           onPressed: () {
-            print("a7aaaaaaaaaaaaaaaaaaaaaaa");
             if (newPassword.text == '' ||
                 newPasswordConfirmation.text == '' ||
                 oldPassword.text == '') {

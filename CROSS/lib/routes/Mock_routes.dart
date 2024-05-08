@@ -60,7 +60,8 @@ class ApiRoutesBackend {
       '$baseUrl/r/search/?q=$userName&type=user';
 
   static const String addComment = '$baseUrl/api/comment';
-  static String isFollwed(String userName) =>'$baseUrl/api/v1/me/followings/$userName';
+  static String isFollwed(String userName) =>
+      '$baseUrl/api/v1/me/followings/$userName';
 }
 
 class ApiRoutesMockserver {
@@ -80,4 +81,5 @@ class ApiRoutesMockserver {
   static const String getTrending = '$baseUrl/trendingTodat';
   static const String getRecentSearch = '$baseUrl/recentlySearched';
   static const String message = '$baseUrl/messages';
+  static const String getCommunities = '$baseUrl/community';
 }

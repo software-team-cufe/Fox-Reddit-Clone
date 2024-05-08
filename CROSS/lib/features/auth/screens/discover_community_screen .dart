@@ -2,9 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/navbar.dart';
+import 'package:reddit_fox/routes/Mock_routes.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:typed_data';
 
-class DiscoverCommunityScreen extends StatelessWidget {
+import 'package:shared_preferences/shared_preferences.dart';
+
+class DiscoverCommunityScreen extends StatefulWidget {
   const DiscoverCommunityScreen({super.key});
+
+  @override
+  State<DiscoverCommunityScreen> createState() =>
+      _DiscoverCommunityScreenState();
+}
+
+class _DiscoverCommunityScreenState extends State<DiscoverCommunityScreen> {
+  Future<Map<dynamic, dynamic>> discoveryCommunities() async {
+    const url = ApiRoutesMockserver.getCommunities;
+    final res = await http.get(
+      Uri.parse(url),
+    );
+    print(res.statusCode);
+    print(res.body);
+    if (res.statusCode == 200) {
+      return json.decode(res.body).asMap();
+    } else {
+      print('Failed to load followed accounts');
+      throw Exception("failed to ");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // discoveryCommunities();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,53 +45,37 @@ class DiscoverCommunityScreen extends StatelessWidget {
       child: Scaffold(
         bottomNavigationBar: const nBar(),
         body: SingleChildScrollView(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.menu),
-                      onPressed: () {},
-                    ),
-                    RegularText(
-                      text: "Comunities",
-                      fontsize: 20,
-                    ),
-                    const Gap(150),
-                    const Icon(Icons.search),
-                    const Spacer(),
-                    const CircleAvatar()
-                  ],
-                ),
-                const Gap(30),
-                const MoreLikeContainer(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {},
+                  ),
+                  RegularText(
+                    text: "Comunities",
+                    fontsize: 20,
+                  ),
+                  const Gap(150),
+                  const Icon(Icons.search),
+                  const Spacer(),
+                  const CircleAvatar()
+                ],
+              ),
+              const Gap(30),
+              MoreLikeContainer(
                   communityName: "valorant",
-                  communityCards: [
-                    SuggestedCommunityCard(),
-                    SuggestedCommunityCard(),
-                    SuggestedCommunityCard(),
-                    SuggestedCommunityCard(),
-                    SuggestedCommunityCard(),
-                  ],
-                ),
-                const MoreLikeContainer(
-                  communityName: "valorant",
-                  communityCards: [
-                    SuggestedCommunityCard(),
-                    SuggestedCommunityCard(),
-                    SuggestedCommunityCard(),
-                    SuggestedCommunityCard(),
-                    SuggestedCommunityCard(),
-                  ],
-                )
-
-                //  NavigationBar(destinations: destinations)
-                ,
-              ],
-            ),
+                  communityCards: discoveryCommunities()),
+              const Gap(30),
+              MoreLikeContainer(
+                  communityName: "AI", communityCards: discoveryCommunities()),
+              const Gap(30),
+              MoreLikeContainer(
+                  communityName: "Cars",
+                  communityCards: discoveryCommunities()),
+            ],
           ),
         ),
       ),
@@ -67,67 +84,92 @@ class DiscoverCommunityScreen extends StatelessWidget {
 }
 
 class MoreLikeContainer extends StatelessWidget {
-  const MoreLikeContainer({
+  MoreLikeContainer({
     super.key,
     required this.communityName,
     required this.communityCards,
   });
 
   final String communityName;
-  final List<SuggestedCommunityCard> communityCards;
+  Future<Map<dynamic, dynamic>> communityCards;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          leading: Text(
-            'More Like $communityName',
-            style: const TextStyle(fontSize: 20),
-          ),
-          trailing: const Icon(Icons.arrow_forward_ios),
-        ),
-        SizedBox(
-          height: 280,
-          width: 400,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: (communityCards.length / 2)
-                .ceil(), // Adjust itemCount for pairs
-            itemBuilder: (context, index) {
-              final firstIndex =
-                  index * 2; // Calculate starting index for the pair
-              final communityCard1 = firstIndex < communityCards.length
-                  ? communityCards[firstIndex]
-                  : null; // Handle cases with odd number of cards
+    return FutureBuilder<Map<dynamic, dynamic>>(
+      future: communityCards,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          Map<dynamic, dynamic> communityCards = snapshot.data ?? {};
 
-              final secondIndex = firstIndex + 1;
-              final communityCard2 = secondIndex < communityCards.length
-                  ? communityCards[secondIndex]
-                  : null; // Handle cases with odd number of cards
+          return Column(
+            children: [
+              ListTile(
+                leading: Text(
+                  'More Like $communityName',
+                  style: const TextStyle(fontSize: 20),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios),
+              ),
+              SizedBox(
+                height: 280,
+                width: 400,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: (communityCards.length / 2)
+                      .ceil(), // Adjust itemCount for pairs
+                  itemBuilder: (context, index) {
+                    final firstIndex =
+                        index * 2; // Calculate starting index for the pair
+                    final communityCard1 = firstIndex < communityCards.length
+                        ? communityCards[firstIndex]
+                        : null; // Handle cases with odd number of cards
 
-              return Column(
-                // Use Column for vertical layout within pairs
-                children: [
-                  if (communityCard1 != null)
-                    communityCard1, // Display only if available
-                  if (communityCard2 != null)
-                    const SizedBox(height: 10), // Add spacing (optional)
-                  if (communityCard2 != null)
-                    communityCard2, // Display only if available
-                ],
-              );
-            },
-          ),
-        ),
-      ],
+                    final secondIndex = firstIndex + 1;
+                    final communityCard2 = secondIndex < communityCards.length
+                        ? communityCards[secondIndex]
+                        : null; // Handle cases with odd number of cards
+
+                    return Column(
+                      // Use Column for vertical layout within pairs
+                      children: [
+                        if (communityCard1 != null)
+                          SuggestedCommunityCard(
+                              bio: communityCards[firstIndex]['Bio'],
+                              name: communityCards[firstIndex][
+                                  'communityName']), // Display only if available
+                        if (communityCard2 != null)
+                          const SizedBox(height: 10), // Add spacing (optional)
+                        if (communityCard2 != null)
+                          SuggestedCommunityCard(
+                              bio: communityCards[secondIndex]['Bio'],
+                              name: communityCards[secondIndex][
+                                  'communityName']), // Display only if available
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }
 
 class SuggestedCommunityCard extends StatelessWidget {
-  const SuggestedCommunityCard({super.key});
-
+  const SuggestedCommunityCard(
+      {super.key, required this.bio, required this.name});
+  final String bio;
+  final String name;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -154,17 +196,16 @@ class SuggestedCommunityCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Valorant',
-                        style: TextStyle(
+                      Text(
+                        name,
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.5,
                         height: 40,
-                        child: const Text(
-                          'lablablablablablablablalablablablablablablablblablablablablablablablablablablablablablablabllablablablablablablablalablablablablablablablblablablablablablablablablablablablablablablabl',
-                          // style: TextStyle( fontSize: 20),
+                        child: Text(
+                          bio, // style: TextStyle( fontSize: 20),
                           maxLines: 3,
                           softWrap: true, // Enables text wrapping
                           overflow: TextOverflow.visible, //
@@ -174,7 +215,7 @@ class SuggestedCommunityCard extends StatelessWidget {
                   ),
                   Textbuttoncontainer(
                     text: "Join",
-                    onPressed: () => const Placeholder(),
+                    onPressed: () => {},
                     color: Colors.blue,
                   )
                 ],
