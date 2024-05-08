@@ -226,16 +226,26 @@ Future<List<Community>> getUserCommunities(String userId) async {
 
 /// Fetch a community by its name.
 Future<Either<Failure, Community>> getCommunityByName(String name) async {
+  // Get the access token from SharedPreferences.
+  final prefs = await SharedPreferences.getInstance();
+  final accessToken = prefs.getString('backtoken') ?? '';
+
   try {
-    final response = await http.get(Uri.parse('http://foxnew.southafricanorth.cloudapp.azure.com/$name'));
+    final response = await http.get(
+      Uri.parse('http://foxnew.southafricanorth.cloudapp.azure.com/$name'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
   
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       final communityData = responseData['community'];
       
       // Create a Community object from the fetched data
-      final community = Community.fromJson(communityData);
-
+      print('Response Body: ${response.body}');
+      //final community = responseData['community'];
+      print('Type of communityData: ${communityData.runtimeType}');
       // Print the community data
       print('Community Data:');
       print('ID: ${communityData['_id']}');
@@ -245,20 +255,23 @@ Future<Either<Failure, Community>> getCommunityByName(String name) async {
       print('Member Count: ${communityData['membersCnt']}');
 
       // Return the community data as a Right
-      return Right(community);
+      return Right(Community.fromJson(communityData));
     } else {
       // Print the failure status code
-      print('Failed to fetch community data: ${response.statusCode}');
+      print('me4at4at: ${response.statusCode}');
       
       // Return a failure message as a Left
-      return Left(Failure('Failed to fetch community data: ${response.statusCode}'));
+      return Left(Failure('7ara2: ${response.statusCode}'));
     }
   } catch (e) {
     // Print the error message
-    print('Failed to fetch community data: $e');
+    print('mee4 me4at4at: $e');
+    //print(e.stackTrace);
+    print(StackTrace);
+    print('s7a');
 
     // Return a failure message as a Left if an error occurs
-    return Left(Failure('Failed to fetch community data: $e'));
+    return Left(Failure('me4 7ara2: $e'));
   }
 }
 

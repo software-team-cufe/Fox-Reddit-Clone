@@ -95,8 +95,7 @@ class CommunityController extends StateNotifier<bool> {
 Future<List<Community>> getUserCommunities() async {
   // Get the user ID from the user provider
   final uid = _ref.read(userProvider)?.uid ?? '';
-  
-  try {
+    try {
     // Call the repository method to fetch user communities
     return await _communityRepository.getUserCommunities(uid);
   } catch (e) {
@@ -171,10 +170,6 @@ Future<void> editCommunity({
     },
   );
 }
-
-
-
-
   /// Search for communities based on a query.
   Stream<List<Community>> searchCommunity(String query) {
     return _communityRepository.searchCommunity(query);
