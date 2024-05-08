@@ -24,5 +24,5 @@ export const extractAxiosError = (ex) => {
     if (ex.response?.data != null && ex.response?.data?.length != 0 && ex.response?.data[0]?.message != null) {
         return ex.response?.data[0]?.message;
     }
-    return ex?.message;
+    return null;
 }

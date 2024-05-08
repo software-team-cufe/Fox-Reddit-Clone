@@ -16,16 +16,18 @@ export default function CommentSection({ comments }) {
 
   const [commentts, setComments] = useState(comments ?? []);
   const { data, isLoading, isError } =
-    useQuery(`get-comms-${params.id}`, () => axios.get(`http://localhost:3002/comments?postID=${params.id}`).then(data => {
-      setComments(data?.data ?? comments ?? []);
-      return data;
-    }),
+    useQuery(`get-comms-${params.id}`,
+      () => axios.get(`http://localhost:3002/comments?postID=${params.id}`)
+        .then(data => {
+          setComments(data?.data ?? comments ?? []);
+          return data;
+        }),
       {
         refetchOnWindowFocus: false,
         retry: 0,
       }
     );
-
+  console.log(commentts);
   const handelAddComment = async () => {
     const comm = document.getElementById('txt-comment').value;
     if (comm == null || comm == "") {
@@ -35,7 +37,7 @@ export default function CommentSection({ comments }) {
     const id = toast.loading("Please wait");
     try {
       const res = await userAxios.post("/api/comment", {
-        "linkID": params.id,
+        "linkID": `t3_${params.id}`,
         "textHTML": comm,
         "textJSON": comm,
       });
@@ -48,7 +50,7 @@ export default function CommentSection({ comments }) {
           "username": "user1",
           "userID": 1
         },
-        "votesCount": 10,
+        "votesCount": 0,
 
         "createdAt": "2022/02/15, 15:05:45",
         "commentText": comm,
