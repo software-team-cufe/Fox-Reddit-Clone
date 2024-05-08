@@ -356,7 +356,7 @@ class _Search1State extends State<Search1> with SingleTickerProviderStateMixin {
                   itemBuilder: (context, index) {
                     var comment = commentData[index];
                     print('passed user: $comment');
-              return  comentViewSerch(comment: comment);
+              return  ComentViewSearch(comment: comment);
             },
           );
           }
