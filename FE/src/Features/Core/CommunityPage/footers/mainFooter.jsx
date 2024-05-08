@@ -8,6 +8,7 @@ export default function MainFooter (){
   const [moderators, setModerators] = useState([]);
   const { community } = useParams();  
   const [members, setMembers] = useState(0);
+
   const navigate =useNavigate();
   useEffect( () => {
     const getNumofMembers = async () => {
@@ -42,7 +43,33 @@ export default function MainFooter (){
   };
   getModerators();}
   , [community])
+  
+ const [textData, setTextData] = useState({});
 
+  const getText = async () => {
+    try {
+      const res = await userAxios.get(`/${community}/api/text_widgets`);
+       console.log(res.data);
+       const { rules } = res.data;
+       const getData ={
+        rules: rules.map(rule => ({
+          title: rule.title,
+          description: rule.description
+        }))
+       };
+       setTextData(getData);
+       console.log(getData)
+
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+
+    getText();
+  }, [community]);
 
   const navigator = useNavigate();
   const handleNavigate=()=>{
@@ -107,19 +134,19 @@ export default function MainFooter (){
 
     return(
         <div className='w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg hidden md:block'>
-           <div className=" flex flex-col content-between ">
-              <div className=" flex flex-col">
-                <p className=" font-semibold text-sm"> {community}</p>
+           <div className=" flex flex-col content-between">
+              <div className=" flex flex-col space-y-2  mb-3">
+                <p className=" font-semibold text-lg"> {community}</p>
                 <p className=" text-xs text-gray-500 font-light">community description</p>
               </div>
              
               <div className=" flex flex-row justify-between my-3">
                   <div className=" flex flex-col">
-                      <p className=" font-semibold text-sm">{members}</p>
+                      <p className=" font-semibold text-md">{members}</p>
                       <p className=" text-xs text-gray-500 font-light">Members</p>
                   </div>
                   <div className=" flex flex-col">
-                     <p className="font-semibold text-sm">456</p>
+                     <p className="font-semibold text-md">456</p>
                    
                      <div className=" flex flex-row"> 
                        <svg className="text-green-500 w-2 h-2 fill-current rounded-full mt-1 mr-1"
@@ -128,10 +155,19 @@ export default function MainFooter (){
                       </div>
                   </div>
                   <div className=" flex flex-col">
-                     <p className=" font-semibold text-sm">Top 1%</p>
+                     <p className=" font-semibold text-md">Top 1%</p>
                      <p className=" text-xs text-gray-500 font-light">Rank by size</p>
                   </div>
               </div>
+           </div>
+           <hr className="w-[100%] h-px mb-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+           <div className='mx-3 flex flex-col my-3'>
+            {textData.rules && textData.rules.map((rule, index) => (
+               <div key={index} className="flex flex-col space-y-3" >
+                   <h2 className="text-xs text-gray-600  uppercase font-medium ">{rule.title}</h2>
+                   <div className="text-xs text-gray-500 capitalize">{rule.description}</div>
+               </div>
+            ))}
            </div>
            <hr className="w-[100%] h-px mb-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
            <div className=" flex flex-col space-y-3"> 
