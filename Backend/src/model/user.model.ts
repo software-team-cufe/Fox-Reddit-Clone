@@ -126,6 +126,12 @@ export class UserPrefs {
 
   @prop({ default: true })
   prefShowTrending?: boolean;
+
+  @prop({ default: true })
+  autoplayMedia: boolean;
+
+  @prop({ default: true })
+  blurMature: boolean;
 }
 export class notificationSettings {
   @prop({ default: true })
