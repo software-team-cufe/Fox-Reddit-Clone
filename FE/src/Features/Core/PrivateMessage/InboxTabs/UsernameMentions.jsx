@@ -49,29 +49,26 @@ function UsernameMentions({ DiffTime }) {
 
     const fetchMessages = async () => {
         try {
-            console.log(userStore.getState().user.user.username)
-            const res = await userAxios.get('api/get_user_mentions');
 
-            console.log(res.data);
-            // res.data.map((item, i) => {
-            //     if (item.Comment.votes.length > 0) {
-            //         for (let index = 0; index < item.Comment.votes.length; index++) {
-            //             if (item.Comment.votes[index].userID === currentId) {
-            //                 if (item.Comment.votes[index].type === 1) {
-            //                     const newVotes = [...MeVote];
-            //                     newVotes[i] = true;
-            //                     setMeVote(newVotes);
-            //                 } else if (item.Comment.votes[index].type === -1) {
-            //                     const newVotes = [...MeVote];
-            //                     newVotes[i] = false;
-            //                     setMeVote(newVotes);
-            //                 }
-            //                 console.log(MeVote);
-            //                 break;
-            //             }
-            //         }
-            //     }
-            // })
+            const res = await userAxios.get('api/get_user_mentions');
+            res.data.map((item, i) => {
+                if (item.comment.votes.length > 0) {
+                    for (let index = 0; index < item.comment.votes.length; index++) {
+                        if (item.comment.votes[index].userID === currentId) {
+                            if (item.comment.votes[index].type === 1) {
+                                const newVotes = [...MeVote];
+                                newVotes[i] = true;
+                                setMeVote(newVotes);
+                            } else if (item.comment.votes[index].type === -1) {
+                                const newVotes = [...MeVote];
+                                newVotes[i] = false;
+                                setMeVote(newVotes);
+                            }
+                            break;
+                        }
+                    }
+                }
+            })
             setMessages(res.data);
             setLoading(false);
         } catch (error) {

@@ -5,7 +5,7 @@ import { Switch } from '@headlessui/react'
 import { userAxios } from "@/Utils/UserAxios";
 import { userStore } from '../../../../hooks/UserRedux/UserStore';
 import { useNavigate } from 'react-router-dom';
-export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
+export default function All({ DiffTime }) {
     const currentId = userStore.getState().user.user._id;
     const navigator = useNavigate();
     const [AllM, setAllM] = useState([]);
@@ -58,7 +58,6 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
     const fetchMessages = async () => {
         try {
             const res = await userAxios.get('api/get_all');
-            console.log(res.data);
             const filteredMessages = res.data.filter(message => !message.isDeleted);
             setAllM(filteredMessages);
             setLoading(false);
@@ -76,6 +75,26 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
             console.log(error);
         }
     }
+
+    const setUnreadAtIndex = async (index, id) => {
+        try {
+            const res = await userAxios.post('message/markUnreadMessage/',
+                { messageId: id });
+
+        } catch (error) {
+            console.log(error)
+        }
+        setAllM(prevPostRep => {
+            const updatedPostRep = [...prevPostRep];
+            if (index >= 0 && index < updatedPostRep.length) {
+                updatedPostRep[index] = {
+                    ...updatedPostRep[index],
+                    unread: true
+                };
+            }
+            return updatedPostRep;
+        });
+    };
 
     const handleUpVote = async (id, index, UpOrDownV) => {
         try {
@@ -127,7 +146,6 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
                         type: "unblock"
                     }
                     const res = await userAxios.post('api/block_user', data);
-                    console.log(res.data);
                     //check if UserToBlock is not empty set BlockedUserInRep
                     setBlockedUserInRep(!BlockedUserInRep);
                 }
@@ -137,7 +155,6 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
                         type: "block"
                     }
                     const res = await userAxios.post('api/block_user', data);
-                    console.log(res.data);
                     //check if UserToBlock is not empty set BlockedUserInRep
                     setBlockedUserInRep(!BlockedUserInRep);
                 }
@@ -155,7 +172,6 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
                 type: "block"
             }
             const res = await userAxios.post('api/block_user', data);
-            console.log(res.data);
             setBlocked(prevState => {
                 const newState = [...prevState];
                 newState[i] = true;
@@ -381,7 +397,7 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
                                                 }}
                                                     className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}</>}
-                                        {!mess.postTitle && <p onClick={() => { setUnreadAtIndex(i, true); }}
+                                        {!mess.postTitle && <p onClick={() => { setUnreadAtIndex(i, mess._id); }}
                                             className={`mx-2 text-xs m-1  hover:cursor-pointer
                                      hover:underline ${mess.unread ? "hidden" : "block"}`}>Mark Unread</p>}
                                         {!mess.postTitle && <p onClick={() => { setShowRepIn(true); toggleShowRepIn(i); }}
