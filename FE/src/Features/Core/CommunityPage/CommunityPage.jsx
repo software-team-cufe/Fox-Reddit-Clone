@@ -187,13 +187,17 @@ export default function CommunityPage() {
 
   const fetchInitialPosts = () => {
     setFeed(true);
-    let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
+    console.log("new posts")
+    let link = `api/listing/posts/r/${commObj.name}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
     if (selected == 'Top') {
       link = link + `&t=${period}`;
     }
     userAxios.get(link)
       .then((response) => {
-        const newPosts = response?.data?.posts?.map(post => ({
+        if(response.data.length > 0){
+          setpagedone(true);
+        }
+        const newPosts = response.data.map(post => ({
           communityName: post.username,
           communityIcon: post.userID.avatar,
           images: post.attachments,
@@ -207,7 +211,7 @@ export default function CommunityPage() {
           type: "post",
           spoiler: post.spoiler,
           NSFW: post.nsfw
-        })) ?? [];
+        }));
         setcurrentpage(2);
         setPosts(newPosts);
         setFeed(false);
@@ -221,7 +225,12 @@ export default function CommunityPage() {
   const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], fetchInitialPosts, { enabled: !loading, staleTime: Infinity });
 
   useEffect(() => {
-    if (searchRedux != null && searchRedux != "") {
+    setFeed(true);
+    if (!commObj) {
+      fetchCommunity();
+      return;
+    }
+    else{
       userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
       .then((response) => {
         if (response.data.subredditSearchPosts.length < limitpage) {
@@ -247,6 +256,7 @@ export default function CommunityPage() {
       .catch(error => {
         console.error('There was an error!', error);
       });
+      setFeed(false);
     }
   }, [searchRedux]);
 
