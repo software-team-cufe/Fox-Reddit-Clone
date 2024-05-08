@@ -12,7 +12,9 @@ const ModCard = () => {
     const [handleView, setHandleView] = useState(false);
     const [handleDescription, setHandleDescription] = useState(false);
     const [isOpened, setIsOpened] = useState(false);
-    const [addWidget, setAddWidget] = useState(false);
+    const [addWidget, setAddWidget] = useState(false); 
+    const [ title, setTitle ] = useState('');
+    const [ description, setDescription ] = useState('');
     const [handleText, setHandleText] = useState(false);
     const [handleRules, setHandleRules] = useState(false);
     const [handleButtons, setHandleButtons] = useState(false);
@@ -25,8 +27,10 @@ const ModCard = () => {
     const moderatorName = useSelector(state => state.user.user.username);
     const [members, setMembers] = useState(0);
     const [moderators, setModerators] = useState([]);
+
     const navigator = useNavigate();
     const navigate =useNavigate();
+    
     const handleNavigate=()=>{
         navigator('/message/compose');
     }
@@ -66,9 +70,51 @@ const ModCard = () => {
     
       getModerators();
     }, [community]);
-  
-
-
+       
+   
+     const textWidget = async (event) => {
+      if (event) {
+        event.preventDefault();
+      }
+      try {
+        const widgetData = {
+          widgets: [
+            {
+              title,
+              description
+            }
+          ]
+        };
+        const res = await userAxios.patch(`/${community}/api/edit_text_widgets`, widgetData);
+        console.log(res.data);
+        console.log("input text");
+        setTitle(title);
+        console.log(title);
+        setDescription(description);
+        console.log(description);
+        console.log("success");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+   
+   const deleteTextWidget = async (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    try {
+      const emptyWidgetData = {
+        widgets: []
+      };
+      const res = await userAxios.patch(`/${community}/api/edit_text_widgets`, emptyWidgetData);
+      console.log(res.data);
+      console.log("Text widget deleted successfully");
+      setTitle(''); 
+      setDescription(''); 
+    } catch (error) {
+      console.log(error);
+    }
+   }
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
@@ -479,6 +525,8 @@ const ModCard = () => {
                                                  <input
                                                    type="text"
                                                    placeholder="Widget name*"
+                                                   value={title}
+                                                   onChange={(e) => setTitle(e.target.value)}
                                                    className="text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2 rounded-2xl p-2 bg-gray-200"
                                                    
                                                  />
@@ -489,7 +537,8 @@ const ModCard = () => {
                                                        <input 
                                                         type="text"
                                                         placeholder="Text*"
-                                                      
+                                                        value={description}
+                                                        onChange={(e) => setDescription(e.target.value)}
                                                         className="text-black focus:outline-none border border-gray-200 self-center h-24 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
                                                         </input> 
                                                        
@@ -499,12 +548,18 @@ const ModCard = () => {
                                                  </div>
 
                                                  <div className=' flex flex-row justify-end space-x-3  mr-4 mt-10'>
-                                                   <button onClick={ ()=> setHandleText(false)} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
-                                                    Cancel
-                                                    </button>
-                                                    <button onClick={ ()=> setHandleText(false)} className=' w-[62px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
-                                                     Save
-                                                    </button>
+                                                     {title && description ? (
+                                                        <button onClick={deleteTextWidget} className=' w-[62px] text-xs rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-200 '>
+                                                           Delete
+                                                        </button>
+                                                         ) : null}
+                                                      <button onClick={ ()=> setHandleText(false)} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
+                                                        Cancel
+                                                      </button>
+                                                      <button onClick={ (event)=> {setHandleText(false) ; textWidget(event);}} className=' w-[62px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                                                       Save
+                                                     </button>
+                                                 
                                                </div>
                                              </div>
                                         </div>
