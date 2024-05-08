@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from 'react-redux'
+import GoogleIcon from "../../../../GeneralComponents/GoogleIcon";
 /**
  * RegisterPage Component
  * 
@@ -49,7 +50,9 @@ export default function RegisterPage({ }) {
     const [loading, setLoading] = useState(false);
     const disp = useDispatch();
     const nav = useNavigate();
+    const handelContinueWithGoogle = () => { 
 
+    };
     const register = async (e) => {
         const obj = Object.fromEntries(new FormData(document.getElementById("from-register")).entries());
         if (obj.password != obj.passwordConfirmation && obj.password != "" && obj.passwordConfirmation != "") {
@@ -98,7 +101,15 @@ export default function RegisterPage({ }) {
                             <Button role="register-btn" className=" w-full" loading={loading} disabled={loading} onClick={register} >
                                 Create account
                             </Button>
+                            <button type="button" onClick={handelContinueWithGoogle} className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
+                                <div className=" w-4">
+                                    <GoogleIcon />
+                                </div>
 
+                                Continue With Google
+                                <p></p>
+
+                            </button>
                         </form>
                     </div>
                 </div>

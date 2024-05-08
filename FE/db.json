@@ -846,9 +846,33 @@
         "username": "user1",
         "userID": 1
       },
-      "votesCount": -1,
+      "votesCount": -2,
       "createdAt": "2022/02/15, 15:05:45",
       "commentText": "ertertert",
+      "postID": "663ab996a987f88b93bffb1e"
+    },
+    {
+      "id": "64d7",
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 0,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "dxaxxxxxxxx",
+      "postID": "663ab996a987f88b93bffb1e"
+    },
+    {
+      "id": "c6f8",
+      "user": {
+        "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "username": "user1",
+        "userID": 1
+      },
+      "votesCount": 0,
+      "createdAt": "2022/02/15, 15:05:45",
+      "commentText": "ddddddddddaweqwrfffffffff",
       "postID": "663ab996a987f88b93bffb1e"
     }
   ]

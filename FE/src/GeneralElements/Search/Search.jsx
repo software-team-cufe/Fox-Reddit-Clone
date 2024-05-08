@@ -16,6 +16,7 @@ import axios from "axios";
 import { useDispatch } from 'react-redux';
 import { setSearchField } from '@/hooks/UserRedux/searchSlice';
 import { useMatch } from 'react-router-dom';
+import { userAxios } from "@/Utils/UserAxios";
 
 const SearchComponent = ({ Viewed, setViewed }) => {
     let path = useLocation().pathname;
@@ -45,6 +46,7 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     const match = useMatch("/r/:community");
     const dispatcher = useDispatch();
 
+    const [YourCommunities, setYourCommunities] = useState([])
 
     useEffect(() => {
         //fetchData();
@@ -68,14 +70,33 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     }, [path])
 
     useEffect(() => {
-        console.log(Viewed)
-    }, [Viewed])
-    useEffect(() => {
         const timer = setTimeout(goSearch, 200);
-        // console.log(showSelector)
         return () => clearTimeout(timer);
 
     }, [search]);
+
+    useEffect(() => {
+        fetchOtherComs();
+        fetchPeople();
+    }, [search])
+
+
+    const fetchOtherComs = async () => {
+        try {
+            const res = await userAxios.get(`r/search/?q=${search}&type=sr&page=1&limit=5`)
+            setComs(res.data.communitySearchResultAuth);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const fetchPeople = async () => {
+        try {
+            const res = await userAxios.get(`r/search/?q=${search}&type=user&page=1&limit=5`)
+            setpeople(res.data.communitySearchResultAuth);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const fetchData = async () => {
         try {
@@ -147,7 +168,8 @@ const SearchComponent = ({ Viewed, setViewed }) => {
                         onBlur={() => { setFocus(false); }}
                         onKeyDown={(e) => { if (search && e.key === 'Enter') navToSearch(search) }} />
                     {showSelector && (
-                        !hideit && <div className="absolute left-0 bg-white shadow h-max z-30 w-full rounded-b-md font-medium">
+                        !hideit && <div className=" max-h-[300px] h-max overflow-auto
+                        absolute left-0 bg-white shadow  z-30 w-full rounded-b-md font-medium">
                             <div className="p-2 space-y-1">
                                 {filteredPeople.length !== 0 && <> <hr className='w[80%] mx-4' /> People
                                     {filteredPeople.map((item, index) => (

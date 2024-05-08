@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowBigUp, ArrowBigDown, X, UserRoundX, BadgeCheck } from 'lucide-react'
+import { ArrowBigUp, ArrowBigDown, X, UserRoundX, BadgeCheck, Store } from 'lucide-react'
 import { Switch } from '@headlessui/react'
 import { userAxios } from "@/Utils/UserAxios";
 import { userStore } from '../../../../hooks/UserRedux/UserStore';
 import { useNavigate } from 'react-router-dom';
 
 function PostReplies({ DiffTime, setUnreadAtIndex }) {
-    const currentId = userStore.getState().user.user.username;
+    const currentId = userStore.getState().user.user._id;
     const navigator = useNavigate();
     const [Messages, setMessages] = useState([]);
     const [SureToRemove, setSureToRemove] = useState(Array(Messages.length).fill(false));
@@ -21,6 +21,7 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
     const [loading, setLoading] = useState(true);
     const [crash, setCrash] = useState(false);
     const [Blocked, setBlocked] = useState(Array(Messages.length).fill(false));
+    const [MeVote, setMeVote] = useState(Array(Messages.length).fill(null));
 
     const buttons = ["Harassment", "Threatening violence",
         "Hate", "Minor abuse or sexualization", "Sharing personal information",
@@ -48,16 +49,28 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
         try {
             const res = await userAxios.get('api/get_post_replies');
             console.log(res.data);
-            const filteredMessages = res.data.filter(message => !message.Comment.isDeleted);
-            // if(!(res.dat.Comment.votesCount === 0))
-            //     {
-            //         for (let index = 0; index < res.dat.Comment.votes.length; index++) {
-            //             const element = array[index];
-
-            //         }
-            //         filteredMessages.vote=
-            //     }
-            setMessages(filteredMessages);
+            res.data.map((item, i) => {
+                if (item.Comment.votes.length > 0) {
+                    for (let index = 0; index < item.Comment.votes.length; index++) {
+                        if (item.Comment.votes[index].userID === currentId) {
+                            if (item.Comment.votes[index].type === 1) {
+                                const newVotes = [...MeVote];
+                                newVotes[i] = true;
+                                console.log('1')
+                                setMeVote(newVotes);
+                            } else if (item.Comment.votes[index].type === -1) {
+                                const newVotes = [...MeVote];
+                                newVotes[i] = false;
+                                setMeVote(newVotes);
+                                console.log("3")
+                            }
+                            console.log(MeVote);
+                            break;
+                        }
+                    }
+                }
+            })
+            setMessages(res.data);
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -86,24 +99,33 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
     };
 
 
-    const handleUpVote = (id, index, UpOrDownV) => {
-        //after api
-        if (UpOrDownV === 'up') {
-            handleVote(index, "")
-        }
-        else {
-            handleVote(index, 'up')
+    const handleUpVote = async (id, index, UpOrDownV) => {
+        try {
+            const res = await userAxios.post("api/commentvote",
+                {
+                    commentID: id,
+                    "type": 1
+                });
+            const newVotes = [...MeVote];
+            newVotes[index] = true;
+            setMeVote(newVotes);
+        } catch (error) {
+            console.log(error);
         }
     }
-    const handleDownVote = (id, index, UpOrDownV) => {
-        //after api
-        if (UpOrDownV === 'down') {
-            handleVote(index, "")
+    const handleDownVote = async (id, index, UpOrDownV) => {
+        try {
+            const res = await userAxios.post("api/commentvote",
+                {
+                    commentID: id,
+                    "type": -1
+                });
+            const newVotes = [...MeVote];
+            newVotes[index] = false;
+            setMeVote(newVotes);
+        } catch (error) {
+            console.log(error);
         }
-        else {
-            handleVote(index, 'down')
-        }
-
     }
     const handleRemove = async (id, i) => {
         try {
@@ -222,11 +244,11 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                         </div>
                         <div className='flex mr-2 sm:ml-14 ml-3 mb-2'>
                             <div className='flex flex-col mr-2'>
-                                <ArrowBigUp onClick={() => { handleUpVote(mess.id, i, mess.UpOrDownV) }}
-                                    className={`${mess.UpOrDownV === 'up' ?
+                                <ArrowBigUp onClick={() => { handleUpVote(mess.commentID, i, mess.UpOrDownV) }}
+                                    className={`${MeVote[i] === true ?
                                         ' text-green-600 rounded-full' : 'text-slate-400'} hover:cursor-pointer`} />
-                                <ArrowBigDown onClick={() => { handleDownVote(mess.id, i, mess.UpOrDownV) }}
-                                    className={`${mess.UpOrDownV === 'down' ?
+                                <ArrowBigDown onClick={() => { handleDownVote(mess.commentID, i, mess.UpOrDownV) }}
+                                    className={`${MeVote[i] === false ?
                                         ' text-red-600 rounded-full' : 'text-slate-400'} hover:cursor-pointer`} />
                             </div>
                             <div className='mr-2 w-full '>

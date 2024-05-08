@@ -74,6 +74,17 @@ export default function CommunityPage() {
 
       await userAxios.get(`/${community}`)
         .then((response) => {
+          
+          let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
+          if (!(recent.includes(community))) {
+            if (recent.length < 5) {
+              recent = [...recent, community];
+            } else {
+              recent = [...recent.slice(1), community];
+            }
+          }
+          localStorage.setItem('recentCommunities', JSON.stringify(recent));
+
           const newcomm = {
             id: response.data.community._id,
             name: response.data.community.name,
@@ -91,8 +102,11 @@ export default function CommunityPage() {
           if (newcomm.type == "private") {
             setShowKickOut(true);
           }
+
+          // write save comm in localstorage here ////////////////////////
         })
         .catch(error => {
+          
           console.error('There was an error!', error);
           toast.error("this community doesn't seem to exist, try again");
           navigator("/404");
@@ -102,6 +116,15 @@ export default function CommunityPage() {
       let joinedComms = 0;
       await userAxios.get(`/subreddits/mine/member`)
         .then((response) => {
+          let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
+          if (!(recent.includes(community))) {
+            if (recent.length < 5) {
+              recent = [...recent, community];
+            } else {
+              recent = [...recent.slice(1), community];
+            }
+          }
+          localStorage.setItem('recentCommunities', JSON.stringify(recent));
           const joins = response?.data?.communities?.map((join) => join.name);
           joinedComms = joins;
         })
@@ -170,7 +193,7 @@ export default function CommunityPage() {
     }
     userAxios.get(link)
       .then((response) => {
-        const newPosts = response.data.posts.map(post => ({
+        const newPosts = response?.data?.posts?.map(post => ({
           communityName: post.username,
           communityIcon: post.userID.avatar,
           images: post.attachments,
@@ -184,7 +207,7 @@ export default function CommunityPage() {
           type: "post",
           spoiler: post.spoiler,
           NSFW: post.nsfw
-      }));
+        })) ?? [];
         setcurrentpage(2);
         setPosts(newPosts);
         setFeed(false);
@@ -256,7 +279,7 @@ export default function CommunityPage() {
           type: "post",
           spoiler: post.spoiler,
           NSFW: post.nsfw
-      }));
+        }));
 
         setPosts(prevPosts => [...prevPosts, ...newPosts]);
         setCallingPosts(false);
@@ -286,6 +309,7 @@ export default function CommunityPage() {
   if (commObj == null) {
     return <>Community not found</>
   }
+
   //main body of the page
   return (
     <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
@@ -301,7 +325,7 @@ export default function CommunityPage() {
       {/* community name and (members count in mobile mode)*/}
       <div className='w-full relative flex justify-between items-center md:m-3'>
         <div>
-          <img id="iconEditPen" src={commObj.icon} alt='community' className={`${commObj.modded ? 'hover:brightness-50' : ''} absolute object-fit md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`} onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={commObj.modded ? () => handleEditComponents("Avatar") : undefined} />
+          <img id="iconEditPen" src={commObj.icon} alt='community' className={`${commObj.modded ? 'hover:brightness-50' : ''} object-cover absolute object-fit md:-top-16 -top-2 md:w-24 w-12 md:h-24 h-12 rounded-full`} onMouseEnter={() => setEditIcon(true)} onMouseLeave={() => setEditIcon(false)} onClick={commObj.modded ? () => handleEditComponents("Avatar") : undefined} />
           {editIcon && commObj.modded ? <Pen className={`absolute md:-top-5 md:left-10 text-white left-8 top-5 md:w-4 md:h-4 w-2 h-2`} /> : <></>}
           <span className='absolute  md:top-10 top-0 md:left-0 left-16 md:text-3xl text-lg font-bold'>r/{commObj.name}</span>
           <div className='absolute md:top-10 top-[28px] md:left-28 left-16 md:hidden text-xs font-semibold text-gray-500 flex flex-wrap gap-x-3'>
