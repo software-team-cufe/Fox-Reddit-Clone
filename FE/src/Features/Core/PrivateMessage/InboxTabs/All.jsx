@@ -4,8 +4,10 @@ import { ArrowBigUp, ArrowBigDown, X, UserRoundX, BadgeCheck } from 'lucide-reac
 import { Switch } from '@headlessui/react'
 import { userAxios } from "@/Utils/UserAxios";
 import { userStore } from '../../../../hooks/UserRedux/UserStore';
+import { useNavigate } from 'react-router-dom';
 export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
     const currentId = userStore.getState().user.user._id;
+    const navigator = useNavigate();
     const [AllM, setAllM] = useState([]);
     const [SureToRemove, setSureToRemove] = useState(false);
     const [SureToBlock, setSureToBlock] = useState(false);
@@ -82,7 +84,18 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
         }
 
     }
-    const handleRemove = () => { }
+    // const handleRemove = async (id, i) => {
+    //     try {
+    //         const res = await userAxios.post('api/del_msg', { msgId: id });
+    //         setRemoved(prevState => {
+    //             const newState = [...prevState];
+    //             newState[i] = true;
+    //             return newState;
+    //         });
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
     const handleBlock = async () => {
         if (UserToReport) {
             try {
@@ -200,34 +213,49 @@ export default function All({ DiffTime, setUnreadAtIndex, handleVote }) {
                                     {mess.fromID && mess.fromID._id === currentId && <>
                                         <p className='text-xs mt-1 mr-2 text-gray-500'>
                                             to</p>
-                                        <p className='text-sm mr-2  text-blue-600
+                                        <p onClick={() => {
+                                            navigator(`/user/${mess.toID.username}`);
+                                        }}
+                                            className='text-sm mr-2  text-blue-600
                                         hover:cursor-pointer hover:underline'>
                                             {mess.toID.username}</p></>}
                                     {mess.fromID && !(mess.fromID._id === currentId) && <>
                                         <p className='text-xs mt-1 mr-2 text-gray-500'>
                                             from</p>
-                                        <p className='text-sm mr-2  text-blue-600
+                                        <p onClick={() => {
+                                            navigator(`/user/${mess.fromID.username}`);
+                                        }}
+                                            className='text-sm mr-2  text-blue-600
                                         hover:cursor-pointer hover:underline'>
                                             {mess.fromID.username}</p></>}
                                     {mess.postTitle && <><p className='text-xs mt-1 mr-2 text-gray-500'>
                                         from</p>
-                                        <p className='text-sm mr-2  text-blue-600
+                                        <p onClick={() => {
+                                            navigator(`/user/${mess.from.username}`);
+                                        }}
+                                            className='text-sm mr-2  text-blue-600
                                      hover:cursor-pointer hover:underline'>
-                                            {mess.from.username}</p></>}
+                                            {mess.from.username}</p>
+                                        {mess.communityName && <p className='text-xs mt-1 mr-2 text-gray-500'>
+                                            via</p>}
+                                        <p onClick={() => {
+                                            navigator(`r/${mess.communityName}`);
+                                        }}
+                                            className='text-sm mr-2  text-blue-600
+                                     hover:cursor-pointer hover:underline'>
+                                            {mess.communityName}</p>
+                                    </>}
                                     <p className='text-xs mt-1 mr-2 text-gray-500'>
                                         {DiffTime(mess.createdAt)}</p>
                                 </div>
                                 {!mess.postTitle && <div className='mb-2  text-sm'
                                     dangerouslySetInnerHTML={{ __html: mess.text }}></div>}
                                 {mess.postTitle && <div className='mb-2  text-sm'
-                                    dangerouslySetInnerHTML={{ __html: mess.Comment.textHTML }}></div>}
+                                    dangerouslySetInnerHTML={{ __html: mess.comment.textHTML }}></div>}
                                 <div className='flex flex-wrap text-gray-500'>
-                                    {mess.postTitle && <> <p className='text-xs m-1 hover:cursor-pointer 
-                                    hover:underline' onClick={() => {
-                                            //go to comment page
-                                        }}>Context</p>
-                                        <p onClick={() => {
-                                            //go to post page
+                                    {mess.postTitle && <>
+                                        <p nClick={() => {
+                                            navigator(`/posts/${mess.postID}`)
                                         }} className='mx-2 m-1 text-xs hover:cursor-pointer 
                                     hover:underline '>Full Comments ({mess.commentNum})</p></>}
                                     {!SureToRemove && <p onClick={() => {

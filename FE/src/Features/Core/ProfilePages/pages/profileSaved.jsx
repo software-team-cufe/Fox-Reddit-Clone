@@ -33,19 +33,21 @@ export default function ProfileSaved({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.coummunityName,
+                    communityIcon: post.communityIcon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post._id,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    commentsNum: post.commentsNum,
+                    comments: post.postComments,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    hidden: post.isHidden
                 }));
                 setcurrentpage(2);
                 setPosts(newPosts);
@@ -67,19 +69,21 @@ export default function ProfileSaved({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.coummunityName,
+                    communityIcon: post.communityIcon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post._id,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    commentsNum: post.commentsNum,
+                    comments: post.postComments,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    hidden: post.isHidden
                 }));
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
@@ -95,8 +99,8 @@ export default function ProfileSaved({ using }) {
 
     if (loading) {
         return (
-            <div role='savedtab' className="w-100 h-100 flex flex-col items-center justify-center">
-                <img src={'/logo.png'} className="h-12 w-12 mt-24 z-10 mx-auto animate-ping" alt="Logo" />
+            <div role='savedtab' className="w-100 h-400 flex flex-col z-50 items-center justify-center">
+                <img src={'/logo.png'} className="h-12 w-12 mt-24 z-50 mx-auto animate-ping" alt="Logo" />
             </div>
         )
     }

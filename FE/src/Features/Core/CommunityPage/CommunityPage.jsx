@@ -6,7 +6,7 @@
  * The component is wrapped in a CommunityProvider component that provides the selected sorting and period values.
  * @file FILEPATH
  */
-import React, { useContext, createContext, useState, useRef, useCallback } from "react";
+import React, { useContext, createContext, useState, useRef, useCallback, useEffect } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
@@ -57,7 +57,7 @@ export default function CommunityPage() {
   const [callingposts, setCallingPosts] = useState(false);
   const [pagedone, setpagedone] = useState(false);
   const limitpage = 5;
-  const [currentpage, setcurrentpage] = useState(1);
+  const [currentpage, setcurrentpage] = useState(2);
   const [loading, setLoading] = useState(true);
   const [feed, setFeed] = useState(false);
   const [commObj, setComm] = useState(null);
@@ -65,6 +65,8 @@ export default function CommunityPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editComponent, setEditComponent] = useState("Banner");
   const [showKickOut, setShowKickOut] = useState(false);
+  const searchRedux = useSelector(state => state.search);
+
 
   //to fetch the community data from the server and use them
   const fetchCommunity = useCallback(async () => {
@@ -195,7 +197,7 @@ export default function CommunityPage() {
           communityName: post.username,
           communityIcon: post.userID.avatar,
           images: post.attachments,
-          id: post._id,
+          postId: post._id,
           title: post.title,
           description: post.textHTML,
           votesCount: post.votesCount,
@@ -217,6 +219,36 @@ export default function CommunityPage() {
   };
 
   const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], fetchInitialPosts, { enabled: !loading, staleTime: Infinity });
+
+  useEffect(() => {
+    if (searchRedux != null && searchRedux != "") {
+      userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
+      .then((response) => {
+        if (response.data.subredditSearchPosts.length < limitpage) {
+          setpagedone(true);
+        }
+        const newPosts = response.data.subredditSearchPosts.map(post => ({
+          communityName: post.username,
+          communityIcon: post.userId,
+          images: post.attachments,
+          postId: post.postId,
+          title: post.title,
+          description: post.textHTML,
+          votesCount: post.votesCount,
+          commentsNum: post.commentsNum,
+          thumbnail: post.attachments[0],
+          video: null,
+          type: "post",
+          spoiler: post.spoiler,
+          NSFW: post.nsfw
+        }));
+        setPosts(newPosts);
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
+    }
+  }, [searchRedux]);
 
   const swtichJoinState = async () => {
     if (user == null) {
@@ -248,7 +280,8 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    let link = `api/listing/posts/r/example_subreddit_2_lavish_hair/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
+    if(searchRedux == null || searchRedux == ""){
+    let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
     if (selected == 'Top') {
       link = link + `&t=${period}`;
     }
@@ -258,12 +291,12 @@ export default function CommunityPage() {
           setpagedone(true);
         }
         const newPosts = response.data.posts.map(post => ({
-          communityName: post.username,
+          communityName: post.coummunityName,
           communityIcon: post.userID.avatar,
           images: post.attachments,
-          id: post._id,
+          postId: post._id,
           title: post.title,
-          description: post.textHTML,
+          textHTML: post.textHTML,
           votesCount: post.votesCount,
           comments: post.commentsCount,
           thumbnail: post.thumbnail,
@@ -282,6 +315,36 @@ export default function CommunityPage() {
         console.error('Error:', error);
         setCallingPosts(false);
       });
+    }
+    else{
+      userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=${currentpage}&limit=${limitpage}`)
+      .then((response) => {
+        if (response.data.subredditSearchPosts.length < limitpage) {
+          setpagedone(true);
+        }
+        const newPosts = response.data.subredditSearchPosts.map(post => ({
+          communityName: post.username,
+          communityIcon: post.userId,
+          images: post.attachments,
+          postId: post.postId,
+          title: post.title,
+          description: post.textHTML,
+          votesCount: post.votesCount,
+          commentsNum: post.commentsNum,
+          thumbnail: post.attachments[0],
+          video: null,
+          type: "post",
+          spoiler: post.spoiler,
+          NSFW: post.nsfw
+        }));
+        setPosts(prevPosts => [...prevPosts, ...newPosts]);
+        setCallingPosts(false);
+        setcurrentpage(1 + currentpage);
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
+    }
   };
 
   const handleEditComponents = (value) => {

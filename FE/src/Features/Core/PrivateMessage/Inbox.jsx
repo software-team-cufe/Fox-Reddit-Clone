@@ -83,9 +83,6 @@ export default function Inbox({ DiffT }) {
         });
     };
 
-
-
-
     return (
 
         // nested routing for the setting pages renders navofsetting then feed according to route
@@ -101,7 +98,9 @@ export default function Inbox({ DiffT }) {
 
                 <Route key={"/selfreply"} path="/selfreply" element={<PostReplies setUnreadAtIndex={setUnreadAtIndex}
                     DiffTime={DiffT} />} />
-                <Route key={"/mentions"} path="/mentions" element={<UsernameMentions />} />
+                <Route key={"/mentions"} path="/mentions" element={<UsernameMentions
+                    DiffTime={DiffT}
+                />} />
             </Route>
         </Routes >
 

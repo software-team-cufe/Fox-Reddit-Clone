@@ -143,7 +143,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
         <Logo role="FoxLogo"
           className=" text-2xl" />
 
-        <SearchComponent Viewed={ViewdInSearch} setViewed={setViewdInSearch} />
+        <SearchComponent Viewed={ViewdInSearch} setViewed={setViewdInSearch} IsLogged={IsLogged} />
 
         {IsLogged && <>
 

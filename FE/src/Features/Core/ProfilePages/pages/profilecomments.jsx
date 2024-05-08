@@ -1,9 +1,10 @@
-import React, {  useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef } from "react";
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent";
 import { useQuery } from "react-query";
 import { userAxios } from "../../../../Utils/UserAxios";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 /**
  * Renders the profile comments section.
@@ -23,31 +24,27 @@ function ProfileComments({ using, context }) {
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage,setcurrentpage] = useState(1);
+    const [currentpage, setcurrentpage] = useState(2);
     const limitpage = 5;
     const here = useLocation().pathname;
-
+    const userRedux = useSelector(state => state.user.user);
     //fetch comments on load and put into comments array
     const fetchInitialComments = () => {
         setload(true);
         userAxios.get(`/user/${using}/comments?page=1&count=${limitpage}&limit=${limitpage}&t=${period}`)
             .then(response => {
-                if(response.data.comments.length < limitpage){
+                if (response.data.comments.length < limitpage) {
                     setpagedone(true);
                 }
                 const newComments = response.data.comments.map(comment => ({
                     user: {
-                        image: null,
-                        Username: null,
-                        id: comment.authorID
+                        avatar: comment.authorId.avatar,
+                        username: userRedux.username,
+                        id: comment.authorId._id
                     },
-                    info: {
-                        votes: comment.votesCount,
-                        time: comment.createdAt,
-                    },
-                    content: {
-                        text: comment.commentText
-                    }
+                    votesCount: comment.votesCount,
+                    createdAt: comment.createdAt,
+                    commentText: comment.textHTML
                 }));
                 setcurrentpage(2);
                 setComments(newComments);
@@ -60,34 +57,30 @@ function ProfileComments({ using, context }) {
             });
     };
 
-    const {error: postsError } = useQuery(['fetchInitialProfileComments', selected, period],fetchInitialComments, { retry: 0, refetchOnWindowFocus: false });
+    const { error: postsError } = useQuery(['fetchInitialProfileComments', selected, period], fetchInitialComments, { retry: 0, refetchOnWindowFocus: false });
 
     const fetchMoreComments = () => {
         setCallingPosts(true);
         userAxios.get(`/user/${using}/comments?page=${currentpage}&count=${limitpage}&limit=${limitpage}&t=${period}`)
-        .then(response => {
-                if(response.data.comments.length < limitpage) {
+            .then(response => {
+                if (response.data.comments.length < limitpage) {
                     setpagedone(true);
                 }
                 console.log(response.data.comments)
                 const newComments = response.data.comments.map(comment => ({
                     user: {
-                        image: null,
-                        Username: null,
-                        id: comment.authorID
+                        avatar: comment.authorId.avatar,
+                        username: userRedux.username,
+                        id: comment.authorId._id
                     },
-                    info: {
-                        votes: comment.votesCount,
-                        time: comment.createdAt,
-                    },
-                    content: {
-                        text: comment.textHTML
-                    }
+                    votesCount: comment.votesCount,
+                    createdAt: comment.createdAt,
+                    commentText: comment.textHTML
                 }));
 
                 setComments(prevComments => [...prevComments, ...newComments]);
                 setCallingPosts(false);
-                setcurrentpage(1+currentpage);
+                setcurrentpage(1 + currentpage);
 
             })
             .catch(error => {
@@ -123,8 +116,8 @@ function ProfileComments({ using, context }) {
                 <>
                     {/*no results view*/}
                     <img src={'/confusedSnoo.png'} className="w-16 mx-auto h-24 mb-2" alt="Confused Snoo"></img>
-                    {here === `/user/${using}/comments` ? 
-                    <p className="text-lg mx-auto font-bold">looks like you haven't commented on anything</p> : <p className="text-lg mx-auto font-bold">u/{using} has no comments yet</p>}
+                    {here === `/user/${using}/comments` ?
+                        <p className="text-lg mx-auto font-bold">looks like you haven't commented on anything</p> : <p className="text-lg mx-auto font-bold">u/{using} has no comments yet</p>}
                 </>
             )}
         </div>

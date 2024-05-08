@@ -7,8 +7,10 @@ import { Switch } from '@headlessui/react'
 import ReactQuill from 'react-quill';
 import { userStore } from '../../../../hooks/UserRedux/UserStore';
 import { userAxios } from "@/Utils/UserAxios";
+import { useNavigate } from 'react-router-dom';
 function Messages({ DiffTime, setUnreadAtIndex, }) {
     const currentId = userStore.getState().user.user._id;
+    const navigator = useNavigate();
     const [AllMess, setAllMess] = useState([]);
     const [SureToRemove, setSureToRemove] = useState(Array(AllMess.length).fill(false));
     const [SureToBlock, setSureToBlock] = useState(Array(AllMess.length).fill(false));
@@ -175,9 +177,8 @@ function Messages({ DiffTime, setUnreadAtIndex, }) {
 
     const SendReport = async () => {
         try {
-            const res = await userAxios.post('api/block_user', {
+            const res = await userAxios.post('api/report_msg', {
                 msg_id: MessToReport,
-                type: selectedButton.title
             });
             setSelectedButton(null);
             setUserToReport('');

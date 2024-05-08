@@ -11,27 +11,17 @@
  */
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { setSearchField } from '@/hooks/UserRedux/searchSlice';
+import { useMatch } from 'react-router-dom';
+import { userAxios } from "@/Utils/UserAxios";
 
-const SearchComponent = ({ Viewed, setViewed }) => {
+const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
     let path = useLocation().pathname;
-    const Profile = [{ name: "u / Nouran", icon: "Prof.jpg" }]
-    const YourCommunities = [{ name: "r / com1", icon: "DumPhoto1.jpg", membersCount: "12" },
-    { name: " r / com2", icon: "DumPhoto2.jpg", membersCount: "125" }];
-    const OtherCommunities = [{ name: "r / com3", icon: "DumPhoto3.jpg", membersCount: "123" },
-    {
-        name: "r / com4", icon: "DumPhoto4.jpg", membersCount: "1235", rules: [
-            "Be respectful to other members.",
-            "No spamming or self-promotion.",
-            "Keep discussions relevant to League of Legends.",
-            "No hate speech or harassment of any kind.",
-            "Follow Reddit's content policy."
-        ],
-    }];
 
-
-    const [peoplee, setpeople] = useState([]);
+    const [people, setpeople] = useState([]);
     const [Coms, setComs] = useState([]);
     const [search, setSearch] = useState('');
     const [showSelector, setShowSelector] = useState(false);
@@ -39,6 +29,11 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     const [Focus, setFocus] = useState(false);
     const navigator = useNavigate();
     const [hideit, sethideit] = useState(false);
+    const params = useParams();
+    const match = useMatch("/r/:community");
+    const dispatcher = useDispatch();
+
+    const [YourCommunities, setYourCommunities] = useState([]);
 
     useEffect(() => {
         //fetchData();
@@ -48,18 +43,12 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     useEffect(() => {
 
         if (path.includes("/user/")) {
-            const IncludeIndex = path.indexOf("/user/") + 6; // Add 6 to skip "/user/"
-            // Find the index of the first occurrence of the character after the "/user/" part
-            const characterIndex = path.indexOf("/", IncludeIndex);
-            let user = path.substring(IncludeIndex, characterIndex !== -1 ? characterIndex : path.length);
-            setViewed(user);
+            const user = params.user;
+            setViewed(`u/${user}`);
         }
         else if (path.includes("/r/")) {
-            const IncludeIndex = path.indexOf("/r/") + 3; // Add 6 to skip "/user/"
-            // Find the index of the first occurrence of the character after the "/user/" part
-            const characterIndex = path.indexOf("/", IncludeIndex);
-            let user = path.substring(IncludeIndex, characterIndex !== -1 ? characterIndex : path.length);
-            setViewed(user);
+            const comm = params.community;
+            setViewed(`r/${comm}`);
         }
         else {
             setViewed(null);
@@ -68,14 +57,42 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     }, [path])
 
     useEffect(() => {
-        console.log(Viewed)
-    }, [Viewed])
-    useEffect(() => {
         const timer = setTimeout(goSearch, 200);
-        // console.log(showSelector)
         return () => clearTimeout(timer);
 
     }, [search]);
+
+    useEffect(() => {
+        fetchOtherComs();
+        fetchPeople();
+    }, [search])
+
+
+    const fetchOtherComs = async () => {
+        try {
+            const res = await userAxios.get(`r/search/?q=${search}&type=sr&page=1&limit=5`)
+            if (IsLogged)
+                setComs(res.data.communitySearchResultAuth);
+            else if (!IsLogged) {
+                setComs(res.data.communitySearchResultNotAuth);
+                console.log(res.data.
+                    communitySearchResultNotAuth
+                )
+            }
+            console.log(IsLogged)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const fetchPeople = async () => {
+        try {
+            const res = await userAxios.get(`r/search/?q=${search}&type=user&page=1&limit=5`)
+            setpeople(res.data.users);
+            console.log(res.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const fetchData = async () => {
         try {
@@ -92,10 +109,15 @@ const SearchComponent = ({ Viewed, setViewed }) => {
     }
 
     const navToSearch = (value) => {
-        setSelected(value);
-        setSearch("");
-        sethideit(true);
-        navigator(`/search/${value}/posts`);
+        if (match && Viewed != null) {
+            dispatcher(setSearchField(value));
+        }
+        else {
+            setSelected(value);
+            setSearch("");
+            sethideit(true);
+            navigator(`/search/${value}/posts`);
+        }
     };
 
     const handlechange = (comingvalue) => {
@@ -110,8 +132,8 @@ const SearchComponent = ({ Viewed, setViewed }) => {
         }
     };
 
-    const filteredPeople = peoplee.filter(item =>
-        item.name.toLowerCase().includes(search.toLowerCase())
+    const filteredPeople = people.filter(item =>
+        item.username.toLowerCase().includes(search.toLowerCase())
     );
     const filteredComs = Coms.filter(item =>
         item.name.toLowerCase().includes(search.toLowerCase())
@@ -142,7 +164,8 @@ const SearchComponent = ({ Viewed, setViewed }) => {
                         onBlur={() => { setFocus(false); }}
                         onKeyDown={(e) => { if (search && e.key === 'Enter') navToSearch(search) }} />
                     {showSelector && (
-                        !hideit && <div className="absolute left-0 bg-white shadow h-max z-30 w-full rounded-b-md font-medium">
+                        !hideit && <div className=" max-h-[300px] h-max overflow-auto
+                        absolute left-0 bg-white shadow  z-30 w-full rounded-b-md font-medium">
                             <div className="p-2 space-y-1">
                                 {filteredPeople.length !== 0 && <> <hr className='w[80%] mx-4' /> People
                                     {filteredPeople.map((item, index) => (

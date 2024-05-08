@@ -33,17 +33,13 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
       .then(response => {
         let newComments = response.data.commentsSearchResultNotAuth.map(comment => ({
           user: {
-            image: comment.useravatar[0],
-            Username: comment.username[0],
+            avatar: comment.useravatar[0],
+            username: comment.username[0],
             id: comment.userId
           },
-          info: {
-            votes: comment.commentvotesCount,
-            time: comment.commentcreatedAt,
-          },
-          content: {
-            text: comment.textHTML
-          }
+            votesCount: comment.commentvotesCount,
+            createdAt: comment.commentcreatedAt,
+            commentText: comment.textHTML
       }));
         if (newComments.length < limitpage) {
           setpagedone(true);
@@ -58,23 +54,21 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
     } else {
       userAxios.get(`/r/search/?q=${searched}&type=comment&page=1&limit=${limitpage}&sort=${selected}`)
       .then(response => {
+        console.log(response.data.commentsSearchResultAuth);
         let newComments = response.data.commentsSearchResultAuth.map(comment => ({
           user: {
-            image: comment.useravatar[0],
-            Username: comment.username[0],
+            avatar: comment.useravatar[0],
+            username: comment.username[0],
             id: comment.userId
           },
-          info: {
-            votes: comment.commentvotesCount,
-            time: comment.commentcreatedAt,
-          },
-          content: {
-            text: comment.textHTML
-          }
+            votesCount: comment.commentvotesCount,
+            createdAt: comment.commentcreatedAt,
+            commentText: comment.textHTML
       }));
         if (newComments.length < limitpage) {
           setpagedone(true);
         }
+        console.log(newComments)
         setComments(newComments);
         setLoading(false);
       })
@@ -92,17 +86,13 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
       .then(response => {
         let newComments = response.data.commentsSearchResultNotAuth.map(comment => ({
           user: {
-            image: comment.useravatar[0],
-            Username: comment.username[0],
+            avatar: comment.useravatar[0],
+            username: comment.username[0],
             id: comment.userId
           },
-          info: {
-            votes: comment.commentvotesCount,
-            time: comment.commentcreatedAt,
-          },
-          content: {
-            text: comment.textHTML
-          }
+            votesCount: comment.commentvotesCount,
+            createdAt: comment.commentcreatedAt,
+            commentText: comment.textHTML
       }));
         if (newComments.length < limitpage) {
           setpagedone(true);
@@ -119,17 +109,13 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
       .then(response => {
         let newComments = response.data.commentsSearchResultAuth.map(comment => ({
           user: {
-            image: comment.useravatar[0],
-            Username: comment.username[0],
+            avatar: comment.useravatar[0],
+            username: comment.username[0],
             id: comment.userId
           },
-          info: {
-            votes: comment.commentvotesCount,
-            time: comment.commentcreatedAt,
-          },
-          content: {
-            text: comment.textHTML
-          }
+            votesCount: comment.commentvotesCount,
+            createdAt: comment.commentcreatedAt,
+            commentText: comment.textHTML
       }));
         if (newComments.length < limitpage) {
           setpagedone(true);

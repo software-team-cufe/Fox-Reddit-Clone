@@ -23,7 +23,7 @@ export default function ProfileHidden({ using }) {
     const [callingposts, setCallingPosts] = useState(false);
     const loadMoreButtonRef = useRef(null);
     const [pagedone, setpagedone] = useState(false);
-    const [currentpage, setcurrentpage] = useState(1);
+    const [currentpage, setcurrentpage] = useState(2);
     const limitpage = 5;
 
     //fetch posts on load and put into posts array
@@ -31,23 +31,26 @@ export default function ProfileHidden({ using }) {
         setLoading(true);
         userAxios.get(`api/user/${using}/hiddenPosts?page=1&count=${limitpage}&limit=${limitpage}&t=${period}&sort=${selected}`)
             .then(response => {
+                console.log(response.data.posts);
                 if (response.data.posts.length < limitpage) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.coummunityName,
+                    communityIcon: post.communityIcon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post._id,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    commentsNum: post.commentsCount,
+                    comments: post.postComments,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    hidden: post.isHidden
                 }));
                 setPosts(newPosts);
                 setLoading(false);
@@ -69,19 +72,21 @@ export default function ProfileHidden({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.coummunityName,
+                    communityIcon: post.communityIcon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post._id,
                     title: post.title,
-                    description: post.textHTML,
-                    votes: post.votesCount,
-                    comments: post.commentsCount,
+                    textHTML: post.textHTML,
+                    votesCount: post.votesCount,
+                    commentsNum: post.commentsCount,
+                    comments: post.postComments,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    hidden: post.isHidden
                 }));
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);

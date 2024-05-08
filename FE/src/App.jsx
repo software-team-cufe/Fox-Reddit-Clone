@@ -125,7 +125,7 @@ function MainRoute() {
             "/r/:id/about/:idd/:idd",
             "/r/:id/about/:idd/:idd/:iddd",
             "/community",
-          ]) && 
+          ]) &&
           <Sidebar RecentCommunities={JSON.parse(localStorage.getItem('recentCommunities'))} IsOpen={OpenSideBar} />
         }
 
