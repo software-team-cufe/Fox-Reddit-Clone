@@ -457,9 +457,9 @@ export class User {
   /***************************************
    recursive relations
    ***************************************/
-  @prop()
+  @prop({ ref: 'User' })
   followers?: User[]; // Array of user references
-  @prop()
+  @prop({ ref: 'User' })
   userFollows?: User[]; // Array of user references
 
   @prop({ ref: User })

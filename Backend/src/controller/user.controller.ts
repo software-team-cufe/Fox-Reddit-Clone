@@ -1347,36 +1347,46 @@ export async function getFollowerHandler(req: Request, res: Response) {
       message: 'Access token is missing',
     });
   }
-  const user = await findUserByUsername(res.locals.user.username);
 
   const followerUsername = req.params.username;
 
   try {
-    if (!user || !res.locals.user.username) {
+    const user = await findUserByUsername(res.locals.user.username);
+    if (!user) {
       return res.status(401).json({
         status: 'failed',
-        message: 'Access token is missing or invalid',
+        message: 'Access token is invalid',
       });
-    } else if (!user.userFollows || user.userFollows.length === 0) {
+    }
+
+    const follower = await findUserByUsername(followerUsername);
+    if (!follower) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Follower not found',
+      });
+    }
+
+    let isFollowed = false;
+    const followers = user.followers;
+    followers?.forEach((el) => {
+      // Check if the follower's ID is equal to the user's ID
+      if (el.toString() == follower._id.toString()) isFollowed = true;
+    });
+
+    if (isFollowed) {
+      const followerData = {
+        username: follower.username,
+        about: follower.about,
+        avatar: follower.avatar,
+      };
+      return res.status(200).json({
+        followerData,
+      });
+    } else {
       return res.status(200).json({
         followerData: 'none',
       });
-    } else {
-      const follower = user.userFollows.find((f) => f.username === followerUsername);
-      if (follower) {
-        const followerData = {
-          username: follower.username,
-          about: follower.about,
-          avatar: follower.avatar,
-        };
-        return res.status(200).json({
-          followerData,
-        });
-      } else {
-        return res.status(200).json({
-          followerData: 'none',
-        });
-      }
     }
   } catch (error) {
     console.error('Error in getFollowerHandler:', error);
@@ -1423,8 +1433,15 @@ export async function getFollowingHandler(req: Request, res: Response) {
         message: 'Access token is missing or invalid',
       });
     } else {
-      const followingID = user.followers?.find((f) => f.toString() === userID?.toString());
-      if (followingID) {
+      let isFollowed = false;
+
+      const followers = user.userFollows;
+      followers?.forEach((el) => {
+        // Check if userID is defined and equal to commModerator
+        if (el.toString() == user1._id.toString()) isFollowed = true;
+      });
+
+      if (isFollowed) {
         const followingData = {
           username: user1.username,
           about: user1.about,
