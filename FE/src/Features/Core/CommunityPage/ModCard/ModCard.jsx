@@ -275,14 +275,31 @@ const addButtons = async (event) => {
     }
   }
   
- 
   useEffect(() => {
     deleteButton();
   }, []);
 
+  const getButton = async () => {
+    try {
+      const res = await userAxios.get(`/${community}/api/button_widgets`);
+      const { buttonTitle, link } = res.data;
+      setButtonTitle(buttonTitle);
+      setLink(link);
+      console.log("Button");
+      console.log(buttonTitle);
+      console.log(link);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  useEffect(() => {
+    getButton();
+  }, []);
+
   return (
-    <div className={`relative border border-slate-200 bg-slate-50 min-h-fit h-fit rounded-xl ${path === `r/${encodeURIComponent(community)}/info` ? "md:block hidden mr-5" : "mx-auto mt-5"} pb-3 w-[340px] flex-col`}>
-         
+    <div className={`relative border border-slate-200 bg-slate-50 min-h-fit h-fit rounded-xl pb-3 w-[340px] flex-col`}>
+ 
        <div className=' flex flex-row justify-between m-3'>
            <div className=' flex flex-col space-y-3'>
               <div className=' text-md font-semibold '>
@@ -408,6 +425,23 @@ const addButtons = async (event) => {
          </div>
          
        </div>
+
+
+       <div className=' mx-3  flex flex-col my-3'>
+        {
+          link && buttonTitle ?(
+
+            <button 
+            onClick={() => window.location.href = link}
+            className='text-sm text-gray-500 hover:underline w-full  border rounded-full h-8'>
+          { buttonTitle}
+          </button>
+          ): null
+      
+        }
+       </div>
+
+
        <hr className="w-[100%] h-px mb-3 bg-gray-200 border-0 dark:bg-gray-700"></hr>
         <div className=' flex flex-col mx-3 '> 
            <p className='text-sm text-gray-500 mt-3  font-medium'> MODERATORS</p>
