@@ -1,6 +1,6 @@
 
 import { useNavigate, Link } from "react-router-dom";
-import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useMemo, useEffect, useCallback, useContext } from 'react'
 import { Tabs, Tab } from '../../../GeneralElements/Tabs/Tab'
 import { NotepadText, ImageUp, BarChart2, Link2, Trash2, BadgeInfo, X, Plus, LoaderCircle } from 'lucide-react'
 import ReactQuill from 'react-quill';
@@ -21,7 +21,8 @@ function TypingArea(props) {
     const [adv2, setAdv2] = useState('default');
     const [contestEnable, setContestEnable] = useState(false);
     const [autoMod, setAutoMod] = useState(false);
-    const scheduled = true;
+    const query =  new URLSearchParams(window.location.search);
+    const scheduled = query.get("variable");
 
     const navigator = useNavigate();
     const [DisablePoll, setDisablePoll] = useState(false);
