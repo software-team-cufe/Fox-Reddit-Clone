@@ -2,9 +2,9 @@
   "apps": [
     {
       "name": "mock",
-      "script": "npm",
+      "script": "npm run mock-api",
       "interpreter": "none",
-      "args": "mock-api"
+      "args": ""
     }
   ]
 }
