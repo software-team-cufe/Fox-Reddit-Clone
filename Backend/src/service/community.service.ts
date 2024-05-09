@@ -15,7 +15,7 @@ import { findUserById, findUserByUsername } from './user.service';
 import { findPostById } from './post.service';
 import { findCommentById } from './comment.service';
 import UserModel, { Moderator } from '../model/user.model';
-
+import { Ref } from '@typegoose/typegoose';
 /**
  * Finds a community by its subreddit name.
  *
@@ -1957,3 +1957,120 @@ export async function getTrendingSearches(page: number, limit: number) {
     throw new appError('Something went wrong in trending searches', 500);
   }
 }
+
+export async function getPopular(
+  page: number,
+  limit: number,
+  sort: string | undefined,
+  topBy: string | undefined,
+  hiddenPosts: Ref<Post>[] | [] | undefined
+) {
+  try {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    let sortCriteria: Record<string, 1 | -1>;
+    let additionalCriteria: Record<string, unknown> = {};
+    switch (sort) {
+      case 'hot':
+        sortCriteria = { 'posts.insightCnt': -1 };
+        break;
+      case 'top':
+        sortCriteria = { 'posts.votesCount': -1 };
+        switch (topBy) {
+          case 'hour':
+            console.log('top by hour');
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 60 * 60 * 1000) } };
+            break;
+          case 'day':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } };
+            break;
+          case 'week':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } };
+            break;
+          case 'month':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } };
+            break;
+          case 'year':
+            additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) } };
+            break;
+          default:
+            additionalCriteria = {};
+            break;
+        }
+        break;
+      case 'best':
+        //sort randomly
+        sortCriteria = { 'posts.randomSort': -1 };
+        break;
+      case 'new':
+        sortCriteria = { 'posts.createdAt': -1 };
+        break;
+      default:
+        sortCriteria = { 'posts.randomSort': -1 };
+        break;
+    }
+    const popularPosts = await CommunityModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { privacyType: 'Public' }, // Match public communities
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'posts', // Posts collection
+          localField: 'communityPosts', // Field containing post IDs in the community model
+          foreignField: '_id', // Field in the posts model
+          as: 'posts', // Name of the field to store posts in the result
+        },
+      },
+      { $unwind: '$posts' }, // Unwind the posts array
+      {
+        $match: {
+          'posts.title': { $exists: true }, // Filter out posts without titles (optional)
+          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+          'posts.createdAt': { $lte: new Date() },
+          'posts.nsfw': { $ne: true }, //popular page should not contain nsfw posts
+          ...additionalCriteria, // Apply additional criteria
+          //handle posts that are hidden
+        },
+      },
+      { $sort: sortCriteria }, // Apply sorting criteria
+      { $skip: skip }, // Skip documents based on page and limit
+      { $limit: limit }, // Limit the number of documents returned
+      {
+        $project: {
+          CommunityID: '$posts.CommunityID', // Project post CommunityID
+          communityIcon: '$icon', // Project community icon
+          communityName: '$name', // Project community name
+          communityDescription: '$description', // Project community description
+          memberCount: '$membersCnt', // Project member count
+          postId: '$posts._id', // Project post ID
+          userId: '$posts.userID', // Project user ID
+          username: '$posts.username', // Project username
+          title: '$posts.title', // Project post title
+          textHTML: '$posts.textHTML', // Project post textHTML
+          textJSON: '$posts.textJSON', // Project post textJSON
+          isDeleted: '$posts.isDeleted', // Project post isDeleted
+          attachments: '$posts.attachments', // Project post attachments
+          poll: '$posts.poll', // Project post poll
+          spoiler: '$posts.spoiler', // Project post spoiler
+          isLocked: '$posts.isLocked', // Project post isLocked
+          type: '$posts.type', // Project post type
+          nsfw: '$posts.nsfw', // Project post nsfw
+          spamCount: '$posts.spamCount', // Project post spamCount
+          votesCount: '$posts.votesCount', // Project post votesCount
+          createdAt: '$posts.createdAt', // Project post createdAt
+          editedAt: '$posts.editedAt', // Project post editedAt
+          followers: '$posts.followers', // Project post followers
+          commentsNum: '$posts.commentsNum', // Project post commentsNum
+        },
+      },
+    ]);
+    return popularPosts;
+  } catch (error) {
+    throw new appError('Something went wrong in popular page', 500);
+  }
+}
+export async function getAll() {}

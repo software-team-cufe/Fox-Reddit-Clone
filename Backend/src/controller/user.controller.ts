@@ -40,7 +40,7 @@ import { findPostById, userPosts, userPostss } from '../service/post.service';
 import mergeTwo from '../middleware/user.control.midel';
 import appError from '../utils/appError';
 import { createNotification } from '../service/notification.service';
-import { getHomePostsNotAuth, getHomePostsAuth } from '../service/community.service';
+import { getHomePostsNotAuth, getHomePostsAuth, getPopular } from '../service/community.service';
 
 /**
  * Handles the creation of a user.
@@ -1738,4 +1738,20 @@ export async function getUserHomePagePostsHandler(
     }
     return res.status(500).json({ msg: 'Internal server error in home page' });
   }
+}
+
+export async function getPopularPageHandler(req: Request<{}, {}, {}, HomePagePostsInput['query']>, res: Response) {
+  const query = req.query;
+  const sort = query.sort as string;
+  const topBy = query.topBy as string;
+  //page and limit
+  // Convert strings to numbers
+  const pageString = req.query.page;
+  const limitString = req.query.limit;
+  const page = pageString ? parseInt(pageString, 10) : 1; // Convert page string to number, default to 1 if not provided
+  const limit = limitString ? parseInt(limitString, 10) : 10; // Convert limit string to number, default to 10 if not provided
+  const user = res.locals.user;
+  const hiddenPosts = user.hiddenPosts || [];
+  const popularPosts = await getPopular(page, limit, sort, topBy, hiddenPosts);
+  return res.status(200).json({ popularPosts });
 }
