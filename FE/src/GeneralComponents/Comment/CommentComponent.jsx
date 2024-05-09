@@ -28,8 +28,8 @@ export default function CommentComponent({ comment, margin = 0 }) {
             marginLeft: margin,
         }}>
             <Link to={`/user/${comm?.user?.username}`} className=" flex gap-2 items-center">
-                <img src={comm.user.avatar} className=" aspect-square w-[30px] rounded-full overflow-hidden" />
-                <p className="font-bold">{comm.user.username}</p>
+                <img src={comm?.user?.avatar ?? ""} className=" aspect-square w-[30px] rounded-full overflow-hidden" />
+                <p className="font-bold">{comm?.user?.username}</p>
                 <p className="font-bold">.</p>
                 <p className="text-sm text-gray-500">{comm.createdAt}</p>
             </Link>
@@ -55,18 +55,7 @@ export default function CommentComponent({ comment, margin = 0 }) {
                     </button>
                 </div>
             </div>
-            {/* {
-                showComment && <div className="my-4">
-                    <TextBox area={true} placeholder="Enter your comment..." />
-                    <div className="flex mt-4 items-center gap-4">
-                        <Button>Comment</Button>
-                        <button onClick={()=> setShowCommetn(false)} className=" bg-gray-100 text-black rounded-full px-4 py-2">Cancel</button>
-                    </div>
-                </div>
-            }
-            {
-                comment.comments?.map((e, idx) => <CommentComponent comment={e} key={idx} margin={margin + 20} />)
-            } */}
+            
         </div>
     )
 }

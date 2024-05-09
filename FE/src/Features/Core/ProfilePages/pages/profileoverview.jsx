@@ -29,8 +29,8 @@ export default function ProfileOverview({ using, context }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    communityName: post.coummunityName,
-                    communityIcon: post.CommunityID.icon,
+                    communityName: post?.coummunityName,
+                    communityIcon: post?.CommunityID?.icon,
                     images: post.attachments,
                     postId: post._id,
                     title: post.title,
@@ -76,7 +76,7 @@ export default function ProfileOverview({ using, context }) {
                 }
                 const newPosts = response.data.posts.map(post => ({
                     communityName: post.coummunityName,
-                    communityIcon: post.CommunityID.icon,
+                    communityIcon: post.CommunityID?.icon,
                     images: post.attachments,
                     postId: post._id,
                     title: post.title,

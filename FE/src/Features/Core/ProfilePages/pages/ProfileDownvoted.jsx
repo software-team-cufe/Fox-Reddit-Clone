@@ -35,20 +35,20 @@ export default function ProfileDownvoted({ using }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.downvotedPosts.map(post => ({
-                    communityName: post.communityName,
-                    communityIcon: post.communityIcon,
-                    images: post.attachments,
-                    postId: post.postId,
-                    title: post.title,
-                    textHTML: post.textHTML,
-                    votesCount: post.votesCount,
-                    comments: post.postComments,
-                    commentsNum: post.commentsCount,
-                    thumbnail: post.thumbnail,
+                    communityName: post?.communityName,
+                    communityIcon: post?.communityIcon,
+                    images: post?.attachments,
+                    postId: post?.postId,
+                    title: post?.title,
+                    textHTML: post?.textHTML,
+                    votesCount: post?.votesCount,
+                    comments: post?.postComments,
+                    commentsNum: post?.commentsCount,
+                    thumbnail: post?.thumbnail,
                     video: null,
                     type: "post",
-                    spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    spoiler: post?.spoiler,
+                    NSFW: post?.nsfw
                 }));
                 setcurrentpage(2);
                 setPosts(newPosts);
