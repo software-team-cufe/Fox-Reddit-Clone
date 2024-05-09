@@ -23,6 +23,10 @@ import EditModal from "./accessories/editBanner";
 import KickOutModal from "./accessories/kickOutModal";
 import { useSelector } from "react-redux";
 import ModCard from "./ModCard/ModCard";
+import { set } from "zod";
+import Spinner from '@/GeneralElements/Spinner/Spinner';
+
+
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -65,6 +69,7 @@ export default function CommunityPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editComponent, setEditComponent] = useState("Banner");
   const [showKickOut, setShowKickOut] = useState(false);
+  const[joining, setJoining] = useState(false);
   const searchRedux = useSelector(state => state.search);
 
 
@@ -191,12 +196,11 @@ export default function CommunityPage() {
     setLoading(false);
   }, []);
 
-  let { error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity });
+  let { error } = useQuery('fetchCommunity', fetchCommunity, { refetchOnWindowFocus: false});
 
   const fetchInitialPosts = async () => {
     setFeed(true);
     if (searchRedux == "") {
-      console.log("none")
       let link = `api/listing/posts/r/${commObj.name}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
       if (selected == 'Top') {
         link = link + `&t=${period}`;
@@ -206,7 +210,6 @@ export default function CommunityPage() {
           if (response.data.length > 0) {
             setpagedone(true);
           }
-          console.log('response:', response.data); // Log response
           const newPosts = response.data.map(post => ({
             communityName: post.username,
             communityIcon: commObj.icon,
@@ -254,9 +257,7 @@ export default function CommunityPage() {
             NSFW: post.nsfw,
             poll: post.poll ? post.poll : []
           }));
-          console.log('newPosts:', newPosts); // Log newPosts
           setPosts(newPosts);
-          console.log('posts:', Posts); // Log posts
         })
         .catch(error => {
           console.error('There was an error!', error);
@@ -265,9 +266,10 @@ export default function CommunityPage() {
     }
   };
 
-  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period, searchRedux], fetchInitialPosts, { enabled: !loading, staleTime: Infinity });
+  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period, searchRedux], fetchInitialPosts, { enabled: !loading, refetchOnWindowFocus: false });
 
   const swtichJoinState = async () => {
+    setJoining(true);
     if (user == null) {
       setShowModal(true);
       return;
@@ -275,16 +277,12 @@ export default function CommunityPage() {
     const subStatus = commObj.joined ? "unsubscribe" : "subscribe";
     await userAxios.post(`/${commObj.name}/api/${subStatus}`)
       .then(() => {
-        if (commObj.joined) {
-          toast.success(`r/${commObj.name} ${commObj.joined ? 'unjoined' : 'joined'}!`)
-        } else {
-          toast.success(`r/${commObj.name} ${commObj.joined ? 'unjoined' : 'joined'}!`)
-        }
         setComm({ ...commObj, joined: !commObj.joined });
       })
       .catch(error => {
         console.error('There was an error!', error);
       });
+      setJoining(false);
   }
 
   const CreatePostHandle = () => {
@@ -340,7 +338,6 @@ export default function CommunityPage() {
           if (response.data.subredditSearchPosts.length < limitpage) {
             setpagedone(true);
           }
-          console.log('response:', response.data); // Log response
           const newPosts = response.data.subredditSearchPosts.map(post => ({
             communityName: post.username,
             communityIcon: commObj.icon,
@@ -421,7 +418,7 @@ export default function CommunityPage() {
             </Link>
           ) : (
             <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${commObj.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
-              <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>
+            {joining ? <Spinner></Spinner> : <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>}
             </button>)}
           <OptionsMenu comm={commObj} setComm={setComm} />
         </div>
@@ -439,7 +436,7 @@ export default function CommunityPage() {
           </Link>
         ) : (
           <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${commObj.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
-            <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>
+            {joining ? <Spinner></Spinner> : <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>}
           </button>)}
         <OptionsMenu comm={commObj} setComm={setComm} />
       </div>
@@ -454,8 +451,8 @@ export default function CommunityPage() {
 
             {/* page buttons for mobile mode*/}
             <div className='flex gap-2 md:hidden'>
-              <Link id="toCommFeed" to={`/r/${commObj.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${commObj.name}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
-              <Link id="toCommAbout" to={`/r/${commObj.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${commObj.name}/about` ? "bg-gray-300" : "bg-white"}`} >about</Link>
+              <Link id="toCommFeed" to={`/r/${commObj.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${encodeURIComponent(community)}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
+              <Link id="toCommAbout" to={`/r/${commObj.name}/info`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${encodeURIComponent(community)}/info` ? "bg-gray-300" : "bg-white"}`} >about</Link>
             </div>
 
             {/* sort elements for the feed*/}
