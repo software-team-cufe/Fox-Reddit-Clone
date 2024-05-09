@@ -1,34 +1,79 @@
 import React, { useEffect, useState } from 'react'
 import NavOfNotification from './NavOfNotification'
 import { useNavigate } from 'react-router-dom';
-import { userAxios } from "../../Utils/UserAxios";
+import { onMessageListener, requestPermission } from '../../Utils/firebase';
+import { userAxios } from '../../Utils/UserAxios';
+import { getToken } from "firebase/messaging";
+import { getMessaging } from "firebase/messaging";
 const NotificationPage = () => {
 
+   useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch((error) => {
+          console.error('Error registering Service Worker:', error);
+        });
+    }
+  }, []);
+  
   const navigator = useNavigate();
   const handleNavigate = () => {
     navigator('/setting/notifications');
   }
+  const [notification, setNotification] = useState({ title:"" , body:" "});
+
+   useEffect(() => {
+   requestPermission();
+      const unsubscribe= onMessageListener().then((payload) => {
+       setNotification({
+       title: payload?.notification.title,
+       body: payload?.notification.body
+     });
+     console.log(payload?.notification.title)
+     console.log("notification",setNotification)
+   });
+   return () => {
+     unsubscribe.catch((err) => console.log(err));
+   };
+   }, []);
 
 
-  const [notifications, setNotifications] = useState([])
-  const [unReadNotifications, setUnReadNotifications] = useState([])
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await userAxios.get('/api/v1/me/notification');
-        setNotifications(response.data.notifications);
-        setUnReadNotifications(response.data.unreadNotificationsCount);
-        console.log(response.data.unreadNotificationsCount);
-        console.log(response.data.notifications);
-        console.log("notifications");
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
+   const fetchToken = async () => {
+    try {
+      const messaging = getMessaging();
+      const currentToken = await getToken(messaging, { vapidKey: "BFWzZdxGVozJKyuEWwyc09beuOhJGwEJCVxataGbpWdHcHqgtwZMI-aWuYk8QfbhGaDpC0JryiYtA22sA01BHos" });
+      const response = await userAxios.post('/api/auth/login/fcmtoken', { fcmtoken: currentToken });
+      console.log(response.data);
+      console.log("current",currentToken);
 
-    fetchNotifications();
-  }, []);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  fetchToken();
 
+    const [notifications, setNotifications] = useState([])
+    const [unreadNotificationsCount, setUnReadNotifications] = useState([])
+    useEffect(() => {
+      const fetchNotifications = async () => {
+        try {
+          const response = await userAxios.get('/api/v1/me/notification');
+          setNotifications(response.data.notifications);
+          setUnReadNotifications(response.data.unreadNotificationsCount);
+          console.log(response.data.unreadNotificationsCount);
+          console.log(response.data.notifications);
+          console.log("fetchNotification");
+        } catch (error) {
+          console.error('Error fetching notifications:', error);
+        }
+      };
+  
+      fetchNotifications();
+    }, []);
 
 
   return (
@@ -47,20 +92,23 @@ const NotificationPage = () => {
 
           </button>
         </div>
-        <div className='mt-4 w-3/5 flex flex-col'>
-        {notifications && notifications.length > 0 && (
-          notifications.map((notification) => (
-            <div key={notification._id}>
-              <p>{notification.title}</p>
-              <p>{notification.type}</p>
-              <p>{notification.source}</p>
-              <p>{notification.createdAt}</p>
-            </div>
-          ))
-        )}
-        <p>Unread Notifications Count: {unReadNotifications}</p>
+         <div>
+         { notification.title}
+         { notification.body}
+         </div>
       </div>
-    </div>
+      <div className='flex flex-col'>
+      {notifications && notifications.slice(0, 2).map((notification) => (
+         <div className="flex justify-between" key={notification._id}>
+           <p>{notification.title}</p>
+           <p>{notification.type}</p>
+           <p>{notification.source}</p>
+           <p>{notification.createdAt}</p>
+         </div>
+         
+       ))}
+      </div>
+      {unreadNotificationsCount}
 
     </div>
   )
