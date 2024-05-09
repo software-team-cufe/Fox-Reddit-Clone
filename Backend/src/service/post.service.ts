@@ -645,49 +645,58 @@ export async function getRandomPostsFromRandom(
 export async function addVoteToPost(userID: string, postID: string, type: number) {
   const post = await findPostById(postID);
   const user = await findUserById(userID);
-
-  if (!post) {
-    return {
-      status: false,
-      error: 'post not found',
-    };
-  }
-
-  if (!user) {
-    return {
-      status: false,
-      error: 'user not found',
-    };
-  }
-
-  const vote = {
-    userID: userID,
-    type: type,
-  };
-  const temp = post.votes;
   try {
-    const updatedPost = await PostModel.findByIdAndUpdate(
-      post._id,
-      {
-        $addToSet: { votes: vote },
-        $inc: { votesCount: type },
-      },
-      { upsert: true, new: true }
-    );
-    const temp2 = updatedPost.votes;
-    const isSame = _.isEqual(temp, temp2);
-    if (isSame) {
-      console.log('same user voted again');
-      type = type * -2;
+    if (!post) {
+      return {
+        status: false,
+        error: 'post not found',
+      };
+    }
+
+    if (!user) {
+      return {
+        status: false,
+        error: 'user not found',
+      };
+    }
+    let oldType;
+    post.votes?.forEach((el) => {
+      // Check if the follower's ID is equal to the user's ID
+      if (el.userID.toString() == userID) oldType = el.type;
+    });
+    if (oldType) {
+      const oldType2 = oldType * -1;
+      const oldVote = {
+        userID: userID,
+        type: oldType,
+      };
       const updatedPost = await PostModel.findByIdAndUpdate(
         post._id,
         {
-          $pull: { votes: vote },
-          $inc: { votesCount: type },
+          $pull: { votes: oldVote },
+          $inc: { votesCount: oldType2 },
         },
         { upsert: true, new: true }
       );
     }
+    if (oldType == type) {
+      return {
+        status: true,
+      };
+    }
+    const newVote = {
+      userID: userID,
+      type: type,
+    };
+
+    const updatedPost = await PostModel.findByIdAndUpdate(
+      post._id,
+      {
+        $addToSet: { votes: newVote },
+        $inc: { votesCount: type },
+      },
+      { upsert: true, new: true }
+    );
   } catch (error) {
     return {
       status: false,

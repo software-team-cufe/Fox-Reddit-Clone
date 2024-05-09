@@ -75,49 +75,58 @@ export function createComment(input: Partial<Comment>) {
 export async function addVoteToComment(userID: string, commentID: string, type: number) {
   const comment = await findCommentById(commentID);
   const user = await findUserById(userID);
-
-  if (!comment) {
-    return {
-      status: false,
-      error: 'Comment not found',
-    };
-  }
-
-  if (!user) {
-    return {
-      status: false,
-      error: 'user not found',
-    };
-  }
-
-  const vote = {
-    userID: userID,
-    type: type,
-  };
-  const temp = comment.votes;
   try {
-    const updatedComment = await CommentModel.findByIdAndUpdate(
-      comment._id,
-      {
-        $addToSet: { votes: vote },
-        $inc: { votesCount: type },
-      },
-      { upsert: true, new: true }
-    );
-    const temp2 = updatedComment.votes;
-    const isSame = _.isEqual(temp, temp2);
+    if (!comment) {
+      return {
+        status: false,
+        error: 'comment not found',
+      };
+    }
 
-    if (isSame) {
-      type = type * -2;
-      const updated = await CommentModel.findByIdAndUpdate(
+    if (!user) {
+      return {
+        status: false,
+        error: 'user not found',
+      };
+    }
+    let oldType;
+    comment.votes?.forEach((el) => {
+      // Check if the follower's ID is equal to the user's ID
+      if (el.userID.toString() == userID) oldType = el.type;
+    });
+    if (oldType) {
+      const oldType2 = oldType * -1;
+      const oldVote = {
+        userID: userID,
+        type: oldType,
+      };
+      const updatedComment = await CommentModel.findByIdAndUpdate(
         comment._id,
         {
-          $pull: { votes: vote },
-          $inc: { votesCount: type },
+          $pull: { votes: oldVote },
+          $inc: { votesCount: oldType2 },
         },
         { upsert: true, new: true }
       );
     }
+    if (oldType == type) {
+      return {
+        status: true,
+      };
+    }
+    const newVote = {
+      userID: userID,
+      type: type,
+    };
+
+    const updatedComment = await CommentModel.findByIdAndUpdate(
+      comment._id,
+      {
+        $addToSet: { votes: newVote },
+        $inc: { votesCount: type },
+      },
+      { upsert: true, new: true }
+    );
   } catch (error) {
     return {
       status: false,
