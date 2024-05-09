@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { userAxios } from '../../Utils/UserAxios';
 import { useEffect, useState } from 'react'
-function NotificationsPopus({ setShowBellPop }) {
+function NotificationsPopus({ setShowBellPop ,onFetchNotifications}) {
     const navigator = useNavigate();
     const navToNot = useNavigate();
     const NavOfNotification=()=>{
@@ -11,7 +11,7 @@ function NotificationsPopus({ setShowBellPop }) {
 
 
     const [notifications, setNotifications] = useState([])
-    const [unReadNotifications, setUnReadNotifications] = useState([])
+    const [unReadNotifications, setUnReadNotifications] = useState(null)
     useEffect(() => {
       const fetchNotifications = async () => {
         try {
@@ -26,9 +26,12 @@ function NotificationsPopus({ setShowBellPop }) {
         }
       };
   
+      
       fetchNotifications();
     }, []);
+     
   
+      
     return (
         <div id="notificationsPopup" className="p-2 h-max w-[350px] rounded-2xl
                bg-white drop-shadow-xl 
@@ -38,6 +41,7 @@ function NotificationsPopus({ setShowBellPop }) {
                     className="w-full  hover:text-orange-700">Notifications</button>
                 <button onClick={() => { navigator("/message/inbox"); setShowBellPop(false); }}
                     className="w-full rounded hover:text-orange-700">Messages</button>
+                    
             </div>
             <div className="rounded-full mb-1 bg-orange-700 w-1/2 h-1" />
            
