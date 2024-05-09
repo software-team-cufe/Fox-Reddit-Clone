@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { Switch } from '@headlessui/react'
 import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
 import { userAxios } from "../../../Utils/UserAxios";
+import { set } from "zod";
 
 /**
  * 
@@ -39,36 +40,56 @@ export default function FeedSettings() {
 
     //connecting to mock & back
     const handleToggleInFeedMatureContent = async () => {
-        // try{userAxios.patch(`api/v1/me/prefs`, {
-        //     labelNsfw: !showMatureContent,
-        // })}catch(error){
-        //     console.error(error);
-        // }        
-        try{axios.patch(`http://localhost:3002/users/${id}`, { 
-            NSFW: !showMatureContent,
+        try{await userAxios.patch(`api/v1/me/prefs`, {
+            over18: !showMatureContent,
         })
-        setShowMatureContent(!showMatureContent)
-        }catch(error){
-            console.error(error);
-        } 
-    }
-    const handleToggleInFeedBlurImage = async () => {
-        try{axios.patch(`http://localhost:3002/users/${id}`, { 
-            blur: !blurMatureImg,
-        })
-        setBlurMatureImg(!blurMatureImg)
-        }catch(error){
-            console.error(error);
-        } 
-    }
-    const handleToggleInFeedAutoplay = async () => {
-        try{axios.patch(`http://localhost:3002/users/${id}`, { 
-            autoPlayVideos: !autoplayMedia,
-        })
-        setAutoplayMedia(!autoplayMedia)
+        setShowMatureContent(!showMatureContent);
         }catch(error){
             console.error(error);
         }
+
+        // try{axios.patch(`http://localhost:3002/users/${id}`, { 
+        //     NSFW: !showMatureContent,
+        // })
+        // setShowMatureContent(!showMatureContent)
+        // }catch(error){
+        //     console.error(error);
+        // } 
+    }
+    const handleToggleInFeedBlurImage = async () => {
+        try{await userAxios.patch(`api/v1/me/prefs`, {
+            blurMature: !blurMatureImg,
+        })
+        setBlurMatureImg(!blurMatureImg);
+        }catch(error){
+            console.error(error);
+        }
+
+        // try{axios.patch(`http://localhost:3002/users/${id}`, { 
+        //     blur: !blurMatureImg,
+        // })
+        // setBlurMatureImg(!blurMatureImg)
+        // }catch(error){
+        //     console.error(error);
+        // } 
+    }
+    const handleToggleInFeedAutoplay = async () => {
+        try{await userAxios.patch(`api/v1/me/prefs`, {
+            autoplayMedia: !autoplayMedia,
+        })
+        setAutoplayMedia(!autoplayMedia);
+        }catch(error){
+            console.error(error);
+        }
+
+        // try{axios.patch(`http://localhost:3002/users/${id}`, { 
+        //     autoPlayVideos: !autoplayMedia,
+        // })
+        // setAutoplayMedia(!autoplayMedia)
+        // }catch(error){
+        //     console.error(error);
+        // }
+        
     }
     const handleToggleInFeedCommunityTheme = async () => {
         try{axios.patch(`http://localhost:3002/users/${id}`, { 
@@ -98,14 +119,22 @@ export default function FeedSettings() {
         }
     }
     const handleToggleInFeedNewTab = async () => {
-        try{axios.patch(`http://localhost:3002/users/${id}`, { 
-            openPostsInNewTab: !openPostsInNewTab,
+        try{userAxios.patch(`api/v1/me/prefs`, {
+            showPostInNewWindow: !openPostsInNewTab,
         })
-        setOpenPostsInNewTab(!openPostsInNewTab)
+            setOpenPostsInNewTab(!openPostsInNewTab);
         }catch(error){
             console.error(error);
-        }
+        }   
+        // try{axios.patch(`http://localhost:3002/users/${id}`, { 
+        //     openPostsInNewTab: !openPostsInNewTab,
+        // })
+        // setOpenPostsInNewTab(!openPostsInNewTab)
+        // }catch(error){
+        //     console.error(error);
+        // }
     }
+
     /** 
     const handleToggleInFeedAutoplay = (isChecked3) => {
         setAutoplayMedia(isChecked3);
@@ -141,19 +170,25 @@ export default function FeedSettings() {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:3002/users/${id}`).then((response) => {
-            console.log(response.data);
-            setBlurMatureImg(response.data.blur);
-            setShowMatureContent(response.data.NSFW);
-            setAutoplayMedia(response.data.autoPlayVideos);
-            setCommunityTheme(response.data.communityTheme);
-            setRememberingSortPerCommunity(response.data.rememberingSortPerCommunity);
-            setrememberGlobalView(response.data.rememberGlobalView);
-            setOpenPostsInNewTab(response.data.openPostsInNewTab);
-
-        }).catch((error) => {
-            console.error(error);
+        userAxios.get(`api/v1/me/prefs`).then((response) => {
+            console.log(response.data.userPrefs);
+            setShowMatureContent(response.data.userPrefs.over18);
+            setBlurMatureImg(response.data.userPrefs.blurMature);
+            setAutoplayMedia(response.data.userPrefs.autoplayMedia);
+            setOpenPostsInNewTab(response.data.userPrefs.showPostInNewWindow);
         })
+        // axios.get(`http://localhost:3002/users/${id}`).then((response) => {
+        //     console.log(response.data);
+        //     setBlurMatureImg(response.data.blur);
+        //     setShowMatureContent(response.data.NSFW);
+        //     setAutoplayMedia(response.data.autoPlayVideos);
+        //     setCommunityTheme(response.data.communityTheme);
+        //     setRememberingSortPerCommunity(response.data.rememberingSortPerCommunity);
+        //     setrememberGlobalView(response.data.rememberGlobalView);
+        //     setOpenPostsInNewTab(response.data.openPostsInNewTab);
+        // }).catch((error) => {
+        //     console.error(error);
+        // })
     },[]);
 
 
