@@ -6,7 +6,16 @@ import { userAxios } from '../../Utils/UserAxios';
 import { getToken } from "firebase/messaging";
 import { getMessaging } from "firebase/messaging";
 const NotificationPage = () => {
+  const [notifications, setNotifications] = useState([])
+  const [unreadNotificationsCount, setUnReadNotifications] = useState([])
+  const [notification, setNotification] = useState({ title:"" , body:" "});
 
+  const navigator = useNavigate();
+  const handleNavigate = () => {
+    navigator('/setting/notifications');
+  }
+
+  
    useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js')
@@ -19,11 +28,8 @@ const NotificationPage = () => {
     }
   }, []);
   
-  const navigator = useNavigate();
-  const handleNavigate = () => {
-    navigator('/setting/notifications');
-  }
-  const [notification, setNotification] = useState({ title:"" , body:" "});
+
+
 
    useEffect(() => {
    requestPermission();
@@ -56,8 +62,7 @@ const NotificationPage = () => {
   
   fetchToken();
 
-    const [notifications, setNotifications] = useState([])
-    const [unreadNotificationsCount, setUnReadNotifications] = useState([])
+   
     useEffect(() => {
       const fetchNotifications = async () => {
         try {
@@ -96,20 +101,20 @@ const NotificationPage = () => {
          { notification.title}
          { notification.body}
          </div>
-      </div>
-      <div className='flex flex-col'>
-      {notifications && notifications.slice(0, 2).map((notification) => (
-         <div className="flex justify-between" key={notification._id}>
-           <p>{notification.title}</p>
-           <p>{notification.type}</p>
-           <p>{notification.source}</p>
-           <p>{notification.createdAt}</p>
-         </div>
-         
-       ))}
-      </div>
-      {unreadNotificationsCount}
+</div>
+<p className='text-lg text-orange-500 ml-2 font-semibold'>{unreadNotificationsCount}</p>
 
+<div className='flex flex-col'>
+      {notifications && notifications.map((notification) => (
+        <div className="flex flex-col text-md border border-gray-300 p-4 m-2" key={notification._id}>
+          <h2 className='text-lg font-semibold'>{notification.title}</h2>
+          <p className='text-sm text-gray-500'>{notification.type}</p>
+          <p className='text-sm text-gray-500'>{notification.source}</p>
+          <p className='text-sm text-gray-500'>{new Date(notification.createdAt).toLocaleString()}</p>
+        </div>
+      ))}
+    </div>
+  
     </div>
   )
 }

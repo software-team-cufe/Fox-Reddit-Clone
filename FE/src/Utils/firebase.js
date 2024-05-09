@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { getMessaging, onMessage } from "firebase/messaging";
 import { getToken } from "firebase/messaging";
 
@@ -14,19 +14,17 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const messagging = getMessaging(app);
+const messaging = getMessaging(app); // Corrected variable name to 'messaging'
 
 export const requestPermission = () => {
-
-    console.log("notification page")
-  Notification.requestPermission().then ( Permission =>{
-    if (Permission === "granted"){
+  console.log("notification page");
+  Notification.requestPermission().then((permission) => {
+    if (permission === "granted") {
       console.log("notification permission granted");
-      return getToken (messagging , {
-        vapidKey:"BFWzZdxGVozJKyuEWwyc09beuOhJGwEJCVxataGbpWdHcHqgtwZMI-aWuYk8QfbhGaDpC0JryiYtA22sA01BHos"
-
+      return getToken(messaging, {
+        vapidKey: "BFWzZdxGVozJKyuEWwyc09beuOhJGwEJCVxataGbpWdHcHqgtwZMI-aWuYk8QfbhGaDpC0JryiYtA22sA01BHos"
       })
-      .then ((currentToken) => {
+      .then((currentToken) => {
         if (currentToken) {
           console.log(currentToken);
         } else {
@@ -36,19 +34,41 @@ export const requestPermission = () => {
       .catch((err) => {
         console.log('An error occurred while retrieving token. ', err);
       });
-    }
-
-    else{
+    } else {
       console.log("notification permission denied");
     }
-  })
-
+  });
 };
+
 requestPermission();
 
 export const onMessageListener = () =>
   new Promise((resolve) => {
-    onMessage(messagging, (payload) => {
+    onMessage(messaging, async (payload) => {
+      // Request permission for notifications
+      const permission = await Notification.requestPermission();
+
+      if (permission === 'granted') {
+        // Create a new Notification object
+        const notification = new Notification(payload.notification.title, {
+          body: payload.notification.body,
+          icon: 'notification-icon.png', // Replace with your notification icon path
+        });
+
+        // Add event listeners for notification events
+        notification.addEventListener('click', () => {
+          // Handle notification click event
+          console.log('Notification clicked');
+        });
+
+        notification.addEventListener('close', () => {
+          // Handle notification close event
+          console.log('Notification closed');
+        });
+      }
+
       resolve(payload);
-});});
+    });
+  });
+
 export const appFirestore = getFirestore(app);
