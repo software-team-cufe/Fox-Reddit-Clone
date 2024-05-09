@@ -134,24 +134,6 @@ const ModCard = () => {
     }
    }
     
-   const deleteButton = async (event) => {
-    if (event) {
-      event.preventDefault();
-    }
-    try {
-      const widgetData = {
-        widgets: [ ]
-      };
-      const res = await userAxios.patch(`/${community}/api/edit_button_widgets`, widgetData);
-      console.log(res.data);
-      console.log("Button deleted successfully");
-      setButtonTitle('');
-      setLink('');
-      console.log("Button deleted successfully");
-    } catch (error) {
-      console.log(error);
-    }
-  }
   
  
   useEffect(() => {
@@ -274,7 +256,29 @@ const addButtons = async (event) => {
     addButtons();
   }, []);
 
-
+  const deleteButton = async (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    try {
+      const widgetData = {
+        widgets: [ ]
+      };
+      const res = await userAxios.patch(`/${community}/api/edit_button_widgets`, widgetData);
+      console.log(res.data);
+      console.log("Button deleted successfully");
+      setButtonTitle('');
+      setLink('');
+      console.log("Button deleted successfully");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+ 
+  useEffect(() => {
+    deleteButton();
+  }, []);
 
   return (
     <div className={`relative border border-slate-200 bg-slate-50 min-h-fit h-fit rounded-xl ${path === `r/${encodeURIComponent(community)}/info` ? "md:block hidden mr-5" : "mx-auto mt-5"} pb-3 w-[340px] flex-col`}>
