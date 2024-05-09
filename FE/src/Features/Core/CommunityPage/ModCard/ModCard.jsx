@@ -137,20 +137,28 @@ const ModCard = () => {
     getText();
   }, []);
  
-  /*
+ 
   const [nickname, setNickname] = useState('');
   const [currentNickname, setCurrentNickname] = useState('');
+  const [communityDescription, setCommunityDescription] = useState('');
   
-   const editCommunity = async (event) => {
-    try {
-      const res = await userAxios.patch(`/${community}/api/edit_details` ,nickname,currentNickname,description);
-      console.log(res.data);
-      console.log("community edited successfully");
-    } catch (error) {
-      console.log(error);
+  const editCommunity = async (event) => {
+    if (event) {
+      event.preventDefault();
     }
-   }
-  */
+  
+  
+      const res = await userAxios.patch(`/${community}/api/edit_details`,nickname ,currentNickname,communityDescription);
+      console.log(res);
+      console.log("community details edited successfully");
+  
+      setNickname(nickname);
+      console.log(nickname);
+      setCurrentNickname(currentNickname);
+      setCommunityDescription(communityDescription);
+      console.log("community details edited successfully");
+
+  }
 
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
@@ -187,8 +195,9 @@ const ModCard = () => {
                     <input
                       type="text"
                       placeholder="Members' nickname"
+                      value={nickname}
                       className="text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2 rounded-2xl p-2 bg-gray-200"
-                      onChange={setHandleName}
+                      onChange={(e) =>{setHandleName;setNickname(e.target.value)}}
                     />
                     <span className={`text-xs text-gray-500 ml-4 ${handleName ? 'text-green-600' : 'text-black'}`}>
                       Give a nickname to your members.
@@ -199,7 +208,8 @@ const ModCard = () => {
                           <input 
                            type="text"
                            placeholder="Currently viewing nickname "
-                           onChange={setHandleView}
+                           value={currentNickname}
+                           onChange={(e)=>{setHandleView;setCurrentNickname(e.target.value)}}
                            className="text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
                            </input> 
                            <span className={`text-xs text-gray-500 ml-4 ${handleView ? 'text-green-600' : 'text-black'}`}>
@@ -210,8 +220,9 @@ const ModCard = () => {
                        <div className=' my-3'>  
                           <input 
                            type="text"
+                           value={communityDescription}
                            placeholder=" Community description "
-                           onChange={setHandleDescription}
+                           onChange={(e)=>{setHandleDescription ; setCommunityDescription(e.target.value)}}
                             className=" text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
                            </input> 
                            <span className={`text-xs text-gray-500 ml-4 ${handleDescription ? 'text-green-600' : 'text-black'}`}>
@@ -225,7 +236,7 @@ const ModCard = () => {
                       <button onClick={ ()=> setIsOpened(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
                        Cancel
                        </button>
-                       <button onClick={ ()=> setIsOpened(false)} className=' w-[57px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                       <button onClick={ (event)=> {setIsOpened(false); editCommunity(event)}} className=' w-[57px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
                         Save
                        </button>
                   </div>
