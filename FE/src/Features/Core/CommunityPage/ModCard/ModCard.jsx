@@ -27,6 +27,10 @@ const ModCard = () => {
     const moderatorName = useSelector(state => state.user.user.username);
     const [members, setMembers] = useState(0);
     const [moderators, setModerators] = useState([]);
+    const [nickname, setNickname] = useState('');
+    const [currentNickname, setCurrentNickname] = useState('');
+    const [communityDescription, setCommunityDescription] = useState('');
+    
 
     const navigator = useNavigate();
     const navigate =useNavigate();
@@ -138,28 +142,51 @@ const ModCard = () => {
   }, []);
  
  
-  const [nickname, setNickname] = useState('');
-  const [currentNickname, setCurrentNickname] = useState('');
-  const [communityDescription, setCommunityDescription] = useState('');
-  
+
   const editCommunity = async (event) => {
     if (event) {
       event.preventDefault();
     }
   
+    const data = {
+      nickname,
+      currentNickname,
+      description,
+    };
   
-      const res = await userAxios.patch(`/${community}/api/edit_details`,nickname ,currentNickname,communityDescription);
-      console.log(res);
-      console.log("community details edited successfully");
+    const res = await userAxios.patch(`/${community}/api/edit_details`, data);
+    console.log(res);
+    console.log("community details edited successfully");
   
-      setNickname(nickname);
-      console.log(nickname);
-      setCurrentNickname(currentNickname);
-      setCommunityDescription(communityDescription);
-      console.log("community details edited successfully");
-
+    setNickname(nickname);
+    console.log(nickname);
+    setCurrentNickname(currentNickname);
+    setCommunityDescription(communityDescription);
+    console.log("community details edited successfully");
   }
 
+
+  const deleteDetails = async (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+  
+    const deletedata = {
+      nickname: '',
+      currentNickname: '',
+      description: '',
+    };
+  
+    const res = await userAxios.patch(`/${community}/api/edit_details`, deletedata);
+    console.log(res);
+    console.log("community details deleted successfully");
+  
+    setNickname('');
+    console.log(nickname);
+    setCurrentNickname('');
+    setCommunityDescription('');
+    console.log("community details deleted successfully");
+  }
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
@@ -233,6 +260,13 @@ const ModCard = () => {
                     </div>
 
                     <div className=' flex flex-row justify-end space-x-3  mr-4'>
+                    {
+                      nickname && currentNickname && communityDescription ?(
+                       <button onClick={deleteDetails} className='w-[62px] text-xs rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-200'>
+                       Delete
+                     </button>
+                      ) : null
+                     }
                       <button onClick={ ()=> setIsOpened(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
                        Cancel
                        </button>
@@ -385,37 +419,45 @@ const ModCard = () => {
                                                  </span>
                                                </div>
                                                     
-                                                    <div className=' my-3'>  
-                                                       <input 
-                                                        type="text"
-                                                        placeholder="Currently viewing nickname "
-                                                        onChange={setHandleView}
-                                                        className= "text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
-                                                        </input> 
-                                                        <span className={`text-xs text-gray-500 ml-4 ${handleView ? 'text-green-600' : 'text-black'}`}>
-                                                          Describe members who are currently viewing and contributing to your community.</span> 
-                                                      
-                                                    </div>
+                                               <div className=' my-3'>  
+                                               <input 
+                                                type="text"
+                                                placeholder="Currently viewing nickname "
+                                                value={currentNickname}
+                                                onChange={(e)=>{setHandleView;setCurrentNickname(e.target.value)}}
+                                                className="text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
+                                                </input> 
+                                                <span className={`text-xs text-gray-500 ml-4 ${handleView ? 'text-green-600' : 'text-black'}`}>
+                                                  Describe members who are currently viewing and contributing to your community.</span> 
+                                              
+                                            </div>
+                                            
                                                     
-                                                    <div className=' my-3'>  
-                                                       <input 
-                                                        type="text"
-                                                        placeholder=" Community description "
-                                                        onChange={setHandleDescription}
-                                                         className="focus:outline-none text-black border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
-                                                        </input> 
-                                                        <span className={`text-xs text-gray-500 ml-4 ${handleDescription ? 'text-green-600' : 'text-black'}`}>
-                                                           Describe your community to visitors. 
-                                                        </span>
-                                                    </div>
+                                            <div className=' my-3'>  
+                                            <input 
+                                             type="text"
+                                             value={communityDescription}
+                                             placeholder=" Community description "
+                                             onChange={(e)=>{setHandleDescription ; setCommunityDescription(e.target.value)}}
+                                              className=" text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
+                                             </input> 
+                                             <span className={`text-xs text-gray-500 ml-4 ${handleDescription ? 'text-green-600' : 'text-black'}`}>
+                                                Describe your community to visitors. 
+                                             </span>
+                                         </div>
                                                    
                                                  </div>
 
                                                  <div className=' flex flex-row justify-end space-x-3  mr-4'>
+                                                 {nickname || currentNickname || description ? (
+                                                  <button onClick={deleteDetails} className='w-[62px] text-xs rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-200'>
+                                                    Delete
+                                                  </button>
+                                                ) : null}
                                                    <button onClick={ ()=> setWidget(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
                                                     Cancel
                                                     </button>
-                                                    <button onClick={ ()=> setWidget(false)} className=' w-[57px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                                                    <button onClick={ (event)=>{ setWidget(false) ;editCommunity(event)}} className=' w-[57px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
                                                      Save
                                                     </button>
                                                </div>
