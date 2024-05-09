@@ -86,7 +86,7 @@ if(userStore.getState().user.user != null){
             const response = await userAxios.get(`subreddits/mine/moderator`);
             const subreddits = response.data;
             setModeratorInSubreddits(subreddits.communities);
-            console.log(response.data.communities);
+            //console.log(response.data.communities);
             if (subreddits.communities.length > 0) {
                settemp(true);
             } else {
@@ -158,11 +158,11 @@ if(userStore.getState().user.user != null){
          tempForYourCom.push(yourCommunitiesList[i]);
       }
    }
-   console.log(tempForYourCom);
+   //console.log(tempForYourCom);
 
    tempForYourCom = [...new Set(tempForYourCom)];
-   console.log(yourCommunitiesList);
-   console.log(userMemberInSubreddits);
+   //console.log(yourCommunitiesList);
+   //console.log(userMemberInSubreddits);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [yourCommunities, setYourCommunities] = useState([]);
 
