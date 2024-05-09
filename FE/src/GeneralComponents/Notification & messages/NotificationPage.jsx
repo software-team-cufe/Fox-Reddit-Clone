@@ -1,34 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import NavOfNotification from './NavOfNotification'
 import { useNavigate } from 'react-router-dom';
-import { appFirestore } from '../../Utils/firebase';
-import { collection, doc, getDocs, query, setDoc, where, onSnapshot } from "@firebase/firestore";
-
-async function getDate() {
-
-  console.log(doc.docs.map(e => e.data()));
-}
-
-function useNotification() {
-  const [notification, setnotification] = useState([]);
-  useEffect(() => {
-    const collRef = collection(appFirestore, "notifications");
-    const doc = onSnapshot(query(collRef, where('userId', '==', 'id')), (snap) => {
-      setnotification(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    });
-  }, [])
-  return notification;
-}
-
-
+import { onMessageListener, requestPermission } from '../../Utils/PushNotification';
 const NotificationPage = () => {
-  const not = useNotification();
-  console.log(not);
+
+  
   const navigator = useNavigate();
   const handleNavigate = () => {
     navigator('/setting/notifications');
   }
+  const [notifications, setNotifications] = useState({ title:"" , body:" "});
 
+   useEffect(() => {
+   requestPermission();
+   const unsubscribe= onMessageListener().then((payload) => {
+     setNotifications({
+       title: payload?.notification.title,
+       body: payload?.notification.body
+     });
+   });
+   return () => {
+     unsubscribe.catch((err) => console.log(err));
+   };
+   }, []);
+  
   return (
     <div>
       <h1 className='text-2xl font-semibold mt-3 mb-8'>Notifications </h1>
@@ -45,9 +40,7 @@ const NotificationPage = () => {
 
           </button>
         </div>
-        {
-          not.map((e, idx) => <p key={idx}>{e.body}</p>)
-        }
+     
       </div>
 
     </div>

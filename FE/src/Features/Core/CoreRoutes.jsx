@@ -62,7 +62,6 @@ export default [
     <Route key={"/threads"} path="/chat/*" element={<ChatRoutes />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
-    <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={'/community'} path='/community' element={<TopCommunities />} />,
   
 ]
