@@ -3,8 +3,9 @@
     {
       "name": "mock",
       "script": "npm",
+      "args": "run mock-api",
       "interpreter": "none",
-      "args": "mock-api"
+      "node_args": "--harmony"
     }
   ]
 }
