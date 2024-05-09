@@ -38,6 +38,10 @@ const ModCard = () => {
     const handleNavigate=()=>{
         navigator('/message/compose');
     }
+    function routeToRules(community) {
+      const path = `/r/${community}/about/rules`;
+      window.location.href = path;
+    }
     useEffect( () => {
       const getNumofMembers = async () => {
         try{ 
@@ -141,8 +145,28 @@ const ModCard = () => {
     getText();
   }, []);
  
+  const getDetails = async () => {
+    try {
+      const res = await userAxios.get(`/${community}/api/details`);
+      const { nickname, currentNickname, communityDescription } = res.data;
+  
+      setNickname(nickname);
+      console.log(nickname);
+      console.log("nickname");
+      setCurrentNickname(currentNickname);
+      console.log(currentNickname);
+      console.log("currentNickname");
+      setCommunityDescription(communityDescription);
+      console.log(communityDescription);
+      console.log("communityDescription");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getDetails();
+  }, []);
  
-
   const editCommunity = async (event) => {
     if (event) {
       event.preventDefault();
@@ -191,9 +215,15 @@ const ModCard = () => {
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
        <div className=' flex flex-row justify-between m-3'>
-           <div className=' text-md font-semibold'>
-              { community}
-           </div>
+           <div className=' flex flex-col space-y-3'>
+              <div className=' text-md font-semibold '>
+               { community}
+             </div>
+             <div className=' text-sm text-gray-500'>
+                {communityDescription}
+             </div>
+         </div>
+        
            <div>
                <button onClick={() => setIsOpened(!isOpened)} className=' rounded-full border border-gray-200 bg-gray-200 w-6 h-6 flex items-center justify-center '>
                  <svg className="w-5 h-5 self-center"
@@ -279,17 +309,21 @@ const ModCard = () => {
               }
            </div>
        </div>
-       <div className=' flex flex-row  mx-3'>
+       <div className=' flex flex-row  mx-3 my-2'>
            <div className=' flex flex-col w-1/2'>
                  <span className='text-sm'>{members}</span>
-                 <p className='text-sm text-gray-500'> Members</p>
+                 <p className='text-sm text-gray-500  capitalize'> 
+                { nickname ?(
+                    nickname): "members" } 
+                 
+                 </p>
            </div>
            <div className=' flex flex-col w-1/2'>
                  <span className='text-sm'> 314 </span>
                  <span className=' flex flex-row'>
                     <svg className=" self-center text-green-500 w-2 h-2 fill-current rounded-full  mr-1"
                      xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="currentColor" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" /></svg>
-                   <p className='text-sm text-gray-500'>Online</p>
+                   <p className='text-sm text-gray-500'>  {currentNickname ? (currentNickname):("online")}</p>
                  </span>
            </div>
        </div>
@@ -693,7 +727,7 @@ const ModCard = () => {
                                                     <p className='text-xs text-gray-500'>Your community doesn't have any rules yet.</p>
                                                  </div>
                                                  <div className=' mx-4 mt-5'>
-                                                    <button className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-8'>
+                                                    <button onClick={routeToRules} className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-8'>
                                                        Create Commmunity Rules
                                                     </button>
                                                  </div>
