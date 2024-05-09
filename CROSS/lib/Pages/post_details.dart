@@ -65,7 +65,6 @@ class _PostDetailsState extends State<PostDetails> {
       print("Item saved");
     } else {
       print("Item not saved");
-      print(access_token);
     }
   }
 
@@ -75,7 +74,6 @@ class _PostDetailsState extends State<PostDetails> {
       headers: {
         'Authorization': 'Bearer $access_token',
         'Content-Type': 'application/json'
-
       },
       body: json.encode({'linkID': '<$postId>'}),
     );
@@ -84,7 +82,6 @@ class _PostDetailsState extends State<PostDetails> {
       print("Item reported");
     } else {
       print("Item not reported");
-      print(access_token);
     }
   }
 
@@ -155,10 +152,11 @@ class _PostDetailsState extends State<PostDetails> {
         dir.createSync(
             recursive: true); // Create the directory if it doesn't exist
       }
-
+    List<String> attachments = widget.post['attachments']
+        .cast<String>(); // Assuming attachments are strings
       String savePath = "${dir.path}/${widget.post['title']}.jpg";
 
-      var response = await http.get(Uri.parse(widget.post['picture']!));
+      var response = await http.get(Uri.parse(attachments[0]));
       if (response.statusCode == 200) {
         File file = File(savePath);
         await file.writeAsBytes(response.bodyBytes);
@@ -184,6 +182,8 @@ class _PostDetailsState extends State<PostDetails> {
 
 // Define a function to show the bottom sheet
   void _showBottomMenu(BuildContext context) {
+        List<String> attachments = widget.post['attachments']
+        .cast<String>(); // Assuming attachments are strings
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -234,10 +234,10 @@ class _PostDetailsState extends State<PostDetails> {
               title: const Text('Download Image'),
               onTap: () {
                 Navigator.pop(context); // Close the menu
-                //if (widget.post['picture'] != null &&
-                //    widget.post['picture']!.isNotEmpty) {
-                //  _downloadImage(context); // Call the download image function
-                //}
+                if (attachments[0] != 'default.jpg' &&
+                    attachments[0].isNotEmpty) {
+                  _downloadImage(context); // Call the download image function
+                }
               },
             ),
             ListTile(
@@ -349,10 +349,19 @@ class _PostDetailsState extends State<PostDetails> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CircleAvatar(
-                  radius: 16,
-                  child: Icon(Icons.account_circle),
-                ),
+                if (widget.post["communityName"] != null &&
+                        (widget.post["communityIcon"] != null &&
+                            widget.post["communityIcon"] != 'default-icon.jpg'))
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundImage:
+                            NetworkImage(widget.post["communityIcon"]),
+                      )
+                    else
+                      const CircleAvatar(
+                          radius: 18,
+                          backgroundImage:
+                              AssetImage('assets/images/avatar.png')),
                 const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
