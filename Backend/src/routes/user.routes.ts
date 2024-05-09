@@ -138,3 +138,6 @@ router.post(
 //** Homepage **/
 router.get('/user-home', validateResource(homePagePostsSchema), getUserHomePagePostsHandler);
 export default router;
+
+//router.get('/r/popular');
+//router.get('/r/all');
