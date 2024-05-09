@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from "react";
-import UserPostComponent from "./extras/userPost";
+import PostComponent from "@/GeneralComponents/Post/Post";
 import { useState } from "react";
 import { userAxios } from "@/Utils/UserAxios";
 import { useQuery } from "react-query";
@@ -36,21 +36,22 @@ export default function ProfilePosts({ using, context }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.coummunityName,
+                    communityIcon: post.CommunityID.icon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post._id,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    commentsNum: post.commentsCount,
+                    comments: post.postComments,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    poll: post.poll ? post.poll : []
                 }));
-                console.log(newPosts);
                 setcurrentpage(2);
                 setPosts(newPosts);
                 setload(false);
@@ -72,19 +73,21 @@ export default function ProfilePosts({ using, context }) {
                     setpagedone(true);
                 }
                 const newPosts = response.data.posts.map(post => ({
-                    communityName: post.username,
-                    communityIcon: post.userID.avatar,
+                    communityName: post.coummunityName,
+                    communityIcon: post.CommunityID.icon,
                     images: post.attachments,
-                    id: post._id,
+                    postId: post._id,
                     title: post.title,
-                    description: post.textHTML,
+                    textHTML: post.textHTML,
                     votesCount: post.votesCount,
-                    comments: post.commentsCount,
+                    commentsNum: post.commentsCount,
+                    comments: post.postComments,
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    poll: post.poll ? post.poll : []
                 }));
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);
@@ -112,7 +115,7 @@ export default function ProfilePosts({ using, context }) {
             {Posts.length > 0 ? (
                 <>
                     {Posts.map((post, index) => (
-                        <UserPostComponent key={index} post={post} />
+                        <PostComponent key={index} post={post} />
                     ))}
                     {!pagedone && !callingposts && (<button role="loadmore" id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className="w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
                     {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}

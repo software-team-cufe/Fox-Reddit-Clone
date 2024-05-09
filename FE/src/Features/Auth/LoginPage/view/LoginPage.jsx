@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import GoogleIcon from "../../../../GeneralComponents/GoogleIcon";
 
 
 
@@ -40,7 +41,7 @@ export default function LoginPage({ }) {
       const res = await userAxios.post('api/auth/login', { username: email, password });
 
       disp(setUser(res.data.user));
-     
+
       nav('/');
     } catch (ex) {
       if (ex.issues != null && ex.issues.length != 0) {
@@ -49,7 +50,9 @@ export default function LoginPage({ }) {
     }
     setLoading(false);
   };
-
+  const handelContinueWithGoogle = () => { 
+        
+  };
   return (
     <div
 
@@ -89,7 +92,15 @@ export default function LoginPage({ }) {
             <Button role="login-btn" disabled={loading} loading={loading} onClick={login} className="w-full">
               Login
             </Button>
+            <button onClick={handelContinueWithGoogle} type="button" className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
+              <div className=" w-4">
+                <GoogleIcon />
+              </div>
 
+              Continue With Google
+              <p></p>
+
+            </button>
           </form>
 
 

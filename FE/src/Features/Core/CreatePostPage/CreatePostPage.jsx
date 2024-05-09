@@ -30,7 +30,6 @@ function CreatePostPage(props) {
     const [imageOrVideo, setimageOrVideo] = useState(null);
     const [height, setHeight] = useState(window.innerHeight);
     const [imageFile, setimageFile] = useState(null);
-    const [imageShow, setimageShow] = useState(null);
     const [load, setload] = useState(false);
     const [Rules, setRules] = useState([]);
     const [ShowExpand, setShowExpand] = useState(Array(Rules.length).fill(false));
@@ -109,14 +108,13 @@ function CreatePostPage(props) {
         for (let index = 0; index < VideoOrImageSrc.length; index++) {
             imageUrl.push(await uploadImage(VideoOrImageSrc[index]));
         }
-        console.log(imageUrl)
         let NewPost;
 
         if (SelectedCom.name === store.username) {
             NewPost = {
                 title: TitleValue,
                 text: PostText + '' + PostURL, spoiler: Spoiler,
-                nsfw: NSFW, pollOptions: PollOptions, attachments: imageUrl,
+                nsfw: NSFW, poll: PollOptions, attachments: imageUrl,
                 createdAt: new Date()
             }
         }
@@ -124,14 +122,12 @@ function CreatePostPage(props) {
             NewPost = {
                 title: TitleValue,
                 text: PostText + '' + PostURL, spoiler: Spoiler,
-                nsfw: NSFW, pollOptions: PollOptions, attachments: imageUrl,
+                nsfw: NSFW, poll: PollOptions, attachments: imageUrl,
                 Communityname: SelectedCom.name,
                 createdAt: new Date()
             }
         }
-        console.log(imageUrl);
-        setimageShow(imageUrl);
-
+        console.log(NewPost)
         try {
             const res = userAxios.post('api/submit', NewPost)
             console.log(res)

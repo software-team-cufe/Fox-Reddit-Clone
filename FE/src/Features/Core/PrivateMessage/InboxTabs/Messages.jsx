@@ -7,8 +7,10 @@ import { Switch } from '@headlessui/react'
 import ReactQuill from 'react-quill';
 import { userStore } from '../../../../hooks/UserRedux/UserStore';
 import { userAxios } from "@/Utils/UserAxios";
-function Messages({ DiffTime, setUnreadAtIndex, }) {
+import { useNavigate } from 'react-router-dom';
+function Messages({ DiffTime }) {
     const currentId = userStore.getState().user.user._id;
+    const navigator = useNavigate();
     const [AllMess, setAllMess] = useState([]);
     const [SureToRemove, setSureToRemove] = useState(Array(AllMess.length).fill(false));
     const [SureToBlock, setSureToBlock] = useState(Array(AllMess.length).fill(false));
@@ -51,24 +53,50 @@ function Messages({ DiffTime, setUnreadAtIndex, }) {
 
     useEffect(() => {
         fetchMessages();
+        MarkRead();
     }, [])
 
     useEffect(() => {
         setShowExpand(Array(AllMess.length).fill(true));
-        // console.log(AllMess)
     }, [AllMess])
 
     useEffect(() => {
         selectedButton === null ? setDisableNext(true) : setDisableNext(false)
     }, [selectedButton])
 
+    const MarkRead = async () => {
+        try {
+            const res = await userAxios.post("message/markReadAllMessages/")
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const setUnreadAtIndex = async (index, id) => {
+        try {
+            const res = await userAxios.post('message/markUnreadMessage/',
+                { messageId: id });
+
+        } catch (error) {
+            console.log(error)
+        }
+        setAllMess(prevPostRep => {
+            const updatedPostRep = [...prevPostRep];
+            if (index >= 0 && index < updatedPostRep.length) {
+                updatedPostRep[index] = {
+                    ...updatedPostRep[index],
+                    unread: true
+                };
+            }
+            return updatedPostRep;
+        });
+    };
+
     const fetchMessages = async () => {
         try {
             const res = await userAxios.get('api/message/allMessagesFRONT');
             const filteredMessages = res.data.messages.filter(message => !message.isDeleted);
-            console.log(res.data)
             setAllMess(filteredMessages);
-            console.log(filteredMessages)
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -78,6 +106,7 @@ function Messages({ DiffTime, setUnreadAtIndex, }) {
 
 
     }
+
 
     const SendReply = async (id, to) => {
         try {
@@ -175,9 +204,8 @@ function Messages({ DiffTime, setUnreadAtIndex, }) {
 
     const SendReport = async () => {
         try {
-            const res = await userAxios.post('api/block_user', {
+            const res = await userAxios.post('api/report_msg', {
                 msg_id: MessToReport,
-                type: selectedButton.title
             });
             setSelectedButton(null);
             setUserToReport('');
@@ -336,7 +364,7 @@ function Messages({ DiffTime, setUnreadAtIndex, }) {
                                                     }}
                                                         className=' m-1 text-xs hover:cursor-pointer
                                      hover:underline'>No</p>   </div>}</>}
-                                            <p onClick={() => { setUnreadAtIndex(i, true); }}
+                                            <p onClick={() => { setUnreadAtIndex(i, mess._id); }}
                                                 className={`mx-2 text-xs m-1  hover:cursor-pointer
                                      hover:underline ${mess.unread ? "hidden" : "block"}`}>Mark Unread</p>
                                             <p onClick={() => { setShowRepIn(true); toggleShowRepIn(i); }}

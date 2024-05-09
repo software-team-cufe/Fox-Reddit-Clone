@@ -22,10 +22,10 @@ const unProtectedRoutes = [
 
 function MainRoute() {
   //store subreddits in array
-  const [recentCommunities, setRecentCommunities] = useState(() => {
-    const storedCommunities = localStorage.getItem('recentCommunities');
-    return storedCommunities ? JSON.parse(storedCommunities) : [];
-  });
+  // const [recentCommunities, setRecentCommunities] = useState(() => {
+  //   const storedCommunities = localStorage.getItem('recentCommunities');
+  //   return storedCommunities ? JSON.parse(storedCommunities) : [];
+  // });
 
   const [WordViewedInSearch, setWordViewedInSearch] = useState(null);
   const path = window.location.pathname;
@@ -40,26 +40,26 @@ function MainRoute() {
   // //this useEffect is to respond to any change in the page to
   // //update the recentCommunities array with the last 5 communities visited
   // //but still need to save it in database as all data vanish when refreshing the page
-  useEffect(() => {
-    const exp = /\/r\/(.*)/;
-    const match = path.match(exp);
-    if (match) {
-      const communityName = match[1];
-      if (!(recentCommunities.includes(communityName))) {
-        if (recentCommunities.length < 5) {
-          setRecentCommunities([...recentCommunities, communityName]);
-        } else {
-          setRecentCommunities([...recentCommunities.slice(1), communityName]);
-        }
-      }
-    }
-  }, [path]); // Include recentCommunities in the dependency array
+  // useEffect(() => {
+  //   const exp = /\/r\/(.*)/;
+  //   const match = path.match(exp);
+  //   if (match) {
+  //     const communityName = match[1];
+  //     if (!(recentCommunities.includes(communityName))) {
+  //       if (recentCommunities.length < 5) {
+  //         setRecentCommunities([...recentCommunities, communityName]);
+  //       } else {
+  //         setRecentCommunities([...recentCommunities.slice(1), communityName]);
+  //       }
+  //     }
+  //   }
+  // }, [path]); // Include recentCommunities in the dependency array
 
   // Store recentCommunities in local storage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('recentCommunities', JSON.stringify(recentCommunities));
-    //localStorage.removeItem('recentCommunities');
-  }, [recentCommunities]);
+  // useEffect(() => {
+  //   localStorage.setItem('recentCommunities', JSON.stringify(recentCommunities));
+  //   //localStorage.removeItem('recentCommunities');
+  // }, [recentCommunities]);
 
 
 
@@ -113,7 +113,7 @@ function MainRoute() {
         IsLogged={store != null} ProfileImageSrc={store != null ? store.avatar : "logo.png"}
         UserName={store != null ? store.username : "fidjfi"} IsOnline={true} />
       <div className="flex my-[73px] px-1 lg:gap-5  h-full mx-auto">
-        {/* {
+        {
           !isUrlMatching(window.location.pathname, [
             "/login",
             "/register",
@@ -125,9 +125,9 @@ function MainRoute() {
             "/r/:id/about/:idd/:idd",
             "/r/:id/about/:idd/:idd/:iddd",
             "/community",
-          ]) && 
-          <Sidebar RecentCommunities={recentCommunities} IsOpen={OpenSideBar} />
-        } */}
+          ]) &&
+          <Sidebar RecentCommunities={JSON.parse(localStorage.getItem('recentCommunities'))} IsOpen={OpenSideBar} />
+        }
 
         <div className='h-full w-full overflow-y-auto '>
           <Outlet />

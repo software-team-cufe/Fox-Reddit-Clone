@@ -6,6 +6,7 @@ import PostsSearchPage from "./pages/PostsSearchPage";
 import CommunitiesSearchPage from "./pages/CommunitiesSearchPage";
 import PeopleSearchPage from "./pages/PeopleSearchPage";
 import CommentsSearchPage from "./pages/CommentsSearchPage";
+import HashtagSearchPage from "./pages/hashtagSearchPage";
 import React, { useContext, createContext } from "react";
 
 /**
@@ -29,6 +30,10 @@ const buttons = [
     text: "People",
     path: "People",
   },
+  {
+    text: "Hashtag",
+    path: "Hashtag",
+  }
 ];
 
 /**
@@ -130,7 +135,8 @@ export default function SearchPagesLayout() {
           <Route key={"/Posts"} path={`Posts`} element={<PostsSearchPage searched={searchkey} />} />
           <Route key={"/Communities"} path={`Communities`} element={<CommunitiesSearchPage searched={searchkey} />} />
           <Route key={"/People"} path={`People`} element={<PeopleSearchPage searched={searchkey} />} />
-          <Route key={"/COmments"} path={`Comments`} element={<CommentsSearchPage searched={searchkey} />} />
+          <Route key={"/Comments"} path={`Comments`} element={<CommentsSearchPage searched={searchkey} />} />
+          <Route key={"/Hashtag"} path={`Hashtag`} element={<HashtagSearchPage></HashtagSearchPage>} />
         </Route>
       </Routes>
     </SearchProvider>

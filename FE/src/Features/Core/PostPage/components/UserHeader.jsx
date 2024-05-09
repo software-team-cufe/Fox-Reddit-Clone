@@ -1,5 +1,5 @@
-import React from "react";
-import { ArrowLeft, Edit, EllipsisVertical, EyeOff, Flag, Lock, Pocket, Trash } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, Edit, EllipsisVertical, EyeOff, Flag, Info, Lock, Pocket, Trash } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from '@headlessui/react';
@@ -7,9 +7,11 @@ import { Fragment } from "react";
 import { userStore } from "../../../../hooks/UserRedux/UserStore";
 import { userAxios } from "../../../../Utils/UserAxios";
 import { toast } from "react-toastify";
+import ReportPostModal from "./ReportPostModal";
 export default function UserHeader({ post }) {
   const params = useParams();
   const navigate = useNavigate();
+  const [isOpen, setOpen] = useState(false);
   const handelSave = async () => {
     const id = toast.loading("Please wait");
     try {
@@ -22,7 +24,7 @@ export default function UserHeader({ post }) {
   const handelDelete = async () => {
     const id = toast.loading("Please wait");
     try {
-      const res = await userAxios.post("/api/save", {
+      const res = await userAxios.post("/api/del", {
         "linkID": `t3_${params.id}`,
       })
     } catch (ex) { }
@@ -37,15 +39,7 @@ export default function UserHeader({ post }) {
     } catch (ex) { }
     toast.dismiss(id);
   };
-  const handelReport = async () => {
-    const id = toast.loading("Please wait");
-    try {
-      const res = await userAxios.post("/api/report", {
-        "linkID": `t3_${params.id}`,
-      })
-    } catch (ex) { }
-    toast.dismiss(id);
-  };
+  
   const handelHide = async () => {
     const id = toast.loading("Please wait");
     try {
@@ -56,10 +50,31 @@ export default function UserHeader({ post }) {
     } catch (ex) { }
     toast.dismiss(id);
   };
+  const handelAddNSFW = async (nsfw) => {
+    const id = toast.loading("Please wait");
+    try {
+      const res = await userAxios.post(`/api/${nsfw ? "marknsfw" : "unmarknsfw"}`, {
+        "linkID": `t3_${params.id}`,
+      })
+      window.location.reload();
+    } catch (ex) { }
+    toast.dismiss(id);
+  };
+  const handelAddSpoiler = async (spoiler) => {
+    const id = toast.loading("Please wait");
+    try {
+      const res = await userAxios.post(`/api/${spoiler ? "spoiler" : "unspoiler"}`, {
+        "linkID": `t3_${params.id}`,
+      })
+      window.location.reload();
+    } catch (ex) { }
+    toast.dismiss(id);
+  };
 
   const userId = userStore.getState().user.user?._id;
   return (
     <div className=" flex items-center justify-between gap-3">
+      <ReportPostModal isOpen={isOpen} closeModal={() => setOpen(false)} />
       <div className=" flex items-center gap-3">
         <button className=" rounded-full bg-gray-100 p-2" onClick={() => navigate(-1)}>
           <ArrowLeft />
@@ -105,12 +120,14 @@ export default function UserHeader({ post }) {
             {/* Sort options list mapped*/}
             <Menu.Items className="absolute right-0 mt-2 w-32 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               {
-                (post.userId == userId && userId != null) && <>
+                (post.userID == userId && userId != null) && <>
                   <Menu.Item>
-                    <button onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
-                      <Edit className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                      <span className="font-semibold text-sm">Edit</span>
-                    </button>
+                    <Link to={`/submit/${params.id}`}>
+                      <button onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                        <Edit className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
+                        <span className="font-semibold text-sm">Edit</span>
+                      </button>
+                    </Link>
                   </Menu.Item>
                   <Menu.Item>
                     <button onClick={handelDelete} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
@@ -122,6 +139,18 @@ export default function UserHeader({ post }) {
                     <button onClick={handelLock} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                       <Lock className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                       <span className="font-semibold text-sm">Lock</span>
+                    </button>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <button onClick={() => handelAddNSFW(!post.nsfw)} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                      <Info className="w-7  mt-1 text-gray-500" aria-hidden="true" />
+                      <span className="font-semibold text-sm">{post.nsfw ? "Remove NSFW tag" : "Add NSFW tag"}</span>
+                    </button>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <button onClick={() => handelAddSpoiler(!post.spoiler)} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                      <Info className="w-7  mt-1 text-gray-500" aria-hidden="true" />
+                      <span className="font-semibold text-sm">{post.spoiler ? "Remove spoiler tag" : "Add spoiler tag"}</span>
                     </button>
                   </Menu.Item>
                 </>
@@ -139,7 +168,7 @@ export default function UserHeader({ post }) {
                 </button>
               </Menu.Item>
               <Menu.Item>
-                <button onClick={handelReport} className="text-start p-3 pt-2 flex gap-3 hover:bg-gray-200 w-full">
+                <button onClick={() => setOpen(true)} className="text-start p-3 pt-2 flex gap-3 hover:bg-gray-200 w-full">
                   <Flag className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                   <span className='font-semibold text-sm'>Report</span>
                 </button>

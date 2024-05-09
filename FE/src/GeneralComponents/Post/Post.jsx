@@ -1,3 +1,4 @@
+import parse from 'html-react-parser';
 import React, { useEffect, useState } from "react";
 import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
@@ -5,7 +6,42 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import { userAxios } from "@/Utils/UserAxios";
 import { toast } from 'react-toastify'
 import { userStore } from "../../hooks/UserRedux/UserStore";
+import axios from 'axios';
+function PollComponent({ polls, postId }) {
+    const [poll, setPolls] = useState(polls ?? []);
+
+
+    if (polls.length == 0) return <></>;
+    const handelVote = async () => {
+        const val = document.getElementById(`poll-option-${postId}`).value;
+        console.log({ val });
+        if (val == null || val == "") return;
+        const id = toast.loading("Please wait");
+        try {
+            const res = await userAxios.post(`/api/posts/${postId}/pool`, {
+                choice: val,
+            });
+            
+        } catch (ex) {
+
+        }
+        toast.dismiss(id);
+    };
+    return <div className='flex border rounded-lg my-4 w-full p-4 space-y-4 flex-col'>
+        {
+            poll.map((e, idx) => <div key={idx} className='flex items-center gap-1'>
+                <input id={`poll-option-${postId}`} type='radio' defaultValue={e.title} />
+                <label>{e.title} ({e.votes})</label>
+            </div>)
+        }
+        <div>
+            <button onClick={handelVote} className='px-4 py-2 rounded-full bg-gray-300 '>Vote</button>
+        </div>
+    </div>
+}
+
 export default function PostComponent({ refetch, role, post, className, viewMode = false }) {
+    const [isOpen, setOpen] = useState(false);
     const user = userStore.getState().user.user;
     const params = useParams();
     const [voteType, setVotesType] = useState(null);
@@ -61,9 +97,9 @@ export default function PostComponent({ refetch, role, post, className, viewMode
         // setVotes(res.data.votesCount);
     };
 
-    console.log(voteType);
     return (
         <div role={role} className={` p-4 w-full ${!viewMode ? "hover:bg-gray-50" : ""} rounded-md ${className}`}>
+
 
             {
                 !viewMode ?
@@ -76,9 +112,11 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                 </div>
                             </div>
                         </Link>
+
                         <Link className="w-full" to={`/posts/${postObj.postId}`}>
                             <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
-                            <p className=" text-gray-600 text-sm">{postObj.textHTML} </p>
+                            <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
+                            {/* <p className=" text-gray-600 text-sm">{parse(post.textHTML)} </p> */}
                             <div
 
                                 className=" rounded-lg my-4 w-full bg-gray-600">
@@ -89,14 +127,21 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                     src={postObj.thumbnail} />
                             </div>
                         </Link>
+                        <PollComponent postId={postObj.postId ?? params.id } polls={post?.poll} />
                     </div> :
 
                     <div>
-
-                        <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
-                        <p className=" text-gray-600 text-sm mb-4">{postObj.description} </p>
-
-                        <p className=" text-gray-600 text-sm">{postObj.textHTML} </p>
+                        {
+                            postObj.isDeleted && <p>Post is deleted</p>
+                        }
+                        {
+                            !postObj.isDeleted && <>
+                                <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
+                                <p className=" text-gray-600 text-sm mb-4">{postObj.description} </p>
+                                <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
+                            </>
+                        }
+                        <PollComponent postId={postObj.postId ?? params.id } polls={post?.poll} />
                         {
                             postObj.video && <div>
                                 <video src={postObj.video} controls />

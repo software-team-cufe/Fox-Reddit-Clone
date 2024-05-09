@@ -10,6 +10,8 @@ import axios from "axios";
 import Dropdown from "./dropDownlist";
 import { toast } from 'react-toastify';
 import { Switch } from '@headlessui/react'
+import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
+import { userAxios } from "../../../Utils/UserAxios";
 
 /**
  * 
@@ -35,8 +37,13 @@ export default function FeedSettings() {
     const changeMenuContent = false;
     let id = 3;
 
-    //connecting to mock
+    //connecting to mock & back
     const handleToggleInFeedMatureContent = async () => {
+        // try{userAxios.patch(`api/v1/me/prefs`, {
+        //     labelNsfw: !showMatureContent,
+        // })}catch(error){
+        //     console.error(error);
+        // }        
         try{axios.patch(`http://localhost:3002/users/${id}`, { 
             NSFW: !showMatureContent,
         })
@@ -149,22 +156,32 @@ export default function FeedSettings() {
         })
     },[]);
 
-    // const handleDataFromSetting = async () => {
-    //     console.log("handleDataFromSetting");
-    //     console.log(showMatureContent);
-    //     try{axios.patch(`http://localhost:3002/users/${id}`, { 
-    //         blur: blurMatureImg,
-    //         NSFW: showMatureContent,
-    //         openPostsInNewTab: openPostsInNewTab,
-    //         rememberingSortPerCommunity: rememberingSortPerCommunity,
-    //         rememberGlobalView: rememberGlobalView,
-    //         autoPlayVideos: autoplayMedia,
-    //         communityTheme: communityTheme,
-    //     })
-    //     }catch(error){
-    //         console.error(error);
-    //     }   
-    // }
+
+    //connecting to Back
+    // useEffect(()=>{
+    //     userAxios.get(`api/v1/me/prefs`).then((response)=>{
+    //         console.log(response.data);}).catch((error)=>{
+    //             console.error(error);
+    //         })
+    // },[])
+
+
+    //const handleDataFromSetting = async () => {
+    //    console.log("handleDataFromSetting");
+    //    console.log(showMatureContent);
+    //    try{axios.patch(`http://localhost:3002/users/${id}`, { 
+    //        blur: blurMatureImg,
+    //        NSFW: showMatureContent,
+    //        openPostsInNewTab: openPostsInNewTab,
+    //        rememberingSortPerCommunity: rememberingSortPerCommunity,
+    //        rememberGlobalView: rememberGlobalView,
+    //        autoPlayVideos: autoplayMedia,
+    //        communityTheme: communityTheme,
+    //    })
+    //    }catch(error){
+    //        console.error(error);
+    //    }   
+    //}
 
     // useEffect(() => {
     //     const handleChangingUserData=()=>{
