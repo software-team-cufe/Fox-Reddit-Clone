@@ -350,17 +350,17 @@ export async function addCommentHandler(req: Request<addComment['body']>, res: R
         message: 'Post author not found',
       });
     }
-    if (postAuthor.notificationPrefs?.commentsOnYourPosts) {
-      await createNotification(
-        postAuthor._id,
-        updatedUser.avatar ?? 'https://res.cloudinary.com/dtl7z245k/image/upload/v1715007017/fkegcflroptfznuinqgn.png',
-        'New Comment!',
-        'comment',
-        `${updatedUser.username} has commented on your post.`,
-        createdComment._id,
-        postAuthor.fcmtoken
-      );
-    }
+
+    await createNotification(
+      postAuthor._id,
+      updatedUser.avatar ?? 'https://res.cloudinary.com/dtl7z245k/image/upload/v1715007017/fkegcflroptfznuinqgn.png',
+      'New Comment!',
+      'comment',
+      `${updatedUser.username} has commented on your post.`,
+      createdComment._id,
+      postAuthor.fcmtoken
+    );
+
     res.status(201).json(createdComment); // 201: Created
   } catch (error) {
     console.error('Error in addCommentHandler:', error);
@@ -1011,17 +1011,15 @@ export async function votePostHandler(req: Request, res: Response) {
       const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), 1);
       //create upvote notification
       if (author) {
-        if (author?.notificationPrefs?.upvotesOnYourPosts) {
-          createNotification(
-            author._id,
-            author.avatar ?? 'https://res.cloudinary.com/dtl7z245k/image/upload/v1715007017/fkegcflroptfznuinqgn.png',
-            'New Upvote!',
-            'Upvote',
-            `${user.username} upvoted your post!`,
-            post._id,
-            author.fcmtoken
-          );
-        }
+        createNotification(
+          author._id,
+          author.avatar ?? 'https://res.cloudinary.com/dtl7z245k/image/upload/v1715007017/fkegcflroptfznuinqgn.png',
+          'New Upvote!',
+          'Upvote',
+          `${user.username} upvoted your post!`,
+          post._id,
+          author.fcmtoken
+        );
       }
       res.status(200).json({
         status: 'success',
@@ -1458,17 +1456,17 @@ export async function addReplyHandler(req: Request, res: Response) {
         message: 'Post author not found',
       });
     }
-    if (commentAuthor.notificationPrefs?.repliesToYourComments) {
-      await createNotification(
-        commentAuthor?._id,
-        user.avatar ?? 'https://res.cloudinary.com/dtl7z245k/image/upload/v1715007017/fkegcflroptfznuinqgn.png',
-        'New comment reply!',
-        'reply',
-        `${user.username} replied to your comment.`,
-        updatedComment._id,
-        commentAuthor.fcmtoken
-      );
-    }
+
+    await createNotification(
+      commentAuthor?._id,
+      user.avatar ?? 'https://res.cloudinary.com/dtl7z245k/image/upload/v1715007017/fkegcflroptfznuinqgn.png',
+      'New comment reply!',
+      'reply',
+      `${user.username} replied to your comment.`,
+      updatedComment._id,
+      commentAuthor.fcmtoken
+    );
+
     res.status(201).json(createdReply); // 201: Created
   } catch (error) {
     console.error('Error in addReplyHandler:', error);

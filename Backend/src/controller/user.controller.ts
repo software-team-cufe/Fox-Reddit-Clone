@@ -1169,17 +1169,17 @@ export async function followRequestHandler(req: Request<followUserInput['body']>
       { $addToSet: { followers: follows._id } },
       { upsert: true, new: true }
     );
-    if (followed.notificationPrefs?.newFollowers) {
-      await createNotification(
-        followed._id,
-        follows.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
-        'New Follower!',
-        'newFollower',
-        `${follows.username} followed you!`,
-        follows._id,
-        followed.fcmtoken
-      );
-    }
+
+    await createNotification(
+      followed._id,
+      follows.avatar ?? 'https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png',
+      'New Follower!',
+      'newFollower',
+      `${follows.username} followed you!`,
+      follows._id,
+      followed.fcmtoken
+    );
+
     return res.status(200).json({
       status: 'succeeded',
     });

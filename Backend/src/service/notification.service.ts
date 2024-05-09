@@ -66,25 +66,34 @@ export async function createNotification(
     }
     // Send a message to the device corresponding to the provided
     // registration token.
-    if (fcmtoken) {
-      admin
-        .messaging()
-        .send(message)
-        .then((response) => {
-          // Response is a message ID string.
-          console.log('Successfully sent message:', response);
-        })
-        .catch((error) => {
-          if (error.code === 'messaging/registration-token-not-registered') {
-            console.log('Error: FCM token is invalid or not registered.', error);
-            // Handle the invalid token error, e.g., remove the token from your database
-            user.fcmtoken =
-              'dLOGE0M9SFi2nuO207BXrT:APA91bHDz9zuFWgx7FnmS4N6AxecBF0bQ00h6owg8IEj39izvGOwDCeTzXxyUY6uzFN6nvJ8wKRTZEO_3wE4cdPN02yrygKLoLu6O4uG4YavYow1uF-xT3L4mZyuLGAsFwtD3dPKvFfc';
-          } else {
-            console.log('Error sending message:', error);
-            // Handle other types of errors
-          }
-        });
+    if (
+      (user.notificationPrefs?.privateMessages && type == 'message') ||
+      (user.notificationPrefs?.commentsOnYourPosts && type == 'comment') ||
+      (user.notificationPrefs?.upvotesOnYourPosts && type == 'Upvote') ||
+      (user.notificationPrefs?.repliesToYourComments && type == 'reply') ||
+      (user.notificationPrefs?.newFollowers && type == 'newFollower') ||
+      (user.notificationPrefs?.postsYouFollow && type == 'newPost')
+    ) {
+      if (fcmtoken) {
+        admin
+          .messaging()
+          .send(message)
+          .then((response) => {
+            // Response is a message ID string.
+            console.log('Successfully sent message:', response);
+          })
+          .catch((error) => {
+            if (error.code === 'messaging/registration-token-not-registered') {
+              console.log('Error: FCM token is invalid or not registered.', error);
+              // Handle the invalid token error, e.g., remove the token from your database
+              user.fcmtoken =
+                'dLOGE0M9SFi2nuO207BXrT:APA91bHDz9zuFWgx7FnmS4N6AxecBF0bQ00h6owg8IEj39izvGOwDCeTzXxyUY6uzFN6nvJ8wKRTZEO_3wE4cdPN02yrygKLoLu6O4uG4YavYow1uF-xT3L4mZyuLGAsFwtD3dPKvFfc';
+            } else {
+              console.log('Error sending message:', error);
+              // Handle other types of errors
+            }
+          });
+      }
     }
     // Save the notification to the database
     const savedNotification = await notification.save();
