@@ -40,14 +40,8 @@ const ModCard = () => {
       return urlPattern.test(url);
     }
     
-    // Example usage:
-    const url = "https://www.example.com";
-    console.log(isValidUrl(url)); // Output: true
     
-    const invalidUrl = "not a valid URL";
-    console.log(isValidUrl(invalidUrl)); // Output: false
-    
-
+  
     const navigator = useNavigate();
     const navigate =useNavigate();
     
