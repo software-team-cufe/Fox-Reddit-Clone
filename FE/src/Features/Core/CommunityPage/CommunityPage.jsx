@@ -369,8 +369,6 @@ export default function CommunityPage() {
     setShowEditModal(true);
   };
 
-
-  //to handle loading until fetch is complete
   if (loading) {
     return (
       <div role="communitypage" className="w-full h-full flex flex-col items-center ">
@@ -378,11 +376,15 @@ export default function CommunityPage() {
       </div>
     )
   }
-  if (commObj == null) {
-    return <>Community not found</>
-  }
 
-  //main body of the page
+  if(path.pathname.includes(`/info`)) {
+    return(
+      <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
+        {commObj.modded ? <ModCard></ModCard> : <MainFooter comm={commObj} />}
+      </div>
+    )}
+    
+
   return (
     <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
       {showModal && <LoginFirtstModal onClose={setShowModal} />}
@@ -490,14 +492,7 @@ export default function CommunityPage() {
             </div>
           )}
         </div>
-        {
-          commObj.modded ? <ModCard></ModCard> :
-            <MainFooter comm={commObj} />
-
-        }
-        {/* community description and rules and other tools on the right*/}
-
-
+        {commObj.modded ? <ModCard></ModCard> : <MainFooter comm={commObj} />}
       </div>
     </div>
   )
