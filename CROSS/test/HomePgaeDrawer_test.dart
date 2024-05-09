@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reddit_fox/Pages/Blanck.dart';
-import 'package:reddit_fox/Pages/home/Drawer.dart';
+import 'package:reddit_fox/Pages/home/endDrawer.dart';
 
 void main() {
   testWidgets('CustomDrawer widget test', (WidgetTester tester) async {
     // Build our CustomDrawer widget
     await tester.pumpWidget(const MaterialApp(
       home: Scaffold(
-        body: CustomDrawer(drawer_Width: 200.0),
+        body: endDrawer(user_width: 10,token: '121231233',),
       ),
     ));
 
