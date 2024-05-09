@@ -42,7 +42,8 @@ export default function ProfileOverview({ using, context }) {
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    poll: post.poll ? post.poll : []
                 }));
                 setPosts(newPosts);
                 const newComments = response.data.comments.map(comment => ({
@@ -88,7 +89,8 @@ export default function ProfileOverview({ using, context }) {
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    poll: post.poll ? post.poll : []
                 }));
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 const newComments = response.data.comments.map(comment => ({

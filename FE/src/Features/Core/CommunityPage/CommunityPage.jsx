@@ -70,11 +70,19 @@ export default function CommunityPage() {
 
   //to fetch the community data from the server and use them
   const fetchCommunity = useCallback(async () => {
+    const storedData = JSON.parse(localStorage.getItem(`comm${community}Storage`));
+    if (storedData) {
+      const {data: storedComm, loggedIn} = storedData; // Remove JSON.parse here
+      if(loggedIn) {
+        setComm(storedComm);
+        setLoading(false);
+        return;
+      }
+    }
     if (user == null) {
-
       await userAxios.get(`/${community}`)
         .then((response) => {
-          
+
           let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
           if (!(recent.includes(community))) {
             if (recent.length < 5) {
@@ -102,11 +110,10 @@ export default function CommunityPage() {
           if (newcomm.type == "private") {
             setShowKickOut(true);
           }
-
-          // write save comm in localstorage here ////////////////////////
+          localStorage.setItem(`comm${community}Storage`, JSON.stringify({data: newcomm, loggedIn: false}));
         })
         .catch(error => {
-          
+
           console.error('There was an error!', error);
           toast.error("this community doesn't seem to exist, try again");
           navigator("/404");
@@ -173,6 +180,7 @@ export default function CommunityPage() {
           if (newcomm.type == "Private" && !joinedComms.includes(newcomm.name)) {
             setShowKickOut(true);
           }
+          localStorage.setItem(`comm${community}Storage`, JSON.stringify({data: newcomm, loggedIn: true}));
         })
         .catch(error => {
           console.error('There was an error!', error);
@@ -182,83 +190,82 @@ export default function CommunityPage() {
     }
     setLoading(false);
   }, []);
-  
+
   let { error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity });
 
-  const fetchInitialPosts = () => {
+  const fetchInitialPosts = async () => {
     setFeed(true);
-    console.log("new posts")
-    let link = `api/listing/posts/r/${commObj.name}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
-    if (selected == 'Top') {
-      link = link + `&t=${period}`;
+    if (searchRedux == "") {
+      console.log("none")
+      let link = `api/listing/posts/r/${commObj.name}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
+      if (selected == 'Top') {
+        link = link + `&t=${period}`;
+      }
+      await userAxios.get(link)
+        .then((response) => {
+          if (response.data.length > 0) {
+            setpagedone(true);
+          }
+          console.log('response:', response.data); // Log response
+          const newPosts = response.data.map(post => ({
+            communityName: post.username,
+            communityIcon: commObj.icon,
+            images: post.attachments,
+            postId: post._id,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }));
+          setcurrentpage(2);
+          setPosts(newPosts);
+          setFeed(false);
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+          setFeed(false);
+        })
     }
-    userAxios.get(link)
-      .then((response) => {
-        if(response.data.length > 0){
-          setpagedone(true);
-        }
-        const newPosts = response.data.map(post => ({
-          communityName: post.username,
-          communityIcon: post.userID.avatar,
-          images: post.attachments,
-          postId: post._id,
-          title: post.title,
-          description: post.textHTML,
-          votesCount: post.votesCount,
-          comments: post.commentsCount,
-          thumbnail: post.thumbnail,
-          video: null,
-          type: "post",
-          spoiler: post.spoiler,
-          NSFW: post.nsfw
-        }));
-        setcurrentpage(2);
-        setPosts(newPosts);
-        setFeed(false);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-        setFeed(false);
-      })
-  };
-
-  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], fetchInitialPosts, { enabled: !loading, staleTime: Infinity });
-
-  useEffect(() => {
-    setFeed(true);
-    if (!commObj) {
-      fetchCommunity();
-      return;
-    }
-    else{
-      userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
-      .then((response) => {
-        if (response.data.subredditSearchPosts.length < limitpage) {
-          setpagedone(true);
-        }
-        const newPosts = response.data.subredditSearchPosts.map(post => ({
-          communityName: post.username,
-          communityIcon: post.userId,
-          images: post.attachments,
-          postId: post.postId,
-          title: post.title,
-          description: post.textHTML,
-          votesCount: post.votesCount,
-          commentsNum: post.commentsNum,
-          thumbnail: post.attachments[0],
-          video: null,
-          type: "post",
-          spoiler: post.spoiler,
-          NSFW: post.nsfw
-        }));
-        setPosts(newPosts);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
+    else {
+      await userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
+        .then((response) => {
+          if (response.data.subredditSearchPosts.length < limitpage) {
+            setpagedone(true);
+          }
+          const newPosts = response.data.subredditSearchPosts.map(post => ({
+            communityName: post.username,
+            communityIcon: commObj.icon,
+            images: post.attachments,
+            postId: post.postId,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            commentsNum: post.commentsNum,
+            thumbnail: post.attachments[0],
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }));
+          console.log('newPosts:', newPosts); // Log newPosts
+          setPosts(newPosts);
+          console.log('posts:', Posts); // Log posts
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+        });
       setFeed(false);
     }
-  }, [searchRedux]);
+  };
+
+  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period, searchRedux], fetchInitialPosts, { enabled: !loading, staleTime: Infinity });
 
   const swtichJoinState = async () => {
     if (user == null) {
@@ -290,70 +297,73 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    if(searchRedux == null || searchRedux == ""){
-    let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
-    if (selected == 'Top') {
-      link = link + `&t=${period}`;
-    }
-    userAxios.get(link)
-      .then(response => {
-        if (response.data.length < limitpage) {
-          setpagedone(true);
-        }
-        const newPosts = response.data.posts.map(post => ({
-          communityName: post.coummunityName,
-          communityIcon: post.userID.avatar,
-          images: post.attachments,
-          postId: post._id,
-          title: post.title,
-          textHTML: post.textHTML,
-          votesCount: post.votesCount,
-          comments: post.commentsCount,
-          thumbnail: post.thumbnail,
-          video: null,
-          type: "post",
-          spoiler: post.spoiler,
-          NSFW: post.nsfw
-        }));
+    if (searchRedux == "") {
+      let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
+      if (selected == 'Top') {
+        link = link + `&t=${period}`;
+      }
+      userAxios.get(link)
+        .then(response => {
+          if (response.data.length < limitpage) {
+            setpagedone(true);
+          }
+          const newPosts = response.data.posts.map(post => ({
+            communityName: post.coummunityName,
+            communityIcon: commObj.icon,
+            images: post.attachments,
+            postId: post._id,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }));
 
-        setPosts(prevPosts => [...prevPosts, ...newPosts]);
-        setCallingPosts(false);
-        setcurrentpage(1 + currentpage);
+          setPosts(prevPosts => [...prevPosts, ...newPosts]);
+          setCallingPosts(false);
+          setcurrentpage(1 + currentpage);
 
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setCallingPosts(false);
-      });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          setCallingPosts(false);
+        });
     }
-    else{
+    else {
       userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=${currentpage}&limit=${limitpage}`)
-      .then((response) => {
-        if (response.data.subredditSearchPosts.length < limitpage) {
-          setpagedone(true);
-        }
-        const newPosts = response.data.subredditSearchPosts.map(post => ({
-          communityName: post.username,
-          communityIcon: post.userId,
-          images: post.attachments,
-          postId: post.postId,
-          title: post.title,
-          description: post.textHTML,
-          votesCount: post.votesCount,
-          commentsNum: post.commentsNum,
-          thumbnail: post.attachments[0],
-          video: null,
-          type: "post",
-          spoiler: post.spoiler,
-          NSFW: post.nsfw
-        }));
-        setPosts(prevPosts => [...prevPosts, ...newPosts]);
-        setCallingPosts(false);
-        setcurrentpage(1 + currentpage);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
+        .then((response) => {
+          if (response.data.subredditSearchPosts.length < limitpage) {
+            setpagedone(true);
+          }
+          console.log('response:', response.data); // Log response
+          const newPosts = response.data.subredditSearchPosts.map(post => ({
+            communityName: post.username,
+            communityIcon: commObj.icon,
+            images: post.attachments,
+            postId: post.postId,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            commentsNum: post.commentsNum,
+            thumbnail: post.attachments[0],
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }));
+          setPosts(prevPosts => [...prevPosts, ...newPosts]);
+          setCallingPosts(false);
+          setcurrentpage(1 + currentpage);
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+        });
     }
   };
 

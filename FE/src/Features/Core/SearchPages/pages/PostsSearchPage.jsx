@@ -58,7 +58,8 @@ export default function PeopleSearchPage({ searched = "filler" }) {
             video: null,
             type: "post",
             spoiler: post.spoiler,
-            NSFW: post.nsfw
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
           }))
           if (newPosts.length < limitpage) {
             setpagedone(true);
@@ -79,7 +80,8 @@ export default function PeopleSearchPage({ searched = "filler" }) {
             video: null,
             type: "post",
             spoiler: post.spoiler,
-            NSFW: post.nsfw
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
           }))
           console.log(newPosts);
           if (newPosts.length < limitpage) {
@@ -129,7 +131,8 @@ export default function PeopleSearchPage({ searched = "filler" }) {
             video: null,
             type: "post",
             spoiler: post.spoiler,
-            NSFW: post.nsfw
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
           }))
           if (newPosts.length < limitpage) {
             setpagedone(true);
@@ -137,6 +140,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
           setPosts(prevPosts => [...prevPosts, ...newPosts]);
         }
         else {
+          console.log(response.data.postsSearchResultAuth)
           const newPosts = response.data.postsSearchResultAuth.map(post => ({
             communityName: post.communityName,
             communityIcon: post.communityIcon,
@@ -150,7 +154,8 @@ export default function PeopleSearchPage({ searched = "filler" }) {
             video: null,
             type: "post",
             spoiler: post.spoiler,
-            NSFW: post.nsfw
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
           }))
           if (newPosts.length < limitpage) {
             setpagedone(true);
