@@ -676,8 +676,8 @@ export async function addVoteToPost(userID: string, postID: string, type: number
     );
     const temp2 = updatedPost.votes;
     const isSame = _.isEqual(temp, temp2);
-
     if (isSame) {
+      console.log('same user voted again');
       type = type * -2;
       const updatedPost = await PostModel.findByIdAndUpdate(
         post._id,

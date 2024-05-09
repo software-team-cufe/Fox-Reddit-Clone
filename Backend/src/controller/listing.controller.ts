@@ -1021,19 +1021,20 @@ export async function votePostHandler(req: Request, res: Response) {
           author.fcmtoken
         );
       }
+      const post1 = await findPostById(req.body.postID);
       res.status(200).json({
         status: 'success',
         message: 'Post is upvoted successfully',
-        value: post.votesCount,
+        value: post1?.votesCount,
       });
     } else if (type == -1) {
       const postResult = await addVoteToPost(user._id.toString(), post._id.toString(), -1);
       const userResult = await addPostVoteToUser(user._id.toString(), post._id.toString(), -1);
-
+      const post2 = await findPostById(req.body.postID);
       res.status(200).json({
         status: 'success',
         message: 'Post is downvoted successfully',
-        value: post.votesCount,
+        value: post2?.votesCount,
       });
     } else {
       return res.status(402).json({
@@ -1087,20 +1088,20 @@ export async function voteCommentHandler(req: Request, res: Response) {
     if (type == 1) {
       const postResult = await addVoteToComment(user._id.toString(), comment._id.toString(), 1);
       const userResult = await addCommentVoteToUser(user._id.toString(), comment._id.toString(), 1);
-
+      const comment1 = await findCommentById(req.body.commentID);
       res.status(200).json({
         status: 'success',
         message: 'Comment is upvoted successfully',
-        value: comment.votesCount,
+        value: comment1?.votesCount,
       });
     } else if (type == -1) {
       const postResult = await addVoteToComment(user._id.toString(), comment._id.toString(), -1);
       const userResult = await addCommentVoteToUser(user._id.toString(), comment._id.toString(), -1);
-
+      const comment2 = await findCommentById(req.body.commentID);
       res.status(200).json({
         status: 'success',
         message: 'Comment is downvoted successfully',
-        value: comment.votesCount,
+        value: comment2?.votesCount,
       });
     } else {
       return res.status(402).json({
