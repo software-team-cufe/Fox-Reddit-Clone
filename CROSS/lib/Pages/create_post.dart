@@ -79,13 +79,20 @@ class _CreatePostState extends State<CreatePost> {
     super.dispose();
   }
 
+  void updatePoll(List<String> updatedPoll) {
+    setState(() {
+      _poll = updatedPoll;
+    });
+  }
+
   void togglePollVisibility() {
     setState(() {
       isPollVisible = !isPollVisible;
       if (!isPollVisible) {
         addedWidget = null;
       } else {
-        addedWidget = PollPage(options: _poll);
+        addedWidget = PollPage(options: _poll, updatePoll: updatePoll); 
+
         imageWidgets = [];
       }
     });
@@ -245,6 +252,7 @@ class _CreatePostState extends State<CreatePost> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('Post submitted successfully');
       print('access_token ' + access_token);
+      print(poll);
       print(requestBody);
     } else {
       print(requestBody);
@@ -284,6 +292,7 @@ class _CreatePostState extends State<CreatePost> {
                         if (title.isEmpty || body.isEmpty) {
                           return;
                         }
+                        attachments.add(url);
 
                         submitPost(title, body, isNsfw, isSpoiler, attachments,
                             _poll, selectedCommunity);

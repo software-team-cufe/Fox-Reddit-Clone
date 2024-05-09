@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class PollPage extends StatefulWidget {
   final List<String> options; // Options list
-  const PollPage({Key? key, required this.options}) : super(key: key);
+  final Function(List<String>) updatePoll;
+  const PollPage({Key? key, required this.options, required this.updatePoll})
+      : super(key: key);
 
   @override
   _PollPageState createState() => _PollPageState();
@@ -27,10 +29,12 @@ class _PollPageState extends State<PollPage> {
     }
   }
 
-  void _addOption(String option) {
+ void _addOption(String option) {
     setState(() {
-      _options.add(option);
-      _textEditingController.clear(); // Clear text field after adding option
+      _options.add(option); // Add the option to the local _options list
+      _textEditingController.clear();
+      widget.updatePoll(
+          _options); // Call the callback function to update the _poll list in CreatePost widget
     });
   }
 
