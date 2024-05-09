@@ -1963,11 +1963,12 @@ export async function getPopular(
   limit: number,
   sort: string | undefined,
   topBy: string | undefined,
-  hiddenPosts: Ref<Post>[] | [] | undefined
+  hiddenPosts: Ref<Post>[] | undefined
 ) {
   try {
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
 
+    console.log(hiddenPosts);
     let sortCriteria: Record<string, 1 | -1>;
     let additionalCriteria: Record<string, unknown> = {};
     switch (sort) {
@@ -1978,7 +1979,6 @@ export async function getPopular(
         sortCriteria = { 'posts.votesCount': -1 };
         switch (topBy) {
           case 'hour':
-            console.log('top by hour');
             additionalCriteria = { 'posts.createdAt': { $gte: new Date(Date.now() - 60 * 60 * 1000) } };
             break;
           case 'day':
@@ -2032,8 +2032,9 @@ export async function getPopular(
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           'posts.createdAt': { $lte: new Date() },
           'posts.nsfw': { $ne: true }, //popular page should not contain nsfw posts
-          ...additionalCriteria, // Apply additional criteria
           //handle posts that are hidden
+          'posts._id': { $nin: hiddenPosts ?? [] }, // Check if post ID is not in hiddenPosts array
+          ...additionalCriteria, // Apply additional criteria
         },
       },
       { $sort: sortCriteria }, // Apply sorting criteria

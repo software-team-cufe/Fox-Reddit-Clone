@@ -22,7 +22,7 @@ import {
   getUserSavedPostsHandler,
   addReplyHandler,
   getCommentRepliesHandler,
-  getPostByIdHandler,
+  getPostCommentsByIdHandler,
   voteOnPostPoll,
 } from '../controller/listing.controller';
 import validateResource from '../middleware/validateResource';
@@ -76,6 +76,6 @@ router.get('/api/listing/posts/r/:subreddit/:sort', getSortedPosts);
 
 router.post('/api/addreply', validateResource(addCommentSchema), addReplyHandler);
 router.get('/api/get_comment_replies/:commentId', getCommentRepliesHandler);
-router.get('/posts/:id', getPostByIdHandler);
+router.get('/posts/:id', getPostCommentsByIdHandler);
 router.post('/api/posts/:id/poll', voteOnPostPoll);
 export default router;
