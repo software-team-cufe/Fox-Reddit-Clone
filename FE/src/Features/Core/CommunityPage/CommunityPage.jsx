@@ -377,7 +377,7 @@ export default function CommunityPage() {
     )
   }
 
-  if(path.pathname == `/r/${encodeURIComponent(community)}/info`) {
+  if(path.pathname.includes(`/info`)) {
     return(
       <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
         {commObj.modded ? <ModCard></ModCard> : <MainFooter comm={commObj} />}
@@ -492,14 +492,7 @@ export default function CommunityPage() {
             </div>
           )}
         </div>
-        {
-          commObj.modded ? <ModCard></ModCard> :
-            <MainFooter comm={commObj} />
-
-        }
-        {/* community description and rules and other tools on the right*/}
-
-
+        {commObj.modded ? <ModCard></ModCard> : <MainFooter comm={commObj} />}
       </div>
     </div>
   )

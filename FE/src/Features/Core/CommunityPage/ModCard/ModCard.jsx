@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { userAxios } from '../../../../Utils/UserAxios';
 import { useNavigate } from 'react-router-dom';
 const ModCard = () => {
@@ -30,7 +30,7 @@ const ModCard = () => {
     const [nickname, setNickname] = useState('');
     const [currentNickname, setCurrentNickname] = useState('');
     const [communityDescription, setCommunityDescription] = useState('');
-    
+    const path = useLocation().pathname;
 
     const navigator = useNavigate();
     const navigate =useNavigate();
@@ -212,7 +212,7 @@ const ModCard = () => {
     console.log("community details deleted successfully");
   }
   return (
-    <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
+    <div className={`relative border border-slate-200 bg-slate-50 min-h-fit h-fit rounded-xl ${path === `r/${encodeURIComponent(community)}/info` ? "md:block hidden mr-5" : "mx-auto mt-5"} pb-3 w-[340px] flex-col`}>
          
        <div className=' flex flex-row justify-between m-3'>
            <div className=' flex flex-col space-y-3'>
