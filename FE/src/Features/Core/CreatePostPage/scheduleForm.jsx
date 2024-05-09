@@ -42,18 +42,18 @@ const advanced2Options = [
     { value: 'secondSticky', label: 'Submit as second sticky post' },
 ];
 
-export default function ScheduleForm({ onClose, setStartDate, setStartTime, setTimeZone, setRepeat, setAdv1, setAdv2, setContestEnable, setAutoMod, startDate, startTime, timeZone, repeat, adv1, adv2, contestEnable, autoMod}) {
+export default function ScheduleForm({ onClose, setStartDate, setStartTime, setTimeZone, setRepeat, setAdv1, setAdv2, setContestEnable, setAutoMod, startDate, startTime, timeZone, repeat, adv1, adv2, contestEnable, autoMod }) {
 
     const CustomInputDate = React.forwardRef(({ value, onClick }, ref) => (
         <div className="relative">
-            <input className="relative w-32 text-sm p-1 border border-opacity-35 border-black" onClick={onClick} value={value} ref={ref} readOnly />
+            <input className="relative w-32 text-sm p-1 border border-opacity-15 border-black" onClick={onClick} value={value} ref={ref} readOnly />
             <Calendar className="absolute right-0 top-0 h-full w-6 p-1" />
         </div>
     ));
 
     const CustomInputTime = React.forwardRef(({ value, onClick }, ref) => (
         <div className="relative">
-            <input className="relative w-32 text-sm p-1 border border-opacity-35 border-black" onClick={onClick} value={value} ref={ref} readOnly />
+            <input className="relative w-32 text-sm p-1 border border-opacity-15 border-black" onClick={onClick} value={value} ref={ref} readOnly />
             <Clock className="absolute right-0 top-0 h-full w-6 p-1" />
         </div>
     ));
@@ -83,7 +83,7 @@ export default function ScheduleForm({ onClose, setStartDate, setStartTime, setT
                         <div className="bg-white p-2 w-full rounded-md">
                             <p className="font-medium text-sm">Schedule this post</p>
                             <hr className="font-light my-2 text-gray-600 w-full" />
-                            <div className="font-medium text-sm">Submit Time</div>
+                            <div className="font-medium mb-2 text-sm">Submit Time</div>
                             <div className="flex flex-wrap justify-start gap-3">
                                 <DatePicker
                                     selected={startDate}
@@ -102,7 +102,7 @@ export default function ScheduleForm({ onClose, setStartDate, setStartTime, setT
                                 />
                                 <div className="flex items-center gap-3">
                                     <label htmlFor="timeZone" className="font-medium text-sm">TimeZone:</label>
-                                    <select id="timeZone" value={timeZone} onChange={e => setTimeZone(e.target.value)} className="w-72 text-sm p-1 border border-opacity-35 border-black">
+                                    <select id="timeZone" value={timeZone} onChange={e => setTimeZone(e.target.value)} className="w-72 text-sm p-1 border border-opacity-15 border-black">
                                         {timeZoneOptions.map(tz => (
                                             <option key={tz.value} value={tz.value}>
                                                 {tz.label}
@@ -111,24 +111,24 @@ export default function ScheduleForm({ onClose, setStartDate, setStartTime, setT
                                     </select>
                                 </div>
                             </div>
-                            <div className="mt-5 font-medium text-sm">Repeat Options</div>
-                            <select id="reapeat" value={repeat} onChange={e => setRepeat(e.target.value)} className="w-56 text-sm p-1 border border-opacity-35 border-black">
+                            <div className="mt-5 mb-2 font-medium text-sm">Repeat Options</div>
+                            <select id="reapeat" value={repeat} onChange={e => setRepeat(e.target.value)} className="w-56 text-sm p-1 border border-opacity-15 border-black">
                                 {repeatOptions.map(option => (
                                     <option key={option.value} value={option.value}>
                                         {option.label}
                                     </option>
                                 ))}
                             </select>
-                            <div className="mt-6 font-medium text-sm">Advanced Options</div>
+                            <div className="mt-6 mb-2 font-medium text-sm">Advanced Options</div>
                             <div className="flex flex-1 justify-start gap-3">
-                                <select id="advancedFirst" value={adv1} onChange={e => setAdv1(e.target.value)} className="w-56 text-sm p-1 border border-opacity-35 border-black">
+                                <select id="advancedFirst" value={adv1} onChange={e => setAdv1(e.target.value)} className="w-56 text-sm p-1 border border-opacity-15 border-black">
                                     {advanced1Options.map(tz => (
                                         <option key={tz.value} value={tz.value}>
                                             {tz.label}
                                         </option>
                                     ))}
                                 </select>
-                                <select id="advancedSecond" value={adv2} onChange={e => setAdv2(e.target.value)} className="w-48 text-sm p-1 border border-opacity-35 border-black">
+                                <select id="advancedSecond" value={adv2} onChange={e => setAdv2(e.target.value)} className="w-48 text-sm p-1 border border-opacity-15 border-black">
                                     {advanced2Options.map(tz => (
                                         <option key={tz.value} value={tz.value}>
                                             {tz.label}
@@ -152,7 +152,7 @@ export default function ScheduleForm({ onClose, setStartDate, setStartTime, setT
                             </div>
 
                             <div className="mt-10 mb-4 font-medium text-sm text-gray-400">Note: This post will be in Scheduled Posts in mod hub and editable.</div>
-                            <div className="-mb-2 -mx-2 rounded-b-lg bg-gray-200 w-full h-16">
+                            <div className="rounded-b-lg bg-gray-200 w-full h-16">
                                 <div className="flex justify-end gap-3 p-3">
                                     <button onClick={() => handleCancel()} className="w-20 rounded-full p-2 h-10 border border-blue-600 hover:border-blue-800 text-blue-500 hover:text-blue-800 font-medium text-sm">cancel</button>
                                     <button onClick={() => handleClose()} className="w-20 rounded-full p-2 h-10 bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm">Apply</button>
