@@ -53,6 +53,7 @@ import {
   getUserHomePagePostsHandler,
   getFollowerHandler,
   getFollowingHandler,
+  getPopularPageHandler,
 } from '../controller/user.controller';
 import requireUser from '../middleware/requireUser';
 import deserializeUser from '../middleware/deserialzeUser';
@@ -139,5 +140,5 @@ router.post(
 router.get('/user-home', validateResource(homePagePostsSchema), getUserHomePagePostsHandler);
 export default router;
 
-//router.get('/r/popular');
+router.get('/r/popular', getPopularPageHandler);
 //router.get('/r/all');

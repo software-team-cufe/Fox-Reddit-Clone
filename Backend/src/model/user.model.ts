@@ -39,7 +39,6 @@ export const privateFields = [
   'hasComment',
   'hasReply',
   'followPost',
-  'hiddenPosts',
   'savedPosts',
   'mentionedInPosts',
   'mentionedInComments',
@@ -52,7 +51,7 @@ export const privateFields = [
 ];
 
 export class UserPrefs {
-  @prop({ default: true })
+  @prop({ default: false })
   emailPrivateMessage?: boolean;
 
   @prop({ default: 'EG' })
@@ -61,43 +60,43 @@ export class UserPrefs {
   @prop()
   commentsNum?: number;
 
-  @prop({ default: true })
+  @prop({ default: false })
   emailCommentReply?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   emailUpvoteComment?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   emailMessages?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   emailUnsubscribeAll?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   emailUpvote?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   emailUsernameMention?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   emailUserNewFollower?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   emailPostReply?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   over18?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   showPostInNewWindow?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   labelNSFW?: boolean;
 
   @prop({ default: true })
   liveOrangereds?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   markMessagesRead?: boolean;
 
   @prop({ default: true })
@@ -106,13 +105,13 @@ export class UserPrefs {
   @prop({ default: true })
   publicVotes?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   showLinkFlair?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   showLocationBasedRecommendation?: boolean;
 
-  @prop({ default: true })
+  @prop({ default: false })
   searchIncludeOver18?: boolean;
 
   @prop({ default: 'new' })
@@ -121,7 +120,7 @@ export class UserPrefs {
   @prop({ default: 'en' })
   language?: string;
 
-  @prop({ default: true })
+  @prop({ default: false })
   threadedMessages?: boolean;
 
   @prop({ default: true })

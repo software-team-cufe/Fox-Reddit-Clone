@@ -1225,3 +1225,12 @@ export async function unmuteUserInUser(userID: string, subreddit: string) {
     status: true,
   };
 }
+
+//function that gets user hiddenPosts by user ID
+export async function getHiddenPosts(userID: string) {
+  const user = await UserModel.findById(userID);
+
+  if (user) {
+    return user.hiddenPosts;
+  }
+}

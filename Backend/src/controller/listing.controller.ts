@@ -1531,7 +1531,7 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
   }
 }
 
-export async function getPostByIdHandler(req: Request<PostByIdInput['params']>, res: Response) {
+export async function getPostCommentsByIdHandler(req: Request<PostByIdInput['params']>, res: Response) {
   try {
     const postId = req.params.id;
     console.log(postId);
@@ -1562,10 +1562,11 @@ export async function getPostByIdHandler(req: Request<PostByIdInput['params']>, 
     }
     console.log(post.postComments);
     const commentsOfPost = await CommentModel.find({ _id: { $in: post.postComments } });
-
-    console.log('commentPosts in get post by id', commentsOfPost);
-    post.postComments = commentsOfPost;
-    return res.status(200).json(post);
+    // post.postComments = commentsOfPost;
+    return res.status(200).json({
+      post,
+      comments: commentsOfPost,
+    });
   } catch (error) {
     return res.status(500).json({ msg: 'Internal server error' });
   }
