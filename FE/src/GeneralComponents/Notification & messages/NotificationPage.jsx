@@ -47,7 +47,7 @@ const NotificationPage = () => {
 
           </button>
         </div>
-        <div className='mt-4 w-3/5'>
+        <div className='mt-4 w-3/5 flex flex-col'>
         {notifications && notifications.length > 0 && (
           notifications.map((notification) => (
             <div key={notification._id}>
