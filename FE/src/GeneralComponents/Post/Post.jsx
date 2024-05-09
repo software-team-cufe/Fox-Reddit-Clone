@@ -10,29 +10,30 @@ import axios from 'axios';
 function PollComponent({ polls, postId }) {
     const [poll, setPolls] = useState(polls ?? []);
 
-
-    if (polls.length == 0) return <></>;
+    console.log({ pollsssssssssss: polls });
+    if (polls?.length == 0 || polls == null) return <></>;
     const handelVote = async () => {
         const val = document.getElementById(`poll-option-${postId}`).value;
-        console.log({ val });
+      
         if (val == null || val == "") return;
         const id = toast.loading("Please wait");
         try {
-            const res = await userAxios.post(`/api/posts/${postId}/pool`, {
+            const res = await userAxios.post(`/api/posts/${postId}/poll`, {
                 choice: val,
             });
-            
-        } catch (ex) {
-
-        }
+            setPolls(res.data)
+        } catch (ex) { }
         toast.dismiss(id);
     };
     return <div className='flex border rounded-lg my-4 w-full p-4 space-y-4 flex-col'>
         {
-            poll.map((e, idx) => <div key={idx} className='flex items-center gap-1'>
-                <input id={`poll-option-${postId}`} type='radio' defaultValue={e.title} />
-                <label>{e.title} ({e.votes})</label>
-            </div>)
+            poll.map((e, idx) => {
+                console.log({ eeeeeeee: e });
+                return <div key={idx} className='flex items-center gap-1'>
+                    <input name={`poll-${postId}`} id={`poll-option-${postId}`} type='radio' defaultValue={e.title} />
+                    <label>{e.title} ({e.votes})</label>
+                </div>;
+            })
         }
         <div>
             <button onClick={handelVote} className='px-4 py-2 rounded-full bg-gray-300 '>Vote</button>
@@ -61,7 +62,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
     }, [voteType]);
     post.votes = post.votes ?? 0;
     // const images = [post.thumbnail, ...post.images];
-    const [postObj, setPost] = useState(post);
+    const [postObj, setPost] = useState(post?.post ?? post);
 
     const vote = async (upvote) => {
         const id = toast.loading('Please wait');
@@ -104,10 +105,10 @@ export default function PostComponent({ refetch, role, post, className, viewMode
             {
                 !viewMode ?
                     <div className="flex flex-col items-start justify-between">
-                        <Link to={`/r/${postObj.communityName}`}>
+                        <Link to={`/r/${postObj?.communityName}`}>
                             <div>
                                 <div className="mb-4 flex items-center gap-4">
-                                    <img src={postObj.communityIcon} alt="image" className="w-9 h-9 rounded-full" />
+                                    <img src={postObj?.communityIcon} alt="image" className="w-9 h-9 rounded-full" />
                                     <h5 className=" text-sm ">r/{postObj.communityName}</h5>
                                 </div>
                             </div>
@@ -127,7 +128,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                     src={postObj.thumbnail} />
                             </div>
                         </Link>
-                        <PollComponent postId={postObj.postId ?? params.id } polls={post?.poll} />
+                        <PollComponent postId={postObj.postId ?? params.id} polls={post?.poll} />
                     </div> :
 
                     <div>
@@ -141,7 +142,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                 <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
                             </>
                         }
-                        <PollComponent postId={postObj.postId ?? params.id } polls={post?.poll} />
+                        <PollComponent polls={postObj?.poll} postId={postObj.postId ?? params.id} />
                         {
                             postObj.video && <div>
                                 <video src={postObj.video} controls />

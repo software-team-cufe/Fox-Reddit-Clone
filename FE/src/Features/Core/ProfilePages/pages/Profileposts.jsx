@@ -37,7 +37,7 @@ export default function ProfilePosts({ using, context }) {
                 }
                 const newPosts = response.data.posts.map(post => ({
                     communityName: post.coummunityName,
-                    communityIcon: post.CommunityID.icon,
+                    communityIcon: post.CommunityID?.icon,
                     images: post.attachments,
                     postId: post._id,
                     title: post.title,
@@ -74,7 +74,7 @@ export default function ProfilePosts({ using, context }) {
                 }
                 const newPosts = response.data.posts.map(post => ({
                     communityName: post.coummunityName,
-                    communityIcon: post.CommunityID.icon,
+                    communityIcon: post.CommunityID?.icon,
                     images: post.attachments,
                     postId: post._id,
                     title: post.title,

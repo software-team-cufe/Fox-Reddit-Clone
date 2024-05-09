@@ -15,19 +15,19 @@ export default function CommentSection({ comments }) {
   const params = useParams();
 
   const [commentts, setComments] = useState(comments ?? []);
-  const { data, isLoading, isError } =
-    useQuery(`get-comms-${params.id}`,
-      () => axios.get(`http://localhost:3002/comments?postID=${params.id}`)
-        .then(data => {
-          setComments(data?.data ?? comments ?? []);
-          return data;
-        }),
-      {
-        refetchOnWindowFocus: false,
-        retry: 0,
-      }
-    );
-  console.log(commentts);
+  // const { data, isLoading, isError } =
+  //   useQuery(`get-comms-${params.id}`,
+  //     () => axios.get(`http://localhost:3002/comments?postID=${params.id}`)
+  //       .then(data => {
+  //         setComments(data?.data ?? comments ?? []);
+  //         return data;
+  //       }),
+  //     {
+  //       refetchOnWindowFocus: false,
+  //       retry: 0,
+  //     }
+  //   );
+  console.log({ commenttssssssssssss: comments });
   const handelAddComment = async () => {
     const comm = document.getElementById('txt-comment').value;
     if (comm == null || comm == "") {
@@ -60,9 +60,9 @@ export default function CommentSection({ comments }) {
     } catch (ex) { }
     toast.dismiss(id);
   };
-  if (isLoading) {
-    return <>Loading ...</>;
-  }
+  // if (isLoading) {
+  //   return <>Loading ...</>;
+  // }
   return (
     <div>
       <div className="flex gap-2  w-full items-center">
