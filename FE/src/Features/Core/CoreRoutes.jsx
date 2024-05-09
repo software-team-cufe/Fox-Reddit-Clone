@@ -64,5 +64,5 @@ export default [
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
-    <Route key={'/community'} path='/community' element={<TopCommunities />} />,  
+    <Route key={'/community'} path='/community' element={<TopCommunities />} />,
 ]

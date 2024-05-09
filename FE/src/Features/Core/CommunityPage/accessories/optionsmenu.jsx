@@ -56,7 +56,7 @@ export default function OptionsMenu({ comm, setComm }) {
   };
 
   return (
-    <Menu as="div" className="relative inline-block text-left z-30">
+    <Menu as="div" className="relative inline-block text-left z-20">
 
       {/* Sort button header*/}
       <Menu.Button id="commOptionsClickDown" role="dropDownButton" className="inline-flex justify-center hover:bg-gray-200 active:bg-gray-300 rounded-full w-fill py-2 px-2 bg-white text-sm text-gray-900 ">
