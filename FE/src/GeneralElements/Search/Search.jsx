@@ -36,47 +36,7 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
     const [limitCom, setlimitCom] = useState(3);
     const [ShowTrend, setShowTrend] = useState(false);
     const trendRef = useRef(null);
-    const [Trending, setTrending] = useState([{
-        "_id": "663acf65a987f88b93c00406",
-        "CommunityID": "663acf65a987f88b93c00406",
-        "communityIcon": "https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714908975/gduxbj1bsk7xnaqtqnc1.png",
-        "communityName": "nadeen",
-        "postId": "663bb4db8da0c3ca737c83cc",
-        "userId": "663b6578b930c8b40698b8be",
-        "username": "amonn",
-        "title": "testttttttttttttttttttt",
-        "textHTML": "<p>testest</p>",
-        "attachments": [],
-        "poll": [],
-        "spoiler": false,
-        "isLocked": false,
-        "type": "linkWithImage",
-        "nsfw": false,
-        "spamCount": 0,
-        "votesCount": 1,
-        "createdAt": "2024-05-08T17:22:33.383Z",
-        "followers": []
-    }, {
-        "_id": "663acf65a987f88b93c00406",
-        "CommunityID": "663acf65a987f88b93c00406",
-        "communityIcon": "https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714908975/gduxbj1bsk7xnaqtqnc1.png",
-        "communityName": "nadeen",
-        "postId": "663bb4db8da0c3ca737c83cc",
-        "userId": "663b6578b930c8b40698b8be",
-        "username": "amonn",
-        "title": "testttttttttttttttttttt",
-        "textHTML": "<p>testest</p>",
-        "attachments": [],
-        "poll": [],
-        "spoiler": false,
-        "isLocked": false,
-        "type": "linkWithImage",
-        "nsfw": false,
-        "spamCount": 0,
-        "votesCount": 1,
-        "createdAt": "2024-05-08T17:22:33.383Z",
-        "followers": []
-    }])
+    const [Trending, setTrending] = useState([])
 
     useEffect(() => {
         //fetchData();
@@ -145,12 +105,9 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
                 setComs(res.data.communitySearchResultAuth);
             else if (!IsLogged) {
                 setComs(res.data.communitySearchResultNotAuth);
-                console.log(res.data.
-                    communitySearchResultNotAuth
-                )
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
     const fetchPeople = async () => {
@@ -164,10 +121,16 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
 
     const fetchTrending = async () => {
         try {
-            const res = await axios.get(`http://foxnew.southafricanorth.cloudapp.azure.com/r/trendingSearch`)
-            console.log(res);
+            const res = await userAxios.get(`r/trendingSearch`)
+            const newTrends = res.data.trendingSearches.map((trend => ({
+                communityIcon: trend.communityIcon,
+                title: trend.title,
+                communityName: trend.communityName,
+                textHTML: trend.textHTML
+            })))
+            setTrending(newTrends);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -193,7 +156,7 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
             setSelected(value);
             setSearch("");
             sethideit(true);
-            navigator(`/search/${value}/posts`);
+            navigator(`/search/${value}/Posts`);
         }
     };
 
