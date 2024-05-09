@@ -54,7 +54,7 @@ import { findCommunityByName, getCommunityByID } from '../service/community.serv
 import UserModel, { User } from '../model/user.model';
 import PostModel, { Post } from '../model/posts.model';
 import CommunityModel from '../model/community.model';
-import { date } from 'zod';
+import { date, number } from 'zod';
 import { post } from '@typegoose/typegoose';
 import mongoose, { ObjectId } from 'mongoose';
 import { createNotification } from '../service/notification.service';
@@ -1561,18 +1561,19 @@ export async function getPostCommentsByIdHandler(req: Request<PostByIdInput['par
         }
       }
     }
-    console.log(post.postComments);
+    //const commentsOfPost = await CommentModel.find({ _id: { $in: post.postComments } });
+    //Perform aggregations to get the comments with details
+    //user avatar,username,userid, votes, user that requested the comments(upvoted or downvoted comments??)
     const commentsOfPost = await CommentModel.find({ _id: { $in: post.postComments } });
-    // post.postComments = commentsOfPost;
-    return res.status(200).json({
-      post,
-      comments: commentsOfPost,
-    });
+
+    const comments = await CommentModel.populate(commentsOfPost, { path: 'authorId', select: '_id avatar username' });
+    //should return for each comment if current user has upvoted,downvote or didn't vote comment
+
+    return res.status(200).json({ comments });
   } catch (error) {
     return res.status(500).json({ msg: 'Internal server error' });
   }
 }
-
 export async function voteOnPostPoll(req: Request, res: Response) {
   const postId = req.params.id;
   const post = await findPostById(postId);
