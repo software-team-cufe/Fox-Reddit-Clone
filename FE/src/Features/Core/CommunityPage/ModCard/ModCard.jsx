@@ -38,6 +38,10 @@ const ModCard = () => {
     const handleNavigate=()=>{
         navigator('/message/compose');
     }
+    function routeToRules(community) {
+      const path = `/r/${community}/about/rules`;
+      window.location.href = path;
+    }
     useEffect( () => {
       const getNumofMembers = async () => {
         try{ 
@@ -723,7 +727,7 @@ const ModCard = () => {
                                                     <p className='text-xs text-gray-500'>Your community doesn't have any rules yet.</p>
                                                  </div>
                                                  <div className=' mx-4 mt-5'>
-                                                    <button className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-8'>
+                                                    <button onClick={routeToRules} className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-8'>
                                                        Create Commmunity Rules
                                                     </button>
                                                  </div>
