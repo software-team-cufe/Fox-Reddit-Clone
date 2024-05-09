@@ -18,6 +18,7 @@ const ModCard = () => {
     const [handleText, setHandleText] = useState(false);
     const [handleRules, setHandleRules] = useState(false);
     const [handleButtons, setHandleButtons] = useState(false);
+    const [addButton, setAddButton] = useState(false);
     const [handleImage, setHandleImage] = useState(false);
     const [handleCommunityList, setHandleCommunityList] = useState(false);
     const [handleCalender, setHandleCalender] = useState(false);
@@ -30,6 +31,21 @@ const ModCard = () => {
     const [nickname, setNickname] = useState('');
     const [currentNickname, setCurrentNickname] = useState('');
     const [communityDescription, setCommunityDescription] = useState('');
+    const [link, setLink] = useState('');
+    const [buttonTitle, setButtonTitle] = useState('');
+  
+    function isValidUrl(url) {
+     
+      const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+      return urlPattern.test(url);
+    }
+    
+    // Example usage:
+    const url = "https://www.example.com";
+    console.log(isValidUrl(url)); // Output: true
+    
+    const invalidUrl = "not a valid URL";
+    console.log(isValidUrl(invalidUrl)); // Output: false
     
 
     const navigator = useNavigate();
@@ -123,7 +139,30 @@ const ModCard = () => {
       console.log(error);
     }
    }
-
+    
+   const deleteButton = async (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    try {
+      const widgetData = {
+        widgets: [ ]
+      };
+      const res = await userAxios.patch(`/${community}/api/edit_button_widgets`, widgetData);
+      console.log(res.data);
+      console.log("Button deleted successfully");
+      setButtonTitle('');
+      setLink('');
+      console.log("Button deleted successfully");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  // Call the deleteButton function instead of addButtons in useEffect
+  useEffect(() => {
+    deleteButton();
+  }, []);
    const getText = async () => {
     try {
       const res = await userAxios.get(`/${community}/api/text_widgets`);
@@ -189,7 +228,6 @@ const ModCard = () => {
     console.log("community details edited successfully");
   }
 
-
   const deleteDetails = async (event) => {
     if (event) {
       event.preventDefault();
@@ -211,6 +249,39 @@ const ModCard = () => {
     setCommunityDescription('');
     console.log("community details deleted successfully");
   }
+
+ 
+const addButtons = async (event) => {
+  if (event) {
+    event.preventDefault();
+  }
+  try {
+    const widgetData = {
+      widgets: [
+        {
+          buttonTitle,
+          link
+        }
+      ]
+    };
+    const res = await userAxios.patch(`/${community}/api/edit_button_widgets`, widgetData);
+    console.log(res.data);
+    console.log("input text");
+    setButtonTitle(buttonTitle);  
+    console.log(buttonTitle);
+    setLink(link);
+    console.log(link);
+ 
+  } catch (error) {
+    console.log(error);
+  }
+}
+  useEffect(() => {
+    addButtons();
+  }, []);
+
+
+
   return (
     <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-xl md:block hidden pb-3 w-[340px] flex-col">
          
@@ -774,6 +845,7 @@ const ModCard = () => {
                                          <input
                                            type="text"
                                            placeholder="Widget name*"
+                                  
                                            className="text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2 rounded-2xl p-2 bg-gray-200"
                                            
                                          />
@@ -784,7 +856,7 @@ const ModCard = () => {
                                                <input 
                                                 type="text"
                                                 placeholder="Description"
-                                              
+                                        
                                                 className="text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
                                                 </input> 
                                                
@@ -799,7 +871,9 @@ const ModCard = () => {
                                              <p className='text-xs text-gray-500'>0/10</p>
                                           </div>
                                           <div className=' mx-4 mt-5'>
-                                             <button className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-9'>
+                                             <button
+                                             onClick={() => { setAddWidget(false), setWidget(false), setHandleButtons(false),setAddButton(true) }}
+                                              className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-9'>
                                                 Add Button
                                              </button>
                                           </div>
@@ -815,8 +889,89 @@ const ModCard = () => {
                                              </button>
                                         </div>
                      </div>
+
               </div>
                 }
+              { addButton &&
+                <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
+                <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-fit '>
+                                       <div className=' flex flex-row justify-between m-4'>
+                                              <button onClick={ ()=> {setAddButton(false) , setHandleButtons(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
+                                                <svg className="w-6 h-5  "
+                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                                </svg>
+                                              </button>
+                                             
+                                       
+                                             <span className='text-xl font-semibold  mr-80 mt-1'> Add button  </span>
+                                             <div>
+                                             <button onClick={ ()=> setAddButton(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
+                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
+                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                                   </svg>
+                                             </button>
+                                            </div>
+                                       </div>
+                                       
+                                       <div  className=' text-md font-semibold mx-4'>Button type</div>
+                                       <div className=' mx-4  mb-6'>
+                                       <div className=' my-3'>
+                                       <input
+                                         type="Label"
+                                         placeholder="Label*"
+                                         value={buttonTitle}
+                                         onChange={(e) => setButtonTitle(e.target.value)}
+                                         className="text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2 rounded-2xl p-2 bg-gray-200"
+                                         
+                                       />
+                                      
+                                          </div>
+                                           
+                                          <div className=' my-3'>  
+                                             <input 
+                                              type="url"
+                                              placeholder="Link"
+                                              value={ link}
+                                              onChange={(e) => setLink(e.target.value)}
+                                              className="text-black focus:outline-none border border-gray-200 self-center h-14 w-full mt-2  rounded-2xl p-2  bg-gray-200" >  
+                                              </input> 
+                                             
+                                          </div>
+                                          
+                                         
+                                       </div>
+                                           <div className=' flex flex-row justify-end space-x-3  mr-4 mt-6 my-5'>
+                                          { buttonTitle && link ?(
+                                            <button onClick={ deleteButton} className=' w-[62px] text-xs rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-200 '>
+                                            Delete 
+                                          </button>
+
+                                          )
+                                          : null
+                                          }
+                                          <button onClick={ ()=> {setAddButton(false) , setHandleButtons(true)}} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
+                                           Cancel
+                                           </button><button 
+                                           onClick={(event) => { 
+                                             if (isValidUrl(link)) {
+                                               setAddButton(false);
+                                               setHandleButtons(true);
+                                               addButtons(event);
+                                             } 
+                                           }} 
+                                           disabled={!isValidUrl(link)} 
+                                           className={`w-[92px] text-xs rounded-3xl font-semibold h-[40px] flex items-center justify-center  ${isValidUrl(link) ? 'bg-blue-800 text-white hover:bg-blue-800' : 'bg-gray-200 text-gray-400'}`}
+                                         >
+                                           Add Button
+                                         </button>
+                                      </div>
+                   </div>
+
+                </div>
+
+              }
+              
                 { handleImage &&
                   <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
                   <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[420px] '>
