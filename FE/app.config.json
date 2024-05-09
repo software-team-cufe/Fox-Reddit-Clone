@@ -4,7 +4,7 @@
       "name": "front-end",
       "script": "http-server",
       "interpreter": "none",
-      "args": "http-server  --port 3001 ./dist"
+      "args": "  --port 3001 ./dist"
     }
   ]
 }
