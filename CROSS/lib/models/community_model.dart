@@ -169,7 +169,8 @@ class Community {
       banner: map['banner'] ?? '',
       avatar: map['avatar'] ?? '',
       memberCount: map['memberCount'] ?? 0,
-      members: List<Member>.from(map['members']?.map((x) => Member.fromMap(x))),
+      members: List<Member>.from(map['members']?.map((x) => Member.fromMap(x))),//
+//      members: [],
       mods: map['mods'],
       imageWidget: map['imageWidget'],
       buttonWidget: map['buttonWidget'],

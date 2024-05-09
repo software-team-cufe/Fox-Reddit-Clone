@@ -22,7 +22,7 @@ class CommunityListDrawer extends ConsumerWidget {
   void navigateToCreateCommunity(BuildContext context) {
     Navigator.pushNamed(context, '/create-community');
   }
-  Future<Either<Failure, Community>> getCommunityByName(String name) async {
+  Future<Either<Failure, Map<String,dynamic>>> getCommunityByName(String name) async {
   // Get the access token from SharedPreferences.
   final prefs = await SharedPreferences.getInstance();
   final accessToken = prefs.getString('backtoken') ?? '';
@@ -34,7 +34,7 @@ class CommunityListDrawer extends ConsumerWidget {
         'Authorization': 'Bearer $accessToken',
       },
     );
-  
+    print('mahmoud print : ${response.statusCode}');
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       final communityData = responseData['community'];
@@ -50,9 +50,10 @@ class CommunityListDrawer extends ConsumerWidget {
       print('Banner: ${communityData['banner']}');
       print('Avatar: ${communityData['icon']}');
       print('Member Count: ${communityData['membersCnt']}');
-
+      
       // Return the community data as a Right
-      return Right(Community.fromJson(communityData));
+      // return Right(Community.fromJson(communityData));
+      return Right(responseData['community']);
     } else {
       // Print the failure status code
       print('me4at4at: ${response.statusCode}');
@@ -74,11 +75,19 @@ class CommunityListDrawer extends ConsumerWidget {
   }
 }
 
-void navigateToCommunity(BuildContext context, Community community) {
+void navigateToCommunity_old (BuildContext context, Map<String, dynamic> communityData) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => CommunityScreen(community: community ),
+      builder: (context) => CommunityScreen(communityData: communityData),
+    ),
+  );
+}
+void navigateToCommunity(BuildContext context, Map<String, dynamic> communityData) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => CommunityScreen(communityData: communityData),
     ),
   );
 }
@@ -111,19 +120,19 @@ Widget build(BuildContext context, WidgetRef ref) {
                             final community = communities[index];
                             print('se7s $community');
                             return GestureDetector(                              
-                              onTap: () async {
-                                final communityEither = await getCommunityByName(community.name);
-                                communityEither.fold(
+                             onTap: () async {
+                              final Either<Failure, Map<String, dynamic>> communityEither = await getCommunityByName(community.name);
+                              communityEither.fold(
                                   (failure) {
-                                    // Handle failure
-                                    print('Failed to get community: ${failure.message}');
+                                      // Handle failure
+                                      print('Failed to get community: ${failure.message}');
                                   },
                                   (communityData) {
-                                    // Successfully fetched community data, navigate to CommunityScreen
-                                    navigateToCommunity(context, communityData);
+                                      // Successfully fetched community data, navigate to CommunityScreen
+                                      navigateToCommunity(context, communityData);
                                   },
-                                );
-                              },// Pass the community name
+                              );
+                          },// Pass the community name
                               child: ListTile(
                                 leading: CircleAvatar(
                                   backgroundImage: NetworkImage(community.avatar),
