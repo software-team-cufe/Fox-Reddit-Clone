@@ -1,33 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import NavOfNotification from './NavOfNotification'
 import { useNavigate } from 'react-router-dom';
-import { appFirestore } from '../../Utils/firebase';
-import { collection, doc, getDocs, query, setDoc, where, onSnapshot } from "@firebase/firestore";
-
-async function getDate() {
-
-  console.log(doc.docs.map(e => e.data()));
-}
-
-function useNotification() {
-  const [notification, setnotification] = useState([]);
-  useEffect(() => {
-    const collRef = collection(appFirestore, "notifications");
-    const doc = onSnapshot(query(collRef, where('userId', '==', 'id')), (snap) => {
-      setnotification(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    });
-  }, [])
-  return notification;
-}
-
-
+import { userAxios } from "../../Utils/UserAxios";
 const NotificationPage = () => {
-  const not = useNotification();
-  console.log(not);
+
   const navigator = useNavigate();
   const handleNavigate = () => {
     navigator('/setting/notifications');
   }
+
+
+  const [notifications, setNotifications] = useState([])
+  const [unReadNotifications, setUnReadNotifications] = useState([])
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await userAxios.get('/api/v1/me/notification');
+        setNotifications(response.data.notifications);
+        setUnReadNotifications(response.data.unreadNotificationsCount);
+        console.log(response.data.unreadNotificationsCount);
+        console.log(response.data.notifications);
+        console.log("notifications");
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+
 
   return (
     <div>
@@ -45,10 +47,20 @@ const NotificationPage = () => {
 
           </button>
         </div>
-        {
-          not.map((e, idx) => <p key={idx}>{e.body}</p>)
-        }
+        <div className='mt-4 w-3/5'>
+        {notifications && notifications.length > 0 && (
+          notifications.map((notification) => (
+            <div key={notification._id}>
+              <p>{notification.title}</p>
+              <p>{notification.type}</p>
+              <p>{notification.source}</p>
+              <p>{notification.createdAt}</p>
+            </div>
+          ))
+        )}
+        <p>Unread Notifications Count: {unReadNotifications}</p>
       </div>
+    </div>
 
     </div>
   )
