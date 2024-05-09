@@ -159,7 +159,7 @@ const ModCard = () => {
     }
   }
   
-  // Call the deleteButton function instead of addButtons in useEffect
+ 
   useEffect(() => {
     deleteButton();
   }, []);
