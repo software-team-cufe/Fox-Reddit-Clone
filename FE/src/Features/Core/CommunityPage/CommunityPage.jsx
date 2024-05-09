@@ -23,6 +23,10 @@ import EditModal from "./accessories/editBanner";
 import KickOutModal from "./accessories/kickOutModal";
 import { useSelector } from "react-redux";
 import ModCard from "./ModCard/ModCard";
+import { set } from "zod";
+import Spinner from '@/GeneralElements/Spinner/Spinner';
+
+
 //helping functions for the notifications frequency and options menu
 
 export const CommunityContext = createContext({
@@ -65,16 +69,25 @@ export default function CommunityPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editComponent, setEditComponent] = useState("Banner");
   const [showKickOut, setShowKickOut] = useState(false);
+  const[joining, setJoining] = useState(false);
   const searchRedux = useSelector(state => state.search);
 
 
   //to fetch the community data from the server and use them
   const fetchCommunity = useCallback(async () => {
+    const storedData = JSON.parse(localStorage.getItem(`comm${community}Storage`));
+    if (storedData) {
+      const {data: storedComm, loggedIn} = storedData; // Remove JSON.parse here
+      if(loggedIn) {
+        setComm(storedComm);
+        setLoading(false);
+        return;
+      }
+    }
     if (user == null) {
-
       await userAxios.get(`/${community}`)
         .then((response) => {
-          
+
           let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
           if (!(recent.includes(community))) {
             if (recent.length < 5) {
@@ -102,11 +115,10 @@ export default function CommunityPage() {
           if (newcomm.type == "private") {
             setShowKickOut(true);
           }
-
-          // write save comm in localstorage here ////////////////////////
+          localStorage.setItem(`comm${community}Storage`, JSON.stringify({data: newcomm, loggedIn: false}));
         })
         .catch(error => {
-          
+
           console.error('There was an error!', error);
           toast.error("this community doesn't seem to exist, try again");
           navigator("/404");
@@ -173,6 +185,7 @@ export default function CommunityPage() {
           if (newcomm.type == "Private" && !joinedComms.includes(newcomm.name)) {
             setShowKickOut(true);
           }
+          localStorage.setItem(`comm${community}Storage`, JSON.stringify({data: newcomm, loggedIn: true}));
         })
         .catch(error => {
           console.error('There was an error!', error);
@@ -183,74 +196,80 @@ export default function CommunityPage() {
     setLoading(false);
   }, []);
 
-  let { error } = useQuery('fetchCommunity', fetchCommunity, { staleTime: Infinity });
+  let { error } = useQuery('fetchCommunity', fetchCommunity, { refetchOnWindowFocus: false});
 
-  const fetchInitialPosts = () => {
+  const fetchInitialPosts = async () => {
     setFeed(true);
-    let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
-    if (selected == 'Top') {
-      link = link + `&t=${period}`;
+    if (searchRedux == "") {
+      let link = `api/listing/posts/r/${commObj.name}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
+      if (selected == 'Top') {
+        link = link + `&t=${period}`;
+      }
+      await userAxios.get(link)
+        .then((response) => {
+          if (response.data.length > 0) {
+            setpagedone(true);
+          }
+          const newPosts = response.data.map(post => ({
+            communityName: post.username,
+            communityIcon: commObj.icon,
+            images: post.attachments,
+            postId: post._id,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }));
+          setcurrentpage(2);
+          setPosts(newPosts);
+          setFeed(false);
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+          setFeed(false);
+        })
     }
-    userAxios.get(link)
-      .then((response) => {
-        const newPosts = response?.data?.posts?.map(post => ({
-          communityName: post.username,
-          communityIcon: post.userID.avatar,
-          images: post.attachments,
-          postId: post._id,
-          title: post.title,
-          description: post.textHTML,
-          votesCount: post.votesCount,
-          comments: post.commentsCount,
-          thumbnail: post.thumbnail,
-          video: null,
-          type: "post",
-          spoiler: post.spoiler,
-          NSFW: post.nsfw
-        })) ?? [];
-        setcurrentpage(2);
-        setPosts(newPosts);
-        setFeed(false);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-        setFeed(false);
-      })
+    else {
+      await userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
+        .then((response) => {
+          if (response.data.subredditSearchPosts.length < limitpage) {
+            setpagedone(true);
+          }
+          const newPosts = response.data.subredditSearchPosts.map(post => ({
+            communityName: post.username,
+            communityIcon: commObj.icon,
+            images: post.attachments,
+            postId: post.postId,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            commentsNum: post.commentsNum,
+            thumbnail: post.attachments[0],
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }));
+          setPosts(newPosts);
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+        });
+      setFeed(false);
+    }
   };
 
-  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period], fetchInitialPosts, { enabled: !loading, staleTime: Infinity });
-
-  useEffect(() => {
-    if (searchRedux != null && searchRedux != "") {
-      userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
-      .then((response) => {
-        if (response.data.subredditSearchPosts.length < limitpage) {
-          setpagedone(true);
-        }
-        const newPosts = response.data.subredditSearchPosts.map(post => ({
-          communityName: post.username,
-          communityIcon: post.userId,
-          images: post.attachments,
-          postId: post.postId,
-          title: post.title,
-          description: post.textHTML,
-          votesCount: post.votesCount,
-          commentsNum: post.commentsNum,
-          thumbnail: post.attachments[0],
-          video: null,
-          type: "post",
-          spoiler: post.spoiler,
-          NSFW: post.nsfw
-        }));
-        setPosts(newPosts);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-    }
-  }, [searchRedux]);
+  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period, searchRedux], fetchInitialPosts, { enabled: !loading, refetchOnWindowFocus: false });
 
   const swtichJoinState = async () => {
+    setJoining(true);
     if (user == null) {
       setShowModal(true);
       return;
@@ -258,16 +277,12 @@ export default function CommunityPage() {
     const subStatus = commObj.joined ? "unsubscribe" : "subscribe";
     await userAxios.post(`/${commObj.name}/api/${subStatus}`)
       .then(() => {
-        if (commObj.joined) {
-          toast.success(`r/${commObj.name} ${commObj.joined ? 'unjoined' : 'joined'}!`)
-        } else {
-          toast.success(`r/${commObj.name} ${commObj.joined ? 'unjoined' : 'joined'}!`)
-        }
         setComm({ ...commObj, joined: !commObj.joined });
       })
       .catch(error => {
         console.error('There was an error!', error);
       });
+      setJoining(false);
   }
 
   const CreatePostHandle = () => {
@@ -280,70 +295,72 @@ export default function CommunityPage() {
 
   const fetchMorePosts = () => {
     setCallingPosts(true);
-    if(searchRedux == null || searchRedux == ""){
-    let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
-    if (selected == 'Top') {
-      link = link + `&t=${period}`;
-    }
-    userAxios.get(link)
-      .then(response => {
-        if (response.data.length < limitpage) {
-          setpagedone(true);
-        }
-        const newPosts = response.data.posts.map(post => ({
-          communityName: post.coummunityName,
-          communityIcon: post.userID.avatar,
-          images: post.attachments,
-          postId: post._id,
-          title: post.title,
-          textHTML: post.textHTML,
-          votesCount: post.votesCount,
-          comments: post.commentsCount,
-          thumbnail: post.thumbnail,
-          video: null,
-          type: "post",
-          spoiler: post.spoiler,
-          NSFW: post.nsfw
-        }));
+    if (searchRedux == "") {
+      let link = `api/listing/posts/r/${commObj.name}/${selected.toLocaleLowerCase()}?page=${currentpage}&limit=${limitpage}&count=0&start=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
+      if (selected == 'Top') {
+        link = link + `&t=${period}`;
+      }
+      userAxios.get(link)
+        .then(response => {
+          if (response.data.length < limitpage) {
+            setpagedone(true);
+          }
+          const newPosts = response.data.posts.map(post => ({
+            communityName: post.coummunityName,
+            communityIcon: commObj.icon,
+            images: post.attachments,
+            postId: post._id,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }));
 
-        setPosts(prevPosts => [...prevPosts, ...newPosts]);
-        setCallingPosts(false);
-        setcurrentpage(1 + currentpage);
+          setPosts(prevPosts => [...prevPosts, ...newPosts]);
+          setCallingPosts(false);
+          setcurrentpage(1 + currentpage);
 
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setCallingPosts(false);
-      });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          setCallingPosts(false);
+        });
     }
-    else{
+    else {
       userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=${currentpage}&limit=${limitpage}`)
-      .then((response) => {
-        if (response.data.subredditSearchPosts.length < limitpage) {
-          setpagedone(true);
-        }
-        const newPosts = response.data.subredditSearchPosts.map(post => ({
-          communityName: post.username,
-          communityIcon: post.userId,
-          images: post.attachments,
-          postId: post.postId,
-          title: post.title,
-          description: post.textHTML,
-          votesCount: post.votesCount,
-          commentsNum: post.commentsNum,
-          thumbnail: post.attachments[0],
-          video: null,
-          type: "post",
-          spoiler: post.spoiler,
-          NSFW: post.nsfw
-        }));
-        setPosts(prevPosts => [...prevPosts, ...newPosts]);
-        setCallingPosts(false);
-        setcurrentpage(1 + currentpage);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
+        .then((response) => {
+          if (response.data.subredditSearchPosts.length < limitpage) {
+            setpagedone(true);
+          }
+          const newPosts = response.data.subredditSearchPosts.map(post => ({
+            communityName: post.username,
+            communityIcon: commObj.icon,
+            images: post.attachments,
+            postId: post.postId,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            commentsNum: post.commentsNum,
+            thumbnail: post.attachments[0],
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }));
+          setPosts(prevPosts => [...prevPosts, ...newPosts]);
+          setCallingPosts(false);
+          setcurrentpage(1 + currentpage);
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+        });
     }
   };
 
@@ -352,8 +369,6 @@ export default function CommunityPage() {
     setShowEditModal(true);
   };
 
-
-  //to handle loading until fetch is complete
   if (loading) {
     return (
       <div role="communitypage" className="w-full h-full flex flex-col items-center ">
@@ -361,11 +376,15 @@ export default function CommunityPage() {
       </div>
     )
   }
-  if (commObj == null) {
-    return <>Community not found</>
-  }
 
-  //main body of the page
+  if(path.pathname.includes(`/info`)) {
+    return(
+      <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
+        {commObj.modded ? <ModCard></ModCard> : <MainFooter comm={commObj} />}
+      </div>
+    )}
+    
+
   return (
     <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
       {showModal && <LoginFirtstModal onClose={setShowModal} />}
@@ -401,7 +420,7 @@ export default function CommunityPage() {
             </Link>
           ) : (
             <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${commObj.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
-              <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>
+            {joining ? <Spinner></Spinner> : <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>}
             </button>)}
           <OptionsMenu comm={commObj} setComm={setComm} />
         </div>
@@ -419,7 +438,7 @@ export default function CommunityPage() {
           </Link>
         ) : (
           <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${commObj.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
-            <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>
+            {joining ? <Spinner></Spinner> : <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>}
           </button>)}
         <OptionsMenu comm={commObj} setComm={setComm} />
       </div>
@@ -434,8 +453,8 @@ export default function CommunityPage() {
 
             {/* page buttons for mobile mode*/}
             <div className='flex gap-2 md:hidden'>
-              <Link id="toCommFeed" to={`/r/${commObj.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${commObj.name}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
-              <Link id="toCommAbout" to={`/r/${commObj.name}/about`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${commObj.name}/about` ? "bg-gray-300" : "bg-white"}`} >about</Link>
+              <Link id="toCommFeed" to={`/r/${commObj.name}`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${encodeURIComponent(community)}` ? "bg-gray-300" : "bg-white"}`} >feed</Link>
+              <Link id="toCommAbout" to={`/r/${commObj.name}/info`} className={`rounded-full font-sans text-sm font-semibold w-fit px-4 py-2 h-fit ${path.pathname == `/r/${encodeURIComponent(community)}/info` ? "bg-gray-300" : "bg-white"}`} >about</Link>
             </div>
 
             {/* sort elements for the feed*/}
@@ -473,14 +492,7 @@ export default function CommunityPage() {
             </div>
           )}
         </div>
-        {
-          commObj.modded ? <ModCard></ModCard> :
-            <MainFooter comm={commObj} />
-
-        }
-        {/* community description and rules and other tools on the right*/}
-
-
+        {commObj.modded ? <ModCard></ModCard> : <MainFooter comm={commObj} />}
       </div>
     </div>
   )

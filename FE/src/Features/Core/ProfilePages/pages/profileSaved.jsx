@@ -47,7 +47,8 @@ export default function ProfileSaved({ using }) {
                     type: "post",
                     spoiler: post.spoiler,
                     NSFW: post.nsfw,
-                    hidden: post.isHidden
+                    hidden: post.isHidden,
+                    poll: post.poll ? post.poll : []
                 }));
                 setcurrentpage(2);
                 setPosts(newPosts);
@@ -83,7 +84,8 @@ export default function ProfileSaved({ using }) {
                     type: "post",
                     spoiler: post.spoiler,
                     NSFW: post.nsfw,
-                    hidden: post.isHidden
+                    hidden: post.isHidden,
+                    poll: post.poll ? post.poll : []
                 }));
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);

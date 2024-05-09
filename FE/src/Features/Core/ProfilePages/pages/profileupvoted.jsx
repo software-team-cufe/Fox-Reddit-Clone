@@ -48,7 +48,8 @@ export default function ProfileUpvoted({using}) {
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    poll: post.poll ? post.poll : []
                 }));
                 setcurrentpage(2);
                 setPosts(newPosts);
@@ -84,7 +85,8 @@ export default function ProfileUpvoted({using}) {
                     video: null,
                     type: "post",
                     spoiler: post.spoiler,
-                    NSFW: post.nsfw
+                    NSFW: post.nsfw,
+                    poll: post.poll ? post.poll : []
                 }));
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);
                 setCallingPosts(false);

@@ -1,6 +1,6 @@
 
 import { useNavigate, Link } from "react-router-dom";
-import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useMemo, useEffect, useCallback, useContext } from 'react'
 import { Tabs, Tab } from '../../../GeneralElements/Tabs/Tab'
 import { NotepadText, ImageUp, BarChart2, Link2, Trash2, BadgeInfo, X, Plus, LoaderCircle } from 'lucide-react'
 import ReactQuill from 'react-quill';
@@ -8,8 +8,22 @@ import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 import './QuillStyle.css'
 import CheckButton from "../../../GeneralElements/CheckButton/CheckButton";
 import Poll from "./Poll"
+import ScheduleForm from "./scheduleForm";
+import { Calendar } from "lucide-react";
 
 function TypingArea(props) {
+    const [scheduleModal, setScheduleModal] = useState(false);
+    const [startDate, setStartDate] = useState(new Date());
+    const [startTime, setStartTime] = useState(new Date());
+    const [timeZone, setTimeZone] = useState("");
+    const [repeat, setRepeat] = useState('hourly');
+    const [adv1, setAdv1] = useState('default');
+    const [adv2, setAdv2] = useState('default');
+    const [contestEnable, setContestEnable] = useState(false);
+    const [autoMod, setAutoMod] = useState(false);
+    const query =  new URLSearchParams(window.location.search);
+    const scheduled = query.get("variable");
+
     const navigator = useNavigate();
     const [DisablePoll, setDisablePoll] = useState(false);
     const [FocusTitle, setFocusTitle] = useState(false);
@@ -129,6 +143,8 @@ function TypingArea(props) {
 
     return (
         <div className='bg-white h-fit rounded  w-full'>
+            {scheduleModal && <ScheduleForm onClose={setScheduleModal} setStartDate={setStartDate} setStartTime={setStartTime} setTimeZone={setTimeZone} setRepeat={setRepeat} setAdv1={setAdv1} setAdv2={setAdv2} setContestEnable={setContestEnable} setAutoMod={setAutoMod}
+                startDate={startDate} startTime={startTime} repeat={repeat} adv1={adv1} adv2={adv2} contestEnable={contestEnable} autoMod={autoMod} />}
 
             <Tabs>
                 <Tab label="Post" num={0} addOnClick={NoDrag} icon={<NotepadText strokeWidth={1} color=" #e94c00" size={24} />}>
@@ -354,24 +370,29 @@ function TypingArea(props) {
                 SetIsChecked={props.SetNFSW} label="NSFW" />
             <hr className="w-[100%-2] my-4 grid mx-5" />
             <div className="w-full relative h-6 ">
-                <button onClick={props.PostFunc}
-                    disabled={DisablePost}
-                    type="submit"
-                    className={`bg-orange-600 text-white rounded-full  py-2 
-                    absolute right-4 flex hover:bg-orange-800 disabled:bg-gray-400
-                    ${props.load ? "px-2" : "px-4"}`}
-                >
-                    {props.load && <LoaderCircle className="animate-spin mx-1" />}
-                    Post
-                </button>
+                <div className="flex justify-end gap-2 p-2">
                 <button
-                    onClick={() => { setShowCancelPost(true); }}
-                    type="submit"
-                    className="border-orange-600 text-orange-600 rounded-full px-4 py-2
-                     absolute right-28 border font-bold  hover:bg-orange-100"
-                >
-                    Cancel
-                </button>
+                        onClick={() => { setShowCancelPost(true); }}
+                        type="submit"
+                        className="border-orange-600 text-orange-600 rounded-full px-4 py-2
+                     border font-bold  hover:bg-orange-100"
+                    >
+                        Cancel
+                    </button>
+                    <span className="flex gap-1 rounded-full w-fit">
+                        <button onClick={props.PostFunc}
+                            disabled={DisablePost}
+                            type="submit"
+                            className={`bg-orange-600 text-white ${scheduled ? 'rounded-l-full' : 'rounded-full'}  py-2 
+                    flex hover:bg-orange-800 disabled:bg-gray-400
+                    ${props.load ? "px-2" : "px-4"}`}
+                        >
+                            {props.load && <LoaderCircle className="animate-spin mx-1" />}
+                            Post
+                        </button>
+                        {scheduled && <button className="rounded-r-full bg-orange-600 text-white p-2 hover:bg-orange-800" onClick={() => setScheduleModal(true)}><Calendar className="w-4 h-4 text-white"/></button>}
+                    </span>
+                </div>
                 <div className="relative">
                     {ShowCancelPost && <div className=" shadow-slate-300 shadow border rounded  
                                            absolute  bg-white right-0 bottom-10 border-orange-600 z-50 w-max h-48">

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { userAxios } from "../../../../Utils/UserAxios";
 import { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ export default function MainFooter (){
   const [moderators, setModerators] = useState([]);
   const { community } = useParams();  
   const [members, setMembers] = useState(0);
+  const path = useLocation().pathname;
 
   const navigate =useNavigate();
   useEffect( () => {
@@ -133,7 +134,7 @@ export default function MainFooter (){
 
 
     return(
-        <div className='w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg hidden md:block'>
+        <div className={`w-[340px] min-w-[25%] flex-auto h-fit p-3 overflow-y-scroll bg-gray-100 rounded-lg ${path == `r/${encodeURIComponent(community)}` ? "hidden md:block" : "mx-auto mt-4"}`}>
            <div className=" flex flex-col content-between">
               <div className=" flex flex-col space-y-2  mb-3">
                 <p className=" font-semibold text-lg"> {community}</p>

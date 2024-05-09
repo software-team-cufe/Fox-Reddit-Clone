@@ -50,7 +50,8 @@ export default function ProfileHidden({ using }) {
                     type: "post",
                     spoiler: post.spoiler,
                     NSFW: post.nsfw,
-                    hidden: post.isHidden
+                    hidden: post.isHidden,
+                    poll: post.poll ? post.poll : []
                 }));
                 setPosts(newPosts);
                 setLoading(false);
@@ -86,7 +87,8 @@ export default function ProfileHidden({ using }) {
                     type: "post",
                     spoiler: post.spoiler,
                     NSFW: post.nsfw,
-                    hidden: post.isHidden
+                    hidden: post.isHidden,
+                    poll: post.poll ? post.poll : []
                 }));
 
                 setPosts(prevPosts => [...prevPosts, ...newPosts]);

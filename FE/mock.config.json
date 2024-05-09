@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "mock",
+      "script": "npm",
+      "args": "run mock-api",
+      "interpreter": "none",
+      "node_args": "--harmony"
+    }
+  ]
+}

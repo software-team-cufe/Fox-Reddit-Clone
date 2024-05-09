@@ -27,9 +27,7 @@ export default function RemovalPage() {
           console.log(error);
           setCrash(true);
           setLoading(false);
-        })
-
-        console.log(Removal);
+        }) 
       }, []);
 
     if(loading){

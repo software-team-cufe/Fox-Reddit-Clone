@@ -29,6 +29,7 @@ function CommunityLayout() {
 
         <Routes>
             <Route path='/' element={<CommunityProvider><CommunityPage /></CommunityProvider>} />
+            <Route path='/info/' element={<CommunityProvider><CommunityPage /></CommunityProvider>} />
             <Route path='/about/*' element={<div className='flex gap-3 w-full h-full'>
 
 
@@ -64,5 +65,4 @@ export default [
     <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={'/community'} path='/community' element={<TopCommunities />} />,
-  
 ]
