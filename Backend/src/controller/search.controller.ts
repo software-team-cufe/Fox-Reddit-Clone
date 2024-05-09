@@ -13,6 +13,7 @@ import {
   getPostsSearchResultsNotAuth, //home page search by posts
   getPostsSearchResultsAuth, //home page search by posts
   getSubredditSearchPosts, //search in subreddit by posts
+  getTrendingSearches,
 } from '../service/community.service';
 import {
   getCommentSearchResultsNotAuth,
@@ -212,4 +213,16 @@ export async function searchSubredditHandler(
   }
 }
 
-// create search sugesstions function so as user enters in the search bar it will show sugesstions
+export async function getTrendingSearchesHandller(req: Request, res: Response, next: NextFunction) {
+  try {
+    //define the page and limit for the trending search results
+    const page = 1;
+    const limit = 6;
+    const trendingSearches = await getTrendingSearches(page, limit);
+    return res.status(200).json({ trendingSearches });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Internal server error in trending searches',
+    });
+  }
+}

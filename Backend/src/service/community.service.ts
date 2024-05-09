@@ -1892,3 +1892,68 @@ export async function getSubredditSearchPosts(
     throw new appError('Something went wrong in search posts auth', 500);
   }
 }
+
+export async function getTrendingSearches(page: number, limit: number) {
+  try {
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    const trendingSearches = await CommunityModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { privacyType: 'Public' }, // Match public communities
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'posts', // Posts collection
+          localField: 'communityPosts', // Field containing post IDs in the community model
+          foreignField: '_id', // Field in the posts model
+          as: 'posts', // Name of the field to store posts in the result
+        },
+      },
+      { $unwind: '$posts' }, // Unwind the posts array
+      {
+        $match: {
+          'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
+          $and: [
+            { 'posts.createdAt': { $lte: new Date() } }, // Posts created before or at the current date
+            { 'posts.createdAt': { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } }, // Posts created within the last 24 hours, TOP 24H
+          ],
+        },
+      },
+      { $sort: { 'posts.votesCount': -1 } }, // Apply sorting criteria
+      { $skip: skip }, // Skip documents based on page and limit
+      { $limit: limit }, // Limit the number of documents returned
+      {
+        $project: {
+          CommunityID: '$posts.CommunityID', // Project post CommunityID
+          communityIcon: '$icon', // Project community icon
+          communityName: '$name', // Project community name
+          postId: '$posts._id', // Project post ID
+          userId: '$posts.userID', // Project user ID
+          username: '$posts.username', // Project username
+          title: '$posts.title', // Project post title
+          textHTML: '$posts.textHTML', // Project post textHTML
+          textJSON: '$posts.textJSON', // Project post textJSON
+          attachments: '$posts.attachments', // Project post attachments
+          poll: '$posts.poll', // Project post poll
+          spoiler: '$posts.spoiler', // Project post spoiler
+          isLocked: '$posts.isLocked', // Project post isLocked
+          type: '$posts.type', // Project post type
+          nsfw: '$posts.nsfw', // Project post nsfw
+          spamCount: '$posts.spamCount', // Project post spamCount
+          votesCount: '$posts.votesCount', // Project post votesCount
+          createdAt: '$posts.createdAt', // Project post createdAt
+          editedAt: '$posts.editedAt', // Project post editedAt
+          followers: '$posts.followers', // Project post followers
+          commentsNum: '$posts.commentsNum', // Project post commentsNum
+        },
+      },
+    ]);
+    return trendingSearches;
+  } catch (error) {
+    throw new appError('Something went wrong in trending searches', 500);
+  }
+}
