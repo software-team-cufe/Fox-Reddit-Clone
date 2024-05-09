@@ -56,7 +56,7 @@ import PostModel, { Post } from '../model/posts.model';
 import CommunityModel from '../model/community.model';
 import { date } from 'zod';
 import { post } from '@typegoose/typegoose';
-import { ObjectId } from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import { createNotification } from '../service/notification.service';
 
 /**
@@ -1271,6 +1271,8 @@ export async function getSortedPosts(req: Request, res: Response) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function getSortedSubredditPosts() {}
 /**
  * Get user saved posts with pagination support.
  *
@@ -1529,11 +1531,32 @@ export async function getPostByIdHandler(req: Request<PostByIdInput['params']>, 
     if (!post) {
       return res.status(400).json({ msg: 'Post not found' });
     }
-    //get community from post
-    //2 cases if community public or private
-    // const communityId = post.CommunityID as unknown as string;
-    // const community = await getCommunityByID(communityId);
-    //get post by id
+    console.log(post);
+    const user = res.locals.user;
+    if (post.CommunityID) {
+      const community = await getCommunityByID(post.CommunityID as unknown as string);
+      if (community?.privacyType === 'Private') {
+        if (!user) return res.status(401).json({ msg: 'not authorized' });
+        // Check if the user is a member
+        const isMember = user.member.some(
+          (member: { communityId: string }) => member.communityId.toString() === community._id.toString()
+        );
+
+        // Check if the user is a moderator
+        const isModerator = user.moderators.some(
+          (moderators: { communityId: string }) => moderators.communityId.toString() === community._id.toString()
+        );
+        console.log(isMember, isModerator);
+        if (!isMember && !isModerator) {
+          return res.status(401).json({ msg: 'not authorized' });
+        }
+      }
+    }
+    console.log(post.postComments);
+    const commentsOfPost = await CommentModel.find({ _id: { $in: post.postComments } });
+
+    console.log('commentPosts in get post by id', commentsOfPost);
+    post.postComments = commentsOfPost;
     return res.status(200).json(post);
   } catch (error) {
     return res.status(500).json({ msg: 'Internal server error' });
