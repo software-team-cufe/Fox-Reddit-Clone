@@ -195,9 +195,6 @@ export class notificationSettings {
   redditAnnouncements?: boolean;
 
   @prop({ default: true })
-  cakeDay?: boolean;
-
-  @prop({ default: true })
   modNotifications?: boolean;
 }
 
