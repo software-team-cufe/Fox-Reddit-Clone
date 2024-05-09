@@ -6,15 +6,14 @@ import 'package:reddit_fox/features/auth/controller/auth_controller.dart';
 import 'package:reddit_fox/features/community/controller/community_controller.dart';
 import 'package:reddit_fox/models/community_model.dart';
 
-
 class CommunityScreen extends ConsumerWidget {
-  final Community community;
+  final Map<String, dynamic> communityData;
 
-  const CommunityScreen({Key? key, required this.community}) : super(key: key);
+  const CommunityScreen({Key? key, required this.communityData}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final name = community.name; // Extract community name
+    final name = communityData['name']; // Extract community name
 
     return Scaffold(
       body: ref.watch(getCommunityByNameProvider(name)).when(
@@ -22,7 +21,7 @@ class CommunityScreen extends ConsumerWidget {
           // Handle failure case
           (failure) => ErrorText(error: failure.message),
           // Handle success case
-          (communityData) {
+          (_) {
             return NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
@@ -34,7 +33,7 @@ class CommunityScreen extends ConsumerWidget {
                       children: [
                         Positioned.fill(
                           child: Image.network(
-                            communityData.banner ?? '', // Handle null banner
+                            communityData['banner'] ?? '', // Handle null banner
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -49,7 +48,7 @@ class CommunityScreen extends ConsumerWidget {
                           Align(
                             alignment: Alignment.topLeft,
                             child: CircleAvatar(
-                              backgroundImage: NetworkImage(communityData.avatar ?? ''), // Handle null avatar
+                              backgroundImage: NetworkImage(communityData['icon'] ?? ''), // Handle null avatar
                               radius: 36,
                             ),
                           ),
@@ -58,7 +57,7 @@ class CommunityScreen extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'r/${communityData.name ?? ''}', // Handle null name
+                                'r/${communityData['name'] ?? ''}', // Handle null name
                                 style: const TextStyle(
                                   fontSize: 19,
                                   fontWeight: FontWeight.bold,
@@ -73,14 +72,14 @@ class CommunityScreen extends ConsumerWidget {
                                   padding: const EdgeInsets.symmetric(horizontal: 25),
                                 ),
                                 child: Text(
-                                  communityData.members != null ? 'Joined' : 'Join',
+                                  communityData['members'] != null ? 'Joined' : 'Join',
                                 ),
                               ),
                             ],
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 10),
-                            child: Text('${communityData.memberCount ?? 0} members'), // Handle null memberCount
+                            child: Text('${communityData['membersCnt'] ?? 0} members'), // Handle null memberCount
                           ),
                         ],
                       ),
