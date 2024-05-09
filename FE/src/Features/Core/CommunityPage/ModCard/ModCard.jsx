@@ -31,7 +31,6 @@ const ModCard = () => {
     const [nickname, setNickname] = useState('');
     const [currentNickname, setCurrentNickname] = useState('');
     const [communityDescription, setCommunityDescription] = useState('');
-<<<<<<< HEAD
     const [link, setLink] = useState('');
     const [buttonTitle, setButtonTitle] = useState('');
   
@@ -48,9 +47,6 @@ const ModCard = () => {
     const invalidUrl = "not a valid URL";
     console.log(isValidUrl(invalidUrl)); // Output: false
     
-=======
-    const path = useLocation().pathname;
->>>>>>> 1429711375471dc2914d918fed341a975696c300
 
     const navigator = useNavigate();
     const navigate =useNavigate();
