@@ -1,4 +1,4 @@
-import React from 'react'
+/*import React from 'react'
 import SideBar from './Components/SideBar'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import ChatPage from './ChatPage'
@@ -16,3 +16,4 @@ export default function ChatRoutes() {
         </div>
     )
 }
+*/
