@@ -23,6 +23,7 @@ import EditedPage from './moderation/about/ModQueue/EditedPage';
 import UnmoderatedPage from './moderation/about/ModQueue/UnmoderatedPage';
 import ScheduledPosts from './moderation/about/SchedulledPosts/ScheduledPosts';
 import ChatRoutes from './ThreadsPage/ChatRoutes';
+import MainFooter from '@/Features/Core/CommunityPage/footers/mainFooter';
 
 function CommunityLayout() {
     return <div className='flex gap-3 w-full h-full'>
@@ -63,6 +64,5 @@ export default [
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
     <Route key={"/message"} path="/message/*" element={<PrivateMessagelayout />} />,
     <Route key={"/notification"} path="/notification/*" element={<NotificationPage />} />,
-    <Route key={'/community'} path='/community' element={<TopCommunities />} />,
-  
+    <Route key={'/community'} path='/community' element={<TopCommunities />} />,  
 ]
