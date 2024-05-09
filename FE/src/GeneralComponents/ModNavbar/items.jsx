@@ -41,7 +41,7 @@ export const modNavbarItems = [
         items: [
             {
                 name: "Rules and Removal Reasons",
-                link: "",
+                link: "/rules",
                 icon: ScrollText ,
                 newTap: false,
             },
