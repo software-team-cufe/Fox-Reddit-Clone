@@ -20,7 +20,7 @@ import {
   getCommentSearchResultsAuth,
   getSubredditCommentsSearch,
 } from '../service/comment.service';
-import { getUserSearchResult } from '../service/user.service';
+import { getUserSearchResult, getHiddenPosts } from '../service/user.service';
 export async function searchHomeHandler(
   req: Request<{}, {}, {}, SearchNormalInput['query']>,
   res: Response,
@@ -43,8 +43,10 @@ export async function searchHomeHandler(
       type === 'link' ? 'posts' : type === 'sr' ? 'subreddits' : type === 'comment' ? 'comments' : 'users';
     //check if user is authenticated
     let userAuthenticated;
+    let hiddenPosts;
     if (res.locals.user) {
       userAuthenticated = true;
+      hiddenPosts = await getHiddenPosts(res.locals.user._id);
     } else {
       userAuthenticated = false;
     }
@@ -63,7 +65,8 @@ export async function searchHomeHandler(
             res.locals.user._id,
             searchkey,
             sort,
-            topBy
+            topBy,
+            hiddenPosts
           );
           return res.status(200).json({ postsSearchResultAuth });
         }
@@ -98,7 +101,8 @@ export async function searchHomeHandler(
               page,
               limit,
               searchkey,
-              sort
+              sort,
+              hiddenPosts
             );
             return res.status(200).json({ commentsSearchResultAuth });
           }
@@ -116,7 +120,8 @@ export async function searchHomeHandler(
             res.locals.user._id,
             searchkey,
             sort,
-            topBy
+            topBy,
+            hiddenPosts
           );
           return res.status(200).json({ postsSearchResultAuth });
         }
@@ -179,7 +184,10 @@ export async function searchSubredditHandler(
     //search type can be link/posts, sr/subreddits,comments, users
     const searchType = type === 'link' ? 'posts' : type === 'comment' ? 'comments' : 'posts';
     //check if user is authenticated
-
+    let hiddenPosts;
+    if (res.locals.user) {
+      hiddenPosts = await getHiddenPosts(res.locals.user._id);
+    }
     //check the moderator and hidden part
     //search logic here
     //switch case
@@ -192,14 +200,22 @@ export async function searchSubredditHandler(
             limit,
             searchkey,
             sort,
-            topBy
+            topBy,
+            hiddenPosts
           );
           return res.status(200).json({ subredditSearchPosts });
         }
         break;
       case 'comments':
         {
-          const subredditSearchComments = await getSubredditCommentsSearch(subredditName, page, limit, searchkey, sort);
+          const subredditSearchComments = await getSubredditCommentsSearch(
+            subredditName,
+            page,
+            limit,
+            searchkey,
+            sort,
+            hiddenPosts
+          );
           return res.status(200).json({ subredditSearchComments });
         }
         break;

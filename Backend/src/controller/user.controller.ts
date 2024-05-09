@@ -1733,7 +1733,11 @@ export async function getUserHomePagePostsHandler(
     if (!sort) {
       throw new Error('Sort parameter missing');
     }
-    const homePageAuthPosts = await getHomePostsAuth(page, limit, userId, sort, topBy);
+    let hiddenPosts;
+    if (res.locals.user) {
+      hiddenPosts = await getHiddenPosts(res.locals.user._id);
+    }
+    const homePageAuthPosts = await getHomePostsAuth(page, limit, userId, sort, topBy, hiddenPosts);
     return res.status(200).json({ homePageAuthPosts });
   } catch (err) {
     if (err instanceof Error) {

@@ -4,6 +4,7 @@ import { User, UserModel } from '../model/user.model';
 import appError from '../utils/appError';
 import { findPostById } from './post.service';
 import { findUserById, findUserByUsername } from './user.service';
+import { Ref } from '@typegoose/typegoose';
 import _ from 'lodash';
 /**
  * Finds a comment by their ID.
@@ -292,7 +293,8 @@ export async function getCommentSearchResultsAuth(
   page: number,
   limit: number,
   query: string,
-  sort: string | undefined
+  sort: string | undefined,
+  hiddenPosts: Ref<Post>[] | undefined
 ) {
   try {
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
@@ -331,9 +333,9 @@ export async function getCommentSearchResultsAuth(
       {
         $match: {
           'posts.title': { $exists: true }, // Filter out posts without title
-          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           'posts.createdAt': { $lte: new Date() },
+          'posts._id': { $nin: hiddenPosts ?? [] }, // Check if post ID is not in hiddenPosts array
         },
       },
       {
@@ -399,7 +401,8 @@ export async function getSubredditCommentsSearch(
   page: number,
   limit: number,
   query: string,
-  sort: string | undefined
+  sort: string | undefined,
+  hiddenPosts: Ref<Post>[] | undefined
 ) {
   try {
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
@@ -438,7 +441,7 @@ export async function getSubredditCommentsSearch(
       {
         $match: {
           'posts.title': { $exists: true }, // Filter out posts without title
-          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+          'posts._id': { $nin: hiddenPosts ?? [] }, // Check if post ID is not in hiddenPosts array
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           'posts.createdAt': { $lte: new Date() }, // Exclude posts created after the current date
         },

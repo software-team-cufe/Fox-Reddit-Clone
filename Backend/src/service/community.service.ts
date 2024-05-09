@@ -1174,7 +1174,8 @@ export async function getPostsSearchResultsAuth(
   userID: string,
   query: string,
   sort: string | undefined,
-  topBy: string | undefined
+  topBy: string | undefined,
+  hiddenPosts: Ref<Post>[] | undefined
 ) {
   try {
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
@@ -1244,9 +1245,9 @@ export async function getPostsSearchResultsAuth(
             { 'posts.title': { $regex: query, $options: 'i' } }, // Match posts by title
             { 'posts.textHTML': { $regex: query, $options: 'i' } }, // Match posts by body
           ],
-          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           'posts.createdAt': { $lte: new Date() },
+          'posts._id': { $nin: hiddenPosts ?? [] }, // Check if post ID is not in hiddenPosts array
           ...additionalCriteria, // Apply additional criteria
         },
       },
@@ -1518,7 +1519,8 @@ export async function getHomePostsAuth(
   limit: number,
   userID: string,
   sort: string | undefined,
-  topBy: string | undefined
+  topBy: string | undefined,
+  hiddenPosts: Ref<Post>[] | undefined
 ) {
   //   What is the difference between the different sort options?
   // "Hot" posts are sorted by number of views.
@@ -1592,9 +1594,9 @@ export async function getHomePostsAuth(
       {
         $match: {
           'posts.title': { $exists: true }, // Filter out posts without titles (optional)
-          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           'posts.createdAt': { $lte: new Date() },
+          'posts._id': { $nin: hiddenPosts ?? [] }, // Check if post ID is not in hiddenPosts array
           ...additionalCriteria, // Apply additional criteria
         },
       },
@@ -1779,7 +1781,8 @@ export async function getSubredditSearchPosts(
   limit: number,
   query: string,
   sort: string | undefined,
-  topBy: string | undefined
+  topBy: string | undefined,
+  hiddenPosts: Ref<Post>[] | undefined
 ) {
   try {
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
@@ -1849,7 +1852,7 @@ export async function getSubredditSearchPosts(
             { 'posts.title': { $regex: query, $options: 'i' } }, // Match posts by title
             { 'posts.textHTML': { $regex: query, $options: 'i' } }, // Match posts by body
           ],
-          'posts.isHidden': { $ne: true }, // Exclude posts with isHidden set to true
+          'posts._id': { $nin: hiddenPosts ?? [] }, // Check if post ID is not in hiddenPosts array
           'posts.isDeleted': { $ne: true }, // Exclude posts with isDeleted set to true
           'posts.createdAt': { $lte: new Date() },
           ...additionalCriteria, // Apply additional criteria
