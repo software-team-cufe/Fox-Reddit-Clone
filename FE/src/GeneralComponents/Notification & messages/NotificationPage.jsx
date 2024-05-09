@@ -9,7 +9,11 @@ const NotificationPage = () => {
   const [notifications, setNotifications] = useState([])
   const [unreadNotificationsCount, setUnReadNotifications] = useState([])
   const [notification, setNotification] = useState({ title:"" , body:" "});
+  const [isRead, setIsRead] = useState(false);
 
+  const handleClick = () => {
+    setIsRead(true);
+  };
   const navigator = useNavigate();
   const handleNavigate = () => {
     navigator('/setting/notifications');
@@ -87,7 +91,7 @@ const NotificationPage = () => {
       <NavOfNotification ></NavOfNotification>
       <div className=' mt-4 w-3/5'>
         <div className='flex justify-end items-center space-x-3'>
-          <button >
+          <button onClick={handleClick}>
             Mark All as read
           </button>
 
@@ -106,15 +110,19 @@ const NotificationPage = () => {
          <p className='text-lg text-orange-500 ml-2 font-semibold mt-7'> Number of unread notifications: {unreadNotificationsCount}</p>
 
          <div className='flex flex-col'>
-              {notifications && notifications.map((notification) => (
-              <div className="flex flex-col text-md border border-gray-300 p-4 m-2" key={notification._id}>
-               <h2 className='text-lg font-semibold'>{notification.title}</h2>
-               <p className='text-sm text-gray-500'>{notification.type}</p>
-               <p className='text-sm text-gray-500'>{notification.source}</p>
-               <p className='text-sm text-gray-500'>{new Date(notification.createdAt).toLocaleString()}</p>
-             </div>
-            ))}
-         </div>
+     
+         {notifications && notifications.map((notification) => (
+           <div
+             className={`flex flex-col text-md border-gray-300 p-4 m-2 ${!isRead ? 'bg-sky-50' : ' bg-white'}`}
+             key={notification._id}
+           >
+             <h2 className='text-lg font-semibold'>{notification.title}</h2>
+             <p className='text-sm text-gray-500'>{notification.type}</p>
+             <p className='text-sm text-gray-500'>{notification.source}</p>
+             <p className='text-sm text-gray-500'>{new Date(notification.createdAt).toLocaleString()}</p>
+           </div>
+         ))}
+       </div>
 </div>
 
   
