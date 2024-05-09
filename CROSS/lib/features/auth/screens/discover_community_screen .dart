@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:reddit_fox/Pages/Search.dart';
 import 'package:reddit_fox/core/common/CustomButton.dart';
 import 'package:reddit_fox/navbar.dart';
 import 'package:reddit_fox/routes/Mock_routes.dart';
@@ -59,7 +60,15 @@ class _DiscoverCommunityScreenState extends State<DiscoverCommunityScreen> {
                     fontsize: 20,
                   ),
                   const Gap(150),
-                  const Icon(Icons.search),
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Search()),
+                      );
+                    },
+                  ),
                   const Spacer(),
                   const CircleAvatar()
                 ],
