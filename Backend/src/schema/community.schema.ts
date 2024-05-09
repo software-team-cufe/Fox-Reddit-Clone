@@ -196,7 +196,7 @@ export const EditImageWidgetArraySchema = object({
   body: object({
     widgets: array(
       object({
-        title: string({
+        imageTitle: string({
           required_error: 'title is required',
         }),
         image: string({
@@ -216,7 +216,7 @@ export const EditButtonWidgetArraySchema = object({
   body: object({
     widgets: array(
       object({
-        title: string({
+        buttonTitle: string({
           required_error: 'title is required',
         }),
         link: string({

@@ -174,7 +174,7 @@ export class TextWidget {
 
 export class ButtonWidget {
   @prop()
-  title!: string;
+  buttonTitle!: string;
 
   @prop()
   link!: string;
@@ -182,7 +182,7 @@ export class ButtonWidget {
 
 export class ImageWidget {
   @prop()
-  title!: string;
+  imageTitle!: string;
 
   @prop()
   image!: string;
