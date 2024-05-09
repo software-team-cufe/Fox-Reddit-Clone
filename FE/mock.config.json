@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "mock",
+      "script": "npm",
+      "interpreter": "none",
+      "args": "mock-api"
+    }
+  ]
+}

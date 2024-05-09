@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "my-frontend-app",
+      "script": "npx",
+      "interpreter": "none",
+      "args": "http-server  --port 3001 ./dist"
+    }
+  ]
+}
+
