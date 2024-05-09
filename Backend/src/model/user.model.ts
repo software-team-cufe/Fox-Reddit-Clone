@@ -135,7 +135,7 @@ export class UserPrefs {
 }
 export class notificationSettings {
   @prop({ default: true })
-  messages?: boolean;
+  privateMessages?: boolean;
 
   @prop({ default: true })
   chatMessages?: boolean;
