@@ -5,6 +5,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// Sample class for comment data
+class CommentData {
+  final String username;
+  final String content;
+  final int votes;
+  final List<CommentData> replies;
+
+  CommentData({
+    required this.username,
+    required this.content,
+    required this.votes,
+    required this.replies,
+  });
+}
+
 class CommentSection extends StatefulWidget {
   final String postId;
   final String? access_token;
@@ -21,7 +36,7 @@ class CommentSection extends StatefulWidget {
 
 class _CommentSectionState extends State<CommentSection> {
   final TextEditingController commentController = TextEditingController();
-  late List<Map<String, dynamic>> comments = [];
+  late List<CommentData> comments;
 
   @override
   void initState() {
@@ -29,33 +44,45 @@ class _CommentSectionState extends State<CommentSection> {
     fetchComments();
   }
 
-  Future<void> fetchComments() async {
-    try {
-      // API endpoint URL
-      String commentsUrl = ApiRoutesBackend.getPostbyId(widget.postId);
-
-      final response = await http.get(
-        Uri.parse(commentsUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${widget.access_token}',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        // Parse responseData and update comments list
-        setState(() {
-          comments = json.decode(response.body).cast<Map<String, dynamic>>();
-        });
-      } else {
-        // Handle error response
-        print('Failed to fetch comments: ${response.statusCode}');
-        print(response.body);
-      }
-    } catch (error) {
-      print('Error fetching comments: $error');
+Future<void> fetchComments() async {
+  try {
+    // Check if postId is not null
+    if (widget.postId == null) {
+      print('postId is null. Cannot fetch comments.');
+      return;
     }
+
+    // API endpoint URL
+    String apiUrl = ApiRoutesBackend.getPostbyId(widget.postId);
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: json.encode({
+        'postId': widget.postId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${widget.access_token}',
+      },
+    );
+    print(widget.postId);
+    print('Response status code: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      var responseData = json.decode(response.body);
+      // Parse responseData and update comments list
+      setState(() {
+        comments = parseComments(responseData);
+      });
+    } else {
+      // Handle error response
+      print('Failed to fetch comments: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error fetching comments: $error');
   }
+}
 
   List<CommentData> parseComments(dynamic responseData) {
     // Parse responseData and return list of CommentData objects

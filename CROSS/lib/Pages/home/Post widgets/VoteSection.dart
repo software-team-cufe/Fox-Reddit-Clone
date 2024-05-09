@@ -148,7 +148,7 @@ class _VoteSectionState extends State<VoteSection> {
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
                       child: Text(
-                        "${widget.post['commentsNo']?? 0} Comments",
+                        "${widget.post['commentsNum']?? 0} Comments",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),

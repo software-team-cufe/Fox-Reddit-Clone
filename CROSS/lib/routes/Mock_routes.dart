@@ -35,7 +35,7 @@ class ApiRoutesBackend {
   static const String changePassword = '$baseUrl/user/changepassword';
   static String getUserByToken(String token) => '$baseUrl/api/v1/me';
   static String getUserById(String id) => '$baseUrl/user/$id';
-    static String getPostbyId(String postId) => '$baseUrl/posts/$postId';
+  static String getPostbyId(String postId) => '$baseUrl/posts/$postId';
 
   static String getPostsByCreatorId(String id) =>
       '$baseUrl/posts?creatorId=$id';
