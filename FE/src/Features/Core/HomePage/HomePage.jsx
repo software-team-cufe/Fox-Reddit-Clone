@@ -76,29 +76,27 @@ export default function HomePage() {
   const [page, setPage] = useState(1);
   const [posts, setPosts] = useState([]);
   const handleScroll = () => {
-    console.log(window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight);
-    if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
-    ) {
-      setPage(page + 1) // Load more data when user scrolls to bottom
+
+    if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+      setPage(page + 1)
     }
   };
-  
-  const { isLoading, isError, error, data, } = useQuery(['get-post', selected, page],
-    () => userAxios.get(`/user-home${localStorage.getItem("authorization") == null ? "" : `?page=${page}&limit=5&sort=${selected.toLowerCase()}`}`).then(data => {
-      setPosts(prev => {
-        
-        return [...prev, ...(data?.data?.homePageAuthPosts ?? data?.data?.homePagePosts)];
-      });
-      return data;
-    }),
+
+  const { isLoading, isError, error, data, } = useQuery(['get-post', selected],
+    (e) => userAxios.get(`/user-home${localStorage.getItem("authorization") == null ? "" : `?page=${1}&limit=500&sort=${selected.toLowerCase()}`}`)
+      .then(data => {
+        console.log({adsfsdfsdfsdf: e});
+        setPosts(prev => {
+
+          return [...(data?.data?.homePageAuthPosts ?? data?.data?.homePagePosts)];
+        });
+        return data;
+      }),
     {
       retry: 0,
       refetchOnWindowFocus: false,
     });
-    
+
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
