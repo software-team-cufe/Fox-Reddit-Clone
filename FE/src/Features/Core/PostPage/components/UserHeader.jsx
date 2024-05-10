@@ -76,7 +76,7 @@ export default function UserHeader({ post }) {
     <div className=" flex items-center justify-between gap-3">
       <ReportPostModal isOpen={isOpen} closeModal={() => setOpen(false)} />
       <div className=" flex items-center gap-3">
-        <button className=" rounded-full bg-gray-100 p-2" onClick={() => navigate(-1)}>
+        <button id="arrow-left" className=" rounded-full bg-gray-100 p-2" onClick={() => navigate(-1)}>
           <ArrowLeft />
         </button>
         <div className=" space-y-2">
@@ -123,32 +123,32 @@ export default function UserHeader({ post }) {
                 (post.userID == userId && userId != null) && <>
                   <Menu.Item>
                     <Link to={`/submit/${params.id}`}>
-                      <button onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                      <button id="icon-edit" onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                         <Edit className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                         <span className="font-semibold text-sm">Edit</span>
                       </button>
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
-                    <button onClick={handelDelete} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                    <button id="icon-trash" onClick={handelDelete} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                       <Trash className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                       <span className="font-semibold text-sm">Delete</span>
                     </button>
                   </Menu.Item>
                   <Menu.Item>
-                    <button onClick={handelLock} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                    <button id="lock" onClick={handelLock} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                       <Lock className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                       <span className="font-semibold text-sm">Lock</span>
                     </button>
                   </Menu.Item>
                   <Menu.Item>
-                    <button onClick={() => handelAddNSFW(!post.nsfw)} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                    <button icon="info" onClick={() => handelAddNSFW(!post.nsfw)} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                       <Info className="w-7  mt-1 text-gray-500" aria-hidden="true" />
                       <span className="font-semibold text-sm">{post.nsfw ? "Remove NSFW tag" : "Add NSFW tag"}</span>
                     </button>
                   </Menu.Item>
                   <Menu.Item>
-                    <button onClick={() => handelAddSpoiler(!post.spoiler)} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                    <button id="icon-infooooooo" onClick={() => handelAddSpoiler(!post.spoiler)} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                       <Info className="w-7  mt-1 text-gray-500" aria-hidden="true" />
                       <span className="font-semibold text-sm">{post.spoiler ? "Remove spoiler tag" : "Add spoiler tag"}</span>
                     </button>
@@ -156,19 +156,19 @@ export default function UserHeader({ post }) {
                 </>
               }
               <Menu.Item>
-                <button onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                <button id="icon-pocketttttt" onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                   <Pocket className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                   <span className="font-semibold text-sm">Save</span>
                 </button>
               </Menu.Item>
               <Menu.Item>
-                <button onClick={handelHide} className="text-start p-3 flex gap-3 mb-2 hover:bg-gray-200 w-full">
+                <button id="eyeoffffff" onClick={handelHide} className="text-start p-3 flex gap-3 mb-2 hover:bg-gray-200 w-full">
                   <EyeOff className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                   <span className='font-semibold text-sm'>Hide</span>
                 </button>
               </Menu.Item>
               <Menu.Item>
-                <button onClick={() => setOpen(true)} className="text-start p-3 pt-2 flex gap-3 hover:bg-gray-200 w-full">
+                <button id="flaaag" onClick={() => setOpen(true)} className="text-start p-3 pt-2 flex gap-3 hover:bg-gray-200 w-full">
                   <Flag className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                   <span className='font-semibold text-sm'>Report</span>
                 </button>

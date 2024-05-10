@@ -76,7 +76,7 @@ export default function BanUserModal({ closeModal, isOpen, values }) {
                                 <div className="mt-2 flex flex-col gap-4">
                                     <div className='pt-6  px-6 flex items-center justify-between'>
                                         Ban a user:
-                                        <button onClick={closeModal}><X /></button>
+                                        <button id="close" onClick={closeModal}><X /></button>
                                     </div>
                                     <hr />
                                     <form onSubmit={(e) => e.preventDefault()} id='frm-ban' className=' '>
@@ -116,10 +116,10 @@ export default function BanUserModal({ closeModal, isOpen, values }) {
                                             <div className='flex gap-2 mt-5 justify-between items-center'>
                                                 <span className=' text-sm'>Visible to banned user</span>
                                                 <div className='flex gap-2'>
-                                                    <Button onClick={closeModal} className=" border bg-transparent hover:bg-transparent border-blue-500  font-semibold">
+                                                    <Button id="cancelll" onClick={closeModal} className=" border bg-transparent hover:bg-transparent border-blue-500  font-semibold">
                                                         <p className='text-blue-500 '>Cancel</p>
                                                     </Button>
-                                                    <Button onClick={handelSubmit} className="bg-blue-500 hover:bg-blue-400">Ban</Button>
+                                                    <Button id="bannnn" onClick={handelSubmit} className="bg-blue-500 hover:bg-blue-400">Ban</Button>
                                                 </div>
                                             </div>
                                         </div>

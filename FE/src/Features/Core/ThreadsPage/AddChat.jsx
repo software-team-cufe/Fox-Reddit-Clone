@@ -47,12 +47,12 @@ export default function AddChat() {
         <div className='w-full h-full flex flex-col items-center justify-center'>
             <div className='flex items-end gap-1 w-[600px]'>
                 <TextBox id={'txt-searchhh'} onChanged={() => getData()} className='w-full h-full' placeholder='Username' />
-                <Button className='mt-4 h-full'>Add</Button>
+                <Button id="add-chat" className='mt-4 h-full'>Add</Button>
             </div>
             <div className='mt-3 w-[600px]'>
                 {
                     result.map((e, idx) =>
-                        <button onClick={() => initChat(e)} className='w-full rounded-md hover:bg-gray-200 flex justify-center py-3' key={idx}>
+                        <button  onClick={() => initChat(e)} className='w-full rounded-md hover:bg-gray-200 flex justify-center py-3' key={idx}>
                             <span>{e}</span>
                         </button>)
                 }

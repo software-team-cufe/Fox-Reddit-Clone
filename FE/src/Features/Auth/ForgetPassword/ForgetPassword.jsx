@@ -60,7 +60,7 @@ export default function ForgetPassword() {
         </div>
 
 
-        <Button disabled={loading} loading={loading}    role="btn" className="w-full" type="submit">Reset Password</Button>
+        <Button id="forget-btn" disabled={loading} loading={loading}    role="btn" className="w-full" type="submit">Reset Password</Button>
       </form>
     </div>
   )

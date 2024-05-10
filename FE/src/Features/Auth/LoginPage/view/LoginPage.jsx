@@ -87,10 +87,10 @@ export default function LoginPage({ }) {
                 </Link>
               </p>
             </div>
-            <Button role="login-btn" disabled={loading} loading={loading} onClick={login} className="w-full">
+            <Button id="login-btn" role="login-btn" disabled={loading} loading={loading} onClick={login} className="w-full">
               Login
             </Button>
-            <button onClick={handelContinueWithGoogle} type="button" className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
+            <button id="login-google" onClick={handelContinueWithGoogle} type="button" className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
               <div className=" w-4">
                 <GoogleIcon />
               </div>

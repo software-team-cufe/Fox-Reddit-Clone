@@ -18,7 +18,7 @@ export default function NotFoundPage({ }) {
                         </p>
                         <br />
                         <Link to='/'>
-                            <Button color="var(--primary)" className="mx-auto" textColor="white" verticalPadding={15} horizontalPadding={30} fontSize="1.1rem" >
+                            <Button id="return-home" color="var(--primary)" className="mx-auto" textColor="white" verticalPadding={15} horizontalPadding={30} fontSize="1.1rem" >
                                 Homepage
                             </Button>
                         </Link>

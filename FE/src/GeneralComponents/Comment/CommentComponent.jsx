@@ -47,19 +47,19 @@ export default function CommentComponent({ comment, margin = 0 }) {
                 <p className="ml-2">{comm.commentText ?? comm.textJSON}</p>
                 <div className="mt-2 flex items-center gap-3">
                     <div className="flex items-center gap-2">
-                        <button onClick={() => handelVote(1)} className="p-2 rounded-full hover:bg-blue-100">
+                        <button id="arrow-circle" onClick={() => handelVote(1)} className="p-2 rounded-full hover:bg-blue-100">
                             <ArrowUpCircle />
                         </button>
                         <p>{comm.votesCount}</p>
-                        <button onClick={() => handelVote(-1)} className="p-2 rounded-full hover:bg-blue-100">
+                        <button id="arrow-down-circle" onClick={() => handelVote(-1)} className="p-2 rounded-full hover:bg-blue-100">
                             <ArrowDownCircle />
                         </button>
                     </div>
-                    <button onClick={() => setShowCommetn(!showComment)} className="flex items-center gap-2 rounded-full hover:bg-blue-100 px-3 py-2" >
+                    <button id="message-circle" onClick={() => setShowCommetn(!showComment)} className="flex items-center gap-2 rounded-full hover:bg-blue-100 px-3 py-2" >
                         <MessageCircle />
                         Reply
                     </button>
-                    <button className="flex items-center gap-2 rounded-full hover:bg-blue-100 px-3 py-2" >
+                    <button id="share-btnnn" className="flex items-center gap-2 rounded-full hover:bg-blue-100 px-3 py-2" >
                         <Share />
                         Share
                     </button>
