@@ -1,5 +1,5 @@
 
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import React, { useState, useRef, useMemo, useEffect, useCallback, useContext } from 'react'
 import { Tabs, Tab } from '../../../GeneralElements/Tabs/Tab'
 import { NotepadText, ImageUp, BarChart2, Link2, Trash2, BadgeInfo, X, Plus, LoaderCircle } from 'lucide-react'
@@ -12,6 +12,7 @@ import ScheduleForm from "./scheduleForm";
 import { Calendar } from "lucide-react";
 
 function TypingArea(props) {
+    const navigate = useNavigate();
     const [scheduleModal, setScheduleModal] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [startTime, setStartTime] = useState(new Date());
@@ -21,8 +22,10 @@ function TypingArea(props) {
     const [adv2, setAdv2] = useState('default');
     const [contestEnable, setContestEnable] = useState(false);
     const [autoMod, setAutoMod] = useState(false);
-    const query =  new URLSearchParams(window.location.search);
-    const scheduled = query.get("variable");
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const variable2 = searchParams.get('variable2');
+    const scheduled = searchParams.get("variable1");
 
     const navigator = useNavigate();
     const [DisablePoll, setDisablePoll] = useState(false);
@@ -140,6 +143,13 @@ function TypingArea(props) {
         setVideoFile(filteredArray2);
     }
 
+    const handleClick = () => {
+        if (scheduled) {
+            navigate(`/r/${variable2}/about/scheduledposts`);
+        } else {
+            props.PostFunc();
+        }
+    };
 
     return (
         <div className='bg-white h-fit rounded  w-full'>
@@ -380,7 +390,7 @@ function TypingArea(props) {
                         Cancel
                     </button>
                     <span className="flex gap-1 rounded-full w-fit">
-                        <button onClick={props.PostFunc}
+                        <button onClick={handleClick}
                             disabled={DisablePost}
                             type="submit"
                             className={`bg-orange-600 text-white ${scheduled ? 'rounded-l-full' : 'rounded-full'}  py-2 
@@ -388,7 +398,7 @@ function TypingArea(props) {
                     ${props.load ? "px-2" : "px-4"}`}
                         >
                             {props.load && <LoaderCircle className="animate-spin mx-1" />}
-                            Post
+                            {scheduled ? "Schedule" : "Post"} 
                         </button>
                         {scheduled && <button className="rounded-r-full bg-orange-600 text-white p-2 hover:bg-orange-800" onClick={() => setScheduleModal(true)}><Calendar className="w-4 h-4 text-white"/></button>}
                     </span>

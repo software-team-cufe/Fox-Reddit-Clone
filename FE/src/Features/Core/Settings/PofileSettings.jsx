@@ -317,7 +317,7 @@ function ProfileSettings() {
     return (
         <div className='flex  '>
 
-            <div className="justify-center  w-[85%]">
+            <div className="justify-center w-[95%]  sm:w-[75%]">
                 <h1 className='mb-9 font-bold text-xl'>Customize profile</h1>
                 <div className='text-xs  text-gray-500'>PROFILE INFORMATION</div>
                 <hr className='mb-6' />

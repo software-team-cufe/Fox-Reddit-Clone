@@ -13,9 +13,9 @@ import SearchComponent from "../../GeneralElements/Search/Search";
 import NotificationsPopup from "./NotificationsPopup";
 export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
   ViewdInSearch, setViewdInSearch,
-  UserName, IsOnline, IsLogged }) {
+  UserName, IsOnline, IsLogged ,unReadNotifications }) {
 
-
+   
   const navigator = useNavigate();
   const listProfRef = useRef(null);
   const UserProfRef = useRef(null);
@@ -34,6 +34,12 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
   const path = useLocation();
 
 
+  const handleBellClick = (e) => {
+    e.preventDefault();
+    
+    setShowBellPop(!ShowBellPop);
+  };
+  
   //handle to use tooltip
   const handleMouseEnterAd = () => {
     setIshoverAd(true);
@@ -266,25 +272,30 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 status={IshoverCreate}
               ></Tooltip>
             </button>
+
             <div className="relative flex">
-              <button id="bellButton" onClick={() => { setShowBellPop(!ShowBellPop) }}
-                role="NotificationsButton"
-                className="bg-white hover:bg-orange-100 
-                sm:block hidden   min-w-8 h-10 my-2 rounded-full hover:   "
-                onMouseEnter={handleMouseEnterBell}
-                onMouseLeave={handleMouseLeaveBell}
-              >
-                <Bell strokeWidth={1} color=" #e94c00" size={32} />
-                <Tooltip
+            <button id="bellButton" onClick={handleBellClick}
+              role="NotificationsButton"
+              className={`bg-white hover:bg-orange-100 
+              sm:block hidden min-w-8 h-10 my-2 rounded-full hover: 
+              ${unReadNotifications > 0 ? 'text-red-500' : ''}`}
+              onMouseEnter={handleMouseEnterBell}
+              onMouseLeave={handleMouseLeaveBell}
+            >
+              <Bell strokeWidth={1} color=" #e94c00" size={32} />
+              {unReadNotifications > 0 && <span className="text-xs font-semibold">{unReadNotifications}</span>}
+              <Tooltip
                   title={"Open inbox"}
                   status={IshoverBell}
-                ></Tooltip>
-              </button>
-              {ShowBellPop &&
+              ></Tooltip>
+            </button>
+            {ShowBellPop &&
                 <div className="absolute top-14 right-0">
-                  <NotificationsPopup setShowBellPop={setShowBellPop} />
+                    <NotificationsPopup setShowBellPop={setShowBellPop} />
                 </div>}
-            </div>
+          </div>
+
+
 
             <div className="relative "
 
