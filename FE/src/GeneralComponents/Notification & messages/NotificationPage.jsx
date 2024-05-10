@@ -11,6 +11,9 @@ const NotificationPage = () => {
   const [notification, setNotification] = useState({ title:"" , body:" "});
   const [isRead, setIsRead] = useState(false);
 
+
+
+  
   const handleClick = () => {
     setIsRead(true);
   };

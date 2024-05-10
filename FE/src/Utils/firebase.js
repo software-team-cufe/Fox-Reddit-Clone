@@ -13,8 +13,19 @@ const firebaseConfig = {
   measurementId: "G-K1SV52MJTR"
 };
 
-const app = initializeApp(firebaseConfig);
+
+if (firebase.messaging.isSupported()) {
+  // Initialize FCM and set up listeners
 const messaging = getMessaging(app); // Corrected variable name to 'messaging'
+
+  // Rest of your FCM setup code
+  // ...
+} else {
+  console.warn('FCM is not supported in this browser.');
+  // Handle the lack of FCM support (e.g., show a fallback notification system)
+}
+
+const app = initializeApp(firebaseConfig);
 
 export const requestPermission = () => {
   console.log("notification page");
@@ -44,6 +55,9 @@ requestPermission();
 
 export const onMessageListener = () =>
   new Promise((resolve) => {
+    if (firebase.messaging.isSupported()) {
+  // Initialize FCM and set up listeners
+
     onMessage(messaging, async (payload) => {
       // Request permission for notifications
       const permission = await Notification.requestPermission();
@@ -69,6 +83,13 @@ export const onMessageListener = () =>
 
       resolve(payload);
     });
+
+  // Rest of your FCM setup code
+  // ...
+} else {
+  console.warn('FCM is not supported in this browser.');
+  // Handle the lack of FCM support (e.g., show a fallback notification system)
+}
   });
 
 export const appFirestore = getFirestore(app);
