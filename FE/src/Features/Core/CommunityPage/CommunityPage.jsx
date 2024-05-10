@@ -72,9 +72,9 @@ export default function CommunityPage() {
   const[joining, setJoining] = useState(false);
   const searchRedux = useSelector(state => state.search);
 
-
   //to fetch the community data from the server and use them
-  const fetchCommunity = useCallback(async () => {
+  useEffect (() => {
+    setLoading(true);
     const storedData = JSON.parse(localStorage.getItem(`comm${community}Storage`));
     if (storedData) {
       const {data: storedComm, loggedIn} = storedData; // Remove JSON.parse here
@@ -85,7 +85,7 @@ export default function CommunityPage() {
       }
     }
     if (user == null) {
-      await userAxios.get(`/${community}`)
+       userAxios.get(`/${community}`)
         .then((response) => {
 
           let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
@@ -126,7 +126,7 @@ export default function CommunityPage() {
     }
     else {
       let joinedComms = 0;
-      await userAxios.get(`/subreddits/mine/member`)
+       userAxios.get(`/subreddits/mine/member`)
         .then((response) => {
           let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
           if (!(recent.includes(community))) {
@@ -145,7 +145,7 @@ export default function CommunityPage() {
         })
 
       let moddedComms = 0;
-      await userAxios.get(`/subreddits/mine/moderator`)
+       userAxios.get(`/subreddits/mine/moderator`)
         .then((response) => {
           const mods = response?.data?.communities?.map((mod) => mod.name);
           moddedComms = mods;
@@ -155,7 +155,7 @@ export default function CommunityPage() {
         })
 
       let favComms = 0;
-      await userAxios.get('/subreddits/mine/favorite')
+       userAxios.get('/subreddits/mine/favorite')
         .then((response) => {
           const favs = response?.data?.communties?.map((fav) => fav.name);
           favComms = favs;
@@ -165,7 +165,7 @@ export default function CommunityPage() {
         })
 
 
-      await userAxios.get(`/${community}`)
+       userAxios.get(`/${community}`)
         .then((response) => {
           const newcomm = {
             id: response.data.community._id,
@@ -194,18 +194,18 @@ export default function CommunityPage() {
         })
     }
     setLoading(false);
-  }, []);
+  }, [community]);
 
-  let { error } = useQuery('fetchCommunity', fetchCommunity, { refetchOnWindowFocus: false});
-
-  const fetchInitialPosts = async () => {
+  useEffect(() => {
+    if(loading) return;
+    const fetchInitialPosts = async () => {
     setFeed(true);
     if (searchRedux == "") {
       let link = `api/listing/posts/r/${commObj.name}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
       if (selected == 'Top') {
         link = link + `&t=${period}`;
       }
-      await userAxios.get(link)
+       await userAxios.get(link)
         .then((response) => {
           if (response.data.length > 0) {
             setpagedone(true);
@@ -236,7 +236,7 @@ export default function CommunityPage() {
         })
     }
     else {
-      await userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
+       await userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
         .then((response) => {
           if (response.data.subredditSearchPosts.length < limitpage) {
             setpagedone(true);
@@ -263,10 +263,9 @@ export default function CommunityPage() {
           console.error('There was an error!', error);
         });
       setFeed(false);
-    }
-  };
-
-  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period, searchRedux], fetchInitialPosts, { enabled: !loading, refetchOnWindowFocus: false });
+    }};
+    fetchInitialPosts();
+  }, [selected, period, searchRedux, community, loading]);
 
   const swtichJoinState = async () => {
     setJoining(true);

@@ -24,7 +24,7 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
   const [pagedone, setpagedone] = useState(false);
   const [currentpage, setcurrentpage] = useState(2);
   const limitpage = 5;
-  const userRedux = useSelector(state => state.user);
+  const userRedux = useSelector(state => state.user.user);
 
   useEffect(() => {
     setLoading(true);
@@ -54,7 +54,6 @@ export default function COmmentsSearchPage({ searched = "filler" }) {
     } else {
       userAxios.get(`/r/search/?q=${searched}&type=comment&page=1&limit=${limitpage}&sort=${selected}`)
       .then(response => {
-        console.log(response.data.commentsSearchResultAuth);
         let newComments = response.data.commentsSearchResultAuth.map(comment => ({
           user: {
             avatar: comment.useravatar[0],

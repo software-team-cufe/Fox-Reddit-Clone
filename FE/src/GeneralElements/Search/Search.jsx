@@ -263,7 +263,7 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
                                 {filteredPeople.length !== 0 && <> <hr className='w[80%] mx-4' /> People
                                     {filteredPeople.map((item, index) => (
                                         (
-                                            <div key={index} onClick={() => { navigator(`/user/${item.name}`) }}
+                                            <div key={index} onClick={() => { handlechange(""); navigator(`/user/${item.name}`) }}
                                                 className="hover:bg-orange-100 flex cursor-pointer p-2 hover:border-light-blue-1">
                                                 <img src={item.avatar} alt={item.name} className='w-9 h-9 rounded ' />
                                                 <div>
@@ -276,7 +276,7 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
                                 {filteredComs.length !== 0 && <> <hr className='w[80%] mx-4' /> Communities
                                     {filteredComs.map((item, index) => (
                                         (
-                                            <div key={index} onClick={() => { navigator(`/r/${item.name}`) }}
+                                            <div key={index} onClick={() => { navigator(`/r/${item.name}`);}}
                                                 className="hover:bg-orange-100 flex cursor-pointer p-2 hover:border-light-blue-1">
                                                 <img src={item.icon} alt={item.name} className='w-9 h-9 rounded ' />
                                                 <div>
