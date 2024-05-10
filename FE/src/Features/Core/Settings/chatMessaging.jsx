@@ -48,7 +48,7 @@ export default function ChatMessaging() {
                     <h4 className="text-gray-400" role="TextOfButtons">Mark all conversations and invites as read.</h4>
                 </div>
                 <div className="w-auto" role="TextOfButtons">
-                    <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
+                    <button id="markAllMessagesAsRead" data-dropdown-toggle="dropdown"
                         className="text-black dark:text-blue-500 w-auto focus:ring-blue-300 font-medium border-solid border-2 border-sky-500 rounded-lg text-sm px-5 py-2.5 text-center 
                         inline-flex gap-5 items-center bg-transparent dark:bg-transparent dark:hover:bg-blue-200 dark:focus:ring-blue-800 rounded-3xl" type="button"
                         role="markButton" onClick={handleUnReadmessages}>

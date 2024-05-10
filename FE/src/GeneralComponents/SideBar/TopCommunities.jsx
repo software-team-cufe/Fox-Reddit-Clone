@@ -105,7 +105,7 @@ export default function TopCommunities() {
                         <img src={comm.icon} alt={comm.name} className="w-12 h-12 border-2 border-gray-400 rounded-full"/>
                     </div>
                     <div className='text-center items-center'>   
-                        <a className='font-bold truncate ' href={`/r/${forShow[index].name}`}>
+                        <a className='font-bold truncate ' href={`/r/${forShow[index].name}`} id={`commName${index}`}>
                         r/{comm.name}
                         </a>
                         <div className='text-xs ml'>{comm.count} Members</div>

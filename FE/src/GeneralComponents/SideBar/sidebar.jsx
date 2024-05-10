@@ -213,7 +213,7 @@ if(userStore.getState().user.user != null){
                      <>
                         <hr className="border-t-1 border-gray-400 dark:border-gray-600 w-full"></hr>
                         <button
-                           id="dropdownDefaultButton"
+                           id="dropdownDefaultButtonForModerator"
                            onClick={functionToExecute}
                            data-dropdown-toggle="dropdown"
                            className="text-gray w-full bg-white-700 hover:bg-gray-200 txt-large focus:outline-none justify-between font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
@@ -224,16 +224,16 @@ if(userStore.getState().user.user != null){
                         </button>
                         <div>
                            <ul>
-                              <li className="flex items-center px-1 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400">
-                                 <Link to={"/modmail"} className="flex items-center" >
+                              <li className="flex items-center px-1 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400" id="modMail">
+                                 <Link to={"/modmail"} className="flex items-center" id="linkToModMail">
                                     <Mail className="ml-2 w-4 h-4" />
-                                    <span className=" px-2 py-2 text-gray-800">Mod mail</span>
+                                    <span className=" px-2 py-2 text-gray-800" id="textToModMail">Mod mail</span>
                                  </Link>
                               </li>
-                              <li className="flex items-center px-1 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400 ">
-                                 <Link to={"/r/mod"} className="flex items-center" >
+                              <li className="flex items-center px-1 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400" id="rMod">
+                                 <Link to={"/r/mod"} className="flex items-center" id="linkToRMod">
                                     <Table className="ml-2 w-4 h-4" />
-                                    <span className=" px-2 py-2 text-gray-800">r/mod</span>
+                                    <span className=" px-2 py-2 text-gray-800" id="textToRMod">r/mod</span>
                                  </Link>
                               </li>
                               {tempForClear?.map((subreddit, index) => {
@@ -242,7 +242,8 @@ if(userStore.getState().user.user != null){
                                     <a
                                        href={`/r/${subreddit.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
-                                       key={index}>
+                                       key={index}
+                                       id={`subreddit.name${index}`}>
                                        <img src={subreddit.icon} className="rounded-full w-7 my-auto h-7" />
 
                                        {subreddit.name}
@@ -259,7 +260,7 @@ if(userStore.getState().user.user != null){
 
                   <li>
                      <button
-                        id="dropdownDefaultButton"
+                        id="dropdownDefaultButtonForRecentComunnities"
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
                         className="text-gray w-full bg-white-700 hover:bg-gray-200  focus:outline-none justify-between font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
@@ -269,7 +270,7 @@ if(userStore.getState().user.user != null){
                         <ChevronDown className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                      </button>
 
-                     <div id="dropdown" className="">
+                     <div id="dropdownForRecentcommunities" className="">
                         <ul className="" aria-labelledby="dropdownDefaultButton">
                            {/*here is where the ui print the subreddits i just entered */}
                            <li>
@@ -277,7 +278,8 @@ if(userStore.getState().user.user != null){
                                  <a
                                     href={`/r/${subreddit}`}
                                     className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
-                                    key={index}>
+                                    key={index}
+                                    id={`subreddit.name${index}`}>
                                     <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7" />
 
                                     {subreddit}
@@ -293,7 +295,7 @@ if(userStore.getState().user.user != null){
 
                   <li>
                      <button
-                        id="dropdownDefaultButton1"
+                        id="dropdownDefaultButtonForMyCommunities"
                         onClick={functionToExecute}
                         data-dropdown-toggle="dropdown"
                         className="text-gray w-full bg-white-700 hover:bg-gray-200 justify-between focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700 "
@@ -327,7 +329,8 @@ if(userStore.getState().user.user != null){
                                     <a
                                        href={`/r/${commun.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
-                                       key={index}>
+                                       key={index}
+                                       id="subreddit.name">
                                        <img src={commun.icon} className="rounded-full w-7 my-auto h-7" />
                                        {commun.name}
                                     </a>
@@ -365,6 +368,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.redditinc.com/"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 id="aboutReddit"
                               >
                                  About Reddit
                               </a>
@@ -373,6 +377,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://accounts.reddit.com/adsregister?dest=https%3A%2F%2Fads.reddit.com%2F&referrer=https%3A%2F%2Fwww.reddit.com%2F&utm_source=web3x_consumer&utm_name=left_nav_cta"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 id="advertise"
                               >
                                  Advertise
                               </a>
@@ -381,6 +386,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://support.reddithelp.com/hc/en-us"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 id="help"
                               >
                                  Help
                               </a>
@@ -389,6 +395,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.redditinc.com/blog"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 id="blog"
                               >
                                  Blog
                               </a>
@@ -397,6 +404,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.redditinc.com/careers"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 id="career"
                               >
                                  career
                               </a>
@@ -405,6 +413,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.redditinc.com/press"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
+                                 id="press"
                               >
                                  Press
                               </a>
@@ -416,6 +425,7 @@ if(userStore.getState().user.user != null){
                               <Link
                                  to="./community"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
+                                 id="communities"
                               >
                                  <i className="fa-solid fa-users-between-lines w-5 h-5"></i>
                                  <span className="px-2 py-2 text-gray-800" >Communities</span>
@@ -427,6 +437,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.reddit.com/posts/2024/global/"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
+                                 id="bestOfReddit"
                               >
                                  <Sparkles className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">Best of Reddit</span>
@@ -437,6 +448,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.reddit.com/topics/a-1/"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
+                                 id="topics"
                               >
                                  <LayoutGrid strokeWidth={1.5} className="w-5 h-5" />
                                  <span className="px-2 py-2 text-gray-800">Topics</span>
@@ -449,6 +461,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.redditinc.com/policies/content-policy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
+                                 id="contentPolicy"
                               >
                                  <Siren className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">content policy</span>
@@ -458,6 +471,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.reddit.com/policies/privacy-policy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
+                                 id="privacyPolicy"
                               >
                                  <BookLock className="w-5 h-5" />
                                  <span className="px-2 py-2 text-gray-800">Privacy policy</span>
@@ -468,6 +482,7 @@ if(userStore.getState().user.user != null){
                               <a
                                  href="https://www.redditinc.com/policies/user-agreement"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
+                                 id="userAgreement"
                               >
                                  <Handshake className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">User agreement</span>
