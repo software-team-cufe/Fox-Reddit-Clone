@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ArrowDownCircle, ArrowLeftCircle, ArrowRightCircle, ArrowUpCircle, MessageCircle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import "react-image-gallery/styles/css/image-gallery.css";
+import ImageGallery from "react-image-gallery";
 import { userAxios } from "@/Utils/UserAxios";
 import { toast } from 'react-toastify'
 import { userStore } from "../../hooks/UserRedux/UserStore";
@@ -42,7 +43,7 @@ function PollComponent({ polls, postId }) {
 }
 
 export default function PostComponent({ refetch, role, post, className, viewMode = false }) {
-    const [isOpen, setOpen] = useState(false);
+    const [isSpoiler, setSpoiler] = useState(post?.post?.spoiler ?? post?.spoiler ?? false);
     const user = userStore.getState().user.user;
     const params = useParams();
     const [voteType, setVotesType] = useState(null);
@@ -115,7 +116,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                                 </div>
                             </div>
                         </Link>
-
+                       
                         <Link className="w-full" to={`/posts/${postObj.postId}`}>
                             <h2 className="mb-2 text-xl font-bold">{postObj.title} </h2>
                             <div className='asdasd' dangerouslySetInnerHTML={{ __html: post.textHTML }} />
@@ -123,11 +124,19 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                             <div
 
                                 className=" rounded-lg my-4 w-full bg-gray-600">
-                                <img
-                                    style={{ filter: !!postObj.spoiler ? 'blur(10px)' : "" }}
-                                    className="mx-auto max-h-[600px] lg:max-w-[800px] w-full rounded-lg my-4"
-                                    alt=""
-                                    src={postObj.thumbnail} />
+                                {
+                                    postObj.attachments?.length != null && postObj.attachments?.length != 0 &&
+                                    <img
+                                        onClick={() => {
+                                            if (postObj.spoiler) {
+                                                setSpoiler(!isSpoiler);
+                                            }
+                                        }}
+                                        style={{ filter: isSpoiler ? 'blur(10px)' : "" }}
+                                        className="mx-auto max-h-[600px] lg:max-w-[800px] w-full rounded-lg my-4"
+                                        alt=""
+                                        src={postObj.attachments[0]} />
+                                }
                             </div>
                         </Link>
                         <PollComponent postId={postObj.postId ?? params.id} polls={post?.poll} />
@@ -146,11 +155,40 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                         }
                         <PollComponent polls={postObj?.poll} postId={postObj.postId ?? params.id} />
                         {
-                            postObj.video && <div>
+                            postObj?.video && <div>
                                 <video src={postObj.video} controls />
                             </div>
                         }
+                        {(postObj?.attachments?.length != null && postObj?.attachments?.length != 0) &&
+                            <div
+                                onClick={() => {
+                                    if (postObj.spoiler) {
+                                        setSpoiler(!isSpoiler);
+                                    }
+                                }}
+                                style={{ filter: isSpoiler ? 'blur(10px)' : "" }}
+                                className=" max-w-[700px]">
+                                <ImageGallery
 
+                                    showBullets={postObj.attachments.length > 1}
+                                    renderLeftNav={(onClick, disabled) => (
+                                        <button className=" absolute z-20 top-[50%] ml-4" onClick={onClick} disabled={disabled} >
+                                            <ArrowLeftCircle className=" text-white" />
+                                        </button>
+                                    )}
+                                    renderRightNav={(onClick, disabled) => (
+                                        <button className=" absolute z-20 top-[50%] right-4" onClick={onClick} disabled={disabled} >
+                                            <ArrowRightCircle className=" text-white" />
+                                        </button>
+                                    )}
+                                    showThumbnails={false} showPlayButton={false} showFullscreenButton={false} items={postObj.attachments.map((e, idx) => {
+                                        return {
+                                            original: e,
+                                            thumbnail: e,
+                                        };
+                                    })} />
+                            </div>
+                        }
                     </div>
             }
 

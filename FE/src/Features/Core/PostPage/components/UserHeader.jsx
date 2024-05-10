@@ -39,7 +39,7 @@ export default function UserHeader({ post }) {
     } catch (ex) { }
     toast.dismiss(id);
   };
-  
+
   const handelHide = async () => {
     const id = toast.loading("Please wait");
     try {
@@ -72,6 +72,8 @@ export default function UserHeader({ post }) {
   };
 
   const userId = userStore.getState().user.user?._id;
+  console.log({ post: post.post.userID });
+  console.log({ user: userId });
   return (
     <div className=" flex items-center justify-between gap-3">
       <ReportPostModal isOpen={isOpen} closeModal={() => setOpen(false)} />
@@ -120,7 +122,7 @@ export default function UserHeader({ post }) {
             {/* Sort options list mapped*/}
             <Menu.Items className="absolute right-0 mt-2 w-32 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               {
-                (post.userID == userId && userId != null) && <>
+                (post?.post?.userID == userId && userId != null) && <>
                   <Menu.Item>
                     <Link to={`/submit/${params.id}`}>
                       <button id="icon-edit" onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
