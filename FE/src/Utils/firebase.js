@@ -23,7 +23,6 @@ const messaging = getMessaging(app); // Corrected variable name to 'messaging'
 } catch (error){
   console.warn('FCM is not supported in this browser.');
   // Handle the lack of FCM support (e.g., show a fallback notification system)
->>>>>>> 962d8078993c485e5305d35b9801c329fab62b3d
 }
 
 const app = initializeApp(firebaseConfig);
@@ -56,11 +55,8 @@ requestPermission();
 
 export const onMessageListener = () =>
   new Promise((resolve) => {
-<<<<<<< HEAD
-    if (firebase.messaging.isSupported()) {
-=======
+
     try{
->>>>>>> 962d8078993c485e5305d35b9801c329fab62b3d
   // Initialize FCM and set up listeners
 
     onMessage(messaging, async (payload) => {
@@ -91,13 +87,9 @@ export const onMessageListener = () =>
 
   // Rest of your FCM setup code
   // ...
-<<<<<<< HEAD
-} else {
-  console.log('FCM is not supported in this browser.');
-=======
+
 } catch (error){
   console.warn('FCM is not supported in this browser.');
->>>>>>> 962d8078993c485e5305d35b9801c329fab62b3d
   // Handle the lack of FCM support (e.g., show a fallback notification system)
 }
   });
