@@ -14,15 +14,10 @@ const firebaseConfig = {
 };
 
 
-if (firebase.messaging.isSupported()) {
-  // Initialize FCM and set up listeners
-const messaging = getMessaging(app); // Corrected variable name to 'messaging'
-
-  // Rest of your FCM setup code
-  // ...
-} else {
-  console.warn('FCM is not supported in this browser.');
-  // Handle the lack of FCM support (e.g., show a fallback notification system)
+try {
+  const messaging = getMessaging(app); // Corrected variable name to 'messaging'
+} catch (error) {
+  console.log(error);
 }
 
 const app = initializeApp(firebaseConfig);
@@ -87,7 +82,7 @@ export const onMessageListener = () =>
   // Rest of your FCM setup code
   // ...
 } else {
-  console.warn('FCM is not supported in this browser.');
+  console.log('FCM is not supported in this browser.');
   // Handle the lack of FCM support (e.g., show a fallback notification system)
 }
   });
