@@ -87,7 +87,7 @@ void main() {
       // Check if initial UI contains necessary widgets
       expect(find.text('Next'), findsOneWidget);
       expect(find.text('Title'), findsOneWidget);
-      expect(find.text('body text(optional)'), findsOneWidget);
+      expect(find.text('body text'), findsOneWidget);
       expect(find.byType(MyTextInputWidget), findsNWidgets(2));
     });
 
