@@ -192,7 +192,7 @@ const ModCard = () => {
     const data = {
       nickname,
       currentNickname,
-      description,
+      communityDescription,
     };
   
     const res = await userAxios.patch(`/${community}/api/edit_details`, data);
@@ -214,7 +214,7 @@ const ModCard = () => {
     const deletedata = {
       nickname: '',
       currentNickname: '',
-      description: '',
+      communityDescription: '',
     };
   
     const res = await userAxios.patch(`/${community}/api/edit_details`, deletedata);
