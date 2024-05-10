@@ -11,11 +11,10 @@ const NotificationPage = () => {
   const [notification, setNotification] = useState({ title:"" , body:" "});
   const [isRead, setIsRead] = useState(false);
 
-if (firebase.messaging.isSupported()) {
-  // Initialize FCM and set up listeners
 
-  const messaging = firebase.messaging();
-const handleClick = () => {
+
+  
+  const handleClick = () => {
     setIsRead(true);
   };
   const navigator = useNavigate();
@@ -87,14 +86,6 @@ const handleClick = () => {
   
       fetchNotifications();
     }, []);
-  
-} else {
-  console.warn('FCM is not supported in this browser.');
-}
-
-
-
-  
 
 
   return (

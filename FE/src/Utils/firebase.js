@@ -13,11 +13,24 @@ const firebaseConfig = {
   measurementId: "G-K1SV52MJTR"
 };
 
+<<<<<<< HEAD
 
 
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app); // Corrected variable name to 'messaging'
+||||||| 6d92f39a... https fcm error
+  const messaging = firebase.messaging();
+
+  // Rest of your FCM setup code
+  // ...
+} else {
+  console.warn('FCM is not supported in this browser.');
+}
+=======
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app); // Corrected variable name to 'messaging'
+>>>>>>> parent of 6d92f39a... https fcm error
 
 export const requestPermission = () => {
   console.log("notification page");
