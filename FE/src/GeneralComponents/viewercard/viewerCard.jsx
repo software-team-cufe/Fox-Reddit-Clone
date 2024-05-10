@@ -11,6 +11,7 @@ import  { useEffect } from 'react';
 
 function CardOptionsMenu() {  //prop takes the display to use it outside the component
     const username = useSelector(state => state.user.user.username);
+
     const handleBlock = async () => {
         try {
             const response = await userAxios.post('/api/block_user', { username , type: 'unblock' });
@@ -21,6 +22,9 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
             console.log(error);
         }
     }
+
+ 
+ 
     return (
         <Menu as="div" className="relative inline-block text-left">
             {/* dropdown menu displaying currently selected display*/}
@@ -81,28 +85,42 @@ export default function ViewerCard() {
     const username = useSelector(state => state.user.user.username);
     const [numOfPost, setPost] = useState(0);
     const [numOfComment, setComment] = useState(0);
-    const handleFollow = async() => {
-        try{
-           const res= await userAxios.post('api/follow', {username});
-           console.log(res);
-           console.log("followed")
-        }
-        catch (error) {
-            console.log(error)
-        }
-
+    const [communities, setCommunities] = useState([]);
+   
+const handleFollow = async () => {
+    try {
+      const res = await userAxios.post('api/follow', { username });
+      console.log(res);
+      console.log("followed");
+      setCLicked(true);
+      localStorage.setItem('followAction', 'followed');
+    } catch (error) {
+      console.log(error);
     }
-    const handleUnfollow = async() => {
-        try{
-           const response= await userAxios.post('api/unfollow', {username});
-           console.log(response);
-           console.log("unfollowed")
-        }
-        catch (error) {
-            console.log(error)
-        }
-
+  }
+  
+  const handleUnfollow = async () => {
+    try {
+      const response = await userAxios.post('api/unfollow', { username });
+      console.log(response);
+      console.log("unfollowed");
+      setCLicked(false);
+      localStorage.setItem('followAction', 'unfollowed');
+    } catch (error) {
+      console.log(error);
     }
+  }
+  
+  useEffect(() => {
+    const storedAction = localStorage.getItem('followAction');
+    if (storedAction === 'followed') {
+        setCLicked(true);
+    } else if (storedAction === 'unfollowed') {
+      setCLicked(false);
+    }
+  }, []);
+  
+
      useEffect(() => {
         const fetchCommentPosts = async () => {
             try {
@@ -120,10 +138,24 @@ export default function ViewerCard() {
 
         fetchCommentPosts();
      },[])
-    
+     
+     useEffect(() => { 
+        const getCommunities = async () => {
+      try {
+        const response = await userAxios.get(`/subreddits/${viewer}/creator`);
+        console.log("creator");
+        console.log(response.data.communities.map(comm => ({ name: comm.name, memberCount: comm.memberCount, icon: comm.icon })));
+        setCommunities(response.data.communities.map(comm => ({ name: comm.name, memberCount: comm.memberCount, icon: comm.icon })));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCommunities();
+  }, []);
 
     return (
-        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl md:block hidden pb-3 w-[340px]">
+        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block overflow-y-auto">
 
          
             <div className='flex flex-row justify-between items-center mx-3 mt-3'>
@@ -160,6 +192,7 @@ export default function ViewerCard() {
                        <p className=' text-sm text-center'>chat</p>
                   </button>
                  </div>
+                 
                    <div className='text-xs text-gray-500 '>blablablablablablablablablbla
          
                    </div>
@@ -210,33 +243,10 @@ export default function ViewerCard() {
                </button>
             </div>
          
-
-            <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
-           <div className='flex flex-col'>
-              <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">MODERATOR OF THESE COMMUNITIES</h1>
-              <div className=' flex flex-row space-x-2 hover:bg-gray-100 h-12 '>
-              <button  className=' flex flex-row w-full justify-between hover:bg-gray-100 '>
-                 <div className='flex flex-row space-x-3 ml-6 my-3'>  
-                    <svg className="text-blue-600 w-7 h-7"
-                     xmlns="http://www.w3.org/2000/svg" width="24"  height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    <div className=' flex flex-col  '>
-                       <span className=' text-xs'>r/communityname</span>     
-                       <span className=' text-xs text-gray-400'> 10K members</span>                
-                    </div>
-                 </div>
             
-                 <div>
-                    <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300  w-[55px] h-7  px-2  text-black text-xs font-semibold '> Joined</button>
-                 </div>
-             </button>      
-           </div>
-           </div>
-    
            <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
          
-           <div className=' mx-3'>
+           <div className=' mx-3 my-4'>
              <h1 className=" mb-4 text-xs text-gray-500 font-semibold">TROPHY CASE</h1>
               <div className=" flex flex-row space-x-1"> 
                 <svg className="text-yellow-300 w-7 h-7"
@@ -244,6 +254,32 @@ export default function ViewerCard() {
                 <p  className=' text-sm py-1'>  One-Year Club</p>
               </div>
            </div>
+
+            <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700" />
+           <div className='flex flex-col h-fit'>
+              <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">MODERATOR OF THESE COMMUNITIES</h1>
+              <div className='flex flex-col hover:bg-gray-100 h-12'>
+              {communities.map((community, index) => (
+                  <a key={index} href={`/r/${community.name}`} className='flex flex-row w-full justify-between hover:bg-gray-100'>
+                      <div className='flex flex-row space-x-3 ml-6 my-3'>
+                          <img src={community.icon} alt={community.name} className="w-7 h-7" />
+                          <div className='flex flex-col'>
+                              <div className='flex flex-row'>
+                                  <div className='flex flex-row'>
+                                      <span className='text-xs'>r/{community.name}</span>
+                                  </div>
+                              </div>
+                              <span className='text-xs text-gray-400'>{community.memberCount} members</span>
+                          </div>
+                      </div>
+                      <div>
+                          <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[47px] h-7 px-2 text-black text-xs font-semibold'>Join</button>
+                      </div>
+                  </a>
+              ))}
+             </div>
+           </div>
+    
            
 
         </div>
