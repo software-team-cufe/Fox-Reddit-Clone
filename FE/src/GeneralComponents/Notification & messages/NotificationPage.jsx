@@ -11,7 +11,11 @@ const NotificationPage = () => {
   const [notification, setNotification] = useState({ title:"" , body:" "});
   const [isRead, setIsRead] = useState(false);
 
-  const handleClick = () => {
+if (firebase.messaging.isSupported()) {
+  // Initialize FCM and set up listeners
+
+  const messaging = firebase.messaging();
+const handleClick = () => {
     setIsRead(true);
   };
   const navigator = useNavigate();
@@ -49,10 +53,7 @@ const NotificationPage = () => {
      unsubscribe.catch((err) => console.log(err));
    };
    }, []);
-if (firebase.messaging.isSupported()) {
-  // Initialize FCM and set up listeners
 
-  const messaging = firebase.messaging();
 
    const fetchToken = async () => {
     try {
@@ -61,19 +62,13 @@ if (firebase.messaging.isSupported()) {
       const response = await userAxios.post('/api/auth/login/fcmtoken', { fcmtoken: currentToken });
       console.log(response.data);
       console.log("current",currentToken);
-       fetchToken();
+
     } catch (error) {
       console.log(error);
     }
   }
-} else {
-  console.warn('FCM is not supported in this browser.');
-}
-
-
   
-  
- 
+  fetchToken();
 
    
     useEffect(() => {
@@ -92,6 +87,14 @@ if (firebase.messaging.isSupported()) {
   
       fetchNotifications();
     }, []);
+  
+} else {
+  console.warn('FCM is not supported in this browser.');
+}
+
+
+
+  
 
 
   return (
