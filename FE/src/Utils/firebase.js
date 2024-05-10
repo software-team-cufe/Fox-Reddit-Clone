@@ -14,13 +14,13 @@ const firebaseConfig = {
 };
 
 
-if (firebase.messaging.isSupported()) {
+try{
   // Initialize FCM and set up listeners
 const messaging = getMessaging(app); // Corrected variable name to 'messaging'
 
   // Rest of your FCM setup code
   // ...
-} else {
+} catch (error){
   console.warn('FCM is not supported in this browser.');
   // Handle the lack of FCM support (e.g., show a fallback notification system)
 }
