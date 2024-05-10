@@ -14,7 +14,7 @@ function PollComponent({ polls, postId }) {
     if (polls?.length == 0 || polls == null) return <></>;
     const handelVote = async () => {
         const val = document.getElementById(`poll-option-${postId}`).value;
-      
+
         if (val == null || val == "") return;
         const id = toast.loading("Please wait");
         try {
@@ -71,26 +71,28 @@ export default function PostComponent({ refetch, role, post, className, viewMode
                 postID: postObj.postId ?? params.id,
                 type: upvote ? 1 : -1,
             });
-            if (voteType == null) {
-                setPost(prev => { return { ...prev, votesCount: upvote ? prev.votesCount + 1 : prev.votesCount - 1 } })
-                setVotesType(upvote ? 1 : -1)
+            setPost(prev => { return { ...prev, votesCount: res.data.value } })
+            setVotesType(upvote ? 1 : -1)
+            // if (voteType == null) {
+            //     setPost(prev => { return { ...prev, votesCount: upvote ? prev.votesCount + 1 : prev.votesCount - 1 } })
+            //     setVotesType(upvote ? 1 : -1)
 
-            }
-            if (upvote && voteType == 1) {
-                setPost(prev => { return { ...prev, votesCount: prev.votesCount - 1 } });
-                setVotesType(null);
-            } else if (!upvote && voteType == -1) {
-                setPost(prev => { return { ...prev, votesCount: prev.votesCount + 1 } });
-                setVotesType(null);
-            }
-            if (upvote && voteType == -1) {
-                setPost(prev => { return { ...prev, votesCount: prev.votesCount + 2 } });
-                setVotesType(1);
-            }
-            if (!upvote && voteType == 1) {
-                setPost(prev => { return { ...prev, votesCount: prev.votesCount - 2 } });
-                setVotesType(-1);
-            }
+            // }
+            // if (upvote && voteType == 1) {
+            //     setPost(prev => { return { ...prev, votesCount: prev.votesCount - 1 } });
+            //     setVotesType(null);
+            // } else if (!upvote && voteType == -1) {
+            //     setPost(prev => { return { ...prev, votesCount: prev.votesCount + 1 } });
+            //     setVotesType(null);
+            // }
+            // if (upvote && voteType == -1) {
+            //     setPost(prev => { return { ...prev, votesCount: prev.votesCount + 2 } });
+            //     setVotesType(1);
+            // }
+            // if (!upvote && voteType == 1) {
+            //     setPost(prev => { return { ...prev, votesCount: prev.votesCount - 2 } });
+            //     setVotesType(-1);
+            // }
         } catch (ex) { }
 
         toast.dismiss(id);
