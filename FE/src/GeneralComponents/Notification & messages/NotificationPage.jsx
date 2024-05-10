@@ -49,7 +49,10 @@ const NotificationPage = () => {
      unsubscribe.catch((err) => console.log(err));
    };
    }, []);
+if (firebase.messaging.isSupported()) {
+  // Initialize FCM and set up listeners
 
+  const messaging = firebase.messaging();
 
    const fetchToken = async () => {
     try {
@@ -58,13 +61,19 @@ const NotificationPage = () => {
       const response = await userAxios.post('/api/auth/login/fcmtoken', { fcmtoken: currentToken });
       console.log(response.data);
       console.log("current",currentToken);
-
+       fetchToken();
     } catch (error) {
       console.log(error);
     }
   }
+} else {
+  console.warn('FCM is not supported in this browser.');
+}
+
+
   
-  fetchToken();
+  
+ 
 
    
     useEffect(() => {
