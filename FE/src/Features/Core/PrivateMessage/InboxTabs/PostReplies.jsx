@@ -375,7 +375,7 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                             </button>
                         ))}
                         <br />
-                        <button onClick={() => { setReportPop(false); setDoneReportPop(true); }}
+                        <button id="nexttttt" onClick={() => { setReportPop(false); setDoneReportPop(true); }}
                             className='p-2 bg-[#935226ef] text-white
                                      rounded-full absolute bottom-3 right-4 hover:bg-[#edc6b2] 
                                       hover:text-slate-900 disabled:bg-gray-300 disabled:text-white'
@@ -429,7 +429,7 @@ function PostReplies({ DiffTime, setUnreadAtIndex }) {
                         </div>
                         <hr />
                         <br />
-                        <button onClick={() => { setDoneReportPop(false); SendReport(); }}
+                        <button id="Submitssssss" onClick={() => { setDoneReportPop(false); SendReport(); }}
                             className='p-2 bg-[#935226ef] text-white
                                      rounded-full absolute bottom-3 right-4 hover:bg-[#edc6b2] 
                                       hover:text-slate-900 disabled:bg-gray-300 disabled:text-white'>

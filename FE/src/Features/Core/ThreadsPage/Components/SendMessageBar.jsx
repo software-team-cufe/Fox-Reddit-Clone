@@ -37,7 +37,7 @@ export default function SendMessageBar() {
 
             </div>
             <div className="ml-6">
-                <button type='submit' className="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 hover:bg-gray-300 text-indigo-800 text-white">
+                <button id='send-msg' type='submit' className="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 hover:bg-gray-300 text-indigo-800 text-white">
                     <svg
                         className="w-5 h-5 transform rotate-90 -mr-px"
                         fill="none"

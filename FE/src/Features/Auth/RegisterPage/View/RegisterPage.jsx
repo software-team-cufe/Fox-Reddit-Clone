@@ -98,10 +98,10 @@ export default function RegisterPage({ }) {
                                     Login
                                 </Link>
                             </p>
-                            <Button role="register-btn" className=" w-full" loading={loading} disabled={loading} onClick={register} >
+                            <Button id="register-btn" role="register-btn" className=" w-full" loading={loading} disabled={loading} onClick={register} >
                                 Create account
                             </Button>
-                            <button type="button" onClick={handelContinueWithGoogle} className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
+                            <button id="register-btn-google" type="button" onClick={handelContinueWithGoogle} className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
                                 <div className=" w-4">
                                     <GoogleIcon />
                                 </div>

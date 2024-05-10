@@ -33,13 +33,13 @@ const EditedPage = () => {
     
             <Menu.Items className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <Menu.Item className="px-3 border-b-gray-300 border-b">
-                    <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                    <button id="newest-first" className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                      
                       <p> Newest First</p>
                     </button>
                 </Menu.Item>
                <Menu.Item className="px-3 border-b-gray-300 border-b">
-                   <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                   <button id="oldest-first" className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                                      
                    <p> Oldest First</p>
                    </button>
@@ -71,25 +71,25 @@ const EditedPage = () => {
    
            <Menu.Items className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                <Menu.Item className="px-3 border-b-gray-300 border-b">
-                   <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                   <button id="post-comments" className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                     
                      <p> Posts And Comments </p>
                    </button>
                </Menu.Item>
               <Menu.Item className="px-3 border-b-gray-300 border-b">
-                  <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                  <button id="posts-btn" className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                                     
                   <p> Posts</p>
                   </button>
               </Menu.Item>
               <Menu.Item className="px-3 border-b-gray-300 border-b">
-                  <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                  <button id="comments-btn" className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                                 
                     <p> Comments</p>
                   </button>
                </Menu.Item>
                <Menu.Item className="px-3 border-b-gray-300 border-b">
-                   <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                   <button id="live-chat-msgs" className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                      <p> Live Chat Messages</p>
                    </button>
                </Menu.Item>
@@ -126,14 +126,14 @@ const EditedPage = () => {
      
              <Menu.Items className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                  <Menu.Item className="px-3 border-b-gray-300 border-b">
-                     <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                     <button id="card" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                        <svg className="w-6 h-6 rotate-[90deg]"
                         xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="4" y="4" width="16" height="16" rx="2" />  <line x1="12" y1="4" x2="12" y2="20" /></svg>
                        <p> Card </p>
                      </button>
                  </Menu.Item>
                 <Menu.Item className="px-3 border-b-gray-300 border-b">
-                    <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                    <button id="icon-1" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                     <svg className="text-gray-500 w-6 h-6 rotate-[90deg]"
                     xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
@@ -143,7 +143,7 @@ const EditedPage = () => {
                     </button>
                 </Menu.Item>
                 <Menu.Item className="px-3 border-b-gray-300 border-b">
-                    <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+                    <button id="icon-2" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                        <svg className="text-gray-500 w-6 h-6"
                         xmlns="http://www.w3.org/2000/svg" width="24"  height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
@@ -165,7 +165,7 @@ const EditedPage = () => {
      <Menu as="div" className="relative inline-block text-left  float-right">
    
      <div>
-       <Menu.Button className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white p-2 text-sm text-black font-semibold  flex-row">
+       <Menu.Button id="icon-3" className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white p-2 text-sm text-black font-semibold  flex-row">
        <svg className="text-gray-400 w-7 h-7 self-center"
        xmlns="http://www.w3.org/2000/svg" width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="1.5"  strokeLinecap="round"  strokeLinejoin="round">  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /></svg>
          <svg className="w-5 h-5 text-gray-500 self-center"
@@ -185,42 +185,42 @@ const EditedPage = () => {
 
      <Menu.Items className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
          <Menu.Item className="px-3 border-b-gray-300 border-b">
-             <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+             <button id="icon-5" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                  <p> Spam Filtered </p>
              </button>
          </Menu.Item>
         <Menu.Item className="px-3 border-b-gray-300 border-b">
-            <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+            <button id="HasReports" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                        
                <p> Has Reports</p>
             </button>
         </Menu.Item>
         <Menu.Item className="px-3 border-b-gray-300 border-b">
-            <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+            <button id="SelfPosts" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                   
                 <p> Self Posts</p>
             </button>
          </Menu.Item>
          <Menu.Item className="px-3 border-b-gray-300 border-b">
-            <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+            <button id="PostsWithFlair" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
                
                <p> Posts With Flair</p>
             </button>
          </Menu.Item>
          <Menu.Item className="px-3 border-b-gray-300 border-b">
-             <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+             <button id="Postsssssssssssss" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
             
              <p> Posts</p>
             </button>
          </Menu.Item>
          <Menu.Item className="px-3 border-b-gray-300 border-b">
-            <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+            <button id="Commentssssssssss" className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
         
              <p> Comments</p>
             </button>
           </Menu.Item>
           <Menu.Item className="px-3 border-b-gray-300 border-b">
-            <button className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
+            <button id='ChatPostssssssss' className={' text-gray-500 flex relative pr-4 h-12 py-3 gap-2 text-md font-medium hover:bg-blue-100 w-full hover:text-black'}>
       
              <p> Chat Posts</p>
             </button>

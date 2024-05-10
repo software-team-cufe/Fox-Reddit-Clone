@@ -379,7 +379,7 @@ export default function FeedSettings() {
                         </div>
 
                         <div role="toggleButton">
-                        <Switch id="blurringtoggle" 
+                        <Switch id="communityThemeToggle" 
                             checked={communityTheme}
                             onChange={handleToggleInFeedCommunityTheme}
                             className={`${communityTheme ? 'bg-blue-900' : 'bg-gray-300'}
@@ -400,7 +400,7 @@ export default function FeedSettings() {
                             <div className="text-gray-400 text-wrap text-xs" role="TextOfButtons">
                                 Choose how you would like content organized in communities you visit. This will not affect global feeds such as Home, or Popular.
                             </div></div>
-                            <Dropdown secondOrFirst={changeContent}/>
+                            <Dropdown id="chooseContentSort" secondOrFirst={changeContent}/>
                         </div>
                     </div>
 

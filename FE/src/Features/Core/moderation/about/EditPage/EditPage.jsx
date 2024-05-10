@@ -55,7 +55,7 @@ export default function EditPage() {
         <div className='w-full'>
             <div className='flex items-center justify-between'>
                 <h2 className='my-4 mx-8 text-xl font-bold'>Post and Comment settings</h2>
-                <button onClick={submitData} className=' rounded-full w-fit bg-blue-500 px-4 py-2 text-white'>
+                <button id="save-changes-edit-page" onClick={submitData} className=' rounded-full w-fit bg-blue-500 px-4 py-2 text-white'>
                     Save Changes
                 </button>
             </div>

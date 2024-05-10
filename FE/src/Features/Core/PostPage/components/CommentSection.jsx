@@ -56,7 +56,7 @@ export default function CommentSection({ comments }) {
         "commentText": comm,
         "postID": params.id,
       },);
-      setComments([...commentts, res2.data])
+      // setComments([...commentts, res2.data])
     } catch (ex) { }
     toast.dismiss(id);
   };

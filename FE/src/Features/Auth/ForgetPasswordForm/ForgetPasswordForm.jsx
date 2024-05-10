@@ -80,7 +80,7 @@ export default function ForgetPasswordForm() {
             Log In
           </Link>
         </div>
-        <Button disabled={loading} loading={loading} className="w-full">Email me</Button>
+        <Button id="email me" disabled={loading} loading={loading} className="w-full">Email me</Button>
       </form>
     </div>
   )

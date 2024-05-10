@@ -315,7 +315,7 @@ const addButtons = async (event) => {
          </div>
         
            <div>
-               <button onClick={() => setIsOpened(!isOpened)} className=' rounded-full border border-gray-200 bg-gray-200 w-6 h-6 flex items-center justify-center '>
+               <button  id="btn1" onClick={() => setIsOpened(!isOpened)} className=' rounded-full border border-gray-200 bg-gray-200 w-6 h-6 flex items-center justify-center '>
                  <svg className="w-5 h-5 self-center"
                   xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="1" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />  <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" /></svg>
                </button>
@@ -327,7 +327,7 @@ const addButtons = async (event) => {
                    
                          <span className='text-xl font-semibold mr-48 mt-1'> Edit community details widget </span>
                          <div>
-                         <button onClick={ ()=> setIsOpened(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
+                         <button id="btn2" onClick={ ()=> setIsOpened(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                                </svg>
@@ -382,15 +382,15 @@ const addButtons = async (event) => {
                     <div className=' flex flex-row justify-end space-x-3  mr-4'>
                     {
                       nickname && currentNickname && communityDescription ?(
-                       <button onClick={deleteDetails} className='w-[62px] text-xs rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-200'>
+                       <button  id="btn3" onClick={deleteDetails} className='w-[62px] text-xs rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-200'>
                        Delete
                      </button>
                       ) : null
                      }
-                      <button onClick={ ()=> setIsOpened(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
+                      <button  id="btn4" onClick={ ()=> setIsOpened(false)} className=' w-[57px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
                        Cancel
                        </button>
-                       <button onClick={ (event)=> {setIsOpened(false); editCommunity(event)}} className=' w-[57px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                       <button id="btn5" onClick={ (event)=> {setIsOpened(false); editCommunity(event)}} className=' w-[57px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
                         Save
                        </button>
                   </div>
@@ -436,6 +436,7 @@ const addButtons = async (event) => {
           link && buttonTitle ?(
 
             <button 
+            id="btn6"
             onClick={() => window.location.href = link}
             className='text-sm text-gray-500 hover:underline w-full  border rounded-full h-8'>
           { buttonTitle}
@@ -491,7 +492,7 @@ const addButtons = async (event) => {
                        </button>
                    </div>
              </div>
-             <button onClick={ ()=> setWidget(true)} className=" text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[35px] flex items-center justify-center hover:bg-blue-800 ">
+             <button id="btn7" onClick={ ()=> setWidget(true)} className=" text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[35px] flex items-center justify-center hover:bg-blue-800 ">
                    Edit Widgets
              </button>
                 { widget && 
@@ -857,7 +858,7 @@ const addButtons = async (event) => {
                   <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
                   <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-[460px] '>
                                          <div className=' flex flex-row justify-between m-4'>
-                                                <button onClick={ ()=> {setHandleButtons(false),setWidget(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
+                                                <button id="btn8" onClick={ ()=> {setHandleButtons(false),setWidget(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
                                                   <svg className="w-6 h-5  "
                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
@@ -867,7 +868,7 @@ const addButtons = async (event) => {
                                          
                                                <span className='text-xl font-semibold mr-80 mt-1'> Add button widget </span>
                                                <div>
-                                               <button onClick={ ()=> setHandleButtons(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
+                                               <button id="btn99" onClick={ ()=> setHandleButtons(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
                                                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                                                      </svg>
@@ -908,6 +909,7 @@ const addButtons = async (event) => {
                                           </div>
                                           <div className=' mx-4 mt-5'>
                                              <button
+                                             id="btn10"
                                              onClick={() => { setAddWidget(false), setWidget(false), setHandleButtons(false),setAddButton(true) }}
                                               className=' border-2 border-gray-400 hover:border-gray-500 rounded-2xl text-sm w-full h-9'>
                                                 Add Button
@@ -917,10 +919,10 @@ const addButtons = async (event) => {
                                             
 
                                           <div className=' flex flex-row justify-end space-x-3  mr-4 mt-6'>
-                                            <button onClick={ ()=> setHandleButtons(false)} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
+                                            <button id="btn11" onClick={ ()=> setHandleButtons(false)} className=' w-[62px] text-xs bg-gray-200 rounded-3xl text-black font-semibold h-[40px] flex items-center justify-center hover:bg-gray-300 '>
                                              Cancel
                                              </button>
-                                             <button onClick={ ()=> setHandleButtons(false)} className=' w-[62px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
+                                             <button id="btn12" onClick={ ()=> setHandleButtons(false)} className=' w-[62px] text-xs bg-blue-800 rounded-3xl text-white font-semibold h-[40px] flex items-center justify-center hover:bg-blue-800 '>
                                               Save
                                              </button>
                                         </div>
@@ -932,7 +934,7 @@ const addButtons = async (event) => {
                 <div className=' w-screen h-screen bg-slate-950 bg-opacity-30 fixed top-0 right-0 flex justify-center items-center z-40'>
                 <div className=' bg-white flex-col shadow-md rounded-xl w-[600px] h-fit '>
                                        <div className=' flex flex-row justify-between m-4'>
-                                              <button onClick={ ()=> {setAddButton(false) , setHandleButtons(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
+                                              <button id="btn13" onClick={ ()=> {setAddButton(false) , setHandleButtons(true)}} className='  rounded-full  hover:border-gray-200 hover:bg-gray-200 w-8 h-8 flex items-center justify-center mt-1'>
                                                 <svg className="w-6 h-5  "
                                                  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
@@ -942,7 +944,7 @@ const addButtons = async (event) => {
                                        
                                              <span className='text-xl font-semibold  mr-80 mt-1'> Add button  </span>
                                              <div>
-                                             <button onClick={ ()=> setAddButton(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
+                                             <button id="btn14" onClick={ ()=> setAddButton(false)} className=' mt-1 rounded-full border border-gray-200 bg-gray-200 w-8 h-8 flex items-center justify-center'>
                                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                                                    </svg>

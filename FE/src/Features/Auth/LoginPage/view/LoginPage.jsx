@@ -73,14 +73,12 @@ export default function LoginPage({ }) {
             <TextBox role="password" type="password" name="password" disabled={loading} placeholder="********" label="Password" />
             <div className=" space-y-2" >
               <p className="mt-4 text-sm text-gray-500">
-                Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>
-                  username
-                </Link> or <Link className="text-blue-700 underline text-sm" to={`/forget-password`}>
+                Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-password`}>
                   password
                 </Link>?
               </p>
               <p className="  text-sm text-gray-500">
-                New to Reddit? {" "}
+                New to Fox? {" "}
                 <Link
                   to="/register"
                   className="font-semibold hover:underline leading-6 text-indigo-600 hover:text-indigo-500"
@@ -89,10 +87,10 @@ export default function LoginPage({ }) {
                 </Link>
               </p>
             </div>
-            <Button role="login-btn" disabled={loading} loading={loading} onClick={login} className="w-full">
+            <Button id="login-btn" role="login-btn" disabled={loading} loading={loading} onClick={login} className="w-full">
               Login
             </Button>
-            <button onClick={handelContinueWithGoogle} type="button" className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
+            <button id="login-google" onClick={handelContinueWithGoogle} type="button" className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
               <div className=" w-4">
                 <GoogleIcon />
               </div>
