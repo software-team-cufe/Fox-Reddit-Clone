@@ -13,9 +13,9 @@ import SearchComponent from "../../GeneralElements/Search/Search";
 import NotificationsPopup from "./NotificationsPopup";
 export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
   ViewdInSearch, setViewdInSearch,
-  UserName, IsOnline, IsLogged ,unReadNotifications }) {
+  UserName, IsOnline, IsLogged, unReadNotifications }) {
 
-   
+
   const navigator = useNavigate();
   const listProfRef = useRef(null);
   const UserProfRef = useRef(null);
@@ -36,10 +36,10 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
 
   const handleBellClick = (e) => {
     e.preventDefault();
-    
+
     setShowBellPop(!ShowBellPop);
   };
-  
+
   //handle to use tooltip
   const handleMouseEnterAd = () => {
     setIshoverAd(true);
@@ -131,7 +131,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
   return (
     <nav className=" px-[1.5rem] z-40 w-100vl fixed  w-full h-[69px]  bg-white top-0">
       <div className="flex w-full ">
-        <button
+        <button id="open-side"
           className={`bg-white hover:bg-orange-100  lg:hidden w-8  h-10 my-2 
             rounded-full  ${path.pathname.includes('setting') ||
               path.pathname.includes('submit') ? "hidden" : " block"} `}
@@ -165,7 +165,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
               <ul ref={OpenSmRef} className=" top-10 rounded-lg flex-col sm:hidden block 
               shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                 <li>
-                  <button onClick={() => { navigator(`/user/${UserName}/posts`); setOpenSmList(false); }}
+                  <button id="profIcon1"
+                    onClick={() => { navigator(`/user/${UserName}/posts`); setOpenSmList(false); }}
                     className="bg-white    text-black h-16 py-2 px-4 rounded inline-flex items-center w-full">
                     <ProfileIcon imageSrc={ProfileImageSrc} altText={UserName} isOnline={IsOnline} />
                     <div className="flex-col flex my-2">
@@ -176,7 +177,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 </li>
 
                 <li>
-                  <button onClick={() => { setOpenSmList(false); setShowBellPop(!ShowBellPop) }}
+                  <button id="notif1"
+                    onClick={() => { setOpenSmList(false); setShowBellPop(!ShowBellPop) }}
                     className="bg-white relative  mx-4 flex min-w-8 h-10 my-2 rounded-full hover:   "
                     onMouseEnter={handleMouseEnterBell}
                     onMouseLeave={handleMouseLeaveBell}
@@ -191,7 +193,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 </li>
 
                 <li>
-                  <button
+                  <button id="sub1"
                     className="bg-white   mx-4  min-w-8 flex  h-10 my-2 rounded-full   "
                     onMouseEnter={handleMouseEnterCreate}
                     onMouseLeave={handleMouseLeaveCreate}
@@ -203,7 +205,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 </li>
                 <li>
                   <Link to={'/chat/1'}>
-                    <button onClick={() => { setOpenSmList(false); }}
+                    <button id="chat1"
+                      onClick={() => { setOpenSmList(false); }}
                       className="bg-white  mx-4 flex  min-w-8 h-12 my-2 rounded-full   "
                       onMouseEnter={handleMouseEnterChat}
                       onMouseLeave={handleMouseLeaveChat}
@@ -215,7 +218,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 </li>
                 <div className="bg-gray-200 h-px mx-4  "></div>
                 <li>
-                  <button onClick={() => { navigator("/setting/account"); setOpenSmList(false); }}
+                  <button id="setting1"
+                    onClick={() => { navigator("/setting/account"); setOpenSmList(false); }}
                     className="bg-white   text-black h-12  py-1 px-1 
                          rounded inline-flex items-center w-full">
                     <Settings strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
@@ -223,12 +227,13 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => {
-                    setOpenSmList(false);
-                    localStorage.removeItem('authorization');
-                    localStorage.removeItem('refreshToken');
-                    window.location.href = '/'
-                  }}
+                  <button id="log-out1"
+                    onClick={() => {
+                      setOpenSmList(false);
+                      localStorage.removeItem('authorization');
+                      localStorage.removeItem('refreshToken');
+                      window.location.href = '/'
+                    }}
                     className="bg-white   text-black h-12 py-1 px-1  rounded inline-flex items-center w-full">
                     <LogOut strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                     Log out
@@ -236,7 +241,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 </li>
               </ul>
             )}
-            <button role="advertisement-button"
+            <button id="advertisement-button"
+              role="advertisement-button"
               className="bg-white hover:bg-orange-100 sm:block hidden    my-3 h-fit   rounded-full   "
               onMouseEnter={handleMouseEnterAd}
               onMouseLeave={handleMouseLeaveAd}
@@ -250,7 +256,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
             </button>
 
             <Link to={'/chat/1'}>
-              <button role="ChatButton"
+              <button id="chat2"
+                role="ChatButton"
                 className="bg-white hover:bg-orange-100  sm:block hidden  min-w-8 h-10 my-2 rounded-full   "
                 onMouseEnter={handleMouseEnterChat}
                 onMouseLeave={handleMouseLeaveChat}
@@ -260,7 +267,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
               </button>
             </Link>
 
-            <button role="CretePostButton"
+            <button id="CretePostButton"
+              role="CretePostButton"
               className="bg-white hover:bg-orange-100 sm:block hidden   min-w-8  h-10 my-2 rounded-full   "
               onMouseEnter={handleMouseEnterCreate}
               onMouseLeave={handleMouseLeaveCreate}
@@ -274,26 +282,26 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
             </button>
 
             <div className="relative flex">
-            <button id="bellButton" onClick={handleBellClick}
-              role="NotificationsButton"
-              className={`bg-white hover:bg-orange-100 
+              <button id="bellButton" onClick={handleBellClick}
+                role="NotificationsButton"
+                className={`bg-white hover:bg-orange-100 
               sm:block hidden min-w-8 h-10 my-2 rounded-full hover: 
               ${unReadNotifications > 0 ? 'text-red-500' : ''}`}
-              onMouseEnter={handleMouseEnterBell}
-              onMouseLeave={handleMouseLeaveBell}
-            >
-              <Bell strokeWidth={1} color=" #e94c00" size={32} />
-              {unReadNotifications > 0 && <span className="text-xs font-semibold">{unReadNotifications}</span>}
-              <Tooltip
+                onMouseEnter={handleMouseEnterBell}
+                onMouseLeave={handleMouseLeaveBell}
+              >
+                <Bell strokeWidth={1} color=" #e94c00" size={32} />
+                {unReadNotifications > 0 && <span className="text-xs font-semibold">{unReadNotifications}</span>}
+                <Tooltip
                   title={"Open inbox"}
                   status={IshoverBell}
-              ></Tooltip>
-            </button>
-            {ShowBellPop &&
+                ></Tooltip>
+              </button>
+              {ShowBellPop &&
                 <div className="absolute top-14 right-0">
-                    <NotificationsPopup setShowBellPop={setShowBellPop} />
+                  <NotificationsPopup setShowBellPop={setShowBellPop} />
                 </div>}
-          </div>
+            </div>
 
 
 
@@ -317,7 +325,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
               {IsOpenProfList && (
                 <ul ref={listProfRef} role="profile-menu" className=" rounded-lg flex-col shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                   <li>
-                    <button onClick={() => { navigator(`/user/${UserName}/posts`); setIsOpenProfList(false); }}
+                    <button id="profIcon2"
+                      onClick={() => { navigator(`/user/${UserName}/posts`); setIsOpenProfList(false); }}
                       className="bg-white hover:bg-orange-100  text-black h-16 py-2 px-4 rounded inline-flex items-center w-full">
                       <ProfileIcon imageSrc={ProfileImageSrc} altText={UserName} isOnline={IsOnline} />
                       <div className="flex-col flex my-2">
@@ -328,29 +337,32 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                   </li>
 
                   <li>
-                    <button onClick={() => {
-                      setIsOpenProfList(false);
-                      localStorage.removeItem('authorization');
-                      localStorage.removeItem('refreshToken');
-                      window.location.href = '/'
-                    }} className="bg-white hover:bg-orange-100 text-black h-12 py-1 px-1  rounded inline-flex items-center w-full">
+                    <button id="logout2"
+                      onClick={() => {
+                        setIsOpenProfList(false);
+                        localStorage.removeItem('authorization');
+                        localStorage.removeItem('refreshToken');
+                        window.location.href = '/'
+                      }} className="bg-white hover:bg-orange-100 text-black h-12 py-1 px-1  rounded inline-flex items-center w-full">
                       <LogOut strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
                       Log out
                     </button>
                   </li>
                   <div className="bg-gray-200 h-px mx-4 my-2"></div>
                   <li>
-                    <button className="bg-white hover:bg-orange-100 text-black  h-12 py-1 px-4  rounded inline-flex items-center w-full">
+                    <button id="advertisement-button2"
+                      className="bg-white hover:bg-orange-100 text-black  h-12 py-1 px-4  rounded inline-flex items-center w-full">
                       <Megaphone strokeWidth={1} className="mx-2" color=" #e94c00" size={24} />
                       Advertise on Fox
                     </button>
                   </li>
                   <div className="bg-gray-200 h-px mx-4 my-2"></div>
                   <li>
-                    <button onClick={() => {
-                      navigator("/setting/account");
-                      setIsOpenProfList(false);
-                    }}
+                    <button id="setting2"
+                      onClick={() => {
+                        navigator("/setting/account");
+                        setIsOpenProfList(false);
+                      }}
                       className="bg-white hover:bg-orange-100 text-black h-12  py-1 px-1 
                          rounded inline-flex items-center w-full">
                       <Settings strokeWidth={1} className="mx-4" color=" #e94c00" size={24} />
@@ -374,7 +386,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
               shadow-2xl absolute right-0 w-max   bg-white mt-2 py-2   mb-2">
                 <li>
                   <Link to="/register">
-                    <button onClick={() => { setOpenSmList(false); }}
+                    <button id="getApp"
+                      onClick={() => { setOpenSmList(false); }}
                       className="NavButtons w-full p-2 text-sm text-black">
                       <QrCode className=" h-5 mx-1 w-5" color=" #e94c00" size={32} />
                       Get App
@@ -384,7 +397,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 <hr className="mx-4 my-1" />
                 <li>
                   <Link to="/login">
-                    <button onClick={() => { setOpenSmList(false); }}
+                    <button id="login"
+                      onClick={() => { setOpenSmList(false); }}
                       className="text-sm p-2 text-black w-full">
                       <div>Log in</div>
                     </button>
@@ -393,7 +407,8 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 <hr className="mx-4 my-1" />
                 <li>
                   <Link to="/register">
-                    <button onClick={() => { setOpenSmList(false); }}
+                    <button id="creatAccount"
+                      onClick={() => { setOpenSmList(false); }}
                       className="text-sm p-2 text-black w-full">
                       Create Account
                     </button>
@@ -405,20 +420,23 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
             <div className="sm:flex items-center sm:visible hidden invisible w-auto">
               <div className="   lg:block  " id="navbar-default"></div>
               <Link to="/register">
-                <button role="GetAppButton"
+                <button id="gettApp2"
+                  role="GetAppButton"
                   className="NavButtons flex sm:visible  invisible bg-gray-400 hover:bg-slate-500">
                   <QrCode className=" h-5 w-5 mx-1" color=" white" size={32} />
                   Get App
                 </button>
               </Link>
               <Link to="/login">
-                <button role="LogInButton"
+                <button id="login2"
+                  role="LogInButton"
                   className="NavButtons sm:block hidden bg-orange-600">
                   <div>Log in</div>
                 </button>
               </Link>
               <Link to="/register">
-                <button role="CreateAccountButton"
+                <button id="createAccount2"
+                  role="CreateAccountButton"
                   className="NavButtons sm:block hidden bg-orange-600">
                   Create Account
                 </button>
