@@ -1,34 +1,91 @@
 import React, { useEffect, useState } from 'react'
 import NavOfNotification from './NavOfNotification'
 import { useNavigate } from 'react-router-dom';
-import { userAxios } from "../../Utils/UserAxios";
+import { onMessageListener, requestPermission } from '../../Utils/firebase';
+import { userAxios } from '../../Utils/UserAxios';
+import { getToken } from "firebase/messaging";
+import { getMessaging } from "firebase/messaging";
 const NotificationPage = () => {
+  const [notifications, setNotifications] = useState([])
+  const [unreadNotificationsCount, setUnReadNotifications] = useState([])
+  const [notification, setNotification] = useState({ title:"" , body:" "});
+  const [isRead, setIsRead] = useState(false);
 
+
+
+  
+  const handleClick = () => {
+    setIsRead(true);
+  };
   const navigator = useNavigate();
   const handleNavigate = () => {
     navigator('/setting/notifications');
   }
 
-
-  const [notifications, setNotifications] = useState([])
-  const [unReadNotifications, setUnReadNotifications] = useState([])
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await userAxios.get('/api/v1/me/notification');
-        setNotifications(response.data.notifications);
-        setUnReadNotifications(response.data.unreadNotificationsCount);
-        console.log(response.data.unreadNotificationsCount);
-        console.log(response.data.notifications);
-        console.log("notifications");
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-
-    fetchNotifications();
+  
+   useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch((error) => {
+          console.error('Error registering Service Worker:', error);
+        });
+    }
   }, []);
+  
 
+
+
+   useEffect(() => {
+   requestPermission();
+      const unsubscribe= onMessageListener().then((payload) => {
+       setNotification({
+       title: payload?.notification.title,
+       body: payload?.notification.body
+     });
+     console.log(payload?.notification.title)
+     console.log("notification",setNotification)
+   });
+   return () => {
+     unsubscribe.catch((err) => console.log(err));
+   };
+   }, []);
+
+
+   const fetchToken = async () => {
+    try {
+      const messaging = getMessaging();
+      const currentToken = await getToken(messaging, { vapidKey: "BFWzZdxGVozJKyuEWwyc09beuOhJGwEJCVxataGbpWdHcHqgtwZMI-aWuYk8QfbhGaDpC0JryiYtA22sA01BHos" });
+      const response = await userAxios.post('/api/auth/login/fcmtoken', { fcmtoken: currentToken });
+      console.log(response.data);
+      console.log("current",currentToken);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  fetchToken();
+
+   
+    useEffect(() => {
+      const fetchNotifications = async () => {
+        try {
+          const response = await userAxios.get('/api/v1/me/notification');
+          setNotifications(response.data.notifications);
+          setUnReadNotifications(response.data.unreadNotificationsCount);
+          console.log(response.data.unreadNotificationsCount);
+          console.log(response.data.notifications);
+          console.log("fetchNotification");
+        } catch (error) {
+          console.error('Error fetching notifications:', error);
+        }
+      };
+  
+      fetchNotifications();
+    }, []);
 
 
   return (
@@ -37,7 +94,7 @@ const NotificationPage = () => {
       <NavOfNotification ></NavOfNotification>
       <div className=' mt-4 w-3/5'>
         <div className='flex justify-end items-center space-x-3'>
-          <button >
+          <button onClick={handleClick}>
             Mark All as read
           </button>
 
@@ -47,21 +104,31 @@ const NotificationPage = () => {
 
           </button>
         </div>
-        <div className='mt-4 w-3/5'>
-        {notifications && notifications.length > 0 && (
-          notifications.map((notification) => (
-            <div key={notification._id}>
-              <p>{notification.title}</p>
-              <p>{notification.type}</p>
-              <p>{notification.source}</p>
-              <p>{notification.createdAt}</p>
-            </div>
-          ))
-        )}
-        <p>Unread Notifications Count: {unReadNotifications}</p>
-      </div>
-    </div>
+         <div>
+         { notification.title}
+         { notification.body}
+         </div>
 
+
+         <p className='text-lg text-orange-500 ml-2 font-semibold mt-7'> Number of unread notifications: {unreadNotificationsCount}</p>
+
+         <div className='flex flex-col'>
+     
+         {notifications && notifications.map((notification) => (
+           <div
+             className={`flex flex-col text-md border-gray-300 p-4 m-2 ${!isRead ? 'bg-sky-50' : ' bg-white'}`}
+             key={notification._id}
+           >
+             <h2 className='text-lg font-semibold'>{notification.title}</h2>
+             <p className='text-sm text-gray-500'>{notification.type}</p>
+             <p className='text-sm text-gray-500'>{notification.source}</p>
+             <p className='text-sm text-gray-500'>{new Date(notification.createdAt).toLocaleString()}</p>
+           </div>
+         ))}
+       </div>
+</div>
+
+  
     </div>
   )
 }

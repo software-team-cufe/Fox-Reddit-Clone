@@ -122,11 +122,24 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
     const fetchTrending = async () => {
         try {
             const res = await userAxios.get(`r/trendingSearch`)
+            console.log(res.data);
+            let imgT = null;
+            res.data.trendingSearches.map((trend) => {
+                trend.attachments.map((img) => {
+                    if (img.contains("image")) {
+                        imgT = img;
+                        return;
+                    }
+                })
+
+            })
             const newTrends = res.data.trendingSearches.map((trend => ({
                 communityIcon: trend.communityIcon,
                 title: trend.title,
                 communityName: trend.communityName,
-                textHTML: trend.textHTML
+                textHTML: trend.textHTML,
+                img: imgT
+
             })))
             setTrending(newTrends);
         } catch (error) {
@@ -233,8 +246,8 @@ const SearchComponent = ({ Viewed, setViewed, IsLogged }) => {
                                                         <p className='mx-2 mt-1 '>{item.communityName}</p>
                                                     </div>
                                                 </div>
-                                                <img className='sm:h-24 sm:w-24 h-0 w-0 rounded right-4 absolute top-2 '
-                                                    src="https://t4.ftcdn.net/jpg/06/70/36/51/360_F_670365191_I2Ek99MkLgw7QNJCgw9zWDbLtWUHXb6l.jpg" alt={item.communityName} />
+                                                {item.imgT && <img className='sm:h-24 sm:w-24 h-0 w-0 rounded right-4 absolute top-2 '
+                                                    src={item.imgT} alt={item.communityName} />}
                                             </div>
                                             <hr className='mx-6 mb-4 mt-2' />
                                         </div>
