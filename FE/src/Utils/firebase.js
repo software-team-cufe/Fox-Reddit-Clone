@@ -12,9 +12,17 @@ const firebaseConfig = {
   appId: "1:24320835329:web:730880693df634d17c6500",
   measurementId: "G-K1SV52MJTR"
 };
+if (firebase.messaging.isSupported()) {
+  // Initialize FCM and set up listeners
+  const app = initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app); // Corrected variable name to 'messaging'
+  const messaging = firebase.messaging();
+
+  // Rest of your FCM setup code
+  // ...
+} else {
+  console.warn('FCM is not supported in this browser.');
+}
 
 export const requestPermission = () => {
   console.log("notification page");
