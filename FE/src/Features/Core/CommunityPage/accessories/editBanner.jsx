@@ -140,8 +140,8 @@ export default function EditModal({ onClose = () => { }, optionheader = "Communi
                             <img role={`commAppearance${OptionHeader}Image`} src={imageFile} alt="uploaded" className={`mx-auto object-cover ${OptionHeader == "Avatar" ? "rounded-full w-36 h-36" : "rounded-2xl w-full h-full"}`} />)}
                     </div>
                     {imageFile ? <div className="flex mx-auto gap-2 justify-between">
-                        <button id="uploadDeleteButton" onClick={() => setImageFile(null)} className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" role="commAppearanceBannerRemove" id="commAppearanceBannerRemove"><Trash2 className="w-4 h-4" /></button>
-                        <button id="uploadSubmitButton" className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" onClick={() => submitImage()} role="commAppearanceAvatarSubmit" id="commAppearanceAvatarSubmit">{submittingReq ? <Spinner></Spinner> : "Submit"}</button></div> : <></>}
+                        <button  onClick={() => setImageFile(null)} className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" role="commAppearanceBannerRemove" id="commAppearanceBannerRemove"><Trash2 className="w-4 h-4" /></button>
+                        <button  className="bg-gray-200 mt-3 text-sm px-2 py-1 mx-auto w-fit rounded-full hover:bg-gray-300" onClick={() => submitImage()} role="commAppearanceAvatarSubmit">{submittingReq ? <Spinner></Spinner> : "Submit"}</button></div> : <></>}
                 </div>)}
         </div>
     );
