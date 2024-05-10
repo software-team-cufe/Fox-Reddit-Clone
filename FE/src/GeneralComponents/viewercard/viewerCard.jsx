@@ -11,13 +11,13 @@ import  { useEffect } from 'react';
 
 function CardOptionsMenu() {  //prop takes the display to use it outside the component
     const username = useSelector(state => state.user.user.username);
-
+    const [isBlocked, setIsBlocked] = useState(false);
     const handleBlock = async () => {
         try {
             const response = await userAxios.post('/api/block_user', { username , type: 'unblock' });
             console.log(response);
             console.log('blocked');
-           
+            setIsBlocked(true);
         } catch (error) {
             console.log(error);
         }
@@ -26,10 +26,11 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
  
  
     return (
+        
         <Menu as="div" className="relative inline-block text-left">
             {/* dropdown menu displaying currently selected display*/}
             <div>
-                <Menu.Button className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white p-2 text-sm text-gray-900 hover:bg-gray-200">
+                <Menu.Button id='dropDownMenu' className="w-full rounded-full inline-flex justify-center gap-x-1.5 bg-white p-2 text-sm text-gray-900 hover:bg-gray-200">
                     <CircleEllipsis className='h-5 w-5' />
                 </Menu.Button>
             </div>
@@ -46,25 +47,25 @@ function CardOptionsMenu() {  //prop takes the display to use it outside the com
                 {/* dropdown menu items */}
                 <Menu.Items className="absolute right-0 z-10 mt-2 w-[200px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <Menu.Item className="px-3 border-b-gray-300 border-b">
-                        <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
+                        <button  id='share' className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
                             <CornerUpRight className='h-5 w-5 mr-2' />
                             <span> Share</span>
                         </button>
                     </Menu.Item>
                     <Menu.Item className="px-3 border-b-gray-300 border-b">
-                        <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
+                        <button id='sendMessage' className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
                         <Mail className='h-5 w-5 mr-2' />                            
                         <span> Send a Message</span>
                         </button>
                     </Menu.Item>
                     <Menu.Item className="px-3 border-b-gray-300 border-b">
-                        <button onClick={handleBlock} className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
+                        <button id='blockAccount' onClick={handleBlock} className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
                         <CircleOff className='h-5 w-5 mr-2' />
                         <span> Block Account</span>
                         </button>
                     </Menu.Item>
                     <Menu.Item className="px-3 border-b-gray-300 border-b">
-                        <button className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
+                        <button id='Report' className={' text-gray-700 flex relative pr-4 h-12 py-3 gap-2 text-sm hover:underline w-full'}>
                         <Flag className='h-5 w-5 mr-2' />
                         <span> Report Profile</span>
                         </button>
@@ -165,7 +166,7 @@ const handleFollow = async () => {
              
              <div className=' flex flex-col mx-3 mt-3 space-y-3'>
                 <div className='flex flex-row  space-x-3'>
-                  <button onClick={() => { 
+                  <button id='unfollow/followButton' onClick={() => { 
                     setCLicked(!isClicked); 
                     if(!isClicked) handleFollow();
                     if(isClicked) handleUnfollow();
@@ -183,7 +184,7 @@ const handleFollow = async () => {
                     }
                     <p className={`  text-sm text-center ${ isClicked ? 'text-black' : 'text-white'}`}> {isClicked ? 'Unfollow' : 'Follow'}</p>
                   </button>
-                  <button className=' flex flex-row items-center justify-center space-x-1 border border-gray-200 bg-gray-200 rounded-3xl w-[75px] px-2  h-[35px] '>
+                  <button  id='chat' className=' flex flex-row items-center justify-center space-x-1 border border-gray-200 bg-gray-200 rounded-3xl w-[75px] px-2  h-[35px] '>
                       <svg className="w-5 h-5 self-center"
                       xmlns="http://www.w3.org/2000/svg" width="24"  height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -231,12 +232,12 @@ const handleFollow = async () => {
 
             <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold"> LINKS </h1>
             <div className='  px-4 flex flex-row space-x-2'> 
-               <button className=' border border-gray-200 rounded-2xl flex flex-row bg-gray-200 space-x-1 w-[80px] h-7 p-1'>
+               <button id='link' className=' border border-gray-200 rounded-2xl flex flex-row bg-gray-200 space-x-1 w-[80px] h-7 p-1'>
                  <svg className="w-3 h-4"
                  xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" /></svg>
                  <p className=' text-xs font-medium'>LinkedIn</p>
                </button>
-               <button className=' border border-gray-200 rounded-2xl flex flex-row bg-gray-200 space-x-1 w-[110px] h-7 p-1'>
+               <button id='profile' className=' border border-gray-200 rounded-2xl flex flex-row bg-gray-200 space-x-1 w-[110px] h-7 p-1'>
                  <svg className="w-3 h-4"
                  xmlns="http://www.w3.org/2000/svg" width="24"  height="24"   viewBox="0 0 24 24"  strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" /></svg>
                  <p className=' text-xs  font-medium'>Career Profile</p>
@@ -273,7 +274,7 @@ const handleFollow = async () => {
                           </div>
                       </div>
                       <div>
-                          <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[47px] h-7 px-2 text-black text-xs font-semibold'>Join</button>
+                          <button id='join' className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[47px] h-7 px-2 text-black text-xs font-semibold'>Join</button>
                       </div>
                   </a>
               ))}
