@@ -5,6 +5,8 @@ import { onMessageListener, requestPermission } from '../../Utils/firebase';
 import { userAxios } from '../../Utils/UserAxios';
 import { getToken } from "firebase/messaging";
 import { getMessaging } from "firebase/messaging";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState([])
   const [unreadNotificationsCount, setUnReadNotifications] = useState([])
@@ -45,8 +47,10 @@ const NotificationPage = () => {
        title: payload?.notification.title,
        body: payload?.notification.body
      });
+     
      console.log(payload?.notification.title)
      console.log("notification",setNotification)
+     toast.info(payload?.notification.title)
    });
    return () => {
      unsubscribe.catch((err) => console.log(err));
@@ -69,27 +73,32 @@ const NotificationPage = () => {
   
   fetchToken();
 
-   
-    useEffect(() => {
-      const fetchNotifications = async () => {
-        try {
-          const response = await userAxios.get('/api/v1/me/notification');
-          setNotifications(response.data.notifications);
-          setUnReadNotifications(response.data.unreadNotificationsCount);
-          console.log(response.data.unreadNotificationsCount);
-          console.log(response.data.notifications);
-          console.log("fetchNotification");
-        } catch (error) {
-          console.error('Error fetching notifications:', error);
-        }
-      };
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await userAxios.get('/api/v1/me/notification');
+        const newNotifications = response.data.notifications.filter((newNotification) => {
+          return !notifications.some((prevNotification) => prevNotification.id === newNotification.id);
+        });
+        const currentNotification = newNotifications[newNotifications.length - 1];
+        const message = `You : ${currentNotification.type}`;
   
-      fetchNotifications();
-    }, []);
+        setNotifications((prevNotifications) => [...prevNotifications, ...newNotifications]);
+        setUnReadNotifications(response.data.unreadNotificationsCount);
+  
+        toast.info(message);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+  
+    fetchNotifications();
+  }, [notifications]);
 
 
   return (
     <div>
+      <ToastContainer />
       <h1 className='text-2xl font-semibold mt-3 mb-8'>Notifications </h1>
       <NavOfNotification ></NavOfNotification>
       <div className=' mt-4 w-3/5'>
