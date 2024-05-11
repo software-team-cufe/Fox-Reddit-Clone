@@ -6,7 +6,7 @@ export default function UserMessages({ chat,chatId }) {
     const friend = (chat.sender == user.username ? chat.reciever : chat.sender) ?? "esd";
 
     return (
-        <Link to={`/chat/${chatId}`} className="flex flex-row items-center p-4">
+        <a href={`/chat/${chatId}`} className="flex flex-row items-center p-4">
             <div className="flex items-center justify-center h-10 w-10 rounded-full bg-pink-500 text-pink-300 font-bold flex-shrink-0">
                 {friend[0].toUpperCase()}
             </div>
@@ -17,7 +17,7 @@ export default function UserMessages({ chat,chatId }) {
                 </div>
 
             </div>
-        </Link>
+        </a>
 
     )
 }
