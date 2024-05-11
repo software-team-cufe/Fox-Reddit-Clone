@@ -1118,6 +1118,18 @@ export async function voteCommentHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Handles the submission of a post.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ *
+ * @throws {Error} - If the access token is missing or invalid.
+ * @throws {Error} - If the community is not found.
+ * @throws {Error} - If there is an error creating the post.
+ * @throws {Error} - If there is an internal server error.
+ */
 export async function submitPostHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -1227,8 +1239,14 @@ export async function submitPostHandler(req: Request, res: Response) {
   }
 }
 
-/*YOUSEF PHASE 3 WORK */
-
+/**
+ * Retrieves sorted posts based on the provided parameters.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A JSON response containing the sorted posts.
+ * @throws {Error} If there is an error retrieving the sorted posts.
+ */
 export async function getSortedPosts(req: Request, res: Response) {
   try {
     const sub = req.params.subreddit || ' ';
@@ -1279,7 +1297,6 @@ export async function getSortedPosts(req: Request, res: Response) {
   }
 }
 
-export async function getSortedSubredditPosts() {}
 /**
  * Get user saved posts with pagination support.
  *
@@ -1584,6 +1601,13 @@ export async function getPostCommentsByIdHandler(req: Request<PostByIdInput['par
     return res.status(500).json({ msg: 'Internal server error' });
   }
 }
+/**
+ * Vote on a poll in a post.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ */
 export async function voteOnPostPoll(req: Request, res: Response) {
   const postId = req.params.id;
   const post = await findPostById(postId);

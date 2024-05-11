@@ -13,6 +13,13 @@ admin.initializeApp({
     'https://console.firebase.google.com/u/0/project/fox-app-e9b9f/firestore/databases/-default-/data/~2Fnotifications~2FpWhFVkla6UlLCzAsB61k', // Your Firebase database URL
 });
 
+/**
+ * Finds a notification by its ID.
+ *
+ * @param {string} id - The ID of the notification to find.
+ * @returns {Promise<NotificationModel>} - A promise that resolves to the found notification.
+ * @throws {Error} - If the notification is not found.
+ */
 export async function findNotificationById(id: string) {
   try {
     const notification = await NotificationModel.findById(id);
@@ -26,6 +33,19 @@ export async function findNotificationById(id: string) {
   }
 }
 
+/**
+ * Creates a new notification and sends it to the user's device using Firebase Cloud Messaging (FCM).
+ *
+ * @param {Types.ObjectId} userId - The ID of the user receiving the notification.
+ * @param {string} icon - The URL or path of the notification icon.
+ * @param {string} title - The title of the notification.
+ * @param {string} type - The type of the notification.
+ * @param {string} text - The text content of the notification.
+ * @param {Types.ObjectId} source - The ID of the source of the notification.
+ * @param {string} fcmtoken - The FCM token of the user's device.
+ * @returns {Promise<NotificationModel>} - The saved notification object.
+ * @throws {Error} - If the user is not found or there is an error sending the notification.
+ */
 export async function createNotification(
   userId: Types.ObjectId,
   icon: string, // Assuming 'icon' is a string representing the icon URL or path

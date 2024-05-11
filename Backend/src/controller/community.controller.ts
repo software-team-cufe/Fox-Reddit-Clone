@@ -276,6 +276,14 @@ export async function getCommunityOfOtherUserAsCreatorHandler(req: Request, res:
   }
 }
 
+/**
+ * Retrieves the moderator of a community.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns The moderator of the community.
+ * @throws {Error} If there is an error retrieving the moderator.
+ */
 export async function getModeratorHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -571,6 +579,14 @@ export async function unsubscribeCommunityHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves information about a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the community information.
+ */
 export async function getCommunityHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -607,6 +623,14 @@ export async function getCommunityHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves all communities and their information.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the communities.
+ */
 export async function getAllCommunityHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -2632,11 +2656,12 @@ export async function removeSpamPostHandler(req: Request, res: Response) {
 }
 
 /**
- *  approve Spam Comment Handler.
+ * Removes a spam comment from a subreddit.
  *
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
- * @return {Promise<void>} The promise of a void.
+ * @returns {Response} The response object with the status and message.
+ * @throws {Error} If there is an unexpected error.
  */
 export async function removeSpamCommentHandler(req: Request, res: Response) {
   if (!res.locals.user) {
@@ -2943,6 +2968,16 @@ export async function unlockPostHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Uploads a community icon.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves when the icon is uploaded successfully.
+ * @throws {appError} - If the access token is missing or if there is no image provided.
+ * @throws {appError} - If the community is not found or if the user is not a moderator.
+ * @throws {appError} - If there is an internal server error in image upload.
+ */
 export async function uploadCommunityIcon(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -2996,6 +3031,17 @@ export async function uploadCommunityIcon(req: Request, res: Response) {
   }
 }
 
+/**
+ * Uploads a community banner image.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves when the banner is uploaded successfully.
+ * @throws {Error} - If the access token is missing or there is no image.
+ * @throws {Error} - If the community is not found.
+ * @throws {Error} - If the user is not a moderator of the community.
+ * @throws {Error} - If there is an internal server error.
+ */
 export async function uploadCommunityBanner(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3046,6 +3092,14 @@ export async function uploadCommunityBanner(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the community rules for a given subreddit.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the community rules.
+ */
 export async function getCommunityRulesHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3083,6 +3137,14 @@ export async function getCommunityRulesHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the removal reasons for a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the removal reasons.
+ */
 export async function getCommunityRemovalResonsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3120,6 +3182,14 @@ export async function getCommunityRemovalResonsHandler(req: Request, res: Respon
   }
 }
 
+/**
+ * Retrieves the categories of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the categories or if the access token is missing or invalid.
+ */
 export async function getCommunityCategoriesHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3157,6 +3227,14 @@ export async function getCommunityCategoriesHandler(req: Request, res: Response)
   }
 }
 
+/**
+ * Retrieves the image widgets for a given subreddit.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the image widgets.
+ */
 export async function getImageWidgetsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3194,6 +3272,14 @@ export async function getImageWidgetsHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the text widgets for a given subreddit.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the text widgets.
+ */
 export async function getTextWidgetsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3231,6 +3317,14 @@ export async function getTextWidgetsHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the button widgets for a given subreddit.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the button widgets.
+ */
 export async function getButtonWidgetsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3268,6 +3362,14 @@ export async function getButtonWidgetsHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the post settings for a given subreddit.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the post settings.
+ */
 export async function getPostSettingsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3305,6 +3407,14 @@ export async function getPostSettingsHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the content controls for a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the content controls.
+ */
 export async function getContentControlsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3342,6 +3452,14 @@ export async function getContentControlsHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the details of a community.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns The details of the community.
+ * @throws {Error} If there is an error retrieving the community details.
+ */
 export async function getCommunityDetailsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3429,6 +3547,14 @@ export async function getPendingMembersHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Deletes the icon of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Response} The response object with the result of the operation.
+ * @throws {Error} If there is an error during the operation.
+ */
 export async function deleteCommunityIcon(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -3473,6 +3599,14 @@ export async function deleteCommunityIcon(req: Request, res: Response) {
   }
 }
 
+/**
+ * Deletes the banner of a community.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Response} The response object with the result of the operation.
+ * @throws {Error} If there is an error during the operation.
+ */
 export async function deleteCommunityBanner(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({

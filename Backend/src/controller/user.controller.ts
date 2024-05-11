@@ -326,6 +326,15 @@ export async function changePasswrodHandler(req: Request<{}, {}, ChangePasswordI
     });
   }
 }
+/**
+ * Handles the change email functionality for a user.
+ *
+ * @param req - The request object containing the user's new email and current password.
+ * @param res - The response object to send the result of the change email operation.
+ * @returns A JSON response indicating the success or failure of the change email operation.
+ * @throws {appError} If the user is not found, the email and password are not provided, the new email is the same as the old email, or the password is invalid.
+ * @throws {Error} If there is an error sending the verification email or saving the updated user information.
+ */
 export async function changeEmailHandler(req: Request<{}, {}, ChangeEmailInput['body']>, res: Response) {
   try {
     const user = await findUserByUsername(res.locals.user.username);
@@ -439,6 +448,14 @@ export async function getCurrentUserPrefs(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the notification preferences of the current user.
+ *
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<void>} - A Promise that resolves to void.
+ * @throws {Error} - If the access token is missing or the user doesn't exist.
+ */
 export async function getCurrentUserNotificationPrefs(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -493,6 +510,13 @@ export async function editCurrentUserPrefs(req: Request, res: Response) {
 
   return res.status(200).send(user.prefs);
 }
+/**
+ * Edit the notification preferences of the current user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Response} The updated notification preferences of the user.
+ */
 export async function editCurrentUserNotificationPrefs(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -517,6 +541,14 @@ export async function editCurrentUserNotificationPrefs(req: Request, res: Respon
   return res.status(200).send(user.notificationPrefs);
 }
 
+/**
+ * Retrieves the upvoted posts for a user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<Response>} The response containing the upvoted posts.
+ * @throws {Error} If there is an error fetching the upvoted posts.
+ */
 export async function getUpvotedPosts(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -583,6 +615,14 @@ export async function getUpvotedPosts(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the downvoted posts for a user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<Response>} The response containing the downvoted posts.
+ * @throws {Error} If there is an error fetching the downvoted posts.
+ */
 export async function getDownvotedPosts(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -805,6 +845,14 @@ export async function getUserSubmittedHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the comments of a user based on the provided username, page, count, limit, and sort parameters.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the user comments or if there is an internal server error.
+ */
 export async function getUserCommentsHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -864,6 +912,14 @@ export async function getUserCommentsHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the user overview data for a given username.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the user overview data.
+ */
 export async function getUserOverviewHandler(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -944,8 +1000,6 @@ export async function getUserOverviewHandler(req: Request, res: Response) {
     return res.status(500).send('Internal server error');
   }
 }
-
-/****************************** BOUDY ***********************************/
 
 /**
  * Retrieves the details of a user by their username.
@@ -1468,8 +1522,6 @@ export async function getFollowingHandler(req: Request, res: Response) {
   }
 }
 
-/****************************** BOUDY ***********************************/
-
 /**
  * Retrieves the user ID from the access token in the request.
  *
@@ -1547,6 +1599,14 @@ export async function uploadUserPhoto(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the number of posts and comments for the authenticated user.
+ *
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Response} The response containing the number of posts and comments.
+ * @throws {Error} If there is an error retrieving the number of posts and comments.
+ */
 export async function getNumberPostsCommentsMe(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({
@@ -1578,6 +1638,14 @@ export async function getNumberPostsCommentsMe(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the number of posts and comments for a user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - If there is an error retrieving the number of posts and comments.
+ */
 export async function getNumberPostsCommentsUser(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({

@@ -891,6 +891,14 @@ export async function removeFavoriteFromUser(userID: string, communityName: stri
   };
 }
 
+/**
+ * Retrieves user search results based on the provided query.
+ *
+ * @param {string} query - The search query.
+ * @param {number} page - The page number of the search results.
+ * @param {number} limit - The maximum number of search results per page.
+ * @returns {Promise<User[]>} - A promise that resolves to an array of user search results.
+ */
 export async function getUserSearchResult(query: string, page: number, limit: number) {
   const userResults = await UserModel.find({
     $or: [{ username: { $regex: query, $options: 'i' } }, { about: { $regex: query, $options: 'i' } }],
@@ -902,6 +910,13 @@ export async function getUserSearchResult(query: string, page: number, limit: nu
   return userResults;
 }
 
+/**
+ * Finds users that follow a specific user.
+ *
+ * @param {string} userId - The ID of the user to find followers for.
+ * @returns {Promise<UserModel[]>} - A promise that resolves to an array of UserModel objects representing the users that follow the specified user.
+ * @throws {Error} - If an error occurs while finding the users.
+ */
 export async function findUsersThatFollowUser(userId: string) {
   try {
     // Assuming 'userFollows' is an array of user IDs that the current user follows
@@ -912,7 +927,13 @@ export async function findUsersThatFollowUser(userId: string) {
     throw error; // Re-throw the error to be caught by the caller
   }
 }
-
+/**
+ * Finds users that follow a specific community.
+ *
+ * @param {string} communityId - The ID of the community to search for followers.
+ * @returns {Promise<UserModel[]>} - A promise that resolves to an array of UserModel objects representing the users that follow the community.
+ * @throws {Error} - If there is an error while executing the function.
+ */
 export async function findUsersThatFollowCommunity(communityId: string) {
   try {
     const users = await UserModel.find({
@@ -930,6 +951,15 @@ export async function findUsersThatFollowCommunity(communityId: string) {
   }
 }
 
+/**
+ * Retrieves the history posts of a user with pagination.
+ *
+ * @param {string} username - The username of the user.
+ * @param {number} page - The page number for pagination.
+ * @param {number} count - The number of posts to retrieve per page.
+ * @returns {Promise<string[]>} - A promise that resolves to an array of post IDs.
+ * @throws {appError} - If the user is not found.
+ */
 export async function userHistoryPosts(username: string, page: number, count: number) {
   // Calculate skip based on page and count
   const skip = (page - 1) * count;
@@ -1226,7 +1256,12 @@ export async function unmuteUserInUser(userID: string, subreddit: string) {
   };
 }
 
-//function that gets user hiddenPosts by user ID
+/**
+ * Retrieves the hidden posts for a given user.
+ *
+ * @param {string} userID - The ID of the user.
+ * @returns {Promise<string[]>} - A promise that resolves to an array of hidden post IDs.
+ */
 export async function getHiddenPosts(userID: string) {
   const user = await UserModel.findById(userID);
 

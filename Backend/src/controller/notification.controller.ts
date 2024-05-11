@@ -4,6 +4,14 @@ import { findNotificationById } from '../service/notification.service';
 import { notificationInfo } from '../model/user.model';
 import CommunityModel from '../model/community.model';
 
+/**
+ * Retrieves the notifications for a user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves with the user's notifications or an error response.
+ * @throws {Error} - If there is an error fetching the user notifications.
+ */
 export async function getUserNotifications(req: Request, res: Response) {
   try {
     let user = res.locals.user;
@@ -64,6 +72,15 @@ export async function getUserNotifications(req: Request, res: Response) {
   }
 }
 
+/**
+ * Edits a user notification.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves with the updated user notification or an error response.
+ *
+ * @throws {Error} - If there is an error fetching user notifications or saving the updated user.
+ */
 export async function editUserNotification(req: Request, res: Response) {
   try {
     let user = res.locals.user;

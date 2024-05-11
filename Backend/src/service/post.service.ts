@@ -27,37 +27,15 @@ export function findPostById(id: string) {
   return PostModel.findById(id);
 }
 
+/**
+ * Retrieves a post by its ID.
+ *
+ * @param {string} id - The ID of the post to retrieve.
+ * @returns {Promise<Post | null>} - A promise that resolves to the retrieved post, or null if no post is found.
+ */
 export async function getPostById(id: string) {
   return PostModel.findById(id);
 }
-
-// export async function findPostsByCommunity(community: string): Promise<Post[]> {
-//   try {
-//     const communityObject = await findCommunityByName(community);
-
-//     const posts = await PostModel.aggregate([
-//       // Match documents by the community ID
-//       { $match: { communityId: communityObject?.id } },
-//       // Sample documents randomly
-//       { $sample: { size: 10 } }, // Adjust the size as needed
-//     ]).exec();
-
-//     return posts;
-//   } catch (error) {
-//     throw new Error('Error finding posts by community');
-//   }
-// }
-
-/**
- * Finds the top posts from a specified community.
- *
- * @param community - The name of the community to find the top posts for.
- * @param limit - The maximum number of posts to retrieve (default is 10).
- * @param page - The page number of the results to retrieve (default is 1).
- * @param count - The number of posts to skip (default is 0).
- * @returns A promise that resolves to an array of Post objects representing the top posts from the specified community.
- * @throws Error if the community is not found or if there is an error finding the top posts.
- */
 
 /**
  * Finds the top posts from a specified community.
@@ -259,6 +237,17 @@ export async function findTopPostsByCommunityWithinTime(
   }
 }
 
+/**
+ * Finds the top posts by random within a specified time frame.
+ *
+ * @param limit The maximum number of posts to retrieve. Default is 10.
+ * @param page The page number of the results. Default is 1.
+ * @param count The number of posts to skip. Default is 0.
+ * @param startDate The start date of the time frame.
+ * @param endDate The end date of the time frame.
+ * @returns A promise that resolves to an array of Post objects.
+ * @throws Error if there is an error finding the posts by community within the time frame.
+ */
 export async function findTopPostsByRandomWithinTime(
   limit: number = 10,
   page: number = 1,

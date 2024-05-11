@@ -107,6 +107,14 @@ export async function refreshAccessTokenHandler(req: Request, res: Response) {
   return res.status(200).json({ accessToken });
 }
 
+/**
+ * Updates the FCM token for the authenticated user.
+ *
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<Response>} The updated FCM token response.
+ * @throws {Error} If the access token is missing or if there is an error updating the FCM token.
+ */
 export async function getFCMToken(req: Request, res: Response) {
   if (!res.locals.user) {
     return res.status(401).json({

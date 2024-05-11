@@ -310,6 +310,15 @@ export async function updateModeratorToCom(userID: string, subreddit: string, in
   };
 }
 
+/**
+ * Removes a moderator from a community.
+ *
+ * @param {string} userID - The ID of the moderator to be removed.
+ * @param {string} subreddit - The name of the community.
+ * @returns {Object} - An object indicating the status of the operation.
+ *                    - If the moderator is successfully removed, the status will be true.
+ *                    - If the community or the moderator is not found, the status will be false and an error message will be provided.
+ */
 export async function removeModeratorFromCom(userID: string, subreddit: string) {
   const community = await findCommunityByName(subreddit);
 
@@ -337,6 +346,15 @@ export async function removeModeratorFromCom(userID: string, subreddit: string) 
   };
 }
 
+/**
+ * Removes a member from a community.
+ *
+ * @param {string} userID - The ID of the user to be removed.
+ * @param {string} subreddit - The name of the community.
+ * @returns {Object} - An object with the status of the operation.
+ *                    - If the user or community is not found, the status will be false and an error message will be provided.
+ *                    - If the operation is successful, the status will be true.
+ */
 export async function removeMemberFromCom(userID: string, subreddit: string) {
   const community = await findCommunityByName(subreddit);
 
@@ -551,6 +569,13 @@ export async function getCommunityMembers(communityName: string) {
   return { status: true, users };
 }
 
+/**
+ * Edits the rules of a community.
+ *
+ * @param subreddit - The name of the subreddit to edit the rules for.
+ * @param rules - An array of CommunityRule objects representing the new rules for the subreddit.
+ * @returns An object with a status indicating the success of the operation. If the operation was successful, the status will be true. If an error occurred, the status will be false and the error property will contain the error message.
+ */
 export async function editCommunityRules(subreddit: string, rules: CommunityRule[]) {
   const community = await findCommunityByName(subreddit);
 
@@ -578,6 +603,16 @@ export async function editCommunityRules(subreddit: string, rules: CommunityRule
   };
 }
 
+/**
+ * Edits the removal reasons of a community.
+ *
+ * @param subreddit - The name of the subreddit.
+ * @param reasons - An array of removal reasons.
+ * @returns An object with the status of the operation.
+ *          - If the community is not found, the status will be false and the error will be 'user not found'.
+ *          - If an error occurs during the update, the status will be false and the error will be the error object.
+ *          - If the update is successful, the status will be true.
+ */
 export async function editCommunityRemovalReasons(subreddit: string, reasons: removalReason[]) {
   const community = await findCommunityByName(subreddit);
 
@@ -605,6 +640,13 @@ export async function editCommunityRemovalReasons(subreddit: string, reasons: re
   };
 }
 
+/**
+ * Edits the categories of a community.
+ *
+ * @param subreddit - The name of the subreddit to edit.
+ * @param cats - An array of CommunityRule objects representing the new categories.
+ * @returns An object with a status indicating the success of the operation. If the operation was successful, the status will be true. If an error occurred, the status will be false and the error field will contain the error message.
+ */
 export async function editCommunityCategories(subreddit: string, cats: CommunityRule[]) {
   const community = await findCommunityByName(subreddit);
 
@@ -628,6 +670,13 @@ export async function editCommunityCategories(subreddit: string, cats: Community
   };
 }
 
+/**
+ * Edits the image widgets of a community.
+ *
+ * @param subreddit - The name of the subreddit (community) to edit.
+ * @param widgets - An array of ImageWidget objects representing the new image widgets.
+ * @returns An object with a status indicating the success of the operation. If the operation is successful, the status will be true. If there is an error, the status will be false and the error property will contain the error message.
+ */
 export async function editCommunityImageWidgets(subreddit: string, widgets: ImageWidget[]) {
   const community = await findCommunityByName(subreddit);
 
@@ -655,6 +704,13 @@ export async function editCommunityImageWidgets(subreddit: string, widgets: Imag
   };
 }
 
+/**
+ * Edits the text widgets of a community.
+ *
+ * @param subreddit - The name of the subreddit (community) to edit.
+ * @param widgets - An array of TextWidget objects representing the new text widgets.
+ * @returns An object with a status indicating the success of the operation. If the operation is successful, the status will be true. If an error occurs, the status will be false and an error message will be provided.
+ */
 export async function editCommunityTextWidgets(subreddit: string, widgets: TextWidget[]) {
   const community = await findCommunityByName(subreddit);
 
@@ -682,6 +738,13 @@ export async function editCommunityTextWidgets(subreddit: string, widgets: TextW
   };
 }
 
+/**
+ * Edits the button widgets of a community.
+ *
+ * @param subreddit - The name of the subreddit/community.
+ * @param widgets - An array of button widgets to be updated.
+ * @returns An object with the status of the operation. If the operation is successful, the status will be true. If there is an error, the status will be false and the error message will be provided.
+ */
 export async function editCommunityButtonWidgets(subreddit: string, widgets: ButtonWidget[]) {
   const community = await findCommunityByName(subreddit);
 
@@ -709,6 +772,13 @@ export async function editCommunityButtonWidgets(subreddit: string, widgets: But
   };
 }
 
+/**
+ * Edits the post settings of a community.
+ *
+ * @param subreddit - The name of the community.
+ * @param settings - The new post settings to be applied.
+ * @returns An object with the status of the operation. If the community is not found, the status will be false and an error message will be provided. If an error occurs during the update, the status will be false and the error will be included in the response. Otherwise, the status will be true.
+ */
 export async function editCommunityPostSettings(subreddit: string, settings: PostSettings) {
   const community = await findCommunityByName(subreddit);
 
@@ -736,6 +806,13 @@ export async function editCommunityPostSettings(subreddit: string, settings: Pos
   };
 }
 
+/**
+ * Edits the content controls of a community.
+ *
+ * @param subreddit - The name of the subreddit/community.
+ * @param controls - The new content controls to be applied.
+ * @returns An object with the status of the operation. If the operation is successful, the status will be true. If there is an error, the status will be false and the error message will be provided.
+ */
 export async function editCommunityContentControls(subreddit: string, controls: ContentControls) {
   const community = await findCommunityByName(subreddit);
 
@@ -763,6 +840,15 @@ export async function editCommunityContentControls(subreddit: string, controls: 
   };
 }
 
+/**
+ * Edits the details of a community.
+ *
+ * @param {string} subreddit - The name of the subreddit to edit.
+ * @param {Details} details - The new details for the subreddit.
+ * @returns {Object} - An object indicating the status of the operation.
+ *   - status: A boolean indicating whether the operation was successful.
+ *   - error: If status is false, this will contain the error message.
+ */
 export async function editCommunitydetails(subreddit: string, details: Details) {
   const community = await findCommunityByName(subreddit);
 
@@ -884,7 +970,15 @@ export async function markSpamComment(userID: string, subreddit: string, comment
     status: true,
   };
 }
-
+/**
+ * Approves a spam post in a subreddit.
+ *
+ * @param {string} postID - The ID of the post to be approved.
+ * @param {string} subreddit - The name of the subreddit where the post belongs.
+ * @returns {Object} - An object indicating the status of the approval.
+ *   - status: A boolean indicating whether the approval was successful.
+ *   - error: An error message if the approval failed.
+ */
 export async function approveSpamPost(postID: string, subreddit: string) {
   const community = await findCommunityByName(subreddit);
   const post = await findPostById(postID);
@@ -920,6 +1014,15 @@ export async function approveSpamPost(postID: string, subreddit: string) {
   };
 }
 
+/**
+ * Approves a spam comment in a subreddit.
+ *
+ * @param {string} commentID - The ID of the comment to be approved.
+ * @param {string} subreddit - The name of the subreddit where the comment belongs.
+ * @returns {Object} - An object with the status of the operation and an optional error message.
+ *   - status: A boolean indicating whether the operation was successful.
+ *   - error: An optional error message if an error occurred during the operation.
+ */
 export async function approveSpamComment(commentID: string, subreddit: string) {
   const community = await findCommunityByName(subreddit);
   const comment = await findCommentById(commentID);
