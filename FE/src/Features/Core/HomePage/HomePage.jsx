@@ -9,6 +9,7 @@ import { useState } from "react";
 import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
 import { createContext, useContext } from "react";
 import BackToTop from "../../../GeneralComponents/backToTop/backToTop";
+import { useSearchParams } from 'react-router-dom';
 /**
  * HomePage Component
  * 
@@ -68,24 +69,30 @@ export function HomeProvider({ children }) {
     </HomeContext.Provider>
   );
 }
-
+const sort = [
+  'best',
+  'hot',
+  'new',
+  'top',
+]
 export default function HomePage() {
-
+  let [searchParams, setSearchParams] = useSearchParams();
+  const search = sort.includes(searchParams.get('sort') ?? "ssssss") ? searchParams.get('sort') : "best";
   // const { selected } = { selected: "new" };
-  const { selected } = useContext(HomeContext);
+  let { selected } = useContext(HomeContext);
   const [page, setPage] = useState(1);
   const [posts, setPosts] = useState([]);
+  selected = search;
   const handleScroll = () => {
-
     if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
       setPage(page + 1)
     }
   };
 
-  const { isLoading, isError, error, data, } = useQuery(['get-post', selected],
-    (e) => userAxios.get(`/user-home${localStorage.getItem("authorization") == null ? "" : `?page=${1}&limit=500&sort=${selected.toLowerCase()}`}`)
+  const { isLoading, isError, error, data, } = useQuery(['get-post' ],
+    (e) => userAxios.get(`/user-home${localStorage.getItem("authorization") == null ? "" : `?page=${1}&limit=800&sort=${search}`}`)
       .then(data => {
-        console.log({adsfsdfsdfsdf: e});
+        console.log({ adsfsdfsdfsdf: e });
         setPosts(prev => {
 
           return [...(data?.data?.homePageAuthPosts ?? data?.data?.homePagePosts)];
@@ -106,7 +113,7 @@ export default function HomePage() {
       <div className="w-full relative overflow-y-auto space-y-4">
         <BackToTop />
         <div className="flex -mb-3 gap-x-4">
-          <div role="sortmenu"><Sortmenu context={HomeContext} /></div>
+          <div role="sortmenu"><Sortmenu selected={search} context={HomeContext} /></div>
           <PeriodSelect appearance={selected} context={HomeContext} />
         </div>
         <hr />

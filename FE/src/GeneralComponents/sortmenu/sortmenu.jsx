@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDown } from 'lucide-react'
 import React, { useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 //for mapping the sorting button options
 /**
@@ -27,10 +27,10 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Sortmenu({ context }) {
+export default function Sortmenu({ context,selected }) {
 
   //managing current state selection and passing data to parent eleement to change the sorting
-  const [current, switchstates] = useState("New");
+  const [current, switchstates] = useState(selected ?? "New");
   const { setselected } = useContext(context);
   const path = useLocation().pathname;
 
@@ -61,7 +61,7 @@ export default function Sortmenu({ context }) {
       >
 
         {/* Sort options list mapped*/}
-        <Menu.Items className="absolute right-0 mt-2 w-20 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute z-50 right-0 mt-2 w-20 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
 
           {/* prompt of options*/}
           <div role="menuBodyHeader" className='font-semibold text-sm mx-3 my-3 text-gray-700'>Sort by</div>
@@ -69,27 +69,27 @@ export default function Sortmenu({ context }) {
           {/* Sort option mapped*/}
           <Menu.Item >
             {({ active }) => (
-              <div id="bestOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Best' ? 'bg-gray-200' : '', isValidBest(path) ? '' : 'hidden')} onClick={() => handleSwitch("Best")}>
+              <a href='?sort=best' id="bestOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Best' ? 'bg-gray-200' : '', isValidBest(path) ? '' : 'hidden')} onClick={() => handleSwitch("Best")}>
                 Best
-              </div>
+              </a>
             )}</Menu.Item>
           <Menu.Item >
             {({ active }) => (
-              <div id="hotOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Hot' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Hot")}>
+              <a href="?sort=hot" id="hotOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Hot' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Hot")}>
                 Hot
-              </div>
+              </a>
             )}</Menu.Item>
           <Menu.Item >
             {({ active }) => (
-              <div id="newOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'New' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("New")}>
+              <a href="?sort=new" id="newOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'New' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("New")}>
                 New
-              </div>
+              </a>
             )}</Menu.Item>
           <Menu.Item >
             {({ active }) => (
-              <div id="topOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Top' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Top")}>
+              <a href="?sort=top" id="topOption" className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm', current === 'Top' ? 'bg-gray-200' : '')} onClick={() => handleSwitch("Top")}>
                 Top
-              </div>
+              </a>
             )}</Menu.Item>
         </Menu.Items>
       </Transition>
