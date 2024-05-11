@@ -1563,14 +1563,14 @@ export async function getPostCommentsByIdHandler(req: Request<PostByIdInput['par
   try {
     const postId = req.params.id;
     console.log(postId);
-    const post = await getPostById(postId);
-    if (!post) {
+    const Post = await getPostById(postId);
+    if (!Post) {
       return res.status(400).json({ msg: 'Post not found' });
     }
-    console.log(post);
+    console.log(Post);
     const user = res.locals.user;
-    if (post.CommunityID) {
-      const community = await getCommunityByID(post.CommunityID as unknown as string);
+    if (Post.CommunityID) {
+      const community = await getCommunityByID(Post.CommunityID as unknown as string);
       if (community?.privacyType === 'Private') {
         if (!user) return res.status(401).json({ msg: 'not authorized' });
         // Check if the user is a member
@@ -1588,12 +1588,11 @@ export async function getPostCommentsByIdHandler(req: Request<PostByIdInput['par
         }
       }
     }
-    //const commentsOfPost = await CommentModel.find({ _id: { $in: post.postComments } });
-    //Perform aggregations to get the comments with details
     //user avatar,username,userid, votes, user that requested the comments(upvoted or downvoted comments??)
-    const comments = await CommentModel.find({ _id: { $in: post.postComments } });
+    const commentsPost = await CommentModel.find({ _id: { $in: Post.postComments } });
 
-    //const comments = await CommentModel.populate(commentsOfPost, { path: 'authorId', select: '_id avatar username' });
+    const post = await PostModel.populate(Post, { path: 'CommunityID', select: '_id icon' });
+    const comments = await CommentModel.populate(commentsPost, { path: 'authorId', select: '_id avatar username' });
     //should return for each comment if current user has upvoted,downvote or didn't vote comment
 
     return res.status(200).json({ post, comments });
