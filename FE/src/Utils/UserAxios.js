@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { extractAxiosError } from "./Utils";
 
 const userAxios = axios.create({
-    baseURL: "https://foxnew.southafricanorth.cloudapp.azure.com/",
+    baseURL: "http://foxnew.southafricanorth.cloudapp.azure.com/",
     withCredentials: true,
 
 })
