@@ -34,7 +34,7 @@ export default function SideBar() {
                     <div className="text-xs text-gray-400 font-semibold uppercase">
                         Threads
                     </div>
-                    <Link to={`/chat/add`}>
+                    <Link id="add-chat" to={`/chat/add`}>
                         <MessageCirclePlus />
                     </Link>
                 </div>
