@@ -1,7 +1,7 @@
 /**
  * @file Sidebar component for the Fox Reddit Clone application.
  * @module Sidebar
- */
+ *//////////
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
