@@ -38,8 +38,8 @@ export default function CommentComponent({ comment, margin = 0 }) {
             marginLeft: margin,
         }}>
             <Link to={`/user/${comm?.user?.username}`} className=" flex gap-2 items-center">
-                <img src={comm?.user?.avatar ?? ""} className=" aspect-square w-[30px] rounded-full overflow-hidden" />
-                <p className="font-bold">{comm?.user?.username}</p>
+                <img src={comm?.authorId?.avatar ?? ""} className=" aspect-square w-[30px] rounded-full overflow-hidden" />
+                <p className="font-bold">{comm?.authorId?.username}</p>
                 <p className="font-bold">.</p>
                 <p className="text-sm text-gray-500">{comm.createdAt}</p>
             </Link>
