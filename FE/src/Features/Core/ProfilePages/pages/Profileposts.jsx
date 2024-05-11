@@ -48,6 +48,7 @@ export default function ProfilePosts({ using, context }) {
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
+                    votes: post.votes,
                     spoiler: post.spoiler,
                     NSFW: post.nsfw,
                     poll: post.poll ? post.poll : []
@@ -85,6 +86,7 @@ export default function ProfilePosts({ using, context }) {
                     thumbnail: post.thumbnail,
                     video: null,
                     type: "post",
+                    votes: post.votes,
                     spoiler: post.spoiler,
                     NSFW: post.nsfw,
                     poll: post.poll ? post.poll : []

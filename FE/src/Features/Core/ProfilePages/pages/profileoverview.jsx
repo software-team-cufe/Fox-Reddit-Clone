@@ -24,7 +24,6 @@ export default function ProfileOverview({ using, context }) {
         setload(true);
         userAxios.get(`user/${using}/overview?page=1&count=${limitpage}&limit=${limitpage}&t=${period}$sort=${selected}`)
             .then(response => {
-                console.log(response.data.posts);
                 if (response.data.posts.length < limitpage && response.data.comments.length < limitpage) {
                     setpagedone(true);
                 }
@@ -40,11 +39,14 @@ export default function ProfileOverview({ using, context }) {
                     comments: post.postComments,
                     thumbnail: post.thumbnail,
                     video: null,
+                    votes: post.votes,
                     type: "post",
+                    userID: post.userID._id,
                     spoiler: post.spoiler,
                     NSFW: post.nsfw,
                     poll: post.poll ? post.poll : []
                 }));
+                console.log(newPosts);
                 setPosts(newPosts);
                 const newComments = response.data.comments.map(comment => ({
                     user: {
@@ -80,6 +82,7 @@ export default function ProfileOverview({ using, context }) {
                     communityIcon: post.CommunityID?.icon,
                     images: post.attachments,
                     postId: post._id,
+                    votes: post.votes,
                     title: post.title,
                     textHTML: post.textHTML,
                     votesCount: post.votesCount,

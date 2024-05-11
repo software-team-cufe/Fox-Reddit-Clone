@@ -69,145 +69,138 @@ export default function CommunityPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editComponent, setEditComponent] = useState("Banner");
   const [showKickOut, setShowKickOut] = useState(false);
-  const[joining, setJoining] = useState(false);
+  const [joining, setJoining] = useState(false);
   const searchRedux = useSelector(state => state.search);
   const [firstDone, setFirstDone] = useState(false);
   //to fetch the community data from the server and use them
-  useEffect (() => {
-    const fetchCommunity = async () => {
-    setLoading(true);
-    setFirstDone(false);
-    if (user == null) {
-       await userAxios.get(`/${community}`)
-        .then((response) => {
-
-          let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
-          if (!(recent.includes(community))) {
-            if (recent.length < 5) {
-              recent = [...recent, community];
-            } else {
-              recent = [...recent.slice(1), community];
-            }
-          }
-          localStorage.setItem('recentCommunities', JSON.stringify(recent));
-
-          const newcomm = {
-            id: response.data.community._id,
-            name: response.data.community.name,
-            icon: response.data.community.icon,
-            backimage: response.data.community.banner,
-            rules: response.data.community.communityRules,
-            membersCount: response.data.community.membersCnt,
-            onlineMembers: 0,
-            joined: false,
-            modded: false,
-            favourited: false,
-            type: response.data.community.privacyType
-          }
-          setComm(newcomm);
-          if (newcomm.type == "private") {
-            setShowKickOut(true);
-          }
-          localStorage.setItem(`comm${community}Storage`, JSON.stringify({data: newcomm, loggedIn: false}));
-        })
-        .catch(error => {
-
-          console.error('There was an error!', error);
-          toast.error("this community doesn't seem to exist, try again");
-          navigator("/404");
-        })
-    }
-    else {
-      let joinedComms = 0;
-       await userAxios.get(`/subreddits/mine/member`)
-        .then((response) => {
-          let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
-          if (!(recent.includes(community))) {
-            if (recent.length < 5) {
-              recent = [...recent, community];
-            } else {
-              recent = [...recent.slice(1), community];
-            }
-          }
-          localStorage.setItem('recentCommunities', JSON.stringify(recent));
-          const joins = response?.data?.communities?.map((join) => join.name);
-          joinedComms = joins;
-        })
-        .catch(error => {
-          console.error("cant fetch communitites", error);
-        })
-
-      let moddedComms = 0;
-       await userAxios.get(`/subreddits/mine/moderator`)
-        .then((response) => {
-          const mods = response?.data?.communities?.map((mod) => mod.name);
-          moddedComms = mods;
-        })
-        .catch(error => {
-          console.error("can't fetch modded", error)
-        })
-
-      let favComms = 0;
-       await userAxios.get('/subreddits/mine/favorite')
-        .then((response) => {
-          const favs = response?.data?.communties?.map((fav) => fav.name);
-          favComms = favs;
-        })
-        .catch(error => {
-          console.error("can't fetch favs", error);
-        })
-
-
-       await userAxios.get(`/${community}`)
-        .then((response) => {
-          const newcomm = {
-            id: response.data.community._id,
-            name: response.data.community.name,
-            icon: response.data.community.icon,
-            backimage: response.data.community.banner,
-            rules: response.data.community.communityRules,
-            membersCount: response.data.community.membersCnt,
-            onlineMembers: 0,
-            joined: joinedComms.includes(response.data.community.name),
-            modded: moddedComms.includes(response.data.community.name),
-            favourited: favComms.includes(response.data.community.name),
-            type: response.data.community.privacyType,
-            muted: response.data.community.muted
-          }
-          setComm(newcomm);
-          if (newcomm.type == "Private" && !joinedComms.includes(newcomm.name)) {
-            setShowKickOut(true);
-          }
-          localStorage.setItem(`comm${community}Storage`, JSON.stringify({data: newcomm, loggedIn: true}));
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-          toast.error("this community doesn't seem to exist, try again");
-          navigator("/404");
-        })
-        setFirstDone(true);
-    }
-  };
-  fetchCommunity();
-  }, [community]);
-
   useEffect(() => {
-    if(!firstDone) return;
-    const fetchInitialPosts = async () => {
-    setFeed(true);
-    if (searchRedux == "") {
-      let link = `api/listing/posts/r/${commObj.name}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
+    const fetchCommunity = async () => {
+      let tempIcon;
+      setLoading(true);
+      setFirstDone(false);
+      if (user == null) {
+        await userAxios.get(`/${community}`)
+          .then((response) => {
+
+            let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
+            if (!(recent.includes(community))) {
+              if (recent.length < 5) {
+                recent = [...recent, community];
+              } else {
+                recent = [...recent.slice(1), community];
+              }
+            }
+            localStorage.setItem('recentCommunities', JSON.stringify(recent));
+
+            const newcomm = {
+              id: response.data.community._id,
+              name: response.data.community.name,
+              icon: response.data.community.icon,
+              backimage: response.data.community.banner,
+              rules: response.data.community.communityRules,
+              membersCount: response.data.community.membersCnt,
+              onlineMembers: 0,
+              joined: false,
+              modded: false,
+              favourited: false,
+              type: response.data.community.privacyType
+            }
+            tempIcon = response.data.community.icon;
+            setComm(newcomm);
+            if (newcomm.type == "private") {
+              setShowKickOut(true);
+            }
+            localStorage.setItem(`comm${community}Storage`, JSON.stringify({ data: newcomm, loggedIn: false }));
+          })
+          .catch(error => {
+
+            console.error('There was an error!', error);
+            toast.error("this community doesn't seem to exist, try again");
+            navigator("/404");
+          })
+      }
+      else {
+        let joinedComms = 0;
+        await userAxios.get(`/subreddits/mine/member`)
+          .then((response) => {
+            let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
+            if (!(recent.includes(community))) {
+              if (recent.length < 5) {
+                recent = [...recent, community];
+              } else {
+                recent = [...recent.slice(1), community];
+              }
+            }
+            localStorage.setItem('recentCommunities', JSON.stringify(recent));
+            const joins = response?.data?.communities?.map((join) => join.name);
+            joinedComms = joins;
+          })
+          .catch(error => {
+            console.error("cant fetch communitites", error);
+          })
+
+        let moddedComms = 0;
+        await userAxios.get(`/subreddits/mine/moderator`)
+          .then((response) => {
+            const mods = response?.data?.communities?.map((mod) => mod.name);
+            moddedComms = mods;
+          })
+          .catch(error => {
+            console.error("can't fetch modded", error)
+          })
+
+        let favComms = 0;
+        await userAxios.get('/subreddits/mine/favorite')
+          .then((response) => {
+            const favs = response?.data?.communties?.map((fav) => fav.name);
+            favComms = favs;
+          })
+          .catch(error => {
+            console.error("can't fetch favs", error);
+          })
+
+
+        await userAxios.get(`/${community}`)
+          .then((response) => {
+            const newcomm = {
+              id: response.data.community._id,
+              name: response.data.community.name,
+              icon: response.data.community.icon,
+              backimage: response.data.community.banner,
+              rules: response.data.community.communityRules,
+              membersCount: response.data.community.membersCnt,
+              onlineMembers: 0,
+              joined: joinedComms.includes(response.data.community.name),
+              modded: moddedComms.includes(response.data.community.name),
+              favourited: favComms.includes(response.data.community.name),
+              type: response.data.community.privacyType,
+              muted: response.data.community.muted
+            }
+            tempIcon = response.data.community.icon;
+            setComm(newcomm);
+            if (newcomm.type == "Private" && !joinedComms.includes(newcomm.name)) {
+              setShowKickOut(true);
+            }
+            localStorage.setItem(`comm${community}Storage`, JSON.stringify({ data: newcomm, loggedIn: true }));
+          })
+          .catch(error => {
+            console.error('There was an error!', error);
+            toast.error("this community doesn't seem to exist, try again");
+            navigator("/404");
+          })
+      }
+      let link = `api/listing/posts/r/${community}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
       if (selected == 'Top') {
         link = link + `&t=${period}`;
       }
-       await userAxios.get(link)
+      await userAxios.get(link)
         .then((response) => {
           if (response.data.length > 0) {
             setpagedone(true);
           }
           const newPosts = response.data.map(post => ({
             communityName: post.username,
-            communityIcon: commObj.icon,
+            communityIcon: tempIcon,
             images: post.attachments,
             postId: post._id,
             title: post.title,
@@ -223,15 +216,25 @@ export default function CommunityPage() {
           }));
           setcurrentpage(2);
           setPosts(newPosts);
-          setFeed(false);
         })
         .catch(error => {
           console.error('There was an error!', error);
-          setFeed(false);
         })
-    }
-    else {
-       await userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
+      setFeed(false);
+      setFirstDone(true);
+      setLoading(false);
+    };
+    fetchCommunity();
+  }, [community]);
+
+  useEffect(() => {
+    fetchInitialPosts();
+  }, [selected, period, searchRedux]);
+
+  const fetchInitialPosts = async () => {
+    if (searchRedux == "") { return}
+    setFeed(true);
+      await userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
         .then((response) => {
           if (response.data.subredditSearchPosts.length < limitpage) {
             setpagedone(true);
@@ -258,11 +261,7 @@ export default function CommunityPage() {
           console.error('There was an error!', error);
         });
       setFeed(false);
-    }
-    setLoading(false);
   };
-    fetchInitialPosts();
-  }, [selected, period, searchRedux, community, loading, firstDone]);
 
   const swtichJoinState = async () => {
     setJoining(true);
@@ -278,7 +277,7 @@ export default function CommunityPage() {
       .catch(error => {
         console.error('There was an error!', error);
       });
-      setJoining(false);
+    setJoining(false);
   }
 
   const CreatePostHandle = () => {
@@ -373,13 +372,14 @@ export default function CommunityPage() {
     )
   }
 
-  if(path.pathname.includes(`/info`)) {
-    return(
+  if (path.pathname.includes(`/info`)) {
+    return (
       <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
         {commObj.modded ? <ModCard></ModCard> : <MainFooter comm={commObj} />}
       </div>
-    )}
-    
+    )
+  }
+
 
   return (
     <div role="communitypage" className={`flex-initial mx-0 -mt-4 md:w-[80%] w-full md:mx-auto relative`}>
@@ -416,7 +416,7 @@ export default function CommunityPage() {
             </Link>
           ) : (
             <button id="joinComm" role="joinButton" className={`rounded-full w-fit px-4 h-10 items-center  ${commObj.joined ? 'border-gray-700 border-[1px] hover:border-black' : 'hover:bg-blue-600 bg-blue-700'}`} onClick={() => swtichJoinState()}>
-            {joining ? <Spinner></Spinner> : <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>}
+              {joining ? <Spinner></Spinner> : <span className={`inline font-bold text-sm ${commObj.joined ? 'text-black' : 'text-white'}`}>{commObj.joined ? 'Joined' : 'Join'}</span>}
             </button>)}
           <OptionsMenu comm={commObj} setComm={setComm} />
         </div>

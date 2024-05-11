@@ -50,6 +50,12 @@ export default function Card (){
     const handleNavigate=()=>{
        navigator('/setting/profile');
     }
+
+    const navigate = useNavigate();
+
+    const handleClick = (communityName) => {
+      navigate(`/r/${communityName}`);
+    };
   
     return(
         <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block overflow-y-auto">
@@ -63,7 +69,7 @@ export default function Card (){
             </button>
         </div>
     
-        <span className='font-bold ml-5'>{username}</span>
+        <span id='username' className='font-bold ml-5 '>{username}</span>
         
         <button
               className="flex items-center py-1.5 px-3 ml-5 mt-4 text-xs font-medium text-black focus:outline-none
@@ -363,25 +369,29 @@ export default function Card (){
          <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">YOU'RE A MODERATOR OF THESE COMMUNITIES</h1>
         </div> 
         <div className='flex flex-col hover:bg-gray-100 h-12'>
-        {communities.map((community, index) => (
-            <a key={index} href={`/r/${community.name}`} className='flex flex-row w-full justify-between hover:bg-gray-100'>
-                <div className='flex flex-row space-x-3 ml-6 my-3'>
-                    <img src={community.icon} alt={community.name} className="w-7 h-7" />
-                    <div className='flex flex-col'>
-                        <div className='flex flex-row'>
-                            <div className='flex flex-row'>
-                                <span className='text-xs'>r/{community.name}</span>
-                            </div>
-                        </div>
-                        <span className='text-xs text-gray-400'>{community.memberCount} members</span>
-                    </div>
+      {communities.map((community, index) => (
+        <a
+          key={index}
+          onClick={() => handleClick(community.name)}
+          className='flex flex-row w-full justify-between hover:bg-gray-100'
+        >
+          <div className='flex flex-row space-x-3 ml-6 my-3'>
+            <img src={community.icon} alt={community.name} className="w-7 h-7" />
+            <div className='flex flex-col'>
+              <div className='flex flex-row'>
+                <div className='flex flex-row'>
+                  <span className='text-xs'>r/{community.name}</span>
                 </div>
-                <div>
-                    <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[55px] h-7 px-2 text-black text-xs font-semibold'>Joined</button>
-                </div>
-            </a>
-        ))}
-       </div>
+              </div>
+              <span className='text-xs text-gray-400'>{community.memberCount} members</span>
+            </div>
+          </div>
+          <div>
+            <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[55px] h-7 px-2 text-black text-xs font-semibold'>Joined</button>
+          </div>
+        </a>
+      ))}
+    </div>
 
      </div>
     )
