@@ -84,18 +84,19 @@ export default function UserHeader({ post }) {
         </button>
         <div className=" space-y-2">
           <div className="flex items-center gap-2">
-            <Link to={`/r/${post?.coummunityName}`}>
-              <img className="h-[40px] rounded-full overflow-hidden aspect-square " src="https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg" />
+            <Link to={`/r/${post?.post?.coummunityName}`}>
+              <img className="h-[40px] rounded-full overflow-hidden aspect-square " 
+              src="https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg" />
             </Link>
             <div className="w-fit">
               <div className="flex items-center gap-2">
-                <Link to={`/r/${post?.coummunityName}`}>
-                  <p>r/{post.coummunityName} . </p>
+                <Link to={`/r/${post?.post?.coummunityName}`}>
+                  <p>r/{post?.post?.coummunityName} . </p>
                 </Link>
                 <p className=" text-sm text-gray-500">15 hr ago</p>
               </div>
-              <Link to={`/user/${post.username}`}>
-                <p className=" text-sm text-gray-500">Spacesh1psoda</p>
+              <Link to={`/user/${post?.post?.username}`}>
+                <p className=" text-sm text-gray-500">{post?.post?.username}</p>
               </Link>
             </div>
           </div>
