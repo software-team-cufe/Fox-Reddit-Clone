@@ -202,7 +202,6 @@ if(userStore.getState().user.user != null){
                         <Link
                            to={e.link}
                            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group"
-                           onClick={navigate(`/${e.link}`)}
                            id={`${e.title}`}
                         >
                            <e.icon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
@@ -233,10 +232,10 @@ if(userStore.getState().user.user != null){
                                 
                                  return (
                                     <Link
+                                       to={`/r/${subreddit.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                        key={index}
-                                       id={`subreddit.name${index}`}
-                                       onClick={navigate(`/r/${subreddit.name}`)}>
+                                       id={`subreddit.name${index}`}>
                                        <img src={subreddit.icon} className="rounded-full w-7 my-auto h-7" />
 
                                        {subreddit.name}
@@ -272,8 +271,7 @@ if(userStore.getState().user.user != null){
                                     to={`/r/${subreddit}`}
                                     className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                     key={index}
-                                    id={`subreddit.name${index}`}
-                                    onClick={navigate(`/r/${subreddit}`)}>
+                                    id={`subreddit.name${index}`}>
                                     <img src={"https://res.cloudinary.com/dvnf8yvsg/image/upload/v1714594934/vjhqqv4imw26krszm7hr.png"} className="rounded-full w-7 my-auto h-7" />
 
                                     {subreddit}
@@ -324,8 +322,7 @@ if(userStore.getState().user.user != null){
                                        to={`/r/${commun.name}`}
                                        className="px-3 rounded-lg py-2 flex gap-2 w-full h-10 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                        key={index}
-                                       id="subreddit.name"
-                                       onClick={navigate(`/r/${commun.name}`)}>
+                                       id="subreddit.name">
                                        <img src={commun.icon} className="rounded-full w-7 my-auto h-7" />
                                        {commun.name}
                                     </Link>
@@ -364,7 +361,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.redditinc.com/"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                  id="aboutReddit"
-                                 onClick={navigate("https://www.redditinc.com/")}
                               >
                                  About Reddit
                               </Link>
@@ -374,7 +370,6 @@ if(userStore.getState().user.user != null){
                                  to="https://accounts.reddit.com/adsregister?dest=https%3A%2F%2Fads.reddit.com%2F&referrer=https%3A%2F%2Fwww.reddit.com%2F&utm_source=web3x_consumer&utm_name=left_nav_cta"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                  id="advertise"
-                                 onClick={navigate("https://accounts.reddit.com/adsregister?dest=https%3A%2F%2Fads.reddit.com%2F&referrer=https%3A%2F%2Fwww.reddit.com%2F&utm_source=web3x_consumer&utm_name=left_nav_cta")}
                               >
                                  Advertise
                               </Link>
@@ -384,7 +379,6 @@ if(userStore.getState().user.user != null){
                                  to="https://support.reddithelp.com/hc/en-us"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                  id="help"
-                                 onClick={navigate("https://support.reddithelp.com/hc/en-us")}
                               >
                                  Help
                               </Link>
@@ -394,7 +388,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.redditinc.com/blog"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                  id="blog"
-                                 onClick={navigate("https://www.redditinc.com/blog")}
                               >
                                  Blog
                               </Link>
@@ -404,7 +397,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.redditinc.com/careers"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                  id="career"
-                                 onClick={navigate("https://www.redditinc.com/careers")}
                               >
                                  career
                               </Link>
@@ -414,7 +406,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.redditinc.com/press"
                                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray"
                                  id="press"
-                                 onClick={navigate("https://www.redditinc.com/press")}
                               >
                                  Press
                               </Link>
@@ -427,7 +418,6 @@ if(userStore.getState().user.user != null){
                                  to="./community"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                                  id="communities"
-                                 onClick={navigate("./community")}
                               >
                                  <i className="fa-solid fa-users-between-lines w-5 h-5"></i>
                                  <span className="px-2 py-2 text-gray-800" >Communities</span>
@@ -440,7 +430,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.reddit.com/posts/2024/global/"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                                  id="bestOfReddit"
-                                 onClick={navigate("https://www.reddit.com/posts/2024/global/")}
                               >
                                  <Sparkles className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">Best of Reddit</span>
@@ -452,7 +441,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.reddit.com/topics/a-1/"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                                  id="topics"
-                                 onClick={navigate("https://www.reddit.com/topics/a-1/")} 
                               >
                                  <LayoutGrid strokeWidth={1.5} className="w-5 h-5" />
                                  <span className="px-2 py-2 text-gray-800">Topics</span>
@@ -466,7 +454,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.redditinc.com/policies/content-policy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                                  id="contentPolicy"
-                                 onClick={navigate("https://www.redditinc.com/policies/content-policy")}
                               >
                                  <Siren className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">content policy</span>
@@ -477,7 +464,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.reddit.com/policies/privacy-policy"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                                  id="privacyPolicy"
-                                 onClick={navigate("https://www.reddit.com/policies/privacy-policy")}
                               >
                                  <BookLock className="w-5 h-5" />
                                  <span className="px-2 py-2 text-gray-800">Privacy policy</span>
@@ -489,7 +475,6 @@ if(userStore.getState().user.user != null){
                                  to="https://www.redditinc.com/policies/user-agreement"
                                  className="flex items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-800 text-gray-400"
                                  id="userAgreement"
-                                 onClick={navigate("https://www.redditinc.com/policies/user-agreement")}
                               >
                                  <Handshake className="w-5 h-5" />
                                  <span className=" px-2 py-2 text-gray-800">User agreement</span>
