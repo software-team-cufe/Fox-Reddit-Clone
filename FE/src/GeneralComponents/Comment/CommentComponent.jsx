@@ -37,7 +37,7 @@ export default function CommentComponent({ comment, margin = 0 }) {
         <div style={{
             marginLeft: margin,
         }}>
-            <Link to={`/user/${comm?.user?.username}`} className=" flex gap-2 items-center">
+            <Link to={`/viewer/${comm?.authorId?.username}`} className=" flex gap-2 items-center">
                 <img src={comm?.authorId?.avatar ?? ""} className=" aspect-square w-[30px] rounded-full overflow-hidden" />
                 <p className="font-bold">{comm?.authorId?.username}</p>
                 <p className="font-bold">.</p>

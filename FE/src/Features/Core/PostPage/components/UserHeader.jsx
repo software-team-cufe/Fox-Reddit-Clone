@@ -95,7 +95,7 @@ export default function UserHeader({ post }) {
                 </Link>
                 <p className=" text-sm text-gray-500">15 hr ago</p>
               </div>
-              <Link to={`/user/${post?.post?.username}`}>
+              <Link to={`/viewer/${post?.post?.username}`}>
                 <p className=" text-sm text-gray-500">{post?.post?.username}</p>
               </Link>
             </div>
