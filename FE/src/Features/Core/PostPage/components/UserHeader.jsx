@@ -86,7 +86,7 @@ export default function UserHeader({ post }) {
           <div className="flex items-center gap-2">
             <Link to={`/r/${post?.post?.coummunityName}`}>
               <img className="h-[40px] rounded-full overflow-hidden aspect-square " 
-              src="https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg" />
+              src={post?.post?.CommunityID?.icon} />
             </Link>
             <div className="w-fit">
               <div className="flex items-center gap-2">
