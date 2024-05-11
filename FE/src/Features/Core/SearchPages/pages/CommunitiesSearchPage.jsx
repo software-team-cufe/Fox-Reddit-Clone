@@ -20,7 +20,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   const [pagedone, setpagedone] = useState(false);
   const [currentpage, setcurrentpage] = useState(2);
   const limitpage = 5;
-  const reduxUser = useSelector(state => state.user);
+  const reduxUser = useSelector(state => state.user.user);
 
   useEffect(() => {
     userAxios.get(`r/search/?q=${searched}&type=sr&page=1&limit=${limitpage}`)  //fetch users and organize into users array for mapping

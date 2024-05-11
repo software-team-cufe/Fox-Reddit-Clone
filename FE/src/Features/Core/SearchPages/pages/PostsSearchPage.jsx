@@ -21,7 +21,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   const loadMoreButtonRef = useRef(null);
   const [pagedone, setpagedone] = useState(false);
   const [currentpage, setcurrentpage] = useState(2);
-  const userRedux = useSelector(state => state.user);
+  const userRedux = useSelector(state => state.user.user);
   const limitpage = 5;
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function PeopleSearchPage({ searched = "filler" }) {
     userAxios.get(`r/search/?q=${searched}&type=link&page=1&limit=${limitpage}&sort=${selected}&sortBy=${searchPeriod}`)
       .then(response => {
         if (userRedux == null) {
-          const newPosts = response.data.postsSearchResultsNotAuth.map(post => ({
+          const newPosts = response.data.postsSearchResultNotAuth.map(post => ({
             communityName: post.communityName,
             communityIcon: post.communityIcon,
             images: post.attachments,

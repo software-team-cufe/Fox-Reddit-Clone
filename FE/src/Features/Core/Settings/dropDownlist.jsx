@@ -45,7 +45,7 @@ if(secondOrFirst == 1){
         <div ref={ref} className="item-center text-center">
             <button
                 onClick={() => setOpen(!open)}
-                id="dropdownDefaultButton"
+                id="dropdownDefaultButtonForSorting"
                 data-dropdown-toggle="dropdown"
                 className="text-blue-500 dark:text-blue-500 mr-2 w-auto font-medium rounded-lg text-sm px-7 py-1.5 justify-between
                 bg-transparent dark:bg-transparent mb-2" // Added mb-2 for a small gap
@@ -59,24 +59,24 @@ if(secondOrFirst == 1){
                items-center bg-transparent dark:bg-transparent rounded-3xl inline-block">
                    <ul className="">
                         <li onClick={()=>{
-                                toast.success("changes saved. \u{1F60A}");
+                                toast.success("changes saved.");
                                 setItem("Hot");
-                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2"><Flame /><span>Hot</span></li>
+                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2" id="hotOption"><Flame /><span>Hot</span></li>
                         <li onClick={
                             ()=>{
-                                    toast.success("changes saved. \u{1F60A}");
+                                    toast.success("changes saved.");
                                     setItem("New");
-                                }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2"><BadgePlus /><span>New</span></li>
+                                }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2" id="NewOption"><BadgePlus /><span>New</span></li>
                         <li onClick={()=>{
-                                toast.success("changes saved. \u{1F60A}");
+                                toast.success("changes saved.");
                                 setItem("Rising");
-                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2"><CircleArrowOutUpLeft /><span>Rising</span></li>
+                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2" id="RisingOption"><CircleArrowOutUpLeft /><span>Rising</span></li>
                         <li onClick={
                             ()=>{
-                                toast.success("changes saved. \u{1F60A}");
+                                toast.success("changes saved.");
                                 setItem("Top");
                             }
-                            } className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2"><ArrowsUpFromLine /><span>Top</span></li>
+                            } className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2" id="TopOption"><ArrowsUpFromLine /><span>Top</span></li>
                     </ul>
                </div>
             )}
@@ -87,7 +87,7 @@ if(secondOrFirst == 1){
         <div ref={ref} className="item-center text-center">
             <button
                 onClick={() => setOpen(!open)}
-                id="dropdownDefaultButton"
+                id="dropdownDefaultButtonForThemeView"
                 data-dropdown-toggle="dropdown"
                 className="text-blue-500 dark:text-blue-500 mr-2 w-auto font-medium rounded-lg text-sm px-7 py-1.5
                 bg-transparent dark:bg-transparent mb-2" // Added mb-2 for a small gap
@@ -103,15 +103,15 @@ if(secondOrFirst == 1){
                         <li onClick={()=>{
                                 toast.success("changes saved. \u{1F60A}");
                                 setItem("Card");
-                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2"><GalleryThumbnails /><span>card</span></li>
+                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2" id="cardOption"><GalleryThumbnails /><span>card</span></li>
                         <li onClick={()=>{
                                 toast.success("changes saved. \u{1F60A}");
                                 setItem("Classic");
-                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2"><Rows2 /><span>classic</span></li>
+                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2" id="classicOption"><Rows2 /><span>classic</span></li>
                         <li onClick={()=>{
                                 toast.success("changes saved. \u{1F60A}");
                                 setItem("Compact");
-                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2"><Rows4 /><span>compact</span></li>
+                            }} className="flex flex-col hover:bg-blue-100 items-center cursor-pointer border border-block px-4 py-2" id="compactOption"><Rows4 /><span>compact</span></li>
                     </ul>
                </div>
             )}

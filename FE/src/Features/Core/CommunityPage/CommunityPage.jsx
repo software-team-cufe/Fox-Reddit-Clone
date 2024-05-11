@@ -71,21 +71,14 @@ export default function CommunityPage() {
   const [showKickOut, setShowKickOut] = useState(false);
   const[joining, setJoining] = useState(false);
   const searchRedux = useSelector(state => state.search);
-
-
+  const [firstDone, setFirstDone] = useState(false);
   //to fetch the community data from the server and use them
-  const fetchCommunity = useCallback(async () => {
-    const storedData = JSON.parse(localStorage.getItem(`comm${community}Storage`));
-    if (storedData) {
-      const {data: storedComm, loggedIn} = storedData; // Remove JSON.parse here
-      if(loggedIn) {
-        setComm(storedComm);
-        setLoading(false);
-        return;
-      }
-    }
+  useEffect (() => {
+    const fetchCommunity = async () => {
+    setLoading(true);
+    setFirstDone(false);
     if (user == null) {
-      await userAxios.get(`/${community}`)
+       await userAxios.get(`/${community}`)
         .then((response) => {
 
           let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
@@ -126,7 +119,7 @@ export default function CommunityPage() {
     }
     else {
       let joinedComms = 0;
-      await userAxios.get(`/subreddits/mine/member`)
+       await userAxios.get(`/subreddits/mine/member`)
         .then((response) => {
           let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
           if (!(recent.includes(community))) {
@@ -145,7 +138,7 @@ export default function CommunityPage() {
         })
 
       let moddedComms = 0;
-      await userAxios.get(`/subreddits/mine/moderator`)
+       await userAxios.get(`/subreddits/mine/moderator`)
         .then((response) => {
           const mods = response?.data?.communities?.map((mod) => mod.name);
           moddedComms = mods;
@@ -155,7 +148,7 @@ export default function CommunityPage() {
         })
 
       let favComms = 0;
-      await userAxios.get('/subreddits/mine/favorite')
+       await userAxios.get('/subreddits/mine/favorite')
         .then((response) => {
           const favs = response?.data?.communties?.map((fav) => fav.name);
           favComms = favs;
@@ -165,7 +158,7 @@ export default function CommunityPage() {
         })
 
 
-      await userAxios.get(`/${community}`)
+       await userAxios.get(`/${community}`)
         .then((response) => {
           const newcomm = {
             id: response.data.community._id,
@@ -192,20 +185,22 @@ export default function CommunityPage() {
           toast.error("this community doesn't seem to exist, try again");
           navigator("/404");
         })
+        setFirstDone(true);
     }
-    setLoading(false);
-  }, []);
+  };
+  fetchCommunity();
+  }, [community]);
 
-  let { error } = useQuery('fetchCommunity', fetchCommunity, { refetchOnWindowFocus: false});
-
-  const fetchInitialPosts = async () => {
+  useEffect(() => {
+    if(!firstDone) return;
+    const fetchInitialPosts = async () => {
     setFeed(true);
     if (searchRedux == "") {
       let link = `api/listing/posts/r/${commObj.name}/best?page=1&limit=${limitpage}&count=0&startDate=1970-01-01T00%3A00%3A00Z&endDate=2099-12-31T23%3A59%3A59Z`;
       if (selected == 'Top') {
         link = link + `&t=${period}`;
       }
-      await userAxios.get(link)
+       await userAxios.get(link)
         .then((response) => {
           if (response.data.length > 0) {
             setpagedone(true);
@@ -236,7 +231,7 @@ export default function CommunityPage() {
         })
     }
     else {
-      await userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
+       await userAxios.get(`r/${commObj.name}/search/?q=${searchRedux}&type=link&sort=${selected}&page=1&limit=${limitpage}`)
         .then((response) => {
           if (response.data.subredditSearchPosts.length < limitpage) {
             setpagedone(true);
@@ -264,9 +259,10 @@ export default function CommunityPage() {
         });
       setFeed(false);
     }
+    setLoading(false);
   };
-
-  const { error: postsError } = useQuery(['fetchInitialPosts', selected, period, searchRedux], fetchInitialPosts, { enabled: !loading, refetchOnWindowFocus: false });
+    fetchInitialPosts();
+  }, [selected, period, searchRedux, community, loading, firstDone]);
 
   const swtichJoinState = async () => {
     setJoining(true);
