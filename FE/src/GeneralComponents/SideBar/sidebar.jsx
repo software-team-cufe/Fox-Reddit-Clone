@@ -203,6 +203,7 @@ if(userStore.getState().user.user != null){
                            to={e.link}
                            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-100 group"
                            onClick={navigate(`/${e.link}`)}
+                           id={`${e.title}`}
                         >
                            <e.icon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900" />
                            <span className="ms-3 text-gray-800">{e.title}</span>
