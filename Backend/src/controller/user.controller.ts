@@ -1706,6 +1706,13 @@ export async function getHistoryPostHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Handles the request to get user's home page posts.
+ *
+ * @param {Request<{}, {}, {}, HomePagePostsInput['query']>} req - The request object.
+ * @param {Response} res - The response object.
+ * @return {Promise<void>} A JSON response with the user's home page posts.
+ */
 export async function getUserHomePagePostsHandler(
   req: Request<{}, {}, {}, HomePagePostsInput['query']>,
   res: Response
@@ -1746,7 +1753,14 @@ export async function getUserHomePagePostsHandler(
     return res.status(500).json({ msg: 'Internal server error in home page' });
   }
 }
-
+/**
+ * Handles the request to get popular posts.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A JSON response with the popular posts.
+ * @throws {Error} If something goes wrong while retrieving the popular posts.
+ */
 export async function getPopularPageHandler(req: Request<{}, {}, {}, HomePagePostsInput['query']>, res: Response) {
   try {
     const sort = req.query.sort as string;

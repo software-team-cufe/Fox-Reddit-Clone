@@ -185,7 +185,16 @@ export function extractUsernamesFromTextJSON(textJSON: string): string[] {
 
   return usernames;
 }
-
+/**
+ * Retrieves search results for comments without authentication.
+ *
+ * @param {number} page - The page number of the search results.
+ * @param {number} limit - The maximum number of search results to return per page.
+ * @param {string} query - The search query to match comments by HTML or JSON text.
+ * @param {string} sort - The sorting criteria for the search results. Can be 'top' or 'new'. Defaults to 'new'.
+ * @returns {Promise<Array>} - A promise that resolves to an array of comment search results.
+ * @throws {appError} - If there is an error retrieving the search results.
+ */
 export async function getCommentSearchResultsNotAuth(
   page: number,
   limit: number,
@@ -287,7 +296,18 @@ export async function getCommentSearchResultsNotAuth(
     throw new appError('Failed to get search results comments', 400);
   }
 }
-
+/**
+ * Retrieves authenticated comment search results based on the provided parameters.
+ *
+ * @param {string} userID - The ID of the user performing the search.
+ * @param {number} page - The page number of the search results.
+ * @param {number} limit - The maximum number of search results per page.
+ * @param {string} query - The search query to match comments by HTML or JSON text.
+ * @param {string | undefined} sort - The sorting criteria for the search results. Possible values are 'top' or 'new'. Defaults to 'new'.
+ * @param {Ref<Post>[] | undefined} hiddenPosts - An array of hidden post IDs to exclude from the search results.
+ * @returns {Promise<any>} - A promise that resolves to the authenticated comment search results.
+ * @throws {appError} - If there is an error retrieving the search results.
+ */
 export async function getCommentSearchResultsAuth(
   userID: string,
   page: number,
@@ -396,6 +416,18 @@ export async function getCommentSearchResultsAuth(
   }
 }
 
+/**
+ * Retrieves subreddit comments based on search criteria.
+ *
+ * @param {string} communityName - The name of the community to search within.
+ * @param {number} page - The page number of the search results.
+ * @param {number} limit - The maximum number of search results to return per page.
+ * @param {string} query - The search query to match comments against.
+ * @param {string | undefined} sort - The sorting criteria for the search results. Can be 'top' or 'new'.
+ * @param {Ref<Post>[] | undefined} hiddenPosts - An array of post IDs to exclude from the search results.
+ * @returns {Promise<any>} - A promise that resolves to the subreddit comments search results.
+ * @throws {appError} - If there is an error retrieving the search results.
+ */
 export async function getSubredditCommentsSearch(
   communityName: string,
   page: number,

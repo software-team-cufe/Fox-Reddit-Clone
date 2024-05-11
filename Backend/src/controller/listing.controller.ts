@@ -1532,6 +1532,16 @@ export async function getCommentRepliesHandler(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the comments for a specific post by its ID.
+ *
+ * @param req - The request object containing the post ID in the params.
+ * @param res - The response object to send the comments and post details.
+ * @returns The post details and comments in the response body.
+ * @throws 400 error if the post is not found.
+ * @throws 401 error if the user is not authorized to access the comments.
+ * @throws 500 error if there is an internal server error.
+ */
 export async function getPostCommentsByIdHandler(req: Request<PostByIdInput['params']>, res: Response) {
   try {
     const postId = req.params.id;
@@ -1564,12 +1574,12 @@ export async function getPostCommentsByIdHandler(req: Request<PostByIdInput['par
     //const commentsOfPost = await CommentModel.find({ _id: { $in: post.postComments } });
     //Perform aggregations to get the comments with details
     //user avatar,username,userid, votes, user that requested the comments(upvoted or downvoted comments??)
-    const commentsOfPost = await CommentModel.find({ _id: { $in: post.postComments } });
+    const comments = await CommentModel.find({ _id: { $in: post.postComments } });
 
-    const comments = await CommentModel.populate(commentsOfPost, { path: 'authorId', select: '_id avatar username' });
+    //const comments = await CommentModel.populate(commentsOfPost, { path: 'authorId', select: '_id avatar username' });
     //should return for each comment if current user has upvoted,downvote or didn't vote comment
 
-    return res.status(200).json({ comments });
+    return res.status(200).json({ post, comments });
   } catch (error) {
     return res.status(500).json({ msg: 'Internal server error' });
   }

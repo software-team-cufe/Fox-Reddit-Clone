@@ -21,6 +21,16 @@ import {
   getSubredditCommentsSearch,
 } from '../service/comment.service';
 import { getUserSearchResult, getHiddenPosts } from '../service/user.service';
+
+/**
+ * Handles the search functionality for the home page.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @param next - The next function.
+ * @returns The search results based on the search type.
+ * @throws {Error} If there is an internal server error.
+ */
 export async function searchHomeHandler(
   req: Request<{}, {}, {}, SearchNormalInput['query']>,
   res: Response,
@@ -133,6 +143,17 @@ export async function searchHomeHandler(
   }
 }
 
+/**
+ * Handles the search for subreddits.
+ *
+ * @param req - The request object containing the subreddit name and search parameters.
+ * @param res - The response object to send the search results.
+ * @param next - The next function to call in the middleware chain.
+ * @returns A JSON response with the search results.
+ * @throws 404 error if the subreddit is not found.
+ * @throws 401 error if the subreddit is private and the user is not a member or moderator.
+ * @throws 500 error if there is an internal server error.
+ */
 export async function searchSubredditHandler(
   req: Request<SearchSubredditInput['params'], {}, {}, SearchSubredditInput['query']>,
   res: Response,
@@ -228,7 +249,15 @@ export async function searchSubredditHandler(
     });
   }
 }
-
+/**
+ * Handles the request to get trending searches.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function.
+ * @returns {Promise<Response>} The response containing the trending searches.
+ * @throws {Error} If there is an error in getting the trending searches.
+ */
 export async function getTrendingSearchesHandller(req: Request, res: Response, next: NextFunction) {
   try {
     //define the page and limit for the trending search results

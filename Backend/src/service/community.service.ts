@@ -997,6 +997,15 @@ export async function addUserToPending(userID: string, subreddit: string) {
   };
 }
 
+/**
+ * Retrieves search results for subreddits when the user is not authenticated.
+ *
+ * @param query - The search query string.
+ * @param page - The page number of the search results.
+ * @param limit - The maximum number of search results to retrieve per page.
+ * @returns An array of community results matching the search query.
+ * @throws An error if there was an issue retrieving the search results.
+ */
 export async function getSrSearchResultNotAuth(query: string, page: number, limit: number) {
   //user not logged in
   try {
@@ -1012,6 +1021,17 @@ export async function getSrSearchResultNotAuth(query: string, page: number, limi
     return error;
   }
 }
+
+/**
+ * Retrieves search results for a user's communities based on a query.
+ *
+ * @param {string} query - The search query.
+ * @param {number} page - The page number of the search results.
+ * @param {number} limit - The maximum number of search results per page.
+ * @param {string} userID - The ID of the user.
+ * @returns {Promise<Array<Object>>} - A promise that resolves to an array of community search results.
+ * @throws {Error} - If an error occurs while retrieving the search results.
+ */
 export async function getSrSearchResultAuth(query: string, page: number, limit: number, userID: string) {
   try {
     const skip = (page - 1) * limit;
@@ -1049,6 +1069,17 @@ export async function getSrSearchResultAuth(query: string, page: number, limit: 
     return error;
   }
 }
+/**
+ * Retrieves search results for posts for non-authenticated users.
+ *
+ * @param {number} page - The page number of the search results.
+ * @param {number} limit - The maximum number of search results to return per page.
+ * @param {string} query - The search query.
+ * @param {string | undefined} sort - The sorting criteria for the search results.
+ * @param {string | undefined} topBy - The additional criteria for sorting the search results by top.
+ * @returns {Promise<Array<Object>>} - An array of search results for posts.
+ * @throws {appError} - If there is an error retrieving the search results.
+ */
 export async function getPostsSearchResultsNotAuth(
   page: number,
   limit: number,
@@ -1168,6 +1199,19 @@ export async function getPostsSearchResultsNotAuth(
   }
 }
 
+/**
+ * Retrieves search results for posts with authentication.
+ *
+ * @param {number} page - The page number of the search results.
+ * @param {number} limit - The maximum number of search results to return per page.
+ * @param {string} userID - The ID of the user performing the search.
+ * @param {string} query - The search query.
+ * @param {string | undefined} sort - The sorting criteria for the search results.
+ * @param {string | undefined} topBy - The additional criteria for sorting the search results by top.
+ * @param {Ref<Post>[] | undefined} hiddenPosts - An array of hidden post IDs.
+ * @returns {Promise<any>} - The search results for posts.
+ * @throws {appError} - If an error occurs during the search.
+ */
 export async function getPostsSearchResultsAuth(
   page: number,
   limit: number,
@@ -1512,8 +1556,18 @@ export async function unmuteUserInCommunity(userID: string, subreddit: string) {
   };
 }
 
-//get home page posts for logged in and authenticated user
-
+/**
+ * Retrieves home posts for an authenticated user.
+ *
+ * @param {number} page - The page number of the posts to retrieve.
+ * @param {number} limit - The maximum number of posts to retrieve per page.
+ * @param {string} userID - The ID of the authenticated user.
+ * @param {string | undefined} sort - The sorting criteria for the posts. Possible values are 'hot', 'top', 'best', 'new', or undefined.
+ * @param {string | undefined} topBy - The time frame for sorting 'top' posts. Possible values are 'hour', 'day', 'week', 'month', 'year', or undefined.
+ * @param {Ref<Post>[] | undefined} hiddenPosts - An array of hidden post IDs for the authenticated user.
+ * @returns {Promise<any>} - A promise that resolves to an array of home posts for the authenticated user.
+ * @throws {appError} - Throws an appError with a status code of 404 if there is an error retrieving the posts.
+ */
 export async function getHomePostsAuth(
   page: number,
   limit: number,
@@ -1749,6 +1803,15 @@ export async function communityPostIDs(name: string, page: number, count: number
   return postIDs;
 }
 
+/**
+ * Retrieves the moderator of a community based on the community name and moderator username.
+ *
+ * @param {string} communityName - The name of the community.
+ * @param {string} username - The username of the moderator.
+ * @returns {Object} - An object containing the status and moderator information.
+ *                    - If the moderator is found, the status will be true and the moderator information will be included.
+ *                    - If the moderator is not found or the community is not found, the status will be false.
+ */
 export async function getCommunityModerator(communityName: string, username: string) {
   // Find the community by name
   const community = await findCommunityByName(communityName);
@@ -1775,6 +1838,19 @@ export async function getCommunityModerator(communityName: string, username: str
   return { status: true, moderator: mode };
 }
 
+/**
+ * Retrieves subreddit search posts based on the provided parameters.
+ *
+ * @param {string} communityName - The name of the community to search in.
+ * @param {number} page - The page number of the search results.
+ * @param {number} limit - The maximum number of search results to return per page.
+ * @param {string} query - The search query to match against post titles and bodies.
+ * @param {string | undefined} sort - The sorting criteria for the search results. Possible values are 'hot', 'top', 'new', 'comments', or undefined for default sorting.
+ * @param {string | undefined} topBy - The time period to filter the search results. Possible values are 'hour', 'day', 'week', 'month', 'year', or undefined for all time.
+ * @param {Ref<Post>[] | undefined} hiddenPosts - An array of post IDs to exclude from the search results.
+ * @returns {Promise<any>} - A promise that resolves to an array of subreddit search posts.
+ * @throws {appError} - If an error occurs during the search posts operation.
+ */
 export async function getSubredditSearchPosts(
   communityName: string,
   page: number,
@@ -1896,6 +1972,14 @@ export async function getSubredditSearchPosts(
   }
 }
 
+/**
+ * Retrieves the trending searches based on the specified page and limit.
+ *
+ * @param {number} page - The page number to retrieve.
+ * @param {number} limit - The maximum number of trending searches to return.
+ * @returns {Promise<Array<Object>>} - A promise that resolves to an array of trending searches.
+ * @throws {appError} - If something goes wrong while retrieving the trending searches.
+ */
 export async function getTrendingSearches(page: number, limit: number) {
   try {
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
@@ -1961,6 +2045,17 @@ export async function getTrendingSearches(page: number, limit: number) {
   }
 }
 
+/**
+ * Retrieves popular posts based on specified criteria.
+ *
+ * @param {number} page - The page number of the results.
+ * @param {number} limit - The maximum number of posts to retrieve per page.
+ * @param {string | undefined} sort - The sorting criteria for the posts. Possible values are 'hot', 'top', 'best', 'new', or undefined.
+ * @param {string | undefined} topBy - The time period to consider when sorting by 'top'. Possible values are 'hour', 'day', 'week', 'month', 'year', or undefined.
+ * @param {Ref<Post>[] | undefined} hiddenPosts - An array of post IDs to exclude from the results.
+ * @returns {Promise<any>} - A promise that resolves to an array of popular posts.
+ * @throws {appError} - If an error occurs while retrieving the popular posts.
+ */
 export async function getPopular(
   page: number,
   limit: number,
@@ -2077,4 +2172,3 @@ export async function getPopular(
     throw new appError('Something went wrong in popular page', 500);
   }
 }
-export async function getAll() {}
