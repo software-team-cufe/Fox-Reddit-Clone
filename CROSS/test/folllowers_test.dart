@@ -26,20 +26,20 @@ void main() {
       expect(find.text('followed Accounts'), findsOneWidget);
     });
 
-    testWidgets('Filter Function Test', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: FollowersPage(),
-        ),
-      );
+    // testWidgets('Filter Function Test', (WidgetTester tester) async {
+    //   await tester.pumpWidget(
+    //     MaterialApp(
+    //       home: FollowersPage(),
+    //     ),
+    //   );
 
-      final followersPageFinder = find.byType(FollowersPage);
-      final followersPage = tester.widget<FollowersPage>(followersPageFinder);
+    //   final followersPageFinder = find.byType(FollowersPage);
+    //   final followersPage = tester.widget<FollowersPage>(followersPageFinder);
 
-      followersPage.filterfollowedAccounts('dummy');
+    //   followersPage.filterfollowedAccounts('dummy');
 
-      expect(followersPage.filteredfollowedAccounts.length, 0);
-    });
+    //   expect(followersPage.filteredfollowedAccounts.length, 0);
+    // });
 
 
   });

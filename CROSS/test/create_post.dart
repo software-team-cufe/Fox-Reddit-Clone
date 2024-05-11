@@ -85,7 +85,7 @@ void main() {
       // Check if initial UI contains necessary widgets
       expect(find.text('Next'), findsOneWidget);
       expect(find.text('Title'), findsOneWidget);
-      expect(find.text('body text(optional)'), findsAtLeastNWidgets(0));
+      expect(find.text('body text'), findsAtLeastNWidgets(0));
     });
 
   });

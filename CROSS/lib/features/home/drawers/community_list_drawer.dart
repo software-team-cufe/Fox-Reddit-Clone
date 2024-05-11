@@ -7,13 +7,10 @@ import 'package:reddit_fox/core/common/error_text.dart';
 import 'package:reddit_fox/core/common/loader.dart';
 import 'package:reddit_fox/core/failure.dart';
 import 'package:reddit_fox/features/community/controller/community_controller.dart';
-import 'package:reddit_fox/features/community/repository/community_repository.dart';
 import 'package:reddit_fox/features/community/screens/community_screen.dart';
 import 'package:reddit_fox/features/community/screens/mod_tools_screen.dart';
-import 'package:reddit_fox/models/community_model.dart';
 import 'package:reddit_fox/theme/pallete.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class CommunityListDrawer extends ConsumerWidget {
   final double drawer_Width;
@@ -22,63 +19,22 @@ class CommunityListDrawer extends ConsumerWidget {
   void navigateToCreateCommunity(BuildContext context) {
     Navigator.pushNamed(context, '/create-community');
   }
-  Future<Either<Failure, Community>> getCommunityByName(String name) async {
-  // Get the access token from SharedPreferences.
-  final prefs = await SharedPreferences.getInstance();
-  final accessToken = prefs.getString('backtoken') ?? '';
 
-  try {
-    final response = await http.get(
-      Uri.parse('http://foxnew.southafricanorth.cloudapp.azure.com/$name'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
-  
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      final communityData = responseData['community'];
-      
-      // Create a Community object from the fetched data
-      print('Response Body: ${response.body}');
-      //final community = responseData['community'];
-      print('Type of communityData: ${communityData.runtimeType}');
-      // Print the community data
-      print('Community Data:');
-      print('ID: ${communityData['_id']}');
-      print('Name: ${communityData['name']}');
-      print('Banner: ${communityData['banner']}');
-      print('Avatar: ${communityData['icon']}');
-      print('Member Count: ${communityData['membersCnt']}');
 
-      // Return the community data as a Right
-      return Right(Community.fromJson(communityData));
-    } else {
-      // Print the failure status code
-      print('me4at4at: ${response.statusCode}');
-      
-      // Return a failure message as a Left
-      return Left(Failure('7ara2: ${response.statusCode}'));
-    }
-  } catch (e) {
-    // Print the error message
-    print('mee4 me4at4at: $e');
-    //print(e.stackTrace);
-    print(StackTrace);
-    print(StackTrace.current);
-
-    print('s7a');
-
-    // Return a failure message as a Left if an error occurs
-    return Left(Failure('me4 7ara2: $e'));
-  }
-}
-
-void navigateToCommunity(BuildContext context, Community community) {
+void navigateToCommunity_old (BuildContext context, String communityName) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => CommunityScreen(community: community ),
+      builder: (context) => CommunityScreen(communityName: communityName),
+    ),
+  );
+}
+
+void navigateToCommunity(BuildContext context, String communityName) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => CommunityScreen(communityName: communityName),
     ),
   );
 }
@@ -111,19 +67,9 @@ Widget build(BuildContext context, WidgetRef ref) {
                             final community = communities[index];
                             print('se7s $community');
                             return GestureDetector(                              
-                              onTap: () async {
-                                final communityEither = await getCommunityByName(community.name);
-                                communityEither.fold(
-                                  (failure) {
-                                    // Handle failure
-                                    print('Failed to get community: ${failure.message}');
-                                  },
-                                  (communityData) {
-                                    // Successfully fetched community data, navigate to CommunityScreen
-                                    navigateToCommunity(context, communityData);
-                                  },
-                                );
-                              },// Pass the community name
+                              onTap: () {
+                                navigateToCommunity(context, community.name);
+                              },
                               child: ListTile(
                                 leading: CircleAvatar(
                                   backgroundImage: NetworkImage(community.avatar),
@@ -131,6 +77,7 @@ Widget build(BuildContext context, WidgetRef ref) {
                                 title: Text('r/${community.name}'),
                               ),
                             );
+
                           },
                         ),
                       ),

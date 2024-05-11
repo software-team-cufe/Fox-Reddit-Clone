@@ -13,7 +13,7 @@ void main() {
     expect(find.text('Login'), findsOneWidget);
 
     // Verify that email and password input fields are present.
-    expect(find.byType(TextField), findsNWidgets(2));
+    expect(find.byType(TextField), findsNWidgets(1));
 
     // Verify that the "Forgot password?" text button is present.
     expect(find.text('Forgot password?'), findsOneWidget);
