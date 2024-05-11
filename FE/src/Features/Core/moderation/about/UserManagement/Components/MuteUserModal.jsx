@@ -65,7 +65,7 @@ export default function MuteUserModal({ closeModal, isOpen, }) {
                                 <div className="mt-2 flex flex-col gap-4">
                                     <div className='pt-6  px-6 flex items-center justify-between'>
                                         Mute  user:
-                                        <button onClick={closeModal}><X /></button>
+                                        <button id="close" onClick={closeModal}><X /></button>
                                     </div>
                                     <hr />
                                     <form onSubmit={(e) => e.preventDefault()} id='frm-ban' className=' '>
@@ -78,10 +78,10 @@ export default function MuteUserModal({ closeModal, isOpen, }) {
                                             <div className='flex gap-2 mt-5 justify-between items-center'>
                                                 <div></div>
                                                 <div className='flex gap-2'>
-                                                    <Button onClick={closeModal} className=" border bg-transparent hover:bg-transparent border-blue-500  font-semibold">
+                                                    <Button id="cancel-btn" onClick={closeModal} className=" border bg-transparent hover:bg-transparent border-blue-500  font-semibold">
                                                         <p className='text-blue-500 '>Cancel</p>
                                                     </Button>
-                                                    <Button onClick={handelSubmit} className="bg-blue-500 hover:bg-blue-400">Mute</Button>
+                                                    <Button id="submit-bttn" onClick={handelSubmit} className="bg-blue-500 hover:bg-blue-400">Mute</Button>
                                                 </div>
                                             </div>
                                         </div>

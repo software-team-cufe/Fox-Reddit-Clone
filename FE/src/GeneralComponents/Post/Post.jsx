@@ -37,7 +37,7 @@ function PollComponent({ polls, postId }) {
             })
         }
         <div>
-            <button onClick={handelVote} className='px-4 py-2 rounded-full bg-gray-300 '>Vote</button>
+            <button id="vote-btn" onClick={handelVote} className='px-4 py-2 rounded-full bg-gray-300 '>Vote</button>
         </div>
     </div>
 }
@@ -152,12 +152,12 @@ export default function PostComponent({ refetch, role, post, className, viewMode
 
                                     showBullets={postObj.attachments.length > 1}
                                     renderLeftNav={(onClick, disabled) => (
-                                        <button className=" absolute z-20 top-[50%] ml-4" onClick={onClick} disabled={disabled} >
+                                        <button id="arrow-circle-btnn" className=" absolute z-20 top-[50%] ml-4" onClick={onClick} disabled={disabled} >
                                             <ArrowLeftCircle className=" text-white" />
                                         </button>
                                     )}
                                     renderRightNav={(onClick, disabled) => (
-                                        <button className=" absolute z-20 top-[50%] right-4" onClick={onClick} disabled={disabled} >
+                                        <button id="arrow-circle-btsssssssnn" className=" absolute z-20 top-[50%] right-4" onClick={onClick} disabled={disabled} >
                                             <ArrowRightCircle className=" text-white" />
                                         </button>
                                     )}

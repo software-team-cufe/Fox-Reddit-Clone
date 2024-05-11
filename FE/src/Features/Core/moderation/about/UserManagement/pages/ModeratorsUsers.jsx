@@ -39,7 +39,7 @@ export default function ModeratorsUsers() {
       <AddModeratorModal isOpen={isOpen.open} initial={isOpen.values} closeModal={() => setOpen({ open: false, values: null })} />
       <div className='mt-9'>
         <div className='mb-4 flex justify-end'>
-          <button onClick={() => setOpen({ open: true, values: null })} className=' rounded-full bg-blue-500 px-4 py-2 text-white'>
+          <button id='add-mod' onClick={() => setOpen({ open: true, values: null })} className=' rounded-full bg-blue-500 px-4 py-2 text-white'>
             Add moderator
           </button>
         </div>
@@ -61,8 +61,8 @@ export default function ModeratorsUsers() {
               </Link>
 
               <div className='flex items-center gap-3'>
-                <button onClick={() => setOpen({ open: true, values: e })} className=' text-blue-500 '>Edit</button>
-                <button onClick={() => handelRemove(e)} className=' text-blue-500 '>Remove</button>
+                <button id='edit-btn' onClick={() => setOpen({ open: true, values: e })} className=' text-blue-500 '>Edit</button>
+                <button id='remove-btn' onClick={() => handelRemove(e)} className=' text-blue-500 '>Remove</button>
               </div>
 
             </div>)

@@ -103,7 +103,7 @@ export default function UserHeader({ post }) {
         userId != null && <Menu as="div" className="flex">
 
           {/* Sort button header*/}
-          <Menu.Button role="dropDownButton" className="inline-flex justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full aspect-square w-[30px] bg-white text-sm text-gray-900 ">
+          <Menu.Button id="open-btn" role="dropDownButton" className="inline-flex justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full aspect-square w-[30px] bg-white text-sm text-gray-900 ">
             <EllipsisVertical className="h-5 w-4 fill-black" />
           </Menu.Button>
 

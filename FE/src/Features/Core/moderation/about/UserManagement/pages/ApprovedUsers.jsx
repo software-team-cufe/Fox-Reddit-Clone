@@ -31,7 +31,7 @@ export default function ApprovedUsers() {
       <ApproveUserModal isOpen={isOpen} closeModal={() => setOpen(false)} />
       <div className='mt-9'>
         <div className='mb-4 flex justify-end'>
-          <button onClick={() => setOpen(true)} className=' rounded-full bg-blue-500 px-4 py-2 text-white'>Approve User</button>
+          <button id="approve-user" onClick={() => setOpen(true)} className=' rounded-full bg-blue-500 px-4 py-2 text-white'>Approve User</button>
         </div>
         <div className=' rounded-lg border p-4 w-full'>
           {
@@ -51,7 +51,7 @@ export default function ApprovedUsers() {
               </Link>
 
               <div>
-                <button onClick={() => handelRemove(e)} className=' text-blue-500 '>Remove</button>
+                <button id="remove-btnn" onClick={() => handelRemove(e)} className=' text-blue-500 '>Remove</button>
               </div>
 
             </div>)

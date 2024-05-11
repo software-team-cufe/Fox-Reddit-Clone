@@ -31,7 +31,7 @@ export default function BannedUsers() {
             <div className='mt-9'>
                 <div className='mb-4 flex justify-between'>
                     <h2 className=' text-lg font-semibold'>banned users</h2>
-                    <button onClick={() => setOpen({ oepn: true, values: null })} className=' rounded-full bg-blue-500 px-4 py-2 text-white'>Ban User</button>
+                    <button id="ban-btnnn" onClick={() => setOpen({ oepn: true, values: null })} className=' rounded-full bg-blue-500 px-4 py-2 text-white'>Ban User</button>
                 </div>
                 <div className=' rounded-lg border p-4 w-full'>
                     {

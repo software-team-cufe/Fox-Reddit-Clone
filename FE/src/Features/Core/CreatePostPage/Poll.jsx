@@ -97,6 +97,7 @@ function Poll(props) {
             ))}
             <div className='flex gap-0 md:gap-40'>
                 <button
+                id='poll-submit'
                     onClick={handleAddOption}
                     type="submit"
                     disabled={DisableAddOption}

@@ -41,7 +41,7 @@ export default function MutedUsers() {
       <MuteUserModal isOpen={isOpen} closeModal={() => setOpen(false)} />
       <div className='mt-9'>
         <div className='mb-4 flex justify-end'>
-          <button onClick={() => setOpen(true)} className=' rounded-full bg-blue-500 px-4 py-2 text-white'>Mute User</button>
+          <button id="mute-btntntn" onClick={() => setOpen(true)} className=' rounded-full bg-blue-500 px-4 py-2 text-white'>Mute User</button>
         </div>
         <div className=' rounded-lg border p-4 w-full'>
           {
@@ -61,7 +61,7 @@ export default function MutedUsers() {
               </Link>
 
               <div>
-                <button onClick={() => handelUnMute(e)} className=' text-blue-500 '>Unmute</button>
+                <button id="unmuteeeee" onClick={() => handelUnMute(e)} className=' text-blue-500 '>Unmute</button>
               </div>
 
             </div>)
