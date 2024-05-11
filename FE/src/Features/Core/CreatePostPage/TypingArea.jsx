@@ -157,7 +157,7 @@ function TypingArea(props) {
                 startDate={startDate} startTime={startTime} repeat={repeat} adv1={adv1} adv2={adv2} contestEnable={contestEnable} autoMod={autoMod} />}
 
             <Tabs>
-                <Tab label="Post" num={0} addOnClick={NoDrag} icon={<NotepadText strokeWidth={1} color=" #e94c00" size={24} />}>
+                <Tab label="Post" num={0} addOnClick={NoDrag} id="PostTab" icon={<NotepadText strokeWidth={1} color=" #e94c00" size={24} />}>
                     <div className='p-4 relative'>
                         <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ?
                             'border-gray-800' : 'border-gray-300'}`}>
@@ -185,7 +185,7 @@ function TypingArea(props) {
                     </div>
                 </Tab>
                 <Tab label="Image & Video" num={1} addOnClick={Drag}
-                    icon={<ImageUp strokeWidth={1} color=" #e94c00" size={24} />}>
+                    icon={<ImageUp strokeWidth={1} color=" #e94c00" size={24} />} id="ImageTab">
 
                     <div className='p-4 relative w-full'>
                         <div className={`flex border rounded w-full p-1 h-fit my-2 ${FocusTitle ? 'border-gray-800'
@@ -304,7 +304,7 @@ function TypingArea(props) {
                         </div>
                     </div>
                 </Tab>
-                <Tab label="Link" num={2} addOnClick={NoDrag} icon={<Link2 strokeWidth={1} color=" #e94c00" size={24} />}>
+                <Tab label="Link" num={2} id="LinkTab" addOnClick={NoDrag} icon={<Link2 strokeWidth={1} color=" #e94c00" size={24} />}>
                     <div className='p-4 relative'>
                         <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ?
                             'border-gray-800' : 'border-gray-300'}`}>
@@ -323,7 +323,7 @@ function TypingArea(props) {
                          focus:outline-none focus:border-gray-800" placeholder="Url" />
                     </div>
                 </Tab>
-                <Tab label="Poll" enable={DisablePoll} num={3} addOnClick={NoDrag} icon={<BarChart2 strokeWidth={1}
+                <Tab label="Poll" id="PollTab" enable={DisablePoll} num={3} addOnClick={NoDrag} icon={<BarChart2 strokeWidth={1}
                     color=" #e94c00" size={24} />}>
                     <div className='p-4 relative'>
                         <div className={`flex border rounded  p-1 h-fit my-2 ${FocusTitle ? 'border-gray-800' :
