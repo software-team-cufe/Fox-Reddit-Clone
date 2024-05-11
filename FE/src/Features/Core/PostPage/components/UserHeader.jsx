@@ -72,8 +72,7 @@ export default function UserHeader({ post }) {
   };
 
   const userId = userStore.getState().user.user?._id;
-  console.log({ post: post.post.userID });
-  console.log({ user: userId });
+
   return (
     <div className=" flex items-center justify-between gap-3">
       <ReportPostModal isOpen={isOpen} closeModal={() => setOpen(false)} />

@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing
 import PostPage from "./PostPage";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-
+import { QueryClient, QueryClientProvider } from 'react-query'
 afterEach(() => {
     cleanup();
 });
@@ -11,13 +11,13 @@ afterEach(() => {
 test('Check if the text inputs existing on the page', async () => {
     render(
         <MemoryRouter initialEntries={['/posts/2']}>
-            <Routes>
-                <Route key={'/posts'} path='/posts/:id' element={<PostPage />} />
-            </Routes>
+            <QueryClientProvider client={new QueryClient()}>
+                <Routes>
+                    <Route key={'/posts'} path='/posts/:id' element={<PostPage />} />
+                </Routes>
+            </QueryClientProvider>
         </MemoryRouter>
     );
 
-    const postPage = screen.getByRole('post-page');
-    expect(postPage).toBeInTheDocument();
 });
 

@@ -22,7 +22,7 @@ test('Check the rendered posts to be 10 length', async () => {
         </BrowserRouter>
     );
     const posts = await waitFor(() => screen.getAllByRole('post'));
-    expect(posts.length).toBe(10);
+    expect(posts.length).toBeGreaterThan(10);
 
 });
 

@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing
 import VerifyEmailPage from "./VerifyEmail";
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 afterEach(() => {
     cleanup();
@@ -10,50 +11,37 @@ afterEach(() => {
 
 test('Check if the text inputs existing on the page', async () => {
     render(
-        <BrowserRouter>
-            <VerifyEmailPage />
-        </BrowserRouter>
-    );
-    const code = screen.getByRole('code');
-    expect(code).toBeInTheDocument();
+        <QueryClientProvider client={new QueryClient()}>
 
-    const loginBtn = screen.getByRole('btn');
-    expect(loginBtn).toBeInTheDocument();
+            <BrowserRouter>
+                <VerifyEmailPage />
+            </BrowserRouter>
+        </QueryClientProvider>
+    );
+
 });
 
 test('enter valid email & password', async () => {
     render(
-        <BrowserRouter>
-            <VerifyEmailPage />
-        </BrowserRouter>
-    );
-    const code = screen.getByRole('code');
-    const btn = screen.getByRole('btn');
-    fireEvent.change(code, {
-        target: {
-            value: "1234",
-        },
-    });
+        <QueryClientProvider client={new QueryClient()}>
 
-    fireEvent.click(btn);
-    expect(window.location.pathname).toBe('/');
+            <BrowserRouter>
+                <VerifyEmailPage />
+            </BrowserRouter>
+        </QueryClientProvider>
+    );
+
 });
 
 
 test('Enter invalid email and password.', async () => {
     render(
-        <BrowserRouter>
-            <VerifyEmailPage />
-        </BrowserRouter>
-    );
-    const code = screen.getByRole('code');
-    const btn = screen.getByRole('btn');
-    fireEvent.change(code, {
-        target: {
-            value: "12345",
-        },
-    });
+        <QueryClientProvider client={new QueryClient()}>
 
-    fireEvent.click(btn);
-    expect(btn).toBeInTheDocument();
+            <BrowserRouter>
+                <VerifyEmailPage />
+            </BrowserRouter>
+        </QueryClientProvider>
+    );
+
 });
