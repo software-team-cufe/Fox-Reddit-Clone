@@ -27,15 +27,17 @@ export default function UserHeader({ post }) {
       const res = await userAxios.post("/api/del", {
         "linkID": `t3_${params.id}`,
       })
+      window.location.reload();
     } catch (ex) { }
     toast.dismiss(id);
   };
   const handelLock = async () => {
     const id = toast.loading("Please wait");
     try {
-      const res = await userAxios.post("/api/lock", {
+      const res = await userAxios.post(`/api/${post.post?.isLocked ? "unlock" : "lock"}`, {
         "linkID": `t3_${params.id}`,
       })
+      window.location.reload();
     } catch (ex) { }
     toast.dismiss(id);
   };
@@ -43,7 +45,7 @@ export default function UserHeader({ post }) {
   const handelHide = async () => {
     const id = toast.loading("Please wait");
     try {
-      const res = await userAxios.post("/api/hide", {
+      const res = await userAxios.post(`/api/${post.post?.isHidden ? "unhide" : "hide"}`, {
         "linkID": `t3_${params.id}`,
       })
       window.location.reload();
@@ -103,7 +105,8 @@ export default function UserHeader({ post }) {
         userId != null && <Menu as="div" className="flex">
 
           {/* Sort button header*/}
-          <Menu.Button id="open-btn" role="dropDownButton" className="inline-flex justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full aspect-square w-[30px] bg-white text-sm text-gray-900 ">
+          <Menu.Button id="open-btn" role="dropDownButton"
+            className="mx-11 justify-center border border-black hover:bg-gray-200 active:bg-gray-300 rounded-full aspect-square w-[30px] bg-white text-sm text-gray-900 ">
             <EllipsisVertical className="h-5 w-4 fill-black" />
           </Menu.Button>
 
@@ -124,7 +127,7 @@ export default function UserHeader({ post }) {
                 (post?.post?.userID == userId && userId != null) && <>
                   <Menu.Item id="item-edit">
                     <Link id="icon-edit" to={`/submit/${params.id}`}>
-                      <button  onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
+                      <button id="icon-edit-btntn" onClick={handelSave} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                         <Edit className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
                         <span className="font-semibold text-sm">Edit</span>
                       </button>
@@ -139,19 +142,19 @@ export default function UserHeader({ post }) {
                   <Menu.Item id="lock-item">
                     <button id="lock" onClick={handelLock} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                       <Lock className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                      <span className="font-semibold text-sm">Lock</span>
+                      <span className="font-semibold text-sm">{post?.post?.isLocked ? "UnLock" : "Lock"}</span>
                     </button>
                   </Menu.Item>
                   <Menu.Item id="item-info">
                     <button icon="info" onClick={() => handelAddNSFW(!post.nsfw)} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                       <Info className="w-7  mt-1 text-gray-500" aria-hidden="true" />
-                      <span className="font-semibold text-sm">{post.nsfw ? "Remove NSFW tag" : "Add NSFW tag"}</span>
+                      <span className="font-semibold text-sm">{post?.post?.nsfw ? "Remove NSFW tag" : "Add NSFW tag"}</span>
                     </button>
                   </Menu.Item>
                   <Menu.Item id="item-info-2">
                     <button id="icon-infooooooo" onClick={() => handelAddSpoiler(!post.spoiler)} className="text-start flex gap-3 p-3 hover:bg-gray-200 w-full">
                       <Info className="w-7  mt-1 text-gray-500" aria-hidden="true" />
-                      <span className="font-semibold text-sm">{post.spoiler ? "Remove spoiler tag" : "Add spoiler tag"}</span>
+                      <span className="font-semibold text-sm">{post?.post?.spoiler ? "Remove spoiler tag" : "Add spoiler tag"}</span>
                     </button>
                   </Menu.Item>
                 </>
@@ -165,7 +168,7 @@ export default function UserHeader({ post }) {
               <Menu.Item id="item-eye">
                 <button id="eyeoffffff" onClick={handelHide} className="text-start p-3 flex gap-3 mb-2 hover:bg-gray-200 w-full">
                   <EyeOff className="w-4 h-4 mt-1 text-gray-500" aria-hidden="true" />
-                  <span className='font-semibold text-sm'>Hide</span>
+                  <span className='font-semibold text-sm'>{post?.post?.isHidden ? "UnHide" : "Hide"}</span>
                 </button>
               </Menu.Item>
               <Menu.Item id="item-flag">

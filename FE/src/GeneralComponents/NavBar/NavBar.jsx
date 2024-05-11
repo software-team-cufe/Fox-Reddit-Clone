@@ -292,10 +292,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
               >
                 <Bell strokeWidth={1} color=" #e94c00" size={32} />
                 {unReadNotifications > 0 && <span className="text-xs font-semibold">{unReadNotifications}</span>}
-                <Tooltip
-                  title={"Open inbox"}
-                  status={IshoverBell}
-                ></Tooltip>
+                
               </button>
               {ShowBellPop &&
                 <div className="absolute top-14 right-0">
@@ -316,10 +313,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                 onMouseLeave={handleMouseLeaveProf} className=" sm:block hidden  w-12 h-12 cursor-pointer">
                 <ProfileIcon imageSrc={ProfileImageSrc} altText={UserName} isOnline={IsOnline} />
               </div>
-              <Tooltip
-                title={"Open profile menu"}
-                status={IshoverProf}
-              ></Tooltip>
+              
 
 
               {IsOpenProfList && (
