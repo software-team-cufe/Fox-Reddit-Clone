@@ -204,7 +204,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
                   </button>
                 </li>
                 <li>
-                  <Link to={'/chat/1'}>
+                  <Link to={'/chat/'}>
                     <button id="chat1"
                       onClick={() => { setOpenSmList(false); }}
                       className="bg-white  mx-4 flex  min-w-8 h-12 my-2 rounded-full   "
@@ -255,7 +255,7 @@ export default function NavBar({ SetOpenSiseBar, ProfileImageSrc,
               ></Tooltip>
             </button>
 
-            <Link to={'/chat/1'}>
+            <Link to={'/chat/'}>
               <button id="chat2"
                 role="ChatButton"
                 className="bg-white hover:bg-orange-100  sm:block hidden  min-w-8 h-10 my-2 rounded-full   "

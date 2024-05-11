@@ -14,7 +14,7 @@ export default function PostPage() {
     if (isLoading) return <></>;
     let post = data?.data;
     if (post == null) return <div role='not-found'>Post not found</div>;
-
+    console.log(post);
     return (
         <div role='post-page' className=" space-y-4">
 

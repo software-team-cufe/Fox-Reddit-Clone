@@ -74,26 +74,6 @@ export default function PostComponent({ refetch, role, post, className, viewMode
             });
             setPost(prev => { return { ...prev, votesCount: res.data.value } })
             setVotesType(upvote ? 1 : -1)
-            // if (voteType == null) {
-            //     setPost(prev => { return { ...prev, votesCount: upvote ? prev.votesCount + 1 : prev.votesCount - 1 } })
-            //     setVotesType(upvote ? 1 : -1)
-
-            // }
-            // if (upvote && voteType == 1) {
-            //     setPost(prev => { return { ...prev, votesCount: prev.votesCount - 1 } });
-            //     setVotesType(null);
-            // } else if (!upvote && voteType == -1) {
-            //     setPost(prev => { return { ...prev, votesCount: prev.votesCount + 1 } });
-            //     setVotesType(null);
-            // }
-            // if (upvote && voteType == -1) {
-            //     setPost(prev => { return { ...prev, votesCount: prev.votesCount + 2 } });
-            //     setVotesType(1);
-            // }
-            // if (!upvote && voteType == 1) {
-            //     setPost(prev => { return { ...prev, votesCount: prev.votesCount - 2 } });
-            //     setVotesType(-1);
-            // }
         } catch (ex) { }
 
         toast.dismiss(id);
@@ -195,7 +175,7 @@ export default function PostComponent({ refetch, role, post, className, viewMode
             <div className="flex flex-row mt-4 items-center gap-4">
                 <div className="flex bg-gray-100 gap-3 items-center rounded-[80px] px-3 py-2">
                     <ArrowUpCircle onClick={() => vote(true)} className={`w-5 h-5 cursor-pointer ${voteType == 1 ? " text-blue-600" : ""}`} />
-                    <p>{postObj.votesCount}</p>
+                    <p>{postObj.votesCount ?? 0}</p>
                     <ArrowDownCircle onClick={() => vote(false)} className={`w-5 h-5 cursor-pointer ${voteType == -1 ? " text-blue-600" : ""}`} />
                 </div>
                 {!viewMode && <div className="flex bg-gray-100 gap-1 items-center rounded-[80px] px-3 py-2">

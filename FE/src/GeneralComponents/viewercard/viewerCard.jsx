@@ -8,7 +8,7 @@ import { userAxios } from '../../Utils/UserAxios';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import  { useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 function CardOptionsMenu() {  //prop takes the display to use it outside the component
     const username = useSelector(state => state.user.user.username);
     const [isBlocked, setIsBlocked] = useState(false);
@@ -87,7 +87,11 @@ export default function ViewerCard() {
     const [numOfPost, setPost] = useState(0);
     const [numOfComment, setComment] = useState(0);
     const [communities, setCommunities] = useState([]);
-   
+    const navigate = useNavigate();
+
+  const handleClick = (communityName) => {
+    navigate(`/r/${communityName}`);
+  };
 const handleFollow = async () => {
     try {
       const res = await userAxios.post('api/follow', { username });
@@ -261,24 +265,28 @@ const handleFollow = async () => {
               <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">MODERATOR OF THESE COMMUNITIES</h1>
               <div className='flex flex-col hover:bg-gray-100 h-12'>
               {communities.map((community, index) => (
-                  <a key={index} href={`/r/${community.name}`} className='flex flex-row w-full justify-between hover:bg-gray-100'>
-                      <div className='flex flex-row space-x-3 ml-6 my-3'>
-                          <img src={community.icon} alt={community.name} className="w-7 h-7" />
-                          <div className='flex flex-col'>
-                              <div className='flex flex-row'>
-                                  <div className='flex flex-row'>
-                                      <span className='text-xs'>r/{community.name}</span>
-                                  </div>
-                              </div>
-                              <span className='text-xs text-gray-400'>{community.memberCount} members</span>
-                          </div>
+                <a
+                  key={index}
+                  onClick={() => handleClick(community.name)}
+                  className='flex flex-row w-full justify-between hover:bg-gray-100'
+                >
+                  <div className='flex flex-row space-x-3 ml-6 my-3'>
+                    <img src={community.icon} alt={community.name} className="w-7 h-7" />
+                    <div className='flex flex-col'>
+                      <div className='flex flex-row'>
+                        <div className='flex flex-row'>
+                          <span className='text-xs'>r/{community.name}</span>
+                        </div>
                       </div>
-                      <div>
-                          <button id='join' className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[47px] h-7 px-2 text-black text-xs font-semibold'>Join</button>
-                      </div>
-                  </a>
+                      <span className='text-xs text-gray-400'>{community.memberCount} members</span>
+                    </div>
+                  </div>
+                  <div>
+                    <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[55px] h-7 px-2 text-black text-xs font-semibold'>Join</button>
+                  </div>
+                </a>
               ))}
-             </div>
+            </div>
            </div>
     
            
