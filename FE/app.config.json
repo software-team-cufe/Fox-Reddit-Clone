@@ -2,9 +2,9 @@
   "apps": [
     {
       "name": "front-end",
-      "script": "http-server",
+      "script": "serve ./dist -l 3001",
       "interpreter": "none",
-      "args": "  --port 3001 ./dist"
+      "args": ""
     }
   ]
 }
