@@ -71,21 +71,14 @@ export default function CommunityPage() {
   const [showKickOut, setShowKickOut] = useState(false);
   const[joining, setJoining] = useState(false);
   const searchRedux = useSelector(state => state.search);
-
+  const [firstDone, setFirstDone] = useState(false);
   //to fetch the community data from the server and use them
   useEffect (() => {
+    const fetchCommunity = async () => {
     setLoading(true);
-    const storedData = JSON.parse(localStorage.getItem(`comm${community}Storage`));
-    if (storedData) {
-      const {data: storedComm, loggedIn} = storedData; // Remove JSON.parse here
-      if(loggedIn) {
-        setComm(storedComm);
-        setLoading(false);
-        return;
-      }
-    }
+    setFirstDone(false);
     if (user == null) {
-       userAxios.get(`/${community}`)
+       await userAxios.get(`/${community}`)
         .then((response) => {
 
           let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
@@ -126,7 +119,7 @@ export default function CommunityPage() {
     }
     else {
       let joinedComms = 0;
-       userAxios.get(`/subreddits/mine/member`)
+       await userAxios.get(`/subreddits/mine/member`)
         .then((response) => {
           let recent = JSON.parse(localStorage.getItem('recentCommunities')) ?? [];
           if (!(recent.includes(community))) {
@@ -145,7 +138,7 @@ export default function CommunityPage() {
         })
 
       let moddedComms = 0;
-       userAxios.get(`/subreddits/mine/moderator`)
+       await userAxios.get(`/subreddits/mine/moderator`)
         .then((response) => {
           const mods = response?.data?.communities?.map((mod) => mod.name);
           moddedComms = mods;
@@ -155,7 +148,7 @@ export default function CommunityPage() {
         })
 
       let favComms = 0;
-       userAxios.get('/subreddits/mine/favorite')
+       await userAxios.get('/subreddits/mine/favorite')
         .then((response) => {
           const favs = response?.data?.communties?.map((fav) => fav.name);
           favComms = favs;
@@ -165,7 +158,7 @@ export default function CommunityPage() {
         })
 
 
-       userAxios.get(`/${community}`)
+       await userAxios.get(`/${community}`)
         .then((response) => {
           const newcomm = {
             id: response.data.community._id,
@@ -192,12 +185,14 @@ export default function CommunityPage() {
           toast.error("this community doesn't seem to exist, try again");
           navigator("/404");
         })
+        setFirstDone(true);
     }
-    setLoading(false);
+  };
+  fetchCommunity();
   }, [community]);
 
   useEffect(() => {
-    if(loading) return;
+    if(!firstDone) return;
     const fetchInitialPosts = async () => {
     setFeed(true);
     if (searchRedux == "") {
@@ -263,9 +258,11 @@ export default function CommunityPage() {
           console.error('There was an error!', error);
         });
       setFeed(false);
-    }};
+    }
+    setLoading(false);
+  };
     fetchInitialPosts();
-  }, [selected, period, searchRedux, community, loading]);
+  }, [selected, period, searchRedux, community, loading, firstDone]);
 
   const swtichJoinState = async () => {
     setJoining(true);
