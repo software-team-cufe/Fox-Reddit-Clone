@@ -64,7 +64,7 @@ export default function LoginPage({ }) {
             Log In
           </h2>
           <p className=" text-sm text-gray-400">
-            By continuing, you agree to our User Agreement and acknowledge that you understand the Privacy Policy.
+            By continui  nournour  Agreement and acknowledge that you understand the Privacy Policy.
           </p>
         </div>
         <div className="mt-10">
