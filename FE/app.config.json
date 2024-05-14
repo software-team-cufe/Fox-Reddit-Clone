@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "front-end",
-      "script": "serve ./dist -l 3001",
+      "script": "serve -s ./dist -l 3001",
       "interpreter": "none",
       "args": ""
     }
