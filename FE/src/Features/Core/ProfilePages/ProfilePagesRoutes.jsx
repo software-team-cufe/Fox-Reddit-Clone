@@ -1,11 +1,4 @@
-import {
-  Link,
-  Outlet,
-  Route,
-  Routes,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { Link, Outlet, Route, Routes, useLocation, useParams, } from "react-router-dom";
 import ProfileOverview from "./pages/profileoverview";
 import { Plus } from "lucide-react";
 import ProfileUpvoted from "./pages/profileupvoted";
@@ -57,7 +50,7 @@ const buttons = [
     text: "downvoted",
     path: "downvoted",
   },
-];
+]
 
 export const ProfileContext = createContext({
   selected: "New",
@@ -66,15 +59,14 @@ export const ProfileContext = createContext({
   setperiod: (period) => { },
 });
 
+
 // Create a provider component that holds the state
 export function ProfileProvider({ children }) {
   const [selected, setselected] = useState("New");
   const [period, setperiod] = useState("All time");
 
   return (
-    <ProfileContext.Provider
-      value={{ selected, setselected, period, setperiod }}
-    >
+    <ProfileContext.Provider value={{ selected, setselected, period, setperiod }}>
       {children}
     </ProfileContext.Provider>
   );
@@ -132,11 +124,11 @@ function Layout() {
         <div role="card" className="flex-grow w-[35%] max-w-[337px]"><Card /></div>
       </div>
     </div>
-  );
+  )
 }
 
 export default function ProfilePagesLayout() {
-  const { user } = useParams(); // fetching user from url
+  const { user } = useParams();  // fetching user from url
   return (
     // nested routing for the profile pages renders layout then feed according to route
     <ProfileProvider>
@@ -153,5 +145,5 @@ export default function ProfilePagesLayout() {
         </Route>
       </Routes>
     </ProfileProvider>
-  );
+  )
 }
