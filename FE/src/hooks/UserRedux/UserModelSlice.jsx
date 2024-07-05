@@ -12,14 +12,12 @@ export const userSlice = createSlice({
     initialState: initialState,
     reducers: {
         setUser: (state, action) => {
-            const res = userModel.safeParse(action.payload);
-            if (!res.success) return;
-            state.user = res.data;
+
+            state.user = action.payload;
         },
-        
         logOutUser: (state) => {
             state.user = null;
-            localStorage.removeItem('token');
+            localStorage.removeItem('authorization');
         },
     },
 });

@@ -26,7 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
     <ToastContainer
       position="top-left"
-      autoClose={30000}
+      autoClose={6000}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick

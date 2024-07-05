@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "front-end",
+      "script": "serve -s ./dist -l 3001",
+      "interpreter": "none",
+      "args": ""
+    }
+  ]
+}
+

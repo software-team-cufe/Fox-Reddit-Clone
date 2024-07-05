@@ -1,232 +1,81 @@
-import React from "react";
+import React, { useState } from "react";
 import CommentComponent from "@/GeneralComponents/Comment/CommentComponent"
 import TextBox from "@/GeneralElements/TextBox/TextBox"
-
-const comments = [
-  {
-    user: {
-      image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-      name: "",
-    },
-    content: {
-      text: "You mean random web development facts most web developer will already know?",
-    },
-    info: {
-      time: "14h ago",
-      votes: 14,
-    },
-    comments: [
-      {
-        user: {
-          image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-          name: "",
-        },
-        content: {
-          text: "yyyyyyyyyyyYou mean random web development facts most web developer will already know?",
-        },
-        info: {
-          time: "14h ago",
-          votes: 14,
-        },
-        comments: [
-          {
-            user: {
-              image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-              name: "",
-            },
-            content: {
-              text: "You mean random web development facts most web developer will already know?",
-            },
-            info: {
-              time: "14h ago",
-              votes: 14,
-            },
-          },
-          
-          {
-            user: {
-              image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-              name: "",
-            },
-            content: {
-              text: "You mean random web development facts most web developer will already know?",
-            },
-            info: {
-              time: "14h ago",
-              votes: 14,
-            },
-          },
-          
-          {
-            user: {
-              image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-              name: "",
-            },
-            content: {
-              text: "You mean random web development facts most web developer will already know?",
-            },
-            info: {
-              time: "14h ago",
-              votes: 14,
-            },
-          },
-          
-          {
-            user: {
-              image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-              name: "",
-            },
-            content: {
-              text: "You mean random web development facts most web developer will already know?",
-            },
-            info: {
-              time: "14h ago",
-              votes: 14,
-            },
-          },
-          
-          {
-            user: {
-              image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-              name: "",
-            },
-            content: {
-              text: "You mean random web development facts most web developer will already know?",
-            },
-            info: {
-              time: "14h ago",
-              votes: 14,
-            },
-          },
-          
-        ],
-      },
-      
-      {
-        user: {
-          image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-          name: "",
-        },
-        content: {
-          text: "You mean random web development facts most web developer will already know?",
-        },
-        info: {
-          time: "14h ago",
-          votes: 14,
-        },
-      },
-      
-      {
-        user: {
-          image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-          name: "",
-        },
-        content: {
-          text: "You mean random web development facts most web developer will already know?",
-        },
-        info: {
-          time: "14h ago",
-          votes: 14,
-        },
-      },
-      
-      {
-        user: {
-          image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-          name: "",
-        },
-        content: {
-          text: "You mean random web development facts most web developer will already know?",
-        },
-        info: {
-          time: "14h ago",
-          votes: 14,
-        },
-      },
-      
-      {
-        user: {
-          image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-          name: "",
-        },
-        content: {
-          text: "You mean random web development facts most web developer will already know?",
-        },
-        info: {
-          time: "14h ago",
-          votes: 14,
-        },
-      },
-      
-    ],
-  },
-  {
-    user: {
-      image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-      name: "",
-    },
-    content: {
-      text: "You mean random web development facts most web developer will already know?",
-    },
-    info: {
-      time: "14h ago",
-      votes: 14,
-    },
-    comments: [
-      {
-        user: {
-          image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-          name: "",
-        },
-        content: {
-          text: "You mean random web development facts most web developer will already know?",
-        },
-        info: {
-          time: "14h ago",
-          votes: 14,
-        },
-      },
-    ],
-  },
-  {
-    user: {
-      image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-      name: "",
-    },
-    content: {
-      text: "You mean random web development facts most web developer will already know?",
-    },
-    info: {
-      time: "14h ago",
-      votes: 14,
-    },
-    comments: [
-      {
-        user: {
-          image: "https://t3.ftcdn.net/jpg/05/85/86/44/360_F_585864419_kgIYUcDQ0yiLOCo1aRjeu7kRxndcoitz.jpg",
-          name: "",
-        },
-        content: {
-          text: "You mean random web development facts most web developer will already know?",
-        },
-        info: {
-          time: "14h ago",
-          votes: 14,
-        },
-      },
-    ],
-  },
-]
+import { toast } from "react-toastify";
+import { userAxios } from "../../../../Utils/UserAxios";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 
 
-export default function CommentSection() {
+
+
+export default function CommentSection({ comments }) {
+  const params = useParams();
+
+  const [commentts, setComments] = useState(comments ?? []);
+  // const { data, isLoading, isError } =
+  //   useQuery(`get-comms-${params.id}`,
+  //     () => axios.get(`http://localhost:3002/comments?postID=${params.id}`)
+  //       .then(data => {
+  //         setComments(data?.data ?? comments ?? []);
+  //         return data;
+  //       }),
+  //     {
+  //       refetchOnWindowFocus: false,
+  //       retry: 0,
+  //     }
+  //   );
+  console.log({ commenttssssssssssss: comments });
+  const handelAddComment = async () => {
+    const comm = document.getElementById('txt-comment').value;
+    if (comm == null || comm == "") {
+      toast.error("Please enter the comment");
+      return;
+    }
+    const id = toast.loading("Please wait");
+    try {
+      const res = await userAxios.post("/api/comment", {
+        "linkID": `t3_${params.id}`,
+        "textHTML": comm,
+        "textJSON": comm,
+      });
+
+    } catch (ex) { }
+    try {
+      const res2 = await axios.post("http://localhost:3002/comments", {
+        "user": {
+          "avatar": "https://images.unsplash.com/photo-1616509091215-57bbece93654?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          "username": "user1",
+          "userID": 1
+        },
+        "votesCount": 0,
+
+        "createdAt": "2022/02/15, 15:05:45",
+        "commentText": comm,
+        "postID": params.id,
+      },);
+      // setComments([...commentts, res2.data])
+    } catch (ex) { }
+    toast.dismiss(id);
+  };
+  // if (isLoading) {
+  //   return <>Loading ...</>;
+  // }
   return (
     <div>
-      <TextBox placeholder="Add a comment" className=" rounded-2xl mb-6" />
-      {
-        comments.map((e, idx) => <CommentComponent comment={e} key={idx} />)
-      }
+      <div className="flex gap-2  w-full items-center">
+        <TextBox id="txt-comment" placeholder="Add a comment" className="w-full rounded-2xl " />
+        <button onClick={handelAddComment} className=" hover:bg-gray-300 h-full p-3 rounded-md flex items-center justify-center">
+          <span>Post</span>
+        </button>
+      </div>
+      <div className="my-5">
+        {
+          commentts.map((e, idx) => <CommentComponent comment={e} key={idx} />)
+        }
+      </div>
     </div>
   )
 }

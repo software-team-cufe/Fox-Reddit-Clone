@@ -1,8 +1,26 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, ArrowLeft } from "lucide-react";
+import axios from "axios";
 
-function SocialLinks({ handleOpenLinkPop }) {
-    const [hide, sethide] = useState(false);
+function SocialLinks({ handleOpenLinkPop, hide, DisableSL }) {
+    const ButtonsWithoutCustomLink = [
+        { icon: "/instagram.png", linkName: "Instagram", userName: "", link: "https://www.instagram.com/" },
+        { icon: "/linktree.png", linkName: "Linktree", userName: "", link: "https://linktr.ee/" },
+        { icon: "/beacons.png", linkName: "Beacons", userName: "", link: "https://beacons.ai/" },
+        { icon: "/soundcloud.png", linkName: "SoundCloud", userName: "", link: "https://soundcloud.com/" },
+        { icon: "/tumblr.png", linkName: "Tumblr", userName: "", link: "https://www.tumblr.com/" },
+        { icon: "/twitch.png", linkName: "Twitch", userName: "", link: "https://www.twitch.tv/" },
+        { icon: "/tiktok.png", linkName: "Tiktok", userName: "", link: "https://www.tiktok.com/" },
+        { icon: "/twitter.png", linkName: "Twitter", userName: "", link: "https://twitter.com/" },
+        { icon: "/buy_me_a_coffee.png", linkName: "Buy Me a Coffee", userName: "", link: "https://buymeacoffee.com/" },
+        { icon: "/onlyfans.png", linkName: "OnlyFans", userName: "", link: "https://onlyfans.com/" },
+        { icon: "/patreon.png", linkName: "Patreon", userName: "", link: "https://www.patreon.com/" },
+        { icon: "/cameo.png", linkName: "Cameo", userName: "", link: "https://www.cameo.com/" },
+        { icon: "/venmo.png", linkName: "Venmo", userName: "", link: "https://venmo.com/" },
+        { icon: "/paypal.png", linkName: "Paypal", userName: "", link: "https://www.paypal.com/eg/" },
+        { icon: "/kofi.png", linkName: "Kofi", userName: "", link: "https://ko-fi.com/" }]
+
+    const [UserSocialLinks, setUserSocialLinks] = useState([]);
 
     const [OpenCustomLink, setOpenCustomLink] = useState(false);
     const [CustomLinkeLable, setCustomLinkeLable] = useState("");
@@ -14,22 +32,6 @@ function SocialLinks({ handleOpenLinkPop }) {
     const [FoxLinkWarning, setFoxLinkWarning] = useState(false);
     const [FoxLinkValue, setFoxLinkValue] = useState("");
     const [DisableSaveFL, setDisableSaveFL] = useState(true);
-
-    const [OpenInstaLink, setOpenInstaLink] = useState(false);
-    const [InstaLinkValue, setInstaLinkValue] = useState("");
-    const [DisableSaveInsta, setDisableSaveInsta] = useState(true);
-
-    const [OpenTwitLink, setOpenTwitLink] = useState(false);
-    const [TwitLinkValue, setTwitLinkValue] = useState("");
-    const [DisableSaveTwit, setDisableSaveTwit] = useState(true);
-
-    const [OpenTikLink, setOpenTikLink] = useState(false);
-    const [TikLinkValue, setTikLinkValue] = useState("");
-    const [DisableSaveTik, setDisableSaveTik] = useState(true);
-
-    const [OpenTwitchLink, setOpenTwitchLink] = useState(false);
-    const [TwitchLinkValue, setTwitchLinkValue] = useState("");
-    const [DisableSaveTwitch, setDisableSaveTwitch] = useState(true);
 
     const [OpenFBLink, setOpenFBLink] = useState(false);
     const [FBLinkeLable, setFBLinkeLable] = useState("");
@@ -43,61 +45,17 @@ function SocialLinks({ handleOpenLinkPop }) {
     const [DisableSaveyoutube, setDisableSaveyoutube] = useState(true);
     const [youtubeWarnMess, setyoutubeWarnMess] = useState(false);
 
-    const [OpenTumblrLink, setOpenTumblrLink] = useState(false);
-    const [TumblrLinkValue, setTumblrLinkValue] = useState("");
-    const [DisableSaveTumblr, setDisableSaveTumblr] = useState(true);
-
     const [OpenSpotifyLink, setOpenSpotifyLink] = useState(false);
     const [SpotifyLinkeLable, setSpotifyLinkeLable] = useState("");
     const [SpotifyLinkvalue, setSpotifyLinkvalue] = useState("");
     const [DisableSaveSpotify, setDisableSaveSpotify] = useState(true);
     const [SpotifyWarnMess, setSpotifyWarnMess] = useState(false);
 
-    const [OpenSoundCouldLink, setOpenSoundCouldLink] = useState(false);
-    const [SoundCouldLinkValue, setSoundCouldLinkValue] = useState("");
-    const [DisableSaveSoundCould, setDisableSaveSoundCould] = useState(true);
-
-    const [OpenBeaconsLink, setOpenBeaconsLink] = useState(false);
-    const [BeaconsLinkValue, setBeaconsLinkValue] = useState("");
-    const [DisableSaveBeacons, setDisableSaveBeacons] = useState(true);
-
-    const [OpenLinktreeLink, setOpenLinktreeLink] = useState(false);
-    const [LinktreeLinkValue, setLinktreeLinkValue] = useState("");
-    const [DisableSaveLinktree, setDisableSaveLinktree] = useState(true);
-
     const [OpenDiscordLink, setOpenDiscordLink] = useState(false);
     const [DiscordLinkeLable, setDiscordLinkeLable] = useState("");
     const [DiscordLinkvalue, setDiscordLinkvalue] = useState("");
     const [DisableSaveDiscord, setDisableSaveDiscord] = useState(true);
     const [DiscordWarnMess, setDiscordWarnMess] = useState(false);
-
-    const [OpenVenmoLink, setOpenVenmoLink] = useState(false);
-    const [VenmoLinkValue, setVenmoLinkValue] = useState("");
-    const [DisableSaveVenmo, setDisableSaveVenmo] = useState(true);
-
-    const [OpenCashAppLink, setOpenCashAppLink] = useState(false);
-    const [CashAppLinkValue, setCashAppLinkValue] = useState("");
-    const [DisableSaveCashApp, setDisableSaveCashApp] = useState(true);
-
-    const [OpenPatreonLink, setOpenPatreonLink] = useState(false);
-    const [PatreonLinkValue, setPatreonLinkValue] = useState("");
-    const [DisableSavePatreon, setDisableSavePatreon] = useState(true);
-
-    const [OpenKofiLink, setOpenKofiLink] = useState(false);
-    const [KofiLinkValue, setKofiLinkValue] = useState("");
-    const [DisableSaveKofi, setDisableSaveKofi] = useState(true);
-
-    const [OpenPaypalLink, setOpenPaypalLink] = useState(false);
-    const [PaypalLinkValue, setPaypalLinkValue] = useState("");
-    const [DisableSavePaypal, setDisableSavePaypal] = useState(true);
-
-    const [OpenCameoLink, setOpenCameoLink] = useState(false);
-    const [CameoLinkValue, setCameoLinkValue] = useState("");
-    const [DisableSaveCameo, setDisableSaveCameo] = useState(true);
-
-    const [OpenOnlyFansLink, setOpenOnlyFansLink] = useState(false);
-    const [OnlyFansLinkValue, setOnlyFansLinkValue] = useState("");
-    const [DisableSaveOnlyFans, setDisableSaveOnlyFans] = useState(true);
 
     const [OpenSubstackLink, setOpenSubstackLink] = useState(false);
     const [SubstackLinkeLable, setSubstackLinkeLable] = useState("");
@@ -111,17 +69,26 @@ function SocialLinks({ handleOpenLinkPop }) {
     const [DisableSavekickstarter, setDisableSavekickstarter] = useState(true);
     const [kickstarterWarnMess, setkickstarterWarnMess] = useState(false);
 
-    const [OpenBuyCoffLink, setOpenBuyCoffLink] = useState(false);
-    const [BuyCoffLinkValue, setBuyCoffLinkValue] = useState("");
-    const [DisableSaveBuyCoff, setDisableSaveBuyCoff] = useState(true);
-
     const [OpenShopifyLink, setOpenShopifyLink] = useState(false);
     const [ShopifyLinkeLable, setShopifyLinkeLable] = useState("");
     const [ShopifyLinkvalue, setShopifyLinkvalue] = useState("");
     const [DisableSaveShopify, setDisableSaveShopify] = useState(true);
     const [ShopifyWarnMess, setShopifyWarnMess] = useState(false);
 
+    const [OpenMapped, setOpenMapped] = useState(false);
+    const [SelectedButton, setSelectedButton] = useState(null);
+    const [DisableSaveSelected, setDisableSaveSlected] = useState(true);
+    const [UserNameValue, setUserNameValue] = useState('');
+    const [openUserLinkPop, setopenUserLinkPop] = useState(false);
+    const [DisableSaveUserLink, setDisableSaveUserLink] = useState(true);
+    const [UserNameUserLink, setUserNameUserLink] = useState('');
+    const [SelectedButtonUL, setSelectedButtonUL] = useState(null);
 
+    useEffect(() => {
+        fetchUserLinks();
+    }, [])
+
+    //Enable and Disable save buttons
     //handle Custom link
     useEffect(() => {
         if (CustomLinkvalue.length !== 0 && CustomLinkeLable.length !== 0) {
@@ -130,32 +97,77 @@ function SocialLinks({ handleOpenLinkPop }) {
             setDisableSaveCL(true);
         }
     }, [CustomLinkvalue, CustomLinkeLable]);
-    const handleCustomLinkValue = (e) => {
-        if (CustomLinkvalue.length === 0 && !(e.target.value.includes('https://')))
-            setCustomLinkvalue("https://" + e.target.value)
-        else
-            setCustomLinkvalue(e.target.value)
-    }
-    const handleSaveCustomLink = () => {//To do
-        if (!(CustomLinkvalue.startsWith("https://") && CustomLinkvalue.includes("."))) {
-            setCLWarnMess(true);
-
+    //handle Shopify link
+    useEffect(() => {
+        if (ShopifyLinkvalue.length !== 0 && ShopifyLinkeLable.length !== 0) {
+            setDisableSaveShopify(false);
+        } else {
+            setDisableSaveShopify(true);
         }
-        else
-            setCLWarnMess(false);
-    }
 
-    //handl Fox link
-    const handleSaveFoxLink = () => {//to do
-        if (FoxLinkValue.startsWith("r/") || FoxLinkValue.startsWith("u/")) {
-            setDisableSaveFL(false);
-            setFoxLinkWarning(false);
+    }, [ShopifyLinkvalue, ShopifyLinkeLable]);
+    //handle kickstarter link
+    useEffect(() => {
+        if (kickstarterLinkvalue.length !== 0 && kickstarterLinkeLable.length !== 0) {
+            setDisableSavekickstarter(false);
+        } else {
+            setDisableSavekickstarter(true);
+        }
+
+    }, [kickstarterLinkvalue, kickstarterLinkeLable]);
+    //handle Substack link
+    useEffect(() => {
+        if (SubstackLinkvalue.length !== 0 && SubstackLinkeLable.length !== 0) {
+            setDisableSaveSubstack(false);
+        } else {
+            setDisableSaveSubstack(true);
+        }
+
+    }, [SubstackLinkvalue, SubstackLinkeLable]);
+    //handle Discord link
+    useEffect(() => {
+        if (DiscordLinkvalue.length !== 0 && DiscordLinkeLable.length !== 0) {
+            setDisableSaveDiscord(false);
+        } else {
+            setDisableSaveDiscord(true);
+        }
+
+    }, [DiscordLinkvalue, DiscordLinkeLable]);
+    //handle Spotify link
+    useEffect(() => {
+        if (SpotifyLinkvalue.length !== 0 && SpotifyLinkeLable.length !== 0) {
+            setDisableSaveSpotify(false);
+        } else {
+            setDisableSaveSpotify(true);
+        }
+
+    }, [SpotifyLinkvalue, SpotifyLinkeLable]);
+    //handle youtube link
+    useEffect(() => {
+        if (youtubeLinkvalue.length !== 0 && youtubeLinkeLable.length !== 0) {
+            setDisableSaveyoutube(false);
+        } else {
+            setDisableSaveyoutube(true);
+        }
+
+    }, [youtubeLinkvalue, youtubeLinkeLable]);
+    useEffect(() => {
+        if (FBLinkvalue.length !== 0 && FBLinkeLable.length !== 0) {
+            setDisableSaveFB(false);
+        } else {
+            setDisableSaveFB(true);
+        }
+
+    }, [FBLinkvalue, FBLinkeLable]);
+    useEffect(() => {
+        if (UserNameValue.length === 0) {
+            setDisableSaveSlected(true);
+
         }
         else {
-            setDisableSaveFL(true);
-            setFoxLinkWarning(true);
+            setDisableSaveSlected(false);
         }
-    }
+    }, [UserNameValue])
     useEffect(() => {
         if (FoxLinkValue.length === 0) {
             setDisableSaveFL(true);
@@ -165,102 +177,135 @@ function SocialLinks({ handleOpenLinkPop }) {
             setDisableSaveFL(false);
         }
     }, [FoxLinkValue])
-
-    //handle Instagram link
-    const handleSaveInstaLink = () => {//to do
-
-    }
-    const handleInstaLValue = (e) => {
-        if (InstaLinkValue.length === 0)
-            setInstaLinkValue("@" + e.target.value)
-        else
-            setInstaLinkValue(e.target.value)
-    }
     useEffect(() => {
-        if (InstaLinkValue.length === 0) {
-            setDisableSaveInsta(true);
+        if (FoxLinkValue.length === 0) {
+            setDisableSaveFL(true);
 
         }
         else {
-            setDisableSaveInsta(false);
+            setDisableSaveFL(false);
         }
-    }, [InstaLinkValue])
-
-    //handle Twitter link
-    const handleSaveTwitLink = () => {//to do
-
-    }
-    const handleTwitLValue = (e) => {
-        if (TwitLinkValue.length === 0)
-            setTwitLinkValue("@" + e.target.value)
-        else
-            setTwitLinkValue(e.target.value)
-    }
+    }, [FoxLinkValue])
     useEffect(() => {
-        if (TwitLinkValue.length === 0) {
-            setDisableSaveTwit(true);
+        if (UserNameUserLink.length === 0) {
+            setDisableSaveUserLink(true);
 
         }
         else {
-            setDisableSaveTwit(false);
+            setDisableSaveUserLink(false);
         }
-    }, [TwitLinkValue])
-
-    //handle Tiktok link
-    const handleSaveTikLink = () => {//to do
-
-    }
-    const handleTikLValue = (e) => {
-        if (TikLinkValue.length === 0)
-            setTikLinkValue("@" + e.target.value)
-        else
-            setTikLinkValue(e.target.value)
-    }
+    }, [UserNameUserLink])
     useEffect(() => {
-        if (TikLinkValue.length === 0) {
-            setDisableSaveTik(true);
+        if (UserSocialLinks.length <= 4)
+            DisableSL(false);
+        else
+            DisableSL(true);
+    }, [UserSocialLinks])
 
+    const fetchUserLinks = async () => {
+        try {
+            const res = await axios.get('http://localhost:3002/users/1');
+            setUserSocialLinks(res.data.SocialLinks);
+        } catch (ex) {
+            console.error(ex);
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
+    }
+
+    const handleCustomLinkValue = (e) => {
+        if (CustomLinkvalue.length === 0 && !(e.target.value.includes('https://')))
+            setCustomLinkvalue("https://" + e.target.value)
+        else
+            setCustomLinkvalue(e.target.value)
+    }
+    const handleSaveCustomLink = async () => {
+        if (!(CustomLinkvalue.startsWith("https://") && CustomLinkvalue.includes("."))) {
+            setCLWarnMess(true);
         }
         else {
-            setDisableSaveTik(false);
+            setCLWarnMess(false);
+
+            const newSocialLink = {
+                icon: "/link.png",
+                linkName: "Custom link",
+                userName: CustomLinkeLable,
+                link: CustomLinkvalue
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenCustomLink(false);
+            setCustomLinkeLable('');
+            setCustomLinkvalue('');
+
         }
-    }, [TikLinkValue])
 
-    //handle Twitch link
-    const handleSaveTwitchLink = () => {//to do
     }
-    const handleTwitchLValue = (e) => {
-        if (TwitchLinkValue.length === 0)
-            setTwitchLinkValue("@" + e.target.value)
-        else
-            setTwitchLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (TwitchLinkValue.length === 0) {
-            setDisableSaveTwitch(true);
+    //handl Fox link
+    const handleSaveFoxLink = async () => {
+        if (FoxLinkValue.startsWith("r/") || FoxLinkValue.startsWith("u/")) {
+            //check if user exits
+            if (FoxLinkValue.startsWith("u/")) {
+                const response = await axios.get(`http://localhost:3002/users`)
+                    .catch(err => console.error(err));
+                for (const user of response.data) {
+                    if (user.name === FoxLinkValue.slice(2)) {
 
+                        const newSocialLink = {
+                            icon: "/logo.png",
+                            linkName: "Fox",
+                            userName: FoxLinkValue,
+                            link: "http://devopsagmdmnfront.southafricanorth.cloudapp.azure.com/" + FoxLinkValue
+                        }
+                        const updatedSL = [...UserSocialLinks, newSocialLink]
+                        const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+                        setUserSocialLinks(updatedSL);
+                        setOpenFoxLink(false);
+                        setFoxLinkValue('');
+                    }
+                    else
+                        setFoxLinkWarning(true);
+                }
+            }
+            if (FoxLinkValue.startsWith("r/")) {
+                const response = await axios.get(`http://localhost:3002/communities`)
+                    .catch(err => console.error(err));
+                for (const user of response.data) {
+                    if (user.name === FoxLinkValue.slice(2)) {
+                        //To Do: API
+                        const newSocialLink = {
+                            icon: "/logo.png",
+                            linkName: "Fox",
+                            userName: FoxLinkValue,
+                            link: "http://devopsagmdmnfront.southafricanorth.cloudapp.azure.com/" + FoxLinkValue
+                        }
+                        const updatedSL = [...UserSocialLinks, newSocialLink]
+                        //const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+                        setUserSocialLinks(updatedSL);
+                        setOpenFoxLink(false);
+                        setFoxLinkValue('');
+                    }
+                    else
+                        setFoxLinkWarning(true);
+                }
+            }
         }
         else {
-            setDisableSaveTwitch(false);
+            setDisableSaveFL(true);
+            setFoxLinkWarning(true);
         }
-    }, [TwitchLinkValue])
+    }
 
     //handle Facebook link
-    useEffect(() => {
-        if (FBLinkvalue.length !== 0 && FBLinkeLable.length !== 0) {
-            setDisableSaveFB(false);
-        } else {
-            setDisableSaveFB(true);
-        }
-
-    }, [FBLinkvalue, FBLinkeLable]);
     const handleFBLinkValue = (e) => {
         if (FBLinkvalue.length === 0 && !(e.target.value.includes('https://')))
             setFBLinkvalue("https://" + e.target.value)
         else
             setFBLinkvalue(e.target.value)
     }
-    const handleSaveFBLink = () => {//To do
+    const handleSaveFBLink = async () => {
         if (FBLinkvalue.startsWith("https://facebook.com") ||
             FBLinkvalue.startsWith("https://Facebook.com") ||
             FBLinkvalue.startsWith("https://facebook.com/") ||
@@ -272,27 +317,32 @@ function SocialLinks({ handleOpenLinkPop }) {
             )) {
             setFBWarnMess(false);
 
+            const newSocialLink = {
+                icon: "/facebook.png",
+                linkName: "Facebook",
+                userName: FBLinkeLable,
+                link: FBLinkvalue
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenFBLink(false);
+            setFBLinkvalue('');
+            setFBLinkeLable('');
+
         }
         else
             setFBWarnMess(true);
     }
 
-    //handle youtube link
-    useEffect(() => {
-        if (youtubeLinkvalue.length !== 0 && youtubeLinkeLable.length !== 0) {
-            setDisableSaveyoutube(false);
-        } else {
-            setDisableSaveyoutube(true);
-        }
 
-    }, [youtubeLinkvalue, youtubeLinkeLable]);
     const handleyoutubeLinkValue = (e) => {
         if (youtubeLinkvalue.length === 0 && !(e.target.value.includes('https://')))
             setyoutubeLinkvalue("https://" + e.target.value)
         else
             setyoutubeLinkvalue(e.target.value)
     }
-    const handleSaveyoutubeLink = () => {//To do
+    const handleSaveyoutubeLink = async () => {
         if (youtubeLinkvalue.startsWith("https://youtube.com") ||
             youtubeLinkvalue.startsWith("https://Youtube.com") ||
             youtubeLinkvalue.startsWith("https://youtube.com/") ||
@@ -303,47 +353,31 @@ function SocialLinks({ handleOpenLinkPop }) {
             youtubeLinkvalue.startsWith("https://www.Youtube.com/")) {
             setyoutubeWarnMess(false);
 
+            const newSocialLink = {
+                icon: "/youtube.png",
+                linkName: "Youtube",
+                userName: youtubeLinkeLable,
+                link: youtubeLinkvalue
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenyoutubeLink(false);
+            setyoutubeLinkeLable('');
+            setyoutubeLinkvalue('');
+
         }
         else
             setyoutubeWarnMess(true);
     }
 
-    //handle Tumblr link
-    const handleSaveTumblrLink = () => {//to do
-
-    }
-    const handleTumblrLValue = (e) => {
-        if (TumblrLinkValue.length === 0)
-            setTumblrLinkValue("@" + e.target.value)
-        else
-            setTumblrLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (TumblrLinkValue.length === 0) {
-            setDisableSaveTumblr(true);
-
-        }
-        else {
-            setDisableSaveTumblr(false);
-        }
-    }, [TumblrLinkValue])
-
-    //handle Spotify link
-    useEffect(() => {
-        if (SpotifyLinkvalue.length !== 0 && SpotifyLinkeLable.length !== 0) {
-            setDisableSaveSpotify(false);
-        } else {
-            setDisableSaveSpotify(true);
-        }
-
-    }, [SpotifyLinkvalue, SpotifyLinkeLable]);
     const handleSpotifyLinkValue = (e) => {
         if (SpotifyLinkvalue.length === 0 && !(e.target.value.includes('https://')))
             setSpotifyLinkvalue("https://" + e.target.value)
         else
             setSpotifyLinkvalue(e.target.value)
     }
-    const handleSaveSpotifyLink = () => {//To do
+    const handleSaveSpotifyLink = async () => {
         if (SpotifyLinkvalue.startsWith("https://spotify.com") ||
             SpotifyLinkvalue.startsWith("https://Spotify.com") ||
             SpotifyLinkvalue.startsWith("https://spotify.com/") ||
@@ -359,87 +393,31 @@ function SocialLinks({ handleOpenLinkPop }) {
         ) {
             setSpotifyWarnMess(false);
 
+            const newSocialLink = {
+                icon: "/spotify.png",
+                linkName: "Spotify",
+                userName: SpotifyLinkeLable,
+                link: SpotifyLinkvalue
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenSpotifyLink(false);
+            setSpotifyLinkeLable('');
+            setSpotifyLinkvalue('');
+
         }
         else
             setSpotifyWarnMess(true);
     }
 
-    //handle SoundCould link
-    const handleSaveSoundCouldLink = () => {//to do
-
-    }
-    const handleSoundCouldLValue = (e) => {
-        if (SoundCouldLinkValue.length === 0)
-            setSoundCouldLinkValue("@" + e.target.value)
-        else
-            setSoundCouldLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (SoundCouldLinkValue.length === 0) {
-            setDisableSaveSoundCould(true);
-
-        }
-        else {
-            setDisableSaveSoundCould(false);
-        }
-    }, [SoundCouldLinkValue])
-
-    //handle Beacons link
-    const handleSaveBeaconsLink = () => {//to do
-
-    }
-    const handleBeaconsLValue = (e) => {
-        if (BeaconsLinkValue.length === 0)
-            setBeaconsLinkValue("@" + e.target.value)
-        else
-            setBeaconsLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (BeaconsLinkValue.length === 0) {
-            setDisableSaveBeacons(true);
-
-        }
-        else {
-            setDisableSaveBeacons(false);
-        }
-    }, [BeaconsLinkValue])
-
-    //handle Linktree link
-    const handleSaveLinktreeLink = () => {//to do
-
-    }
-    const handleLinktreeLValue = (e) => {
-        if (LinktreeLinkValue.length === 0)
-            setLinktreeLinkValue("@" + e.target.value)
-        else
-            setLinktreeLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (LinktreeLinkValue.length === 0) {
-            setDisableSaveLinktree(true);
-
-        }
-        else {
-            setDisableSaveLinktree(false);
-        }
-    }, [LinktreeLinkValue])
-
-    //handle Discord link
-    useEffect(() => {
-        if (DiscordLinkvalue.length !== 0 && DiscordLinkeLable.length !== 0) {
-            setDisableSaveDiscord(false);
-        } else {
-            setDisableSaveDiscord(true);
-        }
-
-    }, [DiscordLinkvalue, DiscordLinkeLable]);
     const handleDiscordLinkValue = (e) => {
         if (DiscordLinkvalue.length === 0 && !(e.target.value.includes('https://')))
             setDiscordLinkvalue("https://" + e.target.value)
         else
             setDiscordLinkvalue(e.target.value)
     }
-    const handleSaveDiscordLink = () => {//To do
+    const handleSaveDiscordLink = async () => {
         if (DiscordLinkvalue.startsWith("https://Discord.com") ||
             DiscordLinkvalue.startsWith("https://discord.com") ||
             DiscordLinkvalue.startsWith("https://Discord.com/") ||
@@ -450,166 +428,52 @@ function SocialLinks({ handleOpenLinkPop }) {
             DiscordLinkvalue.startsWith("https://www.Discord.com/")) {
             setDiscordWarnMess(false);
 
+            const newSocialLink = {
+                icon: "/discord.png",
+                linkName: "Discord",
+                userName: DiscordLinkeLable,
+                link: DiscordLinkvalue
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenDiscordLink(false);
+            setDiscordLinkeLable('');
+            setDiscordLinkvalue('');
+
         }
         else
             setDiscordWarnMess(true);
     }
-    //handle Venmo link
-    const handleSaveVenmoLink = () => {//to do
 
+    const handleSaveSelected = async () => {
+        try {
+            const newSocialLink = {
+                icon: ButtonsWithoutCustomLink[SelectedButton].icon,
+                linkName: ButtonsWithoutCustomLink[SelectedButton].linkName,
+                userName: UserNameValue,
+                link: ButtonsWithoutCustomLink[SelectedButton].link
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenMapped(false);
+            setUserNameValue('');
+        } catch (ex) {
+            console.error(ex);
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
     }
-    const handleVenmoLValue = (e) => {
-        if (VenmoLinkValue.length === 0)
-            setVenmoLinkValue("@" + e.target.value)
-        else
-            setVenmoLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (VenmoLinkValue.length === 0) {
-            setDisableSaveVenmo(true);
 
-        }
-        else {
-            setDisableSaveVenmo(false);
-        }
-    }, [VenmoLinkValue])
-
-    //handle CashApp link
-    const handleSaveCashAppLink = () => {//to do
-
-    }
-    const handleCashAppLValue = (e) => {
-        if (CashAppLinkValue.length === 0)
-            setCashAppLinkValue("@" + e.target.value)
-        else
-            setCashAppLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (CashAppLinkValue.length === 0) {
-            setDisableSaveCashApp(true);
-
-        }
-        else {
-            setDisableSaveCashApp(false);
-        }
-    }, [CashAppLinkValue])
-
-    //handle Patreon link
-    const handleSavePatreonLink = () => {//to do
-
-    }
-    const handlePatreonLValue = (e) => {
-        if (PatreonLinkValue.length === 0)
-            setPatreonLinkValue("@" + e.target.value)
-        else
-            setPatreonLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (PatreonLinkValue.length === 0) {
-            setDisableSavePatreon(true);
-
-        }
-        else {
-            setDisableSavePatreon(false);
-        }
-    }, [PatreonLinkValue])
-
-    //handle Kofi link
-    const handleSaveKofiLink = () => {//to do
-
-    }
-    const handleKofiLValue = (e) => {
-        if (KofiLinkValue.length === 0)
-            setKofiLinkValue("@" + e.target.value)
-        else
-            setKofiLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (KofiLinkValue.length === 0) {
-            setDisableSaveKofi(true);
-
-        }
-        else {
-            setDisableSaveKofi(false);
-        }
-    }, [KofiLinkValue])
-
-    //handle Paypal link
-    const handleSavePaypalLink = () => {//to do
-
-    }
-    const handlePaypalLValue = (e) => {
-        if (PaypalLinkValue.length === 0)
-            setPaypalLinkValue("@" + e.target.value)
-        else
-            setPaypalLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (PaypalLinkValue.length === 0) {
-            setDisableSavePaypal(true);
-
-        }
-        else {
-            setDisableSavePaypal(false);
-        }
-    }, [PaypalLinkValue])
-
-    //handle Cameo link
-    const handleSaveCameoLink = () => {//to do
-
-    }
-    const handleCameoLValue = (e) => {
-        if (CameoLinkValue.length === 0)
-            setCameoLinkValue("@" + e.target.value)
-        else
-            setCameoLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (CameoLinkValue.length === 0) {
-            setDisableSaveCameo(true);
-
-        }
-        else {
-            setDisableSaveCameo(false);
-        }
-    }, [CameoLinkValue])
-
-    //handle OnlyFans link
-    const handleSaveOnlyFansLink = () => {//to do
-
-    }
-    const handleOnlyFansLValue = (e) => {
-        if (OnlyFansLinkValue.length === 0)
-            setOnlyFansLinkValue("@" + e.target.value)
-        else
-            setOnlyFansLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (OnlyFansLinkValue.length === 0) {
-            setDisableSaveOnlyFans(true);
-
-        }
-        else {
-            setDisableSaveOnlyFans(false);
-        }
-    }, [OnlyFansLinkValue])
-
-    //handle Substack link
-    useEffect(() => {
-        if (SubstackLinkvalue.length !== 0 && SubstackLinkeLable.length !== 0) {
-            setDisableSaveSubstack(false);
-        } else {
-            setDisableSaveSubstack(true);
-        }
-
-    }, [SubstackLinkvalue, SubstackLinkeLable]);
     const handleSubstackLinkValue = (e) => {
         if (SubstackLinkvalue.length === 0 && !(e.target.value.includes('https://')))
             setSubstackLinkvalue("https://" + e.target.value)
         else
             setSubstackLinkvalue(e.target.value)
     }
-    const handleSaveSubstackLink = () => {//To do
+    const handleSaveSubstackLink = async () => {
         if (SubstackLinkvalue.startsWith("https://substack.com") ||
             SubstackLinkvalue.startsWith("https://Substack.com") ||
             SubstackLinkvalue.startsWith("https://substack.com/") ||
@@ -620,27 +484,31 @@ function SocialLinks({ handleOpenLinkPop }) {
             SubstackLinkvalue.startsWith("https://www.Substack.com/")) {
             setSubstackWarnMess(false);
 
+            const newSocialLink = {
+                icon: "/substack.png",
+                linkName: "Substack",
+                userName: SubstackLinkeLable,
+                link: SubstackLinkvalue
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenSubstackLink(false);
+            setSubstackLinkvalue('');
+            setSubstackLinkeLable('');
         }
         else
             setSubstackWarnMess(true);
     }
 
-    //handle kickstarter link
-    useEffect(() => {
-        if (kickstarterLinkvalue.length !== 0 && kickstarterLinkeLable.length !== 0) {
-            setDisableSavekickstarter(false);
-        } else {
-            setDisableSavekickstarter(true);
-        }
 
-    }, [kickstarterLinkvalue, kickstarterLinkeLable]);
     const handlekickstarterLinkValue = (e) => {
         if (kickstarterLinkvalue.length === 0 && !(e.target.value.includes('https://')))
             setkickstarterLinkvalue("https://" + e.target.value)
         else
             setkickstarterLinkvalue(e.target.value)
     }
-    const handleSavekickstarterLink = () => {//To do
+    const handleSavekickstarterLink = async () => {
         if (kickstarterLinkvalue.startsWith("https://kickstarter.com") ||
             kickstarterLinkvalue.startsWith("https://Kickstarter.com") ||
             kickstarterLinkvalue.startsWith("https://kickstarter.com/") ||
@@ -651,47 +519,31 @@ function SocialLinks({ handleOpenLinkPop }) {
             kickstarterLinkvalue.startsWith("https://www.Kickstarter.com/")) {
             setkickstarterWarnMess(false);
 
+            const newSocialLink = {
+                icon: "/kickstarter.png",
+                linkName: " Kickstarter",
+                userName: kickstarterLinkeLable,
+                link: kickstarterLinkvalue
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenkickstarterLink(false);
+            setkickstarterLinkeLable('');
+            setkickstarterLinkvalue('');
+
         }
         else
             setkickstarterWarnMess(true);
     }
 
-    //handle Buy Me a Coffe link
-    const handleSaveBuyCoffLink = () => {//to do
-
-    }
-    const handleBuyCoffLValue = (e) => {
-        if (BuyCoffLinkValue.length === 0)
-            setBuyCoffLinkValue("@" + e.target.value)
-        else
-            setBuyCoffLinkValue(e.target.value)
-    }
-    useEffect(() => {
-        if (BuyCoffLinkValue.length === 0) {
-            setDisableSaveBuyCoff(true);
-
-        }
-        else {
-            setDisableSaveBuyCoff(false);
-        }
-    }, [BuyCoffLinkValue])
-
-    //handle Shopify link
-    useEffect(() => {
-        if (ShopifyLinkvalue.length !== 0 && ShopifyLinkeLable.length !== 0) {
-            setDisableSaveShopify(false);
-        } else {
-            setDisableSaveShopify(true);
-        }
-
-    }, [ShopifyLinkvalue, ShopifyLinkeLable]);
     const handleShopifyLinkValue = (e) => {
         if (ShopifyLinkvalue.length === 0 && !(e.target.value.includes('https://')))
             setShopifyLinkvalue("https://" + e.target.value)
         else
             setShopifyLinkvalue(e.target.value)
     }
-    const handleSaveShopifyLink = () => {//To do
+    const handleSaveShopifyLink = async () => {
         if (ShopifyLinkvalue.startsWith("https://shopify.com") ||
             ShopifyLinkvalue.startsWith("https://Shopify.com") ||
             ShopifyLinkvalue.startsWith("https://shopify.com/") ||
@@ -702,185 +554,175 @@ function SocialLinks({ handleOpenLinkPop }) {
             ShopifyLinkvalue.startsWith("https://www.Shopify.com/")) {
             setShopifyWarnMess(false);
 
+            const newSocialLink = {
+                icon: "/shopify.png",
+                linkName: "Shopify",
+                userName: ShopifyLinkeLable,
+                link: ShopifyLinkvalue
+            }
+            const updatedSL = [...UserSocialLinks, newSocialLink]
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSL });
+            setUserSocialLinks(updatedSL);
+            setOpenShopifyLink(false);
+            setShopifyLinkeLable('');
+            setShopifyLinkvalue('');
+
         }
         else
             setShopifyWarnMess(true);
     }
 
-
+    const handleSaveUserLink = async () => {
+        try {
+            const updatedSocialLinks = [...UserSocialLinks];
+            updatedSocialLinks[SelectedButtonUL] = {
+                ...updatedSocialLinks[SelectedButtonUL],
+                userName: UserNameUserLink
+            };
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSocialLinks });
+            setUserSocialLinks(updatedSocialLinks);
+            setopenUserLinkPop(false);
+        } catch (ex) {
+            console.error(ex);
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
+    }
+    const handleDeleteSL = async (index) => {
+        try {
+            const updatedSocialLinks = UserSocialLinks.filter((_, i) => i !== index);
+            const res = await axios.patch(`http://localhost:3002/users/1`, { SocialLinks: updatedSocialLinks });
+            setUserSocialLinks(updatedSocialLinks);
+        } catch (ex) {
+            console.error(ex);
+            if (ex.issues != null && ex.issues.length != 0) {
+                toast.error(ex.issues[0].message);
+            }
+        }
+    }
 
     return (
         <>
             {!(hide) && (
 
-                <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+                <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto 
+                overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full
+                 md:inset-0 h-[calc(100%-1rem)]    ">
                     <div className="relative p-4  w-2/3 mx-8  place-content-center justify-center">
                         {/* <!-- Modal content --> */}
                         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                             {/* <!-- Modal header --> */}
                             <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                                <h3 className="text-xl w-full font-semibold justify-center place-content-center
+                                 flex text-gray-900 dark:text-white">
                                     Add Social Link
                                 </h3>
-                                <button onClick={handleOpenLinkPop} type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                                <button onClick={handleOpenLinkPop} type="button" className="text-gray-400 
+                                bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 
+                                h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600
+                                 dark:hover:text-white">
                                     <X />
                                 </button>
                             </div>
                             {/* <!-- Modal body --> */}
-                            <div className="flex flex-wrap p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                <button onClick={() => { setOpenCustomLink(true); sethide(true); }} className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
+                            <div className="flex flex-wrap p-4 md:p-5 border-t border-gray-200 rounded-b
+                             dark:border-gray-600">
+                                <button role="CustomLinkButton"
+                                    onClick={() => { setOpenCustomLink(true); handleOpenLinkPop(true); }}
+                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/link.png" alt="Link" />
                                     <div className='mx-2 text-xs font-bold'>Custom link </div>
                                 </button>
-                                <button onClick={() => { setOpenFoxLink(true); sethide(true); }}
+                                <button onClick={() => {
+                                    setOpenFoxLink(true); handleOpenLinkPop(true); setFoxLinkWarning(false);
+                                }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/logo.png" alt="Fox" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Fox </div>
                                 </button>
-                                <button onClick={() => { setOpenInstaLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/instagram.png" alt="instagram" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Instagram </div>
-                                </button>
-                                <button onClick={() => { setOpenTwitLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/twitter.png" alt="twitter" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Twitter </div>
-                                </button>
-                                <button onClick={() => { setOpenTikLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/tiktok.png" alt="tiktok" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Tiktok </div>
-                                </button>
-                                <button onClick={() => { setOpenTwitchLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/twitch.png" alt="twitch" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Twitch </div>
-                                </button>
-                                <button onClick={() => { setOpenFBLink(true); sethide(true); }}
+                                <button onClick={() => { setOpenFBLink(true); handleOpenLinkPop(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/facebook.png" alt="facebook" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Facebook </div>
                                 </button>
-                                <button onClick={() => { setOpenyoutubeLink(true); sethide(true); }}
+                                <button onClick={() => { setOpenyoutubeLink(true); handleOpenLinkPop(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/youtube.png" alt="youtube" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Youtube </div>
                                 </button>
-                                <button onClick={() => { setOpenTumblrLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/tumblr.png" alt="tumblr" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Tumblr </div>
-                                </button>
-                                <button onClick={() => { setOpenSpotifyLink(true); sethide(true); }}
+                                <button onClick={() => { setOpenSpotifyLink(true); handleOpenLinkPop(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/spotify.png" alt="spotify" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Spotify </div>
                                 </button>
-                                <button onClick={() => { setOpenSoundCouldLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/soundcloud.png" alt="soundcloud" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>SoundCloud </div>
-                                </button>
-                                <button onClick={() => { setOpenBeaconsLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/beacons.png" alt="beacons" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Beacons</div>
-                                </button>
-                                <button onClick={() => { setOpenLinktreeLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/linktree.png" alt="linktree" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Linktree</div>
-                                </button>
-                                <button onClick={() => { setOpenDiscordLink(true); sethide(true); }}
+                                <button onClick={() => { setOpenDiscordLink(true); handleOpenLinkPop(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/discord.png" alt="discord" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Discord</div>
                                 </button>
-                                <button onClick={() => { setOpenVenmoLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/venmo.png" alt="venmo" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Venmo</div>
-                                </button>
-                                <button onClick={() => { setOpenCashAppLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/cash_app.png" alt="cash_app" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Cash app</div>
-                                </button>
-                                <button onClick={() => { setOpenPatreonLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/patreon.png" alt="Patreon" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Patreon</div>
-                                </button>
-                                <button onClick={() => { setOpenKofiLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/kofi.png" alt="kofi" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Kofi</div>
-                                </button>
-                                <button onClick={() => { setOpenPaypalLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/paypal.png" alt="paypal" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Paypal</div>
-                                </button>
-                                <button onClick={() => { setOpenCameoLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/cameo.png" alt="cameo" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Cameo</div>
-                                </button>
-                                <button onClick={() => { setOpenOnlyFansLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src="/onlyfans.png" alt="onlyfans" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>OnlyFans</div>
-                                </button>
-                                <button onClick={() => { setOpenSubstackLink(true); sethide(true); }}
+                                <button onClick={() => { setOpenSubstackLink(true); handleOpenLinkPop(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/substack.png" alt="substack" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Substack</div>
                                 </button>
-                                <button onClick={() => { setOpenkickstarterLink(true); sethide(true); }}
+                                <button onClick={() => { setOpenkickstarterLink(true); handleOpenLinkPop(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/kickstarter.png" alt="kickstarter" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Kickstarter</div>
                                 </button>
-                                <button onClick={() => { setOpenBuyCoffLink(true); sethide(true); }}
-                                    className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
-                                    <img src=".\icons\buy_me_a_coffee.png" alt="buy-me-a-coffee" className='w-4 h-4' />
-                                    <div className='mx-2 text-xs font-bold'>Buy Me a Coffee</div>
-                                </button>
-                                <button onClick={() => { setOpenShopifyLink(true); sethide(true); }}
+                                <button onClick={() => { setOpenShopifyLink(true); handleOpenLinkPop(true); }}
                                     className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
                                     <img src="/shopify.png" alt="shopify" className='w-4 h-4' />
                                     <div className='mx-2 text-xs font-bold'>Shopify</div>
                                 </button>
+                                {ButtonsWithoutCustomLink.map((button, index) =>
+                                    <button key={index}
+                                        onClick={() => {
+                                            setOpenMapped(true); handleOpenLinkPop(true);
+                                            setSelectedButton(index);
+                                        }}
+                                        className='rounded-full border p-4 m-2 bg-gray-200 flex hover:bg-gray-300'>
+                                        <img src={button.icon} alt={button.linkName} className='w-4 h-4' />
+                                        <div className='mx-2 text-xs font-bold'>{button.linkName}</div>
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
 
                 </div>
             )}
-            {OpenCustomLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+            {/* Smaller Popus */}
+            {OpenCustomLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center
+             overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center 
+             items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
                         <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                             <button
                                 onClick={() => {
                                     setOpenCustomLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200
+                                 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600
+                                  dark:hover:text-white"
                             >
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center
+                             flex text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
 
-                            <button
+                            <button role='SaveCustomLinkButton'
                                 disabled={DisableSaveCL}
                                 onClick={handleSaveCustomLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300
+                                 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200
+                                  hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600
+                                   dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -892,38 +734,50 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Custom link </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setCustomLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleCustomLinkValue} value={CustomLinkvalue} placeholder='https://website.com' />
+                            <br />   <input role="titleInputCustom"
+                                type="text" onChange={() => { setCustomLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+
+                            <br />
+
+                            <input role="UrlInputCustom" type="text"
+                                className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handleCustomLinkValue} value={CustomLinkvalue} placeholder='https://website.com' />
                             {CLWarnMess &&
-                                <div className="text-xs text-red-500"><span>URL is not valid</span></div>
+                                <div role="customLinkMess"
+                                    className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
 
                         </form>
                     </div>
                 </div>
             </div>}
-            {OpenFoxLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+            {OpenFoxLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto
+             overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0
+              h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
                         <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                             <button
                                 onClick={() => {
                                     setOpenFoxLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900
+                                 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex
+                             text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
                             <button
                                 disabled={DisableSaveFL}
                                 onClick={handleSaveFoxLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg
+                                  text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -936,177 +790,22 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Fox </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={() => setFoxLinkValue(event.target.value)} value={FoxLinkValue} placeholder='r/community Or u/user' />
+                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={() => setFoxLinkValue(event.target.value)} value={FoxLinkValue}
+                                placeholder='r/community Or u/user' />
                             {FoxLinkWarning &&
-                                <div className="text-xs text-red-500"><span>This community or user doesn’t exist. Double-check your spelling.</span></div>
+                                <div className="text-xs text-red-500"><span>This community or user doesn’t exist.
+                                    Double-check your spelling.</span></div>
                             }
 
                         </form>
                     </div>
                 </div>
             </div>}
-            {OpenInstaLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenInstaLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveInsta}
-                                onClick={handleSaveInstaLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
 
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/instagram.png" alt="instagram" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Instagram </div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleInstaLValue} value={InstaLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenTwitLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenTwitLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveTwit}
-                                onClick={handleSaveTwitLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/twitter.png" alt="twitter" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Twitter </div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleTwitLValue} value={TwitLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenTikLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenTikLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveTik}
-                                onClick={handleSaveTikLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/tiktok.png" alt="tiktok" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Tiktok </div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleTikLValue} value={TikLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-
-            {OpenTwitchLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenTwitchLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveTwitch}
-                                onClick={handleSaveTwitchLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/twitch.png" alt="twitch" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Twitch </div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleTwitchLValue} value={TwitchLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenFBLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+            {OpenFBLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto
+             overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 
+             h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
                     {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
@@ -1115,20 +814,24 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <button
                                 onClick={() => {
                                     setOpenFBLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 
+                                rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex
+                             text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
 
                             <button
                                 disabled={DisableSaveFB}
                                 onClick={handleSaveFBLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg
+                                  text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -1140,8 +843,10 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Facebook </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setFBLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleFBLinkValue} value={FBLinkvalue} placeholder='https://facebook.com' />
+                            <br />   <input type="text" onChange={() => { setFBLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handleFBLinkValue} value={FBLinkvalue} placeholder='https://facebook.com' />
                             {FBWarnMess &&
                                 <div className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
@@ -1150,7 +855,9 @@ function SocialLinks({ handleOpenLinkPop }) {
                     </div>
                 </div>
             </div>}
-            {OpenyoutubeLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+            {OpenyoutubeLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto
+             overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 
+             h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
                     {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
@@ -1159,20 +866,24 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <button
                                 onClick={() => {
                                     setOpenyoutubeLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900
+                                 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex
+                             text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
 
                             <button
                                 disabled={DisableSaveyoutube}
                                 onClick={handleSaveyoutubeLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm
+                                   h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -1184,8 +895,10 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Youtube </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setyoutubeLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleyoutubeLinkValue} value={youtubeLinkvalue} placeholder='https://youtube.com' />
+                            <br />   <input type="text" onChange={() => { setyoutubeLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handleyoutubeLinkValue} value={youtubeLinkvalue} placeholder='https://youtube.com' />
                             {youtubeWarnMess &&
                                 <div className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
@@ -1194,47 +907,10 @@ function SocialLinks({ handleOpenLinkPop }) {
                     </div>
                 </div>
             </div>}
-            {OpenTumblrLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenTumblrLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveTumblr}
-                                onClick={handleSaveTumblrLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
 
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/tumblr.png" alt="tumblr" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Tumblr </div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleTumblrLValue} value={TumblrLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenSpotifyLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+            {OpenSpotifyLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto 
+            overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 
+            h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
                     {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
@@ -1243,20 +919,24 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <button
                                 onClick={() => {
                                     setOpenSpotifyLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 
+                                rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex
+                             text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
 
                             <button
                                 disabled={DisableSaveSpotify}
                                 onClick={handleSaveSpotifyLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm 
+                                  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -1268,8 +948,10 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Spotify </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setSpotifyLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleSpotifyLinkValue} value={SpotifyLinkvalue} placeholder='https://Spotify.com' />
+                            <br />   <input type="text" onChange={() => { setSpotifyLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handleSpotifyLinkValue} value={SpotifyLinkvalue} placeholder='https://Spotify.com' />
                             {SpotifyWarnMess &&
                                 <div className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
@@ -1278,127 +960,11 @@ function SocialLinks({ handleOpenLinkPop }) {
                     </div>
                 </div>
             </div>}
-            {OpenSoundCouldLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenSoundCouldLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveSoundCould}
-                                onClick={handleSaveSoundCouldLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
 
-                        </div>
 
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/soundcloud.png" alt="soundcloud" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>SoundCloud </div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleSoundCouldLValue} value={SoundCouldLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenBeaconsLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenBeaconsLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveBeacons}
-                                onClick={handleSaveBeaconsLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/beacons.png" alt="beacons" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Beacons</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleBeaconsLValue} value={BeaconsLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenLinktreeLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenLinktreeLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveLinktree}
-                                onClick={handleSaveLinktreeLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/linktree.png" alt="linktree" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Linktree</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleLinktreeLValue} value={LinktreeLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenDiscordLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+            {OpenDiscordLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto 
+            overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 
+            h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
                     {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
@@ -1407,20 +973,24 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <button
                                 onClick={() => {
                                     setOpenDiscordLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 
+                                rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex
+                             text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
 
                             <button
                                 disabled={DisableSaveDiscord}
                                 onClick={handleSaveDiscordLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm
+                                   h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -1432,319 +1002,44 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Discord</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setDiscordLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleDiscordLinkValue} value={DiscordLinkvalue} placeholder='https://Discord.com' />
+                            <br />   <input type="text" onChange={() => { setDiscordLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handleDiscordLinkValue} value={DiscordLinkvalue} placeholder='https://Discord.com' />
                             {DiscordWarnMess &&
                                 <div className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
-
                         </form>
                     </div>
                 </div>
             </div>}
-            {OpenVenmoLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+
+            {OpenSubstackLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto
+             overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 
+             h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenVenmoLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveVenmo}
-                                onClick={handleSaveVenmoLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/venmo.png" alt="venmo" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Venmo</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleVenmoLValue} value={VenmoLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenCashAppLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenCashAppLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveCashApp}
-                                onClick={handleSaveCashAppLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/cash_app.png" alt="cash_app" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Cash app</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleCashAppLValue} value={CashAppLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenPatreonLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenPatreonLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSavePatreon}
-                                onClick={handleSavePatreonLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/patreon.png" alt="Patreon" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Patreon</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handlePatreonLValue} value={PatreonLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenKofiLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenKofiLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveKofi}
-                                onClick={handleSaveKofiLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/kofi.png" alt="kofi" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Kofi</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleKofiLValue} value={KofiLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenPaypalLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenPaypalLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSavePaypal}
-                                onClick={handleSavePaypalLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/paypal.png" alt="paypal" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Paypal</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handlePaypalLValue} value={PaypalLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenCameoLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenCameoLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveCameo}
-                                onClick={handleSaveCameoLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/cameo.png" alt="cameo" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Cameo</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleCameoLValue} value={CameoLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenOnlyFansLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenOnlyFansLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveOnlyFans}
-                                onClick={handleSaveOnlyFansLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src="/onlyfans.png" alt="onlyfans" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>OnlyFans</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleOnlyFansLValue} value={OnlyFansLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenSubstackLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
                         <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                             <button
                                 onClick={() => {
                                     setOpenSubstackLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 
+                                rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white">
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex
+                             text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
 
                             <button
                                 disabled={DisableSaveSubstack}
                                 onClick={handleSaveSubstackLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm
+                                   h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -1752,12 +1047,15 @@ function SocialLinks({ handleOpenLinkPop }) {
                         </div>
 
                         <div className='rounded-full border p-4 mt-2 mx-2 w-max bg-gray-200 flex '>
-                            <img src="/Substack.png" alt="Substack" className='w-4 h-4' />
+                            <img src="/substack.png" alt="Substack" className='w-4 h-4' />
                             <div className='mx-2 text-xs font-bold'>Substack </div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setSubstackLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleSubstackLinkValue} value={SubstackLinkvalue} placeholder='https://Substack.com' />
+                            <br />   <input type="text" onChange={() => { setSubstackLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handleSubstackLinkValue} value={SubstackLinkvalue}
+                                placeholder='https://Substack.com' />
                             {SubstackWarnMess &&
                                 <div className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
@@ -1766,29 +1064,33 @@ function SocialLinks({ handleOpenLinkPop }) {
                     </div>
                 </div>
             </div>}
-            {OpenkickstarterLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+            {OpenkickstarterLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto
+             overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0
+              h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
                         <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                             <button
                                 onClick={() => {
                                     setOpenkickstarterLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 
+                                rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex
+                             text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
 
                             <button
                                 disabled={DisableSavekickstarter}
                                 onClick={handleSavekickstarterLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg 
+                                 text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -1800,8 +1102,11 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Kickstarter</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setkickstarterLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handlekickstarterLinkValue} value={kickstarterLinkvalue} placeholder='https://kickstarter.com' />
+                            <br />   <input type="text" onChange={() => { setkickstarterLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handlekickstarterLinkValue} value={kickstarterLinkvalue}
+                                placeholder='https://kickstarter.com' />
                             {kickstarterWarnMess &&
                                 <div className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
@@ -1810,69 +1115,34 @@ function SocialLinks({ handleOpenLinkPop }) {
                     </div>
                 </div>
             </div>}
-            {OpenBuyCoffLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
+
+            {OpenShopifyLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto 
+            overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 
+            h-[calc(100%-1rem)]    ">
                 <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
                     <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
-                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <button
-                                onClick={() => {
-                                    setOpenBuyCoffLink(false);
-                                    sethide(false);;
-                                }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                <ArrowLeft />
-                            </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
-                                Add Social Link
-                            </h3>
-                            <button
-                                disabled={DisableSaveBuyCoff}
-                                onClick={handleSaveBuyCoffLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                                Save
-                            </button>
-
-                        </div>
-
-                        <div
-                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
-                            <img src=".\icons\buy_me_a_coffee.png" alt="buy-me-a-coffee" className='w-4 h-4' />
-                            <div className='mx-2 text-xs font-bold'>Buy Me a Coffee</div>
-                        </div>
-                        <form className='mb-4  pb-4 px-4'>
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleBuyCoffLValue} value={BuyCoffLinkValue} placeholder='@userName' />
-
-                        </form>
-                    </div>
-                </div>
-            </div>}
-            {OpenShopifyLink && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)]    ">
-                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
-                    {/* <!-- Modal content --> */}
-                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
-                        {/* <!-- Modal header --> */}
                         <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                             <button
                                 onClick={() => {
                                     setOpenShopifyLink(false);
-                                    sethide(false);;
+                                    handleOpenLinkPop(false);;
                                 }}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 
+                                rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <ArrowLeft />
                             </button>
-                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex text-gray-900 dark:text-white">
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center flex
+                             text-gray-900 dark:text-white">
                                 Add Social Link
                             </h3>
 
                             <button
                                 disabled={DisableSaveShopify}
                                 onClick={handleSaveShopifyLink}
-                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg 
+                                 text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 Save
                             </button>
@@ -1884,8 +1154,10 @@ function SocialLinks({ handleOpenLinkPop }) {
                             <div className='mx-2 text-xs font-bold'>Shopify</div>
                         </div>
                         <form className='mb-4  pb-4 px-4'>
-                            <br />   <input type="text" onChange={() => { setShopifyLinkeLable(event.target.value) }} placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
-                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' onChange={handleShopifyLinkValue} value={ShopifyLinkvalue} placeholder='https://Shopify.com' />
+                            <br />   <input type="text" onChange={() => { setShopifyLinkeLable(event.target.value) }}
+                                placeholder='Display Text' className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2' />
+                            <br /> <input type="text" className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={handleShopifyLinkValue} value={ShopifyLinkvalue} placeholder='https://Shopify.com' />
                             {ShopifyWarnMess &&
                                 <div className="text-xs text-red-500"><span>URL is not valid</span></div>
                             }
@@ -1894,8 +1166,117 @@ function SocialLinks({ handleOpenLinkPop }) {
                     </div>
                 </div>
             </div>}
+            {OpenMapped && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center 
+            overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center 
+            w-full md:inset-0 h-[calc(100%-1rem)]    ">
+                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
+                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
+                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                            <button
+                                onClick={() => {
+                                    setOpenMapped(false);
+                                    handleOpenLinkPop(false);
+                                }}
+                                className="text-gray-400 bg-transparent hover:bg-gray-200
+                                 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600
+                                  dark:hover:text-white"
+                            >
+                                <ArrowLeft />
+                            </button>
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center 
+                            flex text-gray-900 dark:text-white">
+                                Add Social Link
+                            </h3>
+                            <button
+                                disabled={DisableSaveSelected}
+                                onClick={handleSaveSelected}
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg
+                                  text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                            >
+                                Save
+                            </button>
 
+                        </div>
+
+                        <div
+                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
+                            <img src={ButtonsWithoutCustomLink[SelectedButton].icon}
+                                alt={ButtonsWithoutCustomLink[SelectedButton].linkName} className='w-4 h-4' />
+                            <div className='mx-2 text-xs font-bold'>
+                                {ButtonsWithoutCustomLink[SelectedButton].linkName}</div>
+                        </div>
+                        <form className='mb-4  pb-4 px-4'>
+                            <br /> <input type="text" value={UserNameValue}
+                                className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={() => { setUserNameValue(event.target.value) }} placeholder='@userName' />
+                        </form>
+                    </div>
+                </div>
+            </div>}
+            <div className='flex flex-wrap m-1'>
+                {UserSocialLinks.map((button, index) =>
+                    <div key={index} className='flex m-2'>
+                        <button onClick={() => {
+                            setopenUserLinkPop(true); setSelectedButtonUL(index);
+                            setUserNameUserLink(button.userName)
+                        }}
+                            className='rounded-full border h-fit p-2 bg-gray-200 flex hover:bg-gray-300'>
+                            <img src={button.icon} alt={button.linkName} className='w-4 h-4' />
+                            <div className='mx-2 text-xs font-bold min-w-max'>{button.userName}</div>
+                        </button>
+                        <X strokeWidth={1} size={15} onClick={() => { handleDeleteSL(index) }}
+                            className='rounded-full hover:bg-gray-300 cursor-pointer my-2' />
+                    </div>
+                )}
+            </div>
+            {openUserLinkPop && <div className="flex bg-[rgba(0,0,0,0.59)] place-content-center 
+            overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center 
+            w-full md:inset-0 h-[calc(100%-1rem)]    ">
+                <div className="relative p-4  w-2/3 mx-8 h-96 place-content-center justify-center">
+                    <div className="relative bg-white   rounded-lg shadow dark:bg-gray-700">
+                        <div className="flex items-center  p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                            <button
+                                onClick={() => {
+                                    setopenUserLinkPop(false);
+                                }}
+                                className="text-gray-400 bg-transparent hover:bg-gray-200
+                                 hover:text-gray-900 rounded-lg text-sm w-8 h-8 dark:hover:bg-gray-600
+                                  dark:hover:text-white"
+                            >
+                                <ArrowLeft />
+                            </button>
+                            <h3 className="text-xl w-full font-semibold justify-center place-content-center 
+                            flex text-gray-900 dark:text-white">
+                                Add Social Link
+                            </h3>
+                            <button
+                                disabled={DisableSaveUserLink}
+                                onClick={handleSaveUserLink}
+                                className="text-black font-bold p-2 w-max bg-gray-300 disabled:text-gray-500
+                                 disabled:hover:bg-gray-300 hover:bg-gray-200 hover:text-gray-900 rounded-lg
+                                  text-sm  h-8 dark:hover:bg-gray-600 dark:hover:text-white"
+                            >
+                                Save
+                            </button>
+                        </div>
+                        <div
+                            className='rounded-full w-max border p-4 m-2 bg-gray-200 flex '>
+                            <img src={UserSocialLinks[SelectedButtonUL].icon}
+                                alt={UserSocialLinks[SelectedButtonUL].linkName} className='w-4 h-4' />
+                            <div className='mx-2 text-xs font-bold'>
+                                {UserSocialLinks[SelectedButtonUL].linkName}</div>
+                        </div>
+                        <form className='mb-4  pb-4 px-4'>
+                            <br /> <input type="text" value={UserNameUserLink}
+                                className='border rounded-lg text-sm h-10 p-2 w-[95%] mb-2'
+                                onChange={() => { setUserNameUserLink(event.target.value) }} placeholder='@userName' />
+                        </form>
+                    </div>
+                </div>
+            </div>}
         </>
+
     )
 }
 

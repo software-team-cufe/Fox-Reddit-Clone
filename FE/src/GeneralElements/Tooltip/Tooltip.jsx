@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import "tailwindcss/tailwind.css";
 
+/**
+ * @file The Tooltip component is a reusable component 
+ * that displays a tooltip with a title when hovered over.
+ *  It provides a simple way to add tooltips to various elements in a React application.
+ * @module Tooltip
+ */
+
 function Tooltip({ title, status }) {
   const [IsHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className={`  flex-col    absolute ${
-        status ? "opacity-100  " : "opacity-0  "
-      }`}
+      className={`  flex-col    absolute ${status ? "opacity-100  " : "opacity-0  "
+        }`}
     >
       <svg
         className="absolute text-gray-100 h-4 left-0 ml-3  "

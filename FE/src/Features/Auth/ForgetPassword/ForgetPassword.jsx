@@ -1,16 +1,51 @@
+/**
+ * Renders the ForgetPassword component.
+ * This component allows users to reset their password by providing their username and email address.
+ *
+ * @module ForgetPassword
+ * 
+ * @returns {JSX.Element} The ForgetPassword component.
+ */
 import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
-import { Link } from "react-router-dom";
-
+import { userAxios } from "@/Utils/UserAxios";
+import { setUser } from "@/hooks/UserRedux/UserModelSlice";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux'
 export default function ForgetPassword() {
+ 
+  const [loading, setLoading] = useState(false);
+  const disp = useDispatch();
+  const nav = useNavigate();
+
+  const forgetPassword = async (e) => {
+    e.preventDefault();
+    const obj = Object.fromEntries(new FormData(document.getElementById("forgetPassword")).entries());
+    console.log(obj);
+
+    setLoading(true);
+    try {
+
+      const res = await userAxios.post('api/users/forgotpassword', obj);
+
+      disp(setUser(res.data.user));
+      nav('/login');
+      setLoading(false);
+    } catch (ex) {
+      console.log(ex);
+      setLoading(false);
+    }
+
+  }
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <div className=" max-w-[400px] border shadow p-6 rounded-lg">
+      <form onSubmit={forgetPassword} id="forgetPassword" className=" max-w-[400px] border shadow p-6 rounded-lg">
         <h2 className="mb-3 text-xl font-bold">Reset your password</h2>
         <p className="text-sm">Tell us the username and email address associated with your Reddit account, and we’ll send you an email with a link to reset your password.</p>
-        <TextBox role={'username'} className="my-4" placeholder="Username" />
-        <TextBox role={'email'} className="mb-6" placeholder="Email" />
+        {/* <TextBox name={'username'} role={'username'} className="mb-6" placeholder="username" /> */}
+        <TextBox name={'email'} role={'email'} className="mb-6" placeholder="Email" />
         <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>
           Forgot your username ?
         </Link>
@@ -25,8 +60,8 @@ export default function ForgetPassword() {
         </div>
 
 
-        <Button role="btn" className="w-full" onClick={() => window.location.href = '/'}>Reset Password</Button>
-      </div>
+        <Button id="forget-btn" disabled={loading} loading={loading}    role="btn" className="w-full" type="submit">Reset Password</Button>
+      </form>
     </div>
   )
 }

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Features/Core/ProfilePages/ViewerProfileRoutes.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Features/Core/ProfilePages/ViewerProfileRoutes.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Link, Outlet, Route, Routes, useLocation, useNavigate, useParams, } from "react-router-dom";
+import ProfileOverview from "./pages/profileoverview";
+import ProfilePosts from "./pages/Profileposts";
+import ProfileComments from "./pages/profilecomments";
+import Sortmenu from "@/GeneralComponents/sortmenu/sortmenu";
+import PeriodSelect from "@/GeneralComponents/PeriodSelect/PeriodSelect";
+import ViewerCard from "@/GeneralComponents/viewercard/viewerCard.jsx";
+import { useState, useEffect, useContext, createContext } from "react";
+import React from "react";
+import BackToTop from "@/GeneralComponents/backToTop/backToTop";
+import { userAxios } from "@/Utils/UserAxios";
+import { useQuery } from "react-query";
+
+/**
+ * @file ViewerProfileRoutes.jsx
+ * @desc This file contains the routing and layout components for the viewer profile pages.
+ * It imports various components from react-router-dom and other custom components to render the profile pages.
+ * The ViewerProfilePage component is the main component that handles the nested routing and renders the layout and profile pages based on the current route.
+ * The ViewerProvider component is a context provider that holds the state for the viewer profile pages.
+ * The Layout component is the main layout component that renders the profile header, sections bar, sorting components, and the viewer card.
+ * The ProfileOverview, ProfilePosts, and ProfileComments components are the individual profile pages that are rendered based on the current route.
+ * The axios library is used to fetch user information from an API.
+ */
+
+// for mapping the list of buttons
+const buttons = [
+  {
+    text: "overview",
+    path: "overview",
+  },
+  {
+    text: "posts",
+    path: "posts",
+  },
+  {
+    text: "comments",
+    path: "comments",
+  },
+]
+
+export const ViewerContext = createContext();
+
+
+// Create a provider component that holds the state
+export function ViewerProvider({ children }) {
+  const [selected, setselected] = useState("New");
+  const [period, setperiod] = useState("All time");
+
+  return (
+    &lt;ViewerContext.Provider value={{ selected, setselected, period, setperiod }}>
+      {children}
+    &lt;/ViewerContext.Provider>
+  );
+}
+
+
+function Layout() {
+
+  const path = useLocation();
+  const { selected } = useContext(ViewerContext);
+  const [avatar, setAvatar] = useState("");  // fetching user avatar from redux store
+  const [loading, setLoading] = useState(true); // loading state for fetching user info
+  const { viewer } = useParams();  // getting the user from the url
+ const navigator = useNavigate();
+  const fetchViewerAbout =() => {
+    // Fetch user info
+    userAxios.get(`user/${viewer}/about`) // fetching user info
+      .then(response => {
+        setAvatar(response.data.avatar);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        navigator('/404');
+        setLoading(false);
+      })
+  };
+
+  const { isError} = useQuery('ViewerProfileAbout', fetchViewerAbout);
+
+  // loading spinner to wait for fetch then load body of apge
+  if (loading) {
+    return (
+      &lt;div role="ViewerPage" className="w-100 h-100 flex flex-col items-center justify-center">
+            &lt;img src={'/logo.png'} className="h-20 w-20 mt-24 mx-auto animate-ping" alt="Logo" />
+      &lt;/div>
+    )
+  }
+
+  //main body of page
+  return (
+    &lt;div role="ViewerPage" className="flex gap-10 w-[80%] mx-auto">
+      &lt;div className="relative flex-grow md:w-[55%]">
+        &lt;BackToTop />
+        &lt;div role="avatarHeader" className='relative flex mb-8'>
+          &lt;img src={avatar} className='p-1 w-20 h-24 rounded-full z-0' alt="">&lt;/img>
+          &lt;span className='text-black font-bold text-2xl absolute top-10 left-24'>u/{viewer}&lt;/span>
+          &lt;span className='text-gray-500 font-semibold absolute top-3/4 left-24'>u/{viewer}&lt;/span>
+        &lt;/div>
+
+        {/* selection of user activity: posts,comments...etc*/}
+        &lt;ul role="sectionsBar" className='flex gap-3 overflow-x-auto mb-3 p-1'>
+          {
+            buttons.map((btn, index) => &lt;li key={index}>
+              &lt;Link id={`${btn.text}ViewerTab`} role={`${btn.text}Button`} to={`/viewer/${viewer}/${btn.path}`}>
+                &lt;button className={`rounded-3xl w-fit px-3 h-10 hover:underline hover:bg-gray-300 ${path.pathname == `/viewer/${viewer}/${btn.path}` ? "bg-gray-300" : "bg-white"}`} >{btn.text}&lt;/button>
+              &lt;/Link>
+            &lt;/li>)
+          }
+        &lt;/ul>
+
+        {/* sorting lists and period select components and create post in case of overview*/}
+        &lt;div className="flex gap-1">
+
+          {/* sorting lists and period select components */}
+          &lt;div role="sortmenu">&lt;Sortmenu context={ViewerContext} />&lt;/div>
+          &lt;PeriodSelect appearance={selected} context={ViewerContext} />
+
+        &lt;/div>
+        &lt;hr />
+        &lt;Outlet />
+      &lt;/div>
+
+      {/* profile user card */}
+      &lt;div role="card" className="flex-grow md:w-[35%] max-w-[380px]">&lt;ViewerCard />&lt;/div>
+    &lt;/div>
+  )
+}
+
+
+export default function ViewerProfilePage() {
+  const { viewer } = useParams();
+
+  return (
+    // nested routing for the profile pages renders layout then feed according to route
+    &lt;ViewerProvider>
+      &lt;Routes>
+        &lt;Route element={&lt;Layout />} >
+          &lt;Route key={'/viewer'} path={`/`} />
+          &lt;Route key={'/comments'} path="/comments" element={&lt;ProfileComments context={ViewerContext} using={viewer} />} />
+          &lt;Route key={'/posts'} path="posts" element={&lt;ProfilePosts context={ViewerContext} using={viewer} />} />
+          &lt;Route key={'/overview'} path="/overview" element={&lt;ProfileOverview context={ViewerContext} using={viewer} />} />
+        &lt;/Route>
+      &lt;/Routes>
+    &lt;/ViewerProvider>
+  )
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatMessaging.html">ChatMessaging</a></li><li><a href="module-CheckButton.html">CheckButton</a></li><li><a href="module-ForgetPassword.html">ForgetPassword</a></li><li><a href="module-ForgetUsername.html">ForgetUsername</a></li><li><a href="module-LoginPage.html">LoginPage</a></li><li><a href="module-Settingpagelayout.html">Settingpagelayout</a></li><li><a href="module-Sidebar.html">Sidebar</a></li><li><a href="module-Tooltip.html">Tooltip</a></li><li><a href="module-feedSettings.html">feedSettings</a></li></ul><h3>Global</h3><ul><li><a href="global.html#HomeContext">HomeContext</a></li><li><a href="global.html#Layout">Layout</a></li><li><a href="global.html#Navofsetting">Navofsetting</a></li><li><a href="global.html#ProfileComments">ProfileComments</a></li><li><a href="global.html#SearchContext">SearchContext</a></li><li><a href="global.html#SearchProvider">SearchProvider</a></li><li><a href="global.html#Tab">Tab</a></li><li><a href="global.html#Tabs">Tabs</a></li><li><a href="global.html#ToggleButton">ToggleButton</a></li><li><a href="global.html#buttons">buttons</a></li><li><a href="global.html#isValidBest">isValidBest</a></li><li><a href="global.html#periods">periods</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 20 2024 22:48:20 GMT+0200 (Eastern European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

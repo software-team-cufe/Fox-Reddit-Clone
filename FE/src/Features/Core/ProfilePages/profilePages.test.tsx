@@ -2,21 +2,94 @@ import React = require("react");
 import { render, screen, fireEvent, waitFor, prettyDOM, cleanup } from "@testing-library/react";
 import ProfilePagesLayout from "./ProfilePagesRoutes";
 import '@testing-library/jest-dom';
-import { BrowserRouter, MemoryRouter, Routes, Route } from "react-router-dom";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
+import configureMockStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
+
+const mockStore = configureMockStore();
+const reduxMockStore = mockStore({
+    user: {
+        user: {
+            username: 'annas_alaa',
+            avatar: 'mock-avatar'
+        },
+    },
+});
 
 
-afterEach(() =>{
+jest.mock('@/Utils/UserAxios', () => ({
+    userAxios: {
+        get: jest.fn(() => Promise.resolve({ data: { avatar: 'mock-avatar' } })),
+    },
+}));
+
+class MockIntersectionObserver {
+    constructor(public callback: IntersectionObserverCallback, public options?: IntersectionObserverInit) { }
+
+    disconnect() {
+        return null;
+    }
+
+    observe() {
+        return null;
+    }
+
+    unobserve() {
+        return null;
+    }
+
+    takeRecords() {
+        return [];
+    }
+
+    root = null;
+    rootMargin = '';
+    thresholds = [0];
+}
+
+Object.defineProperty(window, 'IntersectionObserver', {
+    writable: true,
+    configurable: true,
+    value: MockIntersectionObserver,
+});
+
+
+const queryClient = new QueryClient();
+
+afterEach(() => {
     cleanup();
 });
 
 test('avatar header renders correctly', () => {
     render(
-        <BrowserRouter>
-            <ProfilePagesLayout />
-        </BrowserRouter>
+        <Provider store={reduxMockStore}>
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/user/annas_alaa/overview']}>
+                    <Routes>
+                        <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        </Provider>
     );
+
     const avatarHeader = screen.getByRole('avatarHeader');
     expect(avatarHeader).toBeInTheDocument();
+});
+
+test('sections bar renders correctly', () => {
+    render(
+        <Provider store={reduxMockStore}>
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/user/annas_alaa/overview']}>
+                    <Routes>
+                        <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        </Provider>
+    );
 
     const sectionsBar = screen.getByRole('sectionsBar');
     expect(sectionsBar).toBeInTheDocument();
@@ -44,9 +117,37 @@ test('avatar header renders correctly', () => {
 
     const createPostButton = screen.getByRole('createPostButton');
     expect(createPostButton).toBeInTheDocument();
+});
+
+test('sort menu renders correctly', () => {
+    render(
+        <Provider store={reduxMockStore}>
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/user/annas_alaa/overview']}>
+                    <Routes>
+                        <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        </Provider>
+    );
 
     const sortmenu = screen.getByRole('sortmenu');
     expect(sortmenu).toBeInTheDocument();
+});
+
+test('card renders correctly', () => {
+    render(
+        <Provider store={reduxMockStore}>
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/user/annas_alaa/overview']}>
+                    <Routes>
+                        <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        </Provider>
+    );
 
     const card = screen.getByRole('card');
     expect(card).toBeInTheDocument();
@@ -56,11 +157,15 @@ describe('profile sections navigation correctly', () => {
 
     test('navigates to all sections pages when overview button is clicked', async () => {
         render(
-            <MemoryRouter initialEntries={['/user/anas']}>
-                <Routes>
-                    <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
-                </Routes>
-            </MemoryRouter>
+            <Provider store={reduxMockStore}>
+                <QueryClientProvider client={queryClient}>
+                    <MemoryRouter initialEntries={['/user/annas_alaa/overview']}>
+                        <Routes>
+                            <Route path="/user/:user/*" element={<ProfilePagesLayout />} />
+                        </Routes>
+                    </MemoryRouter>
+                </QueryClientProvider>
+            </Provider>
         );
 
         const overviewButton = await screen.findByRole('overviewButton');
@@ -112,6 +217,4 @@ describe('profile sections navigation correctly', () => {
             expect(screen.getByRole('downvotedtab')).toBeInTheDocument();
         });
     });
-
-
 });

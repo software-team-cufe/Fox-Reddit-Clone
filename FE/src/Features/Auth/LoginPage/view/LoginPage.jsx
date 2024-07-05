@@ -1,4 +1,14 @@
 
+/**
+ * LoginPage component for user login.
+ * @module LoginPage
+ * @component
+ * @example
+ * return (
+ *   <LoginPage />
+ * )
+ * @returns {JSX.Element} The LoginPage component.
+ */
 import React from "react";
 import Button from "@/GeneralElements/Button/Button";
 import TextBox from "@/GeneralElements/TextBox/TextBox";
@@ -9,46 +19,40 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import GoogleIcon from "../../../../GeneralComponents/GoogleIcon";
+
+
 
 export default function LoginPage({ }) {
 
   const [loading, setLoading] = useState(false);
-  // const disp = useDispatch();
+  const disp = useDispatch();
   const nav = useNavigate();
   const login = async (e) => {
-
-    // e?.preventDefault();
+    e?.preventDefault();
     const { email, password } = Object.fromEntries(new FormData(document.getElementById("frm-login")).entries());
-    if (email == 'email' && password == 'test1234') {
-      nav('/')
+    console.log({ email, password });
+    if (!email || !password || email == "" || password == "") {
+      toast.error("Please enter all the required information.");
+      return;
     }
-    return;
-    // if (!email || !password || email == "" || password == "") {
-    //   toast.error("Please enter all the required information.");
-    //   return;
-    // }
-    // setLoading(true);
-    // try {
-    //   const res = await userAxios.post('login', { email, password });
-    //   const user = await userModel.parseAsync(res.data.user);
-    //   disp(setUser(user));
-    //   if (user.banned) {
-    //     nav(0)
-    //     return;
-    //   }
-    //   if (!user.verifiedEmail) {
-    //     nav('/verify-email');
-    //   } else {
-    //     nav('/');
-    //   }
-    // } catch (ex) {
-    //   if (ex.issues != null && ex.issues.length != 0) {
-    //     toast.error(ex.issues[0].message);
-    //   }
-    // }
-    // setLoading(false);
-  };
+    setLoading(true);
+    try {
+      const res = await userAxios.post('api/auth/login', { username: email, password });
 
+      disp(setUser(res.data.user));
+
+      nav('/');
+    } catch (ex) {
+      if (ex.issues != null && ex.issues.length != 0) {
+        toast.error(ex.issues[0].message);
+      }
+    }
+    setLoading(false);
+  };
+  const handelContinueWithGoogle = () => { 
+        
+  };
   return (
     <div
 
@@ -60,23 +64,21 @@ export default function LoginPage({ }) {
             Log In
           </h2>
           <p className=" text-sm text-gray-400">
-            By continuing, you agree to our User Agreement and acknowledge that you understand the Privacy Policy.
+            By continui  nournour  Agreement and acknowledge that you understand the Privacy Policy.
           </p>
         </div>
         <div className="mt-10">
           <form id="frm-login" className="space-y-6" onSubmit={login}>
-            <TextBox role="email" name="email" disabled={loading} placeholder="me@domain.com" label="Email address" />
-            <TextBox role="password" name="password" disabled={loading} placeholder="********" label="Password" />
+            <TextBox role="email" name="email" disabled={loading} placeholder="username" label="username" />
+            <TextBox role="password" type="password" name="password" disabled={loading} placeholder="********" label="Password" />
             <div className=" space-y-2" >
               <p className="mt-4 text-sm text-gray-500">
-                Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-username`}>
-                  username
-                </Link> or <Link className="text-blue-700 underline text-sm" to={`/forget-password`}>
+                Forgot your <Link className="text-blue-700 underline text-sm" to={`/forget-password`}>
                   password
                 </Link>?
               </p>
               <p className="  text-sm text-gray-500">
-                New to Reddit? {" "}
+                New to Fox? {" "}
                 <Link
                   to="/register"
                   className="font-semibold hover:underline leading-6 text-indigo-600 hover:text-indigo-500"
@@ -85,10 +87,18 @@ export default function LoginPage({ }) {
                 </Link>
               </p>
             </div>
-            <Button role="login-btn" disabled={loading} loading={loading} onClick={login} className="w-full">
+            <Button id="login-btn" role="login-btn" disabled={loading} loading={loading} onClick={login} className="w-full">
               Login
             </Button>
+            <button id="login-google" onClick={handelContinueWithGoogle} type="button" className=" border px-4 rounded-full w-full py-3 flex items-center justify-between">
+              <div className=" w-4">
+                <GoogleIcon />
+              </div>
 
+              Continue With Google
+              <p></p>
+
+            </button>
           </form>
 
 

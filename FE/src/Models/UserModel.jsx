@@ -15,4 +15,7 @@ const userModel = z.object({
     updatedAt: z.string().optional().nullable(),
 });
 
+
 export default userModel;
+
+

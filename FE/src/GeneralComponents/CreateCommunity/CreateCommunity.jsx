@@ -1,24 +1,30 @@
 import { useState } from 'react';
-import { X, Globe, Lock, Eye } from 'lucide-react';
+import { X, Globe, Lock } from 'lucide-react';
 import { toast } from 'react-toastify';
 import React from 'react';
-import axios from 'axios';
 import { Switch } from '@headlessui/react'
-
-
-export default function CreateCommunity({ onClose = () => { } }) {
+import {userAxios} from '@/Utils/UserAxios';
+import Spinner from '@/GeneralElements/Spinner/Spinner';
+/**
+ * Component for creating a community.
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClose - The function to be called when the component is closed.
+ * @returns {JSX.Element} The CreateCommunity component.
+ */
+export default function CreateCommunity({ onClose = () => { }, setCommList = () => {} , commList = [] }) {
 
     const validText = <div className={` text-green-500 text-xs mt-1 ml-5`}>Choose wisely. Once you pick a name, it can't be changed.</div>;
     const invalidText = <div className={` text-red-600 text-xs mt-1 ml-5`}>Please fill out this field.</div>;
 
     const handleClose = () => {
-        onClose();
+        onClose(true);
     };
 
     const [inputValue, setInputValue] = useState('');  //input of the name field
     const [isValid, setIsValid] = useState(false);  //for valid or invalid name input
     const [commType, setCommType] = useState('');   //to select community type
     const [NSFW, setEnabled] = useState(false)      //to enable or disable NSFW
+    const [submittingReq, setSubmittingReq] = useState(false);
 
     const handleChange = (event) => {    //to handle and validate the input of the name field
         const value = event.target.value;
@@ -35,36 +41,32 @@ export default function CreateCommunity({ onClose = () => { } }) {
         setCommType(event.target.value);
     };
 
-    const submitRequest = () => {   //to submit the request of creating a community
-        if (commType == '') {
-            toast.error('Please select a community type');
+    const submitRequest = async () => {   //to submit the request of creating a community
+        setSubmittingReq(true);
+        try {
+            if (commType == '') {
+                toast.error('Please select a community type');
+            } else {
+                const response = await userAxios.post('/create_subreddit', {
+                    name: inputValue,
+                    type: commType.replace('comm-',''),
+                    over18: NSFW
+                });
+                console.log(response.data);
+                setCommList([...commList, { icon: response.data.community.icon, name: response.data.community.name}]);
+                toast.success('Community created successfully');
+                handleClose();
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                toast.error('A community with this name already exists');
+            } else {
+                console.error('Error:', error);
+            }
+        } finally {
+            setSubmittingReq(false);
         }
-        else {
-            axios.post('https://virtserver.swaggerhub.com/BOUDIE2003AHMED/fox/1/api/createCommunity', {
-                name: inputValue,
-                type: commType,
-                NSFW: NSFW,
-                description: '',
-                Banner: null,
-                Icon: null
-            })
-            .then(response => {
-                if (response.status === 200) {
-                    toast.success('Community created successfully');
-                    handleClose();
-                } else {
-                    toast.error('Failed to create community');
-                }
-            })
-            .catch((error) => {
-                if (error.response && error.response.status === 400) {
-                    toast.error('A community with this name already exists');
-                } else {
-                    console.error('Error:', error);
-                }
-            });
-        }
-    }
+    };
 
     return (
         <>
@@ -72,9 +74,9 @@ export default function CreateCommunity({ onClose = () => { } }) {
                 <div className="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                     <div className="fixed inset-0 w-screen overflow-y-auto">
-                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0 ">
-                            <div role="createForm" className="relative transform overflow-hidden rounded-xl w-80 h-[635px] bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0 ">
+                            <div role="createForm" className="relative transform  rounded-xl w-80 h-3/4 bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 rounded-full">
 
                                     {/* Create a community heading */}
                                     <div className='flex gap-2'>
@@ -82,7 +84,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                         <h3 className="mt-2 text-2xl font-semibold leading-6 text-gray-900" id="modal-title">Create a community</h3>
                                     </div>
                                     {/* exit button top right */}
-                                    <X role="exitButton" onClick={handleClose} className="p-2 absolute top-4 right-5 h-8 w-8 bg-gray-200 hover:bg-slate-300 rounded-full cursor-pointer text-gray-500 active:bg-gray-500" />
+                                    <X id="createCommX" role="exitButton" onClick={handleClose} className="p-2 absolute top-4 right-5 h-8 w-8 bg-gray-200 hover:bg-slate-300 rounded-full cursor-pointer text-gray-500 active:bg-gray-500" />
 
                                     {/* Description of creating a community */}
                                     <div className=" text-sm text-gray-500 my-2">
@@ -90,7 +92,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                     </div>
 
                                     {/* Name input field with validation */}
-                                    <input role="nameInput" type="text" value={inputValue} maxLength={21} onChange={handleChange} placeholder="Name" className={`bg-gray-200 self-center h-14 w-full mt-2 border-2 border-gray-200 rounded-2xl p-2 focus:outline-none focus:ring-2 focus:ring-slate-300
+                                    <input id="commNameInput" role="nameInput" type="text" value={inputValue} maxLength={21} onChange={handleChange} placeholder="Name" className={`bg-gray-200 self-center h-14 w-full mt-2 border-2 border-gray-200 rounded-2xl p-2 focus:outline-none focus:ring-2 focus:ring-slate-300
                                         text-sm ${isValid ? 'border-green-400' : 'border-red-700'}`} />
 
                                     {/* Validation text and input length display */}
@@ -105,7 +107,7 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                     <ul role="typeOptions" className="grid w-full gap-6 md:grid-rows-2">
                                         <li>
                                             {/* Public community option */}
-                                            <input role="optionPublic" type="radio" id="comm-public" name="comm" value="comm-public" className="hidden peer" onClick={handleRadioChange} required />
+                                            <input id="comm-public" role="optionPublic" type="radio" name="comm" value="comm-Public" className="hidden peer" onClick={handleRadioChange} required />
                                             <label htmlFor="comm-public" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Globe className="w-6 h-6 mr-6" />
                                                 <div className="block">
@@ -115,19 +117,8 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                             </label>
                                         </li>
                                         <li>
-                                            {/* Restricted community option */}
-                                            <input role="optionRestricted" type="radio" id="comm-restricted" name="comm" value="comm-restricted" className="hidden peer" onClick={handleRadioChange} />
-                                            <label htmlFor="comm-restricted" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
-                                                <Eye className="w-6 h-6 mr-6" />
-                                                <div className="block">
-                                                    <div className="text-xs font-semibold">Restricted</div>
-                                                    <div className="w-full text-xs">Anyone can view, but only approved users can contribute</div>
-                                                </div>
-                                            </label>
-                                        </li>
-                                        <li>
                                             {/* Private community option */}
-                                            <input role="optionPrivate" type="radio" id="comm-private" name="comm" value="comm-private" className="hidden peer" onClick={handleRadioChange} />
+                                            <input id="comm-private" role="optionPrivate" type="radio" name="comm" value="comm-Private" className="hidden peer" onClick={handleRadioChange} />
                                             <label htmlFor="comm-private" className="inline-flex items-center w-full p-3 rounded-xl cursor-pointer peer-checked:bg-gray-200 hover:bg-gray-100 active:bg-gray-300">
                                                 <Lock className="w-6 h-6 mr-6" />
                                                 <div className="block">
@@ -158,12 +149,11 @@ export default function CreateCommunity({ onClose = () => { } }) {
 
                                         {/* NSFW switch */}
                                         <div className="mr-3">
-                                            <Switch
+                                            <Switch id="NSFWtoggle" 
                                                 checked={NSFW}
                                                 onChange={setEnabled}
                                                 className={`${NSFW ? 'bg-blue-900' : 'bg-gray-300'}
                                                     relative inline-flex h-8 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}>
-                                                <span className="sr-only">Use setting</span>
                                                 <span
                                                     aria-hidden="true"
                                                     className={`${NSFW ? 'translate-x-4' : 'translate-x-0'}
@@ -175,8 +165,8 @@ export default function CreateCommunity({ onClose = () => { } }) {
                                     <div className='flex justify-end'>
                                         
                                         {/* Cancel and submit buttons */}
-                                        <button role="cancelButton" onClick={handleClose} className="bg-gray-100 py-2 h-12 px-4 rounded-full text-sm font-semibold text-gray-500 hover:bg-gray-200 active:bg-gray-300">Cancel</button>
-                                        <button role="submitButton" onClick={submitRequest} disabled={!isValid} className="bg-slate-300 h-12 py-2 px-4 rounded-full text-sm font-semibold text-white ml-4 hover:bg-slate-400 enabled:hover:bg-blue-900 enabled:bg-blue-800">Create r/{inputValue}</button>
+                                        <button id="cancelCreateComm" role="cancelButton" onClick={handleClose} className="bg-gray-100 py-2 h-12 px-4 rounded-full text-sm font-semibold text-gray-500 hover:bg-gray-200 active:bg-gray-300">Cancel</button>
+                                        <button id="submitCreateComm" role="submitButton" onClick={submitRequest} disabled={!isValid} className="bg-slate-300 h-12 py-2 px-4 rounded-full text-sm font-semibold text-white ml-4 hover:bg-slate-400 enabled:hover:bg-blue-900 enabled:bg-blue-800">{submittingReq ? <Spinner></Spinner> : `Create r/${inputValue}`}</button>
                                     </div>
                                 </div>
                             </div>

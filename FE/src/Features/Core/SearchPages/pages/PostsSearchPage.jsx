@@ -1,36 +1,94 @@
-import React, {useContext} from "react";
+import React, { useContext, useRef } from "react";
 import { useState, useEffect } from "react";
-import Spinner from "@/GeneralElements/Spinner/Spinner";
-import axios from 'axios';
 import PostComponent from "@/GeneralComponents/Post/Post";
 import { SearchContext } from "../SearchPagesRoutes";
+import { userAxios } from "@/Utils/UserAxios";
+import { useSelector } from "react-redux";
 
+/**
+ * Renders the People Search page.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.searched - The search query string.
+ * @returns {JSX.Element} The People Search page component.
+ */
 export default function PeopleSearchPage({ searched = "filler" }) {
 
   const { selected, period } = useContext(SearchContext);
-  const [posts, setPosts] = useState([]);     // array of posts to show
+  const [Posts, setPosts] = useState([]);     // array of posts to show
   const [loading, setLoading] = useState(true);   // loading state for fetching
+  const [callingposts, setCallingPosts] = useState(false);
+  const loadMoreButtonRef = useRef(null);
+  const [pagedone, setpagedone] = useState(false);
+  const [currentpage, setcurrentpage] = useState(2);
+  const userRedux = useSelector(state => state.user.user);
+  const limitpage = 5;
 
   useEffect(() => {
     setLoading(true);    //set loading to true before fetching
-    axios.get("http://localhost:3002/posts")    //fetch posts and organize into posts array for mapping
-      .then(response => {
-        const newPosts = response.data.map(post => ({
-          subReddit: {
-            image: post.attachments.subredditIcon,
-            title: post.communityName,
-        },
-        images: post.attachments.postData,
-        id: post.postID,
-        title: post.title,
-        subTitle: post.postText,
-        votes: post.votesCount,
-        comments: post.commentsCount,
-        thumbnail: post.thumbnail,
-        video: null
-        }));
+    let searchPeriod = "";
+    switch (period) {
+      case "All time": searchPeriod = "all";
+        break;
+      case "Past year": searchPeriod = "year";
+        break;
+      case "Past month": searchPeriod = "month";
+        break;
+      case "Past week": searchPeriod = "week";
+        break;
+      case "Past 24 hours": searchPeriod = "day";
+        break;
+      case "Past hour": searchPeriod = "hour";
+        break;
+    }
 
-        setPosts(newPosts);
+    userAxios.get(`r/search/?q=${searched}&type=link&page=1&limit=${limitpage}&sort=${selected}&sortBy=${searchPeriod}`)
+      .then(response => {
+        if (userRedux == null) {
+          const newPosts = response.data.postsSearchResultNotAuth.map(post => ({
+            communityName: post.communityName,
+            communityIcon: post.communityIcon,
+            images: post.attachments,
+            postId: post.postId,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }))
+          if (newPosts.length < limitpage) {
+            setpagedone(true);
+          }
+          setPosts(newPosts);
+        }
+        else {
+          const newPosts = response.data.postsSearchResultAuth.map(post => ({
+            communityName: post.communityName,
+            communityIcon: post.communityIcon,
+            images: post.attachments,
+            postId: post.postId,
+            title: post.title,
+            textHTML: post.textHTML,
+            votesCount: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }))
+          console.log(newPosts);
+          if (newPosts.length < limitpage) {
+            setpagedone(true);
+          }
+          setPosts(newPosts);
+        }
         setLoading(false);   //set loading to false after fetching to load body
       })
       .catch(error => {
@@ -39,11 +97,86 @@ export default function PeopleSearchPage({ searched = "filler" }) {
       });
   }, [searched, selected, period]);
 
+  const fetchMorePosts = () => {
+    setCallingPosts(true);    //set loading to true before fetching
+    let searchPeriod = "";
+    switch (period) {
+      case "All time": searchPeriod = "all";
+        break;
+      case "Past year": searchPeriod = "year";
+        break;
+      case "Past month": searchPeriod = "month";
+        break;
+      case "Past week": searchPeriod = "week";
+        break;
+      case "Past 24 hours": searchPeriod = "day";
+        break;
+      case "Past hour": searchPeriod = "hour";
+        break;
+    }
+
+    userAxios.get(`r/search/?q=${searched}&type=link&page=${currentpage}&limit=${limitpage}&sort=${selected}&sortBy=${searchPeriod}`)
+      .then(response => {
+        if (userRedux == null) {
+          const newPosts = response.data.postsSearchResultNotAuth.map(post => ({
+            communityName: post.communityName,
+            communityIcon: post.communityIcon,
+            images: post.attachments,
+            postId: post.postId,
+            title: post.title,
+            description: post.textHTML,
+            votesCount: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }))
+          if (newPosts.length < limitpage) {
+            setpagedone(true);
+          }
+          setPosts(prevPosts => [...prevPosts, ...newPosts]);
+        }
+        else {
+          console.log(response.data.postsSearchResultAuth)
+          const newPosts = response.data.postsSearchResultAuth.map(post => ({
+            communityName: post.communityName,
+            communityIcon: post.communityIcon,
+            images: post.attachments,
+            postId: post.postId,
+            title: post.title,
+            description: post.textHTML,
+            votesCount: post.votesCount,
+            comments: post.commentsCount,
+            thumbnail: post.thumbnail,
+            video: null,
+            type: "post",
+            spoiler: post.spoiler,
+            NSFW: post.nsfw,
+            poll: post.poll ? post.poll : []
+          }))
+          if (newPosts.length < limitpage) {
+            setpagedone(true);
+          }
+          console.log(newPosts);
+          setPosts(prevPosts => [...prevPosts, ...newPosts]);
+        }
+        setcurrentpage(currentpage + 1);
+        setCallingPosts(false);   //set loading to false after fetching to load body
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setLoading(false);
+      });
+  };
+
   // loading spinner to wait until fetch then load
   if (loading) {
     return (
       <div role="poststab" className="w-100 h-100 flex flex-col items-center justify-center">
-        <Spinner className="h-24 w-24" />
+        <img src={'/logo.png'} className="h-12 w-12 mt-10 mx-auto animate-ping" alt="Logo" />
       </div>
     )
   }
@@ -51,15 +184,15 @@ export default function PeopleSearchPage({ searched = "filler" }) {
   //main body of the page
   return (
     <div role="poststab" className="flex flex-col w-full max-w[756px] h-fit my-4 p-1">
-
       {/* if there are no posts, show no results */}
-      {posts.length > 0 ? (
-        posts.map((post, index) => (
-          <div key={index}>
-            <PostComponent post={post} />
-            <hr className="w-full my-2 border-gray-300" />
-          </div>
-        ))
+      {Posts.length > 0 ? (
+        <>
+          {Posts.map((post, index) => (
+            <PostComponent key={index} post={post} />
+          ))}
+          {!pagedone && !callingposts && (<button id="loadMoreButton" ref={loadMoreButtonRef} type="button" onClick={fetchMorePosts} className=" mx-auto w-fit h-fit my-2 px-3 py-2 bg-gray-200 shadow-inner rounded-full transition transform hover:scale-110">Load more</button>)}
+          {callingposts && (<img src={'/logo.png'} className="h-6 w-6 mx-auto animate-ping" alt="Logo" />)}
+        </>
       ) : (
         <>
           {/*no results view*/}

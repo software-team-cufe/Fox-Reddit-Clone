@@ -1,12 +1,67 @@
-import { Link } from 'react-router-dom';
-import React from 'react';
-//git
+import { Link, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import ProfileSettings from '../../Features/Core/Settings/PofileSettings';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { userAxios } from '../../Utils/UserAxios';
+
+
 export default function Card (){
+    const username = useSelector(state => state.user.user.username);
+    const [numOfPosts, setNumOfPosts] = useState(0);
+    const [numOfComments, setNumOfComments] = useState(0);
+    const [communities, setCommunities] = useState([]);
+  
+    useEffect(() => { 
+        const getCommunities = async () => {
+      try {
+        const response = await userAxios.get(`/subreddits/mine/creator`);
+        console.log("creator");
+        console.log(response.data.communities.map(comm => ({ name: comm.name, memberCount: comm.memberCount, icon: comm.icon })));
+        setCommunities(response.data.communities.map(comm => ({ name: comm.name, memberCount: comm.memberCount, icon: comm.icon })));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCommunities();
+  }, []);
+ 
+    useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await userAxios.get(`/api/user/${username}/number_posts_comments`);
+        console.log(response.data.comment);
+        console.log(response.data.post);
+        setNumOfComments(response.data.comment ?? 0);
+        setNumOfPosts(response.data.post ?? 0);
+       
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+      fetchData();
+    }, []);
+
+
+    const navigator=useNavigate();
+    const handleNavigate=()=>{
+       navigator('/setting/profile');
+    }
+
+    const navigate = useNavigate();
+
+    const handleClick = (communityName) => {
+      navigate(`/r/${communityName}`);
+    };
+  
     return(
-        <div className="flex-none relative border border-slate-200 bg-slate-50 min-w-[240px] w-[337px] min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block">
+        <div className="relative border border-slate-200 bg-slate-50 min-h-fit h-fit mr-5 rounded-2xl pb-3 hidden md:block overflow-y-auto">
         
         <div className='w-[100%] h-[124px] rounded-t-2xl mb-2 bg-gradient-to-b from-blue-900 to-black'>
-            <button className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
+            <button onClick={handleNavigate} className="absolute right-4 top-[74px] pl-[6px] bg-gray-200 rounded-full h-8 w-8 hover:bg-gray-400">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
@@ -14,7 +69,7 @@ export default function Card (){
             </button>
         </div>
     
-        <span className='font-bold ml-5'>username</span>
+        <span id='username' className='font-bold ml-5 '>{username}</span>
         
         <button
               className="flex items-center py-1.5 px-3 ml-5 mt-4 text-xs font-medium text-black focus:outline-none
@@ -28,18 +83,17 @@ export default function Card (){
     
         
         <div className=' flex flex-col mt-6'>
-              <div className='  flex flex-row mb-7'>
-        <div className=' w-1/2 flex-col ml-6'>
-         <p className=' text-sm font-semibold'> 
-           1
-         </p>
-         <p className=' text-xs text-slate-500'> 
-            Post Karma
-         </p>
-        </div>
+              <div className='  flex flex-row mb-7'> <div className=' w-1/2 flex-col ml-6'>
+              <p className=' text-xs md:text-sm font-semibold'> 
+                {numOfPosts}
+              </p>
+              <p className=' text-xs text-slate-500'> 
+                Post Karma
+              </p>
+            </div>
         <div className=' w-1/2 flex-col'>
-           <p className=' text-sm font-semibold'> 
-             0
+           <p className=' text-xs md:text-sm font-semibold'> 
+             {numOfComments}
            </p>
            <p className=' text-xs text-slate-500'> 
              Comment Karma
@@ -48,7 +102,7 @@ export default function Card (){
               </div>
              <div className='  flex flex-row'>
         <div className=' w-1/2 flex-col ml-6'>
-            <p className=' text-sm font-semibold'> 
+            <p className=' text-xs md:text-sm font-semibold'> 
              Feb 29, 2024
            </p>
           <p className=' text-xs text-slate-500'> 
@@ -56,7 +110,7 @@ export default function Card (){
           </p>
         </div>
         <div className=' w-1/2 flex-col'>
-           <p className=' text-sm font-semibold'> 
+           <p className=' text-xs md:text-sm font-semibold'> 
               0
            </p>
            <p className=' text-xs text-slate-500'> 
@@ -72,7 +126,7 @@ export default function Card (){
         <h1 className="text-xs text-gray-600 ml-6"> SETTINGS </h1>
         <br/>
 
-        <div className='flex flex-col'>
+        <div className='flex flex-col pr-2'>
           
            <div className='flex flex-row'>
                
@@ -201,6 +255,7 @@ export default function Card (){
                </g>
                   </svg>    
                </div>
+               <div className='justify-between gap-5 flex'>
                <div className='flex flex-col ml-1'>
                   <p className=' text-sm text-gray-700'>
                      Profile
@@ -210,11 +265,13 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 ml-10'> 
-                  Edit Profile
-                </button>
+                     
+                         <button onClick={handleNavigate} className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 hover:underline'> 
+                            Edit Profile
+                          </button>
+                  
                </div>
-          
+               </div>
            </div>
            <br></br>
            <div className='flex flex-row'>
@@ -232,6 +289,7 @@ export default function Card (){
                <path d="m19.683 5.252-3.87-3.92a1.128 1.128 0 0 0-.8-.332h-1.55a1.093 1.093 0 0 0-1.1.91 1.9 1.9 0 0 1-3.744 0A1.094 1.094 0 0 0 7.533 1h-1.55c-.3 0-.588.12-.8.332L1.317 5.253a1.1 1.1 0 0 0 .014 1.557l1.87 1.829a1.121 1.121 0 0 0 1.48.076l.32-.24v1.936c.344-.31.786-.49 1.25-.511V5.977L3.993 7.668l-1.68-1.646L6.036 2.25H7.42a3.156 3.156 0 0 0 6.16 0h1.383l3.723 3.772-1.7 1.668-2.236-1.749v8.138c.501.337.927.774 1.25 1.284V8.509l.338.264a1.117 1.117 0 0 0 1.436-.109l1.894-1.853a1.101 1.101 0 0 0 .015-1.559ZM13.691 20H1.31A1.325 1.325 0 0 1 0 18.663v-4.916a1.03 1.03 0 0 1 .5-.884.988.988 0 0 1 .98-.014 3 3 0 0 0 3.3-.266c.334-.342.649-.702.944-1.078a.624.624 0 0 1 .775-.163l6.75 3.5A2.945 2.945 0 0 1 15 17.584v1.079A1.325 1.325 0 0 1 13.691 20Zm-12.44-5.873v4.536c0 .054.033.087.058.087h12.382c.025 0 .06-.033.06-.087v-1.079a1.72 1.72 0 0 0-1.035-1.609l-6.349-3.29a9.24 9.24 0 0 1-.76.831 4.235 4.235 0 0 1-4.357.611Zm4.022 4.042-.9-.862 3.138-3.3.9.862-3.138 3.3Zm3.04 0-.913-.857 2.09-2.219.91.857-2.088 2.219Z" />
                   </svg>
                </div>
+               <div className='flex justify-between gap-7'>
                <div className='flex flex-col ml-3'>
                   <p className=' text-sm text-gray-700'>
                   Avatar
@@ -241,11 +299,13 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-12'> 
-                  Style Avatar
-                </button>
+                 <Link to={'/settings/profile'}> 
+                   <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 hover:underline'> 
+                      Style Avatar
+                    </button>
+                  </Link>
                </div>
-          
+                </div>
            </div>
            <br/>
            <div className='flex flex-row'>
@@ -267,8 +327,8 @@ export default function Card (){
                     <path stroke="none" d="M0 0h24v24H0z" />{" "}
                     <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
                 </svg>
-
                </div>
+               <div className='flex justify-between gap-2 xl:gap-10'>
                <div className='flex flex-col ml-2 '>
                   <p className=' text-sm text-gray-700'>
                   Moderation
@@ -278,25 +338,62 @@ export default function Card (){
                   </p>
                </div>
                <div>
-                <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3  hover:bg-gray-300 ml-14'> 
-                  Mod Settings
-                </button>
+                <Link to={'/settings/profile'}>    
+                   <button className=' text-xs bg-gray-200 rounded-full text-gray-700 font-semibold p-2 hover:bg-gray-300 hover:underline'> 
+                      Mod Settings
+                   </button> 
+                 </Link>
+            
                </div>
+              </div>
+
           
            </div>
-
 
         </div>
         
         <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700"/>
         <h1 className=" ml-6 mb-4 text-xs text-gray-600 "> LINKS </h1>  
-        <Link to={'/settings/profile'} className="w-fit flex items-center py-1 pl-2 pr-3 ml-6 mb-2 text-xs font-semibold focus:outline-none bg-gray-200 rounded-full hover:bg-gray-300 hover:underline"> 
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-1">
-        <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
-        </svg>
-      
-        <span>Add Social Link</span>
-        </Link>
+        <div className='ml-6 '>
+                     
+            <button onClick={handleNavigate} className='flex flex-row text-xs bg-gray-200 rounded-full text-gray-700 font-semibold py-2 px-3 hover:bg-gray-300 hover:underline'> 
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-1">
+               <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
+               </svg>
+              <p> Add social link </p>
+            </button>
+ 
+        </div>
+        <hr className="h-px m-3 mb-5 bg-gray-200 border-0 dark:bg-gray-700"/>
+        <div className='ml-6 '>
+         <h1 className="mx-3 mb-4 text-xs text-gray-500 font-semibold">YOU'RE A MODERATOR OF THESE COMMUNITIES</h1>
+        </div> 
+        <div className='flex flex-col hover:bg-gray-100 h-12'>
+      {communities.map((community, index) => (
+        <a
+          key={index}
+          onClick={() => handleClick(community.name)}
+          className='flex flex-row w-full justify-between hover:bg-gray-100'
+        >
+          <div className='flex flex-row space-x-3 ml-6 my-3'>
+            <img src={community.icon} alt={community.name} className="w-7 h-7" />
+            <div className='flex flex-col'>
+              <div className='flex flex-row'>
+                <div className='flex flex-row'>
+                  <span className='text-xs'>r/{community.name}</span>
+                </div>
+              </div>
+              <span className='text-xs text-gray-400'>{community.memberCount} members</span>
+            </div>
+          </div>
+          <div>
+            <button className='py-1 my-3 mr-6 border border-gray-300 rounded-2xl flex flex-row bg-gray-300 w-[55px] h-7 px-2 text-black text-xs font-semibold'>Joined</button>
+          </div>
+        </a>
+      ))}
+    </div>
+
      </div>
     )
 }
+ 
