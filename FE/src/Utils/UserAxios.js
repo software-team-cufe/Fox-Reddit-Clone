@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { extractAxiosError } from "./Utils";
 
 const userAxios = axios.create({
-    baseURL: "https://app.fox-nour.com/api/",
+    baseURL: "http://localhost:3001/",
     withCredentials: true,
 
 })
