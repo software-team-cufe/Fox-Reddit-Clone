@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { extractAxiosError } from "./Utils";
 
 const userAxios = axios.create({
-    baseURL: "http://localhost:3001/",
+    baseURL: "http://localhost:3000/",
     withCredentials: true,
 
 })
