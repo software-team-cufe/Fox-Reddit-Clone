@@ -12,7 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ['http://localhost:3001', 'http://devopsagmdmnfront.southafricanorth.cloudapp.azure.com'],
+    origin: ['http://localhost:3001', 'http://devopsagmdmnfront.southafricanorth.cloudapp.azure.com','https://app.fox-nour.com'],
     credentials: true,
   })
 );
