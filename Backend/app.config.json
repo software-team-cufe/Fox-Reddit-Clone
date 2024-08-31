@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "back-end",
+      "script": "yarn start:prod --port 3000",
+      "interpreter": "none",
+      "args": ""
+    }
+  ]
+}
+
