@@ -1,21 +1,24 @@
 import { object, string, TypeOf } from 'zod';
-
 export const createUserSchema = object({
   body: object({
     username: string({
       required_error: 'Username is required',
+      invalid_type_error: 'Username must be a string',
     }),
     password: string({
       required_error: 'Password is required',
+      invalid_type_error: 'Password must be a string',
     })
-      .min(8, 'Password too short - should be 8 chars minimum')
-      .max(200, 'Password too long - should be 200 chars maximum'),
+      .min(8, 'Password must be at least 8 characters long')
+      .max(200, 'Password cannot exceed 200 characters'),
     passwordConfirmation: string({
       required_error: 'Password confirmation is required',
+      invalid_type_error: 'Password confirmation must be a string',
     }),
     email: string({
       required_error: 'Email is required',
-    }).email('Not a valid email'),
+      invalid_type_error: 'Email must be a string',
+    }).email('Please provide a valid email address'),
   }).refine((data) => data.password === data.passwordConfirmation, {
     message: 'Passwords do not match',
     path: ['passwordConfirmation'],
