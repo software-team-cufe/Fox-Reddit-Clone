@@ -1,0 +1,14 @@
+FROM node:20-alpine
+
+WORKDIR /Backend
+
+COPY package.json yarn.lock tsconfig.json tsconfig.prod.json ./
+
+RUN yarn install --frozen-lockfile
+COPY . .
+
+RUN yarn build
+
+EXPOSE 3000 3002 3001
+
+CMD ["yarn", "start:dev"]
