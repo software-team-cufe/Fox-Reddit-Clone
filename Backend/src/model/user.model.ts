@@ -348,7 +348,7 @@ class PostReply {
   this.password = hashedPassword;
   return;
 })
-@index({ email: 1 })
+//@index({ email: 1 })
 @modelOptions({
   schemaOptions: {
     timestamps: true,

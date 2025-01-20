@@ -4,10 +4,9 @@ import { toast } from "react-toastify";
 import { extractAxiosError } from "./Utils";
 
 const userAxios = axios.create({
-    baseURL: "https://app.fox-nour.com/",
-    withCredentials: true,
-
-})
+  baseURL: "https://nourkhalafserver.ddns.net/",
+  withCredentials: true,
+});
 userAxios.interceptors.request.use(request => {
 
     request.headers.set('authorization', `Bearer ${localStorage.getItem('authorization')}`);
